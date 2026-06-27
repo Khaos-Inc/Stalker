@@ -1,0 +1,633 @@
+-- =================================================================================
+-- FILE: amb_main.script
+-- VERSION: FINAL GOLD V17 (Pure Detection + Isolated Logic + Smooth Fadeout)
+-- =================================================================================
+
+local last_tick = 0
+local mod_callbacks_registered = false
+
+-- ### MCM HELPERS
+local function get_tick_interval() return (amb_mcm and amb_mcm.get_tick_interval) and amb_mcm.get_tick_interval() or 100 end
+local function is_mod_enabled() return (amb_mcm and amb_mcm.is_enabled) and amb_mcm.is_enabled() or true end
+local function is_context_enabled(ctx) return (amb_mcm and amb_mcm.is_context_enabled) and amb_mcm.is_context_enabled(ctx) or true end
+local function is_sound_enabled(snd) return (amb_mcm and amb_mcm.is_sound_enabled) and amb_mcm.is_sound_enabled(snd) or true end
+local function get_sound_volume(snd, base) return (amb_mcm and amb_mcm.get_sound_volume) and amb_mcm.get_sound_volume(snd, base) or (base or 1.0) end
+local function get_sound_interval(base) return (amb_mcm and amb_mcm.get_sound_interval) and amb_mcm.get_sound_interval(base) or base end
+local function get_rain_sound_interval(base, den) return (amb_mcm and amb_mcm.get_rain_sound_interval) and amb_mcm.get_rain_sound_interval(base, den) or base end
+local function get_rain_loop_volume() return (amb_mcm and amb_mcm.get_rain_loop_volume) and amb_mcm.get_rain_loop_volume() or 1.0 end
+local function get_rain_loop_indoor_volume() return (amb_mcm and amb_mcm.get_rain_loop_indoor_volume) and amb_mcm.get_rain_loop_indoor_volume() or 1.0 end
+
+-- ### CACHED REFERENCES
+local cached_level_name = nil
+local cached_player_pos = nil
+local cached_time = 0
+
+local sound_path_cache = {}
+local emitter_vector_cache = {}
+local rain_emitter_vector_cache = {}
+local current_cached_level = nil
+
+-- staggered processing
+local emitter_process_index = 1
+local EMITTERS_PER_TICK = 50
+
+-- rain emitter cache
+local rain_nearby_cache = {}
+local rain_cache_last_rebuild = 0
+local RAIN_CACHE_REBUILD_INTERVAL = 1000
+local RAIN_CACHE_RADIUS = 75
+local rain_cache_rebuild_in_progress = false
+local rain_cache_rebuild_index = 1
+local RAIN_CACHE_REBUILD_PER_TICK = 150
+
+-- === DYNAMIC RAIN LOOP VARIABLES ===
+local current_rain_out_obj = nil
+local current_rain_in_obj = nil
+local current_rain_intensity_type = "none"
+local current_vol_out, current_vol_in = 0, 0
+local last_transition_time = 0
+local TRANSITION_DURATION = 1800
+local fadeout_rain_obj, fadeout_rain_in_obj = nil, nil
+local fadeout_start_time, fadeout_initial_vol = 0, 0
+local fadeout_in_initial_vol = 0
+local FADEOUT_DURATION = 2000 -- 2 Segundos de fadeout para todo
+
+-- === DYNAMIC BLOWOUT VARIABLES (AISLADO + FADEOUT) ===
+local current_blowout_loop_obj = nil
+local current_blowout_outdoor_loop_obj = nil
+local current_blowout_state = "none" -- "none", "indoor", "outdoor"
+
+-- Variables de fadeout para la emisión
+local fadeout_blowout_obj = nil
+local fadeout_blowout_start_time = 0
+local fadeout_blowout_initial_vol = 0
+
+-- raycast accelerator
+local last_ray_time = 0
+local cached_has_roof = false
+local RAY_CHECK_INTERVAL = 400
+local material_black_list = { "water", "bush", "tree" }
+
+local function isBlackListedMaterial(m)
+    if not m then return false end
+    for i = 1, #material_black_list do if string.find(m, material_black_list[i]) then return true end end
+    return false
+end
+
+local MIN_VOLUME_THRESHOLD = 0.01
+local temp_play_pos = vector()
+local temp_zero_pos = vector():set(0, 0, 0)
+local ray_dir_up = vector():set(0, 1, 0)
+
+local sounds_prefetched = false
+local underground_levels_hash = nil
+
+local function build_underground_hash()
+    if underground_levels_hash then return end
+    underground_levels_hash = {}
+    if amb_defs and amb_defs.underground_levels then
+        for i = 1, #amb_defs.underground_levels do underground_levels_hash[amb_defs.underground_levels[i]] = true end
+    end
+end
+
+local function is_underground_level(level_name)
+    if not underground_levels_hash then build_underground_hash() end
+    return underground_levels_hash[level_name] or false
+end
+
+-- ### RAYCAST
+local function check_single_roof(base_pos)
+    if not demonized_geometry_ray then return false end
+    local start_pos = vector():set(base_pos.x, base_pos.y + 1.5, base_pos.z)
+    local remaining = 40.0 
+    for attempt = 1, 5 do
+        if remaining <= 1.0 then break end
+        local ray = demonized_geometry_ray.geometry_ray({ ray_range = remaining, contact_range = remaining - 0.1, flags = 2, ignore_object = db.actor })
+        local result = ray:get(start_pos, ray_dir_up)
+        if not result or not result.in_contact then return false end
+        if result.result and result.result.material_name and isBlackListedMaterial(result.result.material_name) then
+            remaining = remaining - result.distance
+            start_pos = vector():set(result.position):add(vector():set(ray_dir_up):mul(0.5))
+            remaining = remaining - 0.5
+        else return true end
+    end
+    return false
+end
+
+local last_time_solid_indoor = 0
+local INDOOR_GRACE_PERIOD = 1500
+
+local function check_roof_robust()
+    if (cached_time - last_ray_time) < RAY_CHECK_INTERVAL then return cached_has_roof end
+    last_ray_time = cached_time
+    if not db.actor then return false end
+    local pos = db.actor:position()
+    local roof_above = check_single_roof(pos)
+    local dir = db.actor:direction()
+    local flat_dir = vector():set(dir.x, 0, dir.z):normalize()
+    local forward_pos = vector():set(pos.x + flat_dir.x * 1.5, pos.y, pos.z + flat_dir.z * 1.5)
+    local roof_ahead = check_single_roof(forward_pos)
+    
+    if roof_above then
+        last_time_solid_indoor = cached_time; cached_has_roof = true
+    else
+        if roof_ahead and (cached_time - last_time_solid_indoor) < INDOOR_GRACE_PERIOD then cached_has_roof = true
+        else cached_has_roof = false end
+    end
+    return cached_has_roof
+end
+
+-- ### SOUND PATH CACHE & PREFETCH
+local function get_cached_sound_path(name, index)
+    local key = name
+    if not sound_path_cache[key] then sound_path_cache[key] = {} end
+    local idx_key = index or "single"
+    if not sound_path_cache[key][idx_key] then
+        if index then sound_path_cache[key][idx_key] = "sound_revamp\\" .. name .. "\\" .. name .. tostring(index)
+        else sound_path_cache[key][idx_key] = "sound_revamp\\" .. name .. "\\" .. name end
+    end
+    return sound_path_cache[key][idx_key]
+end
+
+local function prefetch_sounds()
+    if sounds_prefetched or not level.prefetch_sound then return end
+    local D = amb_defs; if not D then return end
+    local function fetch_loop(settings_table)
+        if settings_table then
+            for _, settings in pairs(settings_table) do
+                if type(settings) == "table" and settings.file then level.prefetch_sound(get_cached_sound_path(settings.file, nil)) end
+            end
+        end
+    end
+    fetch_loop(D.rain_loop_settings); fetch_loop(D.rain_loop_settings_indoor)
+    if D.blowout_loop_settings_indoor and D.blowout_loop_settings_indoor.file then level.prefetch_sound(get_cached_sound_path(D.blowout_loop_settings_indoor.file, nil)) end
+    if D.blowout_loop_settings_outdoor and D.blowout_loop_settings_outdoor.file then level.prefetch_sound(get_cached_sound_path(D.blowout_loop_settings_outdoor.file, nil)) end
+    sounds_prefetched = true
+end
+
+local random_listing = {}
+local function random_without_repeat(n, m)
+    if n == m then return n end
+    local key = n * 10000 + m; local last = random_listing[key]; local new_num = math.random(n, m)
+    if last then
+        local attempts = 0
+        while new_num == last and attempts < 5 do new_num = math.random(n, m); attempts = attempts + 1 end
+    end
+    random_listing[key] = new_num; return new_num
+end
+
+-- ### CLEANUP FUNCTIONS (General)
+local function stop_sound_obj(snd)
+    if snd and snd:playing() then snd:stop() end
+end
+
+-- === LLUVIA FADEOUT ===
+local function cleanup_rain_loop()
+    stop_sound_obj(current_rain_out_obj); current_rain_out_obj = nil
+    stop_sound_obj(current_rain_in_obj); current_rain_in_obj = nil
+    current_rain_intensity_type = "none"; current_vol_out, current_vol_in = 0, 0
+    stop_sound_obj(fadeout_rain_obj); fadeout_rain_obj = nil
+    stop_sound_obj(fadeout_rain_in_obj); fadeout_rain_in_obj = nil
+end
+
+local function start_rain_fadeout()
+    if current_rain_out_obj then stop_sound_obj(fadeout_rain_obj); fadeout_rain_obj = current_rain_out_obj; fadeout_start_time = cached_time; fadeout_initial_vol = current_vol_out; current_rain_out_obj = nil end
+    if current_rain_in_obj then stop_sound_obj(fadeout_rain_in_obj); fadeout_rain_in_obj = current_rain_in_obj; fadeout_in_initial_vol = current_vol_in; current_rain_in_obj = nil end
+    current_rain_intensity_type = "none"; current_vol_out, current_vol_in = 0, 0
+end
+
+local function process_rain_fadeout()
+    local elapsed = cached_time - fadeout_start_time
+    local fade = 1.0
+    if elapsed < FADEOUT_DURATION then
+        fade = 1.0 - (elapsed / FADEOUT_DURATION); fade = fade * fade * (3 - 2 * fade)
+    else fade = 0.0 end
+    if fadeout_rain_obj then
+        if not fadeout_rain_obj:playing() or fade <= 0 then stop_sound_obj(fadeout_rain_obj); fadeout_rain_obj = nil
+        else fadeout_rain_obj.volume = fadeout_initial_vol * fade end
+    end
+    if fadeout_rain_in_obj then
+        if not fadeout_rain_in_obj:playing() or fade <= 0 then stop_sound_obj(fadeout_rain_in_obj); fadeout_rain_in_obj = nil
+        else fadeout_rain_in_obj.volume = fadeout_in_initial_vol * fade end
+    end
+end
+
+-- === BLOWOUT FADEOUT ===
+local function trigger_single_blowout_fade(snd_obj)
+    if not snd_obj then return end
+    stop_sound_obj(fadeout_blowout_obj) -- Si ya había uno muriendo, lo cortamos de raíz para evitar encimamientos
+    fadeout_blowout_obj = snd_obj
+    fadeout_blowout_start_time = cached_time
+    fadeout_blowout_initial_vol = snd_obj.volume or 1.0
+end
+
+local function process_blowout_fadeout()
+    if not fadeout_blowout_obj then return end
+    local elapsed = cached_time - fadeout_blowout_start_time
+    local fade = 1.0
+    if elapsed < FADEOUT_DURATION then
+        fade = 1.0 - (elapsed / FADEOUT_DURATION)
+        fade = fade * fade * (3 - 2 * fade) -- Suavizado curvo
+    else
+        fade = 0.0
+    end
+
+    if not fadeout_blowout_obj:playing() or fade <= 0 then
+        stop_sound_obj(fadeout_blowout_obj)
+        fadeout_blowout_obj = nil
+    else
+        fadeout_blowout_obj.volume = fadeout_blowout_initial_vol * fade
+    end
+end
+
+local function cleanup_blowout_loop()
+    -- Solo usado para forzar cierre (al salir del juego o apagar mod)
+    stop_sound_obj(current_blowout_loop_obj); current_blowout_loop_obj = nil
+    stop_sound_obj(current_blowout_outdoor_loop_obj); current_blowout_outdoor_loop_obj = nil
+    stop_sound_obj(fadeout_blowout_obj); fadeout_blowout_obj = nil
+    current_blowout_state = "none"
+end
+
+local function cleanup_all_caches()
+    cleanup_rain_loop(); cleanup_blowout_loop()
+    sound_path_cache, emitter_vector_cache, rain_emitter_vector_cache, rain_nearby_cache = {}, {}, {}, {}
+    random_listing = {}; current_cached_level = nil; rain_cache_last_rebuild = 0; rain_cache_rebuild_in_progress = false; rain_cache_rebuild_index, emitter_process_index = 1, 1; sounds_prefetched, cached_has_roof = false, false
+end
+
+local function cache_emitter_vectors(level_name)
+    if current_cached_level == level_name then return end
+    current_cached_level = level_name; emitter_vector_cache, rain_emitter_vector_cache = {}, {}
+    local static_emitters = amb_static.static_sound_emitters[level_name]
+    if static_emitters then for i, emitter in ipairs(static_emitters) do emitter_vector_cache[i] = vector():set(emitter.x, emitter.y, emitter.z) end end
+    local rain_emitters = amb_static.rain_sound_emitters[level_name]
+    if rain_emitters then for i, emitter in ipairs(rain_emitters) do rain_emitter_vector_cache[i] = vector():set(emitter.x, emitter.y, emitter.z) end end
+    emitter_process_index = 1; rain_nearby_cache, rain_cache_last_rebuild = {}, 0; rain_cache_rebuild_in_progress, rain_cache_rebuild_index = false, 1; cleanup_rain_loop(); cleanup_blowout_loop(); prefetch_sounds()
+end
+
+local function play_sound(sound_name, sound_index, sound_base_volume, min_dist, max_dist, volume_modifier)
+    if not cached_player_pos or not is_sound_enabled(sound_name) then return false end
+    local min_d = min_dist or 2.0; local max_d = max_dist or 7.5
+    local dis = math.random() * (max_d - min_d) + min_d
+    local dx, dy, dz = math.random() * 2 - 1, math.random() * 2 - 1, (math.random() * 2 - 1) / 1.5
+    local inv_len = dis / math.sqrt(dx*dx + dy*dy + dz*dz)
+    temp_play_pos:set(cached_player_pos.x + dx * inv_len, cached_player_pos.y + dy * inv_len, cached_player_pos.z + dz * inv_len)
+    local sound_path = get_cached_sound_path(sound_name, sound_index)
+    local sound = xr_sound.get_safe_sound_object(sound_path)
+    if sound then
+        local final_volume = get_sound_volume(sound_name, sound_base_volume or 1)
+        if volume_modifier then final_volume = final_volume * volume_modifier end
+        if final_volume >= MIN_VOLUME_THRESHOLD then sound:play_no_feedback(nil, 0, 0, temp_play_pos, final_volume, 1); return true end
+    end
+    return false
+end
+
+local function play_static_sound(sound_name, sound_index, pos_vector, sound_base_volume, volume_modifier)
+    if not is_sound_enabled(sound_name) then return false end
+    local sound_path = get_cached_sound_path(sound_name, sound_index)
+    local sound = xr_sound.get_safe_sound_object(sound_path)
+    if sound then
+        local final_volume = get_sound_volume(sound_name, sound_base_volume or 1)
+        if volume_modifier then final_volume = final_volume * volume_modifier end
+        if final_volume >= MIN_VOLUME_THRESHOLD then sound:play_no_feedback(nil, 0, 0, pos_vector, final_volume, 1); return true end
+    end
+    return false
+end
+
+function actor_on_first_update()
+    local g_ipairs, g_pairs, D = ipairs, pairs, amb_defs; if not D then return end
+    local time_now = time_global()
+    local function init_list(list) if not list then return end for i = 1, #list do list[i].last_time = (list[i].interval) * (math.random() + 0.5) + time_now end end
+    init_list(D.event_list_cover_indoor); init_list(D.generic_day_outdoor_sounds); init_list(D.generic_night_outdoor_sounds)
+    init_list(D.event_list_underground); init_list(D.event_list_on_rain_outdoor); init_list(D.event_list_on_rain_indoor)
+    init_list(D.event_list_on_storm_outdoor); init_list(D.event_list_on_storm_indoor); init_list(D.event_list_on_blowout_indoor); init_list(D.event_list_on_blowout_outdoor)
+    for _, map_data in g_pairs(D.map_specific_outdoor_sounds) do init_list(map_data.day); init_list(map_data.night) end
+    for _, sound_list in g_pairs(D.map_specific_underground_sounds) do init_list(sound_list) end
+    for _, emitter_list in g_pairs(amb_static.static_sound_emitters) do for _, emitter in g_ipairs(emitter_list) do if emitter.sound_list then for _, evt in g_ipairs(emitter.sound_list) do evt.last_time = 0 end end end end
+    for _, emitter_list in g_pairs(amb_static.rain_sound_emitters) do for _, emitter in g_ipairs(emitter_list) do if emitter.sound_list then for _, evt in g_ipairs(emitter.sound_list) do evt.last_time = 0 end end end end
+    build_underground_hash(); prefetch_sounds()
+end
+
+local function process_sound_list(sound_list, time_current, volume_modifier)
+    if not sound_list then return end
+    for i = 1, #sound_list do
+        local event = sound_list[i]
+        local base_interval = get_sound_interval(event.interval)
+        if (time_current - (event.last_time or 0)) > (base_interval * 1000 * (1.4 - math.random())) then
+            if math.random() < event.chance then play_sound(event.name, random_without_repeat(1, event.sound_list_size), event.base_volume, event.min_dist, event.max_dist, volume_modifier) end
+            event.last_time = time_current
+        end
+    end
+end
+
+local function process_static_emitters(time_current)
+    if not is_context_enabled("static_emitters") then return end
+    local emitters = amb_static.static_sound_emitters[cached_level_name]
+    if not emitters or not cached_player_pos then return end
+    local num_emitters = #emitters; if num_emitters == 0 then return end
+    local px, py, pz = cached_player_pos.x, cached_player_pos.y, cached_player_pos.z
+    local start_idx = emitter_process_index; local end_idx = math.min(start_idx + EMITTERS_PER_TICK - 1, num_emitters)
+    for i = start_idx, end_idx do
+        local emitter = emitters[i]; local dx, dy, dz = emitter.x - px, emitter.y - py, emitter.z - pz
+        local dist_sq = dx*dx + dy*dy + dz*dz; local max_dist_sq = (emitter.max_hearing_dist or 50.0) ^ 2
+        if dist_sq <= max_dist_sq and emitter.sound_list then
+            local emitter_pos = emitter_vector_cache[i]
+            if emitter_pos then
+                for k = 1, #emitter.sound_list do
+                    local evt = emitter.sound_list[k]
+                    if (time_current - (evt.last_time or 0)) > (get_sound_interval(evt.interval) * 1000) then
+                        if math.random() < evt.chance then play_static_sound(evt.name, random_without_repeat(1, evt.sound_list_size), emitter_pos, evt.base_volume) end
+                        evt.last_time = time_current
+                    end
+                end
+            end
+        elseif dist_sq > max_dist_sq and emitter.sound_list then for k = 1, #emitter.sound_list do emitter.sound_list[k].last_time = 0 end end
+    end
+    emitter_process_index = end_idx + 1; if emitter_process_index > num_emitters then emitter_process_index = 1 end
+end
+
+local temp_rain_cache = {}
+local function rebuild_rain_nearby_cache_staggered(emitters, px, py, pz)
+    local num_emitters = #emitters; local cache_radius_sq = RAIN_CACHE_RADIUS * RAIN_CACHE_RADIUS
+    if not rain_cache_rebuild_in_progress then rain_cache_rebuild_in_progress = true; rain_cache_rebuild_index = 1; temp_rain_cache = {} end
+    local end_idx = math.min(rain_cache_rebuild_index + RAIN_CACHE_REBUILD_PER_TICK - 1, num_emitters)
+    for i = rain_cache_rebuild_index, end_idx do
+        local emitter = emitters[i]; local dx, dy, dz = emitter.x - px, emitter.y - py, emitter.z - pz
+        if (dx*dx + dy*dy + dz*dz) <= cache_radius_sq then temp_rain_cache[#temp_rain_cache + 1] = i end
+    end
+    rain_cache_rebuild_index = end_idx + 1
+    if rain_cache_rebuild_index > num_emitters then rain_nearby_cache = temp_rain_cache; temp_rain_cache = {}; rain_cache_rebuild_in_progress = false; rain_cache_last_rebuild = cached_time end
+end
+
+local function process_rain_emitters(time_current, rain_factor)
+    local emitters = amb_static.rain_sound_emitters[cached_level_name]
+    if not emitters or not cached_player_pos or #emitters == 0 then return end
+    local px, py, pz = cached_player_pos.x, cached_player_pos.y, cached_player_pos.z
+    if rain_cache_rebuild_in_progress or (time_current - rain_cache_last_rebuild) > RAIN_CACHE_REBUILD_INTERVAL or #rain_nearby_cache == 0 then rebuild_rain_nearby_cache_staggered(emitters, px, py, pz) end
+    local hemi_modifier = 0.7 + (level.rain_hemi and level.rain_hemi() or 1.0) * 0.3
+    for j = 1, #rain_nearby_cache do
+        local i = rain_nearby_cache[j]; local emitter = emitters[i]
+        if emitter then
+            local dx, dy, dz = emitter.x - px, emitter.y - py, emitter.z - pz
+            local dist_sq = dx*dx + dy*dy + dz*dz; local max_dist = emitter.max_hearing_dist or 55.0
+            if dist_sq <= (max_dist * max_dist) and emitter.sound_list then
+                local emitter_pos = rain_emitter_vector_cache[i]
+                if emitter_pos then
+                    for k = 1, #emitter.sound_list do
+                        local evt = emitter.sound_list[k]
+                        if (time_current - (evt.last_time or 0)) > (get_rain_sound_interval(evt.interval, rain_factor) * 1000) then
+                            if math.random() < evt.chance then play_static_sound(evt.name, random_without_repeat(1, evt.sound_list_size), emitter_pos, evt.base_volume, hemi_modifier) end
+                            evt.last_time = time_current
+                        end
+                    end
+                end
+            elseif dist_sq > (max_dist * max_dist) and emitter.sound_list then for k = 1, #emitter.sound_list do emitter.sound_list[k].last_time = 0 end end
+        end
+    end
+end
+
+-- === LÓGICA DE BLOWOUT AISLADA CON FADEOUT (V17) ===
+local function process_dynamic_blowout(is_blowout, is_underground, is_indoor)
+    -- 1. Si la emisión acaba o bajamos bajo tierra: Fadeout y salir.
+    if not is_blowout or is_underground then
+        if current_blowout_state ~= "none" then
+            if current_blowout_loop_obj then trigger_single_blowout_fade(current_blowout_loop_obj) end
+            if current_blowout_outdoor_loop_obj then trigger_single_blowout_fade(current_blowout_outdoor_loop_obj) end
+            current_blowout_loop_obj = nil
+            current_blowout_outdoor_loop_obj = nil
+            current_blowout_state = "none"
+        end
+        return
+    end
+
+    local desired_state = is_indoor and "indoor" or "outdoor"
+
+    -- 2. Si entramos o salimos de un edificio: Fadeout al viejo, iniciar el nuevo
+    if current_blowout_state ~= desired_state then
+        
+        -- Mandar a desvanecer el que estaba sonando
+        if current_blowout_loop_obj then trigger_single_blowout_fade(current_blowout_loop_obj) end
+        if current_blowout_outdoor_loop_obj then trigger_single_blowout_fade(current_blowout_outdoor_loop_obj) end
+        
+        current_blowout_loop_obj = nil
+        current_blowout_outdoor_loop_obj = nil
+
+        if desired_state == "indoor" then
+            local set_in = amb_defs.blowout_loop_settings_indoor
+            if set_in and set_in.file then
+                local path = get_cached_sound_path(set_in.file, nil)
+                current_blowout_loop_obj = xr_sound.get_safe_sound_object(path)
+                if current_blowout_loop_obj then
+                    current_blowout_loop_obj:play_at_pos(db.actor, temp_zero_pos, 0, sound_object.s2d + sound_object.looped)
+                    current_blowout_loop_obj.volume = set_in.volume or 1.0
+                end
+            end
+        else
+            local set_out = amb_defs.blowout_loop_settings_outdoor
+            if set_out and set_out.file then
+                local path = get_cached_sound_path(set_out.file, nil)
+                current_blowout_outdoor_loop_obj = xr_sound.get_safe_sound_object(path)
+                if current_blowout_outdoor_loop_obj then
+                    current_blowout_outdoor_loop_obj:play_at_pos(db.actor, temp_zero_pos, 0, sound_object.s2d + sound_object.looped)
+                    current_blowout_outdoor_loop_obj.volume = set_out.volume or 1.0
+                end
+            end
+        end
+        
+        current_blowout_state = desired_state
+    else
+        -- 3. Si no cambió de estado, actualiza la posición del audio activo
+        if desired_state == "indoor" and current_blowout_loop_obj and current_blowout_loop_obj:playing() then
+            current_blowout_loop_obj.position = db.actor:position()
+        elseif desired_state == "outdoor" and current_blowout_outdoor_loop_obj and current_blowout_outdoor_loop_obj:playing() then
+            current_blowout_outdoor_loop_obj.position = db.actor:position()
+        end
+    end
+end
+
+-- ### DYNAMIC RAIN LOOPS
+local function process_dynamic_rain_loop(effective_rain_intensity, is_underground, is_indoor)
+    local set_out = amb_defs.rain_loop_settings
+    local set_in = amb_defs.rain_loop_settings_indoor
+    if not set_out or not set_in then return end
+
+    if is_underground or effective_rain_intensity <= 0 then
+        if current_rain_out_obj or current_rain_in_obj then start_rain_fadeout() end
+        return
+    end
+
+    local new_type = current_rain_intensity_type
+    if new_type == "none" or new_type == nil then new_type = "weak" end
+    if new_type == "weak" and effective_rain_intensity >= 0.35 then new_type = "medium"
+    elseif new_type == "medium" then
+        if effective_rain_intensity >= 0.85 then new_type = "storm"
+        elseif effective_rain_intensity < 0.25 then new_type = "weak" end
+    elseif new_type == "storm" and effective_rain_intensity < 0.75 then new_type = "medium" end
+
+    if new_type ~= current_rain_intensity_type then
+        start_rain_fadeout()
+        current_rain_intensity_type = new_type
+        if set_out[new_type] then
+            local path_out = get_cached_sound_path(set_out[new_type].file, nil)
+            current_rain_out_obj = xr_sound.get_safe_sound_object(path_out)
+            if current_rain_out_obj then
+                current_rain_out_obj:play_at_pos(db.actor, temp_zero_pos, 0, sound_object.s2d + sound_object.looped)
+                current_rain_out_obj.volume = MIN_VOLUME_THRESHOLD
+            end
+        end
+        if set_in[new_type] then
+            local path_in = get_cached_sound_path(set_in[new_type].file, nil)
+            current_rain_in_obj = xr_sound.get_safe_sound_object(path_in)
+            if current_rain_in_obj then
+                current_rain_in_obj:play_at_pos(db.actor, temp_zero_pos, 0, sound_object.s2d + sound_object.looped)
+                current_rain_in_obj.volume = MIN_VOLUME_THRESHOLD
+            end
+        end
+        last_transition_time = cached_time
+    end
+
+    local config_vol_out = (set_out[new_type] and set_out[new_type].volume) or 1.0
+    local config_vol_in = (set_in[new_type] and set_in[new_type].volume) or 1.0
+    local scale_out = math.max(level.get_rain_volume(), math.min(effective_rain_intensity, 1.0) * 0.5)
+    local scale_in = math.min(effective_rain_intensity, 1.0) 
+    
+    local base_vol_out = config_vol_out * scale_out * get_rain_loop_volume()
+    local base_vol_in = config_vol_in * scale_in * get_rain_loop_indoor_volume()
+
+    local target_vol_out, target_vol_in = 0, 0
+    if is_indoor then
+        target_vol_in = base_vol_in; target_vol_out = base_vol_out * 0.15 
+    else target_vol_out = base_vol_out; target_vol_in = 0.0 end
+
+    current_vol_out = current_vol_out + (target_vol_out - current_vol_out) * 0.05
+    current_vol_in = current_vol_in + (target_vol_in - current_vol_in) * 0.05
+
+    local time_fade = 1.0
+    local time_since_transition = cached_time - last_transition_time
+    if time_since_transition < TRANSITION_DURATION then
+        local fade_factor = time_since_transition / TRANSITION_DURATION
+        time_fade = fade_factor * fade_factor * (3 - 2 * fade_factor)
+    end
+
+    if current_rain_out_obj and current_rain_out_obj:playing() then
+        current_rain_out_obj.volume = math.max(current_vol_out * time_fade, MIN_VOLUME_THRESHOLD)
+        current_rain_out_obj.position = db.actor:position()
+    end
+    if current_rain_in_obj and current_rain_in_obj:playing() then
+        current_rain_in_obj.volume = math.max(current_vol_in * time_fade, MIN_VOLUME_THRESHOLD)
+        current_rain_in_obj.position = db.actor:position()
+    end
+end
+
+-- ### MAIN UPDATE
+function actor_on_update()
+    local string_find = string.find
+    
+    if not is_mod_enabled() then 
+        if current_rain_out_obj or current_rain_in_obj or fadeout_rain_obj or fadeout_rain_in_obj then cleanup_rain_loop() end
+        if current_blowout_state ~= "none" or fadeout_blowout_obj then cleanup_blowout_loop() end
+        return 
+    end
+    
+    cached_time = time_global()
+    
+    -- Procesamos los fadeouts en cada tick
+    process_rain_fadeout()
+    process_blowout_fadeout()
+    
+    if (cached_time - last_tick) <= get_tick_interval() then return end
+    last_tick = cached_time
+    
+    local player = db.actor
+    if not (player and player:alive()) then return end
+    
+    cached_player_pos = player:position()
+    cached_level_name = level.name()
+    local current_weather = level.get_weather() or ""
+    local rain_factor = level.rain_factor()
+    
+    cache_emitter_vectors(cached_level_name)
+    local D = amb_defs; if not D then return end
+    
+    -- === DETECCIÓN PURA Y DURA DEL MANAGER (ADIÓS GETEVENT SURGE) ===
+    local is_blowout = false
+    if surge_manager then
+        if type(surge_manager.is_started) == "function" and surge_manager.is_started() then is_blowout = true
+        elseif surge_manager.started then is_blowout = true end
+    end
+    if psi_storm_manager then
+        if type(psi_storm_manager.is_started) == "function" and psi_storm_manager.is_started() then is_blowout = true
+        elseif psi_storm_manager.started then is_blowout = true end
+    end
+
+    local is_night = (level.get_time_hours() >= 21 or level.get_time_hours() < 5)
+    local is_storming = rain_factor > 0.7
+    local is_rain_weather = string_find(current_weather, "w_rain") and not string_find(current_weather, "w_rain6")
+    local DRIZZLE_MIN = 0.01
+    local is_drizzle = rain_factor > DRIZZLE_MIN and rain_factor <= 0.05
+    local is_raining  = rain_factor > 0.05 or is_rain_weather
+    
+    if is_blowout then is_raining, is_drizzle, is_storming = false, false, false end
+
+    local effective_rain = 0
+    if (is_raining or is_storming) and not is_blowout then effective_rain = is_rain_weather and math.max(rain_factor, 0.15) or rain_factor
+    elseif is_drizzle then effective_rain = 0.06 + ((rain_factor - DRIZZLE_MIN) / (0.05 - DRIZZLE_MIN)) * 0.05 end
+    
+    process_static_emitters(cached_time)
+    if (is_raining or is_drizzle or is_storming) and is_context_enabled("rain") and not is_blowout then process_rain_emitters(cached_time, effective_rain) end
+    
+    -- TRICK DE ANOMALY
+    local is_map_underground = is_underground_level(cached_level_name)
+    local is_underground = GetEvent("underground") or is_map_underground
+    if is_blowout and not is_map_underground then is_underground = false end
+    
+    local is_indoor = check_roof_robust() 
+    
+    process_dynamic_rain_loop(effective_rain, is_underground, is_indoor)
+    process_dynamic_blowout(is_blowout, is_underground, is_indoor)
+    
+    -- === EVENTOS ===
+    if is_underground then
+        if is_context_enabled("underground") then
+            local lab_specific = D.map_specific_underground_sounds[cached_level_name]
+            if lab_specific then process_sound_list(lab_specific, cached_time) end
+            process_sound_list(D.event_list_underground, cached_time)
+        end
+        return 
+    end
+
+    if is_indoor then
+        if is_blowout and is_context_enabled("indoor") then process_sound_list(D.event_list_on_blowout_indoor, cached_time)
+        elseif is_context_enabled("indoor") then
+            if is_storming and is_context_enabled("storm") then process_sound_list(D.event_list_on_storm_indoor, cached_time)
+            elseif (is_raining or is_drizzle) and is_context_enabled("rain") then process_sound_list(D.event_list_on_rain_indoor, cached_time)
+            else process_sound_list(D.event_list_cover_indoor, cached_time) end
+        end
+    end
+
+    local OUTDOOR_ATTENUATION_INDOORS = 0.25
+    local current_outdoor_vol_mod = is_indoor and OUTDOOR_ATTENUATION_INDOORS or 1.0
+
+    if is_blowout then process_sound_list(D.event_list_on_blowout_outdoor, cached_time, current_outdoor_vol_mod)
+    else
+        if is_storming and is_context_enabled("storm") then process_sound_list(D.event_list_on_storm_outdoor, cached_time, current_outdoor_vol_mod)
+        elseif (is_raining or is_drizzle) and is_context_enabled("rain") then process_sound_list(D.event_list_on_rain_outdoor, cached_time, current_outdoor_vol_mod)
+        else
+            if is_night and is_context_enabled("night") then process_sound_list(D.generic_night_outdoor_sounds, cached_time, current_outdoor_vol_mod)
+            elseif not is_night and is_context_enabled("day") then process_sound_list(D.generic_day_outdoor_sounds, cached_time, current_outdoor_vol_mod) end
+            local map_data = D.map_specific_outdoor_sounds[cached_level_name]
+            if map_data then
+                local map_list = is_night and map_data.night or map_data.day
+                if map_list then process_sound_list(map_list, cached_time, current_outdoor_vol_mod) end
+            end
+        end
+    end
+end
+
+function on_game_start()
+    if not mod_callbacks_registered then
+        RegisterScriptCallback("actor_on_update", actor_on_update)
+        RegisterScriptCallback("actor_on_first_update", actor_on_first_update)
+        RegisterScriptCallback("actor_on_net_destroy", function() cleanup_all_caches() end)
+        mod_callbacks_registered = true
+    end
+end

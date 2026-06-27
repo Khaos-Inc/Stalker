@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="windows-1251"?>
+
+<!-- 
+	MCM
+-->
+<string_table>
+
+
+	<string id="ui_mcm_stashesx_title">
+		<text>НПС грабят тайники</text>
+	</string>
+	<string id="ui_mcm_menu_stashesx">
+		<text>НПС грабят тайники</text>
+	</string>
+
+			<!-- LOOTING -->
+	<string id="ui_mcm_stashesx_header_loot">
+		<text>НПС лутинг</text>
+	</string>
+
+	<string id="ui_mcm_stashesx_reward_loot">
+		<text>НПС грабят все тайники</text>
+	</string>
+	<string id="ui_mcm_stashesx_reward_loot_desc">
+		<text>Позволяет НПС грабить тайники, которые не были созданы игроком (созданные в новой игре / предоставленные в качестве награды / найденные с КПК и т.д.). Имейте в виду, что когда вы откроете такой тайник в первый раз, он все равно станет доступным для разграбления.</text>
+	</string>
+
+	<string id="ui_mcm_stashesx_update_time">
+		<text>Время обновления</text>
+	</string>
+	<string id="ui_mcm_stashesx_update_time_desc">
+		<text>Время (реальные секунды), через которое скрипт выбирает следующий случайный отряд и проверяет тайники вокруг него. Увеличение приведет к тому, что НПС будут реже грабить тайники. \n 
+				\n По умолчанию: 4.0</text>
+	</string>
+
+	<string id="ui_mcm_stashesx_sleep_freq">
+		<text>Лут во время сна</text>
+	</string>
+	<string id="ui_mcm_stashesx_sleep_freq_desc">
+		<text>Частота грабежей во время сна, в двух словах: вы спите один час, и он запускает функцию "x" количество раз, чтобы соответствовать прошедшему времени. На основе опции "Время обновления". Значение "1" означает в режиме реального времени, я рекомендую ниже. \n 
+				\n "0" выключает эту опцию \n
+				\n По умолчанию: 0.25</text>
+	</string>
+
+	<string id="ui_mcm_stashesx_add_perc">
+		<text>Более случайные грабежи</text>
+	</string>
+	<string id="ui_mcm_stashesx_add_perc_desc">
+		<text>Увеличьте, если вы хотите, чтобы тайники с низкой вероятностью были разграблены чаще, например: два тайника сохраняются с вероятностями 1 и 200, если вы увеличите этот ползунок до 100%, у них будет 201 и 400 (увеличивая вероятность разграбления тайника с низкой вероятностью из примера до 50%). \n 
+				\n По умолчанию: 20</text>
+	</string>
+
+			<!-- PAID STASHES -->
+	<string id="ui_mcm_stashesx_header_paid">
+		<text>Оплачиваемые Тайники</text>
+	</string>
+
+	<string id="ui_mcm_stashesx_cost">
+		<text>Стоимость</text>
+	</string>
+	<string id="ui_mcm_stashesx_cost_desc">
+		<text>Стоимость оплаченного тайника в день.</text>
+	</string>
+
+	<string id="ui_mcm_stashesx_max_time">
+		<text>Максимальное Время</text>
+	</string>
+	<string id="ui_mcm_stashesx_max_time_desc">
+		<text>Максимальное количество дней, которое игрок может купить.</text>
+	</string>
+
+			<!-- DEBUG -->
+	<string id="ui_mcm_stashesx_header_debug">
+		<text>Дебаг</text>
+	</string>
+
+	<string id="ui_mcm_stashesx_debugx">
+		<text>Дебаг</text>
+	</string>
+	<string id="ui_mcm_stashesx_debugx_desc">
+		<text>Позволяет просматривать содержимое в консоли.</text>
+	</string>
+
+	<string id="ui_mcm_stashesx_delete_stashes">
+		<text>УДАЛИТЬ АДДОН (прочти меня пожалуйста)</text>
+	</string>
+	<string id="ui_mcm_stashesx_delete_stashes_desc">
+		<text>Чтобы предотвратить повреждение файла сохранения, эта опция удалит все новые (оплачиваемые) тайники, добавленные этим аддоном при следующей загрузке. \n 
+				\n Итак, если вы хотите удалить аддон: \n
+				\n 1) Включите эту опцию; \n
+				\n 2) Сохранитесь, загрузитесь и сохранитесь снова; \n
+				\n 3) Выйдите из игры и отключите аддон.</text>
+	</string>
+
+
+</string_table>

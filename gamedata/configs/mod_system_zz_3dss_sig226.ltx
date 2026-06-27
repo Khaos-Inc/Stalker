@@ -1,0 +1,46 @@
+![wpn_sig226_hud]
+        hands_orientation                = -0.105033, -0.279614, -0.050965
+        hands_orientation_16x9           = -0.105033, -0.279614, -0.050965
+        hands_position                   = 0.007838, -0.001428, 0.03602
+        hands_position_16x9              = 0.007838, -0.001428, 0.03602
+		
+        aim_hud_offset_pos               = -0.056854, 0.0391, 0
+        aim_hud_offset_pos_16x9          = -0.056854, 0.0391, 0
+        aim_hud_offset_rot               = 1.9e-05, -3.5e-05, -0.086627
+        aim_hud_offset_rot_16x9          = 1.9e-05, -3.5e-05, -0.086627
+		
+;----------------------------------------------------------------------------------------
+![wpn_sig226_226sig_kit]
+scopes	=	lazup_pl15
+
+![wpn_sig226_226sig_kit_hud]
+       anm_shots_aim                            = m9_new_aim_burst_shoot_3dss, m9_new_shoot
+       anm_shots_aim_l                          = m9_new_aim_burst_shoot_3dss, shoot_empty
+
+        hands_orientation                = -0.105033, -0.279614, -0.050965
+        hands_orientation_16x9           = -0.105033, -0.279614, -0.050965
+        hands_position                   = 0.007838, -0.001428, 0.03602
+        hands_position_16x9              = 0.007838, -0.001428, 0.03602
+		
+        aim_hud_offset_pos               = -0.05662, 0.027962, 0
+        aim_hud_offset_pos_16x9          = -0.05662, 0.027962, 0
+        aim_hud_offset_rot               = 1.9e-05, -3.5e-05, -0.086627
+        aim_hud_offset_rot_16x9          = 1.9e-05, -3.5e-05, -0.086627
+
+;----------------------------------------------------------------------------------------		
+[wpn_sig226_226sig_kit_lazup_pl15]:wpn_sig226_226sig_kit
+hud				        = wpn_sig226_226sig_kit_laz_hud
+
+1icon_layer		=	laz_x
+1icon_layer_x	=	38
+1icon_layer_y	=	-18
+
+use_alt_aim_hud                   = true 
+laser_status                      = true
+
+[wpn_sig226_226sig_kit_laz_hud]:wpn_sig226_226sig_kit_hud
+item_visual                	= dynamics\weapons\wpn_sig226\wpn_sig226_226sig_kit_laz_hud.ogf
+        aim_hud_offset_alt_pos           = -0.086978, -0.082198, -0.01
+        aim_hud_offset_alt_pos_16x9      = -0.086978, -0.082198, -0.01
+        aim_hud_offset_alt_rot           = 1.9e-05, -3.5e-05, 0.7
+        aim_hud_offset_alt_rot_16x9      = 1.9e-05, -3.5e-05, 0.7

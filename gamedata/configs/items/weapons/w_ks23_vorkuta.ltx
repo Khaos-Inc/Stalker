@@ -1,0 +1,82 @@
+[wpn_ks23_vorkuta]:wpn_ks23
+parent_section              = wpn_ks23_vorkuta
+icons_texture                                       = ui\iconsks23yes        
+inv_grid_width     = 6
+inv_grid_height    = 2
+inv_grid_x         = 0
+inv_grid_y         = 2
+
+upgr_icon_path     = ui\iconsks23yes
+
+upgr_icon_x        = 350
+upgr_icon_y        = 100
+upgr_icon_width    = 0
+upgr_icon_height   = 300
+
+scopes                           = wpn_addon_scope_pu
+		scope_status                     = 0
+		scope_zoom_factor                = 0
+        scope_zoom_factor_alt            = 0
+        use_alt_aim_hud                  = true	
+inv_name                                 = st_wpn_ks23_vorkuta
+inv_name_short                           = st_wpn_ks23_vorkuta
+description                              = st_wpn_ks23_vorkuta_descr
+
+        ammo_elapsed                = 6
+        ammo_mag_size               = 6
+        startup_ammo                = 6
+
+hud                                                = wpn_ks23_vorkuta_hud
+
+inv_weight                                         = 3.9
+
+parent_section                           = wpn_ks23_vorkuta									
+visual                                             = dynamics\weapons\wpn_ks23\wpn_ks23_kaban_up_world.ogf
+
+
+
+silencer_name                            = wpn_sil_hex23
+silencer_status                          = 2
+silencer_x                               = 284
+silencer_y                               = 12
+silencer_light_color                     = 0.6, 0.5, 0.3
+silencer_light_range                     = 0.01
+silencer_light_time                      = 0.2
+silencer_light_var_color                 = 0.05
+silencer_light_var_range                 = 0.5
+
+;silencer_smoke_particles   		= ghost_particles\weapons\generic_smoke_eft_sil
+
+fire_point				    = -0.036000,0.030000,0.342002
+
+
+        cam_dispersion              = 8.4
+		cam_dispersion_inc          = 9.2
+		zoom_cam_step_angle_horz    = 9.28
+
+
+
+[wpn_ks23_vorkuta_hud]:wpn_ks23_hud
+anm_add_cartridge           = ks23_reload_ammo, winchester1300_reload_ammo
+anm_add_cartridge_empty     = ks23_reload_empty_start, winchester1300_reload_empty_start
+anm_bore                    = ks23_dry, idle, 0.6
+anm_bore_jammed                        = ks23_dry_jammed, idle_jammed
+anm_startzarada                = ks23_reload_start, winchester1300_reload_start
+
+item_visual                                            = dynamics\weapons\wpn_ks23\wpn_ks23_vorkuta_hud.ogf
+
+[wpn_ks23_vorkuta_wpn_addon_scope_pu]:wpn_ks23_vorkuta
+parent_section              = wpn_ks23_vorkuta
+
+icons_texture                                       = ui\iconsks23yes        
+inv_grid_width     = 7
+inv_grid_height    = 2
+inv_grid_x         = 7
+inv_grid_y         = 2
+
+hud                                      = wpn_ks23_vorkuta_wpn_addon_scope_pu_hud
+
+[wpn_ks23_vorkuta_wpn_addon_scope_pu_hud]:wpn_ks23_vorkuta_hud
+item_visual                                            = dynamics\weapons\wpn_ks23\wpn_ks23_vorkuta_pu_hud.ogf
+
+;----------------------------------------------------------------------------------------------------------------------------

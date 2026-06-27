@@ -1,0 +1,480 @@
+![wpn_aug_freedom]
+scopes						 = tac30, ac10632, c-more, rmr, aim_low, aim_acro, romeo4, he510, lco1, p1x42, romeo8, e0t2, hco, uh2, acog, specter, echo1, spectre_tactical_kit, infiltrator_tactical_kit, trihawk, monstrum, t12
+
+icons_texture = ui\ui_icon_aug_9mm
+inv_grid_height = 2
+inv_grid_width = 5
+inv_grid_x = 0
+inv_grid_y = 0
+
+upgr_icon_path = ui\ui_upgr_icon_aug_9mm
+upgr_icon_x                              = 0
+upgr_icon_y                              = 0
+upgr_icon_height                         = 150
+upgr_icon_width                          = 350
+
+;visual                                   = dynamics\weapons\wpn_aug_9mm\wpn_aug_9mm.ogf
+
+        inv_weight                       = 3.350
+
+        ammo_elapsed                     = 32
+        ammo_mag_size                    = 32
+
+        rpm                              = 700
+        fire_distance                    = 400
+        bullet_speed                     = 402
+
+        silencer_name                    = wpn_sil_9mm
+        silencer_status                  = 2
+        silencer_x                       = 210
+        silencer_y                       = 10
+
+	s3ds_reticle_size 	=
+	s3ds_eye_relief 	=
+	s3ds_exit_pupil		=
+	s3ds_chroma_power	=
+	magnifications 		=
+	
+lewd_lens_hide_enabled       = true
+lewd_lens_hide_bone          = lens
+lewd_lens_hide_delays        = 0.1,0
+lewd_lens_hide_aim_mode      = true, false, false	
+
+        use_alt_aim_hud                  = true
+        laser_status                     = true
+
+![wpn_aug_freedom_hud]
+anm_shots                                = aug_augmented_9mm_shoot_3dss, shoot
+
+        hands_orientation                = 0.371569, 2.794717, -3.5
+        hands_orientation_16x9           = 0.371569, 2.794717, -3.5
+        hands_position                   = 0.030074, -0.025943, 0.111248
+        hands_position_16x9              = 0.030074, -0.025943, 0.111248
+
+        aim_hud_offset_pos               = -0.081463, 0.010932, -0.14
+        aim_hud_offset_pos_16x9          = -0.081463, 0.010932, -0.14
+        aim_hud_offset_rot               = 3e-06, -0.000102, -0.06
+        aim_hud_offset_rot_16x9          = 3e-06, -0.000102, -0.06
+		
+        aim_hud_offset_alt_pos           = -0.157359, -0.068195, -0.100238
+        aim_hud_offset_alt_pos_16x9      = -0.157359, -0.068195, -0.100238
+        aim_hud_offset_alt_rot           = 3e-06, -0.000102, 0.5
+        aim_hud_offset_alt_rot_16x9      = 3e-06, -0.000102, 0.5
+		
+        lowered_hud_offset_pos           = 0.02604, -0.033891, -0.062048
+        lowered_hud_offset_pos_16x9      = 0.02604, -0.033891, -0.062048
+        lowered_hud_offset_rot           = -0.151884, -0.514887, 0.45
+        lowered_hud_offset_rot_16x9      = -0.151884, -0.514887, 0.45
+
+        item_orientation                 = -0.205703, -2.814909, 0
+        item_position                    = -0.000106, 0.00076, 0
+		
+        fire_point                       = 0, 0.01, 0.382241
+
+        base_hud_offset_pos              = -0.021282, -0.030508, -0.016183
+        base_hud_offset_pos_16x9         = -0.021282, -0.030508, -0.016183
+        base_hud_offset_rot              = 0, 0, 0.10442
+        base_hud_offset_rot_16x9         = 0, 0, 0.10442
+;-------------------------------------------------------------------SIGHTS-------------------------------------------------
+![wpn_aug_freedom_ac10632]
+inv_grid_x = 0
+inv_grid_y = 2
+
+![wpn_aug_freedom_ac10632_hud]:wpn_aug_freedom_hud
+item_visual                      = anomaly_weapons\wpn_aug_9mm\wpn_aug_9mm_ac10632_hud.ogf
+        aim_hud_offset_pos               = -0.081164, 0.010554, -0.1
+        aim_hud_offset_pos_16x9          = -0.081164, 0.010554, -0.1
+        aim_hud_offset_rot               = 3e-06, -0.000102, -0.06
+        aim_hud_offset_rot_16x9          = 3e-06, -0.000102, -0.06
+
+;-----------------------------------------------------------------------------
+![wpn_aug_freedom_c-more]
+inv_grid_x = 0
+inv_grid_y = 4
+
+![wpn_aug_freedom_c-more_hud]:wpn_aug_freedom_hud
+item_visual                      = anomaly_weapons\wpn_aug_9mm\wpn_aug_9mm_c-more_hud.ogf
+        aim_hud_offset_pos               = -0.081015, 0.012785, -0.1
+        aim_hud_offset_pos_16x9          = -0.081015, 0.012785, -0.1
+        aim_hud_offset_rot               = 3e-06, -0.000102, -0.06
+        aim_hud_offset_rot_16x9          = 3e-06, -0.000102, -0.06
+		
+;-----------------------------------------------------------------------------
+[wpn_aug_freedom_rmr]:wpn_aug_freedom
+hud                                      = wpn_aug_freedom_rmr_hud
+
+inv_grid_x = 0
+inv_grid_y = 18
+
+[wpn_aug_freedom_rmr_hud]:wpn_aug_freedom_hud
+item_visual                      = anomaly_weapons\wpn_aug_9mm\wpn_aug_9mm_rmr_hud.ogf
+        aim_hud_offset_pos               = -0.081461, 0.006905, -0.1
+        aim_hud_offset_pos_16x9          = -0.081461, 0.006905, -0.1
+		
+;-----------------------------------------------------------------------------		
+[wpn_aug_freedom_aim_low]:wpn_aug_freedom
+hud				= wpn_aug_freedom_aim_low_hud
+
+inv_grid_x = 0
+inv_grid_y = 6
+
+[wpn_aug_freedom_aim_low_hud]:wpn_aug_freedom_hud
+item_visual		= anomaly_weapons\wpn_aug_9mm\wpn_aug_9mm_aim_low_hud.ogf
+        aim_hud_offset_pos               = -0.081465, 0.027869, -0.1
+        aim_hud_offset_pos_16x9          = -0.081465, 0.027869, -0.1
+
+;-----------------------------------------------------------------------------		
+[wpn_aug_freedom_aim_acro]:wpn_aug_freedom
+hud				= wpn_aug_freedom_aim_acro_hud
+
+inv_grid_x = 0
+inv_grid_y = 8
+
+[wpn_aug_freedom_aim_acro_hud]:wpn_aug_freedom_hud
+item_visual		= anomaly_weapons\wpn_aug_9mm\wpn_aug_9mm_aim_acro_hud.ogf
+        aim_hud_offset_pos               = -0.081567, 0.017452, -0.1
+        aim_hud_offset_pos_16x9          = -0.081567, 0.017452, -0.1
+		
+;-----------------------------------------------------------------------------		
+[wpn_aug_freedom_romeo4]:wpn_aug_freedom
+hud                                      = wpn_aug_freedom_romeo4_hud
+
+inv_grid_x = 5
+inv_grid_y = 6
+
+[wpn_aug_freedom_romeo4_hud]:wpn_aug_freedom_hud
+item_visual		= anomaly_weapons\wpn_aug_9mm\wpn_aug_9mm_romeo4_hud.ogf
+        aim_hud_offset_pos               = -0.08161, 0.008144, -0.1
+        aim_hud_offset_pos_16x9          = -0.08161, 0.008144, -0.1
+		
+;-----------------------------------------------------------------------------		
+[wpn_aug_freedom_he510]:wpn_aug_freedom
+hud                                      = wpn_aug_freedom_he510_hud
+
+inv_grid_x = 0
+inv_grid_y = 14
+
+[wpn_aug_freedom_he510_hud]:wpn_aug_freedom_hud
+item_visual		= anomaly_weapons\wpn_aug_9mm\wpn_aug_9mm_he510_hud.ogf
+        aim_hud_offset_pos               = -0.081294, 0.009115, -0.1
+        aim_hud_offset_pos_16x9          = -0.081294, 0.009115, -0.1
+		
+;-----------------------------------------------------------------------------	
+[wpn_aug_freedom_lco1]:wpn_aug_freedom
+hud                                      = wpn_aug_freedom_lco1_hud
+
+inv_grid_x = 0
+inv_grid_y = 16
+
+[wpn_aug_freedom_lco1_hud]:wpn_aug_freedom_hud
+item_visual		= anomaly_weapons\wpn_aug_9mm\wpn_aug_9mm_lco1_hud.ogf
+        aim_hud_offset_pos               = -0.081151, 0.006645, -0.1
+        aim_hud_offset_pos_16x9          = -0.081151, 0.006645, -0.1
+		
+;-----------------------------------------------------------------------------		
+[wpn_aug_freedom_e0t2]:wpn_aug_freedom
+hud                                      = wpn_aug_freedom_e0t2_hud
+
+inv_grid_x = 0
+inv_grid_y = 10
+[wpn_aug_freedom_e0t2_hud]:wpn_aug_freedom_hud
+item_visual		= anomaly_weapons\wpn_aug_9mm\wpn_aug_9mm_e0t2_hud.ogf
+        aim_hud_offset_pos               = -0.081502, 0.009066, -0.1
+        aim_hud_offset_pos_16x9          = -0.081502, 0.009066, -0.1
+		
+;-----------------------------------------------------------------------------		
+[wpn_aug_freedom_p1x42]:wpn_aug_freedom
+hud                                      = wpn_aug_freedom_p1x42_hud
+
+inv_grid_x = 5
+inv_grid_y = 0
+
+[wpn_aug_freedom_p1x42_hud]:wpn_aug_freedom_hud
+item_visual		= anomaly_weapons\wpn_aug_9mm\wpn_aug_9mm_p1x42_hud.ogf
+        aim_hud_offset_pos               = -0.081346, 0.01077, -0.1
+        aim_hud_offset_pos_16x9          = -0.081346, 0.01077, -0.1
+		
+;-----------------------------------------------------------------------------	
+[wpn_aug_freedom_romeo8]:wpn_aug_freedom
+hud                                      = wpn_aug_freedom_romeo8_hud
+
+inv_grid_x = 5
+inv_grid_y = 4
+
+[wpn_aug_freedom_romeo8_hud]:wpn_aug_freedom_hud
+item_visual		= anomaly_weapons\wpn_aug_9mm\wpn_aug_9mm_romeo8_hud.ogf
+        aim_hud_offset_pos               = -0.081752, 0.007247, -0.1
+        aim_hud_offset_pos_16x9          = -0.081752, 0.007247, -0.1
+		
+;-----------------------------------------------------------------------------		
+[wpn_aug_freedom_hco]:wpn_aug_freedom
+hud                                      = wpn_aug_freedom_hco_hud
+
+inv_grid_x = 0
+inv_grid_y = 12
+[wpn_aug_freedom_hco_hud]:wpn_aug_freedom_hud
+item_visual		= anomaly_weapons\wpn_aug_9mm\wpn_aug_9mm_hco_hud.ogf
+        aim_hud_offset_pos               = -0.081319, 0.002444, -0.1
+        aim_hud_offset_pos_16x9          = -0.081319, 0.002444, -0.1
+		
+;-----------------------------------------------------------------------------	
+[wpn_aug_freedom_uh2]:wpn_aug_freedom
+hud                                      = wpn_aug_freedom_uh2_hud
+
+inv_grid_x = 5
+inv_grid_y = 2
+
+[wpn_aug_freedom_uh2_hud]:wpn_aug_freedom_hud
+item_visual		= anomaly_weapons\wpn_aug_9mm\wpn_aug_9mm_uh1_hud.ogf
+        aim_hud_offset_pos               = -0.081592, 0.006897, -0.1
+        aim_hud_offset_pos_16x9          = -0.081592, 0.006897, -0.1
+
+;-----------------------------------------------------------------------------	
+[wpn_aug_freedom_t12]:wpn_aug_freedom, t12_s
+hud                                      = wpn_aug_freedom_t12_hud
+
+1icon_layer 	= t12_x
+1icon_layer_x	= 115
+1icon_layer_y	= -13
+
+[wpn_aug_freedom_t12_hud]:wpn_aug_freedom_hud
+item_visual		= anomaly_weapons\wpn_aug_9mm\wpn_aug_9mm_t12_hud.ogf
+        aim_hud_offset_pos               = -0.08155, 0.021889, -0.1
+        aim_hud_offset_pos_16x9          = -0.08155, 0.021889, -0.1
+		
+;-------------------------------------------------------------------SCOPES-------------------------------------------------
+[wpn_aug_freedom_echo1]:wpn_aug_freedom, echo1_s
+hud				= wpn_aug_freedom_echo1_hud
+
+inv_grid_x = 5
+inv_grid_y = 16
+
+[wpn_aug_freedom_echo1_hud]:wpn_aug_freedom_hud
+item_visual		= anomaly_weapons\wpn_aug_9mm\wpn_aug_9mm_echo1_hud.ogf
+        aim_hud_offset_pos               = -0.081501, -0.000524, -0.1
+        aim_hud_offset_pos_16x9          = -0.081501, -0.000524, -0.1
+		
+;-----------------------------------------------------------------------------
+![wpn_aug_freedom_acog]:wpn_aug_freedom, acog_s
+hud				= wpn_aug_freedom_acog_hud
+
+inv_grid_x = 5
+inv_grid_y = 14
+
+![wpn_aug_freedom_acog_hud]:wpn_aug_freedom_hud
+item_visual		= anomaly_weapons\wpn_aug_9mm\wpn_aug_9mm_acog_hud.ogf
+        aim_hud_offset_pos               = -0.0815, 0.009261, -0.176147
+        aim_hud_offset_pos_16x9          = -0.0815, 0.009261, -0.176147
+        aim_hud_offset_rot               = 3e-06, -0.000102, -0.06
+        aim_hud_offset_rot_16x9          = 3e-06, -0.000102, -0.06
+		
+;-----------------------------------------------------------------------------
+[wpn_aug_freedom_specter]:wpn_aug_freedom, specter_s
+        hud                         = wpn_aug_freedom_specter_hud
+
+inv_grid_x = 5
+inv_grid_y = 12
+
+[wpn_aug_freedom_specter_hud]:wpn_aug_freedom_hud
+item_visual		= anomaly_weapons\wpn_aug_9mm\wpn_aug_9mm_specter_hud.ogf
+        aim_hud_offset_pos               = -0.081667, 0.006764, -0.136878
+        aim_hud_offset_pos_16x9          = -0.081667, 0.006764, -0.136878
+		
+;-----------------------------------------------------------------------------
+[wpn_aug_freedom_spec_alt]:wpn_aug_freedom, specter_s
+        hud                         = wpn_aug_freedom_spec_alt_hud
+
+inv_grid_x = 5
+inv_grid_y = 10
+
+[wpn_aug_freedom_spec_alt_hud]:wpn_aug_freedom_hud
+item_visual		= anomaly_weapons\wpn_aug_9mm\wpn_aug_9mm_spec_alt_hud.ogf
+        aim_hud_offset_pos               = -0.081667, 0.006764, -0.136878
+        aim_hud_offset_pos_16x9          = -0.081667, 0.006764, -0.136878
+		
+;-----------------------------------------------------------------------------
+[wpn_aug_freedom_trihawk]:wpn_aug_freedom, trihawk_s
+        hud                         = wpn_aug_freedom_trihawk_hud
+
+inv_grid_x = 5
+inv_grid_y = 10
+
+[wpn_aug_freedom_trihawk_hud]:wpn_aug_freedom_hud
+item_visual		= anomaly_weapons\wpn_aug_9mm\wpn_aug_9mm_trihawk_hud.ogf
+        aim_hud_offset_pos               = -0.081455, 0.001308, -0.11769
+        aim_hud_offset_pos_16x9          = -0.081455, 0.001308, -0.11769
+		
+;-----------------------------------------------------------------------------
+[wpn_aug_freedom_monstrum]:wpn_aug_freedom, monstrum_s
+        hud                         = wpn_aug_freedom_monstrum_hud
+
+inv_grid_x = 5
+inv_grid_y = 8
+
+[wpn_aug_freedom_monstrum_hud]:wpn_aug_freedom_hud
+item_visual                              = anomaly_weapons\wpn_aug_9mm\wpn_aug_9mm_monstrum_hud.ogf
+        aim_hud_offset_pos               = -0.081614, 0.016908, -0.157104
+        aim_hud_offset_pos_16x9          = -0.081614, 0.016908, -0.157104
+
+;-----------------------------------------------------------------------------
+[wpn_aug_freedom_tac30]:wpn_aug_freedom, tac30_s
+        hud                         = wpn_aug_freedom_tac30_hud
+
+1icon_layer 	= tac30_x
+1icon_layer_x	= 92
+1icon_layer_y	= -11
+
+[wpn_aug_freedom_tac30_hud]:wpn_aug_freedom_hud
+item_visual		= anomaly_weapons\wpn_aug_9mm\wpn_aug_9mm_tac30_hud.ogf
+        aim_hud_offset_pos               = -0.081508, 0.0026, -0.115433
+        aim_hud_offset_pos_16x9          = -0.081508, 0.0026, -0.115433
+
+;-----------------------------------------------------------------------------
+[wpn_aug_freedom_spectre_tactical_kit]:wpn_aug_freedom, e0t2_magd_s
+hud                                      = wpn_aug_freedom_spectre_tactical_kit_hud
+
+visual                                   = dynamics\weapons\wpn_aug_9mm\wpn_aug_9mm_spectre.ogf
+
+inv_grid_x = 10
+inv_grid_y = 0
+
+upgr_icon_path = ui\ui_upgr_icon_aug_spectre_9mm
+upgr_icon_x                              = 0
+upgr_icon_y                              = 0
+upgr_icon_height                         = 150
+upgr_icon_width                          = 350
+
+        inv_name                         = st_wpn_aug_9mm_spectre
+        inv_name_short                   = st_wpn_aug_9mm_spectre
+        description                      = st_wpn_aug_9mm_spectre_descr
+
+        inv_weight                       = 4.220
+
+        rpm                              = 700
+        hit_power                        = 0.52, 0.52, 0.52, 0.52
+        fire_distance                    = 500
+        bullet_speed                     = 470
+        fire_dispersion_base             = 0.44
+
+        silencer_name                    = wpn_sil_9mm
+        silencer_status                  = 2
+        silencer_x                       = 215
+        silencer_y                       = 10
+
+[wpn_aug_freedom_spectre_tactical_kit_hud]:wpn_aug_freedom_hud
+        item_visual                      = anomaly_weapons\wpn_aug_9mm\wpn_aug_9mm_spectre_hud.ogf
+
+        aim_hud_offset_pos               = -0.081496, 0.017988, -0.1
+        aim_hud_offset_pos_16x9          = -0.081496, 0.017988, -0.1
+
+;-----------------------------------------------------------------------------
+[wpn_aug_freedom_spectre_tactical_kit_off]:wpn_aug_freedom_spectre_tactical_kit
+hud                                      = wpn_aug_freedom_spectre_tactical_kit_off_hud
+
+visual                                   = dynamics\weapons\wpn_aug_9mm\wpn_aug_9mm_spectre.ogf
+
+inv_grid_x = 10
+inv_grid_y = 0
+
+        inv_name                         = st_wpn_aug_9mm_spectre
+        inv_name_short                   = st_wpn_aug_9mm_spectre
+        description                      = st_wpn_aug_9mm_spectre_descr
+
+        inv_weight                       = 4.220
+
+        rpm                              = 700
+        fire_distance                    = 500
+        bullet_speed                     = 470
+        fire_dispersion_base             = 0.44
+
+        silencer_name                    = wpn_sil_9mm
+        silencer_status                  = 2
+        silencer_x                       = 180
+        silencer_y                       = 6
+
+		scope_zoom_factor				 = 0
+
+[wpn_aug_freedom_spectre_tactical_kit_off_hud]:wpn_aug_freedom_spectre_tactical_kit_hud
+        item_visual                      = anomaly_weapons\wpn_aug_9mm\wpn_aug_9mm_spectre_off_hud.ogf
+
+        aim_hud_offset_pos               = -0.081496, 0.017988, -0.101525
+        aim_hud_offset_pos_16x9          = -0.081496, 0.017988, -0.101525
+
+;-----------------------------------------------------------------------------
+;-----------------------------------------------------------------------------
+;-----------------------------------------------------------------------------
+[wpn_aug_freedom_infiltrator_tactical_kit]:wpn_aug_freedom, acog_s
+hud                                      = wpn_aug_freedom_infiltrator_tactical_kit_hud
+
+visual                                   = dynamics\weapons\wpn_aug_9mm\wpn_aug_9mm_infiltrator.ogf
+
+inv_grid_x = 10
+inv_grid_y = 2
+
+upgr_icon_path = ui\ui_upgr_icon_aug_infiltrator_9mm
+upgr_icon_x                              = 0
+upgr_icon_y                              = 0
+upgr_icon_height                         = 150
+upgr_icon_width                          = 350
+
+        inv_name                         = st_wpn_aug_9mm_infiltrator
+        inv_name_short                   = st_wpn_aug_9mm_infiltrator
+        description                      = st_wpn_aug_9mm_infiltrator_descr
+
+        inv_weight                       = 4.55
+
+        rpm                              = 700
+        fire_distance                    = 600
+        bullet_speed                     = 540
+        fire_dispersion_base             = 0.36
+
+        silencer_name                    = wpn_sil_9mm
+        silencer_status                  = 2
+        silencer_x                       = 195
+        silencer_y                       = 5
+	
+[wpn_aug_freedom_infiltrator_tactical_kit_hud]:wpn_aug_freedom_hud
+        item_visual                      = anomaly_weapons\wpn_aug_9mm\wpn_aug_9mm_infiltrator_hud.ogf
+
+        fire_point                       = 0, 0.01, 0.5
+		
+        aim_hud_offset_pos               = -0.081631, 0.015102, -0.120767
+        aim_hud_offset_pos_16x9          = -0.081631, 0.015102, -0.120767
+
+;-----------------------------------------------------------------------------
+[wpn_aug_freedom_infiltrator_tactical_kit_off]:wpn_aug_freedom_infiltrator_tactical_kit, acog_s
+hud                                      = wpn_aug_freedom_infiltrator_tactical_kit_off_hud
+
+visual                                   = dynamics\weapons\wpn_aug_9mm\wpn_aug_9mm_infiltrator.ogf
+
+inv_grid_x = 10
+inv_grid_y = 2
+
+        inv_name                         = st_wpn_aug_9mm_infiltrator
+        inv_name_short                   = st_wpn_aug_9mm_infiltrator
+        description                      = st_wpn_aug_9mm_infiltrator_descr
+
+        inv_weight                       = 4.55
+
+        rpm                              = 700
+        fire_distance                    = 600
+        bullet_speed                     = 540
+        fire_dispersion_base             = 0.36
+
+        silencer_name                    = wpn_sil_9mm
+        silencer_status                  = 2
+        silencer_x                       = 195
+        silencer_y                       = 5
+
+[wpn_aug_freedom_infiltrator_tactical_kit_off_hud]:wpn_aug_freedom_infiltrator_tactical_kit_hud
+        item_visual                      = anomaly_weapons\wpn_aug_9mm\wpn_aug_9mm_infiltrator_off_hud.ogf
+
+        fire_point                       = 0, 0.01, 0.5
+
+        aim_hud_offset_pos               = -0.081631, 0.015102, -0.120767
+        aim_hud_offset_pos_16x9          = -0.081631, 0.015102, -0.120767
+
+        aim_hud_offset_alt_pos           = -0.01532, 0.013882, -0.100238
+        aim_hud_offset_alt_pos_16x9      = -0.01532, 0.013882, -0.100238
+        aim_hud_offset_alt_rot           = 3e-06, -0.000102, -0.5
+        aim_hud_offset_alt_rot_16x9      = 3e-06, -0.000102, -0.5

@@ -1,0 +1,2327 @@
+local M = {}
+
+local STORE_CORPSE = "corpse"
+local STORE_ITEM = "item"
+local INVALID_ID = 65535
+local DEATH_INI_PATH = "items\\settings\\death_generic.ltx"
+local LOADOUT_INI_PATH = "items\\settings\\npc_loadouts\\npc_loadouts.ltx"
+
+local event_stores = {
+	corpse = { ids = {}, seen = {}, head = 1 },
+	ignored_corpse = { ids = {}, seen = {}, head = 1 },
+	item = { ids = {}, seen = {}, head = 1 },
+}
+local targeted_item_requests = {}
+local targeted_item_requests_by_item = {}
+local exclusive_item_reservations = {}
+local vanilla_artifact_pickups = {}
+local VANILLA_ARTIFACT_PICKUP_TTL_MS = 30000
+local VIRTUAL_LOOT_DEATH_MATERIALIZE_LIMIT = 32
+
+local death_ini
+local loadout_ini
+local death_item_counts = {}
+local death_section_cache = {}
+local loadout_slot_cache = {}
+
+local function load_module(name)
+	local mod = rawget(_G, name)
+	if not mod and require then
+		pcall(require, name)
+		mod = rawget(_G, name)
+	end
+	return mod
+end
+
+local function cfg_mod()
+	return load_module("zhopa2_cfg")
+end
+
+local function memory_mod()
+	return load_module("zhopa2_memory")
+end
+
+local function index_mod()
+	return load_module("zhopa2_index")
+end
+
+local function cfg_bool(key, default)
+	local cfg = cfg_mod()
+	if cfg and type(cfg.get_bool) == "function" then
+		return cfg.get_bool(key, default) == true
+	end
+	return default == true
+end
+
+local function cfg_num(key, default)
+	local cfg = cfg_mod()
+	if cfg and type(cfg.get_num) == "function" then
+		return cfg.get_num(key, default)
+	end
+	return default
+end
+
+local function debug_print_enabled()
+	return cfg_bool("debug_hud_enabled", false) == true
+end
+
+local function now_ms()
+	return time_global and time_global() or 0
+end
+
+local function runtime_ready(reason)
+	local rt = rawget(_G, "zhopa2_runtime_patches")
+	if rt and type(rt.runtime_ready) == "function" then
+		return rt.runtime_ready(reason) == true
+	end
+	local fn = rawget(_G, "zhopa2_runtime_ready")
+	if type(fn) == "function" then
+		return fn(reason) == true
+	end
+	return false
+end
+
+local function alife_sim()
+	if not alife then
+		return nil
+	end
+	local ok, sim = pcall(alife)
+	return ok and sim or nil
+end
+
+function M.online_enabled()
+	return cfg_bool("enabled", true) == true and cfg_bool("loot_enabled", true) == true
+end
+
+function M.offline_enabled()
+	return cfg_bool("enabled", true) == true and cfg_bool("loot_offline_enabled", true) == true
+end
+
+function M.enabled()
+	return M.online_enabled()
+end
+
+local function valid_id(id)
+	id = tonumber(id)
+	return id ~= nil and id > 0 and id ~= INVALID_ID
+end
+
+local function object_id(obj)
+	if not obj then
+		return nil
+	end
+	if type(obj) == "number" then
+		return obj
+	end
+	if type(obj.id) == "function" then
+		local ok, id = pcall(obj.id, obj)
+		return ok and tonumber(id) or nil
+	end
+	return tonumber(obj.id)
+end
+
+local function object_section(obj)
+	if not obj then
+		return nil
+	end
+	if type(obj.section) == "function" then
+		local ok, section = pcall(obj.section, obj)
+		return ok and section or nil
+	end
+	if type(obj.section_name) == "function" then
+		local ok, section = pcall(obj.section_name, obj)
+		return ok and section or nil
+	end
+	return nil
+end
+
+local function online_object_by_id(id)
+	id = tonumber(id)
+	if not (id and level and type(level.object_by_id) == "function") then
+		return nil
+	end
+	local ok, obj = pcall(level.object_by_id, id)
+	return ok and obj or nil
+end
+
+local function object_name(obj)
+	if not obj then
+		return "-"
+	end
+	return tostring(object_section(obj) or object_id(obj) or "-")
+end
+
+local function object_level_name(obj)
+	if not (obj and obj.m_game_vertex_id and game_graph) then
+		return nil
+	end
+	local ok_graph, graph = pcall(game_graph)
+	if not (ok_graph and graph and type(graph.valid_vertex_id) == "function" and graph:valid_vertex_id(obj.m_game_vertex_id)) then
+		return nil
+	end
+	local ok_vertex, vertex = pcall(function()
+		return graph:vertex(obj.m_game_vertex_id)
+	end)
+	if not (ok_vertex and vertex and type(vertex.level_id) == "function") then
+		return nil
+	end
+	local ok_level_id, level_id = pcall(function()
+		return vertex:level_id()
+	end)
+	if not (ok_level_id and level_id) then
+		return nil
+	end
+	local sim = alife_sim()
+	if not (sim and type(sim.level_name) == "function") then
+		return nil
+	end
+	local ok_level, level_name = pcall(sim.level_name, sim, level_id)
+	return ok_level and level_name and tostring(level_name) or nil
+end
+
+local function offline_loot_level_log(se_victim, se_looter, attacker_squad)
+	return object_level_name(se_victim)
+		or object_level_name(se_looter)
+		or object_level_name(attacker_squad)
+		or "-"
+end
+
+local function object_clsid(obj)
+	if not obj then
+		return nil
+	end
+	if type(obj.clsid) == "function" then
+		local ok, cls = pcall(obj.clsid, obj)
+		return ok and cls or nil
+	end
+	return nil
+end
+
+local function object_section_exists(section)
+	return section and ini_sys and type(ini_sys.section_exist) == "function" and ini_sys:section_exist(section) == true
+end
+
+local function split_colon(text)
+	local out = {}
+	text = tostring(text or "")
+	for part in text:gmatch("[^:]+") do
+		out[#out + 1] = part
+	end
+	return out
+end
+
+local function table_contains(t, value)
+	if not (t and value) then
+		return false
+	end
+	for i = 1, #t do
+		if t[i] == value then
+			return true
+		end
+	end
+	return false
+end
+
+local function object_alive(obj)
+	if not (obj and type(obj.alive) == "function") then
+		return nil
+	end
+	local ok, alive = pcall(obj.alive, obj)
+	return ok and alive or nil
+end
+
+local function valid_squad_object(squad)
+	local squad_type = type(squad)
+	if squad_type ~= "table" and squad_type ~= "userdata" then
+		return nil
+	end
+	return object_id(squad) and squad or nil
+end
+
+local function item_cost(item)
+	local section = type(item) == "string" and item or object_section(item)
+	if not (section and ini_sys and type(ini_sys.r_float_ex) == "function") then
+		return 0
+	end
+	return math.max(0, tonumber(ini_sys:r_float_ex(section, "cost")) or 0)
+end
+
+local function object_is_artifact(obj)
+	local cls = object_clsid(obj)
+	return cls ~= nil and IsArtefact and IsArtefact(nil, cls) == true
+end
+
+local function mark_artifact_cargo_for_squad(squad, item, section, value, artifact_id, reason)
+	if not squad then
+		return false
+	end
+	section = section or object_section(item)
+	if not section then
+		return false
+	end
+	value = tonumber(value) or item_cost(item or section)
+	local artifact_id = tonumber(artifact_id) or object_id(item)
+	local mem = memory_mod()
+	local added = false
+	if mem and type(mem.add_artifact_cargo) == "function" then
+		added = mem.add_artifact_cargo(squad, section, value, artifact_id, reason or "artifact_loot") == true
+	end
+	local idx = index_mod()
+	if idx and added and type(idx.sync_artifact_cargo) == "function" then
+		idx.sync_artifact_cargo(squad)
+	elseif idx and type(idx.add_artifact_cargo) == "function" then
+		idx.add_artifact_cargo(squad, section, value, artifact_id, reason or "artifact_loot")
+	end
+	return true
+end
+
+local function ensure_death_ini()
+	if death_ini then
+		return death_ini
+	end
+	if itms_manager and itms_manager.ini_death then
+		death_ini = itms_manager.ini_death
+	elseif ini_file then
+		local ok, ini = pcall(ini_file, DEATH_INI_PATH)
+		death_ini = ok and ini or nil
+	end
+	return death_ini
+end
+
+local function ensure_loadout_ini()
+	if loadout_ini then
+		return loadout_ini
+	end
+	if ini_file then
+		local ok, ini = pcall(ini_file, LOADOUT_INI_PATH)
+		loadout_ini = ok and ini or nil
+	end
+	return loadout_ini
+end
+
+local function ini_section_exists(ini, section)
+	return ini and section and type(ini.section_exist) == "function" and ini:section_exist(section) == true
+end
+
+local function ini_read_string(ini, section, key)
+	if not (ini and section and key and type(ini.r_string_ex) == "function") then
+		return nil
+	end
+	local ok, value = pcall(ini.r_string_ex, ini, section, key)
+	return ok and value or nil
+end
+
+local function ini_line_count(ini, section)
+	if not (ini and section and type(ini.line_count) == "function" and ini_section_exists(ini, section)) then
+		return 0
+	end
+	local ok, count = pcall(ini.line_count, ini, section)
+	return ok and tonumber(count) or 0
+end
+
+local function ini_line(ini, section, idx)
+	if not (ini and type(ini.r_line_ex) == "function") then
+		return nil, nil
+	end
+	local ok, _, id, value = pcall(ini.r_line_ex, ini, section, idx, "", "")
+	if ok then
+		return id, value
+	end
+	return nil, nil
+end
+
+local function load_death_item_counts()
+	if next(death_item_counts) then
+		return
+	end
+	local ini = ensure_death_ini()
+	local count = ini_line_count(ini, "item_count")
+	for i = 0, count - 1 do
+		local id, value = ini_line(ini, "item_count", i)
+		if id and value then
+			local parts = {}
+			for part in tostring(value):gmatch("[^,]+") do
+				parts[#parts + 1] = tonumber(part)
+			end
+			local min_count = math.ceil(parts[1] or 0)
+			local max_count = math.ceil(parts[2] or min_count)
+			death_item_counts[id] = { min_count, max_count }
+		end
+	end
+end
+
+local function death_section_items(section)
+	if death_section_cache[section] ~= nil then
+		return death_section_cache[section]
+	end
+	local ini = ensure_death_ini()
+	local out = {}
+	local count = ini_line_count(ini, section)
+	for i = 0, count - 1 do
+		local id, value = ini_line(ini, section, i)
+		if id and object_section_exists(id) then
+			out[#out + 1] = { sec = id, chance = tonumber(value) or 0 }
+		end
+	end
+	death_section_cache[section] = out
+	return out
+end
+
+local function loadout_slot_items(section)
+	if loadout_slot_cache[section] ~= nil then
+		return loadout_slot_cache[section]
+	end
+	local ini = ensure_loadout_ini()
+	local out = {}
+	local count = ini_line_count(ini, section)
+	for i = 0, count - 1 do
+		local id = ini_line(ini, section, i)
+		local parts = split_colon(id)
+		local sec = parts[1]
+		if object_section_exists(sec) then
+			out[#out + 1] = {
+				sec = sec,
+				attachment = parts[2] or "0",
+				ammo_type = parts[3] or "0",
+				chance = tonumber(parts[4]) or 50,
+			}
+		end
+	end
+	loadout_slot_cache[section] = out
+	return out
+end
+
+local function is_monster_player_id(player_id)
+	return player_id == "monster"
+		or player_id == "monster_predatory"
+		or player_id == "monster_predatory_day"
+		or player_id == "monster_predatory_night"
+		or player_id == "monster_vegetarian"
+		or player_id == "monster_zombied"
+		or player_id == "monster_zombied_day"
+		or player_id == "monster_zombied_night"
+		or player_id == "zombied"
+		or (is_squad_monster and is_squad_monster[player_id] == true)
+end
+
+local function looter_squad(npc)
+	if not (npc and get_object_squad) then
+		return nil
+	end
+	local ok, squad = pcall(get_object_squad, npc, "zhopa2_loot")
+	if ok and valid_squad_object(squad) then
+		return squad
+	end
+	ok, squad = pcall(get_object_squad, npc)
+	return ok and valid_squad_object(squad) or nil
+end
+
+local function squad_by_id(squad_id)
+	squad_id = tonumber(squad_id)
+	if not squad_id then
+		return nil
+	end
+	local board = rawget(_G, "SIMBOARD")
+	local squads = board and board.squads
+	local squad = squads and (squads[squad_id] or squads[tostring(squad_id)]) or nil
+	if valid_squad_object(squad) then
+		return squad
+	end
+	squad = alife_object and alife_object(squad_id) or nil
+	return valid_squad_object(squad)
+end
+
+local function managed_stalker_squad_for_looter(npc, require_loot_enabled)
+	if require_loot_enabled and not M.enabled() then
+		return nil
+	end
+	if not cfg_bool("enabled", true) then
+		return false
+	end
+	if not (npc and type(npc.alive) == "function" and npc:alive() == true) then
+		return nil
+	end
+	if not (IsStalker and IsStalker(npc)) then
+		return nil
+	end
+	local npc_id = object_id(npc)
+	if not valid_id(npc_id) or npc_id == AC_ID then
+		return nil
+	end
+	if type(npc.has_info) == "function" and npc:has_info("npcx_is_companion") then
+		return nil
+	end
+	if get_object_story_id and get_object_story_id(npc_id) then
+		return nil
+	end
+	if character_community and character_community(npc) == "zombied" then
+		return nil
+	end
+
+	local squad = looter_squad(npc)
+	if not (squad and squad.zhopa2_managed == true) then
+		return nil
+	end
+	if squad.player_id == "actor" or is_monster_player_id(squad.player_id) then
+		return nil
+	end
+	if get_object_story_id and squad.id and get_object_story_id(squad.id) then
+		return nil
+	end
+	return squad
+end
+
+function M.should_manage_looter(npc)
+	return managed_stalker_squad_for_looter(npc, true) ~= nil
+end
+
+local function section_is_quest(section)
+	if not section then
+		return true
+	end
+	if ini_sys and ini_sys.r_bool_ex and ini_sys:r_bool_ex(section, "quest_item", false) == true then
+		return true
+	end
+	return false
+end
+
+local loot_inventory_classes = {
+	AMMO = true,
+	AMMO_S = true,
+	ARTEFACT = true,
+	SCRPTART = true,
+	EQ_BAKPK = true,
+	EQU_STLK = true,
+	II_ANTIR = true,
+	II_ATTCH = true,
+	II_EXPLO = true,
+	II_FOOD = true,
+	D_CUSTOM = true,
+	D_PDA = true,
+	G_FAKE = true,
+	S_M209 = true,
+	S_OG7B = true,
+	S_VOG25 = true,
+	WP_GLAUN = true,
+	WP_SCOPE = true,
+	WP_SILEN = true,
+}
+
+local function section_has_inventory_icon(section)
+	if not (section and ini_sys and type(ini_sys.r_float_ex) == "function") then
+		return false
+	end
+	return ini_sys:r_float_ex(section, "inv_grid_x") ~= nil and ini_sys:r_float_ex(section, "inv_grid_y") ~= nil
+end
+
+local function object_is_inventory_item(obj)
+	local cls = object_clsid(obj)
+	if not cls then
+		return false
+	end
+	return (IsWeapon and IsWeapon(nil, cls) == true)
+		or (IsAmmo and IsAmmo(nil, cls) == true)
+		or (IsGrenade and IsGrenade(nil, cls) == true)
+		or (IsArtefact and IsArtefact(nil, cls) == true)
+		or (IsOutfit and IsOutfit(nil, cls) == true)
+		or (IsHeadgear and IsHeadgear(nil, cls) == true)
+end
+
+local function section_is_lootable_inventory(section, obj)
+	if object_is_inventory_item(obj) then
+		return true
+	end
+	if not section_has_inventory_icon(section) then
+		return false
+	end
+	local cls = ini_sys and ini_sys.r_string_ex and ini_sys:r_string_ex(section, "class") or nil
+	if not cls then
+		return false
+	end
+	return loot_inventory_classes[cls] == true or cls:find("^WP_") ~= nil or cls:find("^DET_") ~= nil
+end
+
+local cleanup_targeted_item_requests
+
+local function object_is_story(obj, id)
+	id = tonumber(id) or object_id(obj)
+	return get_object_story_id and id and get_object_story_id(id) ~= nil
+end
+
+local function cleanup_exclusive_item_reservations()
+	local ttl = math.max(1, cfg_num("loot_event_ttl_sec", 900)) * 1000
+	local now = now_ms()
+	for item_id, request in pairs(exclusive_item_reservations) do
+		local expired = not request or not request.npc_id or (now > 0 and (now - (request.tg or 0)) > ttl)
+		local item = online_object_by_id(item_id)
+		local se_item = item and alife_object and alife_object(item_id) or nil
+		if expired or not item or (se_item and tonumber(se_item.parent_id) ~= INVALID_ID) then
+			exclusive_item_reservations[item_id] = nil
+		end
+	end
+end
+
+local function exclusive_item_owner(item_id)
+	item_id = tonumber(item_id)
+	if not valid_id(item_id) then
+		return nil
+	end
+	cleanup_exclusive_item_reservations()
+	local request = exclusive_item_reservations[item_id]
+	if request and valid_id(request.npc_id) then
+		return tonumber(request.npc_id)
+	end
+	return nil
+end
+
+local function item_reserved_for_other(obj, looter)
+	local tonum = tonumber
+	local item_id = tonum(object_id(obj))
+	if not valid_id(item_id) then
+		return false
+	end
+	local owner_id = exclusive_item_owner(item_id)
+	local targeted = targeted_item_requests_by_item[item_id]
+	owner_id = owner_id or (targeted and tonum(targeted.npc_id) or nil)
+	if not owner_id then
+		return false
+	end
+	local looter_id = object_id(looter)
+	return tonum(looter_id) ~= tonum(owner_id)
+end
+
+function M.can_take_section(section, obj, looter)
+	if type(section) ~= "string" or section == "" then
+		return false
+	end
+	if section:find("^mp_") then
+		return false
+	end
+	if section_is_quest(section) then
+		return false
+	end
+	if object_is_story(obj) then
+		return false
+	end
+	if item_reserved_for_other(obj, looter) then
+		return false
+	end
+	if not section_is_lootable_inventory(section, obj) then
+		return false
+	end
+	return true
+end
+
+local function is_stalker_server_object(obj)
+	if not (obj and IsStalker) then
+		return false
+	end
+	local ok, result = pcall(IsStalker, obj)
+	if ok and result == true then
+		return true
+	end
+	local cls = object_clsid(obj)
+	return cls ~= nil and IsStalker(nil, cls) == true
+end
+
+local function offline_squad_can_loot(squad)
+	if not (M.offline_enabled() and squad and squad.zhopa2_managed == true) then
+		return false
+	end
+	local cached_count = tonumber(squad.zhopa2_cached_npc_count)
+	if cached_count and cached_count <= 0 then
+		return false
+	end
+	if squad.player_id == "actor" or is_monster_player_id(squad.player_id) then
+		return false
+	end
+	if get_object_story_id and squad.id and get_object_story_id(squad.id) then
+		return false
+	end
+	return true
+end
+
+local function member_server_object(member)
+	if not member then
+		return nil
+	end
+	return member.object or (member.id and alife_object(member.id)) or nil
+end
+
+local function pick_offline_looter(squad, se_attacker)
+	if is_stalker_server_object(se_attacker) then
+		return se_attacker
+	end
+	if squad and type(squad.squad_members) == "function" then
+		for member in squad:squad_members() do
+			local obj = member_server_object(member)
+			if is_stalker_server_object(obj) then
+				return obj
+			end
+		end
+	end
+	return nil
+end
+
+local function collect_child_ids(se_owner)
+	local ids = {}
+	local sim = alife_sim()
+	if not (se_owner and sim and type(sim.get_children) == "function") then
+		return ids
+	end
+	pcall(function()
+		for id in sim:get_children(se_owner) do
+			ids[#ids + 1] = tonumber(id) or id
+		end
+	end)
+	return ids
+end
+
+local function owner_create_args(se_owner)
+	if not (se_owner and se_owner.position and se_owner.m_level_vertex_id and se_owner.m_game_vertex_id and se_owner.id) then
+		return nil
+	end
+	return se_owner.position, se_owner.m_level_vertex_id, se_owner.m_game_vertex_id, se_owner.id
+end
+
+local function set_item_condition_from_source(se_src, se_dst)
+	if not (utils_stpk and se_src and se_dst) then
+		return false
+	end
+	local ok_src, data_src = pcall(utils_stpk.get_item_data, se_src)
+	local ok_dst, data_dst = pcall(utils_stpk.get_item_data, se_dst)
+	if not (ok_src and ok_dst and data_src and data_dst) then
+		return false
+	end
+	data_dst.condition = data_src.condition or data_dst.condition
+	data_dst.upgrades = data_src.upgrades or data_dst.upgrades
+	local ok_set = pcall(utils_stpk.set_item_data, data_dst, se_dst)
+	return ok_set == true
+end
+
+local function create_section_to_looter(section, se_looter, props)
+	if not (section and se_looter) then
+		return nil
+	end
+	if alife_create_item then
+		local ok_item, se_item = pcall(alife_create_item, section, se_looter, props)
+		if ok_item and se_item then
+			if type(se_item) == "table" then
+				return se_item[1]
+			end
+			return se_item
+		end
+	end
+	if not alife_create then
+		return nil
+	end
+	local pos, lvid, gvid, owner_id = owner_create_args(se_looter)
+	if not pos then
+		return nil
+	end
+	local ok_new, se_new = pcall(alife_create, section, pos, lvid, gvid, owner_id)
+	if not (ok_new and se_new) then
+		return nil
+	end
+	return se_new
+end
+
+local function clone_ammo_to_looter(section, se_item, se_looter)
+	local type_ = type
+	local ammo_left
+	if utils_stpk and type_(utils_stpk.get_ammo_data) == "function" then
+		local ok_data, data = pcall(utils_stpk.get_ammo_data, se_item)
+		ammo_left = ok_data and data and tonumber(data.ammo_left) or nil
+	end
+	if not ammo_left and ini_sys and type_(ini_sys.r_u32_ex) == "function" then
+		ammo_left = ini_sys:r_u32_ex(section, "box_size")
+	end
+	if not ammo_left and ini_sys and type_(ini_sys.r_u32) == "function" and type_(ini_sys.line_exist) == "function" and ini_sys:line_exist(section, "box_size") then
+		ammo_left = ini_sys:r_u32(section, "box_size")
+	end
+	ammo_left = ammo_left or 1
+	local sim = alife_sim()
+	if not (sim and se_looter.position and se_looter.m_level_vertex_id and se_looter.m_game_vertex_id and se_looter.id) then
+		return nil
+	end
+	local ok_new, se_new = pcall(function()
+		return sim:create_ammo(section, se_looter.position, se_looter.m_level_vertex_id, se_looter.m_game_vertex_id, se_looter.id, ammo_left)
+	end)
+	if ok_new and se_new then
+		if alife_record then
+			pcall(alife_record, se_new, true)
+		end
+		return se_new
+	end
+	return nil
+end
+
+local function clone_weapon_to_looter(section, se_item, se_looter)
+	return create_section_to_looter(section or object_section(se_item), se_looter)
+end
+
+local function clone_item_to_looter(section, se_item, se_looter)
+	local cls = object_clsid(se_item)
+	if IsWeapon and cls and IsWeapon(nil, cls) then
+		return clone_weapon_to_looter(section, se_item, se_looter)
+	end
+
+	if IsItem and (IsItem("ammo", section) or IsItem("grenade_ammo", section)) then
+		return clone_ammo_to_looter(section, se_item, se_looter)
+	end
+
+	local se_new = create_section_to_looter(section, se_looter)
+	if not se_new then
+		return nil
+	end
+	set_item_condition_from_source(se_item, se_new)
+	return se_new
+end
+
+local function created_item_valid(se_new, se_looter)
+	local new_id = object_id(se_new)
+	if not (se_new and se_looter and new_id and object_id(se_looter)) then
+		return false
+	end
+	local live = alife_object(new_id)
+	if not live then
+		return false
+	end
+	return tonumber(live.parent_id) == tonumber(se_looter.id)
+end
+
+local function created_item_transfer_log_entry(section, se_new, value, tag)
+	local tostr = tostring
+	local label = tostr(section or object_section(se_new) or "-")
+	local new_id = object_id(se_new)
+	if new_id then
+		label = label .. "->" .. tostr(new_id)
+	end
+	value = tonumber(value)
+	if value and value > 0 then
+		label = label .. "=" .. tostr(math.floor(value + 0.5))
+	end
+	if tag then
+		label = label .. "#" .. tostr(tag)
+	end
+	return label
+end
+
+local function offline_loot_item_log_entry(section, se_item, value)
+	local tostr = tostring
+	section = section or object_section(se_item) or "-"
+	local name = object_name(se_item)
+	local label = tostr(section)
+	if name and name ~= "-" and name ~= section then
+		label = label .. "/" .. tostr(name)
+	end
+	local id = object_id(se_item)
+	if id then
+		label = label .. ":" .. tostr(id)
+	end
+	value = tonumber(value)
+	if value and value > 0 then
+		label = label .. "=" .. tostr(math.floor(value + 0.5))
+	end
+	return label
+end
+
+local function offline_loot_item_transfer_log_entry(section, se_item, se_new, value)
+	local label = offline_loot_item_log_entry(section, se_item, value)
+	local new_id = object_id(se_new)
+	if new_id then
+		label = label .. "->" .. tostring(new_id)
+	end
+	return label
+end
+
+local function section_class(section)
+	if not (section and ini_sys and type(ini_sys.r_string_ex) == "function") then
+		return nil
+	end
+	local ok, cls = pcall(ini_sys.r_string_ex, ini_sys, section, "class")
+	return ok and cls or nil
+end
+
+local function section_is_weapon(section, obj)
+	local cls = object_clsid(obj) or section_class(section)
+	if not cls then
+		return false
+	end
+	if IsWeapon and type(cls) ~= "string" then
+		local ok, result = pcall(IsWeapon, nil, cls)
+		if ok and result == true then
+			return true
+		end
+	end
+	return tostring(cls):find("^WP_") ~= nil
+end
+
+local function section_is_ammo(section)
+	return IsItem and (IsItem("ammo", section) == true or IsItem("grenade_ammo", section) == true)
+end
+
+local function npc_squad(se_npc)
+	local group_id = se_npc and tonumber(se_npc.group_id)
+	if not valid_id(group_id) then
+		return nil
+	end
+	return alife_object(group_id)
+end
+
+local function squad_npc_count(squad)
+	if not squad then
+		return 0
+	end
+	if type(squad.npc_count) == "function" then
+		local ok, count = pcall(squad.npc_count, squad)
+		return ok and (tonumber(count) or 0) or 0
+	end
+	return 0
+end
+
+local function split_artifact_sections(sections)
+	local out = {}
+	for sec in tostring(sections or ""):gmatch("[^,]+") do
+		out[#out + 1] = sec
+	end
+	return out
+end
+
+local function consume_artifact_cargo_from_squad(squad, count, value, reason)
+	local mmax = math.max
+	local tonum = tonumber
+	if not (squad and (tonum(squad.zhopa2_artifact_cargo_count) or 0) > 0) then
+		return false
+	end
+	local idx = index_mod()
+	if idx and type(idx.consume_artifact_cargo) == "function" then
+		return idx.consume_artifact_cargo(squad, count, value, reason or "artifact_cargo_looted")
+	end
+	count = mmax(1, tonum(count) or 1)
+	value = mmax(0, tonum(value) or 0)
+	local next_count = mmax(0, (tonum(squad.zhopa2_artifact_cargo_count) or 0) - count)
+	if next_count <= 0 then
+		squad.zhopa2_artifact_cargo_count = 0
+		squad.zhopa2_artifact_cargo_value = 0
+		squad.zhopa2_artifact_cargo_sections = nil
+		squad.zhopa2_artifact_cargo_last_id = nil
+	else
+		squad.zhopa2_artifact_cargo_count = next_count
+		squad.zhopa2_artifact_cargo_value = mmax(0, (tonum(squad.zhopa2_artifact_cargo_value) or 0) - value)
+	end
+	squad.zhopa2_last_result = reason or "artifact_cargo_looted"
+	return true
+end
+
+local function transfer_remaining_artifact_cargo(attacker_squad, victim_squad, reason)
+	local count = math.floor(tonumber(victim_squad and victim_squad.zhopa2_artifact_cargo_count) or 0)
+	if not (attacker_squad and victim_squad and count > 0) then
+		return false
+	end
+	local total_value = math.max(0, tonumber(victim_squad.zhopa2_artifact_cargo_value) or 0)
+	local sections = split_artifact_sections(victim_squad.zhopa2_artifact_cargo_sections)
+	local value_each = count > 0 and (total_value / count) or 0
+	local last_id = tonumber(victim_squad.zhopa2_artifact_cargo_last_id)
+	for i = 1, count do
+		local section = sections[i] or sections[#sections]
+		if section then
+			mark_artifact_cargo_for_squad(attacker_squad, nil, section, value_each, i == count and last_id or nil, reason or "offline_artifact_cargo_loot")
+		end
+	end
+	local idx = index_mod()
+	if idx and type(idx.clear_artifact_cargo) == "function" then
+		idx.clear_artifact_cargo(victim_squad, reason or "offline_artifact_cargo_looted")
+	else
+		consume_artifact_cargo_from_squad(victim_squad, count, total_value, reason or "offline_artifact_cargo_looted")
+	end
+	return true
+end
+
+local function squad_virtual_money(squad)
+	local mem = memory_mod()
+	if mem and type(mem.virtual_money) == "function" then
+		return math.max(0, tonumber(mem.virtual_money(squad)) or 0)
+	end
+	return math.max(0, tonumber(squad and squad.zhopa2_virtual_money) or 0)
+end
+
+local function transfer_remaining_virtual_money(attacker_squad, victim_squad, reason)
+	local amount = math.floor(squad_virtual_money(victim_squad))
+	if not (attacker_squad and victim_squad and amount > 0) then
+		return false
+	end
+	local mem = memory_mod()
+	if mem and type(mem.add_virtual_money) == "function" and type(mem.take_virtual_money) == "function" then
+		local added = mem.add_virtual_money(attacker_squad, amount, reason or "offline_virtual_money_loot") == true
+		if not added then
+			return false
+		end
+		mem.take_virtual_money(victim_squad, amount, reason or "offline_virtual_money_looted")
+		return true
+	end
+	attacker_squad.zhopa2_virtual_money = squad_virtual_money(attacker_squad) + amount
+	victim_squad.zhopa2_virtual_money = 0
+	attacker_squad.zhopa2_last_result = reason or "offline_virtual_money_loot"
+	victim_squad.zhopa2_last_result = reason or "offline_virtual_money_looted"
+	return true
+end
+
+local function death_community(se_npc)
+	local squad = npc_squad(se_npc)
+	local player_id = squad and squad.player_id
+	if player_id and player_id ~= "actor" and not is_monster_player_id(player_id) then
+		return player_id
+	end
+	if se_npc and type(se_npc.community) == "function" then
+		local ok, comm = pcall(se_npc.community, se_npc)
+		if ok and comm and comm ~= "" then
+			return tostring(comm)
+		end
+	end
+	return "stalker"
+end
+
+local function death_rank(se_npc)
+	if ranks and type(ranks.get_se_obj_rank_name) == "function" then
+		local ok, rank = pcall(ranks.get_se_obj_rank_name, se_npc)
+		if ok and rank and rank ~= "" then
+			return tostring(rank)
+		end
+	end
+	if se_npc and type(se_npc.rank) == "function" and ranks and type(ranks.get_rank_name) == "function" then
+		local ok_rank, rank_value = pcall(se_npc.rank, se_npc)
+		if ok_rank and rank_value then
+			local ok_name, name = pcall(ranks.get_rank_name, rank_value)
+			if ok_name and name then
+				return tostring(name)
+			end
+		end
+	end
+	return "novice"
+end
+
+local function pick_existing_section(ini, preferred, fallback)
+	if ini_section_exists(ini, preferred) then
+		return preferred
+	end
+	if ini_section_exists(ini, fallback) then
+		return fallback
+	end
+	return nil
+end
+
+local function create_generated_loot(section, se_looter, moved_items, tag)
+	if not (section and M.can_take_section(section, nil, se_looter)) then
+		return 0, 0, 0
+	end
+	local se_new = create_section_to_looter(section, se_looter, { cond_r = { 30, 70 }, cond_ct = "part", cond_cr = { 0.5, 0.75, 1 } })
+	if not created_item_valid(se_new, se_looter) then
+		return 0, 0, 0
+	end
+	local value = item_cost(section)
+	moved_items[#moved_items + 1] = created_item_transfer_log_entry(section, se_new, value, tag)
+	return 1, math.max(0, value), section_is_weapon(section, se_new) and 1 or 0
+end
+
+local function add_virtual_loot_section(squad, section, count, value, moved_items, tag)
+	if not (squad and section and M.can_take_section(section, nil, nil)) then
+		return 0, 0, 0
+	end
+	count = math.max(1, math.floor(tonumber(count) or 1))
+	value = math.max(0, tonumber(value) or (item_cost(section) * count))
+	local mem = memory_mod()
+	local added = false
+	if mem and type(mem.add_virtual_loot) == "function" then
+		added = mem.add_virtual_loot(squad, section, count, value, tag or "offline_virtual_loot") == true
+	else
+		local current_count = math.max(0, math.floor(tonumber(squad.zhopa2_virtual_loot_count) or 0))
+		local room = math.max(0, 128 - current_count)
+		if room <= 0 then
+			return 0, 0, 0
+		end
+		if count > room then
+			value = value * room / count
+			count = room
+		end
+		squad.zhopa2_virtual_loot_count = current_count + count
+		squad.zhopa2_virtual_loot_value = math.min(500000, (tonumber(squad.zhopa2_virtual_loot_value) or 0) + value)
+		added = true
+	end
+	if not added then
+		return 0, 0, 0
+	end
+	if moved_items then
+		moved_items[#moved_items + 1] = string.format("%s:virtual:%s:%s", tostring(section), tostring(count), tostring(math.floor(value + 0.5)))
+	end
+	return count, value, section_is_weapon(section, nil) and count or 0
+end
+
+local function spawn_death_section(section, se_looter, moved_items)
+	load_death_item_counts()
+	local moved_count, moved_value, moved_weapons = 0, 0, 0
+	local items = death_section_items(section)
+	for i = 1, #items do
+		local entry = items[i]
+		local sec = entry.sec
+		local range = death_item_counts[sec]
+		if sec and range and (entry.chance or 0) > 0 and not section_is_ammo(sec) then
+			local min_count = math.max(0, tonumber(range[1]) or 0)
+			local max_count = math.max(min_count, tonumber(range[2]) or min_count)
+			local count = max_count > min_count and math.random(min_count, max_count) or min_count
+			for _ = 1, count do
+				if (math.random(1, 1000) / 1000) <= entry.chance then
+					local c, v, w = create_generated_loot(sec, se_looter, moved_items, "death")
+					moved_count = moved_count + c
+					moved_value = moved_value + v
+					moved_weapons = moved_weapons + w
+				end
+			end
+		end
+	end
+	return moved_count, moved_value, moved_weapons
+end
+
+local function virtual_death_section(section, squad, moved_items)
+	load_death_item_counts()
+	local moved_count, moved_value, moved_weapons = 0, 0, 0
+	local items = death_section_items(section)
+	for i = 1, #items do
+		local entry = items[i]
+		local sec = entry.sec
+		local range = death_item_counts[sec]
+		if sec and range and (entry.chance or 0) > 0 and not section_is_ammo(sec) then
+			local min_count = math.max(0, tonumber(range[1]) or 0)
+			local max_count = math.max(min_count, tonumber(range[2]) or min_count)
+			local count = max_count > min_count and math.random(min_count, max_count) or min_count
+			for _ = 1, count do
+				if (math.random(1, 1000) / 1000) <= entry.chance then
+					local c, v, w = add_virtual_loot_section(squad, sec, 1, item_cost(sec), moved_items, "offline_virtual_death")
+					moved_count = moved_count + c
+					moved_value = moved_value + v
+					moved_weapons = moved_weapons + w
+				end
+			end
+		end
+	end
+	return moved_count, moved_value, moved_weapons
+end
+
+local function spawn_death_table_loot(se_victim, se_looter, moved_items)
+	if not is_stalker_server_object(se_victim) then
+		return 0, 0, 0
+	end
+	local ini = ensure_death_ini()
+	if not ini then
+		return 0, 0, 0
+	end
+	local comm = death_community(se_victim)
+	local rank = death_rank(se_victim)
+	local sections = {}
+	local public = pick_existing_section(ini, comm .. "_" .. rank, comm)
+	local private = pick_existing_section(ini, comm .. "_private_" .. rank, comm .. "_private")
+	if public then
+		sections[#sections + 1] = public
+	end
+	if private and not table_contains(sections, private) then
+		sections[#sections + 1] = private
+	end
+
+	local moved_count, moved_value, moved_weapons = 0, 0, 0
+	for i = 1, #sections do
+		local c, v, w = spawn_death_section(sections[i], se_looter, moved_items)
+		moved_count = moved_count + c
+		moved_value = moved_value + v
+		moved_weapons = moved_weapons + w
+	end
+	return moved_count, moved_value, moved_weapons
+end
+
+local function virtual_death_table_loot(se_victim, squad, moved_items)
+	if not is_stalker_server_object(se_victim) then
+		return 0, 0, 0
+	end
+	local ini = ensure_death_ini()
+	if not ini then
+		return 0, 0, 0
+	end
+	local comm = death_community(se_victim)
+	local rank = death_rank(se_victim)
+	local sections = {}
+	local public = pick_existing_section(ini, comm .. "_" .. rank, comm)
+	local private = pick_existing_section(ini, comm .. "_private_" .. rank, comm .. "_private")
+	if public then
+		sections[#sections + 1] = public
+	end
+	if private and not table_contains(sections, private) then
+		sections[#sections + 1] = private
+	end
+
+	local moved_count, moved_value, moved_weapons = 0, 0, 0
+	for i = 1, #sections do
+		local c, v, w = virtual_death_section(sections[i], squad, moved_items)
+		moved_count = moved_count + c
+		moved_value = moved_value + v
+		moved_weapons = moved_weapons + w
+	end
+	return moved_count, moved_value, moved_weapons
+end
+
+local function pick_loadout_entry(slot_section)
+	local entries = loadout_slot_items(slot_section)
+	if not entries or #entries <= 0 then
+		return nil
+	end
+	for i = 1, #entries do
+		if math.random(100) < (tonumber(entries[i].chance) or 50) then
+			return entries[i]
+		end
+	end
+	return entries[math.random(#entries)]
+end
+
+local function victim_loadout_section(se_victim, comm, rank)
+	local ini = ensure_loadout_ini()
+	if not ini then
+		return nil
+	end
+	local squad = npc_squad(se_victim)
+	local squad_section = squad and (squad.zhopa2_section_name or object_section(squad)) or nil
+	local npc_section = object_section(se_victim)
+	local loadout = (squad_section and ini_read_string(ini, "loadouts_per_squad", squad_section))
+		or (npc_section and ini_read_string(ini, "loadouts_per_name", npc_section))
+		or (comm and rank and (comm .. "_" .. rank))
+	if not ini_section_exists(ini, loadout) then
+		loadout = comm
+	end
+	if not ini_section_exists(ini, loadout) then
+		loadout = "default"
+	end
+	return ini_section_exists(ini, loadout) and loadout or nil
+end
+
+local function spawn_loadout_fallback_loot(se_victim, se_looter, moved_items)
+	if not is_stalker_server_object(se_victim) then
+		return 0, 0, 0
+	end
+	local ini = ensure_loadout_ini()
+	if not ini then
+		return 0, 0, 0
+	end
+	local comm = death_community(se_victim)
+	local rank = death_rank(se_victim)
+	local loadout = victim_loadout_section(se_victim, comm, rank)
+	if not loadout then
+		return 0, 0, 0
+	end
+
+	local moved_count, moved_value, moved_weapons = 0, 0, 0
+	for _, slot in ipairs({ "primary", "secondary", "extra" }) do
+		local slot_section = ini_read_string(ini, loadout, slot)
+		if ini_section_exists(ini, slot_section) then
+			local entry = pick_loadout_entry(slot_section)
+			local sec = entry and entry.sec
+			if sec and (slot == "extra" or section_is_weapon(sec)) then
+				local c, v, w = create_generated_loot(sec, se_looter, moved_items, "loadout")
+				moved_count = moved_count + c
+				moved_value = moved_value + v
+				moved_weapons = moved_weapons + w
+			end
+		end
+	end
+	return moved_count, moved_value, moved_weapons
+end
+
+local function virtual_loadout_fallback_loot(se_victim, squad, moved_items)
+	if not is_stalker_server_object(se_victim) then
+		return 0, 0, 0
+	end
+	local ini = ensure_loadout_ini()
+	if not ini then
+		return 0, 0, 0
+	end
+	local comm = death_community(se_victim)
+	local rank = death_rank(se_victim)
+	local loadout = victim_loadout_section(se_victim, comm, rank)
+	if not loadout then
+		return 0, 0, 0
+	end
+
+	local moved_count, moved_value, moved_weapons = 0, 0, 0
+	for _, slot in ipairs({ "primary", "secondary", "extra" }) do
+		local slot_section = ini_read_string(ini, loadout, slot)
+		if ini_section_exists(ini, slot_section) then
+			local entry = pick_loadout_entry(slot_section)
+			local sec = entry and entry.sec
+			if sec and (slot == "extra" or section_is_weapon(sec)) then
+				local c, v, w = add_virtual_loot_section(squad, sec, 1, item_cost(sec), moved_items, "offline_virtual_loadout")
+				moved_count = moved_count + c
+				moved_value = moved_value + v
+				moved_weapons = moved_weapons + w
+			end
+		end
+	end
+	return moved_count, moved_value, moved_weapons
+end
+
+local function offline_loot_clone_valid(se_new, se_looter)
+	local new_id = object_id(se_new)
+	if not (se_new and se_looter and new_id and object_id(se_looter)) then
+		return false
+	end
+	local live = alife_object(new_id)
+	if not live then
+		return false
+	end
+	if tonumber(live.parent_id) ~= tonumber(se_looter.id) then
+		return false
+	end
+	return true
+end
+
+local function offline_loot_items_log(items)
+	if not (items and #items > 0) then
+		return "-"
+	end
+	local out = {}
+	local max_items = 20
+	local count = math.min(#items, max_items)
+	for i = 1, count do
+		out[#out + 1] = items[i]
+	end
+	if #items > max_items then
+		out[#out + 1] = "+" .. tostring(#items - max_items)
+	end
+	return table.concat(out, ",")
+end
+
+function M.offline_loot_victim(attacker_squad, se_attacker, se_victim, reason)
+	local tostr = tostring
+	if not runtime_ready("loot_offline") then
+		return false, "runtime_not_ready"
+	end
+	if not (offline_squad_can_loot(attacker_squad) and se_victim) then
+		if not se_victim then
+			return false, "victim_missing"
+		end
+		if not attacker_squad then
+			return false, "attacker_squad_missing"
+		end
+		if attacker_squad.zhopa2_managed ~= true then
+			return false, "attacker_squad_unmanaged"
+		end
+		if attacker_squad.player_id == "actor" or is_monster_player_id(attacker_squad.player_id) then
+			return false, "attacker_squad_excluded"
+		end
+		if get_object_story_id and attacker_squad.id and get_object_story_id(attacker_squad.id) then
+			return false, "attacker_squad_story"
+		end
+		return false, "offline_squad_rejected"
+	end
+	if object_is_story(se_victim) then
+		return false, "victim_story"
+	end
+
+	local se_looter = pick_offline_looter(attacker_squad, se_attacker)
+	if not se_looter then
+		return false, "looter_missing"
+	end
+
+	local moved_count = 0
+	local moved_value = 0
+	local moved_weapons = 0
+	local artifact_count = 0
+	local artifact_value = 0
+	local moved_items = {}
+	local ids = collect_child_ids(se_victim)
+	for i = 1, #ids do
+		local se_item = alife_object(ids[i])
+		local section = object_section(se_item)
+		if se_item and M.can_take_section(section, se_item, se_looter) then
+			local value = item_cost(se_item)
+			if object_is_artifact(se_item) then
+				moved_count = moved_count + 1
+				moved_value = moved_value + math.max(0, value)
+				artifact_count = artifact_count + 1
+				artifact_value = artifact_value + math.max(0, value)
+				mark_artifact_cargo_for_squad(attacker_squad, se_item, section, value, object_id(se_item), reason or "offline_artifact_loot")
+				moved_items[#moved_items + 1] = string.format("%s:artifact_cargo:%s:%s", tostring(section), tostring(object_id(se_item) or "-"), tostring(math.floor(value + 0.5)))
+			else
+				local c, v, w = add_virtual_loot_section(attacker_squad, section, 1, value, moved_items, reason or "offline_virtual_loot")
+				moved_count = moved_count + c
+				moved_value = moved_value + v
+				moved_weapons = moved_weapons + w
+			end
+		end
+	end
+
+	local death_count, death_value, death_weapons = virtual_death_table_loot(se_victim, attacker_squad, moved_items)
+	moved_count = moved_count + death_count
+	moved_value = moved_value + death_value
+	moved_weapons = moved_weapons + death_weapons
+
+	local loadout_count = 0
+	if moved_weapons <= 0 then
+		local loadout_value, loadout_weapons = 0, 0
+		loadout_count, loadout_value, loadout_weapons = virtual_loadout_fallback_loot(se_victim, attacker_squad, moved_items)
+		moved_count = moved_count + loadout_count
+		moved_value = moved_value + loadout_value
+		moved_weapons = moved_weapons + loadout_weapons
+	end
+
+	if moved_count <= 0 then
+		return false, "nothing_moved:children=" .. tostr(#ids) .. ":death=" .. tostr(death_count or 0) .. ":loadout=" .. tostr(loadout_count or 0)
+	end
+
+	if artifact_count > 0 then
+		consume_artifact_cargo_from_squad(npc_squad(se_victim), artifact_count, artifact_value, reason or "offline_artifact_loot")
+	end
+
+	attacker_squad.zhopa2_last_result = (reason or "offline_virtual_loot") .. ":" .. moved_count
+	if printf and debug_print_enabled() then
+		printf("~ ZHOPA2 offline loot | squad [%s:%s] looter [%s:%s] victim [%s:%s] level [%s] items [%s] value [%s] virtual [%s] reason [%s]",
+			tostr(object_name(attacker_squad)),
+			tostr(object_id(attacker_squad) or "-"),
+			tostr(object_name(se_looter)),
+			tostr(object_id(se_looter) or "-"),
+			tostr(object_name(se_victim)),
+			tostr(object_id(se_victim) or "-"),
+			offline_loot_level_log(se_victim, se_looter, attacker_squad),
+			tostr(moved_count),
+			tostr(math.floor(moved_value + 0.5)),
+			offline_loot_items_log(moved_items),
+			tostr(reason or "offline_virtual_loot")
+		)
+	end
+	return true
+end
+
+local function object_is_online_inventory_owner(obj)
+	if not obj then
+		return false
+	end
+	if type(obj.is_inventory_owner) == "function" then
+		local ok_owner, is_owner = pcall(obj.is_inventory_owner, obj)
+		if ok_owner then
+			return is_owner == true
+		end
+	end
+	if type(obj.cast_InventoryOwner) == "function" then
+		local ok_cast, owner = pcall(obj.cast_InventoryOwner, obj)
+		return ok_cast and owner ~= nil
+	end
+	return false
+end
+
+local function corpse_has_quest_item(corpse)
+	if not (corpse and type(corpse.iterate_inventory) == "function" and object_is_online_inventory_owner(corpse)) then
+		return false
+	end
+	local has_quest = false
+	local function inspect(owner, item)
+		if has_quest or not item then
+			return
+		end
+		if section_is_quest(object_section(item)) or object_is_story(item) then
+			has_quest = true
+		end
+	end
+	pcall(corpse.iterate_inventory, corpse, inspect, corpse)
+	return has_quest
+end
+
+function M.is_protected_corpse(corpse, corpse_id)
+	if cfg_bool("loot_protect_quest_items", true) ~= true then
+		return false
+	end
+	if object_is_story(corpse, corpse_id) then
+		return true
+	end
+	return corpse_has_quest_item(corpse)
+end
+
+local function store_for(kind)
+	return event_stores[kind]
+end
+
+local function compact_store(store)
+	local out = {}
+	local seen = {}
+	local ids = store.ids
+	for i = 1, #ids do
+		local id = ids[i]
+		local entry = store.seen[id]
+		if entry and not seen[id] then
+			out[#out + 1] = id
+			seen[id] = entry
+		end
+	end
+	store.ids = out
+	store.seen = seen
+	store.head = 1
+end
+
+local function cleanup_store(kind)
+	local store = store_for(kind)
+	if not store then
+		return
+	end
+	local ttl = math.max(1, cfg_num("loot_event_ttl_sec", 900)) * 1000
+	local now = now_ms()
+	local changed = false
+	for id, entry in pairs(store.seen) do
+		if (now - (entry.tg or 0)) > ttl then
+			store.seen[id] = nil
+			changed = true
+		end
+	end
+	if changed then
+		compact_store(store)
+	end
+end
+
+local function trim_total_cap()
+	local cap = math.max(1, cfg_num("loot_event_cap_total", 600))
+	local function count()
+		return #event_stores.corpse.ids + #event_stores.item.ids
+	end
+	while count() > cap do
+		local corpse = event_stores.corpse
+		local item = event_stores.item
+		local corpse_id = corpse.ids[1]
+		local item_id = item.ids[1]
+		local corpse_entry = corpse_id and corpse.seen[corpse_id] or nil
+		local item_entry = item_id and item.seen[item_id] or nil
+		if corpse_entry and (not item_entry or (corpse_entry.tg or 0) <= (item_entry.tg or 0)) then
+			corpse.seen[corpse_id] = nil
+			table.remove(corpse.ids, 1)
+		elseif item_entry then
+			item.seen[item_id] = nil
+			table.remove(item.ids, 1)
+		else
+			break
+		end
+	end
+end
+
+local function add_event(kind, id)
+	id = tonumber(id)
+	if not valid_id(id) then
+		return false
+	end
+	if kind == STORE_CORPSE and M.corpse_ignored(id) then
+		return false
+	end
+	if not M.enabled() then
+		return false
+	end
+	local store = store_for(kind)
+	if not store then
+		return false
+	end
+	cleanup_store(kind)
+	if not store.seen[id] then
+		store.ids[#store.ids + 1] = id
+	end
+	store.seen[id] = { tg = now_ms() }
+	trim_total_cap()
+	return true
+end
+
+local function remove_event(kind, id)
+	id = tonumber(id)
+	local store = store_for(kind)
+	if not (store and id) then
+		return
+	end
+	store.seen[id] = nil
+end
+
+local function recent_ids(kind)
+	cleanup_store(kind)
+	local store = store_for(kind)
+	local out = {}
+	if not store then
+		return out
+	end
+	for i = 1, #store.ids do
+		local id = store.ids[i]
+		if store.seen[id] and not (kind == STORE_CORPSE and M.corpse_ignored(id)) then
+			out[#out + 1] = id
+		end
+	end
+	return out
+end
+
+function M.mark_corpse_ignored(id)
+	id = tonumber(id)
+	if not valid_id(id) then
+		return false
+	end
+	local store = store_for("ignored_corpse")
+	if not store then
+		return false
+	end
+	cleanup_store("ignored_corpse")
+	if not store.seen[id] then
+		store.ids[#store.ids + 1] = id
+	end
+	store.seen[id] = { tg = now_ms() }
+	while #store.ids > 512 do
+		local old_id = table.remove(store.ids, 1)
+		if old_id then
+			store.seen[old_id] = nil
+		end
+	end
+	return true
+end
+
+function M.corpse_ignored(id)
+	id = tonumber(id)
+	if not valid_id(id) then
+		return false
+	end
+	cleanup_store("ignored_corpse")
+	local store = store_for("ignored_corpse")
+	return store ~= nil and store.seen[id] ~= nil
+end
+
+function M.recent_corpse_ids()
+	return recent_ids(STORE_CORPSE)
+end
+
+function M.consume_corpse_event_id(id)
+	remove_event(STORE_CORPSE, id)
+end
+
+function M.forget_corpse_id(id)
+	remove_event(STORE_CORPSE, id)
+	M.mark_corpse_ignored(id)
+end
+
+function M.recent_item_ids()
+	return recent_ids(STORE_ITEM)
+end
+
+function M.has_recent_item_events()
+	cleanup_store(STORE_ITEM)
+	local store = event_stores.item
+	return store ~= nil and #store.ids >= (tonumber(store.head) or 1)
+end
+
+function M.is_recent_item_id(id)
+	cleanup_store(STORE_ITEM)
+	id = tonumber(id)
+	return id ~= nil and event_stores.item.seen[id] ~= nil
+end
+
+function M.has_targeted_item_requests()
+	cleanup_targeted_item_requests()
+	return next(targeted_item_requests) ~= nil
+end
+
+cleanup_targeted_item_requests = function()
+	local ttl = math.max(1, cfg_num("loot_event_ttl_sec", 900)) * 1000
+	local now = now_ms()
+	for npc_id, request in pairs(targeted_item_requests) do
+		local expired = not request or not request.item_id or (now > 0 and (now - (request.tg or 0)) > ttl)
+		local item = request and online_object_by_id(request.item_id) or nil
+		local se_item = request and alife_object and alife_object(request.item_id) or nil
+		if expired or not item or (se_item and tonumber(se_item.parent_id) ~= INVALID_ID) then
+			if request and request.item_id then
+				targeted_item_requests_by_item[request.item_id] = nil
+			end
+			targeted_item_requests[npc_id] = nil
+		end
+	end
+end
+
+local function forget_targeted_item_request(item_id)
+	item_id = tonumber(item_id)
+	local request = item_id and targeted_item_requests_by_item[item_id] or nil
+	if request and request.npc_id then
+		targeted_item_requests[request.npc_id] = nil
+	end
+	if item_id then
+		targeted_item_requests_by_item[item_id] = nil
+	end
+end
+
+local function targeted_gather_prepare()
+	local prepare = rawget(_G, "zhopa2_prepare_targeted_gather")
+	if type(prepare) == "function" then
+		return prepare
+	end
+	local gather = load_module("xr_gather_items")
+	prepare = gather and gather.zhopa2_prepare_targeted_gather or nil
+	return type(prepare) == "function" and prepare or nil
+end
+
+local function targeted_gather_clear()
+	local clear = rawget(_G, "zhopa2_clear_gather_item")
+	if type(clear) == "function" then
+		return clear
+	end
+	local gather = load_module("xr_gather_items")
+	clear = gather and gather.zhopa2_clear_gather_item or nil
+	return type(clear) == "function" and clear or nil
+end
+
+function M.reserve_item_for_npc(npc, item_id, reason)
+	if not runtime_ready("loot_reserve_item") then
+		return false, "runtime_not_ready"
+	end
+	item_id = tonumber(item_id)
+	local npc_id = object_id(npc)
+	if not (valid_id(npc_id) and valid_id(item_id)) then
+		return false, "reserve_bad_ids"
+	end
+	local item = online_object_by_id(item_id)
+	local se_item = item and alife_object and alife_object(item_id) or nil
+	if not (item and (not se_item or tonumber(se_item.parent_id) == INVALID_ID)) then
+		return false, "reserve_no_online_item"
+	end
+	cleanup_exclusive_item_reservations()
+	local existing = exclusive_item_reservations[item_id]
+	if existing and existing.npc_id and tonumber(existing.npc_id) ~= npc_id then
+		return false, "reserve_owned_by:" .. tostring(existing.npc_id)
+	end
+	exclusive_item_reservations[item_id] = {
+		npc_id = npc_id,
+		item_id = item_id,
+		reason = reason or "exclusive_item_reservation",
+		tg = now_ms(),
+	}
+	return true, "reserved"
+end
+
+function M.release_item_reservation(item_id, npc_or_id)
+	local tonum = tonumber
+	item_id = tonum(item_id)
+	if not valid_id(item_id) then
+		return false
+	end
+	local request = exclusive_item_reservations[item_id]
+	if not request then
+		return false
+	end
+	local npc_id = object_id(npc_or_id) or tonum(npc_or_id)
+	if valid_id(npc_id) and tonum(request.npc_id) ~= tonum(npc_id) then
+		return false
+	end
+	exclusive_item_reservations[item_id] = nil
+	return true
+end
+
+function M.item_reserved_for_other(npc, item_id)
+	item_id = tonumber(item_id)
+	if not valid_id(item_id) then
+		return false
+	end
+	local item = online_object_by_id(item_id) or (alife_object and alife_object(item_id) or nil)
+	return item_reserved_for_other(item or item_id, npc)
+end
+
+function M.request_item_pickup(npc, item_id, reason)
+	if not runtime_ready("loot_request_item_pickup") then
+		return false, "runtime_not_ready"
+	end
+	item_id = tonumber(item_id)
+	local npc_id = object_id(npc)
+	if not (valid_id(npc_id) and valid_id(item_id)) then
+		return false, "request_bad_ids"
+	end
+	local squad = managed_stalker_squad_for_looter(npc, false)
+	if not squad then
+		return false, "request_bad_looter"
+	end
+	local item = online_object_by_id(item_id)
+	local se_item = item and alife_object and alife_object(item_id) or nil
+	if not (item and (not se_item or tonumber(se_item.parent_id) == INVALID_ID)) then
+		return false, "request_no_online_item"
+	end
+	if not M.can_take_section(object_section(item), item, npc) then
+		return false, "request_bad_section"
+	end
+	cleanup_targeted_item_requests()
+	local existing = targeted_item_requests_by_item[item_id]
+	if existing and existing.npc_id ~= npc_id then
+		targeted_item_requests[existing.npc_id] = nil
+	end
+	targeted_item_requests[npc_id] = {
+		npc_id = npc_id,
+		squad_id = squad.id,
+		item_id = item_id,
+		reason = reason or "targeted_item_pickup",
+		tg = now_ms(),
+	}
+	targeted_item_requests_by_item[item_id] = targeted_item_requests[npc_id]
+	local prepare = targeted_gather_prepare()
+	if type(prepare) ~= "function" then
+		forget_targeted_item_request(item_id)
+		return false, "request_no_prepare"
+	end
+	local ok_prepare, prepared, prepare_reason = pcall(prepare, npc, item_id)
+	if not (ok_prepare and prepared) then
+		forget_targeted_item_request(item_id)
+		if ok_prepare then
+			return false, prepare_reason or "request_prepare_failed"
+		end
+		return false, "request_prepare_error:" .. tostring(prepared)
+	end
+	return true, "request_targeted_pickup"
+end
+
+function M.targeted_item_ids_for_npc(npc)
+	if not runtime_ready("loot_targeted_items") then
+		return nil
+	end
+	local npc_id = object_id(npc)
+	if not valid_id(npc_id) then
+		return nil
+	end
+	cleanup_targeted_item_requests()
+	local request = targeted_item_requests[npc_id]
+	if not (request and valid_id(request.item_id)) then
+		return nil
+	end
+	return { request.item_id }
+end
+
+function M.cancel_item_pickup(npc_or_id, item_id)
+	local npc_id = object_id(npc_or_id) or tonumber(npc_or_id)
+	local npc = type(npc_or_id) == "number" and online_object_by_id(npc_or_id) or npc_or_id
+	local clear = targeted_gather_clear()
+	if valid_id(npc_id) then
+		local request = targeted_item_requests[npc_id]
+		if request and request.item_id then
+			targeted_item_requests_by_item[request.item_id] = nil
+			if type(clear) == "function" and npc then
+				pcall(clear, npc, request.item_id, "request_cancel")
+			end
+		end
+		targeted_item_requests[npc_id] = nil
+	end
+	if valid_id(item_id) then
+		forget_targeted_item_request(item_id)
+		if type(clear) == "function" and npc then
+			pcall(clear, npc, item_id, "request_cancel")
+		end
+	end
+end
+
+local function targeted_request_for_item(item, keep_parented)
+	local item_id = object_id(item)
+	if not valid_id(item_id) then
+		return nil
+	end
+	if keep_parented ~= true then
+		cleanup_targeted_item_requests()
+	end
+	return targeted_item_requests_by_item[item_id]
+end
+
+local function cleanup_vanilla_artifact_pickups()
+	local now = now_ms()
+	if not (now and now > 0) then
+		return
+	end
+	for npc_id, request in pairs(vanilla_artifact_pickups) do
+		if not request or (now - (tonumber(request.tg) or 0)) > VANILLA_ARTIFACT_PICKUP_TTL_MS then
+			vanilla_artifact_pickups[npc_id] = nil
+		end
+	end
+end
+
+local function inventory_section_count(owner, section)
+	if not (owner and section) then
+		return 0
+	end
+	local count = 0
+	if type(owner.iterate_inventory) == "function" and object_is_online_inventory_owner(owner) then
+		local function inspect(_, item)
+			if object_section(item) == section then
+				count = count + 1
+			end
+		end
+		pcall(owner.iterate_inventory, owner, inspect, owner)
+		return count
+	end
+	if type(owner.object) == "function" then
+		local ok, item = pcall(owner.object, owner, section)
+		return ok and item and 1 or 0
+	end
+	return 0
+end
+
+local function inventory_item_by_section(owner, section, excluded_id)
+	if not (owner and section) then
+		return nil
+	end
+	excluded_id = tonumber(excluded_id)
+	local found
+	if type(owner.iterate_inventory) == "function" and object_is_online_inventory_owner(owner) then
+		local function inspect(_, item)
+			if not found and object_section(item) == section and tonumber(object_id(item)) ~= excluded_id then
+				found = item
+			end
+		end
+		pcall(owner.iterate_inventory, owner, inspect, owner)
+	end
+	if found then
+		return found
+	end
+	if type(owner.object) == "function" then
+		local ok, item = pcall(owner.object, owner, section)
+		return ok and item or nil
+	end
+	return nil
+end
+
+local function add_online_member(out, seen, id)
+	id = tonumber(id)
+	if not (id and not seen[id]) then
+		return
+	end
+	local obj = online_object_by_id(id)
+	if not obj then
+		return
+	end
+	local alive = object_alive(obj)
+	if alive == false then
+		return
+	end
+	seen[id] = true
+	out[#out + 1] = obj
+end
+
+local function squad_online_member_objects(squad)
+	local out = {}
+	local seen = {}
+	if not (squad and type(squad.squad_members) == "function") then
+		return out
+	end
+	for member in squad:squad_members() do
+		add_online_member(out, seen, member and member.id)
+	end
+	return out
+end
+
+local function artifact_pickup_recovery_context(squad)
+	return squad
+		and (
+			squad.zhopa2_last_result == "artifact_online_pickup_requested"
+			or squad.zhopa2_last_result == "artifact_online_wait_pickup"
+			or squad.zhopa2_last_result == "artifact_online_approach"
+			or squad.zhopa2_last_result == "artifact_online_contested"
+			or squad.zhopa2_last_result == "artifact_online_wait_inventory"
+			or squad.zhopa2_artifact_approach_npc_id ~= nil
+			or squad.zhopa2_artifact_collect_started ~= nil
+		)
+end
+
+function M.note_vanilla_artifact_pickup(npc, artifact_id, section)
+	local tonum = tonumber
+	cleanup_vanilla_artifact_pickups()
+	local npc_id = object_id(npc)
+	artifact_id = tonum(artifact_id)
+	if not (valid_id(npc_id) and valid_id(artifact_id)) then
+		return false
+	end
+	local idx = index_mod()
+	local squad_id = idx and idx.artifact_reserved_by and tonum(idx.artifact_reserved_by[artifact_id]) or nil
+	local squad = squad_by_id(squad_id) or looter_squad(npc)
+	if not (squad and squad.zhopa2_task == "ARTEFACT") then
+		return false
+	end
+	local reserved = tonum(squad.zhopa2_artifact_id)
+	if not reserved and idx and idx.squad_artifact_reservation and squad.id then
+		reserved = tonum(idx.squad_artifact_reservation[squad.id])
+	end
+	if reserved ~= artifact_id then
+		return false
+	end
+	section = section or squad.zhopa2_artifact_section or (idx and idx.artifact_section and idx.artifact_section[artifact_id])
+	if not section then
+		return false
+	end
+	vanilla_artifact_pickups[npc_id] = {
+		npc_id = npc_id,
+		squad_id = squad.id,
+		artifact_id = artifact_id,
+		section = section,
+		before_count = inventory_section_count(npc, section),
+		tg = now_ms(),
+	}
+	return true
+end
+
+local function record_targeted_artifact_pickup(npc, item, request, reason)
+	if not (npc and item and request) then
+		return false
+	end
+	local squad = squad_by_id(request.squad_id) or looter_squad(npc)
+	if not (squad and (not request.squad_id or tonumber(request.squad_id) == tonumber(squad.id))) then
+		return false
+	end
+	local section = object_section(item)
+	local amount = item_cost(item)
+	local source_id = tonumber(request.item_id) or object_id(item)
+	if not mark_artifact_cargo_for_squad(squad, item, section, amount, source_id, reason or request.reason or "artifact_pickup") then
+		return false
+	end
+	forget_targeted_item_request(object_id(item))
+	return true
+end
+
+local function record_task_artifact_pickup_by_section(npc, item, request, reason)
+	if not (npc and item and request) then
+		return false
+	end
+	if request.section ~= object_section(item) then
+		return false
+	end
+	local artifact_id = tonumber(request.artifact_id)
+	local squad = squad_by_id(request.squad_id) or looter_squad(npc)
+	local reserved = squad and tonumber(squad.zhopa2_artifact_id) or nil
+	local idx = index_mod()
+	if not reserved and squad and idx and idx.squad_artifact_reservation and squad.id then
+		reserved = tonumber(idx.squad_artifact_reservation[squad.id])
+	end
+	if not (
+		squad
+		and squad.zhopa2_task == "ARTEFACT"
+		and artifact_id
+		and reserved == artifact_id
+	) then
+		return false
+	end
+	if not mark_artifact_cargo_for_squad(squad, item, request.section, item_cost(item), artifact_id, reason or "artifact_vanilla_item_take") then
+		return false
+	end
+	forget_targeted_item_request(artifact_id)
+	vanilla_artifact_pickups[request.npc_id or object_id(npc)] = nil
+	return true
+end
+
+local function record_task_artifact_pickup(npc, item, reason)
+	local tonum = tonumber
+	if not (npc and item) then
+		return false
+	end
+	local item_id = object_id(item)
+	local idx = index_mod()
+	local squad_id = idx and idx.artifact_reserved_by and item_id and tonum(idx.artifact_reserved_by[item_id]) or nil
+	local squad = squad_by_id(squad_id) or looter_squad(npc)
+	local reserved = squad and tonum(squad.zhopa2_artifact_id) or nil
+	if not reserved and squad and idx and idx.squad_artifact_reservation and squad.id then
+		reserved = tonum(idx.squad_artifact_reservation[squad.id])
+	end
+	if not (
+		squad
+		and squad.zhopa2_task == "ARTEFACT"
+		and item_id
+		and reserved == tonum(item_id)
+	) then
+		return false
+	end
+	return mark_artifact_cargo_for_squad(squad, item, object_section(item), item_cost(item), item_id, reason or "ground_artefact_loot")
+end
+
+local function recover_task_artifact_from_squad_inventory(squad, artifact_id, reason)
+	artifact_id = tonumber(artifact_id)
+	if not (
+		squad
+		and squad.id
+		and squad.zhopa2_task == "ARTEFACT"
+		and artifact_id
+		and artifact_pickup_recovery_context(squad)
+	) then
+		return false
+	end
+	local idx = index_mod()
+	local reserved = tonumber(squad.zhopa2_artifact_id)
+	if not reserved and idx and idx.squad_artifact_reservation and squad.id then
+		reserved = tonumber(idx.squad_artifact_reservation[squad.id])
+	end
+	if reserved ~= artifact_id then
+		return false
+	end
+	local section = squad.zhopa2_artifact_section or (idx and idx.artifact_section and idx.artifact_section[artifact_id])
+	if not section then
+		return false
+	end
+	local members = squad_online_member_objects(squad)
+	for i = 1, #members do
+		local item = inventory_item_by_section(members[i], section)
+		if item and tonumber(object_id(item)) == artifact_id then
+			return mark_artifact_cargo_for_squad(squad, item, section, item_cost(item), artifact_id, reason or "artifact_inventory_recover")
+		end
+	end
+	return false
+end
+
+function M.recover_pending_vanilla_artifact_pickup(squad, artifact_id)
+	local tonum = tonumber
+	cleanup_vanilla_artifact_pickups()
+	artifact_id = tonum(artifact_id)
+	if not (squad and squad.id and artifact_id) then
+		return false
+	end
+	for npc_id, request in pairs(vanilla_artifact_pickups) do
+		if request
+			and tonum(request.artifact_id) == artifact_id
+			and tonum(request.squad_id) == tonum(squad.id)
+		then
+			local npc = online_object_by_id(npc_id)
+			if npc and inventory_section_count(npc, request.section) > (tonum(request.before_count) or 0) then
+				local item = inventory_item_by_section(npc, request.section)
+				if record_task_artifact_pickup_by_section(npc, item, request, "artifact_vanilla_inventory_recover") then
+					return true
+				end
+			end
+		end
+	end
+	return recover_task_artifact_from_squad_inventory(squad, artifact_id, "artifact_inventory_recover")
+end
+
+function M.corpse_detect_dist_sqr()
+	local dist = math.max(1, cfg_num("loot_corpse_detect_dist_m", 80))
+	return dist * dist
+end
+
+function M.item_detect_dist_sqr()
+	local dist = math.max(1, cfg_num("loot_item_detect_dist_m", 50))
+	return dist * dist
+end
+
+function M.record_loot(npc, source, item, value, reason)
+	if not runtime_ready("loot_record") then
+		return false, "runtime_not_ready"
+	end
+	local request = targeted_request_for_item(item)
+	if request and reason == "ground_artefact_loot" then
+		return record_targeted_artifact_pickup(npc, item, request, reason)
+	end
+	if reason == "ground_artefact_loot" and record_task_artifact_pickup(npc, item, reason) then
+		return true
+	end
+	if not M.enabled() then
+		return false
+	end
+	local squad = looter_squad(npc)
+	if not (squad and squad.zhopa2_managed == true) then
+		return false
+	end
+	local mem = memory_mod()
+	local amount = tonumber(value) or item_cost(item)
+	if item and object_is_artifact(item) then
+		mark_artifact_cargo_for_squad(squad, item, object_section(item), amount, object_id(item), reason or "online_artifact_loot")
+	elseif mem and type(mem.add_loot_value) == "function" then
+		mem.add_loot_value(squad, amount, reason or "online_loot")
+	else
+		squad.zhopa2_loot_count = (tonumber(squad.zhopa2_loot_count) or 0) + 1
+		squad.zhopa2_loot_value = (tonumber(squad.zhopa2_loot_value) or 0) + math.max(0, amount)
+	end
+	squad.zhopa2_last_result = reason or "online_loot"
+	return true
+end
+
+function M.record_offline_combat_loot(squad, target, killed_count, reason)
+	if not runtime_ready("loot_offline_combat") then
+		return false, "runtime_not_ready"
+	end
+	if not (M.offline_enabled() and squad and squad.zhopa2_managed == true) then
+		return false
+	end
+	local moved_cargo = false
+	if target and squad_npc_count(target) <= 0 then
+		moved_cargo = transfer_remaining_artifact_cargo(squad, target, reason or "offline_artifact_cargo_loot") == true
+		transfer_remaining_virtual_money(squad, target, reason or "offline_virtual_money_loot")
+	end
+	killed_count = math.max(1, tonumber(killed_count) or 1)
+	local value = killed_count * 100
+	local mem = memory_mod()
+	if mem and type(mem.add_virtual_loot) == "function" then
+		mem.add_virtual_loot(squad, nil, killed_count, value, reason or "offline_combat_virtual_loot")
+	else
+		squad.zhopa2_virtual_loot_count = (tonumber(squad.zhopa2_virtual_loot_count) or 0) + killed_count
+		squad.zhopa2_virtual_loot_value = (tonumber(squad.zhopa2_virtual_loot_value) or 0) + value
+	end
+	squad.zhopa2_last_result = reason or "offline_combat_virtual_loot"
+	return true
+end
+
+local function materialize_virtual_loot_to_npc(npc, reason)
+	local npc_id = object_id(npc)
+	if not npc_id then
+		return false
+	end
+	local squad = looter_squad(npc)
+	if not (squad and squad.zhopa2_managed == true) then
+		return false
+	end
+	local mem = memory_mod()
+	if not (mem and type(mem.virtual_loot_entries) == "function") then
+		return false
+	end
+	local entries = mem.virtual_loot_entries(squad)
+	if #entries <= 0 then
+		return false
+	end
+	local se_owner = alife_object and alife_object(npc_id) or nil
+	if not se_owner then
+		return false
+	end
+	local created_count = 0
+	local created_value = 0
+	local remaining = VIRTUAL_LOOT_DEATH_MATERIALIZE_LIMIT
+	for i = 1, #entries do
+		if remaining <= 0 then
+			break
+		end
+		local entry = entries[i]
+		local section = entry and entry.section
+		local original_count = math.max(0, math.floor(tonumber(entry and entry.count) or 0))
+		local count = math.min(remaining, original_count)
+		local value_each = original_count > 0 and ((tonumber(entry.value) or 0) / original_count) or item_cost(section)
+		for _ = 1, count do
+			if section and M.can_take_section(section, nil, se_owner) then
+				local se_new = create_section_to_looter(section, se_owner, { cond_r = { 30, 70 }, cond_ct = "part", cond_cr = { 0.5, 0.75, 1 } })
+				if created_item_valid(se_new, se_owner) then
+					created_count = created_count + 1
+					created_value = created_value + math.max(0, value_each)
+				end
+			end
+			remaining = remaining - 1
+			if remaining <= 0 then
+				break
+			end
+		end
+	end
+	if created_count <= 0 then
+		return false
+	end
+	if type(mem.clear_virtual_loot) == "function" then
+		mem.clear_virtual_loot(squad, reason or "virtual_loot_materialized")
+	else
+		squad.zhopa2_virtual_loot_count = 0
+		squad.zhopa2_virtual_loot_value = 0
+		squad.zhopa2_virtual_loot_sections = nil
+	end
+	if printf and debug_print_enabled() then
+		printf("~ ZHOPA2 virtual loot materialized | squad [%s:%s] npc [%s:%s] items [%s] value [%s] reason [%s]",
+			tostring(object_name(squad)),
+			tostring(object_id(squad) or "-"),
+			tostring(object_name(npc)),
+			tostring(npc_id),
+			tostring(created_count),
+			tostring(math.floor(created_value + 0.5)),
+			tostring(reason or "npc_death")
+		)
+	end
+	return true
+end
+
+local function on_npc_death(npc, who)
+	if not runtime_ready("loot_npc_death") then
+		return false, "runtime_not_ready"
+	end
+	if npc then
+		materialize_virtual_loot_to_npc(npc, "npc_death")
+		add_event(STORE_CORPSE, object_id(npc))
+	end
+end
+
+local function on_monster_death(obj, who)
+	if not runtime_ready("loot_monster_death") then
+		return false, "runtime_not_ready"
+	end
+	if obj then
+		add_event(STORE_CORPSE, object_id(obj))
+	end
+end
+
+local function on_npc_item_drop(npc, item)
+	if not runtime_ready("loot_npc_item_drop") then
+		return false, "runtime_not_ready"
+	end
+	if item then
+		add_event(STORE_ITEM, object_id(item))
+	end
+end
+
+local function on_actor_item_drop(item)
+	if not runtime_ready("loot_actor_item_drop") then
+		return false, "runtime_not_ready"
+	end
+	if item then
+		add_event(STORE_ITEM, object_id(item))
+	end
+end
+
+local function on_item_take(npc, item)
+	if not runtime_ready("loot_item_take") then
+		return false, "runtime_not_ready"
+	end
+	if item then
+		local request = targeted_request_for_item(item, true)
+		local vanilla_request = vanilla_artifact_pickups[object_id(npc)]
+		if request then
+			record_targeted_artifact_pickup(npc, item, request, "artifact_item_take")
+		elseif vanilla_request and object_is_artifact(item) then
+			record_task_artifact_pickup_by_section(npc, item, vanilla_request, "artifact_vanilla_item_take")
+		elseif object_is_artifact(item) then
+			record_task_artifact_pickup(npc, item, "artifact_item_take")
+		end
+		remove_event(STORE_ITEM, object_id(item))
+	end
+end
+
+local function on_actor_item_take(item)
+	if not runtime_ready("loot_actor_item_take") then
+		return false, "runtime_not_ready"
+	end
+	if item then
+		remove_event(STORE_ITEM, object_id(item))
+	end
+end
+
+function M.on_game_load()
+	event_stores.corpse = { ids = {}, seen = {}, head = 1 }
+	event_stores.ignored_corpse = { ids = {}, seen = {}, head = 1 }
+	event_stores.item = { ids = {}, seen = {}, head = 1 }
+	targeted_item_requests = {}
+	targeted_item_requests_by_item = {}
+	exclusive_item_reservations = {}
+	vanilla_artifact_pickups = {}
+end
+
+function M.on_game_start()
+	if not RegisterScriptCallback then
+		return
+	end
+	if UnregisterScriptCallback then
+		pcall(UnregisterScriptCallback, "npc_on_death_callback", on_npc_death)
+		pcall(UnregisterScriptCallback, "monster_on_death_callback", on_monster_death)
+		pcall(UnregisterScriptCallback, "npc_on_item_drop", on_npc_item_drop)
+		pcall(UnregisterScriptCallback, "actor_on_item_drop", on_actor_item_drop)
+		pcall(UnregisterScriptCallback, "npc_on_item_take", on_item_take)
+		pcall(UnregisterScriptCallback, "actor_on_item_take", on_actor_item_take)
+		pcall(UnregisterScriptCallback, "on_game_load", M.on_game_load)
+	end
+	RegisterScriptCallback("npc_on_death_callback", on_npc_death)
+	RegisterScriptCallback("monster_on_death_callback", on_monster_death)
+	RegisterScriptCallback("npc_on_item_drop", on_npc_item_drop)
+	RegisterScriptCallback("actor_on_item_drop", on_actor_item_drop)
+	RegisterScriptCallback("npc_on_item_take", on_item_take)
+	RegisterScriptCallback("actor_on_item_take", on_actor_item_take)
+	RegisterScriptCallback("on_game_load", M.on_game_load)
+end
+
+function on_game_start()
+	return M.on_game_start()
+end
+
+_G.zhopa2_loot = M
+return M

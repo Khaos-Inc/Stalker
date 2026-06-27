@@ -1,0 +1,71 @@
+![wpn_remington700_magpul_pro]:700_s
+scopes		= none
+        scripted_snd_ammo_check          = weapons\wpn_remington700_new\remington700_new_ammo_check
+        scripted_snd_ammo_check_empty    = weapons\wpn_remington700_new\remington700_new_ammo_check
+        scripted_snd_ammo_check_no_mag   = weapons\wpn_remington700_new\remington700_new_ammo_check_bolt
+
+scopes							 = pn23, skeet
+	
+lewd_lens_hide_enabled       = true		
+lewd_lens_hide_bone          = lens
+lewd_lens_hide_delays        = 0.1,0
+lewd_lens_hide_aim_mode      = true, false, false	
+![wpn_remington700_magpul_pro_hud]
+fire_bone                                = muzzle
+fire_point                               = 0, 0, 0
+
+        anm_show			 	= remington700_magpul_pro_new_draw, 			idle
+        anm_hide             	= remington700_magpul_pro_new_holster, 			idle
+        anm_shots			 	= remington700_magpul_pro_new_shoot, 			shoot
+        anm_bore			 	= remington700_magpul_pro_new_inspect, 			idle
+        anm_idle             	= remington700_magpul_pro_new_idle, 			idle
+        anm_idle_aim			= remington700_magpul_pro_new_aim, 				idle
+        anm_idle_moving         = remington700_magpul_pro_new_walk, 			idle
+        anm_idle_sprint			= remington700_magpul_pro_new_sprint, 			idle, 1.1   
+anm_reload			 	= remington_new_reload_base_magpul, 				new_reload_magpul
+anm_reload_empty		= remington_new_reload_empty_base_magpul, 		new_reload_empty_magpul
+        anm_reload_misfire		= remington700_magpul_pro_new_unjam, 			unjam
+        anm_ammo_check			= remington700_magpul_pro_new_ammo_check, 		ammo_check
+        anm_ammo_check_empty	= remington700_magpul_pro_new_ammo_check_empty, ammo_check_empty
+		
+        hands_orientation                = -0.005611, 0.021345, -0.7
+        hands_orientation_16x9           = -0.005611, 0.021345, -0.7
+        hands_position                   = 0.02454, 0.019903, 0.023884
+        hands_position_16x9              = 0.02454, 0.019903, 0.023884
+
+        aim_hud_offset_pos               = -0.092095, 0.005586, -0.052347
+        aim_hud_offset_pos_16x9          = -0.092095, 0.005586, -0.052347
+        aim_hud_offset_rot               = 0.000504, 1.7e-05, -0.013
+        aim_hud_offset_rot_16x9          = 0.000504, 1.7e-05, -0.013
+		
+        aim_hud_offset_alt_pos           = -0.10607, -0.077647, -0.05
+        aim_hud_offset_alt_pos_16x9      = -0.10607, -0.077647, -0.05
+        aim_hud_offset_alt_rot           = 0.000504, 1.7e-05, 0.823
+        aim_hud_offset_alt_rot_16x9      = 0.000504, 1.7e-05, 0.823	
+
+        base_hud_offset_pos              = -0.048733, -0.023467, 0.030776
+        base_hud_offset_pos_16x9         = -0.048733, -0.023467, 0.030776
+        base_hud_offset_rot              = 0, 0, 0.122888
+        base_hud_offset_rot_16x9         = 0, 0, 0.122888
+;--------------------------------------------------------------------------------------		
+[wpn_remington700_magpul_pro_pn23]:wpn_remington700_magpul_pro
+hud                     = wpn_remington700_magpul_pro_pn23_hud
+
+1icon_layer				= pn23f
+1icon_layer_x			= 170
+1icon_layer_y			= 3
+	
+[wpn_remington700_magpul_pro_pn23_hud]:wpn_remington700_magpul_pro_hud
+item_visual                              = dynamics\weapons\wpn_remington700\wpn_remington700_magpul_pro_pn23_hud.ogf
+
+;--------------------------------------------------------------------------------------
+[wpn_remington700_magpul_pro_skeet]:wpn_remington700_magpul_pro
+hud                     = wpn_remington700_magpul_pro_skeet_hud
+
+1icon_layer				= skeet_x
+1icon_layer_x			= 180
+1icon_layer_y			= 3
+	
+[wpn_remington700_magpul_pro_skeet_hud]:wpn_remington700_magpul_pro_hud
+item_visual                              = dynamics\weapons\wpn_remington700\wpn_remington700_magpul_pro_skeet_hud.ogf
+

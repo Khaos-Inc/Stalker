@@ -1,0 +1,137 @@
+local armor_weights = {}
+local level_initialized = false
+local ignored_on_load = {}
+
+function on_game_start()
+	RegisterScriptCallback("actor_item_to_slot", handle_to_slot)
+	RegisterScriptCallback("actor_item_to_ruck", handle_to_ruck)
+	RegisterScriptCallback("actor_on_item_drop", handle_to_ruck)
+	RegisterScriptCallback("mcm_option_change", handle_mcm_change)
+	RegisterScriptCallback("actor_on_update", check_for_delta_change)
+	RegisterScriptCallback("on_game_load", handle_game_load)
+
+	pcall(function()
+		RegisterScriptCallback("actor_on_item_after_upgrade", handle_upgrade)
+	end)
+end
+
+function handle_game_load()
+	level_initialized = false
+	ignored_on_load = {}
+
+	CreateTimeEvent("allow_weight_refresh", "init_delay", 3, function()
+		if db.actor then
+			local armor = db.actor:item_in_slot(7)
+			local helm = db.actor:item_in_slot(12)
+			if armor then ignored_on_load[armor:id()] = true end
+			if helm then ignored_on_load[helm:id()] = true end
+		end
+		level_initialized = true
+		return true
+	end)
+end
+
+local function is_armor(item)
+	local sfind = string.find
+	local section = item:section()
+	return sfind(section, "outfit", 1, true) or sfind(section, "nbc", 1, true) or
+	       sfind(section, "exo", 1, true) or sfind(section, "helm", 1, true)
+end
+
+local function force_ui_refresh()
+	if not level_initialized then return end
+	local actor = db.actor
+	if not actor then return end
+	local se_obj = alife_create("bolt", actor:position(), actor:level_vertex_id(), actor:game_vertex_id(), actor:id())
+	if se_obj then
+		CreateTimeEvent("ghost_cleanup", se_obj.id, 0, function()
+			alife_release(se_obj)
+			return true
+		end)
+	end
+end
+
+function check_for_delta_change()
+	if not level_initialized then return end
+	if not db.actor then return end
+
+	local armor = db.actor:item_in_slot(7)
+	local helm = db.actor:item_in_slot(12)
+	local items = {armor, helm}
+	local mult = dynamic_armor_weight_mcm.get_config("mult") or 0.5
+	for _, item in ipairs(items) do
+		if item and armor_weights[item:id()] then
+			local id = item:id()
+			
+			if not ignored_on_load[id] then
+				local current_weight = item:weight()
+				local expected_reduced_weight = armor_weights[id] * mult
+				local delta = current_weight - expected_reduced_weight
+				if math.abs(delta) > 0.01 then
+					if utils_item and utils_item.cache_param then
+						utils_item.cache_param[id] = nil
+					end
+					armor_weights[id] = armor_weights[id] + delta
+					db.actor:move_to_ruck(item)
+				end
+			end
+		end
+	end
+end
+
+function handle_to_slot(item)
+	if not (item and is_armor(item)) then return end
+	local id = item:id()
+
+	ignored_on_load[id] = nil
+
+	if utils_item and utils_item.cache_param then
+		utils_item.cache_param[id] = nil
+	end
+
+	if not armor_weights[id] then
+		armor_weights[id] = item:weight()
+	end
+
+	local mult = dynamic_armor_weight_mcm.get_config("mult") or 0.5
+	item:set_weight(armor_weights[id] * mult)
+	force_ui_refresh()
+end
+
+function handle_to_ruck(item)
+	if not (item and is_armor(item)) then return end
+	local id = item:id()
+	
+	ignored_on_load[id] = nil
+	
+	if armor_weights[id] then
+		item:set_weight(armor_weights[id])
+		armor_weights[id] = nil
+		force_ui_refresh()
+	end
+end
+
+function handle_upgrade(item)
+	if item and is_armor(item) then
+		local id = item:id()
+		if utils_item and utils_item.cache_param then
+			utils_item.cache_param[id] = nil
+		end
+		armor_weights[id] = nil
+		ignored_on_load[id] = nil
+
+		if db.actor:is_in_slot(item) then
+			handle_to_slot(item)
+		end
+	end
+end
+
+function handle_mcm_change(changes)
+	if changes["dynamic_armor_weight/mult"] ~= nil then
+		if not db.actor then return end
+		local armor = db.actor:item_in_slot(7)
+		local helm = db.actor:item_in_slot(12)
+		if armor then handle_to_slot(armor) end
+		if helm then handle_to_slot(helm) end
+	end
+end

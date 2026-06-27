@@ -1,0 +1,1356 @@
+-- PDA Taskboard Tab — UI Only
+-- All data preparation is in z_taskboard_data.
+-- Communicates with data layer via dirty flags + z_taskboard_data.* calls.
+-- Task objects are flat structures keyed by npc_id.."_"..task_id.
+
+-- Logging shorthand (resolves z_taskboard_data.Log at call time)
+local function Log_write(fmt, ...)
+    z_taskboard_data.Log.write(fmt, ...)
+end
+
+local LAYOUT = {
+    WINDOW_W         = 1024,
+    WINDOW_H         = 768,
+    CATEGORY_CARD_W  = 200,
+    CATEGORY_CARD_H  = 76,
+    TASK_CARD_W      = 564,
+    TASK_VAR_W       = 544,
+    TASK_CARD_H      = 200,   -- начальная высота (пересчитывается в __init)
+    TASK_MIN_H       = 100,   -- минимальная высота карточки
+    BOTTOM_PAD       = 10,    -- отступ снизу карточки
+    DETAIL_MAX_H     = 84,    -- макс. видимая высота details
+    DESC_MAX_H       = 120,   -- макс. видимая высота description
+    DESC_GAP         = 4,     -- зазор между header и description
+    SCROLL_HB_W      = 20,    -- ширина hitbox зоны скролла
+    BG_PAD           = 6,     -- отступ bg со всех сторон
+    BG_PAD_W         = 20,    -- суммарный горизонтальный отступ bg
+    BG_PAD_H         = 12,    -- суммарный вертикальный отступ bg
+    -- Variant row
+    VARIANT_ROW_H    = 68,    -- базовая высота строки варианта
+    VARIANT_GAP      = 6,     -- зазор между шапкой и вариантами
+    VARIANT_DET_MAX_H= 68,    -- макс. видимая высота variant details
+    VARIANT_OVERLAY_A= 30,    -- альфа overlay при наведении
+    VARIANT_SHIFT_X  = 110,   -- сдвиг иконки/заголовка влево для multi-variant
+}
+
+local CANCEL_CATEGORY   = "cancel"
+local MAX_COLOR_MATCHES = 2
+
+-- Tasks with custom taskboard icons (texture path as value)
+local CUSTOM_TASK_ICONS = {
+    ["mil_smart_terrain_7_7_freedom_leader_stalker_task_9"] = "ui_tb_icon_mil_smart_terrain_7_7_freedom_leader_stalker_task_9",
+}
+
+local FAULTY_EASTER_EGGS = {
+    "48 61 63 6B 65 64 20 62 79 20 53 65 72 69 6F 75 73",
+    "68 74 74 70 73 3A 2F 2F 77 77 77 2E 79 6F 75 74 75 62 65 2E 63 6F 6D 2F 77 61 74 63 68 3F 76 3D 78 76 46 5A 6A 6F 35 50 67 47 30",
+}
+
+-- Configuration (UI-specific keys)
+
+local config = {}
+
+local function load_config()
+    if not ui_mcm then return end
+	config.logging = ui_mcm.get("pda_taskboard/logging")
+    config.colorize     = ui_mcm.get("pda_taskboard/colorize")
+    config.taskboard_key = ui_mcm.get("pda_taskboard/taskboard_key")
+end
+
+local xml = CScriptXmlInit()
+xml:ParseFile("pda_taskboard.xml")
+
+-- Color System (UI concern — prepares colored text for rendering)
+
+local Color = {
+    metadata = {},
+    location = {},
+    text     = {},
+    title    = "",
+}
+
+function Color.init()
+    Color.metadata = { utils_xml.get_color("pda_blue"):match("(%d+),(%d+),(%d+),(%d+)") }
+    Color.location = { utils_xml.get_color("pda_green"):match("(%d+),(%d+),(%d+),(%d+)") }
+    Color.text     = { utils_xml.get_color("pda_white"):match("(%d+),(%d+),(%d+),(%d+)") }
+    Color.title    = utils_xml.get_color("pda_yellow")
+end
+
+function Color.wrap(color, text, placeholders)
+    local a, r, g, b = unpack(color)
+    local ta, tr, tg, tb = unpack(Color.text)
+
+    if placeholders then
+        local idx = #placeholders + 1
+        placeholders[idx] = string.format(
+            "%%%%c[%d,%d,%d,%d]%s%%%%c[%d,%d,%d,%d]",
+            a, r, g, b, text, ta, tr, tg, tb
+        )
+        return "{" .. idx .. "}"
+    end
+
+    return string.format(
+        "%%c[%d,%d,%d,%d]%s%%c[%d,%d,%d,%d]",
+        a, r, g, b, text, ta, tr, tg, tb
+    )
+end
+
+FACTION_COLORS = {
+    bandit        = { 255, 200, 200, 200 },
+    freedom       = { 255, 0, 255, 0 },
+    mercenary     = { 255, 0, 130, 255 },
+    clear_sky     = { 255, 0, 180, 255 },
+    ecologist     = { 255, 0, 255, 255 },
+    sin           = { 255, 255, 155, 0 },
+    free_stalkers = { 255, 225, 145, 0 },
+    renegade      = { 255, 255, 200, 0 },
+    duty          = { 255, 255, 0, 0 },
+    monolith      = { 255, 170, 0, 255 },
+    military      = { 255, 120, 190, 0 },
+    unisg         = { 255, 140, 40, 40 },
+    trader        = { 255, 70, 140, 140 },
+}
+
+-- Locale & Colorizer
+
+local locale = {
+    metadata  = {},
+    factions  = {},
+    locations = {},
+}
+
+local function load_locale()
+    local lang = ui_options.curr_localization()
+    local lang_data = _G["ui_pda_taskboard_colorize_lang_" .. lang]
+        or _G["ui_pda_taskboard_colorize_lang_eng"]
+
+    if not lang_data then
+        config.colorize = false
+        return
+    end
+
+    locale.metadata  = lang_data.METADATA or {}
+    locale.factions  = lang_data.FACTIONS or {}
+    locale.locations = lang_data.LOCATIONS or {}
+end
+
+local function colorize(text, is_wtf)
+    local placeholders = {}
+    local lines = {}
+    for line in text:gsub("\\n", "\n"):gmatch("[^\r\n]+") do
+        for field, data in pairs(locale.metadata) do
+            for _, pattern in pairs(data) do
+                if not line:match(pattern) then
+                    goto next_pattern
+                end
+
+                if field == "faction" then
+                    local match_count = 0
+                    for faction_key, faction_pattern in pairs(locale.factions) do
+                        if line:match(faction_pattern) then
+                            match_count = match_count + 1
+                            if match_count > MAX_COLOR_MATCHES then break end
+                            line = line:gsub(faction_pattern, function(m)
+                                return Color.wrap(FACTION_COLORS[faction_key], m)
+                            end)
+                            if not is_wtf then break end
+                        end
+                    end
+
+                elseif field == "location" then
+                    local match_count = 0
+                    local loc_data = locale.locations
+                    local order = loc_data and loc_data.loc_order
+                    if order then
+                        for _, loc_key in ipairs(order) do
+                            local patterns = loc_data[loc_key]
+                            if type(patterns) == "table" then
+                                for _, loc_pattern in ipairs(patterns) do
+                                    if line:match(loc_pattern) then
+                                        match_count = match_count + 1
+                                        if match_count > MAX_COLOR_MATCHES then break end
+                                        line = line:gsub(
+                                            "%f[%w\128-\255%(]" .. loc_pattern .. "%f[^%w\128-\255%)]",
+                                            function(m)
+                                                return Color.wrap(Color.location, m, placeholders)
+                                            end
+                                        )
+                                    end
+                                end
+                            end
+                            if match_count > MAX_COLOR_MATCHES then break end
+                        end
+                    end
+                    for i, resolved in ipairs(placeholders) do
+                        line = line:gsub("{" .. i .. "}", resolved)
+                    end
+                    placeholders = {}
+                end
+
+                line = line:gsub(pattern, function(m)
+                    return Color.wrap(Color.metadata, m)
+                end)
+
+                ::next_pattern::
+            end
+        end
+
+        line = line:gsub("%]\\n", "] \\n")
+        table.insert(lines, line)
+    end
+        local nl = " \\n"..string.char(10)
+        text = table.concat(lines, nl)
+    return text
+end
+
+-- Scroll State
+
+local scroll_managed_cards = {}
+
+-- UI — Category List Element
+
+class "category_list_element" (CUIListBoxItem)
+
+function category_list_element:__init(category, is_active)
+    super()
+    self:SetWndRect(Frect():set(0, 0, LAYOUT.CATEGORY_CARD_W, LAYOUT.CATEGORY_CARD_H))
+    self.category_name = category
+
+    self.frame = xml:InitFrame("category_card", self)
+    self.bg    = xml:InitFrame("category_card_bg", self.frame)
+    self.icon  = xml:InitStatic("category_card_icon", self.frame)
+    self.icon:InitTexture("ui_inGame2_pda_taskboard_custom_category_" .. category)
+    self.label = xml:InitTextWnd("category_card_name", self.frame)
+
+    local label_text = game.translate_string("st_pda_caption_" .. category)
+    if is_active then
+        label_text = " " .. label_text .. " >>"
+        self.label:SetTextColor(utils_xml.get_color("white", true))
+    end
+    self.label:SetText(label_text)
+end
+
+-- UI — Task List Element
+
+local function shuffle_string(str)
+    local chars = {}
+    for i = 1, #str do chars[i] = str:sub(i, i) end
+    for i = #chars, 2, -1 do
+        local j = math.random(1, i)
+        chars[i], chars[j] = chars[j], chars[i]
+    end
+    return table.concat(chars)
+end
+
+local function render_faulty_card(self, task_obj)
+    local red   = utils_xml.get_color("red")
+    local white = utils_xml.get_color("white")
+    local egg   = FAULTY_EASTER_EGGS[math.random(1, #FAULTY_EASTER_EGGS)]
+
+    self.npc_icon = xml:InitStatic("task_card_npc_icon", self.frame)
+    self.npc_icon:InitTexture("ui\\ui_noise")
+
+    local npc = task_obj.npc_id and level.object_by_id(task_obj.npc_id)
+    local npc_name      = npc and npc:character_name()      or task_obj.npc_name      or ""
+    local npc_community = npc and npc:character_community()  or task_obj.npc_community or ""
+
+    self.npc_info = xml:InitTextWnd("task_card_npc_info", self.frame)
+    self.npc_info:SetText(shuffle_string(
+        npc_name .. "\\n"
+        .. game.translate_string("ui_st_community") .. ": "
+        .. game.translate_string(npc_community)
+    ))
+
+    self.icon = xml:InitStatic("task_card_icon", self.frame)
+    self.icon:InitTexture("ui\\ui_noise")
+
+    self.text_details = xml:InitTextWnd("task_details", self.frame)
+    self.text_details:SetText(red .. "ERROR" .. white)
+
+    self.text_description = xml:InitTextWnd("task_description", self.frame)
+    self.text_description:SetText(
+        red .. "[PDAOpSys] - Critical Error\\n\\n" .. white
+        .. "GL finding me: " .. egg
+    )
+    self.text_description:AdjustHeightToText()
+end
+
+-- Layout Helpers
+
+local function get_bottom(wnd)
+    if not wnd then return 0 end
+    local p = wnd:GetWndPos()
+    return (p and p.y or 0) + (wnd:GetHeight() or 0)
+end
+
+local function apply_bg_rect(bg, w, h)
+    local L = LAYOUT
+    bg:SetWndRect(Frect():set(
+        L.BG_PAD, L.BG_PAD,
+        L.BG_PAD + (w - L.BG_PAD_W),
+        L.BG_PAD + (h - L.BG_PAD_H)
+    ))
+end
+
+local function make_scroll_hitbox(sv, frame, ox, oy)
+    ox, oy = ox or 0, oy or 0
+    local p, w, h = sv:GetWndPos(), sv:GetWidth(), sv:GetHeight()
+    local r, t = ox + p.x + w, oy + p.y
+    local hb = CUIStatic()
+    hb:SetAutoDelete(true)
+    hb:SetWndRect(Frect():set(r+5 - LAYOUT.SCROLL_HB_W, t, r, t + h))
+    hb:InitTexture("ui\\ui_noise")
+    hb:SetStretchTexture(true)
+    hb:SetTextureColor(GetARGB(0, 255, 255, 255))
+    frame:AttachChild(hb)
+    return hb
+end
+
+--- Если текст длиннее max_h — оборачивает в ScrollView (ограничивает видимую область).
+--- Иначе крепит напрямую к frame. Возвращает sv или nil.
+local function attach_capped_text(text_wnd, frame, scroll_template, max_h)
+    if text_wnd:GetHeight() > max_h then
+        local sv = xml:InitScrollView(scroll_template, frame)
+        sv:AddWindow(text_wnd, true)
+        text_wnd:SetWndPos(vector2():set(0, 0))
+        sv:Enable(false)
+        return sv
+    end
+    frame:AttachChild(text_wnd)
+    return nil
+end
+
+class "task_list_element" (CUIListBoxItem)
+
+--- Применяет рассчитанную высоту к трём уровням: item, frame, bg.
+function task_list_element:apply_card_size(card_h)
+    self.desired_height = card_h
+    self:SetWndRect(Frect():set(0, 0, LAYOUT.TASK_CARD_W, card_h))
+    self.frame:SetWndRect(Frect():set(0, 0, LAYOUT.TASK_CARD_W, card_h))
+    apply_bg_rect(self.bg, LAYOUT.TASK_CARD_W, card_h)
+end
+
+--- Builds variant rows below the header for multi-variant cards.
+function task_list_element:build_variant_rows(task_obj)
+    local L = LAYOUT
+    -- Collect all variants: primary + duplicates
+    local all_variants = { task_obj }
+    for _, dup in ipairs(task_obj.duplicates or {}) do
+        all_variants[#all_variants + 1] = dup
+    end
+
+    -- variant_start_y: below the lowest header element
+    local header_bottom = math.max(
+        get_bottom(self.icon),
+        get_bottom(self.text_details),
+        get_bottom(self.desc_scroll or self.text_description)
+    )
+    self.variant_start_y = header_bottom + L.VARIANT_GAP
+
+    local row_y = self.variant_start_y
+    local row_offset = 0
+    self.variant_rows = {}
+
+    for vi, variant in ipairs(all_variants) do
+        local npc = variant.npc_id and level.object_by_id(variant.npc_id)
+        local npc_name      = npc and npc:character_name()      or variant.npc_name      or ""
+        local npc_community = npc and npc:character_community()  or variant.npc_community or ""
+        local npc_icon_name = npc and npc:character_icon()       or variant.npc_icon      or "ui\\ui_noise"
+
+        -- Detect frequency in title (per-variant)
+        local freq = nil
+        if variant.task_title then
+            freq = variant.task_title:match("%((%d+)[^)]*%)")
+        end
+        --local this_row_h = freq and (L.VARIANT_ROW_H + 16) or L.VARIANT_ROW_H
+                local this_row_h = L.VARIANT_ROW_H
+
+        -- Container
+        local container = CUIWindow()
+        container:SetAutoDelete(true)
+        container:SetWndRect(Frect():set(6, row_y, 6 + L.TASK_VAR_W, row_y + this_row_h))
+        self.frame:AttachChild(container)
+
+        -- Background
+                local bg_template = variant.reached_limit and "task_card_bg_blocked" or "task_card_bg"
+        local row_bg = xml:InitFrame(bg_template, container)
+        row_bg:SetWndRect(Frect():set(0, 0, L.TASK_VAR_W, this_row_h))
+
+        -- NPC icon
+        local v_npc_icon = xml:InitStatic("variant_row_npc_icon", container)
+        v_npc_icon:InitTexture(npc_icon_name)
+                local v_npc_icon_pos = v_npc_icon:GetWndPos()
+
+        -- NPC name + community
+        local v_npc_name = xml:InitTextWnd("variant_row_npc_name", container)
+        local npc_info_text = npc_name .. "\\n"
+            .. game.translate_string("ui_st_community") .. ": "
+            .. game.translate_string(npc_community)
+        if config.colorize then
+            v_npc_name:SetTextColor(utils_xml.get_color("pda_white", true))
+            npc_info_text = colorize(npc_info_text)
+        end
+        v_npc_name:SetText(npc_info_text)
+        v_npc_name:AdjustHeightToText()
+
+                local v_npc_name_pos = v_npc_name:GetWndPos()
+        v_npc_name:SetWndPos(vector2():set(
+            v_npc_name_pos.x,
+            v_npc_icon_pos.y + v_npc_icon:GetHeight() - v_npc_name:GetHeight()
+        ))
+
+        -- Overlay (hover detection) — attached BEFORE details_scroll so scroll
+        -- is higher in z-order and can receive wheel events
+        local overlay = xml:InitStatic("variant_row_overlay", container)
+        overlay:SetWndRect(Frect():set(0, 0, L.TASK_VAR_W, this_row_h))
+        overlay:SetTextureColor(GetARGB(0, 255, 255, 255))
+
+        -- Details text (variant-specific)
+        local v_details_text = xml:InitTextWnd("variant_row_details", nil)
+        local v_raw_details = variant.task_details or ""
+        if freq then
+            local raw_freq = string.format(game.translate_string("st_taskboard_details_freq"),freq)
+            v_raw_details = v_raw_details .. "\\n" .. raw_freq
+        end
+        -- Save pre-colorize details for z_taskboard_rare_bonus calls
+        local v_details_text_raw = v_raw_details
+        if config.colorize then
+            v_details_text:SetTextColor(utils_xml.get_color("pda_white", true))
+            v_raw_details = colorize(v_raw_details, variant.wtf)
+        end
+		
+        -- Append rare bonus star prefix per variant
+        local v_star_prefix = z_taskboard_rare_bonus.get_star_prefix(task_obj.task_id, v_details_text_raw)
+        if v_star_prefix ~= "" then
+			if config.colorize then v_star_prefix = utils_xml.get_color("pda_green") .. v_star_prefix .. utils_xml.get_color("pda_white") end
+            v_raw_details = v_star_prefix.." \\n".. string.char(10) ..v_raw_details
+        end
+        v_details_text:SetText(v_raw_details)
+        v_details_text:AdjustHeightToText()
+
+        local v_details_scroll = attach_capped_text(
+            v_details_text, container,
+            "variant_row_details_scrollbar", L.VARIANT_DET_MAX_H
+        )
+
+        -- Store row data for click handling
+        local row = {
+            container       = container,
+            bg              = row_bg,
+            overlay         = overlay,
+            npc_icon        = v_npc_icon,
+            npc_name        = v_npc_name,
+
+            details_text    = v_details_text,
+            details_scroll  = v_details_scroll,
+            npc_id          = variant.npc_id,
+            key             = variant.key,
+            task_var        = variant.task_var,
+            bounty_target_id = variant.bounty_target_id,
+            fetch_sec       = variant.fetch_sec,
+            fetch_count     = variant.fetch_count,
+            reached_limit   = variant.reached_limit or false,
+            details_text_raw = v_details_text_raw,
+            row_h           = this_row_h,
+        }
+        self.variant_rows[#self.variant_rows + 1] = row
+
+        row_offset = row_offset + this_row_h
+        row_y = self.variant_start_y + row_offset
+    end
+
+    self.variant_total_h = row_offset
+end
+
+--- Single task_obj parameter — all data comes from the unified task object.
+--- Supports both single-variant (normal) and multi-variant (merged) cards.
+function task_list_element:__init(task_obj)
+    super()
+    self:SetWndRect(Frect():set(0, 0, LAYOUT.TASK_CARD_W, LAYOUT.TASK_CARD_H))
+    self.task_id      = task_obj.task_id
+    self.npc_id       = task_obj.npc_id
+    self.key          = task_obj.key
+    self.is_blocked   = task_obj.reached_limit or false
+    self.is_faulty    = task_obj.faulty or false
+    self.has_variants = task_obj.has_variants or false
+    self.hovered_variant = 0
+    self.variant_rows    = nil
+    self.variant_start_y = 0
+    self.variant_total_h = 0
+
+    self.frame = xml:InitFrame("task_card", self)
+    local bg_template = self.is_blocked and "task_card_bg_blocked" or "task_card_bg"
+    self.bg = xml:InitFrame(bg_template, self.frame)
+
+    if self.is_faulty then
+        render_faulty_card(self, task_obj)
+        self:apply_card_size(LAYOUT.TASK_CARD_H)
+        return
+    end
+
+    -- Common text elements
+    self.text_details     = xml:InitTextWnd("task_details", nil)
+    self.text_description = xml:InitTextWnd("task_description", nil)
+
+    -- Prepare text content
+    local task_id   = task_obj.task_id
+    local raw_title = task_obj.task_title or ""
+    if not raw_title:match("[%w%p\128-\255]") then
+        raw_title = game.translate_string(task_manager.task_ini:r_string_ex(task_id, "title")) or ""
+    end
+
+    local ini_descr   = task_manager.task_ini:r_string_ex(task_id, "descr")
+    local raw_details = game.translate_string("st_taskboard_details_"..task_id) or ""
+    if raw_details == "st_taskboard_details_"..task_id then
+        raw_details = task_obj.task_details or game.translate_string(ini_descr) or ""
+    end
+    raw_details = raw_details:gsub("\\n ", "\\n")
+
+    if ini_descr and raw_details == game.translate_string(ini_descr) then
+        raw_details = ""
+    end
+
+    -- Extract frequency from title, append to details (same style for all cards)
+    local freq = raw_title:match("%((%d+)[^)]*%)")
+    if freq then
+        raw_title = raw_title:gsub("%([^)]+%)", "")
+        local raw_freq = string.format(game.translate_string("st_taskboard_details_freq"), freq)
+        raw_details = raw_details .. "\\n" .. raw_freq
+    end
+
+    if self.has_variants then
+        -- Multi-variant: no NPC info in header, no details in header
+        raw_details = ""
+    end
+
+    -- Save pre-colorize details for z_taskboard_rare_bonus calls
+    self.details_text_raw = raw_details
+
+    if config.colorize then
+                self.text_description:SetTextColor(GetARGB(255,200,200,200))
+        if raw_title ~= "" then
+            raw_title = Color.title .. raw_title .. utils_xml.get_color("pda_white")
+        end
+        if raw_details ~= "" then
+            raw_details = colorize(raw_details, task_obj.wtf)
+        end
+        self.text_details:SetTextColor(utils_xml.get_color("pda_white", true))
+    end
+
+    -- Append rare bonus star prefix to details (single-variant only; multi-variant adds per-row)
+    if not self.has_variants then
+        local star_prefix = z_taskboard_rare_bonus.get_star_prefix(task_id, self.details_text_raw)
+        if star_prefix ~= "" then
+			if config.colorize then star_prefix = utils_xml.get_color("pda_green") .. star_prefix .. utils_xml.get_color("pda_white") end
+            raw_details = star_prefix .. " \\n" .. string.char(10) .. raw_details
+        end
+    end
+
+    if self.has_variants then
+        -- ═══ MULTI-VARIANT CARD ═══
+        -- Task icon (shifted left)
+        self.icon = xml:InitStatic("task_card_icon", self.frame)
+        self.icon:InitTexture(
+            task_obj.task_icon
+            or task_manager.task_ini:r_string_ex(task_id, "icon")
+            or CUSTOM_TASK_ICONS[task_id]
+            or "ui\\ui_noise"
+        )
+        local ip = self.icon:GetWndPos()
+        self.icon:SetWndPos(vector2():set(ip.x - LAYOUT.VARIANT_SHIFT_X, ip.y))
+
+        -- Details: title only (no NPC-specific details in header)
+        local details_content = raw_title
+        self.text_details:SetText(details_content)
+        self.text_details:AdjustHeightToText()
+        local dp = self.text_details:GetWndPos()
+        self.text_details:SetWndPos(vector2():set(dp.x - (LAYOUT.VARIANT_SHIFT_X + 1), dp.y))
+
+        -- Attach directly — header details are just the title, no scroll needed
+        self.frame:AttachChild(self.text_details)
+        self.details_scroll = nil
+    else
+        -- ═══ SINGLE-VARIANT CARD (original logic) ═══
+        local npc             = task_obj.npc_id and level.object_by_id(task_obj.npc_id)
+        local saved_name      = not npc and task_obj.npc_name
+        local saved_community = not npc and task_obj.npc_community
+        local saved_icon      = not npc and task_obj.npc_icon
+
+        self.npc_info = xml:InitTextWnd("task_card_npc_info", self.frame)
+
+        local npc_name      = npc and npc:character_name()      or saved_name
+        local npc_community = npc and npc:character_community()  or saved_community
+        local raw_npc_info  = npc_name
+            and (npc_name .. "\\n"
+                 .. game.translate_string("ui_st_community") .. ": "
+                 .. game.translate_string(npc_community))
+            or ""
+
+        if config.colorize then
+            self.npc_info:SetTextColor(utils_xml.get_color("pda_white", true))
+            raw_npc_info = colorize(raw_npc_info)
+        end
+
+        -- NPC icon + info
+        local npc_icon_name = npc and npc:character_icon() or saved_icon or "ui\\ui_noise"
+        self.npc_icon = xml:InitStatic("task_card_npc_icon", self.frame)
+        self.npc_icon:InitTexture(npc_icon_name)
+
+        self.npc_info:SetText(raw_npc_info)
+        self.npc_info:AdjustHeightToText()
+
+        -- Task icon
+        self.icon = xml:InitStatic("task_card_icon", self.frame)
+        self.icon:InitTexture(
+            task_obj.task_icon
+            or task_manager.task_ini:r_string_ex(task_id, "icon")
+            or CUSTOM_TASK_ICONS[task_id]
+            or "ui\\ui_noise"
+        )
+
+        -- Details (title + short info)
+        local details_content = raw_title .. " \\n" .. raw_details
+        self.text_details:SetText(details_content)
+        self.text_details:AdjustHeightToText()
+
+        -- Прижимаем низ details к низу иконки
+        local details_pos = self.text_details:GetWndPos()
+        self.text_details:SetWndPos(vector2():set(
+            details_pos.x,
+            details_pos.y + self.icon:GetHeight() - self.text_details:GetHeight()
+        ))
+
+        self.details_scroll = attach_capped_text(
+            self.text_details, self.frame,
+            "task_details_scrollbar", LAYOUT.DETAIL_MAX_H
+        )
+    end
+
+    -- Description (shared for both card types)
+    local header_bottom
+    if self.has_variants then
+        header_bottom = get_bottom(self.text_details)
+    else
+        header_bottom = math.max(
+            get_bottom(self.icon),
+            get_bottom(self.details_scroll or self.text_details)
+        )
+    end
+    local desc_y = header_bottom + LAYOUT.DESC_GAP
+
+    self.text_description:SetWndPos(vector2():set(
+        self.text_description:GetWndPos().x,
+        desc_y
+    ))
+    self.text_description:SetText(task_obj.task_description or "")
+    self.text_description:AdjustHeightToText()
+
+    self.desc_scroll = attach_capped_text(
+        self.text_description, self.frame,
+        "task_description_scrollbar", LAYOUT.DESC_MAX_H
+    )
+
+    if self.desc_scroll then
+        self.desc_scroll:SetWndPos(vector2():set(
+            self.desc_scroll:GetWndPos().x,
+            desc_y
+        ))
+    end
+
+    -- Variant rows (multi-variant only)
+    if self.has_variants then
+        self:build_variant_rows(task_obj)
+    end
+
+    -- Расчёт авторазмера
+    local max_bottom = 0
+    if self.has_variants then
+        max_bottom = math.max(max_bottom, get_bottom(self.icon))
+        max_bottom = math.max(max_bottom, get_bottom(self.text_details))
+        max_bottom = math.max(max_bottom, get_bottom(self.desc_scroll or self.text_description))
+        max_bottom = math.max(max_bottom, self.variant_start_y + self.variant_total_h)
+    else
+        max_bottom = math.max(max_bottom, get_bottom(self.npc_info))
+        max_bottom = math.max(max_bottom, get_bottom(self.npc_icon))
+        max_bottom = math.max(max_bottom, get_bottom(self.details_scroll or self.text_details))
+        max_bottom = math.max(max_bottom, get_bottom(self.desc_scroll or self.text_description))
+    end
+
+    local card_h = math.max(max_bottom + LAYOUT.BOTTOM_PAD, LAYOUT.TASK_MIN_H)
+    self:apply_card_size(card_h)
+
+    -- Scroll hitboxes
+    if not self.has_variants and self.details_scroll then
+        self.details_scroll.scroll_hitbox = make_scroll_hitbox(self.details_scroll, self.frame)
+    end
+    if self.desc_scroll then
+        self.desc_scroll.scroll_hitbox = make_scroll_hitbox(self.desc_scroll, self.frame)
+    end
+
+    -- Variant scroll hitboxes (on self.frame with container offset)
+    if self.has_variants and self.variant_rows then
+        for vi, row in ipairs(self.variant_rows) do
+            if row.details_scroll then
+                local cp = row.container:GetWndPos()
+                row.details_scroll.scroll_hitbox = make_scroll_hitbox(
+                    row.details_scroll, self.frame, cp.x, cp.y
+                )
+            end
+        end
+    end
+
+    if self.details_scroll or self.desc_scroll or (self.variant_rows and #self.variant_rows > 0) then
+        table.insert(scroll_managed_cards, self)
+    end
+end
+
+-- Main Controller — PDA Taskboard Tab
+
+local instance = nil
+
+class "pda_taskboard_tab" (CUIScriptWnd)
+
+function pda_taskboard_tab:__init()
+    super()
+    self.selected_category = nil
+    self:InitControls()
+end
+
+function pda_taskboard_tab:InitControls()
+    self:SetWndRect(Frect():set(0, 0, LAYOUT.WINDOW_W, LAYOUT.WINDOW_H))
+
+    self.frame = xml:InitFrame("frame_main", self)
+    xml:InitFrame("frame_button_refresh", self.frame)
+    xml:InitFrame("frame_category_list", self.frame)
+
+    self.btn_refresh = xml:Init3tButton("btn_refresh", self.frame)
+    self:Register(self.btn_refresh, "btn_refresh")
+    self:AddCallback("btn_refresh", ui_events.BUTTON_CLICKED, self.OnBtnRefreshClicked, self)
+
+    self.category_list = xml:InitListBox("category_list", self.frame)
+    self:Register(self.category_list, "category_list")
+    self:AddCallback("category_list", ui_events.LIST_ITEM_CLICKED, self.OnCategoryClicked, self)
+
+    self.task_list = xml:InitListBox("task_list", self.frame)
+    self:Register(self.task_list, "task_list")
+    self:AddCallback("task_list", ui_events.LIST_ITEM_CLICKED, self.OnTaskClicked, self)
+
+    self.status_text = xml:InitTextWnd("status_text", self.frame)
+    self.status_text:Show(false)
+
+    self.cancel_category_shown = false
+
+    self.confirm_dialog_bg   = xml:InitFrame("confirm_dialog_bg", self)
+    self.confirm_dialog_text = xml:InitTextWnd("confirm_dialog_text", self)
+    self.btn_confirm_yes     = xml:Init3tButton("btn_confirm_yes", self)
+    self.btn_confirm_no      = xml:Init3tButton("btn_confirm_no", self)
+
+    self:Register(self.btn_confirm_yes, "btn_confirm_yes")
+    self:AddCallback("btn_confirm_yes", ui_events.BUTTON_CLICKED, self.OnBtnConfirmYes, self)
+    self:Register(self.btn_confirm_no, "btn_confirm_no")
+    self:AddCallback("btn_confirm_no", ui_events.BUTTON_CLICKED, self.OnBtnConfirmNo, self)
+
+    self:HideConfirmDialog()
+end
+
+function pda_taskboard_tab:ShowConfirmDialog(task_item)
+    local npc_name  = z_taskboard_data.get_cancel_task_npc_name(task_item.key)
+    local template  = game.translate_string("st_pda_confirm_cancel_task")
+    self.confirm_dialog_text:SetText(strformat(template, npc_name))
+
+    self.confirm_dialog_bg:Show(true)
+    self.confirm_dialog_text:Show(true)
+    self.btn_confirm_yes:Show(true)
+    self.btn_confirm_no:Show(true)
+
+    self.confirm_dialog_visible = true
+    self.pending_cancel_task    = task_item
+    Log_write("ShowConfirmDialog: key=%s npc=%s", tostring(task_item.key), tostring(npc_name))
+end
+
+function pda_taskboard_tab:HideConfirmDialog()
+    self.confirm_dialog_bg:Show(false)
+    self.confirm_dialog_text:Show(false)
+    self.btn_confirm_yes:Show(false)
+    self.btn_confirm_no:Show(false)
+
+    self.confirm_dialog_visible = false
+    self.pending_cancel_task    = nil
+end
+
+function pda_taskboard_tab:Update()
+    CUIScriptWnd.Update(self)
+
+    -- React to data layer changes (pull model via dirty flags)
+    if z_taskboard_data.board_dirty then
+        Log_write("Update: board_dirty -> full rebuild")
+        z_taskboard_data.board_dirty = false
+        z_taskboard_data.categories_dirty = false
+        z_taskboard_data.active_category_dirty = false
+        self:DrawCategoryList()
+    elseif z_taskboard_data.categories_dirty then
+        Log_write("Update: categories_dirty -> incremental")
+        z_taskboard_data.categories_dirty = false
+        self:DrawCategoryListIncremental()
+
+        if z_taskboard_data.active_category_dirty then
+            z_taskboard_data.active_category_dirty = false
+            local cat = self.selected_category
+            if cat and cat ~= CANCEL_CATEGORY then
+                self:DrawTaskList(cat)
+            end
+        end
+    end
+
+    -- Background processing status
+    local st = z_taskboard_data.bg_status
+    if st and st.total > 0 and st.processed < st.total then
+        self.status_text:SetText(st.processed .. "/" .. st.total)
+        self.status_text:Show(true)
+    else
+        self.status_text:Show(false)
+    end
+
+    -- Scroll management + variant hover
+    if #scroll_managed_cards == 0 then return end
+
+    local VAR_ALPHA = GetARGB(LAYOUT.VARIANT_OVERLAY_A, 255, 255, 255)
+    local NO_ALPHA  = GetARGB(0, 255, 255, 255)
+
+    for i = #scroll_managed_cards, 1, -1 do
+        local card = scroll_managed_cards[i]
+        local rows = card.variant_rows
+        local alive = card.details_scroll or card.desc_scroll
+            or (rows and #rows > 0)
+
+        if not alive then
+            table.remove(scroll_managed_cards, i)
+        else
+            -- Toggle scroll by hitbox (card-level)
+            for _, key in ipairs({ "desc_scroll", "details_scroll" }) do
+                local sv = card[key]
+                if sv and sv.scroll_hitbox then
+                    local over = sv.scroll_hitbox:IsCursorOverWindow()
+                    if sv._active ~= over then
+                        sv._active = over
+                        sv:Enable(over)
+                    end
+                end
+            end
+
+            -- Variant rows: scroll by hitbox + hover overlay
+            if rows then
+                card.hovered_variant = 0
+                for vi, row in ipairs(rows) do
+                    -- Scroll hitbox toggle
+                    local sv = row.details_scroll
+                    if sv and sv.scroll_hitbox then
+                        local over = sv.scroll_hitbox:IsCursorOverWindow()
+                        if sv._active ~= over then
+                            sv._active = over
+                            sv:Enable(over)
+                        end
+                    end
+                    -- Overlay hover
+                    local ov = row.overlay
+                    if ov then
+                        if ov:IsCursorOverWindow() then
+                            card.hovered_variant = vi
+                            ov:SetTextureColor(VAR_ALPHA)
+                        else
+                            ov:SetTextureColor(NO_ALPHA)
+                        end
+                    end
+                end
+            end
+        end
+    end
+end
+
+function pda_taskboard_tab:OnBtnRefreshClicked()
+    if self.confirm_dialog_visible then return end
+    self:HideConfirmDialog()
+    Log_write("OnBtnRefreshClicked")
+    z_taskboard_rare_bonus.clear_display_cache()
+    z_taskboard_data.reset_taskboard()
+end
+
+function pda_taskboard_tab:OnBtnConfirmYes()
+    local task_item = self.pending_cancel_task
+    if not task_item then
+        self:HideConfirmDialog()
+        return
+    end
+
+    Log_write("OnBtnConfirmYes: cancelling key=%s task_id=%s", tostring(task_item.key), tostring(task_item.task_id))
+
+    task_manager.get_task_manager():set_task_failed(task_item.task_id)
+
+    for i, obj in ipairs(z_taskboard_data.cancel_tasks) do
+        if obj.key == task_item.key then
+            table.remove(z_taskboard_data.cancel_tasks, i)
+            break
+        end
+    end
+
+    self:HideConfirmDialog()
+
+    if #z_taskboard_data.cancel_tasks == 0 then
+        self:DrawCategoryList()
+    else
+        self:DrawCancelTaskList()
+    end
+end
+
+function pda_taskboard_tab:OnBtnConfirmNo()
+    Log_write("OnBtnConfirmNo")
+    self:HideConfirmDialog()
+end
+
+-- Category List
+
+local visible_categories = {}
+local category_items = {}
+
+local CATEGORY_INACTIVE_COLOR = GetARGB(255, 200, 200, 200)
+
+function pda_taskboard_tab:UpdateCategoryHighlight()
+    self.category_list:SetSelectedIndex(-1)
+
+    for key, item in pairs(category_items) do
+        if item and item.label then
+            local is_active = (key == self.selected_category)
+            local label_text = game.translate_string("st_pda_caption_" .. key)
+            if is_active then
+                label_text = " " .. label_text .. " >>"
+                item.label:SetTextColor(utils_xml.get_color("white", true))
+            else
+                item.label:SetTextColor(CATEGORY_INACTIVE_COLOR)
+            end
+            item.label:SetText(label_text)
+        end
+    end
+end
+
+function pda_taskboard_tab:DrawCategoryList()
+    scroll_managed_cards = {}
+    category_items = {}
+
+    self.category_list:RemoveAll()
+    self.task_list:RemoveAll()
+    visible_categories = {}
+
+    local data = z_taskboard_data.board_data
+    if type(data) ~= "table" then return end
+
+    local keys = z_taskboard_data.sorted_keys(data)
+
+    for _, key in ipairs(keys) do
+        local is_active = (key == self.selected_category)
+        local item = category_list_element(key, is_active)
+        self.category_list:AddExistingItem(item)
+        category_items[key] = item
+        visible_categories[key] = true
+    end
+
+    local has_cancel = #z_taskboard_data.cancel_tasks > 0
+    if has_cancel then
+        local is_active = (CANCEL_CATEGORY == self.selected_category)
+        local item = category_list_element(CANCEL_CATEGORY, is_active)
+        self.category_list:AddExistingItem(item)
+        category_items[CANCEL_CATEGORY] = item
+        visible_categories[CANCEL_CATEGORY] = true
+        self.cancel_category_shown = true
+    else
+        self.cancel_category_shown = false
+    end
+
+    Log_write("DrawCategoryList: %d categories + cancel=%s", #keys, tostring(has_cancel))
+end
+
+function pda_taskboard_tab:DrawCategoryListIncremental()
+    local data = z_taskboard_data.board_data
+    if type(data) ~= "table" then return false end
+
+    local keys = z_taskboard_data.sorted_keys(data)
+
+    local new_keys = {}
+    for _, key in ipairs(keys) do
+        if not visible_categories[key] then
+            table.insert(new_keys, key)
+        end
+    end
+
+    local need_cancel = #z_taskboard_data.cancel_tasks > 0 and not visible_categories[CANCEL_CATEGORY]
+
+    if #new_keys == 0 and not need_cancel then
+        return false
+    end
+
+    category_items = {}
+    self.category_list:RemoveAll()
+    visible_categories = {}
+
+    for _, key in ipairs(keys) do
+        local is_active = (key == self.selected_category)
+        local item = category_list_element(key, is_active)
+        self.category_list:AddExistingItem(item)
+        category_items[key] = item
+        visible_categories[key] = true
+    end
+
+    if #z_taskboard_data.cancel_tasks > 0 then
+        local is_active = (CANCEL_CATEGORY == self.selected_category)
+        local item = category_list_element(CANCEL_CATEGORY, is_active)
+        self.category_list:AddExistingItem(item)
+        category_items[CANCEL_CATEGORY] = item
+        visible_categories[CANCEL_CATEGORY] = true
+        self.cancel_category_shown = true
+    else
+        self.cancel_category_shown = false
+    end
+
+    Log_write("DrawCategoryListIncremental: +%d new categories", #new_keys)
+
+    -- Intentionally do NOT clear self.task_list — preserve current task view
+
+    return true
+end
+
+-- Task List
+
+--- Выравнивает карточки друг за другом с учётом переменной высоты.
+local function reposition_list_items(list)
+    local y = 0
+    for i = 0, list:GetSize() - 1 do
+        local item = list:GetItemByIndex(i)
+        if item then
+            local h = item.desired_height or LAYOUT.TASK_MIN_H
+            item:SetWndRect(Frect():set(0, y, LAYOUT.TASK_CARD_W, y + h))
+            if item.frame then
+                item.frame:SetWndRect(Frect():set(0, 0, LAYOUT.TASK_CARD_W, h))
+            end
+            if item.bg then
+                apply_bg_rect(item.bg, LAYOUT.TASK_CARD_W, h)
+            end
+            y = y + h
+        end
+    end
+end
+
+function pda_taskboard_tab:DrawCancelTaskList()
+    scroll_managed_cards = {}
+    self.task_list:RemoveAll()
+
+    for i = #z_taskboard_data.cancel_tasks, 1, -1 do
+        local task_obj = z_taskboard_data.cancel_tasks[i]
+        task_obj.reached_limit = false
+        self.task_list:AddExistingItem(task_list_element(task_obj))
+    end
+
+    reposition_list_items(self.task_list)
+    Log_write("DrawCancelTaskList: %d tasks", #z_taskboard_data.cancel_tasks)
+end
+
+--- Renders task list for a category. Lazy-prepares descriptions on first access.
+function pda_taskboard_tab:DrawTaskList(category_name)
+    scroll_managed_cards = {}
+    self.task_list:RemoveAll()
+
+    local data = z_taskboard_data.board_data
+    if type(data) ~= "table" then return false end
+
+    local tasks = data[category_name]
+    if type(tasks) ~= "table" then return false end
+
+    -- Lazy: prepare descriptions only if not yet done
+    local needs_preparation = false
+    for _, task_obj in ipairs(tasks) do
+        if not task_obj.task_description then
+            needs_preparation = true
+            break
+        end
+    end
+
+    if needs_preparation then
+        Log_write("DrawTaskList: preparing descriptions for category=%s", tostring(category_name))
+        z_taskboard_data.prepare_category_descriptions(tasks)
+    end
+
+    local is_fetch_category = z_taskboard_data.FETCH_CATEGORIES[category_name]
+
+    local entries = {}
+    for _, task_obj in ipairs(tasks) do
+        local npc = level.object_by_id(task_obj.npc_id)
+        if npc then
+            task_obj.reached_limit = dialogs.has_tasks_by_npc(npc)
+
+            z_taskboard_data.get_task_details_for_ui(task_obj)
+
+            if is_fetch_category and a_ui_pda_inventory_cache then
+                -- Register per-NPC composite key so priority lookup is correct
+                -- even when multiple NPCs share the same task_id
+                if task_obj.fetch_sec then
+                    a_ui_pda_inventory_cache.register_fetch_task_params_for_npc(
+                        task_obj.task_id, task_obj.npc_id,
+                        task_obj.fetch_sec, task_obj.fetch_count or 1)
+                end
+                task_obj.priority = a_ui_pda_inventory_cache
+                    .get_fetch_task_sort_priority(task_obj.task_id, task_obj.npc_id)
+            else
+                task_obj.priority = 0
+            end
+
+            -- Multi-variant: also check duplicate NPCs and add to entry_cache
+            if task_obj.has_variants and task_obj.duplicates then
+                local valid_dups = {}
+                for _, dup in ipairs(task_obj.duplicates) do
+                    local dup_npc = level.object_by_id(dup.npc_id)
+                    if dup_npc then
+                        dup.reached_limit = dialogs.has_tasks_by_npc(dup_npc)
+                        z_taskboard_data.get_task_details_for_ui(dup)
+                        z_taskboard_data.entry_cache[dup.key] = dup
+                        valid_dups[#valid_dups + 1] = dup
+                    end
+                end
+                task_obj.duplicates = valid_dups
+                if #valid_dups == 0 then
+                    task_obj.has_variants = false
+                    task_obj.duplicates = nil
+                end
+            end
+
+            -- Multi-variant fetch: best priority among all variants
+            if task_obj.has_variants and is_fetch_category
+                and a_ui_pda_inventory_cache then
+                local best = task_obj.priority
+                for _, dup in ipairs(task_obj.duplicates or {}) do
+                    if dup.fetch_sec then
+                        a_ui_pda_inventory_cache.register_fetch_task_params_for_npc(
+                            dup.task_id, dup.npc_id,
+                            dup.fetch_sec, dup.fetch_count or 1)
+                    end
+                    local dp = a_ui_pda_inventory_cache
+                        .get_fetch_task_sort_priority(dup.task_id, dup.npc_id)
+                    if dp < best then best = dp end
+                end
+                task_obj.priority = best
+            end
+
+            table.insert(entries, task_obj)
+        end
+    end
+
+    if #entries == 0 then return false end
+
+    if is_fetch_category then
+        for i, obj in ipairs(entries) do obj.original_index = i end
+        table.sort(entries, function(a, b)
+            if a.priority ~= b.priority then
+                return a.priority < b.priority
+            end
+            return a.original_index < b.original_index
+        end)
+    end
+
+    for _, task_obj in ipairs(entries) do
+        z_taskboard_data.entry_cache[task_obj.key] = task_obj
+        self.task_list:AddExistingItem(task_list_element(task_obj))
+    end
+
+    reposition_list_items(self.task_list)
+    Log_write("DrawTaskList: %d tasks for category=%s", #entries, tostring(category_name))
+    return true
+end
+
+-- List Click Handlers
+
+function pda_taskboard_tab:OnCategoryClicked()
+    if self.confirm_dialog_visible then return end
+
+    local item = self.category_list:GetSelectedItem()
+    if not item then return end
+
+    self.selected_category = item.category_name
+    Log_write("OnCategoryClicked: %s", tostring(item.category_name))
+
+    if item.category_name == CANCEL_CATEGORY then
+        self:UpdateCategoryHighlight()
+        self:DrawCancelTaskList()
+    else
+        self:UpdateCategoryHighlight()
+        local has_tasks = self:DrawTaskList(item.category_name)
+        if not has_tasks then
+            z_taskboard_data.board_data[item.category_name] = nil
+            self:DrawCategoryList()
+        end
+    end
+end
+
+local key_held = false
+function pda_taskboard_tab:OnTaskClicked()
+    if self.confirm_dialog_visible then return end
+
+    local category_name = self.selected_category
+    local task_item     = self.task_list:GetSelectedItem()
+    if not (category_name and task_item) then return end
+
+    -- Alt+Click: save task info to file
+    if key_held then
+        local task_id = task_item.task_id
+        local task_ini = task_manager.task_ini
+        local title_key = task_ini:r_string_ex(task_id, "title") or ""
+        local title_tr = game.translate_string(title_key)
+        if title_tr == title_key then title_tr = "" end
+        local icon = task_ini:r_string_ex(task_id, "icon") or ""
+
+        -- Resolve details (same logic as task_list_element:__init)
+        local ini_descr = task_ini:r_string_ex(task_id, "descr")
+        local details = game.translate_string("st_taskboard_details_"..task_id) or ""
+        if details == "st_taskboard_details_"..task_id then
+            local cached = z_taskboard_data.entry_cache[task_item.key]
+            details = (cached and cached.task_details) or game.translate_string(ini_descr) or ""
+        end
+        if ini_descr and details == game.translate_string(ini_descr) then
+            details = ""
+        end
+
+        Log_write("Alt+Click save task_id=%s", tostring(task_id))
+        local f = io.open("taskboard_task_id.txt", "w")
+        if f then
+            f:write("task_id: " .. tostring(task_id) .. "\n")
+            if title_key ~= "" then f:write("title_key: " .. title_key .. "\n") end
+            if title_tr ~= "" then f:write("title: " .. title_tr .. "\n") end
+            if icon ~= "" then f:write("icon: " .. icon .. "\n") end
+            if details ~= "" then f:write("details: " .. details .. "\n") end
+            f:close()
+        end
+        self.task_list:SetSelectedIndex(-1)
+        return
+    end
+
+    if task_item.is_blocked or task_item.is_faulty then
+        Log_write("OnTaskClicked: blocked=%s faulty=%s key=%s", tostring(task_item.is_blocked), tostring(task_item.is_faulty), tostring(task_item.key))
+        return
+    end
+
+    if category_name == CANCEL_CATEGORY then
+        Log_write("OnTaskClicked: cancel request key=%s", tostring(task_item.key))
+        self:ShowConfirmDialog(task_item)
+        return
+    end
+
+    -- Multi-variant card: ignore clicks outside variant rows
+    if task_item.has_variants and (not task_item.hovered_variant or task_item.hovered_variant == 0) then
+        Log_write("OnTaskClicked: no variant hovered on multi-variant card key=%s", tostring(task_item.key))
+        self.task_list:SetSelectedIndex(-1)
+        return
+    end
+
+    -- Determine accept key: variant row
+    local accept_key = task_item.key
+    if task_item.has_variants and task_item.hovered_variant then
+        local vi = task_item.hovered_variant
+        if vi > 0 and task_item.variant_rows and task_item.variant_rows[vi] then
+            local row = task_item.variant_rows[vi]
+            if row.reached_limit then
+                Log_write("OnTaskClicked: variant blocked key=%s", tostring(row.key))
+                return
+            end
+            accept_key = row.key
+        end
+    end
+
+    Log_write("OnTaskClicked: accept key=%s cat=%s variant=%s", tostring(accept_key), tostring(category_name), tostring(task_item.hovered_variant or 0))
+
+    -- Notify rare bonus system: freeze star growth for accepted task
+    if task_item.has_variants and task_item.hovered_variant then
+        local vi = task_item.hovered_variant
+        if vi > 0 and task_item.variant_rows and task_item.variant_rows[vi] then
+            local row = task_item.variant_rows[vi]
+            z_taskboard_rare_bonus.on_accept(task_item.task_id, row.npc_id, row.details_text_raw or "")
+        end
+    else
+        z_taskboard_rare_bonus.on_accept(task_item.task_id, task_item.npc_id, task_item.details_text_raw or "")
+    end
+
+    z_taskboard_data.accept_task(accept_key)
+
+    -- After accept_task, remove_duplicate_tasks may have already removed entries.
+    -- Check if category still exists.
+    local cat_removed = false
+    local cat_tasks = z_taskboard_data.board_data[category_name]
+    if type(cat_tasks) == "table" then
+        for i, t in ipairs(cat_tasks) do
+            if t.key == task_item.key then
+                table.remove(cat_tasks, i)
+                break
+            end
+        end
+        if #cat_tasks == 0 then
+            z_taskboard_data.board_data[category_name] = nil
+            cat_removed = true
+        end
+    else
+        -- Category was already emptied by remove_duplicate_tasks
+        cat_removed = true
+    end
+
+    if cat_removed then
+        self:DrawCategoryList()
+    else
+        self:DrawCategoryListIncremental()
+        self:DrawTaskList(category_name)
+    end
+end
+
+-- Singleton Access
+
+function get_ui()
+    if not instance then
+        instance = pda_taskboard_tab()
+    end
+    return instance
+end
+
+-- Hotkey
+local function on_key_press(key)
+    if config.logging and key == 184 then key_held = true end
+end
+
+function on_key_release(key)
+    if config.logging and key == 184 then key_held = false end
+    if key ~= config.taskboard_key then return end
+
+    Log_write("on_key_release: hotkey pressed")
+
+    local pda_menu = ActorMenu.get_pda_menu()
+    local use_3d   = get_console_cmd(1, "g_3d_pda")
+
+    if not pda_menu:IsShown() and db.actor:item_in_slot(8) then
+        if use_3d then db.actor:activate_slot(8)
+        else pda_menu:ShowDialog(true) end
+        pda_menu:SetActiveSubdialog("eptTaskboard")
+    elseif pda_menu:IsShown() then
+        if use_3d then db.actor:activate_slot(0)
+        else pda_menu:HideDialog() end
+    end
+end
+
+-- Entry Point
+
+local function on_settings_loaded()
+    load_config()
+    Color.init()
+    load_locale()
+    z_taskboard_rare_bonus.set_locale(locale)
+    Log_write("on_settings_loaded: UI config applied")
+end
+
+function on_game_start()
+    RegisterScriptCallback("on_game_load", on_settings_loaded)
+    RegisterScriptCallback("on_option_change", on_settings_loaded)
+    RegisterScriptCallback("on_key_press", on_key_press)
+    RegisterScriptCallback("on_key_release", on_key_release)
+    Log_write("on_game_start: UI callbacks registered")
+end

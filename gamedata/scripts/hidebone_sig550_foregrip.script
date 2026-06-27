@@ -1,0 +1,27 @@
+--[[
+
+NOTE: KEEP THIS TEXT FOR OTHERS AND TO CREDIT THE ORIGINAL AUTHOR.
+This work is licensed under a Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License
+
+	RavenAscendant
+	2025/1/16
+
+--]]
+
+class "hidebone_sig550_foregrip" ( object_binder )
+function hidebone_sig550_foregrip:__init(obj) super(obj)
+end
+
+function bind(obj)
+    obj:bind_object(hidebone_sig550_foregrip(obj))
+end
+
+function hidebone_sig550_foregrip:update(delta)
+    object_binder.update(self, delta)
+    local gl_state = self.object:weapon_is_grenadelauncher()
+    if gl_state ~= self.gl_state then
+        self.gl_state = gl_state
+        self.object:set_bone_visible("foregrip", not gl_state, true, true)
+        self.object:set_bone_visible("foregrip", not gl_state, true, false)
+    end
+end

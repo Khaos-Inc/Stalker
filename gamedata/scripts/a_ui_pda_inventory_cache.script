@@ -1,0 +1,510 @@
+
+-- Values indicate where the stash object ID is stored in each table entry:
+--   "key" = ID is the dictionary key  (player_created_stashes[id] = data)
+--   "val" = ID is the dictionary value (workshop_stashes[name] = id)
+local stash_types = {
+    player_created_stashes   = "key",
+    workshop_stashes         = "val",
+}
+
+local stash_cache = {}
+local fetch_task_params = {}
+
+-- Logging shorthand (resolves z_taskboard_data.Log at call time)
+local function Log_write(fmt, ...)
+    z_taskboard_data.Log.write(fmt, ...)
+end
+
+-- ======================= UTILS =======================
+
+local function safe_count(item)
+    local ok, uses = pcall(item.get_remaining_uses, item)
+    if ok and type(uses) == "number" and uses > 1 then
+        return uses
+    end
+    return 1
+end
+
+local function level_display_name(level_key)
+    local t = game.translate_string(level_key)
+    if t and t ~= level_key then
+        return t
+    end
+    return level_key
+end
+
+-- ======================= STASH ITERATION =======================
+
+local function for_each_stash_item(callback)
+    local m_data = alife_storage_manager.get_state()
+    if not m_data then return end
+
+    for stash_table, id_field in pairs(stash_types) do
+        local stash_data = m_data[stash_table]
+        if type(stash_data) ~= "table" then goto continue end
+
+        for k, v in pairs(stash_data) do
+            local sid = (id_field == "key") and k or v
+            if type(sid) ~= "number" then goto next_stash end
+
+            local box = level.object_by_id(sid)
+            if box then
+                pcall(function()
+                    box:iterate_inventory_box(callback, box)
+                end)
+            end
+
+            ::next_stash::
+        end
+
+        ::continue::
+    end
+end
+
+-- ======================= LIVE COUNT =======================
+
+local function live_inventory_count(section)
+    if not db or not db.actor or not section then return 0 end
+
+    local cnt = 0
+    pcall(function()
+        db.actor:iterate_inventory(function(_, item)
+            if item:section() == section then
+                cnt = cnt + safe_count(item)
+            end
+        end, nil)
+    end)
+    return cnt
+end
+
+local function live_stash_count(section)
+    if not db or not db.actor or not section then return 0 end
+
+    local cnt = 0
+    for_each_stash_item(function(_, item)
+        if item:section() == section then
+            cnt = cnt + safe_count(item)
+        end
+    end)
+    return cnt
+end
+
+-- ======================= STASH SCAN =======================
+
+local function scan_current_stashes()
+    if not db or not db.actor then return end
+
+    local cache = {}
+    for_each_stash_item(function(_, item)
+        local sec = item:section()
+        cache[sec] = (cache[sec] or 0) + safe_count(item)
+    end)
+
+    stash_cache[level.name()] = next(cache) ~= nil and cache or nil
+end
+
+-- ======================= PERSISTENCE =======================
+
+local function serialize_stash_cache()
+    local result = {}
+    for lvl_key, items in pairs(stash_cache) do
+        local items_list = {}
+        for section, count in pairs(items) do
+            items_list[#items_list + 1] = { s = section, c = count }
+        end
+        result[#result + 1] = { l = lvl_key, i = items_list }
+    end
+    return result
+end
+
+local function deserialize_stash_cache(data)
+    local cache = {}
+    if type(data) ~= "table" then return cache end
+    for _, entry in ipairs(data) do
+        if entry.l and type(entry.i) == "table" then
+            local items = {}
+            for _, item in ipairs(entry.i) do
+                if item.s then
+                    items[item.s] = item.c or 0
+                end
+            end
+            cache[entry.l] = items
+        end
+    end
+    return cache
+end
+
+local SAVE_VERSION = 1
+local SAVE_KEY    = "tb_inv_cache"
+
+local function on_save_state(m)
+    scan_current_stashes()
+    m[SAVE_KEY] = {
+        version = SAVE_VERSION,
+        data    = serialize_stash_cache(),
+    }
+end
+
+local function on_load_state(m)
+
+    local saved = m[SAVE_KEY]
+    if type(saved) ~= "table" then return end
+    if saved.version ~= SAVE_VERSION then
+        Log_write("on_load_state: old inv_cache version %s, discarding", tostring(saved.version))
+        m[SAVE_KEY] = nil
+        return
+    end
+    stash_cache = deserialize_stash_cache(saved.data)
+end
+
+-- ======================= TEXT FORMATTING =======================
+
+local function count_color(cnt, amount)
+    if not amount then
+        return utils_xml.get_color("pda_white")
+    end
+    if cnt == 0 then
+        return utils_xml.get_color("d_red")
+    elseif cnt >= amount then
+        return utils_xml.get_color("pda_green")
+    else
+        return utils_xml.get_color("pda_yellow")
+    end
+end
+
+local function color_number(cnt, clr_num, clr_reset)
+    return clr_num .. "x" .. tostring(cnt) .. clr_reset
+end
+
+local function build_count_text(section, amount, anom_cnt)
+    if not section or not db or not db.actor then
+        return ""
+    end
+
+    local inv_cnt = live_inventory_count(section)
+    local clr_txt = utils_xml.get_color("pda_white")
+
+    local gc = game.translate_string
+    local inv_label = gc("st_inv_cache_inventory")
+    local stash_label = gc("st_inv_cache_stashes")
+
+    local lines = {}
+    local total_stash_cnt = 0
+    local current_lvl = level.name()
+
+    for lvl_key, items in pairs(stash_cache) do
+        local cnt
+        if lvl_key == current_lvl then
+            cnt = live_stash_count(section)
+        else
+            cnt = items[section] or 0
+        end
+
+        total_stash_cnt = total_stash_cnt + cnt
+        if cnt > 0 then
+            table.insert(lines, {
+                key   = lvl_key,
+                name  = level_display_name(lvl_key),
+                count = cnt,
+            })
+        end
+    end
+
+    if not stash_cache[current_lvl] then
+        local cnt = live_stash_count(section)
+        total_stash_cnt = total_stash_cnt + cnt
+        if cnt > 0 then
+            table.insert(lines, {
+                key   = current_lvl,
+                name  = level_display_name(current_lvl),
+                count = cnt,
+            })
+        end
+    end
+
+    table.sort(lines, function(a, b)
+        if a.key == current_lvl then return true end
+        if b.key == current_lvl then return false end
+        return a.key < b.key
+    end)
+
+    local inv_clr = count_color(inv_cnt, amount)
+    local text = clr_txt .. inv_label .. " " .. color_number(inv_cnt, inv_clr, clr_txt)
+
+        local nl = " \\n"..string.char(10)
+    if #lines > 0 then
+        local total_clr = count_color(total_stash_cnt, amount)
+        text = text .. nl .. clr_txt .. stash_label .. " "
+            .. color_number(total_stash_cnt, total_clr, clr_txt) .. ":"
+		if anom_cnt ~= "" then text = text .. " | " .. anom_cnt end
+        for _, entry in ipairs(lines) do
+            local entry_clr = count_color(entry.count, amount)
+            text = text .. nl .. clr_txt .. entry.name .. " "
+                .. color_number(entry.count, entry_clr, clr_txt)
+        end
+    elseif total_stash_cnt == 0 then
+        text = text .. nl .. clr_txt .. stash_label .. " "
+            .. color_number(0, count_color(0, amount), clr_txt)
+		if anom_cnt ~= "" then text = text .. nl .. anom_cnt end
+    end
+    return text
+end
+
+-- ======================= API =======================
+
+local function get_anomalous_stash_suffix(section, amount)
+    if not anomalous_stash or not anomalous_stash.hidden_stash then return "" end
+    local box = level.object_by_id(anomalous_stash.hidden_stash)
+    if not box then return "" end
+
+    local cnt = 0
+    pcall(function()
+        box:iterate_inventory_box(function(_, item)
+            if item:section() == section then
+                cnt = cnt + safe_count(item)
+            end
+        end, box)
+    end)
+
+    local clr_number = count_color(cnt, amount)
+    local clr_txt = utils_xml.get_color("pda_white")
+    return string.format(game.translate_string("st_fetch_count_in_anom_stash"), clr_txt, clr_number, cnt, clr_txt)
+end
+
+--- Returns formatted item count text for fetch tasks (inventory + stashes).
+--- Dual calling convention:
+---   get_cached_fetch_count_text(news_text, section, amount, task_id)
+---     Appends count text to news_text and registers fetch params for sorting.
+---   get_cached_fetch_count_text(section, amount)
+---     Returns count text only (used by IGI resolution).
+function get_cached_fetch_count_text(arg1, arg2, arg3, arg4)
+
+        -- Anomalous Stash addon: count items in the hidden anomalous stash
+    local anom_cnt = fetch_anomalous_stash and get_anomalous_stash_suffix(arg2, arg3) or ""
+
+    if arg3 then
+        if arg4 then
+            -- Always write to the simple key for backward compatibility
+            -- (get_fetch_task_sort_priority falls back to it)
+            fetch_task_params[arg4] = {section = arg2, amount = arg3}
+            Log_write("get_cached_fetch_count_text: registered task_id=%s section=%s amount=%s", tostring(arg4), tostring(arg2), tostring(arg3))
+        end
+        local count_text = build_count_text(arg2, arg3, anom_cnt)
+        if count_text == "" then
+            return arg1 or ""
+        end
+        return arg1 .. "\\n" .. count_text
+    else
+        return build_count_text(arg1, arg2, anom_cnt)
+    end
+end
+
+-- ======================= FETCH TASK SORTING =======================
+
+function register_fetch_task_params(task_id, section, amount)
+    if task_id and section and amount then
+        fetch_task_params[task_id] = {section = section, amount = amount}
+        Log_write("register_fetch_task_params: task_id=%s section=%s amount=%s", tostring(task_id), tostring(section), tostring(amount))
+    end
+end
+
+--- Registers fetch params under a per-NPC composite key (task_id|npc_id).
+--- Called from UI layer before get_fetch_task_sort_priority so multi-variant
+--- cards don't overwrite each other's data on the simple key.
+function register_fetch_task_params_for_npc(task_id, npc_id, section, amount)
+    if task_id and npc_id and section and amount then
+        fetch_task_params[task_id .. "|" .. npc_id] = {section = section, amount = amount}
+        Log_write("register_fetch_task_params_for_npc: task_id=%s npc_id=%s section=%s amount=%s", tostring(task_id), tostring(npc_id), tostring(section), tostring(amount))
+    end
+end
+
+function get_fetch_task_sort_priority(task_id, npc_id)
+    if not task_id or not db or not db.actor then return 4 end
+
+    local section = nil
+    local amount = nil
+
+    -- Try composite key first (multi-variant cards store per-NPC params)
+    if npc_id then
+        local params = fetch_task_params[task_id .. "|" .. npc_id]
+        if params then
+            section = params.section
+            amount = params.amount
+        end
+    end
+
+    -- Fall back to simple key (single-variant or legacy)
+    if not section then
+        local params = fetch_task_params[task_id]
+        if params then
+            section = params.section
+            amount = params.amount
+        end
+    end
+
+    if not section and igi_generic_task and igi_generic_task.TASK_SETUP then
+        local CACHE = igi_generic_task.TASK_SETUP[task_id]
+        if CACHE then
+            if CACHE.entities then
+                for _, entity in ipairs(CACHE.entities) do
+                    if entity.section_name then
+                        section = entity.section_name
+                        amount = entity.amount or 1
+                        break
+                    end
+                end
+            end
+            if not section and CACHE.setup then
+                for key, entry in pairs(CACHE.setup) do
+                    if type(entry) == "table" and entry.entity_type == "item" and entry.section_name then
+                        section = entry.section_name
+                        amount = entry.amount or entry.how_much or 1
+                        break
+                    end
+                end
+            end
+        end
+    end
+
+    if not section or not amount then
+        Log_write("get_fetch_task_sort_priority: no params task_id=%s npc_id=%s", tostring(task_id), tostring(npc_id))
+        return 4
+    end
+
+    local inv_cnt = live_inventory_count(section)
+    local local_stash_cnt = live_stash_count(section)
+
+    local total_stash_cnt = local_stash_cnt
+    local current_lvl = level.name()
+    for lvl_key, items in pairs(stash_cache) do
+        if lvl_key ~= current_lvl then
+            total_stash_cnt = total_stash_cnt + (items[section] or 0)
+        end
+    end
+
+    local priority
+    if inv_cnt >= amount then
+        priority = 1
+    elseif local_stash_cnt >= amount then
+        priority = 2
+    elseif (inv_cnt + total_stash_cnt) > 0 then
+        priority = 3
+    else
+        priority = 4
+    end
+    Log_write("get_fetch_task_sort_priority: task_id=%s npc_id=%s section=%s amount=%s inv=%d stash_local=%d stash_total=%d -> prio=%d",
+        tostring(task_id), tostring(npc_id), tostring(section), tostring(amount),
+        inv_cnt, local_stash_cnt, total_stash_cnt, priority)
+    return priority
+end
+
+function get_fetch_sort_priority_for(section, amount)
+    if not section or not amount or not db or not db.actor then return 4 end
+
+    local inv_cnt = live_inventory_count(section)
+    local local_stash_cnt = live_stash_count(section)
+
+    local total_stash_cnt = local_stash_cnt
+    local current_lvl = level.name()
+    for lvl_key, items in pairs(stash_cache) do
+        if lvl_key ~= current_lvl then
+            total_stash_cnt = total_stash_cnt + (items[section] or 0)
+        end
+    end
+
+    if inv_cnt >= amount then
+        return 1
+    elseif local_stash_cnt >= amount then
+        return 2
+    elseif (inv_cnt + total_stash_cnt) > 0 then
+        return 3
+    else
+        return 4
+    end
+end
+
+function get_fetch_task_params(task_id, npc_id)
+    if not task_id then return nil end
+    -- Try per-NPC composite key first (multi-variant cards)
+    if npc_id then
+        local params = fetch_task_params[task_id .. "|" .. npc_id]
+        if params then return params end
+    end
+    -- Fall back to simple key (single-variant or IGI tasks)
+    return fetch_task_params[task_id]
+end
+
+function clear_fetch_task_params()
+    fetch_task_params = {}
+end
+
+-- ======================= RUNTIME PATCHES =======================
+
+local function cached_extend_news_text(news_text, section, amount, task_id)
+    return get_cached_fetch_count_text(news_text, section, amount, task_id)
+end
+
+local function cached_tasks_fetch_postpone_fetch_for_next_frame(task_id, section, amount)
+    if not (task_id and section) then
+        return true
+    end
+
+    task_id = string.sub(task_id, 1, -7) or ""
+    amount = amount or 1
+
+    local extra = ""
+    if ini_sys and ini_sys:r_string_ex(section, "kind") == "i_arty" then
+        extra = " " .. game.translate_string("st_ui_artefact")
+    end
+
+    local clr = utils_xml.get_color("pda_white")
+    local news_caption = game.translate_string("ui_inv_needs") .. ":"
+    local news_ico = task_manager.task_ini:r_string_ex(task_id, "icon") or "ui_inGame2_D_Sisshik"
+    local news_text = ui_item.get_sec_name(section) .. extra .. clr .. " (x" .. amount .. ")"
+
+    news_text = get_cached_fetch_count_text(news_text, section, amount, task_id)
+
+    db.actor:give_talk_message2(news_caption, news_text, news_ico, "iconed_answer_item", task_id)
+
+    return true
+end
+
+local function install_runtime_tasks_fetch_patch()
+    if not tasks_fetch or type(tasks_fetch.postpone_fetch_for_next_frame) ~= "function" then
+        return false
+    end
+
+    if tasks_fetch.postpone_fetch_for_next_frame == cached_tasks_fetch_postpone_fetch_for_next_frame then
+        return true
+    end
+
+    tasks_fetch.postpone_fetch_for_next_frame = cached_tasks_fetch_postpone_fetch_for_next_frame
+    return true
+end
+
+local function install_runtime_fetch_shows_patch()
+    if not z_fetch_shows_count or type(z_fetch_shows_count.extend_news_text) ~= "function" then
+        return false
+    end
+
+    if z_fetch_shows_count.extend_news_text == cached_extend_news_text then
+        return true
+    end
+
+    z_fetch_shows_count.extend_news_text = cached_extend_news_text
+    return true
+end
+
+-- ======================= INIT =======================
+
+local function install_all_patches()
+    install_runtime_fetch_shows_patch()
+    install_runtime_tasks_fetch_patch()
+end
+
+function on_game_start()
+    RegisterScriptCallback("save_state", on_save_state)
+    RegisterScriptCallback("load_state", on_load_state)
+    RegisterScriptCallback("on_game_load", install_all_patches)
+    install_all_patches()   -- all scripts loaded by now, install patches
+end

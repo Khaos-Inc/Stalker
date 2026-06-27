@@ -1,0 +1,94 @@
+local CONE_ANGLE_H = 60
+local CONE_ANGLE_V = 30
+local RAY_COUNT_H = 12
+local RAY_COUNT_V = 6
+
+function on_game_start()
+	RegisterScriptCallback("actor_on_weapon_before_fire", actor_on_weapon_before_fire)
+end
+
+function actor_on_weapon_before_fire(flags)
+	local wpn = db.actor:active_item()
+	if not (wpn and wpn:clsid() == clsid.wpn_knife_s) then 
+		return 
+	end
+
+	local sec = wpn:section()
+	local melee_range = ini_sys:r_float_ex(sec, "fire_distance") or 2.0
+
+	local best_target = nil
+	local shortest_distance = melee_range
+	local chosen_direction = nil
+
+	local cam_pos = device().cam_pos
+	local cam_dir = device().cam_dir
+
+	local base_yaw = cam_dir:getH()
+	local base_pitch = -cam_dir:getP()
+
+	local start_h = -(CONE_ANGLE_H / 2)
+	local step_h = CONE_ANGLE_H / (RAY_COUNT_H - 1)
+
+	local start_v = -(CONE_ANGLE_V / 2)
+	local step_v = CONE_ANGLE_V / (RAY_COUNT_V - 1)
+
+	local h_indices = {}
+	for h = 0, RAY_COUNT_H - 1 do
+		table.insert(h_indices, h)
+	end
+	table.sort(h_indices, function(a, b)
+		return math.abs(start_h + (a * step_h)) < math.abs(start_h + (b * step_h))
+	end)
+
+	local v_indices = {}
+	for v = 0, RAY_COUNT_V - 1 do
+		table.insert(v_indices, v)
+	end
+	table.sort(v_indices, function(a, b)
+		return math.abs(start_v + (a * step_v)) < math.abs(start_v + (b * step_v))
+	end)
+
+	for _, h in ipairs(h_indices) do
+		local offset_h = start_h + (h * step_h)
+		local final_yaw = base_yaw + math.rad(offset_h)
+
+		for _, v in ipairs(v_indices) do
+			local offset_v = start_v + (v * step_v)
+			local final_pitch = base_pitch + math.rad(offset_v)
+
+			local cos_p = math.cos(final_pitch)
+			local ray_dir = vector():set(
+				-math.sin(final_yaw) * cos_p,
+				math.sin(final_pitch),
+				math.cos(final_yaw) * cos_p
+			):normalize()
+
+			local pick = ray_pick()
+			pick:set_position(cam_pos)
+			pick:set_direction(ray_dir)
+			pick:set_range(melee_range)
+			pick:set_flags(2)
+
+			if pick:query() then
+				local obj = pick:get_object()
+				local dist = pick:get_distance()
+
+				if obj and (IsStalker(obj) or IsMonster(obj)) then
+					if dist < shortest_distance and obj:alive() then
+						shortest_distance = dist
+						best_target = obj
+						chosen_direction = ray_dir
+						break
+					end
+				end
+			end
+		end
+		if best_target then 
+			break 
+		end
+	end
+
+	if best_target and chosen_direction then
+		db.actor:set_actor_direction(chosen_direction:getH())
+	end
+end

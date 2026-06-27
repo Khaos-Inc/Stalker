@@ -1,0 +1,61 @@
+[wpn_tt33_modern_tt_upgr_kit]:wpn_tt33_modern    
+parent_section	= wpn_tt33_modern_tt_upgr_kit
+
+scopes			= 
+
+icons_texture      = ui\remademeowie_icon
+	inv_grid_width     = 2
+	inv_grid_height    = 1
+	inv_grid_x         = 2
+	inv_grid_y         = 3
+
+        fire_dispersion_base        = 0.49
+        bullet_speed                = 460
+
+        silencer_name               = wpn_sil_9mm
+        silencer_status             = 2
+	silencer_x                  = 79
+	silencer_y                  = -20
+
+        ammo_elapsed                = 13
+        ammo_mag_size               = 13
+
+        hud				                 = wpn_tt33_sk1_tt_upgr_kit_hud
+        laser_status                     = true
+
+        inv_name                    = st_wpn_tt33_custom_upgr
+        inv_name_short              = st_wpn_tt33_custom_upgr
+        description                 = st_wpn_tt33_custom_upgr_descr
+
+[wpn_tt33_sk1_tt_upgr_kit_hud]:wpn_tt33_sk1_hud
+        item_visual                      = anomaly_weapons\wpn_tt33\wpn_tt33_sk1_upgr_kit_hud.ogf
+
+        hands_orientation                = -0.104603, -0.277283, -1
+        hands_orientation_16x9           = -0.104603, -0.277283, -1
+        hands_position                   = -0.022444, 0.000256, 0.037161
+        hands_position_16x9              = -0.022444, 0.000256, 0.037161
+		
+        aim_hud_offset_pos               = -0.025513, 0.024326, -0.028739
+        aim_hud_offset_pos_16x9          = -0.025513, 0.024326, -0.028739
+        aim_hud_offset_rot               = 9.7e-05, 9.7e-05, -0.1065
+        aim_hud_offset_rot_16x9          = 9.7e-05, 9.7e-05, -0.1065
+		
+        aim_hud_offset_alt_pos           = -0.069757, -0.04419, -0.070309
+        aim_hud_offset_alt_pos_16x9      = -0.069757, -0.04419, -0.070309
+        aim_hud_offset_alt_rot           = 9.7e-05, 9.7e-05, 0.6
+        aim_hud_offset_alt_rot_16x9      = 9.7e-05, 9.7e-05, 0.6
+
+;--------------Extended mag reloads
+        anm_reload                               = eft_tt33_new_reload_nobump_ext, reload_nobump
+        anm_reload_empty                         = eft_tt33_new_reload_empty_nobump_ext, reload_empty_nobump
+        anm_ammo_check                           = eft_tt33_new_magcheck_ext, magcheck
+        anm_ammo_check_empty                     = eft_tt33_new_magcheck_ext, magcheck_empty
+        anm_ammo_check_no_mag                    = eft_tt33_new_magcheck_ext, magcheck_empty
+        anm_ammo_check_jammed                    = eft_tt33_new_magcheck_ext, magcheck_jammed
+        anm_ammo_check_empty_jammed              = eft_tt33_new_magcheck_ext, magcheck_jammed_empty		
+;---------------------------------------------------
+![wpn_tt33]:wpn_tt33_modern
+parent_section	= wpn_tt33
+[wpn_tt33_tt_upgr_kit]:wpn_tt33_modern_tt_upgr_kit 
+parent_section	= wpn_tt33_tt_upgr_kit
+scopes			=

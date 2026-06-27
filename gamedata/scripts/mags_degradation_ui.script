@@ -1,0 +1,109 @@
+---==================================================================================================================---
+---    Script : mags_degradation_ui
+---    Description : Adds wear display, price scaling, and magazine disassembly support.
+---==================================================================================================================---
+
+local patched = false
+
+local function is_magazine(obj)
+    return obj and magazine_binder.is_magazine(obj)
+end
+
+local function patch_tooltip()
+    local build_desc_footer_orig = ui_item.build_desc_footer
+    local color_green = utils_xml.get_color("d_green")
+    local color_yellow = utils_xml.get_color("yellow")
+    local color_orange = utils_xml.get_color("d_orange")
+    local color_red = utils_xml.get_color("d_red")
+    local color_white = utils_xml.get_color("pda_white")
+
+    ui_item.build_desc_footer = function(obj, sec, str)
+        local result = build_desc_footer_orig(obj, sec, str)
+        if not is_magazine(obj) then return result end
+
+        local condition = magazine_binder.get_mag_condition(obj:id())
+        local percent = math.floor(condition * 100)
+        local condition_color = condition >= 0.75 and color_green
+            or condition >= 0.50 and color_yellow
+            or condition >= 0.25 and color_orange
+            or color_red
+
+        return result
+            .. "\\n "
+            .. color_green
+            .. game.translate_string("st_dot")
+            .. " "
+            .. color_white
+            .. game.translate_string("st_condition")
+            .. ": "
+            .. condition_color
+            .. percent
+            .. "%"
+    end
+end
+
+local function patch_disassembly()
+    local disassembly_item_orig = item_parts.disassembly_item
+    item_parts.disassembly_item = function(obj, obj_data)
+        if is_magazine(obj) then
+            local mag_data = magazine_binder.get_mag_loaded(obj:id())
+            if mag_data and #mag_data.loaded > 0 then
+                magazines.fast_unload_magazine(obj)
+            end
+        end
+
+        return disassembly_item_orig(obj, obj_data)
+    end
+end
+
+function get_item_price(obj, price)
+    if not is_magazine(obj) or not price then return end
+
+    local condition = magazine_binder.get_mag_condition(obj:id())
+    price.sell = math.floor(price.sell * condition)
+    price.buy = math.floor(price.buy * condition)
+end
+
+function mag_disassemble_precondition(obj, bag, mode)
+    if is_magazine(obj) then
+        return game.translate_string("st_awr_disassembly_cloth")
+    end
+end
+
+function mag_disassemble_functor(obj)
+    if not is_magazine(obj) then return end
+
+    local id = obj:id()
+    magazines.create_time_event("mag_degradation", "disassemble_" .. id, 0.1, function()
+        local current = level.object_by_id(id)
+        if current then item_parts.func_disassembly(current) end
+        return true
+    end)
+end
+
+function on_game_start()
+    if patched then return end
+    if mags_degradation_core and mags_degradation_core.install then
+        mags_degradation_core.install()
+    end
+    if not magazine_binder
+        or not magazine_binder.get_mag_condition
+        or not magazines
+        or not mags_patches
+    then
+        return
+    end
+
+    patched = true
+    patch_tooltip()
+    patch_disassembly()
+    RegisterScriptCallback("get_item_price", get_item_price)
+    custom_functor_autoinject.add_functor(
+        "mags_disassemble",
+        mag_disassemble_precondition,
+        mag_disassemble_precondition,
+        nil,
+        mag_disassemble_functor,
+        true
+    )
+end

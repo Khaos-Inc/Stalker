@@ -1,0 +1,53 @@
+-- ======================================================================
+--[[	Broken gun despawner for Weapon Parts Overhaul
+-- ======================================================================
+	Author: Catspaw (CatspawMods @ ModDB)
+	Source: https://www.moddb.com/mods/stalker-anomaly/addons/broken-gun-despawner-for-wpo
+-- ===================================================================--]]
+script_version 				= "1.1"
+release_date            	= 20240814
+--[[======================================================================
+	This does nothing without Weapon Parts Overhaul, obviously.
+	https://github.com/ahuyn/anomaly-wpo/releases/tag/latest
+
+	If an NPC picks up or loots any weapon that has one or more parts 
+	stripped from it, the weapon will be immediately despawned. This cuts 
+	down on item bloat, the tendency of NPCs to jam constantly from using 
+	broken weapons, and those obnoxious corpses of some stalker who 
+	looted eleventy bajillion busted guns.
+
+	Companion NPCs will not despawn weapons by default, in case the 
+	player wants a squadmate to carry something they plan to repair 
+	later. But you really shouldn't do that, because they might use it 
+	and trash it even more.
+-- ===================================================================--]]
+
+skip_squadmates = true -- if false, companions will despawn broken weapons
+
+function has_broken_parts(obj)
+	if not obj then return end
+	local parts_list = a_wpo_parts and a_wpo_parts.parts_list
+	local parts = se_load_var(obj:id(), obj:name(), "parts")
+	if not (parts and parts_list) then return end
+	for k,v in pairs(parts) do
+		if k and v and parts_list[k] and (v == -1) then
+			-- weapon has missing part
+			return true
+		end
+	end
+end
+
+function despawn_broken_weapons(npc, item)
+	if not (npc and npc:alive() and item and IsWeapon(item)) then return end
+	if item and has_broken_parts(item) then
+		local id = item:id()
+		printf("~ broken_gun_despawner:npc_item_on_take - weapon %s (%s) is missing one or more parts, despawning", item:name(), id)
+		local se_obj = id and alife_object(id)
+		if not se_obj then return end
+ 		alife_release(se_obj)
+	end
+end
+
+function on_game_start()
+	RegisterScriptCallback("npc_on_item_take", despawn_broken_weapons)
+end

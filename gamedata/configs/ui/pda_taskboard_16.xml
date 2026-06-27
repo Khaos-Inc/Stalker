@@ -1,0 +1,127 @@
+<w>
+    <main_wnd x="0" y="0" width="1024" height="768"/>
+
+    <frame_main x="28" y="94" width="764" height="614">
+        <texture>ui_inGame2_pda_buttons_background</texture>
+    </frame_main>
+
+    <frame_category_list x="0" y="54" width="200" height="560">
+        <texture>ui_inGame2_pda_buttons_background</texture>
+    </frame_category_list>
+
+    <frame_button_refresh x="0" y="0" width="200" height="54">
+        <texture>ui_inGame2_pda_buttons_background</texture>
+    </frame_button_refresh>
+
+    <!-- REFRESH TASK BUTTON -->
+    <btn_refresh x="14" y="6" width="172" height="42" stretch="1">
+        <texture>ui_inGame2_pda_taskboard_custom_refresh</texture>
+    </btn_refresh>
+
+    <category_list x="0" y="54" width="200" height="560" item_height="66" can_select="1" always_show_scroll="0">
+    </category_list>
+
+    <!-- STATUS TEXT: background generation progress overlay -->
+    <status_text x="0" y="568" width="200" height="46" complex_mode="1">
+        <text align="c" vert_align="c" font="letterica16" r="180" g="220" b="255">0/0</text>
+    </status_text>
+
+    <task_list x="200" y="0" width="564" height="614" item_height="200" can_select="1" always_show_scroll="0">
+    </task_list>
+
+    <!-- CATEGORY CARD -->
+    <category_card x="0" y="0" width="200" height="66">
+    </category_card>
+
+    <category_card_bg x="4" y="4" width="182" height="58" stretch="1">
+        <texture>ui_inGame2_pda_buttons_background</texture>
+    </category_card_bg>
+
+    <category_card_icon x="20" y="5" width="42" height="54" stretch="1">
+        <texture>ui\ui_noise</texture>
+    </category_card_icon>
+        
+    <category_card_name x="52" y="10" width="138" height="60">
+        <text align="c" vert_align="c" font="letterica18" r="200" g="200" b="200">category_card_name</text>
+    </category_card_name>
+
+    <!-- TASK CARD -->
+    <task_card x="0" y="0" width="564" height="200">
+    </task_card>
+
+    <task_card_bg x="6" y="6" width="544" height="188" stretch="1">
+        <texture>ui_inGame2_pda_taskboard_custom_background</texture>
+    </task_card_bg>
+    <task_card_bg_blocked x="6" y="6" width="544" height="188" stretch="1">
+        <texture>ui_inGame2_pda_taskboard_custom_background_blocked</texture>
+    </task_card_bg_blocked>
+
+    <task_card_npc_icon x="24" y="12" width="75" height="60" stretch="1">
+        <texture>ui\ui_noise</texture>
+    </task_card_npc_icon>
+
+    <task_card_npc_info x="12" y="75" width="104" height="113" complex_mode="1">
+        <text align="l" vert_align="t" font="letterica16" r="150" g="150" b="150">npc name placeholder</text>
+    </task_card_npc_info>
+
+    <task_card_icon x="119" y="12" width="106" height="76" stretch="1">
+        <texture>ui\ui_noise</texture>
+    </task_card_icon>
+<!-- 290 -->
+    <task_details_scrollbar x="230" y="12" width="322" height="80" right_ident="0" left_ident="0" top_indent="0" bottom_indent="0" vert_interval="0" always_show_scroll="0"/>
+    <task_details x="230" y="12" width="280" height="80" complex_mode="1">
+        <text align="l" vert_align="t" font="letterica16" r="150" g="150" b="150">details placeholder</text>
+    </task_details>
+
+    <task_description_scrollbar x="119" y="93" width="433" height="95" right_ident="0" left_ident="0" top_indent="0" bottom_indent="0" vert_interval="0" always_show_scroll="0"/>
+    <task_description x="119" y="93" width="423" height="95" complex_mode="1">
+        <text align="l" vert_align="t" font="letterica16" r="150" g="150" b="150">task description placeholder</text>
+    </task_description>
+
+    <!-- VARIANT ROW (multi-variant card) -->
+    <variant_row_bg x="12" y="0" width="540" height="68" stretch="1">
+        <texture>ui_inGame2_pda_taskboard_custom_background</texture>
+    </variant_row_bg>
+	<variant_row_bg_blocked x="12" y="0" width="540" height="68" stretch="1">
+        <texture>ui_inGame2_pda_taskboard_custom_background_blocked</texture>
+    </variant_row_bg_blocked>
+
+    <variant_row_npc_icon x="4" y="8" width="65" height="52" stretch="1">
+        <texture>ui\ui_noise</texture>
+    </variant_row_npc_icon>
+
+    <variant_row_npc_name x="70" y="8" width="150" height="32" complex_mode="1">
+        <text align="l" vert_align="t" font="letterica16" r="150" g="150" b="150">variant npc</text>
+    </variant_row_npc_name>
+
+    <variant_row_freq_text x="230" y="36" width="150" height="16" complex_mode="1">
+        <text align="l" vert_align="t" font="letterica16" r="150" g="150" b="150">freq</text>
+    </variant_row_freq_text>
+    
+	<variant_row_details_scrollbar x="230" y="4" width="315" height="60" right_ident="0" left_ident="0" top_indent="0" bottom_indent="0" vert_interval="0" always_show_scroll="0"/>
+    <variant_row_details x="230" y="4" width="280" height="60" complex_mode="1">
+        <text align="l" vert_align="t" font="letterica16" r="150" g="150" b="150">variant details</text>
+    </variant_row_details>
+	
+	<variant_row_overlay x="0" y="0" width="544" height="68" stretch="1">
+        <texture>ui\ui_noise</texture>
+    </variant_row_overlay>
+
+    <!-- CONFIRM CANCEL DIALOG -->
+    <confirm_dialog_bg x="160" y="271" width="500" height="260" stretch="1">
+        <texture>ui_inGame2_pda_taskboard_custom_background2</texture>
+    </confirm_dialog_bg>
+
+    <confirm_dialog_text x="180" y="296" width="460" height="140" complex_mode="1">
+        <text align="c" vert_align="c" font="letterica18" r="255" g="255" b="255">confirm</text>
+    </confirm_dialog_text>
+
+    <btn_confirm_yes x="320" y="450" width="50" height="50" stretch="1">
+        <texture>ui_inGame2_pda_taskboard_accept</texture>
+    </btn_confirm_yes>
+
+    <btn_confirm_no x="450" y="450" width="50" height="50" stretch="1">
+        <texture>ui_inGame2_pda_taskboard_task_limit_reached</texture>
+    </btn_confirm_no>
+
+</w>

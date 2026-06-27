@@ -1,0 +1,337 @@
+[wpn_colt1911_anarchy]:identity_immunities,weapon_probability,default_weapon_params,wpn_colt1911_sounds
+icons_texture      = ui\remademeowie_icon
+	inv_grid_width     = 2
+	inv_grid_height    = 1
+	inv_grid_x         = 4
+	inv_grid_y         = 3
+
+        laser_status                     = true
+        use_alt_aim_hud                  = true
+
+        GroupControlSection         = spawn_group
+        $npc                        = on
+        $prefetch                   = 8
+        $spawn                      = "weapons\colt1911"
+        scheduled                   = off
+        cform                       = skeleton
+        
+        class                       = WP_PM
+        slot                        = 1
+        animation_slot              = 1
+        ef_weapon_type              = 5
+        hand_dependence             = 1
+        single_handed               = 1
+        
+        default_to_ruck             = false
+        sprint_allowed              = true
+
+        inv_name                    = st_wpn_colt1911_n
+        inv_name_short              = st_wpn_colt1911_n
+        description                 = st_wpn_colt1911_n_descr
+        
+        kind                        = w_pistol
+        inv_weight                  = 1.075
+        repair_type                 = pistol
+        
+        hud                         = wpn_colt1911_n_hud
+        visual                      = dynamics\weapons\wpn_colt1911_n\wpn_colt1911_anarchy_world.ogf
+        position                    = -0.021, -0.085, 0
+        orientation                 = 0, 0, 0
+        fire_point                  = 0, 0.133, 0.161
+        fire_point2                 = 0, 0.133, 0.161
+        ph_mass                     = 1
+        
+        flame_particles             = weapons\generic_weapon03
+        ;smoke_particles             = weapons\generic_shoot_00
+        
+		smoke_particles		   	    = ghost_particles\weapons\flame_eft_sks          ;particles remade incomp.		
+		
+		shell_point		 	        = 0.0, 0.133, 0.047
+		shell_dir		 	        = 0.0, 0.0, 0.4
+		shell_particles	 		    = weapons\45acp
+
+        light_color                 = 0.6, 0.5, 0.3
+        light_range                 = 3.0
+        light_time                  = 0.2
+        light_var_color             = 0.05
+        light_var_range             = 0.5
+
+
+upgr_icon_path     = ui\ui_icon_ppp
+
+upgr_icon_x        = 750
+upgr_icon_y        = 500
+upgr_icon_width    = 150
+upgr_icon_height   = 100
+
+        installed_upgrades          =
+        
+        upgrades                    = up_gr_firstab_colt1911, up_gr_seconab_colt1911, up_gr_thirdab_colt1911, up_gr_fourtab_colt1911
+        installed_upgrades          =
+        upgrade_scheme              = upgrade_scheme_colt1911
+        upgr_icon_x                 = 1150
+        upgr_icon_y                 = 1100
+        upgr_icon_width             = 150
+        upgr_icon_height            = 100
+        
+        fire_modes                  = -1
+        ammo_class                  = ammo_11.43x23_fmj, ammo_11.43x23_fmj_bad, ammo_11.43x23_fmj_verybad, ammo_11.43x23_hydro, ammo_11.43x23_hydro_bad, ammo_11.43x23_hydro_verybad
+        ammo_elapsed                = 11
+        ammo_mag_size               = 11
+        
+        scope_status                = 0
+        scope_zoom_factor           = 0
+        
+        silencer_name               = wpn_sil_45
+        silencer_status             = 0
+        
+        grenade_launcher_status     = 0
+        
+        hit_impulse                 = 40
+        hit_power                   = 0.55, 0.55, 0.55, 0.55
+        hit_type                    = fire_wound
+        fire_distance               = 300
+        bullet_speed                = 270
+        rpm                         = 500
+        rpm_empty_click             = 120
+        
+        use_aim_bullet              = false
+        time_to_aim                 = 0.0 ;  1.0
+        zoom_dof                    = -1000, 1.0, 1000
+        zoom_enabled                = true
+        zoom_rotate_time            = 0.25
+        reload_dof                  = 0.0, 0.5, 5, 1.7
+        control_inertion_factor     = 1.0f
+        crosshair_inertion          = 3.8
+        fire_dispersion_base        = 0.6
+        fire_dispersion_condition_factor = 0.001
+        
+        misfire_probability         = 0.005
+        misfire_start_condition     = 0.7 ;  0.79
+        misfire_start_prob          = 0.007
+        misfire_end_condition       = 0.11
+        misfire_end_prob            = 0.11
+        
+        condition_queue_shot_dec    = 0.0018
+        condition_shot_dec          = 0.0018
+        
+        cam_return                  = 0
+        cam_relax_speed             = 7
+        cam_dispersion              = 2.5
+        cam_dispersion_frac         = 1.1
+        cam_dispersion_inc          = 0.0
+        cam_max_angle               = 50.0
+        cam_max_angle_horz          = 50.0
+        cam_step_angle_horz         = 0.76
+		zoom_cam_dispersion         = 2.0
+
+        
+        PDM_disp_accel_factor       = 1.055
+        PDM_disp_base               = 0.7
+        PDM_disp_crouch             = 1.0
+        PDM_disp_crouch_no_acc      = 1.0
+        PDM_disp_vel_factor         = 1.05
+        
+        cam_relax_speed_ai          = 360
+        holder_fov_modifier         = 1.0
+        holder_range_modifier       = 1.0
+        min_radius                  = 0
+        max_radius                  = 500
+        hit_probability_gd_novice   = 1.00
+        hit_probability_gd_stalker  = 1.00
+        hit_probability_gd_veteran  = 1.00
+        hit_probability_gd_master   = 1.00
+        
+        kill_msg_x                  = 161
+        kill_msg_y                  = 153
+        kill_msg_width              = 37
+        kill_msg_height             = 24
+		weapon_lower_speed			= 0.2
+
+        cost                        = 45000
+
+        hud                         = wpn_colt1911_anarchy_hud
+        visual                      = dynamics\weapons\wpn_colt1911_n\wpn_colt1911_world.ogf	
+
+        scripted_snd_ammo_check                 = weapons\oc33\oc33_new_magcheck
+        scripted_snd_ammo_check_empty           = weapons\oc33\oc33_new_magcheck
+        scripted_snd_ammo_check_jammed          = weapons\oc33\oc33_new_magcheck
+        scripted_snd_ammo_check_empty_jammed    = weapons\oc33\oc33_new_magcheck
+        scripted_snd_ammo_check_no_mag          = $no_sound
+
+        snd_reload		        = weapons\oc33\oc33_reload_maggrab
+        snd_reload_empty	        = weapons\oc33\oc33_reload_empty_maggrab	
+
+        snd_empty		        = weapons\fort\fort_new_empty
+        snd_draw        	        = weapons\fort\fort_new_draw
+        snd_holster        	        = weapons\fort\fort_new_holster
+        snd_bore		        = weapons\fort\fort_new_inspect
+        snd_reload_misfire              = weapons\w99\w99_unjam
+        scripted_snd_reload_misfire_empty        = weapons\w99\w99_unjam_empty
+
+        scripted_snd_sprint2walk        	        = weapons\fort\fort_new_draw
+        scripted_snd_walk2sprint        	        = weapons\fort\fort_new_holster  
+        snd_switch_mode				= weapons\oc33\oc33_new_switch_mode
+
+[wpn_colt1911_anarchy_hud]:hud_base
+        item_visual                 = dynamics\weapons\wpn_colt1911_n\wpn_colt1911_anarchy_hud.ogf
+        attach_place_idx            = 0
+ 
+        zoom_hide_crosshair         = true
+
+        hands_orientation                = -0.108975, -0.450901, -0.050965
+        hands_orientation_16x9           = -0.108975, -0.450901, -0.050965
+        hands_position                   = -0.021981, 0.002979, 0.043697
+        hands_position_16x9              = -0.021981, 0.002979, 0.043697
+		
+        aim_hud_offset_pos               = -0.025279, 0.022431, 0.0045
+        aim_hud_offset_pos_16x9          = -0.025279, 0.022431, 0.0045
+        aim_hud_offset_rot               = -5.5e-05, 1.5e-05, -0.087
+        aim_hud_offset_rot_16x9          = -5.5e-05, 1.5e-05, -0.087
+
+        aim_hud_offset_alt_pos           = -0.079467, -0.041244, -0.01
+        aim_hud_offset_alt_pos_16x9      = -0.079467, -0.041244, -0.01
+        aim_hud_offset_alt_rot           = -5.5e-05, 1.5e-05, 0.6
+        aim_hud_offset_alt_rot_16x9      = -5.5e-05, 1.5e-05, 0.6
+		
+        lowered_hud_offset_pos           = 0, 0, 0.004845
+        lowered_hud_offset_pos_16x9      = 0, 0, 0.004845
+        lowered_hud_offset_rot           = 0.164122, -0.008087, 0.1
+        lowered_hud_offset_rot_16x9      = 0.164122, -0.008087, 0.1
+
+        item_orientation                 = -0.005976, 0.184319, 0
+        item_position                    = -0.002111, 0.004179, 0.002843
+
+        gl_hud_offset_pos                        = 0, 0, 0
+        gl_hud_offset_pos_16x9                   = 0, 0, 0
+        gl_hud_offset_rot                        = 0, 0, 0
+        gl_hud_offset_rot_16x9                   = 0, 0, 0
+
+        lean_hud_offset_pos                      = 0, 0, 0
+        lean_hud_offset_rot                      = 0, 0, 0
+
+        fire_bone                                = muzzle
+        fire_point                               = 0, 0,0
+        
+        anm_bore                                 = oc33_new_inspect, idle
+        anm_show                                 = oc33_new_draw, idle
+        anm_hide                                 = oc33_new_holster, idle
+
+        anm_idle                                 = oc33_new_idle, idle
+        anm_idle_aim_moving                      = oc33_new_walk, idle 
+        anm_idle_aim_moving_crouch               = oc33_new_walk, idle, 0.8 
+        anm_idle_moving                          = oc33_new_walk, idle
+        anm_idle_moving_crouch                   = oc33_new_walk, idle
+        anm_idle_sprint                          = oc33_new_sprint, idle, 1.2
+
+        anm_reload                               = oc33_new_reload_maggrab, reload_maggrab
+        anm_reload_empty                         = oc33_new_reload_empty_maggrab, reload_empty_maggrab
+        anm_reload_misfire          		     = oc33_new_unjam, unjam
+
+        anm_switch_mode                 	     = oc33_new_switchmode, switch_mode
+
+        anm_shots                                = oc33_new_shoot_3dss, oc33_new_shoot
+        anm_idle_aim                             = oc33_new_aim, idle
+
+
+        anm_bore_empty                                 = oc33_new_inspect, idle_empty
+        anm_show_empty                                 = oc33_new_draw, idle_empty
+        anm_hide_empty                                 = oc33_new_holster, idle_empty
+        anm_shot_l                                     = oc33_new_shoot_3dss, shoot_empty
+
+        anm_idle_empty                                 = oc33_new_idle, idle_empty
+        anm_idle_aim_moving_empty                      = oc33_new_walk, idle_empty
+        anm_idle_aim_moving_crouch_empty               = oc33_new_walk, idle_empty, 0.8
+        anm_idle_moving_empty                          = oc33_new_walk, idle_empty
+        anm_idle_moving_crouch_empty                   = oc33_new_walk, idle_empty, 0.9
+        anm_idle_sprint_empty                          = oc33_new_sprint, idle_empty, 1.2
+
+        anm_switch_mode_empty			       = oc33_new_switchmode_empty, switch_mode_empty
+        anm_idle_aim_empty                             = oc33_new_aim, idle_empty
+
+        ; Jammed Animation Variants
+        anm_idle_jammed                    = oc33_new_idle, idle_jammed
+        anm_show_jammed                    = oc33_new_draw, idle_jammed
+        anm_hide_jammed                    = oc33_new_holster, idle_jammed
+        anm_idle_aim_jammed                = oc33_new_aim, idle_jammed
+        anm_idle_sprint_jammed             = oc33_new_sprint, idle_jammed, 1.2
+        anm_idle_moving_jammed             = oc33_new_walk, idle_jammed
+        anm_idle_moving_crouch_jammed      = oc33_new_walk, idle_jammed, 0.8
+        anm_bore_jammed                    = oc33_new_inspect_jammed, idle_jammed
+        ;anm_reload_misfire                 = oc33_new_unjam, unjam
+
+
+        anm_walk2sprint_jammed             = oc33_new_walk2sprint, idle_jammed
+        anm_sprint2walk_jammed             = oc33_new_sprint2walk, idle_jammed
+
+
+        ; Empty Jammed Animation Variants
+        anm_idle_empty_jammed                    = oc33_new_idle, idle_jammed
+        anm_show_empty_jammed                    = oc33_new_draw, idle_jammed
+        anm_hide_empty_jammed                    = oc33_new_holster, idle_jammed
+        anm_idle_aim_empty_jammed                = oc33_new_aim, idle_jammed
+        anm_idle_sprint_empty_jammed             = oc33_new_sprint, idle_jammed, 1.2
+        anm_idle_moving_empty_jammed             = oc33_new_walk, idle_jammed
+        anm_idle_moving_crouch_empty_jammed      = oc33_new_walk, idle_jammed, 0.8
+        anm_bore_empty_jammed                    = oc33_new_inspect_jammed, idle_jammed
+        anm_reload_misfire_empty                 = oc33_new_unjam_empty, unjam_empty
+        anm_shot_l_jammed                        = oc33_new_idle, idle_jammed
+        anm_shots_jammed                   	 = oc33_new_idle, idle_jammed
+
+        anm_walk2sprint_empty_jammed             = oc33_new_walk2sprint, idle_jammed
+        anm_sprint2walk_empty_jammed             = oc33_new_sprint2walk, idle_jammed
+
+        ; Custom Animations Handled In Scripts
+        anm_ammo_check                           = oc33_new_magcheck, magcheck
+        anm_ammo_check_empty                     = oc33_new_magcheck, magcheck_empty
+        anm_ammo_check_no_mag                    = oc33_new_magcheck_nomag, magcheck_nomag
+        ;anm_ammo_check_aim                       = oc33_new_magcheck_ads, magcheck_ads
+        ;anm_ammo_check_empty_aim                 = oc33_new_magcheck_ads, magcheck_empty_ads
+        anm_ammo_check_jammed                    = oc33_new_magcheck, magcheck_jammed
+        anm_ammo_check_empty_jammed              = oc33_new_magcheck, magcheck_jammed_empty
+        anm_switch_mode_jammed                  	     = oc33_new_switchmode_jammed, switch_mode_jammed
+        anm_switch_mode_empty_jammed                  	     = oc33_new_switchmode_jammed, switch_mode_jammed
+         ; Transition/Intermediate Animations
+        anm_walk2sprint             = oc33_new_walk2sprint
+        anm_walk2sprint_empty = oc33_new_walk2sprint, idle_empty
+
+        anm_sprint2walk             = oc33_new_sprint2walk
+        anm_sprint2walk_empty       = oc33_new_sprint2walk, idle_empty
+
+        ; anm_idle2aim             = oc33_new_idle2aim
+        ; anm_idle2aim_empty       = oc33_new_idle2aim, idle_empty
+        
+        ; Transition Definitions
+        ts_pattern_walk2sprint      = .+, anm_idle_sprint, anm_walk2sprint, 1
+
+        ts_pattern_sprint2walk      = anm_idle_sprint, ^anm_idle.*, anm_sprint2walk, 1
+        ts_pattern_sprint2walk_aim  = anm_walk2sprint, ^anm_idle_aim.*, anm_sprint2walk, 1
+        ts_strict_sprint2walk_idle  = anm_walk2sprint, anm_idle, anm_sprint2walk
+        ts_strict_sprint2walk_move  = anm_walk2sprint, anm_idle_moving, anm_sprint2walk
+
+        ;ts_pattern_idle2aim         = ^anm_idle.*, ^anm_idle_aim$, anm_idle2aim, 1
+        ts_strict_sprint2aim        = anm_idle_sprint, anm_idle_aim, anm_sprint2walk
+
+        ts_strict_sprint2inspect        = anm_idle_sprint, anm_bore, anm_sprint2walk
+        ts_strict_walk2sprint_inspect        = anm_walk2sprint, anm_bore, anm_sprint2walk
+
+
+        !anm_sprint_start
+        !anm_sprint_end
+        !anm_sprint_start_empty
+        !anm_sprint_end_empty
+        !anm_sprint_start_jammed
+        !anm_sprint_end_jammed
+        !anm_idle_aim_moving_jammed
+        !anm_idle_aim_moving_crouch_jammed
+        !anm_idle_aim_start_jammed
+        !anm_idle_aim_end_jammed
+        !anm_idle_aim_end_empty
+        !anm_idle_aim_start_empty
+        !anm_idle_aim_end
+        !anm_idle_aim_start
+        !ts_pattern_sprint_start      
+        !ts_pattern_sprint_end      
+        !ts_strict_sprint_end_move  
+        !anm_shots_aim
+        !anm_shots_aim_l 

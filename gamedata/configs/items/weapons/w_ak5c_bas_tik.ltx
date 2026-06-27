@@ -1,0 +1,44 @@
+;-------------------------------------------------------------------------------------------------------------------------------
+[wpn_ak5c_bas_5c_tik]:wpn_ak5c_bas
+
+visual					= dynamics\weapons\wpn_ak5c_bas\wpn_ak5c_5c_tik_world.ogf
+
+hud					= wpn_ak5c_bas_5c_tik_hud
+
+inv_grid_width     = 5
+inv_grid_height    = 2
+inv_grid_x         = 11
+inv_grid_y         = 22
+
+inv_weight                                         = 3.700
+
+hit_impulse                         = 27
+hit_power                           = 0.49, 0.49, 0.49, 0.49
+        hit_type                    = fire_wound
+        fire_distance               = 800
+        bullet_speed                = 900
+        rpm                         = 800
+        rpm_empty_click             = 200
+
+scopes                                             = none
+inv_name                                           = st_wpn_ak5c_bas_5c_tik
+inv_name_short                                     = st_wpn_ak5c_bas_5c_tik
+description                                        = st_wpn_ak5c_bas_5c_tik_descr
+
+parent_section                                     = wpn_ak5c_bas_5c_tik
+
+silencer_name				                       = wpn_sil_spec_isg
+silencer_x                                         = 220
+silencer_y                                         = 8
+
+
+use_alt_aim_hud                                    = true	
+laser_status = true
+;---------------------------------------------------------------------HUD-------------------------------------------------------
+[wpn_ak5c_bas_5c_tik_hud]:wpn_ak5c_bas_hud
+
+item_visual				= dynamics\weapons\wpn_ak5c_bas\wpn_ak5c_5c_tik_hud.ogf
+
+anm_bore				 = ras_m4a1_hand_idle, idle
+
+;-------------------------------------------------------------------------------------------------------------------------------

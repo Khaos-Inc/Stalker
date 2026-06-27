@@ -1,0 +1,75 @@
+![wpn_g36v_rwap_cut_kit]:devo_s
+parent_section		= wpn_g36v_rwap_cut_kit
+scopes				= none
+
+icons_texture                            = ui\ui_icon_g36_new
+inv_grid_height                          = 2
+inv_grid_width                           = 4
+inv_grid_x                               = 0
+inv_grid_y                               = 6
+
+upgr_icon_path		                     = ui\ui_icon_g36_new
+upgr_icon_x                              = 250
+upgr_icon_y                              = 0
+upgr_icon_width                          = 250
+upgr_icon_height                         = 150
+
+!hud_fov
+
+snd_bore                                     = $no_sound
+snd_bore1                                    = $no_sound
+snd_switch                                   = $no_sound
+
+snd_draw                                     = wpn\g36\draw
+snd_holster                                  = wpn\g36\hide
+snd_reload                                   = wpn\g36\reload_part
+snd_reload_misfire                           = wpn\g36\misfire
+snd_reload_empty                             = wpn\g36\reload_full
+snd_switch_mode                              = wpn\g36\switch
+snd_reload_grenade                           = wpn\g36\m320_reload
+
+scripted_snd_ammo_check                            = wpn\g36\mag_check
+scripted_snd_ammo_check_empty                      = wpn\g36\mag_check
+scripted_snd_ammo_check_w_gl                       = wpn\g36\mag_check
+scripted_snd_ammo_check_empty_w_gl                 = wpn\g36\mag_check
+scripted_snd_ammo_check_aim                        = $no_sound
+scripted_snd_ammo_check_empty_aim                  = $no_sound
+scripted_snd_ammo_check_w_gl_aim                   = $no_sound
+scripted_snd_ammo_check_empty_w_gl_aim             = $no_sound
+
+laser_status		 = true
+use_alt_aim_hud		 = true
+
+	s3ds_reticle_size 	= 4.35
+	s3ds_eye_relief 	= 2
+	s3ds_exit_pupil		= 1	
+	s3ds_image_type 	= 2
+	s3ds_reticle_type 	= 7
+	ms_count 			= 2
+	magnifications 		= 6
+	
+lewd_lens_hide_enabled       = true
+lewd_lens_hide_bone          = lens
+lewd_lens_hide_delays        = 0.1,0
+lewd_lens_hide_aim_mode      = true, false, false	
+
+![wpn_g36v_rwap_cut_kit_hud]
+        hands_orientation                = -0.152332, -0.003433, 0
+        hands_orientation_16x9           = -0.152332, -0.003433, 0
+        hands_position                   = -0.024151, -0.005404, 0.025381
+        hands_position_16x9              = -0.024151, -0.005404, 0.025381
+		
+        aim_hud_offset_pos               = -0.055279, 0.008798, -0.158351
+        aim_hud_offset_pos_16x9          = -0.055279, 0.008798, -0.158351
+        aim_hud_offset_rot               = -3e-06, 9.2e-05, 0
+        aim_hud_offset_rot_16x9          = -3e-06, 9.2e-05, 0
+	
+        aim_hud_offset_alt_pos           = -0.055054, -0.004027, -0.05
+        aim_hud_offset_alt_pos_16x9      = -0.055054, -0.004027, -0.05
+        aim_hud_offset_alt_rot           = 3e-06, 9.2e-05, 0
+        aim_hud_offset_alt_rot_16x9      = 3e-06, 9.2e-05, 0
+
+        base_hud_offset_pos              = -0.004638, -0.019263, -0.020411
+        base_hud_offset_pos_16x9         = -0.004638, -0.019263, -0.020411
+        base_hud_offset_rot              = 0, 0, 0.104101
+        base_hud_offset_rot_16x9         = 0, 0, 0.104101

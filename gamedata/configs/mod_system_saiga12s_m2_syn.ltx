@@ -1,0 +1,43 @@
+![wpn_saiga12s_m2]
+		!shell_point
+		!shell_particles
+        shell_bone = bolt
+		
+		snd_draw				= weapons\saiga_eft\draw
+		snd_holster				= weapons\saiga_eft\holster
+		snd_shoot				= weapons\saiga_eft\shoot
+		snd_shoot1				= weapons\saiga_eft\shoot
+		snd_shoot2				= weapons\saiga_eft\shoot
+		snd_shoot3				= weapons\saiga_eft\shoot
+		snd_reload				= weapons\saiga_eft\reload
+		snd_reload_empty		= weapons\saiga_eft\reloadempty
+		snd_reload_misfire      = weapons\saiga_eft\unjam
+		snd_silncer_shot		= weapons\saiga_eft\shootsuppressed
+		snd_empty			    = weapons\saiga_eft\dryfire
+
+		lewd_lens_hide_enabled       = true
+		lewd_lens_hide_bone          = lens
+		lewd_lens_hide_delays        = 0.1,0
+		lewd_lens_hide_aim_mode      = true, false, false
+
+![wpn_saiga12s_m2_hud]
+		anm_show                		= s12_syn_draw, s12_syn_draw_wpn, 2
+		anm_hide                     	= s12_syn_holster, s12_syn_holster_wpn, 2
+		anm_idle                     	= s12_syn_idle, s12_syn_idle_wpn, 2
+		anm_idle_sprint         		= s12_syn_sprint, s12_syn_sprint_wpn, 2
+		anm_idle_moving              	= s12_syn_walk, s12_syn_walk_wpn, 2.5
+		anm_idle_moving_crouch       	= s12_syn_walkcrouch, s12_syn_walkcrouch_wpn, 2.5
+		anm_shots                    	= s12_syn_fire, s12_syn_firelow_wpn, 2
+		anm_shots_variant1				= s12_syn_fire, s12_syn_firehigh_wpn, 2
+		anm_shots_jammed				= s12_syn_firejammed, s12_syn_firejammed_wpn, 2
+		anm_reload                   	= s12_syn_reload, s12_syn_reload_wpn, 2
+		anm_reload_empty             	= s12_syn_reload_empty, s12_syn_reload_empty_wpn, 2
+		anm_reload_misfire           	= s12_syn_unjam, s12_syn_unjam_wpn, 2
+		anm_idle_aim                 	= s12_syn_idleaim, s12_syn_idleaim_wpn, 2
+		anm_bore                     	= s12_syn_inspect, s12_syn_inspect_wpn, 2
+		anm_tosprint					= s12_syn_sprintto, s12_syn_sprintto_wpn, 2
+		anm_fromsprint					= s12_syn_sprintfrom, s12_syn_sprintfrom_wpn, 2
+
+		
+		ts_pattern_tosprint = .+, anm_idle_sprint, anm_tosprint, 1
+		ts_pattern_fromsprint = anm_idle_sprint, ^anm_idle.*, anm_fromsprint, 1

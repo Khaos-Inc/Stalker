@@ -1,0 +1,65 @@
+; zhopa2 movement-first runtime defaults
+
+[zhopa2]
+enabled = true
+stalker_movement_enabled = true
+mutant_movement_enabled = true
+debug_hud_enabled = false
+
+explore_enabled = true
+populate_enabled = true
+base_camping_enabled = true
+patrol_enabled = true
+night_rest_enabled = true
+stalker_hunt_enabled = true
+revenge_enabled = true
+revenge_actor_enabled = true
+revenge_actor_chance = 10
+artefact_enabled = true
+artefact_offline_enabled = true
+
+mutant_explore_enabled = true
+mutant_hunt_enabled = true
+mutant_patrol_enabled = true
+hunt_offline_combat_enabled = true
+hunt_offline_combat_interval_sec = 30
+hunt_offline_combat_distance = 25
+
+stalker_explore_weight = 40
+stalker_populate_weight = 20
+stalker_patrol_weight = 25
+stalker_hunt_weight = 15
+stalker_artefact_weight = 10
+stalker_trade_weight = 10
+mutant_hunt_weight = 35
+mutant_patrol_weight = 30
+mutant_explore_weight = 35
+
+target_sync_enabled = true
+online_intent_enforce_enabled = true
+
+rest_duration_game_hours = 0.25
+mutant_rest_duration_game_hours = 0.25
+patrol_duration_game_hours = 1
+mutant_patrol_duration_game_hours = 1
+rest_fallback_stay_min_sec = 900
+rest_fallback_stay_max_sec = 1800
+
+; Base ownership is a core world-state system. It is intentionally not exposed in MCM.
+base_ownership_enabled = true
+service_filler_enabled = true
+loot_enabled = true
+loot_corpse_detect_dist_m = 80
+loot_item_detect_dist_m = 50
+loot_event_ttl_sec = 900
+loot_event_cap_total = 600
+loot_protect_quest_items = true
+loot_offline_enabled = true
+
+trade_enabled = true
+npc_sell_price_multiplier = 0.2
+story_psy_watchdog_enabled = true
+story_psy_watchdog_levels = l10_limansk, l10_red_forest, l10_radar
+story_psy_watchdog_immune_factions = monolith, isg, greh
+story_north_migration_enabled = true
+story_north_migration_percent = 50

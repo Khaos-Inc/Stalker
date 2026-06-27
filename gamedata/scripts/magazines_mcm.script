@@ -1,0 +1,206 @@
+-- If you don't use MCM, change your defaults from here.
+local defaults = {
+    debug					= false,
+    mag_loadtime_factor		= 1,
+    mag_unloadtime_factor	= 1,
+    mag_tooltip             = 1,
+    empty_mags_stack 		= true,
+    sort_inv				= true,
+
+    show_hud				= true,
+    icon_text				= true,
+    ammo_icon				= true,
+    scale					= 1,
+    ammo_scale				= 1,
+    group_by_ammo			= true,
+    grp_by_bt				= true,
+    show_bgrd				= true,
+    bgrd					= 1,
+	
+
+    load_behavior    		= 0,
+    unload_behavior    		= 0,
+    loadstash_behavior    	= 0,
+    retain_round    		= false,
+    active_ammo_by_mag		= false,
+    mag_fill_mode			= 0,
+    ejection        		= 0,
+	tacload 				= false,
+    mag_unequip_trs         = 1,
+	three_hands				= false,
+    deathquality			= 1.0,
+    deathammo				= 1.0,
+
+    spinner_enable			= true,
+    spinner_style			= "half_circle_dimmed",
+    spinner_scale			= 1,
+    spinner_size			= 24,
+    spinner_speed			= 1.0,
+    spinner_opacity			= 90,
+    spinner_dim				= false,
+    spinner_dim_amount		= 50,
+    box_flash_enable		= true,
+    mag_flash_enable		= true,
+    box_flash_strength		= 95,
+    box_flash_speed			= 90,
+    flash_easing			= "ease_in_out",
+    gauge_enable			= true,
+    gauge_gap				= 6,
+    gauge_opacity			= 90,
+}
+
+local def_map = {
+    debug					= "mgmt",
+    mag_loadtime_factor		= "mgmt",
+    mag_unloadtime_factor	= "mgmt",
+    mag_tooltip             = "mgmt",
+    empty_mags_stack 		= "mgmt",
+    sort_inv				= "mgmt",
+
+    show_hud				= "hud",
+    icon_text				= "hud",
+    ammo_icon				= "hud",
+    scale					= "hud",
+    ammo_scale				= "hud",
+    group_by_ammo			= "hud",
+    grp_by_bt				= "hud",
+    show_bgrd				= "hud",
+    bgrd					= "hud",
+   
+    load_behavior    		= "gameplay",
+    unload_behavior    		= "gameplay",
+    loadstash_behavior    	= "gameplay",
+    retain_round    		= "gameplay",
+    active_ammo_by_mag		= "gameplay",
+    mag_fill_mode			= "gameplay",
+    ejection        		= "gameplay",
+    tacload 				= "gameplay",
+    mag_unequip_trs         = "gameplay",
+	three_hands				= "gameplay",
+    deathquality			= "gameplay",
+    deathammo				= "gameplay",
+
+    spinner_enable			= "spinner",
+    spinner_style			= "spinner",
+    spinner_scale			= "spinner",
+    spinner_size			= "spinner",
+    spinner_speed			= "spinner",
+    spinner_opacity			= "spinner",
+    spinner_dim				= "spinner",
+    spinner_dim_amount		= "spinner",
+    box_flash_enable		= "spinner",
+    mag_flash_enable		= "spinner",
+    box_flash_strength		= "spinner",
+    box_flash_speed			= "spinner",
+    flash_easing			= "spinner",
+    gauge_enable			= "spinner",
+    gauge_gap				= "spinner",
+    gauge_opacity			= "spinner",
+}
+
+local colors = {--alpha value will be reset to match slider
+    orange = GetARGB(100, 255, 159, 82),
+    pink = GetARGB(100, 255, 192, 203),
+    blond = GetARGB(100, 240, 240, 190),
+    white = GetARGB(100, 255, 255, 255),
+    brown = GetARGB(100, 165, 42, 42),
+    blue = GetARGB(100, 0, 0, 255),
+
+    -- priler: colors extension
+    lime = GetARGB(100, 141, 232, 52),
+    khaki_green = GetARGB(100, 124, 159, 79),
+    khaki_desert = GetARGB(100, 173, 146, 57),
+    aqua = GetARGB(100, 49, 176, 231),
+    purple = GetARGB(100, 164, 112, 235),
+    teal = GetARGB(100, 7, 176, 176),
+    teal_dark = GetARGB(100, 111, 151, 170),
+}
+
+
+function get_config(key)
+    if ui_mcm then return ui_mcm.get("magazines/"..def_map[key].."/"..key) else return defaults[key] end
+end
+
+function on_mcm_load()
+    op = { id= "magazines",gr={
+        {id = "mgmt",sh=true,gr={
+            {id= "mgmtitle",type= "slide",text="ui_mcm_magazines_mgmtitle",link= "ui_options_slider_player",size= {512,50},spacing= 20},
+            {id = "debug", type = "check", val = 1, def=false},
+            {id = "mag_loadtime_factor", type = "track", val = 2, min=0.4,max=2,step=0.1, def = 1},
+            {id = "mag_unloadtime_factor", type = "track", val = 2, min=0.4,max=2,step=0.1, def = 1},
+            {id= "mag_tooltip" ,type= "list", val= 2  ,def= 1 ,content= {{0,"topround"},  {1,"trcap"}, {2,"full"}}	},
+            {id = "empty_mags_stack", type = "check", val = 1, def=true},
+            {id = "sort_inv", type = "check", val = 1, def=true},
+            {id= "highlight_color" ,type= "list"     ,val= 0  ,def= "orange" ,content= {{"brown","ram_brown"},{"white","ram_white"}, {"blond","ram_blond"} ,   {"blue","ram_blue"}, {"orange","ram_orange"} , {"pink","ram_pink"} , {"lime","ram_lime"} , {"khaki_green","ram_khaki_green"} , {"khaki_desert","ram_khaki_desert"} , {"aqua","ram_aqua"} , {"purple","ram_purple"} , {"teal","ram_teal"} , {"teal_dark","ram_teal_dark"} }	},
+            {id= "highlight_clr_a" ,type= "track"    ,val= 2	,min= 0   ,max= 255    ,step= 1		,def= 100   },	
+        }},
+        {id = "hud",sh=true,gr={
+            {id= "hudtitle",type= "slide",text="ui_mcm_magazines_hudtitle",link= "ui_options_slider_player",size= {512,50},spacing= 20},
+            {id = "show_hud", type = "check", val = 1, def=true},			
+            {id = "scale", type = "track", val = 2, min=0.1,max=2,step=0.05, def = 1},
+            {id = "grp_by_bt", type = "check", val = 1, def=true},			
+            {id = "group_by_ammo", type = "check", val = 1, def=true},			
+            {id = "icon_text", type = "check", val = 1, def=true},			
+            {id = "ammo_icon", type = "check", val = 1, def=true},
+			{id = "ammo_scale", type = "track", val = 2, min=0.1,max=2,step=0.05, def = 1},
+            {id = "show_bgrd", type = "check", val = 1, def=true},
+            {id = "bgrd" ,type= "list" ,val= 2, def= 1, content= {{1,1},{2,2},{3,3},{4,4},{5,5},{6,6},{7,7},{8,8},{9,9},{10,10},{11,11},{12,12}},no_str = true},
+
+            
+        }},
+        {id = "gameplay",sh=true,gr={
+            {id= "gametitle",type= "slide",text="ui_mcm_magazines_gametitle",link= "ui_options_slider_player",size= {512,50},spacing= 20},
+            {id = "deathquality", type = "track", val = 2, min=0.5,max=2,step=0.1, def = 1},
+            {id = "deathammo", type = "track", val = 2, min=0.5,max=2,step=0.1, def = 1},
+            {id = "load_behavior" ,type= "list" ,val= 2, def= 0, content = {{0,"ind"},{2,"box"}, {1, "full"}}},
+            {id = "unload_behavior" ,type= "list" ,val= 2, def= 0, content={{0,"ind"}, {1, "full"}}},
+            {id = "loadstash_behavior" ,type= "list" ,val= 2, def= 1, content= {{0,"ind"},{2,"box"}, {1, "full"}}},
+            {id = "retain_round", type = "check", val = 1, def=false},	
+            {id = "active_ammo_by_mag", type = "check", val = 1, def=false},
+            {id = "mag_fill_mode" ,type= "list" ,val= 2, def= 0, content= {{0,"dominant"},{1,"peek"}}},
+            {id = "mag_unequip_trs", type = "track", val = 2, min=0,max=100,step=1, def = 1},
+            {id = "ejection" ,type= "list" ,val= 2, def= 1, content= {{0,"loadout"},{1,"ruck"}}},
+			{ id= "rant", type= "desc", text= "ui_mcm_magazines_rant", clr= {255, 225, 0, 0}},
+            {id = "three_hands", type = "check", val = 1, def=false},
+        }},
+        {id = "spinner",sh=true,gr={
+            {id= "spntitle",type= "slide",text="ui_mcm_magazines_spntitle",link= "ui_options_slider_player",size= {512,50},spacing= 20},
+            {id = "spinner_enable", type = "check", val = 1, def=true},
+            {id = "spinner_style" ,type= "list" ,val= 0, def= "half_circle_dimmed", content= {
+                {"default","default"},{"arrows","arrows"},{"chasing_arrows","chasing_arrows"},{"fading_line","fading_line"},{"tarkov_like","tarkov_like"},
+                {"growing_ring","growing_ring"},{"half_circle","half_circle"},{"half_circle_colored","half_circle_colored"},
+                {"half_circle_dimmed","half_circle_dimmed"},{"half_circle_green","half_circle_green"},{"line","line"},
+                {"recycle","recycle"},{"spinning_segments","spinning_segments"},
+                {"two_arrows","two_arrows"},{"wheel","wheel"}}},
+            {id = "spinner_scale" ,type= "list" ,val= 2, def= 1, content= {{1,"fixed"},{2,"scaled"}}},
+            {id = "spinner_size", type = "track", val = 2, min=16,max=64,step=2, def = 24},
+            {id = "spinner_speed", type = "track", val = 2, min=0.3,max=2.0,step=0.1, def = 1.0},
+            {id = "spinner_opacity", type = "track", val = 2, min=10,max=100,step=5, def = 90},
+            {id = "spinner_dim", type = "check", val = 1, def=false},
+            {id = "spinner_dim_amount", type = "track", val = 2, min=0,max=90,step=5, def = 25},
+            {id = "box_flash_enable", type = "check", val = 1, def=true},
+            {id = "mag_flash_enable", type = "check", val = 1, def=true},
+            {id = "box_flash_strength", type = "track", val = 2, min=10,max=100,step=5, def = 95},
+            {id = "box_flash_speed", type = "track", val = 2, min=25,max=200,step=5, def = 90},
+            {id = "flash_easing" ,type= "list" ,val= 0, def= "ease_in_out", content= {
+                {"linear","linear"},{"ease_in","ease_in"},{"ease_out","ease_out"},{"ease_in_out","ease_in_out"}}},
+            {id = "gauge_enable", type = "check", val = 1, def=true},
+            {id = "gauge_gap", type = "track", val = 2, min=0,max=20,step=1, def = 6},
+            {id = "gauge_opacity", type = "track", val = 2, min=10,max=100,step=5, def = 90},
+        }},
+        }
+    }
+    return op
+end
+
+local function on_option_change()
+    if ui_mcm then
+        magazine_binder.ready_color = rax_persistent_highlight.change_alpha(colors[ui_mcm.get("magazines/mgmt/highlight_color")] or colors.orange , ui_mcm.get("magazines/mgmt/highlight_clr_a") or 100 )
+        empty_table(magazines.cache_mag_time)
+    end
+end
+
+function on_game_start()
+    RegisterScriptCallback("on_option_change",on_option_change)
+    on_option_change()
+end

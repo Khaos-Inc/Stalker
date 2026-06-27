@@ -1,0 +1,58 @@
+--zzzz_hide_tooltip_mcm.script
+defaults = {
+	key_hide = DIK_keys.DIK_P,
+	key_modifier = DIK_keys.DIK_LMENU,
+	hide_mode = false,
+	delay = 700,
+	show_tooltip_on_click = true,
+}
+
+function get_config(key)
+	if ui_mcm then
+		return ui_mcm.get("tooltip_manager/" .. key)
+	else
+		return defaults[key]
+	end
+end
+
+function on_mcm_load()
+	local op = {
+		id = "tooltip_manager",
+		sh = true,
+		gr = {
+			{
+				id = "title",
+				type = "slide",
+				link = "ui_options_slider_player",
+				size = { 512, 50 },
+				spacing = 20,
+			},
+			{ id = "key_hide", type = "key_bind", val = 2, def = defaults.key_hide },
+			{
+				id = "key_modifier",
+				type = "radio_h",
+				val = 2,
+				def = defaults.key_modifier,
+				content = {
+					{ DIK_keys.DIK_LSHIFT, "tooltip_manager_key_modifier_shift" },
+					{ DIK_keys.DIK_LCONTROL, "tooltip_manager_key_modifier_ctrl" },
+					{ DIK_keys.DIK_LMENU, "tooltip_manager_key_modifier_alt" },
+				},
+			},
+			{ id = "divider", type = "line" },
+			{ id = "hide_mode", type = "check", val = 1, def = defaults.hide_mode },
+			{ id = "show_tooltip_on_click", type = "check", val = 1, def = defaults.show_tooltip_on_click },
+			{
+				id = "delay",
+				type = "track",
+				text = "tooltip_manager_delay",
+				val = 2,
+				min = 50,
+				max = 2000,
+				step = 50,
+				def = defaults.delay,
+			},
+		},
+	}
+	return op
+end

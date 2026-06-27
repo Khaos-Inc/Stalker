@@ -1,0 +1,53 @@
+![wpn_remington700]
+        snd_draw        		 		 = weapons\wpn_remington700_new\remington700_new_draw
+        snd_bore                         = weapons\wpn_remington700_new\remington700_new_inspect
+        snd_holster                      = weapons\wpn_remington700_new\remington700_new_holster
+        snd_reload                       = weapons\wpn_remington700_new\remington700_new_reload
+        snd_reload_empty		 		 = weapons\wpn_remington700_new\remington700_new_reload_empty
+        snd_reload_misfire               = weapons\wpn_remington700_new\remington700_new_unjam
+        scripted_snd_ammo_check          = weapons\wpn_remington700_new\remington700_new_ammo_check_bolt
+        scripted_snd_ammo_check_empty    = weapons\wpn_remington700_new\remington700_new_ammo_check_bolt
+        scripted_snd_ammo_check_no_mag   = weapons\wpn_remington700_new\remington700_new_ammo_check_bolt
+		
+rpm                              = 40
+		
+scope_zoom_factor                = 12
+min_scope_zoom_factor			 = 40		
+scope_texture                    =
+		
+lewd_lens_hide_enabled       = true		
+lewd_lens_hide_bone          = lens
+lewd_lens_hide_delays        = 0.1,0
+lewd_lens_hide_aim_mode      = true, false, false		
+![wpn_remington700_hud]
+fire_bone                                = muzzle
+fire_point                               = 0, 0, 0
+
+        anm_show			 	= remington700_new_draw, 				idle
+        anm_hide             	= remington700_new_holster, 			idle
+        anm_shots			 	= remington700_new_shoot, 				shoot
+        anm_bore			 	= remington700_new_inspect, 			idle
+        anm_idle             	= remington700_new_idle, 				idle
+        anm_idle_aim			= remington700_new_aim, 				idle
+        anm_idle_moving         = remington700_new_walk, 				idle
+        anm_idle_sprint			= remington700_new_sprint, 				idle, 1.1  
+anm_reload			 	= remington_new_reload_base, 				new_reload_base
+anm_reload_empty		= remington_new_reload_empty_base, 		new_reload_empty_base
+        anm_reload_misfire		= remington700_new_unjam, 				unjam
+        anm_ammo_check          = remington700_new_ammo_check, 			ammo_check 
+        anm_ammo_check_empty	= remington700_new_ammo_check_empty, 	ammo_check_empty
+
+        hands_orientation                = -0.001025, 0.02221, -0.7
+        hands_orientation_16x9           = -0.001025, 0.02221, -0.7
+        hands_position                   = 0.028062, 0.032842, 0.070684
+        hands_position_16x9              = 0.028062, 0.032842, 0.070684
+
+        aim_hud_offset_pos               = -0.09573, 0.007866, -0.093366
+        aim_hud_offset_pos_16x9          = -0.09573, 0.007866, -0.093366
+        aim_hud_offset_rot               = 0.000281, 3.7e-05, -0.011
+        aim_hud_offset_rot_16x9          = 0.000281, 3.7e-05, -0.011
+
+        base_hud_offset_pos              = -0.049424, -0.021182, -0.001369
+        base_hud_offset_pos_16x9         = -0.049424, -0.021182, -0.001369
+        base_hud_offset_rot              = 0, 0, 0.105826
+        base_hud_offset_rot_16x9         = 0, 0, 0.105826

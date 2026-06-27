@@ -1,0 +1,46 @@
+![wpn_toz106]
+parent_section 	= wpn_toz106
+scopes 			= wpn_addon_scope_pu	
+
+!hud_fov
+
+lewd_lens_hide_enabled       = true	
+lewd_lens_hide_bone          = lens
+lewd_lens_hide_delays        = 0.1,0
+lewd_lens_hide_aim_mode      = true, false, false
+![wpn_toz106_hud]
+        hands_orientation                = 0.003955, 0.001993, -1
+        hands_orientation_16x9           = 0.003955, 0.001993, -1
+        hands_position                   = -0.003612, 0.003174, -0.159686
+        hands_position_16x9              = -0.003612, 0.003174, -0.159686
+
+        aim_hud_offset_pos               = -0.086218, 0.033184, -0.06
+        aim_hud_offset_pos_16x9          = -0.086218, 0.033184, -0.06
+        aim_hud_offset_rot               = 1.8e-05, 0.000125, -0.018
+        aim_hud_offset_rot_16x9          = 1.8e-05, 0.000125, -0.018
+
+        base_hud_offset_pos              = -0.046101, -0.011512, 0.010647
+        base_hud_offset_pos_16x9         = -0.046101, -0.011512, 0.010647
+        base_hud_offset_rot              = 0, 0, 0.147907
+        base_hud_offset_rot_16x9         = 0, 0, 0.147907
+;--------------------------------------------------------------------------------------------		
+[wpn_toz106_wpn_addon_scope_pu]:wpn_toz106, pu_s
+hud                         = wpn_toz106_wpn_addon_scope_pu_hud
+
+1icon_layer					= pu_x
+1icon_layer_x				= 77
+1icon_layer_y				= -30
+
+use_alt_aim_hud             = true
+
+[wpn_toz106_wpn_addon_scope_pu_hud]:wpn_toz106_hud		
+item_visual                 = dynamics\weapons\wpn_toz106\wpn_toz106_pu_hud.ogf
+        aim_hud_offset_pos               = -0.081213, 0.016468, -0.042835
+        aim_hud_offset_pos_16x9          = -0.081213, 0.016468, -0.042835
+        aim_hud_offset_rot               = 1.8e-05, 0.000125, -0.018
+        aim_hud_offset_rot_16x9          = 1.8e-05, 0.000125, -0.018
+
+        aim_hud_offset_alt_pos               = -0.086218, 0.033184, -0.06
+        aim_hud_offset_alt_pos_16x9          = -0.086218, 0.033184, -0.06
+        aim_hud_offset_alt_rot               = 1.8e-05, 0.000125, -0.018
+        aim_hud_offset_alt_rot_16x9          = 1.8e-05, 0.000125, -0.018

@@ -1,0 +1,89 @@
+![wpn_k98_mod]:marchf_s
+>scopes					= skeet
+
+!scope_zoom_factor  
+
+icons_texture      = ui\ui_icon_k98_mod
+inv_grid_width     = 6
+inv_grid_height    = 2
+inv_grid_x         = 0
+inv_grid_y         = 0
+
+upgr_icon_path		= ui\ui_icon_k98_mod
+upgr_icon_x			= 0
+upgr_icon_y			= 500
+upgr_icon_width		= 350
+upgr_icon_height	= 100
+				
+lewd_lens_hide_enabled       = true
+lewd_lens_hide_bone          = lens
+lewd_lens_hide_delays        = 0.1,0
+lewd_lens_hide_aim_mode      = true, false, false	
+
+![wpn_k98_mod_hud]
+        hands_orientation                = -0.004628, 0.009499, 0
+        hands_orientation_16x9           = -0.004628, 0.009499, 0
+        hands_position                   = 0.011109, 0.012367, 0.040564
+        hands_position_16x9              = 0.011109, 0.012367, 0.040564
+
+        aim_hud_offset_pos               = -0.077636, 0.020378, -0.106661
+        aim_hud_offset_pos_16x9          = -0.077636, 0.020378, -0.106661
+        aim_hud_offset_rot               = 0.000333, -0.000202, 0
+        aim_hud_offset_rot_16x9          = 0.000333, -0.000202, 0	
+
+        base_hud_offset_pos              = -0.040997, -0.002477, -0.029961
+        base_hud_offset_pos_16x9         = -0.040997, -0.002477, -0.029961
+        base_hud_offset_rot              = 0, 0, 0.102414
+        base_hud_offset_rot_16x9         = 0, 0, 0.102414	
+;-----------------------------------------------------------------------
+[wpn_k98_mod_skeet]:wpn_k98_mod, marchf_s
+hud                                      = wpn_k98_mod_skeet_hud
+
+inv_grid_x         = 0
+inv_grid_y         = 2
+
+[wpn_k98_mod_skeet_hud]:wpn_k98_mod_hud
+item_visual		= dynamics\weapons\wpn_k98_mod\wpn_k98_mod_skeet_hud.ogf
+		
+;==============================================================================
+![wpn_k98_mod_silen98]:marchf_s
+parent_section		= wpn_k98_mod_silen98
+scopes				= skeet
+
+icons_texture		= ui\ui_icon_k98_mod
+inv_grid_width		= 6
+inv_grid_height		= 2
+inv_grid_x			= 0
+inv_grid_y			= 0
+
+upgr_icon_path		= ui\ui_icon_k98_mod
+upgr_icon_x			= 0
+upgr_icon_y			= 400
+upgr_icon_width		= 350
+upgr_icon_height	= 100
+
+inv_grid_x			= 0
+inv_grid_y			= 4
+
+silencer_x			= 274
+silencer_y			= 22
+
+lewd_lens_hide_enabled       = true
+lewd_lens_hide_bone          = lens
+lewd_lens_hide_delays        = 0.1,0
+lewd_lens_hide_aim_mode      = true, false, false	
+
+;-----------------------------------------------------------------------
+[wpn_k98_mod_silen98_skeet]:wpn_k98_mod_silen98, marchf_s
+hud					= wpn_k98_mod_silen98_skeet_hud
+
+inv_grid_x			= 0
+inv_grid_y			= 6
+
+[wpn_k98_mod_silen98_skeet_hud]:wpn_k98_mod_silen98_hud
+item_visual		= dynamics\weapons\wpn_k98_mod\wpn_k98_mod_silen98_skeet_hud.ogf
+	
+;==============================================================================
+[wpn_k98_mauser_kit]:wpn_k98_mod_silen98
+parent_section	= wpn_k98_mauser_kit	
+[wpn_k98_mauser_kit_skeet]:wpn_k98_mod_silen98_skeet

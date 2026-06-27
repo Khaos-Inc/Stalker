@@ -1,0 +1,31 @@
+--NPC HEAL WITH MEDKITS/BANDAGES
+-- BY VODOXLEB
+-- If you don't use MCM, change your defaults from here.
+local defaults = {
+	enable = true,
+	enablebandage = true,
+	enablemedkit = true,
+	med_health_thres = 0.65,
+	limp_health_thres = 0.65,
+	cheatnpc = false,
+    enabledebug = false
+}
+
+function get_config(key)
+    if ui_mcm then return ui_mcm.get("healmed/"..key) else return defaults[key] end
+end
+
+function on_mcm_load()
+    op = { id= "healmed",sh=true ,gr={
+            { id= "title",type= "slide",link= "ui_options_slider_player",text="ui_mcm_limp_title",size= {512,50},spacing= 20 },
+			{id = "enable", type = "check", val = 1, def=true},
+			{id = "enablebandage", type = "check", val = 1, def=true},
+			{id = "enablemedkit", type = "check", val = 1, def=true},
+			{id = "med_health_thres", type = "track", val = 2, min=0,max=1,step=0.01, def = 0.65},
+			{id = "limp_health_thres", type = "track", val = 2, min=0,max=1,step=0.01, def = 0.65},
+			{id = "cheatnpc", type = "check", val = 1, def=false},
+			{id = "enabledebug", type = "check", val = 1, def=false},
+        }
+    }
+    return op
+end

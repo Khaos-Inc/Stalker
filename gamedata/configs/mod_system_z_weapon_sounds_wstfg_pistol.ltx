@@ -1,0 +1,237 @@
+;-----------------------------------------------------------------------------------------------------------------------------
+;------------------------------------- PISTOLS -------------------------------------------------------------------------------
+;-----------------------------------------------------------------------------------------------------------------------------
+
+![wpn_pm]
+!snd_silncer_shot
+!snd_empty
+
+![wpn_pb]:!wpn_pm_sounds, wpn_pb_sounds
+!snd_silncer_shot
+!snd_empty
+
+![wpn_aps]
+!snd_silncer_shot
+snd_bore                    = weapons\aps\pm_bore
+snd_reload				    = weapons\aps\pm_reload
+snd_reload_empty            = weapons\aps\pm_reload_full
+snd_reload_misfire          = weapons\generic\pistolguns_revival2
+!snd_switch_mode
+!snd_empty
+snd_draw                    = weapons\generic\pistolguns_draw
+snd_holster                 = weapons\generic\pistolguns_holster
+; snd_idle_sprint             = rattle\sprint\sprint_hand, 1.0, 1.2
+![wpn_aps_hud]
+!anm_bore_empty_jammed
+!anm_bore_jammed
+
+![wpn_fort]
+!snd_switch_mode
+!snd_empty
+
+![wpn_fort_snag]
+!snd_switch_mode
+!snd_empty
+
+![wpn_fort17]
+!snd_switch_mode
+!snd_empty
+
+![wpn_oc33]
+!snd_silncer_shot
+!snd_switch_mode
+!snd_empty
+
+![wpn_tt33]
+!snd_switch_mode
+!snd_empty
+
+![wpn_cz52]
+!snd_empty
+
+![wpn_cz75]
+!snd_empty
+
+![wpn_hpsa]
+!snd_silncer_shot
+!snd_switch_mode
+!snd_empty
+
+![wpn_gsh18]
+!snd_silncer_shot
+!snd_switch_mode
+!snd_empty
+
+![wpn_mp443]
+!snd_switch_mode
+!snd_empty
+
+snd_draw        	        = weapons\fort\fort_new_draw
+snd_holster        	        = weapons\fort\fort_new_holster
+snd_bore		            = weapons\fn57\fn57_inspect
+
+scripted_snd_ammo_check                 = weapons\fn57\fn57_magcheck
+scripted_snd_ammo_check_empty           = weapons\fn57\fn57_magcheck
+scripted_snd_ammo_check_jammed          = weapons\fn57\fn57_magcheck
+scripted_snd_ammo_check_empty_jammed    = weapons\fn57\fn57_magcheck
+;scripted_snd_ammo_check_no_mag          = $no_sound
+
+snd_reload		            = weapons\fn57\fn57_reload
+snd_reload_empty	        = weapons\fn57\fn57_reload_empty
+
+snd_reload_misfire                          = weapons\w99\w99_unjam
+scripted_snd_reload_misfire_empty           = weapons\w99\w99_unjam_empty
+scripted_snd_sprint2walk        	        = weapons\fort\fort_new_draw
+scripted_snd_walk2sprint        	        = weapons\fort\fort_new_holster   
+
+![wpn_beretta]
+!snd_silncer_shot
+!snd_switch_mode
+!snd_empty
+
+![wpn_beretta_modern]
+!snd_switch_mode
+!snd_empty
+
+![wpn_beretta_camo]
+!snd_switch_mode
+!snd_empty
+
+![wpn_walther]
+!snd_silncer_shot
+!snd_switch_mode
+!snd_empty
+
+![wpn_walther_custom]
+!snd_switch_mode
+!snd_empty
+
+![wpn_glock]
+!snd_switch_mode
+!snd_empty
+
+![wpn_glock_modern]
+!snd_switch_mode
+!snd_empty
+snd_draw                    = weapons\generic\pistolguns_draw2
+snd_holster                 = weapons\generic\pistolguns_holster2
+snd_reload_misfire          = weapons\generic\pistolguns_revival
+![wpn_glock_sk2_hud]
+!anm_switch_mode
+!anm_switch_mode_jammed
+
+![wpn_colt1911]
+!snd_silncer_shot
+!snd_switch_mode
+!snd_empty
+snd_draw                    = weapons\generic\pistolguns_draw
+snd_holster                 = weapons\generic\pistolguns_holster
+
+![wpn_colt1911_camo]:!wpn_colt1911_sounds,wpn_coonan_sounds
+!snd_switch_mode
+!snd_empty
+
+![wpn_sig220]
+!snd_silncer_shot
+!snd_switch_mode
+!snd_empty
+
+![wpn_usp]
+!snd_switch_mode
+!snd_empty
+
+![wpn_fnp45]
+!snd_switch_mode
+!snd_empty
+
+![wpn_fnx45]
+!snd_switch_mode
+!snd_empty
+
+![wpn_fnx45_custom]
+!snd_switch_mode
+!snd_empty
+; snd_empty_first				  = weapons\_dryfire\glock_hammer
+
+![wpn_fn57]
+!snd_switch_mode
+!snd_empty
+
+![wpn_desert_eagle]     ; TheShinyHaxorus' reanim patch
+!snd_empty
+snd_draw                    = weapons\deserteagle\deagle_draw
+snd_holster                 = weapons\deserteagle\deagle_holster
+![wpn_desert_eagle_hud]
+anm_hide                    = deagle_sh_holster_empty, idle
+anm_hide_empty              = deagle_sh_holster_empty, idle_empty
+
+![wpn_mp412]
+scripted_snd_show           = weapons\mp412\mp412_draw, true
+scripted_snd_show_empty     = weapons\mp412\mp412_draw_empty, true
+snd_empty                   = weapons\_dryfire\revolver_dry
+snd_empty_first				= $no_sound
+scripted_snd_ammo_check                 = weapons\mp412\mp412_ammocheck_partial
+scripted_snd_ammo_check_empty           = weapons\mp412\mp412_ammocheck_empty
+
+![wpn_revolver357]
+snd_empty                   = weapons\_dryfire\revolver_dry
+snd_empty_first				= $no_sound
+
+;------------------------------------ BAS (EFTWP) ----------------------------------------------------------------------------
+
+![wpn_pm_bas]
+!snd_empty
+
+![wpn_pmm_bas]
+!snd_empty
+
+![wpn_pb_bas]
+!snd_empty
+
+![wpn_aps_bas]
+!snd_empty
+
+![wpn_walther_p99]
+!snd_empty
+
+![wpn_walther_p99_mod9]
+!snd_empty
+
+![wpn_glock17]
+!snd_empty
+
+![wpn_glock17_m1]
+!snd_empty
+
+![wpn_pl15]:!wpn_mp443_sounds,wpn_gsh18_sounds
+!snd_empty
+
+![wpn_pl15_tan]:!wpn_mp443_sounds,wpn_gsh18_sounds
+!snd_empty
+
+![wpn_colt1911_n]
+!snd_empty
+
+![wpn_korth]
+!snd_empty
+
+![wpn_korth_custom]
+!snd_empty
+
+![wpn_sig220_n]
+!snd_empty
+
+![wpn_sig220_n_u2p2g0r]
+!snd_empty
+
+![wpn_sig226]:!wpn_sig220_sounds,wpn_sig226_sounds
+!snd_empty
+
+![wpn_sig226_226sig_kit]
+!snd_empty
+
+![wpn_usp_tac]
+!snd_empty
+
+![wpn_sr1m]:!wpn_glock_sounds,wpn_sr1_sounds
+!snd_empty

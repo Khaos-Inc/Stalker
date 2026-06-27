@@ -1,0 +1,523 @@
+;==============================================================================	
+![wpn_sr25]
+>scopes	=	lco1, romeo8, romeo4, exps3, bossxe, t12, e0t2_magd, uh1_magd, triji, mark8_rmr, spec_alt, c79, razorhd
+<scopes	=	compm4s, point_aimpro
+
+icons_texture      = ui\ui_icon_sr25new
+inv_grid_width     = 6
+inv_grid_height    = 2
+silencer_x                  = 274
+silencer_y                  = 15
+
+lewd_lens_hide_enabled       = true	
+lewd_lens_hide_bone          = lens
+lewd_lens_hide_delays        = 0.1,0
+lewd_lens_hide_aim_mode      = true, false, false
+
+fire_modes                  = -1, 1
+
+;------------- SOUNDS ----------------------------------------------------------	
+
+scripted_snd_reload_empty                           = weapons\m4t\reload_empty
+scripted_snd_reload_empty_variant1                  = weapons\m4t\reload_empty_2
+scripted_snd_show                                   = weapons\m4t\draw
+scripted_snd_hide                                   = weapons\m4t\hide
+scripted_snd_show_empty                             = weapons\m4t\draw
+scripted_snd_hide_empty                             = weapons\m4t\hide
+scripted_snd_show_jammed                            = weapons\m4t\draw
+scripted_snd_hide_jammed                            = weapons\m4t\hide
+scripted_snd_show_empty_jammed                      = weapons\m4t\draw
+scripted_snd_hide_empty_jammed                      = weapons\m4t\hide
+scripted_snd_ammo_check                             = weapons\m4t\mag_check
+scripted_snd_ammo_check_jammed                      = weapons\m4t\mag_check
+scripted_snd_ammo_check_empty                       = weapons\m4t\mag_check
+scripted_snd_ammo_check_empty_jammed                = weapons\m4t\mag_check
+scripted_snd_ammo_check_aim                         = $no_sound
+scripted_snd_ammo_check_aim_jammed                  = $no_sound
+scripted_snd_ammo_check_empty_aim                   = $no_sound
+scripted_snd_ammo_check_empty_aim_jammed            = $no_sound
+snd_reload_empty                                    = $no_sound
+snd_switch                                          = $no_sound
+snd_draw                                            = $no_sound
+snd_holster                                         = $no_sound
+snd_bore                                            = $no_sound
+scripted_snd_bore                                   = weapons\m4t\inspect
+scripted_snd_bore_empty                             = weapons\m4t\inspect_empty
+scripted_snd_bore_jammed                            = weapons\m4t\inspect_empty
+snd_reload                                          = weapons\m4t\reload
+snd_switch_mode                                     = weapons\m4t\fire_mode_switch
+snd_reload_misfire                                  = weapons\m4t\misfire
+
+![wpn_sr25_hud]
+fire_bone								 = muzzle
+fire_point								 = 0,0,0
+fire_bone2                               = wpn_body
+fire_point2								 = 0,0,0
+
+item_position                            = 0, 0, 0
+item_orientation                         = 0, 0, 0
+
+        hands_orientation                = 0.061594, -0.104694, 0
+        hands_orientation_16x9           = 0.061594, -0.104694, 0
+        hands_position                   = -0.023169, 0.006223, 0.022356
+        hands_position_16x9              = -0.023169, 0.006223, 0.022356
+
+        aim_hud_offset_pos               = -0.063878, 0.01232, -0.03
+        aim_hud_offset_pos_16x9          = -0.063878, 0.01232, -0.03
+        aim_hud_offset_rot               = -7.3e-05, -2.3e-05, 0
+        aim_hud_offset_rot_16x9          = -7.3e-05, -2.3e-05, 0
+		
+        base_hud_offset_pos              = -0.015492, -0.019921, 0.07936
+        base_hud_offset_pos_16x9         = -0.015492, -0.019921, 0.07936
+        base_hud_offset_rot              = 0, 0, 0.10069
+        base_hud_offset_rot_16x9         = 0, 0, 0.10069
+
+        lowered_hud_offset_pos           = 0.04841, -0.030161, 0.012593
+        lowered_hud_offset_pos_16x9      = 0.04841, -0.030161, 0.012593
+        lowered_hud_offset_rot           = 0.057308, -0.566138, 0.227058
+        lowered_hud_offset_rot_16x9      = 0.057308, -0.566138, 0.227058
+
+lean_hud_offset_pos                      = 0, 0, 0
+lean_hud_offset_rot                      = 0, 0, 0
+
+;-------------------------------------------------------------------ANIMATIONS----------------------------------------------------------------------------
+        
+;========================BORING=======================================================
+anm_bore                                 = m4_t_sedzhimol_inspect
+anm_bore_empty                           = m4_t_sedzhimol_ins_jam_emp, idle_empty
+anm_bore_jammed                          = m4_t_sedzhimol_ins_jam_emp, idle_jammed
+anm_bore_empty_jammed                    = m4_t_sedzhimol_ins_jam_emp, idle_jammed
+anm_bore_aim                             = m4_t_sedzhimol_aim, idle
+anm_bore_empty_aim                       = m4_t_sedzhimol_aim, idle_empty
+anm_bore_aim_jammed                      = m4_t_sedzhimol_aim, idle_jammed
+anm_bore_empty_aim_jammed                = m4_t_sedzhimol_aim, idle_jammed
+;========================HIDE==========================================================
+anm_hide                                 = m4_t_sedzhimol_hide, idle
+anm_hide_empty                           = m4_t_sedzhimol_hide, idle_empty
+anm_hide_jammed                          = m4_t_sedzhimol_hide, idle_jammed
+anm_hide_empty_jammed                    = m4_t_sedzhimol_hide, idle_jammed
+;========================SHOW==========================================================
+anm_show                                 = m4_t_sedzhimol_draw, idle
+anm_show_empty                           = m4_t_sedzhimol_draw, idle_empty
+anm_show_jammed                          = m4_t_sedzhimol_draw, idle_jammed
+anm_show_empty_jammed                    = m4_t_sedzhimol_draw, idle_jammed
+;========================IDLE==========================================================
+anm_idle                                 = m4_t_sedzhimol_idle, idle
+anm_idle_moving                          = m4_t_sedzhimol_walk, idle
+anm_idle_moving_crouch                   = m4_t_sedzhimol_walk, idle
+anm_idle_sprint                          = m4_t_sedzhimol_sprint, idle
+anm_idle_aim                             = m4_t_sedzhimol_aim, idle
+anm_idle_aim_moving                      = m4_t_sedzhimol_aim, idle
+anm_idle_aim_moving_crouch               = m4_t_sedzhimol_aim, idle
+
+anm_idle_empty                           = m4_t_sedzhimol_idle, idle_empty
+anm_idle_moving_empty                    = m4_t_sedzhimol_walk, idle_empty
+anm_idle_moving_crouch_empty             = m4_t_sedzhimol_walk, idle_empty
+anm_idle_sprint_empty                    = m4_t_sedzhimol_sprint, idle_empty
+anm_idle_aim_empty                       = m4_t_sedzhimol_aim, idle_empty
+anm_idle_aim_moving_empty                = m4_t_sedzhimol_aim, idle_empty
+anm_idle_aim_moving_crouch_empty         = m4_t_sedzhimol_aim, idle_empty
+
+anm_idle_jammed                          = m4_t_sedzhimol_idle, idle_jammed
+anm_idle_moving_jammed                   = m4_t_sedzhimol_walk, idle_jammed
+anm_idle_moving_crouch_jammed            = m4_t_sedzhimol_walk, idle_jammed
+anm_idle_sprint_jammed                   = m4_t_sedzhimol_sprint, idle_jammed
+anm_idle_aim_jammed                      = m4_t_sedzhimol_aim, idle_jammed
+anm_idle_aim_moving_jammed               = m4_t_sedzhimol_aim, idle_jammed
+anm_idle_aim_moving_crouch_jammed        = m4_t_sedzhimol_aim, idle_jammed
+
+anm_idle_empty_jammed                          = m4_t_sedzhimol_idle, idle_jammed
+anm_idle_moving_empty_jammed                   = m4_t_sedzhimol_walk, idle_jammed
+anm_idle_moving_crouch_empty_jammed            = m4_t_sedzhimol_walk, idle_jammed
+anm_idle_sprint_empty_jammed                   = m4_t_sedzhimol_sprint, idle_jammed
+anm_idle_aim_empty_jammed                      = m4_t_sedzhimol_aim, idle_jammed
+anm_idle_aim_moving_empty_jammed               = m4_t_sedzhimol_aim, idle_jammed
+anm_idle_aim_moving_crouch_empty_jammed        = m4_t_sedzhimol_aim, idle_jammed
+;========================SPRINT PATERN====================================================
+anm_sprint_start                         = m4_t_sedzhimol_sprint_start, idle
+anm_sprint_end                           = m4_t_sedzhimol_sprint_end, idle
+anm_sprint_start_empty                   = m4_t_sedzhimol_sprint_start, idle_empty
+anm_sprint_end_empty                     = m4_t_sedzhimol_sprint_end, idle_empty
+anm_sprint_start_jammed                  = m4_t_sedzhimol_sprint_start, idle_jammed
+anm_sprint_end_jammed                    = m4_t_sedzhimol_sprint_end, idle_jammed
+anm_sprint_start_empty_jammed            = m4_t_sedzhimol_sprint_start, idle_jammed
+anm_sprint_end_empty_jammed              = m4_t_sedzhimol_sprint_end, idle_jammed
+;----------------------------------------------------------------------------------------
+ts_pattern_sprint_start          = .+, anm_idle_sprint, anm_sprint_start, 1
+ts_pattern_sprint_end            = anm_idle_sprint, ^anm_idle.*, anm_sprint_end
+ts_strict_sprint_end_move        = anm_sprint_start, anm_idle_moving, anm_sprint_end
+;========================RELOAD==========================================================
+anm_reload                               = m4_t_sedzhimol_reload_part, m4_t_sedzhimol_reload_part_right
+anm_reload_empty                         = m4_t_sedzhimol_reload_full
+anm_reload_empty_variant1                = m4_t_sedzhimol_reload_full_ver2
+anm_reload_misfire                       = m4_t_sedzhimol_unjammed
+anm_reload_misfire_empty                 = m4_t_sedzhimol_unjammed_to_empty, m4_t_sedzhimol_unjammed_to_empty
+anm_reload_misfire_aim                   = m4_t_sedzhimol_unjammed, m4_t_sedzhimol_unjammed
+anm_reload_misfire_empty_aim             = m4_t_sedzhimol_unjammed_to_empty, m4_t_sedzhimol_unjammed_to_empty
+;========================MAG CHECK=========================================================
+anm_ammo_check                           = m4_t_sedzhimol_mag_check, m4_t_sedzhimol_mag_check
+anm_ammo_check_empty                     = m4_t_sedzhimol_mag_check, m4_t_sedzhimol_mag_check_empty
+anm_ammo_check_empty_jammed              = m4_t_sedzhimol_mag_check, m4_t_sedzhimol_mag_check_empty_jammed
+anm_ammo_check_jammed                    = m4_t_sedzhimol_mag_check, m4_t_sedzhimol_mag_check_jammed
+anm_ammo_check_aim                       = m4_t_sedzhimol_aim, idle
+anm_ammo_check_empty_aim                 = m4_t_sedzhimol_aim, idle_empty
+anm_ammo_check_aim_jammed                = m4_t_sedzhimol_aim, idle_jammed
+anm_ammo_check_empty_aim_jammed          = m4_t_sedzhimol_aim, idle_jammed
+;========================SWITCH MODE=======================================================
+anm_switch_mode                          = m4_t_sedzhimol_switch_mode, idle
+anm_switch_mode_aim                      = m4_t_sedzhimol_aim_switch_mode, idle
+anm_switch_mode_empty                    = m4_t_sedzhimol_switch_mode, idle_empty
+anm_switch_mode_empty_aim                = m4_t_sedzhimol_aim_switch_mode, idle_empty
+anm_switch_mode_jammed                   = m4_t_sedzhimol_switch_mode, idle_jammed
+anm_switch_mode_aim_jammed               = m4_t_sedzhimol_aim_switch_mode, idle_jammed
+anm_switch_mode_empty_jammed             = m4_t_sedzhimol_switch_mode, idle_jammed
+anm_switch_mode_empty_aim_jammed         = m4_t_sedzhimol_aim_switch_mode, idle_jammed
+;========================SHOOTS===========================================================
+anm_shots                                = m4_t_sedzhimol_shoot
+anm_shots_aim                            = m4_t_sedzhimol_shoot
+anm_shot_l                               = m4_t_sedzhimol_shoot, m4_t_sedzhimol_shoot_last
+anm_shot_l_aim                           = m4_t_sedzhimol_shoot, m4_t_sedzhimol_shoot_last
+anm_shots_jammed                         = m4_t_sedzhimol_shoot, m4_t_sedzhimol_shoot_to_jamm
+anm_shots_aim_jammed                     = m4_t_sedzhimol_shoot, m4_t_sedzhimol_shoot_to_jamm
+anm_shot_l_jammed                        = m4_t_sedzhimol_shoot, m4_t_sedzhimol_shoot_to_jamm
+anm_shot_l_aim_jammed                    = m4_t_sedzhimol_shoot, m4_t_sedzhimol_shoot_to_jamm
+
+;---------------------------------------------------SIGHTS---------------------------------------------------
+![wpn_sr25_ac10632]
+1icon_layer			    = ac10632_x
+1icon_layer_x			= 109
+1icon_layer_y			= -7
+![wpn_sr25_ac10632_hud]
+        aim_hud_offset_pos               = -0.063806, 0.00915, -0.02
+        aim_hud_offset_pos_16x9          = -0.063806, 0.00915, -0.02
+		
+![wpn_sr25_c-more]
+1icon_layer			    = c-more_x
+1icon_layer_x			= 111
+1icon_layer_y			= -4		
+![wpn_sr25_c-more_hud]
+        aim_hud_offset_pos               = -0.063844, 0.009294, -0.02
+        aim_hud_offset_pos_16x9          = -0.063844, 0.009294, -0.02
+		
+![wpn_sr25_eot]
+1icon_layer			    = eot_x
+1icon_layer_x			= 113
+1icon_layer_y			= -5		
+![wpn_sr25_eot_hud]
+        aim_hud_offset_pos               = -0.063582, 4e-06, -0.02
+        aim_hud_offset_pos_16x9          = -0.063582, 4e-06, -0.02
+		
+![wpn_sr25_mepro]
+1icon_layer			    = mepro_x
+1icon_layer_x			= 113
+1icon_layer_y			= -2		
+![wpn_sr25_mepro_hud]
+        aim_hud_offset_pos               = -0.064094, -0.001076, 0.02
+        aim_hud_offset_pos_16x9          = -0.064094, -0.001076, 0.02
+		
+![wpn_sr25_aimpoint]
+1icon_layer			    = aimpoint_x
+1icon_layer_x			= 112
+1icon_layer_y			= -14		
+![wpn_sr25_aimpoint_hud]
+        aim_hud_offset_pos               = -0.063878, 0.012788, -0.02
+        aim_hud_offset_pos_16x9          = -0.063878, 0.012788, -0.02
+		
+![wpn_sr25_e0t2]
+1icon_layer			    = e0t2_x
+1icon_layer_x			= 112
+1icon_layer_y			= -9		
+![wpn_sr25_e0t2_hud]
+        aim_hud_offset_pos               = -0.06379, 0.008413, -0.02
+        aim_hud_offset_pos_16x9          = -0.06379, 0.008413, -0.02
+		
+![wpn_sr25_kemper]
+1icon_layer			    = kemper_x
+1icon_layer_x			= 103
+1icon_layer_y			= -11		
+![wpn_sr25_kemper_hud]
+        aim_hud_offset_pos               = -0.063983, 0.004627, -0.02
+        aim_hud_offset_pos_16x9          = -0.063983, 0.004627, -0.02
+		
+;-----------------------------------------------------------------------------------------------
+[wpn_sr25_lco1]:wpn_sr25
+hud				                                   = wpn_sr25_lco1_hud
+
+1icon_layer                              = lco1_x
+1icon_layer_x                            = 111
+1icon_layer_y                            = -7
+
+[wpn_sr25_lco1_hud]:wpn_sr25_hud
+item_visual            	 	                       = anomaly_weapons\wpn_sr25new\wpn_sr25new_lco1_hud.ogf
+        aim_hud_offset_pos               = -0.06411, 0.006097, -0.02
+        aim_hud_offset_pos_16x9          = -0.06411, 0.006097, -0.02
+;-----------------------------------------------------------------------------------------------
+[wpn_sr25_romeo8]:wpn_sr25
+hud				                                   = wpn_sr25_romeo8_hud
+
+1icon_layer                              = romeo8_x
+1icon_layer_x                            = 107
+1icon_layer_y                            = -14
+
+[wpn_sr25_romeo8_hud]:wpn_sr25_hud
+item_visual            	 	                       = anomaly_weapons\wpn_sr25new\wpn_sr25new_romeo8_hud.ogf
+        aim_hud_offset_pos               = -0.064438, 0.005577, -0.02
+        aim_hud_offset_pos_16x9          = -0.064438, 0.005577, -0.02
+;-----------------------------------------------------------------------------------------------
+[wpn_sr25_romeo4]:wpn_sr25
+hud				                                   = wpn_sr25_romeo4_hud
+
+1icon_layer                              = romeo4_x
+1icon_layer_x                            = 106
+1icon_layer_y                            = -17
+
+[wpn_sr25_romeo4_hud]:wpn_sr25_hud
+item_visual            	 	                       = anomaly_weapons\wpn_sr25new\wpn_sr25new_romeo4_hud.ogf
+        aim_hud_offset_pos               = -0.064139, 0.006277, -0.02
+        aim_hud_offset_pos_16x9          = -0.064139, 0.006277, -0.02
+;-----------------------------------------------------------------------------------------------
+[wpn_sr25_exps3]:wpn_sr25
+hud				                                   = wpn_sr25_exps3_hud
+
+1icon_layer                              = exps3_x
+1icon_layer_x                            = 112
+1icon_layer_y                            = -10
+
+[wpn_sr25_exps3_hud]:wpn_sr25_hud
+item_visual            	 	                       = anomaly_weapons\wpn_sr25new\wpn_sr25new_exps3_hud.ogf
+        aim_hud_offset_pos               = -0.063829, -0.000676, -0.02
+        aim_hud_offset_pos_16x9          = -0.063829, -0.000676, -0.02
+;-----------------------------------------------------------------------------------------------
+[wpn_sr25_bossxe]:wpn_sr25
+hud				                                   = wpn_sr25_bossxe_hud
+
+1icon_layer                              = bossxe_x
+1icon_layer_x                            = 113
+1icon_layer_y                            = -10
+
+use_alt_aim_hud						 	 = true
+laser_status							 = true
+
+[wpn_sr25_bossxe_hud]:wpn_sr25_hud
+item_visual            	 	                       = anomaly_weapons\wpn_sr25new\wpn_sr25new_bossxe_hud.ogf
+        aim_hud_offset_pos               = -0.063582, -0.006005, -0.02
+        aim_hud_offset_pos_16x9          = -0.063582, -0.006005, -0.02
+		
+        aim_hud_offset_alt_pos           = -0.113866, -0.081061, -0.063989
+        aim_hud_offset_alt_pos_16x9      = -0.113866, -0.081061, -0.063989
+        aim_hud_offset_alt_rot           = -7.3e-05, -2.3e-05, 0.6
+        aim_hud_offset_alt_rot_16x9      = -7.3e-05, -2.3e-05, 0.6		
+;-----------------------------------------------------------------------------------------------
+[wpn_sr25_t12]:wpn_sr25, t12_s
+hud				                                   = wpn_sr25_t12_hud
+
+1icon_layer                              = t12_x
+1icon_layer_x                            = 115
+1icon_layer_y                            = -10
+
+[wpn_sr25_t12_hud]:wpn_sr25_hud
+item_visual            	 	                       = anomaly_weapons\wpn_sr25new\wpn_sr25new_t12_hud.ogf
+        aim_hud_offset_pos               = -0.064211, 0.008501, -0.02
+        aim_hud_offset_pos_16x9          = -0.064211, 0.008501, -0.02
+		
+;---------------------------------------------------SCOPES---------------------------------------------------
+;---------------------------------------------------SCOPES---------------------------------------------------
+;---------------------------------------------------SCOPES---------------------------------------------------
+![wpn_sr25_acog]:acog_s
+1icon_layer			    = acog_x
+1icon_layer_x			= 86
+1icon_layer_y			= -6
+![wpn_sr25_acog_hud]
+        aim_hud_offset_pos               = -0.064142, 0.007298, -0.079129
+        aim_hud_offset_pos_16x9          = -0.064142, 0.007298, -0.079129
+		
+![wpn_sr25_specter]:specter_s
+1icon_layer				= specter_x
+1icon_layer_x			= 67
+1icon_layer_y			= -11
+![wpn_sr25_specter_hud]
+        aim_hud_offset_pos               = -0.063871, 0.005084, -0.053425
+        aim_hud_offset_pos_16x9          = -0.063871, 0.005084, -0.053425
+		
+![wpn_sr25_leupold]:leupold_s
+1icon_layer			    = leupold_x
+1icon_layer_x			= 70
+1icon_layer_y			= -9
+![wpn_sr25_leupold_hud]
+        aim_hud_offset_pos               = -0.064178, 0.005454, 0.001261
+        aim_hud_offset_pos_16x9          = -0.064178, 0.005454, 0.001261
+		
+![wpn_sr25_pn23]:pn23_s
+1icon_layer			    = pn23_x
+1icon_layer_x			= 72
+1icon_layer_y			= -12
+![wpn_sr25_pn23_hud]
+        aim_hud_offset_pos               = -0.064233, -0.009517, 0.00802
+        aim_hud_offset_pos_16x9          = -0.064233, -0.009517, 0.00802
+		
+![wpn_sr25_gauss_sight]:gauss_s
+1icon_layer			    = gauss_sight_x
+1icon_layer_x			= 69
+1icon_layer_y			= -3
+![wpn_sr25_gauss_sight_hud]
+        aim_hud_offset_pos               = -0.06383, 0.001833, -0.065657
+        aim_hud_offset_pos_16x9          = -0.06383, 0.001833, -0.065657
+		
+![wpn_sr25_susat]:susat_s
+1icon_layer                              = susat_x
+1icon_layer_x                            = 112
+1icon_layer_y                            = -6
+![wpn_sr25_susat_hud]
+        aim_hud_offset_pos               = -0.064182, -0.006998, -0.091689
+        aim_hud_offset_pos_16x9          = -0.064182, -0.006998, -0.091689
+		
+![wpn_sr25_marchf]:marchf_s
+1icon_layer                              = marchf_x
+1icon_layer_x                            = 92
+1icon_layer_y                            = -6
+![wpn_sr25_marchf_hud]
+        aim_hud_offset_pos               = -0.064364, 0.005696, -0.011548
+        aim_hud_offset_pos_16x9          = -0.064364, 0.005696, -0.011548
+		
+;-----------------------------------------------------------------------------------------------
+[wpn_sr25_triji]:wpn_sr25, acog_s
+hud				                                   = wpn_sr25_triji_hud
+
+1icon_layer			    = acog_x
+1icon_layer_x			= 86
+1icon_layer_y			= -6
+2icon_layer			    = cant_x
+2icon_layer_x			= 132
+2icon_layer_y			= -4
+
+		use_alt_aim_hud		= true
+
+[wpn_sr25_triji_hud]:wpn_sr25_hud
+item_visual            	 	                       = anomaly_weapons\wpn_sr25new\wpn_sr25new_triji_hud.ogf
+        aim_hud_offset_pos               = -0.064142, 0.007298, -0.079129
+        aim_hud_offset_pos_16x9          = -0.064142, 0.007298, -0.079129
+
+        aim_hud_offset_alt_pos           = -0.099365, -0.059975, -0.02
+        aim_hud_offset_alt_pos_16x9      = -0.099365, -0.059975, -0.02
+        aim_hud_offset_alt_rot           = -7.3e-05, -2.3e-05, 0.823
+        aim_hud_offset_alt_rot_16x9      = -7.3e-05, -2.3e-05, 0.823	
+;-----------------------------------------------------------------------------------------------
+[wpn_sr25_mark8_rmr]:wpn_sr25, leupold_s
+hud				                                   = wpn_sr25_mark8_rmr_hud
+
+1icon_layer			    = leupold_x
+1icon_layer_x			= 70
+1icon_layer_y			= -9
+2icon_layer			    = cant_x
+2icon_layer_x			= 132
+2icon_layer_y			= -4
+
+		use_alt_aim_hud		= true
+
+[wpn_sr25_mark8_rmr_hud]:wpn_sr25_hud
+item_visual            	 	                       = anomaly_weapons\wpn_sr25new\wpn_sr25new_mark8_rmr_hud.ogf
+        aim_hud_offset_pos               = -0.064178, 0.005454, 0.001261
+        aim_hud_offset_pos_16x9          = -0.064178, 0.005454, 0.001261
+		
+        aim_hud_offset_alt_pos           = -0.099365, -0.059975, -0.02
+        aim_hud_offset_alt_pos_16x9      = -0.099365, -0.059975, -0.02
+        aim_hud_offset_alt_rot           = -7.3e-05, -2.3e-05, 0.823
+        aim_hud_offset_alt_rot_16x9      = -7.3e-05, -2.3e-05, 0.823	
+;-----------------------------------------------------------------------------------------------
+[wpn_sr25_spec_alt]:wpn_sr25, specter_s
+hud				                                   = wpn_sr25_spec_alt_hud
+
+1icon_layer				= specter_x
+1icon_layer_x			= 67
+1icon_layer_y			= -11
+2icon_layer			    = cant_x
+2icon_layer_x			= 132
+2icon_layer_y			= -4
+
+		use_alt_aim_hud		= true
+		
+[wpn_sr25_spec_alt_hud]:wpn_sr25_hud
+item_visual            	 	                       = anomaly_weapons\wpn_sr25new\wpn_sr25new_spec_alt_hud.ogf
+        aim_hud_offset_pos               = -0.063871, 0.005084, -0.053425
+        aim_hud_offset_pos_16x9          = -0.063871, 0.005084, -0.053425
+		
+        aim_hud_offset_alt_pos           = -0.099365, -0.059975, -0.02
+        aim_hud_offset_alt_pos_16x9      = -0.099365, -0.059975, -0.02
+        aim_hud_offset_alt_rot           = -7.3e-05, -2.3e-05, 0.823
+        aim_hud_offset_alt_rot_16x9      = -7.3e-05, -2.3e-05, 0.823	
+;-----------------------------------------------------------------------------------------------
+[wpn_sr25_c79]:wpn_sr25, c79_s
+hud				                                   = wpn_sr25_c79_hud
+
+1icon_layer                              = c79_x
+1icon_layer_x                            = 105
+1icon_layer_y                            = -8
+
+
+[wpn_sr25_c79_hud]:wpn_sr25_hud
+item_visual            	 	                       = anomaly_weapons\wpn_sr25new\wpn_sr25new_c79_hud.ogf
+        aim_hud_offset_pos               = -0.064189, 0.004218, -0.055374
+        aim_hud_offset_pos_16x9          = -0.064189, 0.004218, -0.055374
+;-----------------------------------------------------------------------------------------------
+[wpn_sr25_e0t2_magd]:wpn_sr25, e0t2_magd_s
+hud				                                   = wpn_sr25_e0t2_magd_hud
+
+1icon_layer                              = e0t2_magd_x
+1icon_layer_x                            = 69
+1icon_layer_y                            = -8
+
+		
+[wpn_sr25_e0t2_magd_hud]:wpn_sr25_hud
+item_visual            	 	                       = anomaly_weapons\wpn_sr25new\wpn_sr25new_e0t2_magd_hud.ogf
+        aim_hud_offset_pos               = -0.064123, 0.00852, -0.075681
+        aim_hud_offset_pos_16x9          = -0.064123, 0.00852, -0.075681	
+;-----------------------------------------------------------------------------------------------
+[wpn_sr25_e0t2_magd_off]:wpn_sr25
+hud				                                   = wpn_sr25_e0t2_magd_off_hud
+
+1icon_layer                              = e0t2_magd_x
+1icon_layer_x                            = 69
+1icon_layer_y                            = -8
+
+[wpn_sr25_e0t2_magd_off_hud]:wpn_sr25_hud
+item_visual            	 	                       = anomaly_weapons\wpn_sr25new\wpn_sr25new_e0t2_magd_off_hud.ogf
+        aim_hud_offset_pos               = -0.064123, 0.00852, -0.02
+        aim_hud_offset_pos_16x9          = -0.064123, 0.00852, -0.02
+;-----------------------------------------------------------------------------------------------
+[wpn_sr25_uh1_magd]:wpn_sr25, uh1_magd_s
+hud				                                   = wpn_sr25_uh1_magd_hud
+
+1icon_layer                              = uh1_magd_x
+1icon_layer_x                            = 69
+1icon_layer_y                            = -10
+
+		
+[wpn_sr25_uh1_magd_hud]:wpn_sr25_hud
+item_visual            	 	                       = anomaly_weapons\wpn_sr25new\wpn_sr25new_uh1_magd_hud.ogf
+        aim_hud_offset_pos               = -0.064154, 0.005279, -0.075681
+        aim_hud_offset_pos_16x9          = -0.064154, 0.005279, -0.075681
+;-----------------------------------------------------------------------------------------------
+[wpn_sr25_uh1_magd_off]:wpn_sr25
+hud				                                   = wpn_sr25_uh1_magd_off_hud
+
+1icon_layer                              = uh1_magd_x
+1icon_layer_x                            = 69
+1icon_layer_y                            = -10
+
+[wpn_sr25_uh1_magd_off_hud]:wpn_sr25_hud
+item_visual            	 	                       = anomaly_weapons\wpn_sr25new\wpn_sr25new_uh1_magd_off_hud.ogf
+        aim_hud_offset_pos               = -0.064154, 0.005279, -0.02
+        aim_hud_offset_pos_16x9          = -0.064154, 0.005279, -0.02
+;-----------------------------------------------------------------------------------------------
+[wpn_sr25_razorhd]:wpn_sr25, razorhd_s
+hud				                                   = wpn_sr25_razorhd_hud
+
+1icon_layer			    = razorhd_x
+1icon_layer_x			= 70
+1icon_layer_y			= -12
+
+
+[wpn_sr25_razorhd_hud]:wpn_sr25_hud
+item_visual            	 	                       = anomaly_weapons\wpn_sr25new\wpn_sr25new_razorhd_hud.ogf
+        aim_hud_offset_pos               = -0.064073, 0.005873, -0.000662
+        aim_hud_offset_pos_16x9          = -0.064073, 0.005873, -0.000662

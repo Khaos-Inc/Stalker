@@ -1,0 +1,31 @@
+[wpn_fort500_n_snd_shoot]
+snd_1_layer               = weapons\mossberg\mossberg_shoot
+snd_2_layer               = wpn\fort_500\_close
+snd_3_layer               = weapons\_distance_shooting_mid\saiga_distant
+snd_4_layer               = weapons\_distance_shooting_far\saiga_distant
+
+[wpn_fort500_snd_silencer_shoot]
+snd_1_layer               = wpn\fort_500\shoot_silencer
+snd_2_layer               = wpn\fort_500\_close
+
+[wpn_fort500_sounds_n]:wpn_mossberg_sounds ;--?
+snd_draw				  = wpn\fort_500\draw
+snd_holster				  = wpn\fort_500\hide
+snd_shoot				  = wpn_fort500_n_snd_shoot
+snd_reload_misfire		  = wpn\fort_500\misfire
+snd_bore				  = $no_sound
+snd_open_weapon			  = $no_sound
+snd_add_cartridge		  = wpn\fort_500\insert1
+snd_add_cartridge1		  = wpn\fort_500\insert2
+snd_add_cartridge2		  = wpn\fort_500\insert3
+snd_add_cartridge3		  = wpn\fort_500\insert4
+snd_close_weapon		  = wpn\fort_500\gun_close
+
+snd_silncer_shot         = wpn_fort500_snd_silencer_shoot
+
+scripted_snd_open             = wpn\fort_500\gun_open
+scripted_snd_open_empty       = wpn\fort_500\reload_start
+scripted_snd_bore             = wpn\fort_500\bore
+scripted_snd_bore_empty       = wpn\fort_500\bore
+scripted_snd_ammo_check       = wpn\fort_500\crtr_check
+scripted_snd_ammo_check_empty = wpn\fort_500\crtr_check

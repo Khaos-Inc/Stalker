@@ -1,0 +1,410 @@
+![wpn_pm_custom]:identity_immunities,weapon_probability,default_weapon_params,wpn_pm_sounds
+        GroupControlSection         = spawn_group
+        $npc                        = on
+        $prefetch                   = 8
+        $spawn                      = "weapons\pm"
+        scheduled                   = off
+        cform                       = skeleton
+        class                       = WP_PM
+        slot                        = 1
+        animation_slot              = 1
+        ef_weapon_type              = 5
+        hand_dependence             = 1
+        single_handed               = 1
+
+        inv_name                    = st_wpn_pm_new
+        inv_name_short              = st_wpn_pm_new
+        description                 = st_wpn_pm_new_descr
+
+        use_alt_aim_hud                  = true
+        scopes                           = lazup_pl15
+
+        parent_section                   = wpn_pm_custom
+        
+        default_to_ruck             = false
+        sprint_allowed              = true
+                
+        kind                        = w_pistol
+        inv_weight                  = 0.73
+        cost                        = 4890
+        repair_type                 = pistol
+        
+        hud                         = wpn_pm_sk1_new_hud
+        visual                      = dynamics\weapons\wpn_pm\wpn_pm.ogf
+        position                    = -0.021, -0.085, 0.0
+        orientation                 = 0, 0, 0
+        fire_point                  = 0.0, 0.133, 0.161
+        ph_mass                     = 1
+
+icons_texture      = ui\remademeowie_icon
+	inv_grid_width     = 2
+	inv_grid_height    = 1
+	inv_grid_x         = 0
+	inv_grid_y         = 0
+        
+        flame_particles             = weapons\generic_weapon03
+        smoke_particles             = weapons\generic_shoot_00
+        
+		shell_point		 			= 0.0, 0.133, 0.047
+		shell_dir		 			= 0.0, 0.0, 0.4
+		shell_particles	 			= weapons\9x18
+
+        light_color                 = 0.6, 0.5, 0.3
+        light_range                 = 3.0
+        light_time                  = 0.2
+        light_var_color             = 0.05
+        light_var_range             = 0.5
+        
+        upgrades                    = up_gr_firstab_pm, up_gr_seconab_pm, up_gr_thirdab_pm, up_gr_fourtab_pm, up_gr_fifthab_pm, up_gr_fifthcd_pm
+        installed_upgrades          =
+        upgrade_scheme              = upgrade_scheme_pm
+        upgr_icon_x                 = 1300
+        upgr_icon_y                 = 0
+        upgr_icon_width             = 150
+        upgr_icon_height            = 100
+        
+        fire_modes                  = 1
+        ammo_class                  = ammo_9x18_fmj, ammo_9x18_fmj_bad, ammo_9x18_fmj_verybad, ammo_9x18_pmm, ammo_9x18_pmm_bad, ammo_9x18_pmm_verybad, ammo_9x18_ap, ammo_9x18_ap_bad, ammo_9x18_ap_verybad
+        ammo_elapsed                = 8
+        ammo_mag_size               = 8
+        
+        scope_status                = 0
+        scope_zoom_factor           = 0
+        
+        silencer_name               = wpn_sil_9mm
+        silencer_status             = 2
+		silencer_x                  = 82		
+		silencer_y                  = -19
+        silencer_light_color        = 0.6, 0.5, 0.3
+        silencer_light_range        = 0.01
+        silencer_light_time         = 0.2
+        silencer_light_var_color    = 0.05
+        silencer_light_var_range    = 0.5
+        silencer_smoke_particles    = weapons\generic_shoot_00
+        
+        grenade_launcher_status     = 0
+        
+        hit_impulse                 = 20
+        hit_power                   = 0.45, 0.45, 0.45, 0.45
+        hit_type                    = fire_wound
+        fire_distance               = 300
+        bullet_speed                = 290
+        rpm                         = 340
+        rpm_empty_click             = 120
+        
+        use_aim_bullet              = false
+        time_to_aim                 = 0.0 ;  1.0
+        zoom_dof                    = -1000, 1.0, 1000
+        zoom_enabled                = true
+        zoom_rotate_time            = 0.25
+        reload_dof                  = 0.0, 0.5, 5, 1.7
+control_inertion_factor = 1.0f
+        crosshair_inertion          = 2.3
+        fire_dispersion_base        = 0.62
+        fire_dispersion_condition_factor = 0.001
+        
+        misfire_probability         = 0.005
+        misfire_start_condition     = 0.7 ;  0.81
+        misfire_start_prob          = 0.007
+        misfire_end_condition       = 0.1
+        misfire_end_prob            = 0.11
+        
+        condition_queue_shot_dec    = 0.0016
+        condition_shot_dec          = 0.0016
+        
+snd_draw					                                      = weapons\pm\pm_draw
+snd_holster				                                          = weapons\pistol_holster
+snd_empty				                                          = weapons\pm\pm_empty
+snd_reload				                                          = weapons\pm\pm_reload
+snd_reload_empty                                                  = weapons\pm\pm_reload_full
+snd_close				                                          = weapons\pm\pm_close
+snd_silncer_shot		                                          = weapons\pm\pm_shoot_sil
+snd_bore                                                          = weapons\pm\pm_bore
+snd_reload_misfire                                                = weapons\pm\grach_revival
+snd_reload				                                          = weapons\pm\pm_reload
+snd_reload_empty                                                  = weapons\pm\pm_reload_full
+
+
+        cam_return                  = 0
+        cam_relax_speed             = 8
+        cam_dispersion              = 2.0
+        cam_dispersion_frac         = 1.1
+        cam_dispersion_inc          = 0.0
+        cam_max_angle               = 50.0
+        cam_max_angle_horz          = 50.0
+        cam_step_angle_horz         = 0.52
+		zoom_cam_dispersion         = 1.5
+        
+        PDM_disp_accel_factor       = 1.055
+        PDM_disp_base               = 0.6
+        PDM_disp_crouch             = 1.0
+        PDM_disp_crouch_no_acc      = 1.0
+        PDM_disp_vel_factor         = 1.05
+        
+
+snd_reload = weapons\pm\pm_reload
+snd_reload_empty = $no_sound
+snd_empty = $no_sound
+snd_bore = $no_sound
+scripted_snd_empty_fire = weapons\pm\pm_click
+scripted_snd_bore = weapons\pm\pm_inspect
+scripted_snd_bore_jammed = weapons\pm\pm_click
+scripted_snd_bore_empty_jammed = weapons\pm\pm_click_jammed
+scripted_snd_reload_misfire = weapons\pm\pm_unjam
+
+scripted_snd_reload_empty = weapons\pm\pm_reload_empty
+scripted_snd_reload_empty_no_mag = weapons\pm\pm_reload_no_mag
+
+scripted_snd_ammo_check = weapons\pm\pm_magcheck
+scripted_snd_ammo_check_ammo8 = weapons\pm\pm_magcheck
+scripted_snd_ammo_check_ammo7 = weapons\pm\pm_magcheck
+scripted_snd_ammo_check_ammo6 = weapons\pm\pm_magcheck
+scripted_snd_ammo_check_ammo5 = weapons\pm\pm_magcheck
+scripted_snd_ammo_check_ammo4 = weapons\pm\pm_magcheck_partial
+scripted_snd_ammo_check_ammo3 = weapons\pm\pm_magcheck_partial
+scripted_snd_ammo_check_ammo2 = weapons\pm\pm_magcheck_partial
+scripted_snd_ammo_check_ammo1 = weapons\pm\pm_magcheck_partial
+scripted_snd_ammo_check_empty = weapons\pm\pm_magcheck_empty
+scripted_snd_ammo_check_no_mag = weapons\pm\pm_magcheck_empty
+
+
+        cam_relax_speed_ai          = 360
+        holder_fov_modifier         = 1.0
+        holder_range_modifier       = 1.0
+        min_radius                  = 0
+        max_radius                  = 500
+        hit_probability_gd_novice   = 1.00
+        hit_probability_gd_stalker  = 1.00
+        hit_probability_gd_veteran  = 1.00
+        hit_probability_gd_master   = 1.00
+        
+        kill_msg_x                  = 227
+        kill_msg_y                  = 82
+        kill_msg_width              = 27
+        kill_msg_height             = 23
+		weapon_lower_speed			= 0.2
+		
+
+[wpn_pm_sk1_new_hud]:hud_base
+        item_visual                      = anomaly_weapons\wpn_pm\wpn_pm_sk1_hud.ogf
+        attach_place_idx            = 0
+        zoom_hide_crosshair         = true
+
+safemode_anm				= 
+safemode_anm2				= 
+
+        item_orientation                 = 0.001, 0, 0
+        item_position                    = 0.00053, -0.003452, 0
+		
+        hands_orientation                = -0.000444, 0.005246, -1
+        hands_orientation_16x9           = -0.000444, 0.005246, -1
+        hands_position                   = -0.025383, -0.0001, 0.025
+        hands_position_16x9              = -0.025383, -0.0001, 0.025
+		
+        aim_hud_offset_pos               = -0.02851, 0.028573, -0.019418
+        aim_hud_offset_pos_16x9          = -0.02851, 0.028573, -0.019418
+        aim_hud_offset_rot               = 5e-05, 1.7e-05, -0.09
+        aim_hud_offset_rot_16x9          = 5e-05, 1.7e-05, -0.09
+		
+        lowered_hud_offset_pos           = 0, 0, 0.004845
+        lowered_hud_offset_pos_16x9      = 0, 0, 0.004845
+        lowered_hud_offset_rot           = 0.164122, -0.008087, 0.1
+        lowered_hud_offset_rot_16x9      = 0.164122, -0.008087, 0.1
+
+
+
+gl_hud_offset_pos           = 0, 0, 0
+gl_hud_offset_rot           = 0, 0, 0
+lean_hud_offset_pos         = 0, 0, 0
+lean_hud_offset_rot         = 0, 0, 0
+        
+anm_bore                    = h_pm_inspect, pm_idle
+        anm_bore_empty              = h_pm_inspect, pm_idle_empty
+        anm_bore_no_mag             = h_pm_inspect, pm_idle_no_mag
+        anm_hide                    = h_pm_holster, pm_holster
+        anm_hide_empty              = h_pm_holster_empty, pm_idle_empty
+        anm_show                    = h_pm_draw_empty, pm_draw
+        anm_show_empty              = h_pm_draw_empty, pm_idle_empty
+        anm_idle                    = h_pm_idle, pm_idle
+        anm_idle_lowered                    = h_pm_idle_safe, pm_idle
+        anm_idle_empty              = h_pm_idle, pm_idle_empty
+        anm_idle_empty_lowered                    = h_pm_idle_safe, pm_idle_empty
+        anm_idle_moving             = h_pm_walk, pm_idle
+        anm_idle_moving_empty       = h_pm_walk, pm_idle_empty
+        anm_idle_moving_crouch      = h_pm_walk, pm_idle, 0.7
+        anm_idle_moving_crouch_empty = h_pm_walk, pm_idle_empty, 0.7
+        anm_idle_sprint             = h_pm_sprint, pm_idle, 1.125
+        anm_idle_sprint_empty       = h_pm_sprint, pm_idle_empty, 1.125
+
+        ;anm_idle_aim                = h_pm_idle_aimless, pm_idle ; aim without sway
+        anm_idle_aim                = h_pm_idle_aimless, pm_idle
+        anm_idle_aim_empty          = h_pm_idle_aimless, pm_idle_empty
+        ;anm_idle_aim_move                = h_pm_walk_aim, pm_idle, 0.7
+        ;anm_idle_aim_move_empty                = h_pm_walk_aim, pm_idle, 0.7
+        ;anm_idle_aim_move_crouch                = h_pm_walk_aim, pm_idle, 0.45
+        ;anm_idle_aim_move_crouch_empty                = h_pm_walk_aim, pm_idle, 0.45
+
+        anm_shots                   = h_pm_shoot, pm_shoot
+        anm_shots_variant1                   = h_pm_shoot, pm_shoot1
+        anm_shots_variant2                   = h_pm_shoot, pm_shoot2
+        anm_shots_variant3                   = h_pm_shoot, pm_shoot3
+        anm_shots_aim                   = h_pm_shoot_aim_3dss, pm_shoot
+        anm_shots_aim_variant1                   = h_pm_shoot_aim_3dss, pm_shoot1
+        anm_shots_aim_variant2                   = h_pm_shoot_aim_3dss, pm_shoot2
+        anm_shots_aim_variant3                   = h_pm_shoot_aim_3dss, pm_shoot3	
+anm_shot_l                  = h_pm_shoot_empty, pm_shoot_empty
+        anm_shot_l_aim                  = h_pm_shoot_aim_empty, pm_shoot_empty
+        anm_empty_fire = h_pm_click, pm_click_empty
+
+
+        ; jammed
+        anm_reload_misfire           = h_pm_unjam, pm_unjam
+        anm_bore_jammed              = h_pm_click, pm_click_jammed
+        anm_hide_jammed              = h_pm_holster_empty, pm_idle_jammed
+        anm_show_jammed              = h_pm_draw_empty, pm_idle_jammed
+        anm_idle_jammed                     = h_pm_idle, pm_idle_jammed
+        anm_idle_lowered_jammed             = h_pm_idle_safe, pm_idle_jammed
+        anm_idle_moving_jammed             = h_pm_walk, pm_idle_jammed
+        anm_idle_moving_crouch_jammed      = h_pm_walk, pm_idle_jammed, 0.7
+        anm_idle_sprint_jammed             = h_pm_sprint, pm_idle_jammed, 1.125
+
+        anm_idle_aim_jammed                = h_pm_idle_aim, pm_idle_jammed
+        anm_idle_aim_move_jammed                = h_pm_walk_aim, pm_idle_jammed, 0.7
+        anm_idle_aim_move_crouch_jammed                = h_pm_walk_aim, pm_idle_jammed, 0.45
+
+        anm_shots_jammed                   = h_pm_shoot_jammed, pm_shoot_jammed
+        anm_shots_aim_jammed                   = h_pm_shoot_aim_jammed, pm_shoot_jammed
+
+        anm_ammo_check_jammed  = h_pm_magcheck_slide_empty, pm_idle_jammed
+
+
+        ; empty jammed
+        anm_reload_misfire_empty           = h_pm_unjam_empty, pm_unjam_empty
+        anm_bore_empty_jammed              = h_pm_click_empty_jammed, pm_click_empty_jammed
+        anm_hide_empty_jammed              = h_pm_holster_empty, pm_idle_empty_jammed
+        anm_show_empty_jammed              = h_pm_draw_empty, pm_idle_empty_jammed
+        anm_idle_empty_jammed                     = h_pm_idle, pm_idle_empty_jammed
+        anm_idle_lowered_empty_jammed             = h_pm_idle_safe, pm_idle_empty_jammed
+        anm_idle_moving_empty_jammed             = h_pm_walk, pm_idle_empty_jammed
+        anm_idle_moving_crouch_empty_jammed      = h_pm_walk, pm_idle_empty_jammed, 0.7
+        anm_idle_sprint_empty_jammed             = h_pm_sprint, pm_idle_empty_jammed, 1.125
+
+        anm_idle_aim_empty_jammed                = h_pm_idle_aim, pm_idle_empty_jammed
+        anm_idle_aim_move_empty_jammed                = h_pm_walk_aim, pm_idle_empty_jammed, 0.7
+        anm_idle_aim_move_crouch_empty_jammed                = h_pm_walk_aim, pm_idle_empty_jammed, 0.45
+
+        anm_shots_empty_jammed                   = h_pm_shoot_empty_jammed, pm_shoot_empty_jammed
+        anm_shots_aim_empty_jammed                   = h_pm_shoot_aim_empty_jammed, pm_shoot_empty_jammed
+
+        anm_ammo_check_empty_jammed  = h_pm_magcheck_slide_empty, pm_idle_empty_jammed
+
+        anm_empty_fire_jammed = h_pm_click_empty_jammed, pm_click_empty_jammed ; my script sucks
+
+
+        ; hell
+        anm_reload                  = h_pm_reload, pm_reload_ammo4
+        anm_reload_ammo8            = h_pm_reload, pm_reload_ammo8
+        anm_reload_ammo7            = h_pm_reload, pm_reload_ammo7
+        anm_reload_ammo6            = h_pm_reload, pm_reload_ammo6
+        anm_reload_ammo5            = h_pm_reload, pm_reload_ammo5
+        anm_reload_ammo4            = h_pm_reload, pm_reload_ammo4
+        anm_reload_ammo3            = h_pm_reload, pm_reload_ammo3
+        anm_reload_ammo2            = h_pm_reload, pm_reload_ammo2
+        anm_reload_ammo1            = h_pm_reload, pm_reload_ammo1
+        anm_reload_empty            = h_pm_reload_empty, pm_reload_empty
+        anm_reload_empty_no_mag           = h_pm_reload_no_mag, pm_reload_no_mag
+
+        anm_ammo_check        = h_pm_magcheck, pm_magcheck_ammo9
+        anm_ammo_check_ammo8  = h_pm_magcheck, pm_magcheck_ammo8
+        anm_ammo_check_ammo7  = h_pm_magcheck, pm_magcheck_ammo7
+        anm_ammo_check_ammo6  = h_pm_magcheck, pm_magcheck_ammo6
+        anm_ammo_check_ammo5  = h_pm_magcheck, pm_magcheck_ammo5
+        anm_ammo_check_ammo4  = h_pm_magcheck_partial, pm_magcheck_partial_ammo4
+        anm_ammo_check_ammo3  = h_pm_magcheck_partial, pm_magcheck_partial_ammo3
+        anm_ammo_check_ammo2  = h_pm_magcheck_partial, pm_magcheck_partial_ammo2
+        anm_ammo_check_ammo1  = h_pm_magcheck_partial, pm_magcheck_partial_ammo1
+        anm_ammo_check_empty  = h_pm_magcheck_slide_empty, pm_idle_empty
+        anm_ammo_check_no_mag = h_pm_magcheck_no_mag, pm_idle_no_mag
+
+
+        anm_idle_aim_start = h_pm_idle2aim, pm_idle, 0.95
+        anm_idle_aim_start_empty = h_pm_idle2aim, pm_idle_empty, 0.95
+        anm_idle_aim_start_jammed = h_pm_idle2aim, pm_idle_jammed, 0.95
+        anm_idle_aim_start_empty_jammed = h_pm_idle2aim, pm_idle_empty_jammed, 0.95
+        anm_idle_aim_end = h_pm_idle2aim, pm_idle, 0.925
+        anm_idle_aim_end_empty = h_pm_idle2aim, pm_idle_empty, 0.925
+        anm_idle_aim_end_jammed = h_pm_idle2aim, pm_idle_jammed, 0.925
+        anm_idle_aim_end_empty_jammed = h_pm_idle2aim, pm_idle_empty_jammed, 0.925
+
+        ;transitions
+
+        ts_pattern_idle2sprint = ^anm_idle.*, ^anm_idle_sprint.*, anm_idle2sprint, 3
+        anm_idle2sprint = h_pm_idle2sprint, pm_idle, 1
+        anm_idle2sprint_empty = h_pm_idle2sprint, pm_idle_empty, 1
+        anm_idle2sprint_jammed = h_pm_idle2sprint, pm_idle_jammed, 1
+        anm_idle2sprint_empty_jammed = h_pm_idle2sprint, pm_idle_empty_jammed, 1
+
+        ts_pattern_sprint2idle = ^anm_idle_sprint.*, ^anm_idle.*, anm_sprint2idle, 3
+        anm_sprint2idle = h_pm_sprint2idle, pm_idle, 1
+        anm_sprint2idle_empty = h_pm_sprint2idle, pm_idle_empty, 1
+        anm_sprint2idle_jammed = h_pm_sprint2idle, pm_idle_jammed, 1
+        anm_sprint2idle_empty_jammed = h_pm_sprint2idle, pm_idle_empty_jammed, 1  	
+		
+
+strafe_hud_offset_rot              = 1,-2,8
+strafe_hud_offset_pos              = -0.001,0.00420,0
+strafe_hud_offset_rot_16x9         = 1,-2,8
+strafe_hud_offset_pos_16x9         = -0.001,0.00420,0
+strafe_transition_time             = 0.45
+
+inertion_offset_LRUD_aim = 0.012, 0.012, 0.008, 0.008
+
+shooting_hud_effect                = true
+shooting_max_LRUD                  = 0.005,0.005,0.005,0.001
+shooting_max_LRUD_aim              = 0.0025,0.0025,0,0.005
+shooting_backward_offset           = 0.02,0.015
+shooting_ret_speed                 = 8
+shooting_ret_aim_speed             = 12
+shooting_min_LRUD_power            = 0.05
+
+
+empty_click_anm_speed = 0
+empty_click_anm_power = 0
+
+
+safemode_anm_speed = 1.1
+safemode_anm_power = 0.7
+
+
+safemode_anm_speed2 = 1.2
+safemode_anm_power2 = 0.4
+
+        shell_bone                  = wpn_body
+        shell_point                 = 200, 200, 200
+        
+        fire_bone                   = muzzle
+fire_point                       = 0,0,0
+
+;--------------------------------------------------------------------------------------------
+[wpn_pm_custom_lazup_pl15]:wpn_pm_custom
+hud				                 = wpn_pm_sk1_lazup_pl15_hud
+
+        inv_name                    = st_wpn_pm_las
+        inv_name_short              = st_wpn_pm_las
+        description                 = st_wpn_pm_las_descr
+		
+icons_texture      = ui\remademeowie_icon
+	inv_grid_width     = 2
+	inv_grid_height    = 1
+	inv_grid_x         = 2
+	inv_grid_y         = 0
+		
+        laser_status                     = true
+		use_alt_aim_hud					 = true
+
+[wpn_pm_sk1_lazup_pl15_hud]:wpn_pm_sk1_new_hud
+item_visual                      = anomaly_weapons\wpn_pm\wpn_pm_las_up_hud.ogf
+        aim_hud_offset_alt_pos           = -0.065704, -0.024696, -0.05
+        aim_hud_offset_alt_pos_16x9      = -0.065704, -0.024696, -0.05
+        aim_hud_offset_alt_rot           = 5e-05, 1.7e-05, 0.6
+        aim_hud_offset_alt_rot_16x9      = 5e-05, 1.7e-05, 0.6

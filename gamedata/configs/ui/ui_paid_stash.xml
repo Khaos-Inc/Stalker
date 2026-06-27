@@ -1,0 +1,38 @@
+<w>
+	<paid_stash>
+
+		<background x="400" y="335" width="600" height="300">
+			<auto_static x="-5" y="0" width="240" height="85" stretch="1">
+				<texture>ui_inGame2_message_box</texture>
+			</auto_static>
+		</background>
+
+		<btn_unlock x="10" y="50" width="70" height="35" check_mode="0">
+			<text font="letterica18">st_paid_stash_unlock</text>
+			<texture>ui_inGame2_Mp_bigbuttone</texture>
+		</btn_unlock>
+
+		<btn_buy x="81" y="50" width="70" height="35" check_mode="0">
+			<text font="letterica18">st_paid_stash_buy</text>
+			<texture>ui_inGame2_Mp_bigbuttone</texture>
+		</btn_buy>
+
+		<btn_cancel x="152" y="50" width="70" height="35" check_mode="0">
+			<text font="letterica18">st_paid_stash_cancel</text>
+			<texture>ui_inGame2_Mp_bigbuttone</texture>
+		</btn_cancel>
+
+		<status x="81" y="25" width="70" height="35">
+			<text complex_mode="1" r="224" g="18" b="18" align="c" font="letterica18"/>
+		</status>
+
+		<timer x="0" y="25" width="240" height="35">
+			<text complex_mode="1" r="200" g="200" b="200" align="c" font="letterica18"/>
+		</timer>
+
+		<buy_cost x="0" y="5" width="120" height="35">
+			<text complex_mode="1" r="200" g="200" b="200" align="c" font="letterica16"/>
+		</buy_cost>
+
+	</paid_stash>
+</w>

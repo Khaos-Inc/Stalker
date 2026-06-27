@@ -1,0 +1,20 @@
+local defaults = {
+    ["mult"] = 0.5
+}
+
+function get_config(key)
+    if ui_mcm then
+        local val = ui_mcm.get("dynamic_armor_weight/" .. key)
+        if val ~= nil then return val end
+    end
+    return defaults[key]
+end
+
+function on_mcm_load()
+    return {
+        id = "dynamic_armor_weight", sh = true, gr = {
+            {id = "title", type = "slide", link = "ui_options_slider_player", text = "ui_mcm_dynamic_armor_weight_title", size = {512, 50}, spacing = 20},
+            {id = "mult", type = "track", val = 2, min = 0.0, max = 1.0, step = 0.01, def = 0.5},
+        }
+    }
+end

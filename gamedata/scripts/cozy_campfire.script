@@ -1,0 +1,72 @@
+local health_regen =  0.002
+local hunger_drain = .000206
+local thirst_drain = 1.7
+local healing_multi = 1.0
+local signet_cancel = 1.25
+local accel_checked = false
+
+function get_nearby_lit_campfire(dist)
+	local pos = db.actor:position()
+	for id,binder in pairs(bind_campfire.campfires_all) do
+		if (binder and binder.campfire and binder.campfire:is_on()) then
+			if (pos:distance_to_sqr(binder.object:position()) <= dist) then
+				return true
+			end
+		end 
+	end 
+	return false
+end
+
+-- Check for presence of signet on belt to cancel out satiety/thirst drain
+function check_signet()
+	arti, belt = perk_based_artefacts.iterate_belt(db.actor)
+	for i = 1, #belt do
+		if belt[i] == "af_signet" then
+			return true
+		end
+	end
+	return false
+end
+
+trigger = 0
+delay = 800
+
+function actor_on_update()
+	arti = {}
+	belt = {}
+    tg = time_global()
+    
+    if trigger == 0 then
+        grok_delay = tg + delay
+        trigger = 1
+    end
+
+    if (trigger == 1 and tg > grok_delay) then
+        trigger = 0
+   		if not (db.actor) then 
+			return
+		end
+    	if get_nearby_lit_campfire(10.0) then
+			if ui_mcm and ui_mcm.get("black_road_revisited/campfire_accel") == true then
+				healing_multi = 2.5
+			else
+				healing_multi = 1.0
+			end
+        	db.actor:change_health(health_regen * healing_multi)
+        	-- printf("regenerating hp")
+			if (db.actor.health < 1) then
+				signet_val = 0
+				if check_signet() then
+					signet_val = signet_cancel
+				end
+				current_hunger = db.actor:cast_Actor():conditions():GetSatiety()
+				db.actor.satiety = current_hunger - hunger_drain * math.clamp((healing_multi - 1 - signet_val), 0, healing_multi)
+				actor_status_thirst.set_last_drink(thirst_drain * math.clamp((healing_multi - 1 - signet_val), 0, healing_multi))
+			end
+    	end
+    else return end
+end
+
+function on_game_start()
+	RegisterScriptCallback("actor_on_update",actor_on_update)
+end

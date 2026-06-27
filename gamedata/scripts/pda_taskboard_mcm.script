@@ -1,0 +1,50 @@
+-- Default config
+config = {
+    scanning_range = 100,
+    taskboard_key = DIK_keys.DIK_J,
+    companions_give_tasks = false,
+    colorize = true,
+    immediate_npc_threshold = 30,
+    bg_npcs_per_frame = 1,
+    bg_frame_interval = 0.2,
+    logging = false,
+	rare_bonus_enabled = true,
+    rare_bonus_min_per_star  = 1000,
+    rare_bonus_reward_pct = 25,
+    rare_bonus_hours_per_star = 15,
+    rare_bonus_max_stars = 5,
+    rare_bonus_star_chance = 0.50,
+    rare_bonus_rank_affects_chance = true,
+    rare_bonus_init_stars = 0.5,
+    rare_bonus_fail_chance_bonus = 0.03,
+    rare_bonus_logging = false,
+}
+
+op = {
+    id = "pda_taskboard", sh = true, gr = {
+        {id = "banner", type = "slide", size = {512, 50}, text = "ui_mcm_pda_taskboard_banner", spacing = 20},
+        {id = "scanning_range", type = "track", val = 2, min = 50, max = 300, step = 1, def = config.scanning_range},
+        {id = "taskboard_key", type = "key_bind", val = 2, def = config.taskboard_key},
+        {id = "companions_give_tasks", type = "check", val = 1, def = config.companions_give_tasks},
+        {id = "colorize", type = "check", val = 1, def = config.colorize},
+        {id = "immediate_npc_threshold", type = "track", val = 2, min = 1, max = 50, step = 1, def = config.immediate_npc_threshold},
+        {id = "bg_npcs_per_frame", type = "track", val = 2, min = 1, max = 5, step = 1, def = config.bg_npcs_per_frame},
+        {id = "bg_frame_interval", type = "track", val = 2, min = 0.05, max = 1.0, step = 0.05, def = config.bg_frame_interval},
+        {id = "logging", type = "check", val = 1, def = config.logging},
+		{id = "rare_bonus_banner", type = "slide", size = {512, 50}, text = "ui_mcm_pda_taskboard_rare_bonus_banner", spacing = 20},
+        {id = "rare_bonus_enabled", type = "check", val = 1, def = config.rare_bonus_enabled},
+        {id = "rare_bonus_min_per_star", type = "track", val = 2, min = 0, max = 10000, step = 100, def = config.rare_bonus_min_per_star},
+        {id = "rare_bonus_reward_pct", type = "track", val = 2, min = 0, max = 100, step = 1, def = config.rare_bonus_reward_pct},
+        {id = "rare_bonus_hours_per_star", type = "track", val = 2, min = 1, max = 168, step = 1, def = config.rare_bonus_hours_per_star},
+        {id = "rare_bonus_max_stars", type = "track", val = 2, min = 1, max = 10, step = 1, def = config.rare_bonus_max_stars},
+        {id = "rare_bonus_star_chance", type = "track", val = 2, min = 0.05, max = 1.0, step = 0.05, def = config.rare_bonus_star_chance},
+        {id = "rare_bonus_rank_affects_chance", type = "check", val = 1, def = config.rare_bonus_rank_affects_chance},
+        {id = "rare_bonus_fail_chance_bonus", type = "track", val = 2, min = 0.0, max = 0.50, step = 0.01, def = config.rare_bonus_fail_chance_bonus},
+        {id = "rare_bonus_init_stars", type = "track", val = 2, min = 0.0, max = 1.0, step = 0.05, def = config.rare_bonus_init_stars},
+        {id = "rare_bonus_logging", type = "check", val = 1, def = config.rare_bonus_logging},
+    }
+}
+
+function on_mcm_load()
+    return op
+end

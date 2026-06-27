@@ -1,0 +1,85 @@
+--SEMI-LOGIC FOR LIMPING NPCS
+--BY VODOXLEB
+limping_npcs={}
+limp_health_threshold = 0.65
+function on_game_start()
+	RegisterScriptCallback("npc_on_update", npc_on_update)
+	RegisterScriptCallback("on_option_change", on_option_change)
+	on_option_change()
+end
+
+function on_option_change()
+	modenable = medkit_bandage_heal_mcm.get_config("enable")
+	limp_health_threshold = medkit_bandage_heal_mcm.get_config("limp_health_thres")
+end
+
+function check_npc(npc)
+	if npc:movement_type() ~= 0 and npc:movement_type() ~= 2 and npc:movement_type() ~= 1 then
+		printf("wrong movement type %s", npc:movement_type())
+		return false
+	end
+	if npc:mental_state() ~= anim.free then
+		printf("wrong mental state %s", npc:mental_state())
+		return false
+	end
+	if npc:body_state() ~= move.standing then
+		printf("wrong body state %s", npc:body_state())
+		return false
+	end
+	if state_mgr.get_state(npc) ~= "idle" and state_mgr.get_state(npc) ~= "walk" then
+		printf("wrong state %s", state_mgr.get_state(npc))
+		return false
+	end
+	if npc.health >limp_health_threshold then
+		printf("too much hp")
+		return false
+	end
+	printf("all okay")
+	return true
+end
+
+function npc_on_update(npc)
+	if not modenable then return end
+	local tg = time_global()
+	if not npc then return end
+	local id = npc:id()
+	local st = db.storage[id]
+	if st.healing then return end
+	if (npc:movement_type() >= 0 or npc:movement_type() <= 2)  and npc:mental_state() == anim.free and npc:body_state() == move.standing 
+	--[[and (state_mgr.get_state(npc) == "idle" or state_mgr.get_state(npc) == "walk" or state_mgr.get_state(npc) == "talk_default")]] 
+	and npc.health <limp_health_threshold and npc:character_community() ~= "zombied"
+	and not IsWounded(npc)	then
+		if not limping_npcs[npc:id()] then
+			limping_npcs[npc:id()] = {}
+			limping_npcs[npc:id()].pos = npc:position()
+			limping_npcs[npc:id()].timer = tg
+			--printf("add to limp")
+		end
+	else
+		if limping_npcs[npc:id()] then
+			limping_npcs[npc:id()] = nil
+			npc:clear_animations()
+		end
+	end
+	for k,v in pairs(limping_npcs) do
+		if tg > v.timer then
+			if k == npc:id() then
+				if v.pos:distance_to(npc:position()) > 0 then
+					v.pos = npc:position()
+					if v.state == "stand" then
+						npc:clear_animations()
+					end
+					utils_obj.add_anim(npc,"dmg_norm_walk_fwd_0")
+					v.state = "walk"
+				else
+					if v.state == "walk" then
+						npc:clear_animations()
+					end
+					utils_obj.add_anim(npc,"dmg_norm_torso_1_idle_0")
+					v.state = "stand"
+				end
+				v.timer = tg + 20
+			end
+		end
+	end
+end

@@ -1,0 +1,326 @@
+;------------------------------------------------------------------------------------------------
+[wpn_gauss]:identity_immunities,weapon_probability,default_weapon_params,wpn_gauss_sounds_new
+        GroupControlSection         = spawn_group
+        discovery_dependency        =
+        $npc                        = on
+        $prefetch                   = 8
+        $spawn                      = "weapons\gauss"
+        scheduled                   = off
+        cform                       = skeleton
+		
+        class                       = WP_PM ;WP_SVD
+        slot                        = 2
+        animation_slot              = 2
+        ef_main_weapon_type         = 2 ;3
+        ef_weapon_type              = 10 ;11
+        hand_dependence             = 1
+        single_handed               = 0
+        
+        default_to_ruck             = false
+        sprint_allowed              = true
+        
+		icons_texture      			= ui\ui_icon_gauss_swp
+		inv_grid_height             = 2
+		inv_grid_width              = 6
+		inv_grid_x                  = 0
+		inv_grid_y                  = 0
+        inv_name                    = st_wpn_gauss_bas
+        inv_name_short              = st_wpn_gauss_bas
+        description                 = st_wpn_gauss_bas_descr
+        
+        kind                        = w_sniper; тип оружия отображаемый в спавнере(или еще какая-та хуйня)
+        inv_weight                  = 12.768
+        cost                        = 85860
+	    repair_type                 = rifle_7; не знамо
+        weapon_class                = assault_rifle ;sniper_rifle ; не знамо
+        
+        hud                         = wpn_gauss_hud
+        visual                      = dynamics\weapons\wpn_gauss\wpn_gauss.ogf
+        position                         = -0.019445, 0.013619, 0.01302
+        orientation                 = 0, 0, 0
+		fire_point				= 0.00,0.12,0.69
+		fire_point2				= 0.00,0.12,0.69
+        strap_bone0                 = bip01_spine2
+        strap_bone1                 = bip01_spine1
+        strap_orientation                = -2.360422, -9, 105.2239
+        strap_position                   = -0.176455, -0.158776, -0.005942
+        ph_mass                     = 4 ;3
+        
+        flame_particles             = weapons\generic_weapon_gauss
+        smoke_particles             = weapons\generic_weapon07
+        
+		shell_point		 		= 0.0, 0.129, 0.192
+		shell_dir		 		= 0.0, 0.0, 0.4
+		;shell_particles	 		= weapons\generic_shells
+
+        light_disabled              = false
+        light_color                 = 1.3, 1.5, 2
+        light_range                 = 4.0
+        light_time                  = 0.5
+        light_var_color             = 0.05
+        light_var_range             = 0.5
+        
+		icons_texture      			= ui\ui_icon_gauss_swp
+        upgr_icon_x                 = 0
+        upgr_icon_y                 = 100
+        upgr_icon_width             = 350
+        upgr_icon_height            = 150
+        
+        ammo_class                  = ammo_gauss, ammo_gauss_bad, ammo_gauss_verybad
+        ammo_current                = 10
+        ammo_elapsed                = 0
+        ammo_limit                  = 60
+        ammo_mag_size               = 10
+        startup_ammo                = 10
+        
+        scope_status                = 1
+        scope_dynamic_zoom          = on
+        scope_name                  = wpn_addon_scope
+        scope_texture               = 
+        scope_x                     = 60
+        scope_y                     = -2
+  
+		upgrades                    = up_gr_firstab_svd_nimble, up_gr_seconab_svd_nimble, up_gr_thirdab_svd_nimble	
+		upgrade_scheme              = upgrade_scheme_svd 
+		
+        silencer_status             = 0
+        
+        grenade_launcher_status     = 0
+        
+        hit_impulse                 = 1
+        hit_power                   = 1.0, 1.0, 1.0, 1.0
+        hit_type                    = fire_wound
+        fire_distance               = 1000
+        bullet_speed                = 15000
+        rpm                         = 50
+        rpm_empty_click             = 200
+
+		bullet_bones        = b_10, b_9, b_8, b_7, b_6, b_5, b_4, b_3, b_2, b_1
+        
+        use_aim_bullet              = false
+        time_to_aim                 = 0.0 ;  1.0
+        zoom_enabled                = true
+        zoom_rotate_time            = 0.25
+        reload_dof                  = 0.0, 0.5, 5, 1.7
+		control_inertion_factor = 1.0f
+        crosshair_inertion          = 10.8
+        fire_dispersion_base        = 0.001
+        fire_dispersion_condition_factor = 0.001
+        
+        misfire_probability         = 0.02
+        misfire_start_condition     = 0.7 ;  0.7
+        misfire_start_prob          = 0.007
+        misfire_end_condition       = 0.1
+        misfire_end_prob            = 0.11
+        
+        condition_queue_shot_dec    = 0.0036
+        condition_shot_dec          = 0.0036
+        
+        cam_return                  = 0
+        cam_relax_speed             = 3
+        cam_dispersion              = 0.05
+        cam_dispersion_frac         = 1.1
+        cam_dispersion_inc          = 0.05
+        cam_max_angle               = 0.01
+        cam_max_angle_horz          = 0.01
+        cam_step_angle_horz         = 0.01
+        zoom_cam_relax_speed        = 3
+        zoom_cam_dispersion         = 0.01
+        zoom_cam_dispersion_frac    = 1.0
+        zoom_cam_dispersion_inc     = 0.01
+        zoom_cam_max_angle          = 0.01
+        zoom_cam_max_angle_horz     = 0.01
+        zoom_cam_step_angle_horz    = 0.01
+        
+        PDM_disp_accel_factor       = 3.05
+        PDM_disp_base               = 2.25
+        PDM_disp_crouch             = 1.0
+        PDM_disp_crouch_no_acc      = 1.0
+        PDM_disp_vel_factor         = 3.05
+        
+        cam_relax_speed_ai          = 360
+        zoom_cam_relax_speed_ai     = 360
+        holder_fov_modifier         = 1.0
+        holder_range_modifier       = 2.85
+        min_radius                  = 0
+        max_radius                  = 500
+        hit_probability_gd_novice   = 1.00
+        hit_probability_gd_stalker  = 1.00
+        hit_probability_gd_veteran  = 1.00
+        hit_probability_gd_master   = 1.00
+        
+        kill_msg_x                  = 166
+        kill_msg_y                  = 59
+        kill_msg_width              = 82
+        kill_msg_height             = 23
+ 
+[wpn_gauss_hud]:hud_base
+
+        item_visual                 = anomaly_weapons\wpn_gauss\wpn_gauss_hud.ogf
+        attach_place_idx            = 0
+        zoom_hide_crosshair         = true
+        
+        item_position               = 0, 0, 0
+        item_orientation            = 0, 0, 0
+        
+        aim_hud_offset_pos               = -0.052, 0.009, -0.04
+        aim_hud_offset_pos_16x9          = -0.052, 0.009, -0.04
+        aim_hud_offset_rot               = 0.09, 0, 0
+        aim_hud_offset_rot_16x9          = 0.09, 0, 0
+		
+        hands_orientation                = 1.5538, -0.292798, 0
+        hands_orientation_16x9           = 1.5538, -0.292798, 0
+        hands_position                   = -0.008924, -0.17961, -0.153343
+        hands_position_16x9              = -0.008924, -0.17961, -0.153343
+		
+        lowered_hud_offset_pos           = 0.06, -0.001, -0.003
+        lowered_hud_offset_pos_16x9      = 0.06, -0.001, -0.003
+        lowered_hud_offset_rot           = 0.15, -0.85, 0.12
+        lowered_hud_offset_rot_16x9      = 0.15, -0.85, 0.12
+        
+        gl_hud_offset_pos           = 0, 0, 0
+        gl_hud_offset_rot           = 0, 0, 0
+        
+        lean_hud_offset_pos         = 0, 0, 0
+        lean_hud_offset_rot         = 0, 0, 0
+        
+        anm_bore                    	  = gauss_boree, gauss_bore
+        anm_hide                    	  = gauss_hidee, gauss_hide
+        anm_idle                    	  = gauss_idlee, idle
+        anm_idle_aim                	  = gauss_aim, idle
+        anm_idle_aim_moving         	  = gauss_walke, idle, 0.75
+        anm_idle_aim_moving_crouch  	  = gauss_walke, idle, 0.7
+        anm_idle_moving             	  = gauss_walke, idle
+        anm_idle_sprint             	  = gauss_sprinte, idle
+        anm_reload                  	  = gauss_r, gauss_reload
+		anm_reload_empty                  = gauss_r, gauss_reload_empty
+		anm_reload_misfire                = gauss_mis, gauss_ep_switch
+		anm_reload_misfire_empty          = gauss_mis, gauss_ep_switch_empty
+        anm_shots                   	  = gauss_shote, gauss_shot
+		anm_shot_l                   	  = gauss_shote, gauss_shot_last
+        anm_show                    	  = gauss_drawe, gauss_show
+		
+		anm_bore_empty                    = gauss_boree, gauss_bore_empty
+        anm_hide_empty                    = gauss_hidee, idle_empty
+        anm_idle_empty                    = gauss_idlee, idle_empty
+        anm_idle_aim_empty                = gauss_aim, idle_empty
+        anm_idle_aim_moving_empty         = gauss_walke, idle_empty, 0.75
+        anm_idle_aim_moving_crouch_empty  = gauss_walke, idle_empty, 0.7
+        anm_idle_moving_empty             = gauss_walke, idle_empty
+        anm_idle_sprint_empty             = gauss_sprinte, idle_empty
+        anm_show_empty                    = gauss_drawe, idle_empty
+		
+		anm_bore_jammed                    = gauss_boree, gauss_bore_empty
+        anm_hide_jammed                    = gauss_hidee, idle_empty
+        anm_idle_jammed                    = gauss_idlee, idle_empty
+        anm_idle_aim_jammed                = gauss_aim, idle_empty
+        anm_idle_aim_moving_jammed         = gauss_walke, idle_empty, 0.75
+        anm_idle_aim_moving_crouch_jammed  = gauss_walke, idle_empty, 0.7
+        anm_idle_moving_jammed             = gauss_walke, idle_empty
+        anm_idle_sprint_jammed             = gauss_sprinte, idle_empty
+        anm_show_jammed                    = gauss_drawe, idle_empty
+		anm_shots_jammed                   = gauss_shote, gauss_shot_last
+        
+		shell_point					= 0,0,-100
+		shell_dir               = 0.0, 0.0, -100
+		shell_bone					= body_gauss
+        
+        fire_point                       = 0, 0.038, 0.468196
+		fire_bone               = body_gauss
+
+ 
+;------------------------------------------------------------------------------------------------
+[pri_a17_gauss_rifle]:wpn_gauss	;Gauss UMIROTVORITEL
+        $spawn                      = "weapons\uniq\pri_a17_gauss_rifle"
+        
+        story_id                    = pri_a17_gauss_rifle
+        quest_item                  = false
+        
+        inv_name                    = st_wpn_umirotvoritel
+        description                 = st_wpn_umirotvoritel_descr
+        
+        hud                         = wpn_gauss_hud
+        
+        upgr_icon_x                 = 1750
+        upgr_icon_y                 = 700
+        upgr_icon_width             = 300
+        upgr_icon_height            = 100
+        
+        ammo_class                  = ammo_gauss, ammo_gauss_bad, ammo_gauss_verybad
+        ammo_current                = 10
+        ammo_elapsed                = 0
+        ammo_limit                  = 10
+        ammo_mag_size               = 10
+        
+        hit_impulse                 = 1
+        hit_power                   = 5.5, 5.5, 5.5, 5.5
+        hit_type                    = fire_wound
+        fire_distance               = 2000
+        bullet_speed                = 100000
+        
+        misfire_start_condition     = 0.7 ;  0.6
+        misfire_start_prob          = 0.007
+        misfire_end_condition       = 0.3
+        misfire_end_prob            = 0.11
+        
+        condition_queue_shot_dec    = 0.00002
+        condition_shot_dec          = 0.00001
+        
+        hit_probability_gd_novice   = 1.00
+        hit_probability_gd_stalker  = 1.00
+        hit_probability_gd_veteran  = 1.00
+        hit_probability_gd_master   = 1.00
+
+;======================================================================================================================================================;
+;																																					   ;
+;															     SOUNDS BY TheTazDJ																	   ;
+;																																				       ;
+;======================================================================================================================================================;
+
+[wpn_gauss_sounds_new]:base_sounds
+
+;MISC SOUNDS
+snd_empty				                                          = weapons\gauss\handling\gauss_trigger
+snd_bore														  = weapons\gauss\handling\gauss_inspect
+scripted_snd_bore_jammed										  = weapons\gauss\handling\gauss_inspect
+
+;RELOAD SOUNDS
+snd_reload              										  = weapons\gauss\handling\gauss_reload_partial1
+snd_reload1              										  = weapons\gauss\handling\gauss_reload_partial2
+snd_reload2              										  = weapons\gauss\handling\gauss_reload_partial3
+snd_reload_empty         										  = weapons\gauss\handling\gauss_reload_empty1
+snd_reload_empty1         										  = weapons\gauss\handling\gauss_reload_empty2
+snd_reload_empty2         										  = weapons\gauss\handling\gauss_reload_empty3
+snd_reload_misfire        										  = weapons\gauss\handling\gauss_reactivate_after_jam
+
+;DRAW SCRIPTED SOUNDS
+snd_draw														  = $no_sound
+scripted_snd_show											      = weapons\gauss\handling\gauss_deploy_battery_on,true
+scripted_snd_show_empty										      = weapons\gauss\handling\gauss_deploy
+scripted_snd_show_jammed										  = weapons\gauss\handling\gauss_deploy
+
+;HOLSTER SCRIPTED SOUNDS
+snd_holster														  = $no_sound
+scripted_snd_hide											      = weapons\gauss\handling\gauss_holster_battery_off
+scripted_snd_hide_empty										      = weapons\gauss\handling\gauss_holster
+scripted_snd_hide_jammed										  = weapons\gauss\handling\gauss_holster
+
+;SHOOT SCRIPTED SOUNDS
+snd_shoot				                                          = wpn_gauss_snd_shot
+snd_shoot_actor													  = wpn_gauss_snd_shot_swp_actor
+scripted_snd_shots												  = weapons\gauss\mono\gauss_charge_after_shoot
+
+;---------------------------------- SHOOT LAYERS -----------------------------------;
+
+[wpn_gauss_snd_shot]
+snd_1_layer               			                              = weapons\gauss\gauss_shot
+snd_2_layer 		                                              = weapons\gauss\gauss_wave
+snd_3_layer                                                       = weapons\_distance_shooting_mid\gauss_distant
+snd_4_layer                                                       = weapons\_distance_shooting_far\gauss_distant
+
+[wpn_gauss_snd_shot_swp_actor]
+snd_1_layer               			                              = weapons\gauss\gauss_shot
+snd_2_layer 		                                              = weapons\gauss\gauss_wave
+snd_3_layer                                                       = weapons\_distance_shooting_mid\gauss_distant
+snd_4_layer                                                       = weapons\_distance_shooting_far\gauss_distant
+

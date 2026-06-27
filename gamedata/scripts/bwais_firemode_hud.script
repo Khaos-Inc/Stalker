@@ -1,0 +1,193 @@
+-- Bwais Fire Mode Check HUD
+-- Standalone HUD module. Uses its own XML and texture path.
+-- MCM-adjustable position, tint hue, and opacity.
+
+local firing_mode_icons = { ["Single"] = 0, ["Burst"] = 1, ["Full-Auto"] = 2 }
+local selector_rows = { ["GENERIC_BURST3"] = 0, ["GENERIC_NO_BURST"] = 1 }
+
+local tile_size = 256
+local HUD = nil
+
+local firing_mode_indicator
+local firing_mode_text
+
+local DEFAULT_ICON_X = 512
+local DEFAULT_ICON_Y = 620
+local DEFAULT_TEXT_X = 200
+local DEFAULT_TEXT_Y = 700
+local DEFAULT_OPACITY = 255
+local DEFAULT_HUE = 0 -- 0 means original/white tint. 1-360 applies hue tint.
+
+local function mcm_get(id, def)
+    if ui_mcm then
+        local ok, val = pcall(ui_mcm.get, "bwaisFireModeCheck/" .. id)
+        if ok and val ~= nil then
+            return val
+        end
+    end
+    return def
+end
+
+local function clamp(v, lo, hi)
+    v = tonumber(v) or lo
+    if v < lo then return lo end
+    if v > hi then return hi end
+    return v
+end
+
+local function hsv_to_rgb(h, s, v)
+    h = (tonumber(h) or 0) % 360
+    s = clamp(s or 1, 0, 1)
+    v = clamp(v or 1, 0, 1)
+
+    local c = v * s
+    local x = c * (1 - math.abs(((h / 60) % 2) - 1))
+    local m = v - c
+    local r, g, b = 0, 0, 0
+
+    if h < 60 then
+        r, g, b = c, x, 0
+    elseif h < 120 then
+        r, g, b = x, c, 0
+    elseif h < 180 then
+        r, g, b = 0, c, x
+    elseif h < 240 then
+        r, g, b = 0, x, c
+    elseif h < 300 then
+        r, g, b = x, 0, c
+    else
+        r, g, b = c, 0, x
+    end
+
+    return math.floor((r + m) * 255 + 0.5), math.floor((g + m) * 255 + 0.5), math.floor((b + m) * 255 + 0.5)
+end
+
+local function argb(a, r, g, b)
+    a = clamp(a, 0, 255)
+    r = clamp(r, 0, 255)
+    g = clamp(g, 0, 255)
+    b = clamp(b, 0, 255)
+
+    if GetARGB then
+        return GetARGB(a, r, g, b)
+    end
+
+    return bit_or(bit_lshift(a, 24), bit_lshift(r, 16), bit_lshift(g, 8), b)
+end
+
+local function get_visual_color()
+    local opacity = clamp(mcm_get("opacity", DEFAULT_OPACITY), 0, 255)
+    local hue = clamp(mcm_get("hue", DEFAULT_HUE), 0, 360)
+
+    -- Hue 0 means leave the DDS/text neutral. Hue 1-360 applies a controlled tint.
+    if hue <= 0 then
+        return argb(opacity, 255, 255, 255), opacity, 255, 255, 255
+    end
+
+    local r, g, b = hsv_to_rgb(hue, 0.65, 1.0)
+    return argb(opacity, r, g, b), opacity, r, g, b
+end
+
+local function safe_call(obj, method_name, ...)
+    if obj and obj[method_name] then
+        local ok = pcall(obj[method_name], obj, ...)
+        return ok
+    end
+    return false
+end
+
+local function set_position(ctrl, x, y)
+    if not ctrl then return end
+    local ok, pos = pcall(function() return ctrl:GetWndPos() end)
+    if ok and pos then
+        pos.x = x
+        pos.y = y
+        pcall(function() ctrl:SetWndPos(pos) end)
+    end
+end
+
+function apply_visual_options()
+    local icon_x = clamp(mcm_get("iconX", DEFAULT_ICON_X), -2048, 2048)
+    local icon_y = clamp(mcm_get("iconY", DEFAULT_ICON_Y), -2048, 2048)
+    local text_x = clamp(mcm_get("textX", DEFAULT_TEXT_X), -2048, 2048)
+    local text_y = clamp(mcm_get("textY", DEFAULT_TEXT_Y), -2048, 2048)
+    local color = get_visual_color()
+
+    set_position(firing_mode_indicator, icon_x, icon_y)
+    set_position(firing_mode_text, text_x, text_y)
+
+    if firing_mode_indicator then
+        -- CUIStatic supports this in Anomaly/GAMMA. pcall keeps the mod safe if a build differs.
+        safe_call(firing_mode_indicator, "SetTextureColor", color)
+        safe_call(firing_mode_indicator, "SetColor", color)
+    end
+
+    if firing_mode_text and firing_mode_text.TextControl then
+        local ok, txt = pcall(function() return firing_mode_text:TextControl() end)
+        if ok and txt then
+            safe_call(txt, "SetTextColor", color)
+        end
+    end
+end
+
+function show_text(firing_mode)
+    apply_visual_options()
+    if firing_mode_text then
+        firing_mode_text:TextControl():SetTextST(firing_mode or "")
+    end
+end
+
+function show_indicator(firing_mode, selector_type)
+    if not firing_mode_indicator then
+        return
+    end
+
+    apply_visual_options()
+
+    local row = selector_rows[selector_type] or 0
+    local row_offset = row * tile_size
+
+    local col = firing_mode_icons[firing_mode] or 0
+    local col_offset = col * tile_size
+
+    firing_mode_indicator:SetTextureRect(Frect():set(col_offset, row_offset, col_offset + tile_size, row_offset + tile_size))
+    firing_mode_indicator:Show(true)
+end
+
+function hide_all()
+    if firing_mode_indicator then
+        firing_mode_indicator:Show(false)
+    end
+    show_text("")
+end
+
+function activate_hud()
+    if HUD == nil then
+        HUD = BwaisFireModeHUD()
+        get_hud():AddDialogToRender(HUD)
+    end
+    apply_visual_options()
+end
+
+function deactivate_hud()
+    if HUD ~= nil then
+        get_hud():RemoveDialogToRender(HUD)
+        HUD = nil
+    end
+end
+
+class "BwaisFireModeHUD" (CUIScriptWnd)
+
+function BwaisFireModeHUD:__init() super()
+    local xml = CScriptXmlInit()
+    xml:ParseFile("bwais_firemode_hud.xml")
+
+    firing_mode_indicator = xml:InitStatic("fireMode", self)
+    firing_mode_indicator:InitTexture("ui\\bwais_firemode_indicators")
+    firing_mode_indicator:Show(false)
+
+    firing_mode_text = xml:InitStatic("fireMode_text", self)
+    firing_mode_text:TextControl():SetTextST("")
+
+    apply_visual_options()
+end

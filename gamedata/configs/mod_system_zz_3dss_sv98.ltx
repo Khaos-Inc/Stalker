@@ -1,0 +1,71 @@
+![wpn_sv98]:1p59_s
+
+icons_texture               	 = ui\ui_icon_sv98
+inv_grid_width     = 6
+inv_grid_x         = 0
+inv_grid_y         = 0
+	
+lewd_lens_hide_enabled       = true
+lewd_lens_hide_bone          = lens
+lewd_lens_hide_delays        = 0.1,0
+lewd_lens_hide_aim_mode      = true, false, false		
+
+![wpn_sv98_hud]
+fire_point		= 0, 0.008, 0.36
+fire_bone		= muzzle
+
+        hands_orientation                = -0.008005, -0.001846, 0
+        hands_orientation_16x9           = -0.008005, -0.001846, 0
+        hands_position                   = 9.2e-05, -0.023847, -0.147042
+        hands_position_16x9              = 9.2e-05, -0.023847, -0.147042
+		
+        aim_hud_offset_pos               = -0.090771, 0.014328, -0.089435
+        aim_hud_offset_pos_16x9          = -0.090771, 0.014328, -0.089435
+        aim_hud_offset_rot               = -0.000433, -1.7e-05, 0
+        aim_hud_offset_rot_16x9          = -0.000433, -1.7e-05, 0
+		
+        base_hud_offset_pos              = -0.046664, -0.011916, -0.000456
+        base_hud_offset_pos_16x9         = -0.046664, -0.011916, -0.000456
+        base_hud_offset_rot              = 0, 0, 0.096724
+        base_hud_offset_rot_16x9         = 0, 0, 0.096724
+		
+![wpn_sv98_custom]:big_common_s
+parent_section = wpn_sv98_custom
+scopes						= pn23
+
+
+icons_texture               = ui\ui_icon_sv98
+inv_grid_width     = 6
+inv_grid_x         = 0
+inv_grid_y         = 2
+		
+![wpn_sv98_sk1_hud]
+        hands_orientation                = -0.004159, -0.003124, 0
+        hands_orientation_16x9           = -0.004159, -0.003124, 0
+        hands_position                   = 0.010927, -0.031174, -0.125148
+        hands_position_16x9              = 0.010927, -0.031174, -0.125148
+		
+        aim_hud_offset_pos               = -0.100845, 0.028302, -0.073085
+        aim_hud_offset_pos_16x9          = -0.100845, 0.028302, -0.073085
+        aim_hud_offset_rot               = -8.4e-05, -5.3e-05, 0
+        aim_hud_offset_rot_16x9          = -8.4e-05, -5.3e-05, 0
+
+        base_hud_offset_pos              = -0.059018, -0.000934, 0.014118
+        base_hud_offset_pos_16x9         = -0.059018, -0.000934, 0.014118
+        base_hud_offset_rot              = 0, 0, 0.114357
+        base_hud_offset_rot_16x9         = 0, 0, 0.114357
+		
+;-------------------------------------------------------------------------------		
+[wpn_sv98_custom_pn23]:wpn_sv98_custom
+hud                                      = wpn_sv98_custom_pn23_hud
+
+1icon_layer                              = pn23f
+1icon_layer_x                            = 144
+1icon_layer_y                            = 5
+	
+[wpn_sv98_custom_pn23_hud]:wpn_sv98_sk1_hud
+item_visual                              = anomaly_weapons\wpn_sv98\wpn_sv98_sk1_pn23_hud.ogf
+        aim_hud_offset_pos               = -0.100806, 0.028212, -0.073706
+        aim_hud_offset_pos_16x9          = -0.100806, 0.028212, -0.073706
+        aim_hud_offset_rot               = -0.000224, -0.000184, 0
+        aim_hud_offset_rot_16x9          = -0.000224, -0.000184, 0

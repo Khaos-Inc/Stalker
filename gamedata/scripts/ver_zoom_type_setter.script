@@ -1,0 +1,28 @@
+--[[ Script to reset zoom type to previous / 0 in case it gets stuck to 2, the grenade launcher zoom type -- Verdatim
+
+REQUIRES MODDED EXES VERSION: 2026-3-29 OR NEWER (new method: "ForceSetZoomType" defined in that update; from yours truly) wont crash without that version or newer but this wont work properly.]]
+
+function on_game_start()
+	RegisterScriptCallback("actor_on_weapon_zoom_type_changed", actor_on_weapon_zoom_type_changed)
+end
+
+local DEBUG = false
+
+function printdbg(text)
+	if DEBUG then
+		printf("[zoom_type_fixer]" .. text)
+	end
+end
+
+function actor_on_weapon_zoom_type_changed(wpn, previous, current)
+	--printdbg("previous is " .. previous .. " and current is " .. current)
+	if wpn:is_weapon() and previous == current and previous ~= 0 then
+		if not wpn:cast_Weapon().ForceSetZoomType then 						-- Check for new modded exes method, if not available return immediately
+			return
+		end
+		local new_zoom_type = temp_previous or 0
+		wpn:cast_Weapon():ForceSetZoomType(new_zoom_type)					-- Sets the zoom type via ForceSetZoomType, just to explain to others for future use, 0 is base aim, 1 is alt aim and 2 is grenade launcher aim.
+		--printdbg("zoom type changed to " .. new_zoom_type)
+	end
+	temp_previous = previous -- Cheap way to 'cache' our zoom type value
+end

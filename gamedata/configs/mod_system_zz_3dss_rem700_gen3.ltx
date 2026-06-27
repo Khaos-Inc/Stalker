@@ -1,0 +1,85 @@
+![wpn_remington700_mod_x_gen3]:700_s
+scopes		= none
+        scripted_snd_ammo_check          = weapons\wpn_remington700_new\remington700_new_ammo_check
+        scripted_snd_ammo_check_empty    = weapons\wpn_remington700_new\remington700_new_ammo_check
+        scripted_snd_ammo_check_no_mag   = weapons\wpn_remington700_new\remington700_new_ammo_check_bolt
+
+rpm                              = 40
+		
+scopes							 = pn23, skeet
+	
+lewd_lens_hide_enabled       = true		
+lewd_lens_hide_bone          = lens
+lewd_lens_hide_delays        = 0.1,0
+lewd_lens_hide_aim_mode      = true, false, false	
+![wpn_remington700_mod_x_gen3_hud]
+fire_bone                                = muzzle
+fire_point                               = 0, 0, 0
+
+        anm_show			 		= remington700_mod_x_gen3_new_draw, 				idle
+        anm_hide             		= remington700_mod_x_gen3_new_holster, 				idle
+        anm_shots			 		= remington700_mod_x_gen3_new_shoot, 				shoot
+        anm_bore			 		= remington700_mod_x_gen3_new_inspect, 				idle
+        anm_idle             		= remington700_mod_x_gen3_new_idle, 				idle
+        anm_idle_aim		 		= remington700_mod_x_gen3_new_aim, 					idle
+        anm_idle_moving      		= remington700_mod_x_gen3_new_walk, 				idle
+        anm_idle_sprint				= remington700_mod_x_gen3_new_sprint, 				idle, 1.1   
+anm_reload			 	= remington_new_reload_base_modx, 				new_reload_modx
+anm_reload_empty		= remington_new_reload_empty_base_modx, 		new_reload_empty_modx
+        anm_reload_misfire	 		= remington700_mod_x_gen3_new_unjam, 				unjam
+        anm_ammo_check				= remington700_mod_x_gen3_new_ammo_check, 			ammo_check
+        anm_ammo_check_empty		= remington700_mod_x_gen3_new_ammo_check_empty, 	ammo_check_empty
+		
+        hands_orientation                = -0.001025, 0.02221, -0.7
+        hands_orientation_16x9           = -0.001025, 0.02221, -0.7
+        hands_position                   = 0.027956, 0.009875, 0.046711
+        hands_position_16x9              = 0.027956, 0.009875, 0.046711	
+
+        aim_hud_offset_pos               = -0.095501, 0.00288, -0.087989
+        aim_hud_offset_pos_16x9          = -0.095501, 0.00288, -0.087989
+        aim_hud_offset_rot               = 0.000397, -6.8e-05, -0.013
+        aim_hud_offset_rot_16x9          = 0.000397, -6.8e-05, -0.013
+
+        aim_hud_offset_alt_pos           = -0.109117, -0.084387, -0.06
+        aim_hud_offset_alt_pos_16x9      = -0.109117, -0.084387, -0.06
+        aim_hud_offset_alt_rot           = 0.000397, -0.00011, 0.823
+        aim_hud_offset_alt_rot_16x9      = 0.000397, -0.00011, 0.823
+		
+        base_hud_offset_pos              = -0.049181, -0.028158, -0.000565
+        base_hud_offset_pos_16x9         = -0.049181, -0.028158, -0.000565
+        base_hud_offset_rot              = 0, 0, 0.125722
+        base_hud_offset_rot_16x9         = 0, 0, 0.125722
+;--------------------------------------------------------------------------------------		
+[wpn_remington700_mod_x_gen3_pn23]:wpn_remington700_mod_x_gen3
+hud                     = wpn_remington700_mod_x_gen3_pn23_hud
+
+1icon_layer				= pn23f
+1icon_layer_x			= 163
+1icon_layer_y			= -2
+
+	s3ds_image_type		= 1
+	s3ds_reticle_type 	= 2
+	ms_count 			= 2	
+    ms_colors           = scope_red_dim
+	magnifications		= 3-18
+	
+[wpn_remington700_mod_x_gen3_pn23_hud]:wpn_remington700_mod_x_gen3_hud
+item_visual                              = dynamics\weapons\wpn_remington700\wpn_remington700_mod_x_gen3_pn23_hud.ogf
+
+;--------------------------------------------------------------------------------------
+[wpn_remington700_mod_x_gen3_skeet]:wpn_remington700_mod_x_gen3
+hud                     = wpn_remington700_mod_x_gen3_skeet_hud
+
+1icon_layer				= skeet_x
+1icon_layer_x			= 172
+1icon_layer_y			= -1
+
+	s3ds_image_type		= 3
+	s3ds_reticle_type 	= 2
+	ms_count			= 0
+    ms_colors           = scope_red
+	magnifications		= 3-18
+	
+[wpn_remington700_mod_x_gen3_skeet_hud]:wpn_remington700_mod_x_gen3_hud
+item_visual                              = dynamics\weapons\wpn_remington700\wpn_remington700_mod_x_gen3_skeet_hud.ogf
+

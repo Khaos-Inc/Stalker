@@ -1,0 +1,31 @@
+function on_mcm_load()
+    return{
+        id = "mysurge", 
+        sh = true, 
+        gr = 
+        {
+            {id = "title", type = "slide", link = "ui_options_slider_player", text = "Blowout Options", size = {512, 50}, spacing = 20},
+            {id = "mysurge_delay", type = "track", val = 2, def = 30, min = 25, max = 120, step = 1},
+            {id = "mysurge_delay2", type = "track", val = 2, def = 25, min = 20, max = 48, step = 1},
+            {id = "line1", type = "line" },
+            {id = "surgetype", type = "radio_v", val = 2, def = 0,
+                content = { 
+                    { 0, "surgerandom" }, 
+                    { 1, "surgered" }, 
+                    { 2, "surgegreen" },
+                    { 3, "surgeclear"} 
+                 }
+            },
+            {id = "zombiewhen", type = "radio_h", val = 2, def = 0,
+                content = { 
+                    { 0, "zombietrue" }, 
+                    { 1, "zombiefalse" }
+                 }                
+             }
+        }
+    }
+end
+
+function get_config(key)
+    if ui_mcm then return ui_mcm.get("mysurge/"..key) else return defaults[key] end
+end

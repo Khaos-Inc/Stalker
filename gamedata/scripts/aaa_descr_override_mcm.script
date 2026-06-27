@@ -1,0 +1,51 @@
+-- If you don't use MCM, change your defaults from here.
+local defaults = {
+	["hp"] = true,
+	["rad"] = true,
+	["sat"] = false,
+	["sleep"] = true,
+	["thirst"] = true,
+	["alcohol"] = false,
+
+	["hp_t"] = true,
+	["rad_t"] = true,
+	["bleed_t"] = true,
+
+	["bhs_num_at"] = 12,
+	["bhs_num_always"] = false,
+	["bhs_timed"] = true,
+}
+
+function get_config(key)
+	if ui_mcm then return ui_mcm.get("descr_override/"..key) else return defaults[key] end
+end
+
+function on_mcm_load()
+	op = { id= "descr_override",sh=true ,gr={
+			{ id= "title",type= "slide",link= "ui_options_slider_player",text="ui_mcm_descr_override_title",size= {512,50},spacing= 20 },
+
+			{ id= "title"				   ,type= "title"	 ,text= "ui_mcm_descr_override_main_header" 			,align= "l"	,clr= {255,200,200,200}	},
+			{id = "hp", type = "check", val = 1, def = true},
+			{id = "rad", type = "check", val = 1, def = true},
+			{id = "sat", type = "check", val = 1, def = false},
+			{id = "sleep", type = "check", val = 1, def = true},
+			{id = "thirst", type = "check", val = 1, def = true},
+			{id = "alcohol", type = "check", val = 1, def = false},
+
+			{id= "divider", type = "line" },
+			{ id= "title"				   ,type= "title"	 ,text= "ui_mcm_descr_override_timed_header" 			,align= "l"	,clr= {255,200,200,200}	},
+			{id = "hp_t", type = "check", val = 1, def = true},
+			{id = "rad_t", type = "check", val = 1, def = true},
+			{id = "bleed_t", type = "check", val = 1, def = true},
+
+			{id= "divider", type = "line" },
+			{ id= "title"				   ,type= "title"	 ,text= "ui_mcm_descr_override_bhs_header" 			,align= "l"	,clr= {255,200,200,200}	},
+			{id = "bhs_num_at", type = "track", val = 2, min=1,max=20,step=1, def = 12},
+			{id = "bhs_num_always", type = "check", val = 1, def = false},
+			{id = "bhs_timed", type = "check", val = 1, def = true},
+
+		}
+	}
+
+	return op
+end

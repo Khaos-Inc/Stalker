@@ -1,0 +1,24 @@
+![logic@prayer_1]
+on_combat = re_combat
+
+![logic@prayer_2]
+on_combat = re_combat
+
+![logic@prayer_3]
+on_combat = re_combat
+
+![logic@prayer_4]
+on_combat = re_combat
+
+![logic@prayer_5]
+on_combat = re_combat
+
+![logic@pri_monolith_monolith_trader]
+on_combat = re_combat
+
+![logic@pri_monolith_monolith_mechanic]
+on_combat = re_combat
+
+[re_combat]
+combat_type = {=cond_scheme_cover_dumb()} cover, {=cond_scheme_camper_dumb()} camper, {=cond_scheme_cover_coward()} cover, {=cond_scheme_camper_coward()} camper, {=cond_scheme_stupid()} monolith
+

@@ -1,0 +1,759 @@
+;------------------------------------------------------------------------------------------------
+[wpn_sig550]:identity_immunities,weapon_probability,default_weapon_params,wpn_sig550_sounds
+GroupControlSection                      = spawn_group
+$npc                                     = on
+$prefetch                                = 8
+$spawn                                   = "weapons\sig550"
+scheduled                                = off
+cform                                    = skeleton
+parent_section                           = wpn_sig550
+icons_texture  = ui\sig
+class                                    = WP_AK74
+slot                                     = 2
+animation_slot                           = 2
+ef_main_weapon_type                      = 2
+ef_weapon_type                           = 6
+hand_dependence                          = 1
+single_handed                            = 0
+
+default_to_ruck                          = false
+sprint_allowed                           = true
+
+inv_grid_width     = 5
+inv_grid_height    = 2
+inv_grid_x         = 0
+inv_grid_y         = 0
+inv_name                                 = st_wpn_sig550
+inv_name_short                           = st_wpn_sig550
+description                              = st_wpn_sig550_descr
+
+kind                                     = w_rifle
+inv_weight                               = 4.1
+cost                                     = 43580
+repair_type                              = rifle_5
+weapon_class                             = assault_rifle
+
+hud                                      = wpn_sig550_hud
+visual                                   = dynamics\weapons\wpn_sig550\wpn_sig550.ogf
+position                                 = -0.026, -0.097, 0.0
+orientation                              = 0, 0, 0
+fire_point                               = 0.000000, 0.137000, 0.649000
+fire_point2                              = 0.0, 0.097, 0.722
+strap_bone0                              = bip01_spine2
+strap_bone1                              = bip01_spine1
+strap_position                           = -0.26, -0.11, 0.25
+strap_orientation                        = -15, -9, 110
+ph_mass                                  = 4
+
+flame_particles                          = weapons\generic_weapon05
+smoke_particles                          = weapons\generic_weapon00
+grenade_flame_particles                  = weapons\generic_weapon01
+
+shell_point                              = -0.020000,0.167000,0.082000
+shell_dir                                = 0.0, 0.0, 0.4
+shell_particles                          = weapons\556x45
+
+light_disabled                           = false
+light_color                              = 0.6, 0.5, 0.3
+light_range                              = 5
+light_time                               = 0.2
+light_var_color                          = 0.05
+light_var_range                          = 0.5
+
+upgrades                                 = up_gr_firstab_sig550, up_gr_seconab_sig550, up_gr_thirdab_sig550, up_gr_fourtab_sig550, up_gr_fifthab_sig550
+installed_upgrades                       =
+upgrade_scheme                           = upgrade_scheme_sig550
+upgr_icon_x                              = 600
+upgr_icon_y                              = 700
+upgr_icon_width                          = 300
+upgr_icon_height                         = 100
+
+fire_modes                               = 1, 3, -1
+ammo_class                               = ammo_5.56x45_fmj, ammo_5.56x45_fmj_bad, ammo_5.56x45_fmj_verybad, ammo_5.56x45_ss190, ammo_5.56x45_ss190_bad, ammo_5.56x45_ss190_verybad, ammo_5.56x45_ap, ammo_5.56x45_ap_bad, ammo_5.56x45_ap_verybad
+ammo_elapsed                             = 30
+ammo_mag_size                            = 30
+startup_ammo                             = 90
+
+scopes 			                         = acog, eot, ac10632, c-more
+scope_status                             = 0
+scope_zoom_factor                        = 0
+
+silencer_name                            = wpn_sil_nato
+silencer_status                          = 2
+silencer_x                               = 215
+silencer_y                               = 18
+silencer_light_color                     = 0.6, 0.5, 0.3
+silencer_light_range                     = 0.01
+silencer_light_time                      = 0.2
+silencer_light_var_color                 = 0.05
+silencer_light_var_range                 = 0.5
+silencer_smoke_particles                 = weapons\generic_shoot_00
+
+grenade_class                            = ammo_m209, ammo_m209_bad, ammo_m209_verybad
+grenade_launcher_name                    = wpn_addon_grenade_launcher_m203
+grenade_launcher_status                  = 0
+grenade_launcher_x                       = 118
+grenade_launcher_y                       = 29
+launch_speed                             = 0
+
+hit_impulse                              = 25
+hit_power                                = 0.5, 0.5, 0.5, 0.5
+hit_type                                 = fire_wound
+fire_distance                            = 1000
+bullet_speed                             = 910
+rpm                                      = 700
+rpm_empty_click                          = 200
+
+use_aim_bullet                           = false
+time_to_aim                              = 0.0 ;  3.0
+zoom_dof                                 = 0.5, 1.0, 180
+zoom_enabled                             = true
+zoom_rotate_time                         = 0.25
+reload_dof                               = 0.0, 0.5, 5, 2
+control_inertion_factor = 1.0f
+crosshair_inertion                       = 6.8
+fire_dispersion_base                     = 0.249
+fire_dispersion_condition_factor         = 0.001
+
+misfire_probability                      = 0.005
+misfire_start_condition                  = 0.7 ;  0.84
+misfire_start_prob                       = 0.007
+misfire_end_condition                    = 0.12
+misfire_end_prob                         = 0.11
+
+condition_queue_shot_dec                 = 0.0009
+condition_shot_dec                       = 0.0009
+
+
+cam_return                               = 0
+cam_relax_speed                          = 9
+cam_dispersion                           = 0.556
+cam_dispersion_frac                      = 1.0
+cam_dispersion_inc                       = 0.0675
+cam_max_angle                            = 50.0
+cam_max_angle_horz                       = 50.0
+cam_step_angle_horz                      = 1.5
+zoom_cam_relax_speed                     = 9
+zoom_cam_dispersion                      = 0.466
+zoom_cam_dispersion_frac                 = 0.7
+zoom_cam_dispersion_inc                  = 0.0525
+zoom_cam_max_angle                       = 50.0
+zoom_cam_max_angle_horz                  = 50.0
+zoom_cam_step_angle_horz                 = 1.3
+
+PDM_disp_accel_factor                    = 2.5
+PDM_disp_base                            = 1.04
+PDM_disp_crouch                          = 1.0
+PDM_disp_crouch_no_acc                   = 1.0
+PDM_disp_vel_factor                      = 2.5
+
+cam_relax_speed_ai                       = 360
+zoom_cam_relax_speed_ai                  = 360
+holder_fov_modifier                      = 1.0
+holder_range_modifier                    = 1.0
+min_radius                               = 0
+max_radius                               = 500
+hit_probability_gd_novice                = 1.00
+hit_probability_gd_stalker               = 1.00
+hit_probability_gd_veteran               = 1.00
+hit_probability_gd_master                = 1.00
+
+kill_msg_x                               = 80
+kill_msg_y                               = 59
+kill_msg_width                           = 87
+kill_msg_height                          = 24
+
+snd_reload				                                          = weapons\sick550\sig550_reload
+snd_reload_empty			                                      = weapons\sick550\sig550_reload_empty
+snd_reload_misfire                                                = weapons\sick550\sig550_revival
+snd_silncer_shot				                                  = weapons\sick550\sig550_shoot_silencer
+snd_shoot_grenade			                                      = weapons\sick550\m203_shoot
+snd_reload_grenade			                                      = weapons\sick550\m203_reload
+snd_switch_mode                                                   = weapons\sick550\l85_firemode
+snd_switch_g                                                      = $no_sound
+snd_switch                                                        = $no_sound
+snd_draw				                                          = weapons\sick550\sig550_draw
+
+
+[wpn_sig550_hud]:hud_base
+item_visual                              = anomaly_weapons\wpn_sig550\wpn_sig550_hud
+attach_place_idx                         = 0
+zoom_hide_crosshair                      = true   
+
+        item_position                    = 0, 0, 0
+        item_orientation                 = -1.809, 0.050668, 0
+		lowered_hud_offset_pos           = 0.117361, 0.002072, 0.027589
+        lowered_hud_offset_pos_16x9      = 0.117361, 0.002072, 0.027589
+
+        hands_orientation                = 2, 2, 0
+        hands_orientation_16x9           = 2, 2, 0
+        hands_position                   = -0.013605, 0.007834, -0.112619
+        hands_position_16x9              = -0.013605, 0.007834, -0.112619
+
+        aim_hud_offset_pos               = 0.02354, -0.003807, 0.040126
+        aim_hud_offset_pos_16x9          = 0.02354, -0.003807, 0.040126
+        aim_hud_offset_rot               = 0.039945, 0.003641, 0.00387
+        aim_hud_offset_rot_16x9          = 0.039945, 0.003641, 0.00387
+
+        gl_hud_offset_pos                = 0.017108, -0.018972, 0.005678
+        gl_hud_offset_pos_16x9           = 0.017108, -0.018972, 0.005678
+        gl_hud_offset_rot                = 0.030604, 0.035841, -0.005744
+        gl_hud_offset_rot_16x9           = 0.030604, 0.035841, -0.005744
+
+lean_hud_offset_pos                      = 0, 0, 0
+lean_hud_offset_rot                      = 0, 0, 0
+
+anm_hide                                 = sick_hide, idle
+anm_hide_empty                           = sick_hide, idle_empty
+anm_hide_g                               = sick_glon_hide, sg550_glon_idle
+anm_hide_w_gl                            = sick_gloff_hide, idle
+anm_hide_w_gl_empty                      = sick_gloff_hide, idle_empty
+anm_idle                                 = sick_idle, idle
+anm_idle_empty                           = sick_idle, idle_empty
+anm_idle_aim                             = sick_aim, idle
+anm_idle_aim_empty                       = sick_aim, idle_empty
+anm_idle_aim_moving                      = sick_walk, idle
+anm_idle_aim_moving_empty                = sick_walk, idle_empty
+anm_idle_aim_moving_crouch               = sick_walk, idle, 0.8
+anm_idle_aim_moving_crouch_empty         = sick_walk, idle_empty, 0.8
+anm_idle_g                               = sick_glon_idle, sg550_glon_idle
+anm_idle_g_aim                           = sick_glon_aim, sg550_glon_idle
+anm_idle_moving                          = sick_walk, idle
+anm_idle_moving_empty                    = sick_walk, idle_empty
+anm_idle_moving_crouch                   = sick_walk, idle, 0.8
+anm_idle_moving_crouch_empty             = sick_walk, idle_empty, 0.8
+anm_idle_moving_crouch_g                 = sick_glon_walk, sg550_glon_idle, 0.8
+anm_idle_moving_crouch_g_aim             = sick_glon_walk, sg550_glon_idle, 0.8
+anm_idle_moving_crouch_w_gl              = sick_gloff_walk, idle, 0.8
+anm_idle_moving_crouch_w_gl_empty        = sick_gloff_walk, idle_empty, 0.8
+anm_idle_moving_crouch_w_gl_aim          = sick_gloff_walk, idle, 0.8
+anm_idle_moving_crouch_w_gl_aim_empty    = sick_gloff_walk, idle_empty, 0.8
+anm_idle_moving_g                        = sick_glon_walk, sg550_glon_idle
+anm_idle_moving_g_aim                    = sick_glon_walk, sg550_glon_idle, 0.75
+anm_idle_moving_w_gl                     = sick_gloff_walk, idle
+anm_idle_moving_w_gl_empty               = sick_gloff_walk, idle_empty
+anm_idle_moving_w_gl_aim                 = sick_gloff_walk, idle, 0.75
+anm_idle_moving_w_gl_aim_empty           = sick_gloff_walk, idle_empty, 0.75
+anm_idle_sprint                          = sick_sprint, idle
+anm_idle_sprint_empty                    = sick_sprint, idle_empty
+anm_idle_sprint_g                        = sick_sprint, sg550_glon_idle
+anm_idle_sprint_w_gl                     = sick_sprint, idle
+anm_idle_sprint_w_gl_empty               = sick_sprint, idle_empty
+anm_idle_w_gl                            = sick_gloff_idle, idle
+anm_idle_w_gl_empty                      = sick_gloff_idle, idle_empty
+anm_idle_w_gl_aim                        = sick_gloff_aim, idle
+anm_idle_w_gl_aim_empty                  = sick_gloff_aim, idle_empty
+anm_reload                               = sick_reload, sg550_reload
+anm_reload_empty                         = sick_reload_empty, sg550_reload_empty
+anm_reload_empty_w_gl                    = sick_gloff_reload_empty, sg550_reload_empty
+anm_reload_g                             = sick_gl_reload, sg550_gl_reload
+anm_reload_w_gl                          = sick_gloff_reload, sg550_reload
+anm_shots                                = sick_shoot, sg550_shoot
+anm_shot_l                               = sick_shoot, sg550_shoot_last
+anm_shots_g                              = sick_glon_shoot, sg550_glon_idle
+anm_shots_w_gl                           = sick_gloff_shoot, sg550_gloff_shoot
+anm_shot_l_w_gl                          = sick_gloff_shoot, sg550_shoot_last     
+anm_show                                 = sick_draw, idle
+anm_show_empty                           = sick_draw, idle_empty
+anm_show_g                               = sick_glon_draw, sg550_glon_idle
+anm_show_w_gl                            = sick_gloff_draw, idle
+anm_show_w_gl_empty                      = sick_gloff_draw, idle_empty
+;anm_switch                               = sick_gl_deactivate, sg550_gl_deactivate
+;anm_switch_empty                         = sick_gl_deactivate, sg550_gl_deactivate_empty           
+;anm_switch_g                             = sick_gl_activate, sg550_gl_activate
+
+anm_reload_misfire                       = sick_misfire, sg550_revival
+anm_reload_misfire_w_gl                  = sick_gloff_misfire, sg550_revival
+anm_switch_mode                          = sick_fire_mode, idle
+anm_switch_mode_empty                    = sick_fire_mode, idle_empty
+anm_switch_mode_w_gl                     = sick_gloff_fire_mode, idle
+anm_switch_mode_w_gl_empty               = sick_gloff_fire_mode, idle_empty
+
+anm_hide_jammed                        = sick_hide, idle_jammed
+anm_hide_w_gl_jammed                   = sick_gloff_hide, idle_jammed          
+anm_idle_jammed                        = sick_idle, idle_jammed
+anm_idle_w_gl_jammed                   = sick_gloff_idle, idle_jammed
+anm_idle_aim_jammed                    = sick_aim, idle_jammed
+anm_idle_w_gl_aim_jammed               = sick_gloff_aim, idle_jammed
+anm_idle_aim_moving_jammed             = sick_walk, idle_jammed, 0.75
+anm_idle_moving_w_gl_aim_jammed        = sick_gloff_walk, idle, 0.75
+anm_idle_aim_moving_crouch_jammed      = sick_walk, idle_jammed,  0.7
+anm_idle_moving_crouch_w_gl_aim_jammed = sick_gloff_walk, idle, 0.8
+anm_idle_moving_jammed                 = sick_walk, idle_jammed
+anm_idle_moving_w_gl_jammed            = sick_gloff_walk, idle_jammed
+anm_idle_moving_crouch_jammed          = sick_walk, idle_jammed, 0.7
+anm_idle_moving_crouch_w_gl_jammed     = sick_gloff_walk, idle, 0.8
+anm_idle_sprint_jammed                 = sick_sprint, idle_jammed
+anm_idle_sprint_w_gl_jammed            = sick_sprint, idle_jammed
+anm_show_jammed                        = sick_draw, idle_jammed
+anm_show_w_gl_jammed                   = sick_draw_gloff, idle_jammed
+anm_idle_aim_start_jammed              = sick_aim_start, idle_jammed
+anm_idle_aim_end_jammed                = sick_aim_end, idle_jammed
+anm_idle_aim_start_w_gl_jammed         = sick_gloff_aim_start, idle_jammed
+anm_idle_aim_end_w_gl_jammed           = sick_gloff_aim_end, idle_jammed
+anm_sprint_start_jammed                = sick_sprint_start, idle_jammed   
+anm_sprint_end_jammed                  = sick_sprint_end, idle_jammed
+anm_sprint_start_w_gl_jammed           = sick_gloff_sprint_start, idle_jammed
+anm_sprint_end_w_gl_jammed             = sick_gloff_sprint_end, idle_jammed
+
+;--- Переходы спринта---
+		anm_sprint_start_w_gl        = sick_gloff_sprint_start, idle
+        anm_sprint_end_w_gl          = sick_gloff_sprint_end, idle
+		anm_sprint_start_empty_g     = sick_glon_sprint_start, sg550_glon_idle
+        anm_sprint_end_empty_g       = sick_glon_sprint_end, sg550_glon_idle
+		anm_sprint_start_g           = sick_glon_sprint_start, sg550_glon_idle
+        anm_sprint_end_g             = sick_glon_sprint_end, sg550_glon_idle
+        anm_sprint_start             = sick_sprint_start, idle
+        anm_sprint_end               = sick_sprint_end, idle
+		anm_sprint_start_empty_w_gl  = sick_gloff_sprint_start, idle_empty
+        anm_sprint_end_empty_w_gl    = sick_gloff_sprint_end, idle_empty
+        anm_sprint_start_empty       = sick_sprint_start, idle_empty
+        anm_sprint_end_empty         = sick_sprint_end, idle_empty
+
+;--- Паттерны спринта---
+
+        ts_pattern_sprint_start            = .+, anm_idle_sprint, anm_sprint_start, 1
+        ts_pattern_sprint_end              = anm_idle_sprint, ^anm_idle.*, anm_sprint_end
+        ts_strict_sprint_end_move          = anm_sprint_start, anm_idle_moving, anm_sprint_end	
+
+ ;--- Переходы прицела---
+anm_idle_aim_start                         = sick_aim_start, sg550_aim_start
+anm_idle_aim_end                           = sick_aim_end, sg550_aim_end
+anm_idle_aim_start_w_gl                    = sick_gloff_aim_start, sg550_aim_start
+anm_idle_aim_end_w_gl                      = sick_gloff_aim_end, sg550_aim_end
+anm_idle_aim_start_empty                   = sick_aim_start, idle_empty
+anm_idle_aim_end_empty                     = sick_aim_end, idle_empty
+anm_idle_aim_start_w_gl_empty              = sick_gloff_aim_start, idle_empty
+anm_idle_aim_end_w_gl_empty                = sick_gloff_aim_end, idle_empty
+anm_idle_aim_start_g                       = sick_glon_aim_start, sg550_glon_idle
+anm_idle_aim_start_g_empty                 = sick_glon_aim_start, sg550_glon_idle
+anm_idle_aim_end_g                         = sick_glon_aim_end, sg550_glon_idle
+anm_idle_aim_end_g_empty                   = sick_glon_aim_end, sg550_glon_idle
+anm_shots_w_gl_aim                         = sick_gloff_aim_shoot, sg550_gloff_aim_shoot
+anm_shots_g_aim                            = sick_glon_aim_shoot, sg550_glon_idle
+anm_shots_aim                              = sick_aim_shoot, sg550_aim_shoot
+anm_shot_l_aim                             = sick_aim_shoot, sg550_shoot_last
+anm_shot_l_w_gl_aim                        = sick_gloff_aim_shoot, sg550_shoot_last  
+
+shell_bone                               = wpn_body
+shell_dir                                = 0, 1, 0
+shell_point                              = -0.01, 0, 0.05
+
+fire_bone                                = wpn_body
+fire_bone2                               = wpn_body
+fire_point                               = 0, 0.02, 0.6
+fire_point2                              = 0, 0, 0.2
+
+;------------------------------------------------------------------------------------------------
+[wpn_sig550_ac10632]:wpn_sig550
+1icon_layer                              = ac10632
+1icon_layer_x                            = 82
+1icon_layer_y                            = -3
+
+hud                                      = wpn_sig550_ac10632_hud
+
+[wpn_sig550_ac10632_hud]:wpn_sig550_hud
+item_visual                              = anomaly_weapons\wpn_sig550\wpn_sig550_ac10632_hud.ogf
+
+;------------------------------------------------------------------------------------------------
+[wpn_sig550_acog]:wpn_sig550
+1icon_layer                              = acog
+1icon_layer_x                            = 78
+1icon_layer_y                            = -2
+hud                                      = wpn_sig550_acog_hud
+
+[wpn_sig550_acog_hud]:wpn_sig550_hud
+item_visual                              = anomaly_weapons\wpn_sig550\wpn_sig550_acog_hud.ogf
+
+;------------------------------------------------------------------------------------------------
+[wpn_sig550_eot]:wpn_sig550
+1icon_layer                              = eot
+1icon_layer_x                            = 78
+1icon_layer_y                            = 1
+hud                                      = wpn_sig550_eot_hud
+
+
+[wpn_sig550_eot_hud]:wpn_sig550_hud
+item_visual                              = anomaly_weapons\wpn_sig550\wpn_sig550_eot_hud.ogf
+
+-------------------------------------------------------------------------------------------------
+[wpn_sig550_c-more]:wpn_sig550
+hud						= wpn_sig550_c-more_hud
+1icon_layer			    = c-more
+1icon_layer_x			= 90
+1icon_layer_y			= -8
+scope_zoom_factor       = 0
+[wpn_sig550_c-more_hud]:wpn_sig550_hud
+item_visual             = anomaly_weapons\wpn_sig550\wpn_sig550_c-more_hud.ogf
+
+;------------------------------------------------------------------------------------------------
+;-- Custom
+;------------------------------------------------------------------------------------------------
+[wpn_sig550_custom]:wpn_sig550
+parent_section                           = wpn_sig550_custom
+
+inv_grid_width     = 5
+inv_grid_height    = 2
+inv_grid_x         = 0
+inv_grid_y         = 0
+
+inv_name                                 = st_wpn_sig550_custom
+inv_name_short                           = st_wpn_sig550_custom
+icons_texture                            = ui\sigtaco
+cost                                     = 45860
+
+hud                                      = wpn_sig550_custom_hud
+visual                                   = dynamics\weapons\wpn_sig550\wpn_sig550_sk1.ogf
+
+installed_upgrades                       = up_secona_sig550
+
+rpm                                      = 750
+
+fire_dispersion_base                     = 0.223
+
+misfire_start_condition                  = 0.7 ;  0.75
+misfire_start_prob                       = 0.003
+misfire_end_condition                    = 0.09
+misfire_end_prob                         = 0.04
+
+condition_queue_shot_dec                 = 0.0009
+condition_shot_dec                       = 0.0009
+
+grenade_class                            = ammo_m209, ammo_m209_bad, ammo_m209_verybad
+grenade_launcher_name                    = wpn_addon_grenade_launcher_m203
+grenade_launcher_status                  = 2
+grenade_launcher_x                       = 118
+grenade_launcher_y                       = 29
+launch_speed                             = 0
+
+laser_status = true
+scope_zoom_factor_alt             = 0
+use_alt_aim_hud                   = true
+scopes 			                  = acog, eot, ac10632, c-more
+
+snd_reload				                                          = weapons\sick550\sig550_reload
+snd_reload_empty			                                      = weapons\sick550\sig550_reload_empty
+snd_reload_misfire                                                = weapons\sick550\sig550_revival
+snd_silncer_shot				                                  = weapons\sick550\sig550_shoot_silencer
+snd_shoot_grenade			                                      = weapons\sick550\m203_shoot
+snd_reload_grenade			                                      = weapons\sick550\m203_reload
+snd_switch_mode                                                   = weapons\sick550\l85_firemode
+snd_switch_g                                                      = weapons\sick550\m203_activate
+snd_switch                                                        = weapons\sick550\m203_deactivate
+snd_draw				                                          = weapons\sick550\sig550_draw
+
+
+[wpn_sig550_custom_hud]:wpn_sig550_hud
+item_visual                              = anomaly_weapons\wpn_sig550\wpn_sig550_sk1_hud.ogf
+
+anm_hide                                 = lucky_hide, idle
+anm_hide_empty                           = lucky_hide, idle_empty
+anm_idle                                 = lucky_idle, idle
+anm_idle_empty                           = lucky_idle, idle_empty
+anm_idle_aim                             = lucky_aim, idle
+anm_idle_aim_empty                       = lucky_aim, idle_empty
+anm_idle_aim_moving                      = lucky_walk, idle, 0.75
+anm_idle_aim_moving_empty                = lucky_walk, idle_empty, 0.75
+anm_idle_aim_moving_crouch               = lucky_walk, idle, 0.7
+anm_idle_aim_moving_crouch_empty         = lucky_walk, idle_empty, 0.7
+anm_idle_moving                          = lucky_walk, idle
+anm_idle_moving_empty                    = lucky_walk, idle_empty
+anm_idle_moving_crouch                   = lucky_walk, idle, 0.7
+anm_idle_moving_crouch_empty             = lucky_walk, idle_empty, 0.7
+anm_idle_sprint                          = lucky_sprint, idle
+anm_idle_sprint_empty                    = lucky_sprint, idle_empty
+anm_reload                               = lucky_reload, sg550_reload
+anm_reload_empty                         = lucky_reload_empty, sg550_reload_empty
+anm_shots                                = lucky_shoot, sg550_tac_shoot
+anm_shot_l                               = lucky_shoot, sg550_shoot_last
+anm_show                                 = lucky_draw, idle
+anm_show_empty                           = lucky_draw, idle_empty
+anm_switch_mode                          = lucky_select_fire, idle
+anm_switch_mode_empty                    = lucky_select_fire, idle_empty
+anm_reload_misfire                       = lucky_misfire, sg550_revival   
+
+anm_hide_jammed                        = lucky_hide, idle_jammed         
+anm_idle_jammed                        = lucky_idle, idle_jammed
+anm_idle_aim_jammed                    = lucky_aim, idle_jammed
+anm_idle_aim_moving_jammed             = lucky_walk, idle_jammed, 0.75
+anm_idle_aim_moving_crouch_jammed      = lucky_walk, idle_jammed,  0.7
+anm_idle_moving_jammed                 = lucky_walk, idle_jammed
+anm_idle_moving_crouch_jammed          = lucky_walk, idle_jammed, 0.7
+anm_idle_sprint_jammed                 = lucky_sprint, idle_jammed
+anm_show_jammed                        = lucky_draw, idle_jammed
+anm_switch_mode_jammed                 = lucky_select_fire, idle_jammed  
+anm_sprint_start_jammed                = lucky_sprint_start, idle_jammed 
+anm_sprint_end_jammed                  = lucky_sprint_end, idle_jammed 
+anm_idle_aim_start_jammed              = lucky_aim_start, idle_jammed
+anm_idle_aim_end_jammed                = lucky_aim_end, idle_jammed
+
+;--- Переходы спринта---
+        anm_sprint_start               = lucky_sprint_start, idle
+        anm_sprint_end                 = lucky_sprint_end, idle
+		anm_sprint_start_empty         = lucky_sprint_start, idle_empty
+        anm_sprint_end_empty           = lucky_sprint_end, idle_empty
+
+;--- Паттерны спринта---
+
+        ts_pattern_sprint_start            = .+, anm_idle_sprint, anm_sprint_start, 1
+        ts_pattern_sprint_end              = anm_idle_sprint, ^anm_idle.*, anm_sprint_end
+        ts_strict_sprint_end_move          = anm_sprint_start, anm_idle_moving, anm_sprint_end	
+
+ ;--- Переходы прицела---
+anm_idle_aim_start                         = lucky_aim_start, sg550_aim_start
+anm_idle_aim_end                           = lucky_aim_end, sg550_aim_end
+anm_idle_aim_start_empty                   = lucky_aim_start, idle_empty
+anm_idle_aim_end_empty                     = lucky_aim_end, idle_empty
+anm_shots_aim                              = lucky_aim_shoot, sg550_tac_aim_shoot 
+anm_shot_l_aim                             = lucky_aim_shoot, sg550_shoot_last     
+
+        aim_hud_offset_alt_pos           = -0.00166, -0.017697, 0.010669
+        aim_hud_offset_alt_pos_16x9      = -0.00166, -0.017697, 0.010669
+        aim_hud_offset_alt_rot           = 0.038552, 0.024372, 0.796571
+        aim_hud_offset_alt_rot_16x9      = 0.038552, 0.024372, 0.796571
+        aim_hud_offset_pos               = 0.023583, -0.005885, 0.040126
+        aim_hud_offset_pos_16x9          = 0.023583, -0.005885, 0.040126
+        aim_hud_offset_rot               = 0.061343, 0.006153, -0.001031
+        aim_hud_offset_rot_16x9          = 0.061343, 0.006153, -0.001031
+		hands_orientation                = 2.136, 2.74401, 0
+        hands_orientation_16x9           = 2.136, 2.74401, 0
+		gl_hud_offset_pos                = 0.021423, -0.019044, 0.005678
+        gl_hud_offset_pos_16x9           = 0.021423, -0.019044, 0.005678
+        gl_hud_offset_rot                = 0.046112, 0.008113, 0.008065
+        gl_hud_offset_rot_16x9           = 0.046112, 0.008113, 0.008065
+;------------------------------------------------------------------------------------------------
+[wpn_sig550_custom_ac10632]:wpn_sig550_custom
+1icon_layer                              = ac10632
+1icon_layer_x                            = 82
+1icon_layer_y                            = -3
+hud                                      = wpn_sig550_custom_ac10632_hud
+
+[wpn_sig550_custom_ac10632_hud]:wpn_sig550_custom_hud
+item_visual                              = anomaly_weapons\wpn_sig550\wpn_sig550_ac10632_sk1_hud.ogf
+
+;------------------------------------------------------------------------------------------------
+[wpn_sig550_custom_acog]:wpn_sig550_custom
+1icon_layer                              = acog
+1icon_layer_x                            = 78
+1icon_layer_y                            = -2
+hud                                      = wpn_sig550_custom_acog_hud
+
+
+[wpn_sig550_custom_acog_hud]:wpn_sig550_custom_hud
+item_visual                              = anomaly_weapons\wpn_sig550\wpn_sig550_acog_sk1_hud.ogf
+
+;------------------------------------------------------------------------------------------------
+[wpn_sig550_custom_eot]:wpn_sig550_custom
+1icon_layer                              = eot
+1icon_layer_x                            = 78
+1icon_layer_y                            = 1
+
+
+hud                                      = wpn_sig550_custom_eot_hud
+
+
+[wpn_sig550_custom_eot_hud]:wpn_sig550_custom_hud
+item_visual                              = anomaly_weapons\wpn_sig550\wpn_sig550_eot_sk1_hud.ogf
+
+-------------------------------------------------------------------------------------------------
+[wpn_sig550_custom_c-more]:wpn_sig550_custom
+hud						= wpn_sig550_custom_c-more_hud
+1icon_layer			    = c-more
+1icon_layer_x			= 90
+1icon_layer_y			= -8
+[wpn_sig550_custom_c-more_hud]:wpn_sig550_custom_hud
+item_visual             = anomaly_weapons\wpn_sig550\wpn_sig550_sk1_c-more_hud.ogf
+
+;------------------------------------------------------------------------------------------------
+;-- Lucky
+;------------------------------------------------------------------------------------------------
+[wpn_sig550_luckygun]:wpn_sig550_custom
+parent_section	= wpn_sig550_luckygun
+[wpn_sig550_luckygun_ac10632]:wpn_sig550_custom_ac10632
+parent_section	= wpn_sig550_luckygun
+[wpn_sig550_luckygun_eot]:wpn_sig550_custom_eot
+parent_section	= wpn_sig550_luckygun
+[wpn_sig550_luckygun_c-more]:wpn_sig550_custom_c-more
+parent_section	= wpn_sig550_luckygun
+[wpn_sig550_luckygun_e0t2]:wpn_sig550_custom_e0t2
+parent_section	= wpn_sig550_luckygun
+[wpn_sig550_luckygun_ekp8_18]:wpn_sig550_custom_ekp8_18
+parent_section	= wpn_sig550_luckygun
+[wpn_sig550_luckygun_hco]:wpn_sig550_custom_hco
+parent_section	= wpn_sig550_luckygun
+[wpn_sig550_luckygun_he510]:wpn_sig550_custom_he510
+parent_section	= wpn_sig550_luckygun
+[wpn_sig550_luckygun_kemper]:wpn_sig550_custom_kemper
+parent_section	= wpn_sig550_luckygun
+[wpn_sig550_luckygun_mepro]:wpn_sig550_custom_mepro
+parent_section	= wpn_sig550_luckygun
+[wpn_sig550_luckygun_aimpoint]:wpn_sig550_custom_aimpoint
+parent_section	= wpn_sig550_luckygun
+[wpn_sig550_luckygun_0kp2]:wpn_sig550_custom_0kp2
+parent_section	= wpn_sig550_luckygun
+[wpn_sig550_luckygun_romeo4]:wpn_sig550_custom_romeo4
+parent_section	= wpn_sig550_luckygun
+[wpn_sig550_luckygun_romeo8]:wpn_sig550_custom_romeo8
+parent_section	= wpn_sig550_luckygun
+[wpn_sig550_luckygun_t12]:wpn_sig550_custom_t12
+parent_section	= wpn_sig550_luckygun
+[wpn_sig550_luckygun_bossxe]:wpn_sig550_custom_bossxe
+parent_section	= wpn_sig550_luckygun
+[wpn_sig550_luckygun_acog]:wpn_sig550_custom_acog
+parent_section	= wpn_sig550_luckygun
+[wpn_sig550_luckygun_pn23]:wpn_sig550_custom_pn23
+parent_section	= wpn_sig550_luckygun
+[wpn_sig550_luckygun_leupold]:wpn_sig550_custom_leupold
+parent_section	= wpn_sig550_luckygun
+[wpn_sig550_luckygun_specter]:wpn_sig550_custom_specter
+parent_section	= wpn_sig550_luckygun
+[wpn_sig550_luckygun_marchf]:wpn_sig550_custom_marchf
+parent_section	= wpn_sig550_luckygun
+[wpn_sig550_luckygun_gee36]:wpn_sig550_custom_gee36
+parent_section	= wpn_sig550_luckygun
+[wpn_sig550_luckygun_gauss_sight]:wpn_sig550_custom_gauss_sight
+parent_section	= wpn_sig550_luckygun
+[wpn_sig550_luckygun_tac30]:wpn_sig550_custom_tac30
+parent_section	= wpn_sig550_luckygun
+[wpn_sig550_luckygun_cortex]:wpn_sig550_custom_cortex
+parent_section	= wpn_sig550_luckygun
+[wpn_sig550_luckygun_razorhd]:wpn_sig550_custom_razorhd
+parent_section	= wpn_sig550_luckygun
+[wpn_sig550_luckygun_ps320]:wpn_sig550_custom_ps320
+parent_section	= wpn_sig550_luckygun
+[wpn_sig550_luckygun_c79]:wpn_sig550_custom_c79
+parent_section	= wpn_sig550_luckygun
+[wpn_sig550_luckygun_march_f_shorty]:wpn_sig550_custom_march_f_shorty
+parent_section	= wpn_sig550_luckygun
+[wpn_sig550_luckygun_devo]:wpn_sig550_custom_devo
+parent_section	= wpn_sig550_luckygun
+[wpn_sig550_luckygun_e0t2_magd]:wpn_sig550_custom_e0t2_magd
+parent_section	= wpn_sig550_luckygun
+[wpn_sig550_luckygun_e0t2_magd_off]:wpn_sig550_custom_e0t2_magd_off
+parent_section	= wpn_sig550_luckygun
+[wpn_sig550_luckygun_uh1_magd]:wpn_sig550_custom_uh1_magd
+parent_section	= wpn_sig550_luckygun
+[wpn_sig550_luckygun_uh1_magd_off]:wpn_sig550_custom_uh1_magd_off
+parent_section	= wpn_sig550_luckygun
+[wpn_sig550_luckygun_echo1]:wpn_sig550_custom_echo1
+parent_section	= wpn_sig550_luckygun
+
+;------------------------------------------------------------------------------------------------
+;-- Sniper
+;------------------------------------------------------------------------------------------------
+[wpn_sig550_sniper]:wpn_sig550
+parent_section	= wpn_sig550_sniper
+[wpn_sig550_sniper_ac10632]:wpn_sig550_ac10632
+parent_section	= wpn_sig550_sniper
+[wpn_sig550_sniper_eot]:wpn_sig550_eot
+parent_section	= wpn_sig550_sniper
+[wpn_sig550_sniper_c-more]:wpn_sig550_c-more
+parent_section	= wpn_sig550_sniper
+[wpn_sig550_sniper_e0t2]:wpn_sig550_e0t2
+parent_section	= wpn_sig550_sniper
+[wpn_sig550_sniper_ekp8_18]:wpn_sig550_ekp8_18
+parent_section	= wpn_sig550_sniper
+[wpn_sig550_sniper_hco]:wpn_sig550_hco
+parent_section	= wpn_sig550_sniper
+[wpn_sig550_sniper_he510]:wpn_sig550_he510
+parent_section	= wpn_sig550_sniper
+[wpn_sig550_sniper_kemper]:wpn_sig550_kemper
+parent_section	= wpn_sig550_sniper
+[wpn_sig550_sniper_mepro]:wpn_sig550_mepro
+parent_section	= wpn_sig550_sniper
+[wpn_sig550_sniper_aimpoint]:wpn_sig550_aimpoint
+parent_section	= wpn_sig550_sniper
+[wpn_sig550_sniper_0kp2]:wpn_sig550_0kp2
+parent_section	= wpn_sig550_sniper
+[wpn_sig550_sniper_romeo4]:wpn_sig550_romeo4
+parent_section	= wpn_sig550_sniper
+[wpn_sig550_sniper_romeo8]:wpn_sig550_romeo8
+parent_section	= wpn_sig550_sniper
+[wpn_sig550_sniper_bossxe]:wpn_sig550_bossxe
+parent_section	= wpn_sig550_sniper
+[wpn_sig550_sniper_acog]:wpn_sig550_acog
+parent_section	= wpn_sig550_sniper
+[wpn_sig550_sniper_leupold]:wpn_sig550_leupold
+parent_section	= wpn_sig550_sniper
+[wpn_sig550_sniper_pn23]:wpn_sig550_pn23
+parent_section	= wpn_sig550_sniper
+[wpn_sig550_sniper_specter]:wpn_sig550_specter
+parent_section	= wpn_sig550_sniper
+[wpn_sig550_sniper_marchf]:wpn_sig550_marchf
+parent_section	= wpn_sig550_sniper
+[wpn_sig550_sniper_gauss_sight]:wpn_sig550_gauss_sight
+parent_section	= wpn_sig550_sniper
+[wpn_sig550_sniper_tac30]:wpn_sig550_tac30
+parent_section	= wpn_sig550_sniper
+[wpn_sig550_sniper_cortex]:wpn_sig550_cortex
+parent_section	= wpn_sig550_sniper
+[wpn_sig550_sniper_razorhd]:wpn_sig550_razorhd
+parent_section	= wpn_sig550_sniper
+[wpn_sig550_sniper_ps320]:wpn_sig550_ps320
+parent_section	= wpn_sig550_sniper
+[wpn_sig550_sniper_c79]:wpn_sig550_c79
+parent_section	= wpn_sig550_sniper
+[wpn_sig550_sniper_march_f_shorty]:wpn_sig550_march_f_shorty
+parent_section	= wpn_sig550_sniper
+[wpn_sig550_sniper_devo]:wpn_sig550_devo
+parent_section	= wpn_sig550_sniper
+
+;------------------------------------------------------------------------------------------------
+;-- Camo
+;------------------------------------------------------------------------------------------------
+[wpn_sig550_camo]:wpn_sig550
+parent_section	= wpn_sig550_camo
+[wpn_sig550_camo_ac10632]:wpn_sig550_ac10632
+parent_section	= wpn_sig550_camo
+[wpn_sig550_camo_eot]:wpn_sig550_eot
+parent_section	= wpn_sig550_camo
+[wpn_sig550_camo_c-more]:wpn_sig550_c-more
+parent_section	= wpn_sig550_camo
+[wpn_sig550_camo_e0t2]:wpn_sig550_e0t2
+parent_section	= wpn_sig550_camo
+[wpn_sig550_camo_ekp8_18]:wpn_sig550_ekp8_18
+parent_section	= wpn_sig550_camo
+[wpn_sig550_camo_hco]:wpn_sig550_hco
+parent_section	= wpn_sig550_camo
+[wpn_sig550_camo_he510]:wpn_sig550_he510
+parent_section	= wpn_sig550_camo
+[wpn_sig550_camo_kemper]:wpn_sig550_kemper
+parent_section	= wpn_sig550_camo
+[wpn_sig550_camo_mepro]:wpn_sig550_mepro
+parent_section	= wpn_sig550_camo
+[wpn_sig550_camo_aimpoint]:wpn_sig550_aimpoint
+parent_section	= wpn_sig550_camo
+[wpn_sig550_camo_0kp2]:wpn_sig550_0kp2
+parent_section	= wpn_sig550_camo
+[wpn_sig550_camo_romeo4]:wpn_sig550_romeo4
+parent_section	= wpn_sig550_camo
+[wpn_sig550_camo_romeo8]:wpn_sig550_romeo8
+parent_section	= wpn_sig550_camo
+[wpn_sig550_camo_bossxe]:wpn_sig550_bossxe
+parent_section	= wpn_sig550_camo
+[wpn_sig550_camo_acog]:wpn_sig550_acog
+parent_section	= wpn_sig550_camo
+[wpn_sig550_camo_leupold]:wpn_sig550_leupold
+parent_section	= wpn_sig550_camo
+[wpn_sig550_camo_pn23]:wpn_sig550_pn23
+parent_section	= wpn_sig550_camo
+[wpn_sig550_camo_specter]:wpn_sig550_specter
+parent_section	= wpn_sig550_camo
+[wpn_sig550_camo_marchf]:wpn_sig550_marchf
+parent_section	= wpn_sig550_camo
+[wpn_sig550_camo_gauss_sight]:wpn_sig550_gauss_sight
+parent_section	= wpn_sig550_camo
+[wpn_sig550_camo_tac30]:wpn_sig550_tac30
+parent_section	= wpn_sig550_camo
+[wpn_sig550_camo_cortex]:wpn_sig550_cortex
+parent_section	= wpn_sig550_camo
+[wpn_sig550_camo_razorhd]:wpn_sig550_razorhd
+parent_section	= wpn_sig550_camo
+[wpn_sig550_camo_ps320]:wpn_sig550_ps320
+parent_section	= wpn_sig550_camo
+[wpn_sig550_camo_c79]:wpn_sig550_c79
+parent_section	= wpn_sig550_camo
+[wpn_sig550_camo_march_f_shorty]:wpn_sig550_march_f_shorty
+parent_section	= wpn_sig550_camo
+[wpn_sig550_camo_devo]:wpn_sig550_devo
+parent_section	= wpn_sig550_camo

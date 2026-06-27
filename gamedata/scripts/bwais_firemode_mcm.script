@@ -1,0 +1,23 @@
+-- Bwais Fire Mode Check MCM
+
+function on_mcm_load()
+    local op = {
+        id = "bwaisFireModeCheck",
+        sh = true,
+        gr = {
+            { id = "title", type = "slide", link = "ui_options_slider_player", text = "ui_mcm_bwaisFireModeCheck_title", size = { 512, 50 }, spacing = 20 },
+            { id = "userMode", type = "radio_v", val = 2, def = 3, content = { { 0, "bwaisFireModeCheck_disabled" }, { 1, "bwaisFireModeCheck_basic" }, { 2, "bwaisFireModeCheck_dual_key" }, { 3, "bwaisFireModeCheck_single_key" } } },
+            { id = "displayMode", type = "radio_h", val = 2, def = 3, content = { { 3, "bwaisFireModeCheck_full" }, { 1, "bwaisFireModeCheck_text_only" }, { 2, "bwaisFireModeCheck_image_only" } } },
+            { id = "hideGui", type = "check", val = 1, def = true },
+
+            { id = "divider_visuals", type = "line" },
+            { id = "iconX", type = "track", val = 2, def = 512, min = -256, max = 1280, step = 1 },
+            { id = "iconY", type = "track", val = 2, def = 620, min = -256, max = 1024, step = 1 },
+            { id = "textX", type = "track", val = 2, def = 200, min = -256, max = 1280, step = 1 },
+            { id = "textY", type = "track", val = 2, def = 700, min = -256, max = 1024, step = 1 },
+            { id = "opacity", type = "track", val = 2, def = 255, min = 0, max = 255, step = 5 },
+            { id = "hue", type = "track", val = 2, def = 0, min = 0, max = 360, step = 1 }
+        }
+    }
+    return op
+end

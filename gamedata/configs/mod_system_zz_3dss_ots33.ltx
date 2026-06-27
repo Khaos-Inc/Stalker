@@ -1,0 +1,59 @@
+![wpn_oc33]
+visual                      = dynamics\weapons\wpn_oc33\wpn_oc33.ogf
+
+        scopes                           = lazup_pl15
+
+        parent_section                   = wpn_oc33
+
+        inv_name                    = st_wpn_oc33_new
+        inv_name_short              = st_wpn_oc33_new
+        description                 = st_wpn_oc33_new_descr
+
+	silencer_x                  = 79
+	silencer_y                  = -20
+		
+icons_texture      = ui\remademeowie_icon
+	inv_grid_width     = 2
+	inv_grid_height    = 1
+	inv_grid_x         = 0
+	inv_grid_y         = 4
+
+![wpn_oc33_hud]
+        anm_shots                                = oc33_new_shoot_3dss, oc33_new_shoot
+		
+        hands_orientation                = -0.10193, -0.284495, -0.050965
+        hands_orientation_16x9           = -0.10193, -0.284495, -0.050965
+        hands_position                   = -0.021981, 0.002979, 0.043697
+        hands_position_16x9              = -0.021981, 0.002979, 0.043697
+		
+        aim_hud_offset_pos               = -0.02709, 0.026308, 0.0045
+        aim_hud_offset_pos_16x9          = -0.02709, 0.026308, 0.0045
+        aim_hud_offset_rot               = -5.5e-05, 1.5e-05, -0.087
+        aim_hud_offset_rot_16x9          = -5.5e-05, 1.5e-05, -0.087
+
+        lowered_hud_offset_pos_16x9      = 0, 0, 0.004845
+        lowered_hud_offset_rot           = 0.164122, -0.008087, 0.1
+        lowered_hud_offset_rot_16x9      = 0.164122, -0.008087, 0.1
+
+[wpn_oc33_lazup_pl15]:wpn_oc33
+hud				                 = wpn_oc33_lazup_pl15_hud
+
+        use_alt_aim_hud                  = true
+        laser_status                     = true
+
+        inv_name                    = st_wpn_oc33_las
+        inv_name_short              = st_wpn_oc33_las
+        description                 = st_wpn_oc33_las_descr
+		
+icons_texture      = ui\remademeowie_icon
+	inv_grid_width     = 2
+	inv_grid_height    = 1
+	inv_grid_x         = 2
+	inv_grid_y         = 4
+
+[wpn_oc33_lazup_pl15_hud]:wpn_oc33_hud
+item_visual                 = anomaly_weapons\wpn_oc33\wpn_oc33_las_up_hud.ogf
+        aim_hud_offset_alt_pos           = -0.073054, -0.04178, -0.06
+        aim_hud_offset_alt_pos_16x9      = -0.073054, -0.04178, -0.06
+        aim_hud_offset_alt_rot           = -5.5e-05, 1.5e-05, 0.65
+        aim_hud_offset_alt_rot_16x9      = -5.5e-05, 1.5e-05, 0.65

@@ -1,0 +1,98 @@
+![wpn_korth_custom]
+        visual                      = dynamics\weapons\wpn_korth_custom\wpn_korth_custom_world.ogf
+
+        parent_section                   = wpn_korth_custom
+
+        ammo_elapsed                     = 8
+        ammo_mag_size                    = 8
+
+<scopes	=		e0t2
+>scopes	=		deltapoint, rmr
+
+icons_texture      = ui\remademeowie_icon
+	inv_grid_width     = 2
+	inv_grid_height    = 1
+	inv_grid_x         = 0
+	inv_grid_y         = 5
+	
+	silencer_x                  = 74
+	silencer_y                  = -16
+
+        inv_name                    = st_wpn_rapide
+        inv_name_short              = st_wpn_rapide
+        description                 = st_wpn_rapide_descr
+		
+        use_alt_aim_hud                  = true
+        laser_status                     = true		
+![wpn_korth_custom_hud]
+        item_orientation                 = -0.228696, -3.009813, 1
+        item_position                    = 0.000959, -0.003039, -0.00019
+
+        hands_orientation                = 0.431571, 2.683881, -1
+        hands_orientation_16x9           = 0.431571, 2.683881, -1
+        hands_position                   = -0.019284, -0.00764, 0.051704
+        hands_position_16x9              = -0.019284, -0.00764, 0.051704
+
+        aim_hud_offset_pos               = -0.030429, 0.024773, -0.009389
+        aim_hud_offset_pos_16x9          = -0.030429, 0.024773, -0.009389
+        aim_hud_offset_rot               = -0.000151, -9.1e-05, -0.09
+        aim_hud_offset_rot_16x9          = -0.000151, -9.1e-05, -0.09
+
+        aim_hud_offset_alt_pos           = -0.083367, -0.033106, -0.03
+        aim_hud_offset_alt_pos_16x9      = -0.083367, -0.033106, -0.03
+        aim_hud_offset_alt_rot           = -0.000151, -9.1e-05, 0.6
+        aim_hud_offset_alt_rot_16x9      = -0.000151, -9.1e-05, 0.6
+		
+        lowered_hud_offset_pos           = -0.004033, -0.000282, 0.010351
+        lowered_hud_offset_pos_16x9      = -0.004033, -0.000282, 0.010351
+        lowered_hud_offset_rot           = 0.171253, -0.001313, 0.1
+        lowered_hud_offset_rot_16x9      = 0.171253, -0.001313, 0.1
+
+;-----------------------------------------------------------------------------
+[wpn_korth_custom_deltapoint]:wpn_korth_custom
+hud				                         = wpn_korth_custom_deltapoint_hud
+visual				                     = dynamics\weapons\wpn_korth_custom\wpn_korth_custom_docter_world.ogf
+
+		1icon_layer        = deltapoint_x
+		1icon_layer_x      =  6	
+		1icon_layer_y      = -26
+
+[wpn_korth_custom_deltapoint_hud]:wpn_korth_custom_hud
+item_visual                	= dynamics\weapons\wpn_korth_custom\wpn_korth_custom_deltapoint_hud.ogf
+        aim_hud_offset_pos               = -0.030514, 0.016217, -0.01
+        aim_hud_offset_pos_16x9          = -0.030514, 0.016217, -0.01
+        aim_hud_offset_rot               = -0.000151, -9.1e-05, -0.09
+        aim_hud_offset_rot_16x9          = -0.000151, -9.1e-05, -0.09
+;-----------------------------------------------------------------------------
+[wpn_korth_custom_rmr]:wpn_korth_custom
+hud				                         = wpn_korth_custom_rmr_hud
+visual				                     = dynamics\weapons\wpn_korth_custom\wpn_korth_custom_docter_world.ogf
+
+		1icon_layer        = rmr_x
+		1icon_layer_x      =  6
+		1icon_layer_y      = -27
+		
+[wpn_korth_custom_rmr_hud]:wpn_korth_custom_hud
+item_visual                	             = dynamics\weapons\wpn_korth_custom\wpn_korth_custom_rmr_hud.ogf
+        aim_hud_offset_pos               = -0.030503, 0.018493, -0.01
+        aim_hud_offset_pos_16x9          = -0.030503, 0.018493, -0.01
+        aim_hud_offset_rot               = -0.000151, -9.1e-05, -0.09
+        aim_hud_offset_rot_16x9          = -0.000151, -9.1e-05, -0.09
+;-----------------------------------------------------------------------------
+![wpn_korth_custom_d0cter]:wpn_korth_custom
+
+		1icon_layer        = d0cter_x
+		1icon_layer_x      =  6
+		1icon_layer_y      = -27
+
+![wpn_korth_custom_d0cter_hud]:wpn_korth_custom_hud
+        aim_hud_offset_pos               = -0.030488, 0.015881, -0.01
+        aim_hud_offset_pos_16x9          = -0.030488, 0.015881, -0.01
+        aim_hud_offset_rot               = -0.000151, -9.1e-05, -0.09
+        aim_hud_offset_rot_16x9          = -0.000151, -9.1e-05, -0.09
+;--------------------------------------------------------------------------------------------------		
+[wpn_korth_custom_pk6]:wpn_korth_custom
+hud				= wpn_korth_custom_d0cter_hud
+;--------------------------------------------------------------------------------------------------
+[wpn_korth_custom_lazup_pl15]:wpn_korth_custom
+hud				= wpn_korth_custom_hud

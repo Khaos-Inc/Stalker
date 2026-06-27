@@ -1,0 +1,1364 @@
+; This plugin determines the starting locations for each faction when creating a character.
+; Information on your position can be obtained by pressing P in the main menu and checking positional_info.txt.
+
+; [faction_start_locations]
+; location_section = image,story_only
+; story_only is true or false -> only this location is available in story mode
+; story_only is false -> this location is not avaiable for non-story modes
+
+; Black Road Revisited changes
+; adjusted for GAMMA balance, added extra southern spawns for variability and removed northern spawns (psy damage zones) for
+; story factions that won't auto complete duga free 
+; Thanks to kaiju00 and German_Loser for reference material and original spawns (retained in cases where they're not 
+; super egregious for GAMMA starts)
+
+[army_start_locations]
+; TheEase spawns
+cordon_attic_br         = l12_stancia,true
+cordon_prison_br        = l12_stancia,true
+dv_prison_br            = l12_stancia,true
+dv_dirtpit_br           = l12_stancia,true
+garbage_topdepot_br     = l12_stancia,true
+garbage_train_br        = l12_stancia,true
+aw_shitshack_br         = l12_stancia,true
+aw_gatekeeper_br        = l12_stancia,true
+dc_school_br            = l12_stancia,true
+dc_adminroof_br         = l12_stancia,true
+ds_illuminati_br        = l12_stancia,true
+gs_guardpost_br         = l12_stancia,true
+yantar_hillcamp_br      = l12_stancia,true
+wt_tower_br             = l12_stancia,true
+tc_campsite_br          = l12_stancia,true
+tc_helicopter_br        = l12_stancia,true
+meadow_ambush_br        = l12_stancia,true
+yantar_junk_br          = l12_stancia,true
+cordon_northcamp_br     = l12_stancia,true
+; kaiju00 spawns
+gs_church_br            = l12_stancia,true
+gs_village_br           = l12_stancia,true
+dv_swamp_br             = l12_stancia,true
+dv_x18_br               = l12_stancia,true
+meadow_military_br      = l12_stancia,true
+truckcem_container_br   = l12_stancia,true
+meadow_village_br       = l12_stancia,true
+; German_Loser spawns
+wild_train_yard			= l12_stancia,true
+army_silo				= l12_stancia,true
+army_trailer			= l12_stancia,true
+dead_apartment			= l12_stancia,true
+dead_sewers				= l12_stancia,true
+scape_bridge_pipe		= l12_stancia,true
+dark_isg				= l12_stancia,true
+
+[bandit_start_locations]
+; TheEase spawns
+cordon_mil_fence_br    = l12_stancia,true
+cordon_gate_br         = l12_stancia,true
+cordon_campsite_br     = l12_stancia,true
+cordon_trailer_br      = l12_stancia,true
+cordon_bridge_camp_br  = l12_stancia,true
+cordon_traincar_br     = l12_stancia,true
+cordon_prison_br       = l12_stancia,true
+aw_trailerbed_br       = l12_stancia,true
+aw_gatekeeper_br       = l12_stancia,true
+aw_shitshack_br        = l12_stancia,true
+garbage_topdepot_br    = l12_stancia,true
+garbage_basement_br    = l12_stancia,true
+ds_illuminati_br       = l12_stancia,true
+gs_traincar_br         = l12_stancia,true
+gs_milsurprise_br      = l12_stancia,true
+gs_churchtower_br      = l12_stancia,true
+agroprom_milroof_br    = l12_stancia,true
+agroprom_swamp_br        = l12_stancia,true
+agroprom_mercsite_br     = l12_stancia,true
+agroprom_snork_br        = l12_stancia,true
+yantar_hillcamp_br       = l12_stancia,true
+tc_forest_br             = l12_stancia,true
+meadow_ambush_br         = l12_stancia,true
+rostok_grave_br          = l12_stancia,true
+rostok_escape_br         = l12_stancia,true
+yantar_junk_br          = l12_stancia,true
+garbage_train_br        = l12_stancia,true
+cordon_northcamp_br     = l12_stancia,true
+; kaiju00 spawns
+gs_church_br            = l12_stancia,true
+gs_village_br           = l12_stancia,true
+dv_swamp_br             = l12_stancia,true
+dv_x18_br               = l12_stancia,true
+meadow_military_br      = l12_stancia,true
+truckcem_container_br   = l12_stancia,true
+meadow_village_br       = l12_stancia,true
+; German_Loser spawns
+wild_train_yard		    = l12_stancia,true
+dead_apartment		    = l12_stancia,true
+garbage_truck			= l12_stancia,true
+scape_bridge_pipe		= l12_stancia,true
+scape_hunt_stand		= l12_stancia,true
+cordon_dog_train		= l12_stancia,true
+meadow_truck			= l12_stancia,true
+
+[csky_start_locations]
+; TheEase spawns
+meadow_banditpark_br     = l12_stancia,true
+meadow_cafe_br           = l12_stancia,true
+cordon_mil_fence_br    = l12_stancia,true
+cordon_gate_br         = l12_stancia,true
+tc_easttower_br          = l12_stancia,true
+tc_forest_br             = l12_stancia,true
+wt_shed_br               = l12_stancia,true
+wt_tower_br              = l12_stancia,true
+yantar_hillcamp_br       = l12_stancia,true
+agroprom_milroof_br    = l12_stancia,true
+agroprom_roadcamp        = l12_stancia,true
+gs_milsurprise_br      = l12_stancia,true
+gs_guardpost_br        = l12_stancia,true
+ds_illuminati_br       = l12_stancia,true
+dc_attictwo_br         = l12_stancia,true
+dc_school_br           = l12_stancia,true
+garbage_trashman_br    = l12_stancia,true
+dv_dirtpit_br          = l12_stancia,true
+dv_prison_br           = l12_stancia,true
+cordon_mil_fence_br    = l12_stancia,true
+cordon_gate_br         = l12_stancia,true
+dv_topx18_br           = l12_stancia,true
+; kaiju00 spawns
+gs_church_br           = l12_stancia,true
+gs_village_br          = l12_stancia,true
+dv_swamp_br            = l12_stancia,true
+dv_x18_br              = l12_stancia,true
+meadow_military_br     = l12_stancia,true
+truckcem_container_br  = l12_stancia,true
+meadow_village_br      = l12_stancia,true
+; German_Loser spawns
+swamp_tower				= l12_stancia,true
+
+[dolg_start_locations]
+; TheEase spawns
+dv_prison_br           = l12_stancia,true
+dv_glowingpit_br       = l12_stancia,true
+dv_cliff_br            = l12_stancia,true
+dv_dirtpit_br          = l12_stancia,true
+aw_gatekeeper_br       = l12_stancia,true
+dc_school_br           = l12_stancia,true
+dc_adminroof_br        = l12_stancia,true
+dc_ruinedattic_br      = l12_stancia,true
+dc_apartment_br        = l12_stancia,true
+dc_attictwo_br         = l12_stancia,true
+ds_illuminati_br       = l12_stancia,true
+agroprom_mercsite_br   = l12_stancia,true
+wt_shed_br             = l12_stancia,true
+wt_back_br             = l12_stancia,true
+wt_tower_br            = l12_stancia,true
+tc_campsite_br         = l12_stancia,true
+tc_easttower_br        = l12_stancia,true
+meadow_banditpark_br   = l12_stancia,true
+dv_topx18_br           = l12_stancia,true
+; kaiju00 spawns
+gs_church_br           = l12_stancia,true
+gs_village_br          = l12_stancia,true
+dv_swamp_br            = l12_stancia,true
+dv_x18_br              = l12_stancia,true
+meadow_military_br     = l12_stancia,true
+truckcem_container_br  = l12_stancia,true
+meadow_village_br      = l12_stancia,true
+; German_Loser spawns
+truck_bus				= l12_stancia,true
+army_silo				= l12_stancia,true
+army_trailer			= l12_stancia,true
+scape_bridge_pipe		= l12_stancia,true
+
+[ecolog_start_locations]
+; TheEase spawns
+cordon_mil_fence_br    = l12_stancia,true
+cordon_gate_br         = l12_stancia,true
+meadow_cafe_br           = l12_stancia,true
+tc_helicopter_br         = l12_stancia,true
+rostok_smuggle_br        = l12_stancia,true
+wt_back_br               = l12_stancia,true
+agroprom_swamp_br        = l12_stancia,true
+gs_milsurprise_br      = l12_stancia,true
+ds_illuminati_br       = l12_stancia,true
+ds_traintunnel_br      = l12_stancia,true
+dc_school_br           = l12_stancia,true
+aw_trailerbed_br       = l12_stancia,true
+garbage_train_br       = l12_stancia,true
+garbage_trashman_br    = l12_stancia,true
+dv_dirtpit_br          = l12_stancia,true
+dv_prison_br           = l12_stancia,true
+dv_glowingpit_br       = l12_stancia,true
+dv_topx18_br           = l12_stancia,true
+; kaiju00 spawns
+gs_church_br           = l12_stancia,true
+gs_village_br          = l12_stancia,true
+dv_swamp_br            = l12_stancia,true
+dv_x18_br              = l12_stancia,true
+meadow_military_br     = l12_stancia,true
+truckcem_container_br  = l12_stancia,true
+meadow_village_br      = l12_stancia,true
+; German_Loser spawns
+dead_apartment			= l12_stancia,true
+dead_sewers				= l12_stancia,true
+agroground_entrance		= l12_stancia,true
+dead_attic				= l12_stancia,true
+wild_train_yard			= l12_stancia,true
+dark_x18    			= l12_stancia,true
+
+[freedom_start_locations]
+; TheEase spawns
+cordon_mil_fence_br    = l12_stancia,true
+cordon_gate_br         = l12_stancia,true
+gs_milsurprise_br      = l12_stancia,true
+agroprom_milroof_br    = l12_stancia,true
+wt_shed_br               = l12_stancia,true
+wt_back_br               = l12_stancia,true
+wt_tower_br              = l12_stancia,true
+rostok_grave_br          = l12_stancia,true
+rostok_tower_br          = l12_stancia,true
+rostok_smuggle_br        = l12_stancia,true
+rostok_escape_br         = l12_stancia,true
+tc_campsite_br           = l12_stancia,true
+tc_forest_br             = l12_stancia,true
+meadow_cafe_br           = l12_stancia,true
+; kaiju00 spawns
+gs_church_br           = l12_stancia,true
+gs_village_br          = l12_stancia,true
+dv_swamp_br            = l12_stancia,true
+dv_x18_br              = l12_stancia,true
+meadow_military_br     = l12_stancia,true
+truckcem_container_br  = l12_stancia,true
+meadow_village_br      = l12_stancia,true
+; German_Loser spawns
+truck_bus				= l12_stancia,true
+dead_apartment			= l12_stancia,true
+dead_attic				= l12_stancia,true
+scape_bridge_pipe		= l12_stancia,true
+scape_hunt_stand		= l12_stancia,true
+
+[killer_start_locations]
+; TheEase spawns
+cordon_mil_fence_br    = l12_stancia,true
+cordon_gate_br         = l12_stancia,true
+cordon_campsite_br     = l12_stancia,true
+cordon_trailer_br      = l12_stancia,true
+cordon_bridge_camp_br  = l12_stancia,true
+cordon_prison_br       = l12_stancia,true
+garbage_topdepot_br    = l12_stancia,true
+garbage_train_br       = l12_stancia,true
+ds_illuminati_br       = l12_stancia,true
+gs_milsurprise_br      = l12_stancia,true
+agroprom_milroof_br    = l12_stancia,true
+agroprom_tunnel_br       = l12_stancia,true
+agroprom_roadcamp        = l12_stancia,true
+agroprom_factory_br      = l12_stancia,true
+yantar_tunnel_br         = l12_stancia,true
+rostok_escape_br         = l12_stancia,true
+rostok_tower_br          = l12_stancia,true
+tc_easttower_br          = l12_stancia,true
+tc_helicopter_br         = l12_stancia,true
+meadow_ambush_br         = l12_stancia,true
+yantar_junk_br          = l12_stancia,true
+cordon_northcheck_br    = l12_stancia,true
+cordon_northcamp_br     = l12_stancia,true
+garbage_rocheck_br      = l12_stancia,true
+; kaiju00 spawns
+gs_church_br           = l12_stancia,true
+gs_village_br          = l12_stancia,true
+dv_swamp_br            = l12_stancia,true
+dv_x18_br              = l12_stancia,true
+meadow_military_br     = l12_stancia,true
+truckcem_container_br  = l12_stancia,true
+meadow_village_br      = l12_stancia,true
+; German_Loser spawns
+wild_train_yard			= l12_stancia,true
+truck_bus				= l12_stancia,true
+army_trailer			= l12_stancia,true
+dark_pig				= l12_stancia,true
+scape_hunt_stand		= l12_stancia,true
+dead_apartment			= l12_stancia,true
+dead_attic				= l12_stancia,true
+dark_x18    			= l12_stancia,true
+
+[stalker_start_locations]
+; TheEase spawns
+cordon_mil_fence_br    = l12_stancia,true
+cordon_gate_br         = l12_stancia,true
+cordon_traincar_br     = l12_stancia,true
+dv_prison_br           = l12_stancia,true
+dv_cliff_br            = l12_stancia,true
+dv_dirtpit_br          = l12_stancia,true
+garbage_trashman_br    = l12_stancia,true
+aw_gatekeeper_br       = l12_stancia,true
+aw_shitshack_br        = l12_stancia,true
+dc_school_br           = l12_stancia,true
+dc_ruinedattic_br      = l12_stancia,true
+dc_apartment_br        = l12_stancia,true
+dc_attictwo_br         = l12_stancia,true
+ds_illuminati_br       = l12_stancia,true
+gs_milsurprise_br      = l12_stancia,true
+agroprom_tunnel_br       = l12_stancia,true
+yantar_hillcamp_br       = l12_stancia,true
+wt_shed_br               = l12_stancia,true
+tc_forest_br             = l12_stancia,true
+meadow_banditpark_br     = l12_stancia,true
+meadow_cafe_br           = l12_stancia,true
+agroprom_milroof_br    = l12_stancia,true
+dv_topx18_br           = l12_stancia,true
+; kaiju00 spawns
+gs_church_br           = l12_stancia,true
+gs_village_br          = l12_stancia,true
+dv_swamp_br            = l12_stancia,true
+dv_x18_br              = l12_stancia,true
+meadow_military_br     = l12_stancia,true
+truckcem_container_br  = l12_stancia,true
+meadow_village_br      = l12_stancia,true
+; German_Loser spawns
+truck_bus				= l12_stancia,true
+army_silo				= l12_stancia,true
+dead_apartment			= l12_stancia,true
+dark_pig				= l12_stancia,true
+scape_bridge_pipe		= l12_stancia,true
+agroground_entrance		= l12_stancia,true
+cordon_checkpoint		= l12_stancia,true
+meadow_truck			= l12_stancia,true
+
+[monolith_start_locations]
+; TheEase spawns
+cordon_prison_br       = l12_stancia,true
+; kaiju00 spawns
+outskirts_hospital_br  = l12_stancia,true
+outskirts_school_br    = l12_stancia,true
+jupiter_kopachy_br     = l12_stancia,true
+zaton_sawmill_br       = l12_stancia,true
+zaton_rangerstation_br = l12_stancia,true
+dv_swamp_br            = l12_stancia,true
+dv_x18_br              = l12_stancia,true
+jupiter_cement_br      = l12_stancia,true
+meadow_military_br     = l12_stancia,true
+jupiter_factory_br     = l12_stancia,true
+truckcem_container_br  = l12_stancia,true
+meadow_village_br      = l12_stancia,true
+yantar_junk_br          = l12_stancia,true
+garbage_train_br        = l12_stancia,true
+cordon_northcheck_br    = l12_stancia,true
+cordon_northcamp_br     = l12_stancia,true
+garbage_rocheck_br      = l12_stancia,true
+dv_topx18_br           = l12_stancia,true
+; German_Loser spawns
+mono_prip_wheel			= l12_stancia,true
+mono_jupiter_cooling	= l12_stancia,true
+mono_zaton_crane		= l12_stancia,true
+mono_radar_hideout		= l12_stancia,true
+forest_tunnel			= l12_stancia,true
+limansk_lmghouse		= l12_stancia,true
+deserted_hospital		= l12_stancia,true
+cnpp_cart          		= l12_stancia,true
+zaton_lair      		= l12_stancia,true
+
+[greh_start_locations]
+; TheEase spawns
+cordon_trailer_br      = l12_stancia,true
+cordon_attic_br        = l12_stancia,true
+cordon_prison_br       = l12_stancia,true
+; kaiju00 spawns
+outskirts_hospital_br  = l12_stancia,true
+outskirts_school_br    = l12_stancia,true
+jupiter_kopachy_br     = l12_stancia,true
+zaton_sawmill_br       = l12_stancia,true
+zaton_rangerstation_br = l12_stancia,true
+dv_swamp_br            = l12_stancia,true
+dv_x18_br              = l12_stancia,true
+jupiter_cement_br      = l12_stancia,true
+meadow_military_br     = l12_stancia,true
+jupiter_factory_br     = l12_stancia,true
+truckcem_container_br  = l12_stancia,true
+meadow_village_br      = l12_stancia,true
+yantar_junk_br          = l12_stancia,true
+garbage_train_br        = l12_stancia,true
+cordon_northcheck_br    = l12_stancia,true
+cordon_northcamp_br     = l12_stancia,true
+garbage_rocheck_br      = l12_stancia,true
+dv_topx18_br           = l12_stancia,true
+; German_Loser spawns
+scape_bridge_pipe		= l12_stancia,true
+scape_hunt_stand		= l12_stancia,true
+forest_tunnel			= l12_stancia,true
+scape_bridge_pipe		= l12_stancia,true
+
+[isg_start_locations]
+; TheEase spawns
+
+; kaiju00 spawns
+outskirts_hospital_br   = l12_stancia
+outskirts_school_br     = l12_stancia
+jupiter_kopachy_br      = l12_stancia
+zaton_sawmill_br        = l12_stancia
+zaton_rangerstation_br  = l12_stancia
+dv_swamp_br             = l12_stancia
+dv_x18_br               = l12_stancia
+jupiter_cement_br       = l12_stancia
+redforest_stop          = l12_stancia
+meadow_military_br      = l12_stancia
+darkscape_camp_br       = l12_stancia,true
+jupiter_factory_br      = l12_stancia
+truckcem_container_br   = l12_stancia
+meadow_village_br       = l12_stancia
+; German_Loser spawns
+dark_isg				= l12_stancia
+jupiter_substation		= l12_stancia
+jupiter_factory			= l12_stancia
+zaton_lair      		= l12_stancia
+
+[renegade_start_locations]
+; TheEase spawns
+cordon_mil_fence_br    = l12_stancia,true
+cordon_gate_br         = l12_stancia,true
+cordon_campsite_br     = l12_stancia,true
+cordon_trailer_br      = l12_stancia,true
+cordon_bridge_camp_br  = l12_stancia,true
+cordon_traincar_br     = l12_stancia,true
+cordon_attic_br        = l12_stancia,true
+cordon_prison_br       = l12_stancia,true
+garbage_trashman_br    = l12_stancia,true
+garbage_topdepot_br    = l12_stancia,true
+garbage_basement_br    = l12_stancia,true
+aw_hillcamp_br         = l12_stancia,true
+aw_gatekeeper_br       = l12_stancia,true
+aw_shitshack_br        = l12_stancia,true
+dc_ruinedattic_br      = l12_stancia,true
+dc_attictwo_br         = l12_stancia,true
+gs_churchtower_br      = l12_stancia,true
+gs_traincar_br         = l12_stancia,true
+gs_milsurprise_br      = l12_stancia,true
+agroprom_swamp_br        = l12_stancia,true
+agroprom_tunnel_br       = l12_stancia,true
+agroprom_snork_br        = l12_stancia,true
+agroprom_factory_br      = l12_stancia,true
+yantar_tunnel_br         = l12_stancia,true
+rostok_grave_br          = l12_stancia,true
+tc_forest_br             = l12_stancia,true
+meadow_ambush_br         = l12_stancia,true
+yantar_junk_br          = l12_stancia,true
+garbage_train_br        = l12_stancia,true
+cordon_northcheck_br    = l12_stancia,true
+cordon_northcamp_br     = l12_stancia,true
+garbage_rocheck_br      = l12_stancia,true
+dv_topx18_br           = l12_stancia,true
+; kaiju00 spawns
+gs_church_br           = l12_stancia,true
+gs_village_br          = l12_stancia,true
+dv_swamp_br            = l12_stancia,true
+dv_x18_br              = l12_stancia,true
+meadow_military_br     = l12_stancia,true
+truckcem_container_br  = l12_stancia,true
+meadow_village_br      = l12_stancia,true
+; German_Loser spawns
+wild_train_yard			= l12_stancia,true
+dark_pig				= l12_stancia,true
+scape_hunt_stand		= l12_stancia,true
+swamp_tower     		= l12_stancia,true
+swamp_ruin      		= l12_stancia,true
+meadow_truck			= l12_stancia,true
+
+[zombied_start_locations]
+
+; TheEase spawns
+cordon_mil_fence_br    = l12_stancia,true
+cordon_gate_br         = l12_stancia,true
+cordon_campsite_br     = l12_stancia,true
+cordon_trailer_br      = l12_stancia,true
+cordon_bridge_camp_br  = l12_stancia,true
+cordon_traincar_br     = l12_stancia,true
+cordon_attic_br        = l12_stancia,true
+cordon_prison_br       = l12_stancia,true
+garbage_trashman_br    = l12_stancia,true
+garbage_topdepot_br    = l12_stancia,true
+garbage_basement_br    = l12_stancia,true
+gs_churchtower_br      = l12_stancia,true
+gs_traincar_br         = l12_stancia,true
+gs_milsurprise_br      = l12_stancia,true
+agroprom_swamp_br        = l12_stancia,true
+agroprom_tunnel_br       = l12_stancia,true
+agroprom_snork_br        = l12_stancia,true
+agroprom_factory_br      = l12_stancia,true
+meadow_ambush_br         = l12_stancia,true
+garbage_train_br        = l12_stancia,true
+cordon_northcheck_br    = l12_stancia,true
+cordon_northcamp_br     = l12_stancia,true
+garbage_rocheck_br      = l12_stancia,true
+dv_topx18_br           = l12_stancia,true
+; kaiju00 spawns
+gs_church_br           = l12_stancia,true
+gs_village_br          = l12_stancia,true
+dv_swamp_br            = l12_stancia,true
+dv_x18_br              = l12_stancia,true
+meadow_military_br     = l12_stancia,true
+meadow_village_br      = l12_stancia,true
+; German_Loser spawns
+dark_pig				= l12_stancia,true
+scape_hunt_stand		= l12_stancia,true
+swamp_tower     		= l12_stancia,true
+swamp_ruin      		= l12_stancia,true
+meadow_truck			= l12_stancia,true
+
+; Spawn locations
+; TheEase spawns
+
+[agroprom_swamp_br]
+lvid = 35284
+gvid 	= 970
+x = -191.72200012207
+y = 5.1861462593079
+z = 30.713739395142
+
+[agroprom_mercsite_br]
+lvid = 116785
+gvid 	= 1022
+x = -92.06925201416
+y = 10.193970680237
+z = 143.76672363281
+
+[agroprom_tunnel_br]
+lvid = 403519
+gvid 	= 1031
+x = 248.67742919922
+y = 1.0820325613022
+z = 68.757263183594
+
+[agroprom_roadcamp]
+lvid = 287542
+gvid 	= 1029
+x = 105.85313415527
+y = 0.38495814800262
+z = -50.784400939941
+
+[agroprom_snork_br]
+lvid = 390989
+gvid 	= 1034
+x = 229.84745788574
+y = 21.040987014771
+z = -104.38914489746
+
+[agroprom_factory_br]
+lvid = 214020
+gvid 	= 1026
+x = 16.843156814575
+y = -0.001730740070343
+z = 23.663036346436
+
+[yantar_hillcamp_br]
+lvid = 16371
+gvid 	= 2196
+x = -143.22698974609
+y = 6.5556449890137
+z = -297.56771850586
+
+; Forced damage, not a good spawn for blackroad imo although I like the location
+[yantar_pipe_br]
+lvid = 147398
+gvid 	= 2213
+x = 177.70597839355
+y = 3.5805082321167
+z = 93.707778930664
+
+[yantar_tunnel_br]
+lvid = 130121
+gvid 	= 2235
+x = 128.04046630859
+y = -8.7728099822998
+z = -154.60350036621
+
+[yantar_junk_br]
+lvid = 275815
+gvid 	= 1437
+x = 96.140800476074
+y = -2.6631579399109
+z = -398.44088745117
+
+[wt_shed_br]
+lvid = 7913
+gvid 	= 1921
+x = -255.91091918945
+y = 0.17933991551399
+z = 91.762176513672
+
+[wt_back_br]
+lvid = 84
+gvid 	= 1859
+x = -294.32275390625
+y = -8.036196231842e-05
+z = 128.80108642578
+
+[wt_tower_br]
+lvid = 39650
+gvid 	= 1827
+x = -144.61860656738
+y = 7.5041732788086
+z = 161.49983215332
+
+[rostok_grave_br]
+lvid = 29945
+gvid 	= 1746
+x = 74.934928894043
+y = -0.0035155415534973
+z = 162.61570739746
+
+[rostok_tower_br]
+lvid = 41602
+gvid 	= 1714
+x = 156.31156921387
+y = 9.0799837112427
+z = 113.19790649414
+
+[rostok_smuggle_br]
+lvid = 35373
+gvid 	= 1743
+x = 125.3833694458
+y = -4.8255004882812
+z = 12.634362220764
+
+[rostok_escape_br]
+lvid = 61980
+gvid 	= 1772
+x = 239.5986328125
+y = 0.34075462818146
+z = -52.863864898682
+
+[tc_campsite_br]
+lvid = 511137
+gvid 	= 5285
+x = 50.231147766113
+y = 13.227784156799
+z = -371.05606079102
+
+[tc_easttower_br]
+lvid = 738264
+gvid 	= 5176
+x = 225.43768310547
+y = 19.544416427612
+z = -0.29434061050415
+
+[tc_helicopter_br]
+lvid = 576113
+gvid 	= 5180
+x = 97.154716491699
+y = 13.505048751831
+z = 129.70658874512
+
+[tc_forest_br]
+lvid = 427155
+gvid 	= 5128
+x = -13.290383338928
+y = 22.509887695312
+z = -103.71195983887
+
+[garbage_topdepot_br]
+lvid = 119122
+gvid 	= 725
+x = -62.329593658447
+y = 22.796054840088
+z = 9.3097524642944
+
+[garbage_train_br]
+lvid = 13971
+gvid 	= 691
+x = -218.22123718262
+y = 0.42433762550354
+z = 9.2415332794189
+
+[meadow_banditpark_br]
+lvid = 4781
+gvid 	= 5325
+x = -167.6262512207
+y = 0.010788083076477
+z = 187.49301147461
+
+[meadow_cafe_br]
+lvid = 32088
+gvid 	= 5314
+x = -84.545890808105
+y = 0.94846177101135
+z = 69.944442749023
+
+[meadow_ambush_br]
+lvid = 59381
+gvid 	= 5313
+x = -16.288684844971
+y = -16.686145782471
+z = -47.289451599121
+
+[meadow_truck]
+lvid = 83188
+gvid = 5330
+x = 61.296375274658
+y = 1.4812970161438
+z = 132.39753723145
+
+[dv_glowingpit_br]
+lvid = 333774
+gvid 	= 1507
+x = 151.79508972168
+y = 4.2021379470825
+z = -483.96905517578
+
+[dv_cliff_br]
+lvid = 339558
+gvid 	= 1416
+x = 156.75640869141
+y = -3.7497000694275
+z = -106.2668762207
+
+[dv_dirtpit_br]
+lvid = 177755
+gvid 	= 1454
+x = 13.77455329895 
+y = -6.3734679222107
+z = 9.7458839416504
+
+[dv_topx18_br]
+lvid = 327783
+gvid 	= 1467
+x = 146.48492431641
+y = 14.791996955872
+z = -273.65707397461
+
+[garbage_basement_br]
+lvid = 254141
+gvid 	= 643
+x = 102.77252960205
+y = -5.8256120681763
+z = 157.18937683105
+
+[garbage_trashman_br]
+lvid = 254569
+gvid 	= 719
+x = 74.680183410645
+y = 16.585399627686
+z = 33.848793029785
+
+[garbage_rocheck_br]
+lvid = 207368
+gvid 	= 685
+x = 46.942234039307
+y = 0.63039243221283
+z = 246.73725891113
+
+[aw_hillcamp_br]
+lvid = 18656
+gvid 	= 2025
+x = -331.90249633789
+y = -4.4381341934204
+z = 134.18705749512
+
+[aw_trailerbed_br]
+lvid = 156552
+gvid 	= 2186
+x = -155.46955871582
+y = -0.4994470179081
+z = 10.54305267334
+
+[aw_gatekeeper_br]
+lvid = 364385
+gvid 	= 2161
+x = 92.111289978027
+y = -0.66935616731644
+z = 304.05133056641
+
+[aw_shitshack_br]
+lvid = 9573
+gvid 	= 1985
+x = -345.84661865234
+y = -19.897468566895
+z = 303.22540283203
+
+[dc_school_br]
+lvid = 157400
+gvid 	= 2368
+x = 34.814605712891
+y = 2.0073366165161
+z = -113.34107208252
+
+[dc_adminroof_br]
+lvid = 102618
+gvid 	= 2397
+x = -48.580932617188
+y = 13.701251983643
+z = -69.694320678711
+
+[dc_ruinedattic_br]
+lvid = 70959
+gvid 	= 2348
+x = -95.92015838623
+y = 19.053443908691
+z = -58.045810699463
+
+[dc_apartment_br]
+lvid = 152588
+gvid 	= 2339
+x = 20.496656417847
+y = 15.623618125916
+z = 54.852966308594
+
+[dc_attictwo_br]
+lvid = 63897
+gvid 	= 2360
+x = -125.59301757812
+y = 19.054443359375
+z = -17.184671401978
+
+[ds_illuminati_br]
+lvid = 939587
+gvid 	= 1285
+x = 443.07592773438
+y = -0.43972200155258
+z = 107.29345703125
+
+[ds_traintunnel_br]
+lvid = 773562
+gvid 	= 1407
+x = 339.19735717773
+y = 20.115917205811
+z = 285.96630859375
+
+[gs_churchtower_br]
+lvid = 320525
+gvid 	= 242
+x = 273.40463256836
+y = 13.678649902344
+z = -160.95372009277
+
+[gs_guardpost_br]
+lvid = 6951
+gvid 	= 152
+x = -280.04650878906
+y = 15.226658821106
+z = 23.652284622192
+
+[gs_traincar_br]
+lvid = 246830
+gvid 	= 229
+x = 179.31524658203
+y = 12.297296524048
+z = 532.20349121094
+
+[gs_milsurprise_br]
+lvid = 430961
+gvid 	= 126
+x = 434.42437744141
+y = 3.7017209529877
+z = 241.32321166992
+
+[agroprom_milroof_br]
+lvid = 84676
+gvid 	= 1036
+x = -129.08575439453
+y = 14.99901008606
+z = -202.9686126709
+
+[cordon_trailer_br]
+lvid = 192122
+gvid 	= 554
+x = -81.938606262207
+y = -4.9450902938843
+z = -76.992164611816
+
+[cordon_bridge_camp_br]
+lvid = 240690
+gvid 	= 447
+x = -48.86287689209
+y = -10.064266204834
+z = -62.230171203613
+
+[cordon_traincar_br]
+lvid = 387166
+gvid 	= 483
+x = 59.556316375732
+y = 19.45986366272
+z = 156.45428466797
+
+[cordon_attic_br]
+lvid     = 474828
+gvid 	 = 541
+x        = 140.9365234375
+y        = 3.2692246437073
+z        = 337.88323974609
+
+[cordon_prison_br]
+lvid     = 322426
+gvid 	 = 442
+x        = 15.084819793701
+y        = 0.87523853778839
+z        = 291.34707641602
+
+[cordon_gate_br]
+lvid    = 126849
+gvid    = 449
+x       = -129.11305236816
+y       = -26.432243347168
+z       = -476.50112915039
+
+[cordon_mil_fence_br]
+lvid    = 154522
+gvid    = 449
+x       = -106.20529174805
+y       = -30.091152191162
+z       = -394.69909667969
+
+[cordon_campsite_br]
+lvid    = 156638
+gvid 	= 377
+x       = -105.31755828857
+y       = -20.69268989563
+z       = -208.96519470215
+
+[cordon_northcamp_br]
+lvid    = 101712
+gvid 	= 566
+x       = -151.19660949707
+y       = -2.5971744060516
+z       = 306.5110168457
+
+[cordon_northcheck_br]
+lvid    = 350314
+gvid 	= 567
+x       = 37.031543731689
+y       = 16.221672058105
+z       = 679.79956054688
+
+
+[dv_prison_br]
+lvid	=	219505
+gvid	=	1640
+x		=	46.102916717529
+y		=	-2.5022804737091
+z		=	-58.343101501465
+
+; kaiju00 spawns from original Black Road mod
+
+[darkscape_camp_br]
+lvid	=	665776
+gvid	=	1405
+x		=	247.9740
+y		=	-0.1612
+z		=	-192.8920
+
+[meadow_military_br]
+lvid	=	84867
+gvid	=	5305
+x		=	66.9772
+y		=	8.7819
+z		=	171.4487
+
+[jupiter_factory_br]
+lvid	=	1243508
+gvid	=	4694
+x		=	329.8673
+y		=	39.4500
+z		=	-231.8242
+
+[jupiter_cement_br]
+lvid	=	1328544
+gvid	=	4496
+x		=	388.0177
+y		=	21.0679
+z		=	360.7881
+
+[truckcem_container_br]
+lvid	=	247040
+gvid	=	5102
+x		=	-150.1115
+y		=	7.7081
+z		=	-274.0483
+
+[meadow_village_br]
+lvid	=	3940
+gvid	=	5311
+x		=	-172.8860
+y		=	-20.2153
+z		=	-53.1272
+
+[dv_x18_br]
+lvid	=	327766
+gvid	=	1432
+x		=	146.0224
+y		=	0.1485
+z		=	-291.4862
+
+[dv_swamp_br]
+lvid	=	275815
+gvid	=	1437
+x		=	96.1408
+y		=	-2.6631
+z		=	-398.4409
+
+[gs_village_br]
+lvid	=	497133
+gvid	=	62
+x		=	520.3976
+y		=	3.0583
+z		=	-185.8577
+
+[gs_church_br]
+lvid	=	317320
+gvid	=	242
+x		=	276.3734
+y		=	7.0390
+z		=	-160.0652
+
+[jupiter_kopachy_br]
+lvid	=	142109
+gvid	=	4526
+x		=	-339.3554
+y		=	1.4947
+z		=	261.7834
+
+[zaton_sawmill_br]
+lvid	=	315144
+gvid	=	4137
+x		=	-317.1284
+y		=	9.7901
+z		=	426.5531
+
+[zaton_rangerstation_br]
+lvid	=	1640593
+gvid	=	4430
+x		=	410.9932
+y		=	39.4460
+z		=	-18.7069
+
+[outskirts_school_br]
+lvid	=	228108
+gvid	=	4970
+x		=	23.2693
+y		=	-4.3248
+z		=	126.6216
+
+[outskirts_hospital_br]
+lvid	=	384721
+gvid	=	4880
+x		=	153.9295
+y		=	4.6621
+z		=	17.6421
+
+; [Extended] Black Road Remade spawns by German_Loser
+
+[yantar_pipe]
+lvid	=	147072
+gvid	=	2213
+x		=	177.9577331543
+y		=	3.8060555458069
+z		=	94.327941894531
+
+[wild_train_yard]
+lvid	=	20187
+gvid	=	1843
+x		=	-225.63552856445
+y		=	3.1703071594238
+z		=	197.08778381348
+
+; Bugged spawn, ladder latches backwards and basically forces damage on player. Too bad cause I like it. Also, no way to climb back up so unreachable to players
+[truck_radio_tower]
+lvid	=	579288
+gvid	=	5224
+x		=	103.78050994873
+y		=	21.122362136841
+z		=	-146.07609558105
+
+[truck_bus]
+lvid	=	237798
+gvid	=	5116
+x		=	-158.02415466309
+y		=	-4.426878452301
+z		=	-152.96728515625
+
+[truck_crane]
+lvid	=	412261
+gvid	=	5252
+x		=	-25.768140792847
+y		=	19.072999954224
+z		=	302.55206298828
+
+[army_silo]
+lvid	=	80143
+gvid	=	2058
+x		=	-249.55332946777
+y		=	-6.4027528762817
+z		=	300.44366455078
+
+[army_trailer]
+lvid	=	364385
+gvid	=	2161
+x		=	92.042579650879
+y		=	-0.67791712284088
+z		=	304.28494262695
+
+[dead_apartment]
+lvid	=	107875
+gvid	=	2367
+x		=	44.072780609131
+y		=	15.62603187561
+z		=	66.083908081055
+
+[dead_sewers]
+lvid	=	54557
+gvid	=	2411
+x		=	-136.22665405273
+y		=	-1.9778897762299
+z		=	-123.76753234863
+
+[dead_attic]
+lvid	=	28776
+gvid	=	2410
+x		=	-179.91261291504
+y		=	10.35515499115
+z		=	-224.10093688965
+
+[garbage_truck]
+lvid	=	74220
+gvid	=	727
+x		=	-129.42608642578
+y		=	-0.66830956935883
+z		=	-188.42971801758
+
+[dark_pig]
+lvid	=	23537
+gvid	=	1450
+x		=	-135.24949645996
+y		=	0.97615993022919
+z		=	-522.97875976563
+
+[deserted_hospital]
+lvid	=	6554
+gvid	=	2898
+x		=	-76.9268
+y		=	19.7001
+z		=	564.5425
+
+[scape_bridge_pipe]
+lvid	=	656278
+gvid	=	1095
+x		=	239.18441772461
+y		=	-3.7761497497559
+z		=	567.7138671875
+
+[scape_hunt_stand]
+lvid	=	884456
+gvid	=	1265
+x		=	410.39199829102
+y		=	22.82407951355
+z		=	-129.9965057373
+
+[cordon_dog_train]
+lvid	=	615095
+gvid	=	391
+x		=	344.16268920898
+y		=	18.785493850708
+z		=	243.46948242188
+
+[dark_isg]
+lvid	=	272431
+gvid	=	1490
+x		=	93.882247924805
+y		=	4.2354888916016
+z		=	-4.9248666763306
+
+[mono_radar_truck]
+lvid	=	221615
+gvid	=	2522
+x		=	614.72033691406
+y		=	-48.698677062988
+z		=	-25.189706802368
+
+[mono_prip_wheel]
+lvid	=	230987
+gvid	=	2953
+x		=	123.79196166992
+y		=	5.7311654090881
+z		=	205.65747070313
+
+[mono_jupiter_cooling]
+lvid	=	484864
+gvid	=	4575
+x		=	-139.37353515625
+y		=	8.5724172592163
+z		=	361.9289855957
+
+[mono_jupiter_factory]
+lvid	=	1344206
+gvid	=	4487
+x		=	398.87759399414
+y		=	43.121208190918
+z		=	-235.02093505859
+
+[mono_zaton_crane]
+lvid	=	979624
+gvid	=	4156
+x		=	217.75164794922
+y		=	24.483079910278
+z		=	21.239036560059
+
+; Bugged spawn that causes CTD (at least in GAMMA)
+[prom_radar]
+lvid	=	809145
+gvid	=	5485
+x		=	351.59533691406
+y		=	-27.277881622314
+z		=	-279.27096557617
+
+; Bugged spawn that causes CTD (at least in GAMMA)
+[prom_rock]
+lvid	=	202702
+gvid	=	5370
+x		=	-105.49576568604
+y		=	-27.745090484619
+z		=	209.74934387207
+
+; Bugged spawn that causes CTD (at least in GAMMA)
+[prom_factory]
+lvid	=	521612
+gvid	=	5540
+x		=	142.81994628906
+y		=	-17.961000442505
+z		=	273.74429321289
+
+; Bugged spawn (at least in GAMMA)
+[prom_underground]
+lvid	=	891487
+gvid	=	5514
+x		=	494.47158813477
+y		=	-35.788078308105
+z		=	96.51636505127
+
+[agroground_entrance]
+lvid	=	6193
+gvid	=	3637
+x		=	77.0251
+y		=	4.3433
+z		=	190.1959
+
+[cordon_checkpoint]
+lvid	=	133381
+gvid	=	449
+x		=	-123.3384
+y		=	-26.3035
+z		=	-477.4440
+
+[jupiter_substation]
+lvid	=	841976
+gvid	=	4473
+x		=	74.9496
+y		=	-0.7634
+z		=	333.3176
+
+[jupiter_factory]
+lvid	=	1221970
+gvid	=	4694
+x		=	314.3661
+y		=	34.5898
+z		=	-236.9726
+
+; Currently unused
+[pripyat_apartment]
+lvid	=	354368
+gvid	=	4920
+x		=	119.7926
+y		=	28.9091
+z		=	248.0544
+
+[zaton_sawmill]
+lvid	=	320566
+gvid	=	4137
+x		=	-314.4885
+y		=	13.3727
+z		=	426.4774
+
+[forest_tunnel]
+lvid	=	119102
+gvid	=	2831
+x		=	180.9680
+y		=	-0.2169
+z		=	-215.7947
+
+; Too many rads for GAMMA start
+[meadow_basement]
+lvid	=	86976
+gvid	=	5305
+x		=	76.9239
+y		=	-1.5012
+z		=	151.2189
+
+[mono_wishgranter]
+lvid	=	5534
+gvid	=	3958
+x		=	23.7330
+y		=	54.7874
+z		=	30.4835
+
+[mono_radar_hideout]
+lvid	=	67435
+gvid	=	2553
+x		=	302.7321
+y		=	-39.1251
+z		=	-26.5612
+
+[swamp_tower]
+lvid	=	6251
+gvid	=	153
+x		=	-283.0383
+y		=	0.9714
+z		=	33.9751
+
+[swamp_ruin]
+lvid	=	107613
+gvid	=	240
+x		=	-63.5415
+y		=	0.2156
+z		=	305.7326
+
+[limansk_lmghouse]
+lvid	=	4499
+gvid	=	2432
+x		=	-45.4185
+y		=	-0.9644
+z		=	-253.3396
+
+[cnpp_cart]
+lvid	=	277659
+gvid	=	3108
+x		=	630.3523
+y		=	1.5195
+z		=	-28.0252
+
+[zaton_lair]
+lvid	=	154652
+gvid	=	4188
+x		=	-415.5084
+y		=	11.0246
+z		=	4.9371
+
+[dark_x18]
+lvid	=	2811
+gvid	=	3729
+x		=	-0.8477
+y		=	9.3105
+z		=	0.9003
+
+[pripyat_x8]
+lvid	=	3528
+gvid	=	5087
+x		=	-78.5748
+y		=	-16.0324
+z		=	77.5002
+
+[zaton_stingray]
+lvid	=	1129667
+gvid	=	4155
+x		=	95.4792
+y		=	41.9946
+z		=	-380.1403
+
+[jupiter_stingray]
+lvid	=	1264259
+gvid	=	4699
+x		=	343.7229
+y		=	27.5425
+z		=	-406.2117

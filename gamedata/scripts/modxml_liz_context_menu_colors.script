@@ -1,0 +1,73 @@
+local language_list = {
+    eng = true,
+    rus = true,
+}
+local text_modifiers = {}
+
+---comment
+---@param file_name string --xml file name without extension
+---@param string_id string --string id
+---@param callback function --takes string from xml, returns modified string
+function add_text_modifier(file_name, string_id, callback)
+    local modifier = {
+        file_name = file_name,
+        string_id = string_id,
+        callback = callback
+    }
+    table.insert(text_modifiers, modifier)
+end
+
+--- --------------------------------
+--- monkey patches
+--- -------------------------------- 
+
+-- -- disabled this patch shince I alredy have it from field strip colors mod
+-- local baseUICPII = utils_ui.UICellProperties_item.__init
+-- utils_ui.UICellProperties_item.__init = function(self)
+--     baseUICPII(self)
+--     self.textControl:SetTextComplexMode(true)
+-- end
+
+--- --------------------------------
+--- utils
+--- --------------------------------
+
+function on_xml_read()
+    RegisterScriptCallback("on_xml_read", function (file_name, object)
+        for _, modifier in pairs(text_modifiers) do
+            for language, _ in pairs(language_list) do
+                -- if file_name == "text\\" .. language .. "\\" .. modifier.file_name .. ".xml" then
+                if file_name == string.format([[text\%s\%s.xml]], language, modifier.file_name) then
+                    local res = object:query(string.format("string[id=%s] > text", modifier.string_id))
+                    if res[1] then
+                        local el_text = object:getText(res[1])
+                        if el_text then
+                            object:setText(res[1], modifier.callback(language, el_text))
+                        end
+                    end
+                end
+            end
+        end
+    end)
+end
+
+--- --------------------------------
+--- text modifiers
+--- --------------------------------
+
+add_text_modifier("st_items_magazines", "st_mag_eject_magazine", function(language, text)
+    return "%c[d_orange]" .. text
+end)
+add_text_modifier("st_items_magazines", "st_mag_unload_ammo", function(language, text)
+    return "%c[d_orange]" .. text
+end)
+add_text_modifier("ui_st_inventory", "st_unload_magazine", function(language, text)
+    return "%c[d_orange]" .. text
+end)
+add_text_modifier("ui_st_inventory", "st_item_disassemble", function(language, text)
+    return "%c[d_red]" .. text
+end)
+add_text_modifier("ui_st_inventory", "st_awr_disassembly_cloth", function(language, text)
+    return "%c[d_red]" .. text
+end)
+

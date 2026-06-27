@@ -1,0 +1,4558 @@
+local M = {}
+
+local C = {
+	TRADE_SCAN_INTERVAL_MS = 3000,
+	AUTO_TRADE_COOLDOWN_MS = 30000,
+	SMART_TRADE_QUEUE_SLOT_MS = 60000,
+	TRADE_PREPARED_TIMEOUT_MS = 75000,
+	TRADE_FORCE_JOB_PAD_MS = 15000,
+	TRADE_POST_RELEASE_WATCH_MS = 20000,
+	TRADE_POST_RELEASE_WATCH_INTERVAL_MS = 2000,
+	OFFLINE_TRADE_PROFILE_CACHE_TTL_MS = 2000,
+	MED_BANDAGE_KEEP = 3,
+	MEDKIT_KEEP = 3,
+	OTHER_MED_KEEP = 1,
+	GRENADE_KEEP = 2,
+	FOOD_KEEP = 1,
+	DRINK_KEEP = 1,
+	NPC_SELL_FACTOR = 0.2,
+	NPC_BUY_FACTOR = 1.0,
+	DEFAULT_BUY_ITEM_EXPONENT = 2.25,
+	AUTO_TRADE_MIN_MINOR_SELL_VALUE = 1000,
+	ROLE_NONE = "__none",
+	TRADE_BUY_SELL_PATH = "items\\trade\\gulag_job_trade_buy_sell.ltx",
+	AMMO_BUY_MIN = 3,
+}
+M.TRADE_EVENT_BUFFER_MAX = 50
+M.TRADE_ROUTE_VALUE_WEIGHT_STEP = 1500
+M.TRADE_ROUTE_MAX_VALUE_BONUS = 180
+M.trade_release_watch = {}
+M.trade_release_watch_next_tg = 0
+
+local no_trade_comm = {
+	zombied = true,
+	army = true,
+	monolith = true,
+	greh = true,
+	isg = true,
+}
+
+local trade_ini = nil
+local trade_buy_sell_cache = nil
+local original_npc_has_items_to_sell = nil
+local original_trade_job_sell_items = nil
+local original_trade_job_give_id = nil
+local patched_condition = false
+local patched_effect = false
+local registered_callbacks = false
+M.trade_event_buffer = {}
+local JOB_ROLE_CACHE = {}
+local SMART_TRADE_PROVIDER_CACHE = {}
+local SMART_TRADE_CUSTOMER_CACHE = {}
+local SMART_TRADE_QUEUE = {}
+local trade_path = {}
+trade_path.session_banned_npcs = {}
+trade_path.offline_profile_cache = {}
+trade_path.offline_profile_cleanup_at = 0
+
+local function cfg_mod()
+	local cfg = rawget(_G, "zhopa2_cfg")
+	if not cfg and require then
+		pcall(require, "zhopa2_cfg")
+		cfg = rawget(_G, "zhopa2_cfg")
+	end
+	return cfg
+end
+
+function M.perception_mod()
+	local p = rawget(_G, "zhopa2_perception")
+	if not p and require then
+		pcall(require, "zhopa2_perception")
+		p = rawget(_G, "zhopa2_perception")
+	end
+	return p
+end
+
+local function runtime_mod()
+	local rt = rawget(_G, "zhopa2_runtime_patches")
+	if not rt and require then
+		pcall(require, "zhopa2_runtime_patches")
+		rt = rawget(_G, "zhopa2_runtime_patches")
+	end
+	return rt
+end
+
+local function memory_mod()
+	local mem = rawget(_G, "zhopa2_memory")
+	if not mem and require then
+		pcall(require, "zhopa2_memory")
+		mem = rawget(_G, "zhopa2_memory")
+	end
+	return mem
+end
+
+local function runtime_ready(reason)
+	local rt = runtime_mod()
+	if rt and type(rt.runtime_ready) == "function" then
+		return rt.runtime_ready(reason) == true
+	end
+	local fn = rawget(_G, "zhopa2_runtime_ready")
+	if type(fn) == "function" then
+		return fn(reason) == true
+	end
+	return false
+end
+
+local function runtime_not_ready_reason()
+	local rt = runtime_mod()
+	if rt and type(rt.runtime_not_ready_reason) == "function" then
+		return rt.runtime_not_ready_reason() or "runtime_not_ready"
+	end
+	local fn = rawget(_G, "zhopa2_runtime_not_ready_reason")
+	if type(fn) == "function" then
+		return fn() or "runtime_not_ready"
+	end
+	return "runtime_not_ready"
+end
+
+local function cfg_bool(key, default)
+	local cfg = cfg_mod()
+	if cfg and type(cfg.get_bool) == "function" then
+		return cfg.get_bool(key, default) == true
+	end
+	return default == true
+end
+
+function trade_path.trade_smart_blacklisted(smart)
+	local cfg = cfg_mod()
+	if not (cfg and type(cfg.is_trade_smart_blacklisted) == "function") then
+		return false
+	end
+	local level_name = nil
+	local p = M.perception_mod()
+	if p and type(p.obj_level) == "function" then
+		local ok, value = pcall(p.obj_level, smart)
+		level_name = ok and value or nil
+	end
+	local ok, blocked = pcall(cfg.is_trade_smart_blacklisted, smart, level_name)
+	return ok and blocked == true
+end
+
+function trade_path.trade_provider_section_blacklisted(section)
+	local cfg = cfg_mod()
+	if not (cfg and type(cfg.is_trade_provider_section_blacklisted) == "function") then
+		return false
+	end
+	local ok, blocked = pcall(cfg.is_trade_provider_section_blacklisted, section)
+	return ok and blocked == true
+end
+
+local function debug_print_enabled()
+	return cfg_bool("debug_hud_enabled", false) == true
+end
+
+function M.enabled()
+	return cfg_bool("enabled", true) == true and cfg_bool("trade_enabled", true) == true
+end
+
+function M.squad_trade_allowed(squad)
+	if not squad then
+		return false
+	end
+	local faction = squad.player_id
+	local cfg = cfg_mod()
+	if cfg and type(cfg.get_faction_alias) == "function" then
+		local ok, alias = pcall(cfg.get_faction_alias, faction)
+		faction = ok and alias or faction
+	end
+	faction = tostring(faction or "")
+	if faction ~= "" and (no_trade_comm[faction] == true or string.find(faction, "monster", 1, true)) then
+		return false
+	end
+	return true
+end
+
+local function tg()
+	return time_global and time_global() or 0
+end
+
+local function ensure_trade_ini()
+	if trade_ini ~= nil then
+		return trade_ini
+	end
+	local ctor = rawget(_G, "ini_file")
+	if ctor == nil and ini_file ~= nil then
+		ctor = ini_file
+	end
+	if ctor == nil then
+		return nil
+	end
+	local ok, ini = pcall(function()
+		return ctor(C.TRADE_BUY_SELL_PATH)
+	end)
+	if ok and ini ~= nil then
+		trade_ini = ini
+	end
+	return trade_ini
+end
+
+local function clear_table(t)
+	if type(t) ~= "table" then
+		return
+	end
+	for k in pairs(t) do
+		t[k] = nil
+	end
+end
+
+local function slower(value)
+	return type(value) == "string" and string.lower(value) or nil
+end
+
+local function contains_plain(haystack, needle)
+	return type(haystack) == "string" and type(needle) == "string" and string.find(haystack, needle, 1, true) ~= nil
+end
+
+function M.emit_trade_event_text(text)
+	if type(printf) == "function" then
+		local ok = pcall(printf, "%s", text)
+		if ok then
+			return true
+		end
+	end
+	if type(log1) == "function" then
+		local ok = pcall(log1, text)
+		if ok then
+			return true
+		end
+	elseif type(Msg) == "function" then
+		local ok = pcall(Msg, text)
+		if ok then
+			return true
+		end
+	end
+	return false
+end
+
+function M.queue_trade_event(text)
+	if #M.trade_event_buffer >= M.TRADE_EVENT_BUFFER_MAX then
+		table.remove(M.trade_event_buffer, 1)
+	end
+	M.trade_event_buffer[#M.trade_event_buffer + 1] = text
+end
+
+function M.flush_trade_events()
+	local i = 1
+	while i <= #M.trade_event_buffer do
+		if M.emit_trade_event_text(M.trade_event_buffer[i]) then
+			table.remove(M.trade_event_buffer, i)
+		else
+			return false
+		end
+	end
+	return true
+end
+
+function M.print_trade_event(fmt, ...)
+	local text = tostring(fmt or "")
+	if select("#", ...) > 0 then
+		local ok_fmt, formatted = pcall(string.format, fmt, ...)
+		text = ok_fmt and tostring(formatted) or text
+	end
+	M.flush_trade_events()
+	if M.emit_trade_event_text(text) then
+		return
+	end
+	M.queue_trade_event(text)
+end
+
+local function print_trade_error(fmt, ...)
+	if type(printf) == "function" then
+		if not debug_print_enabled() then
+			return
+		end
+	else
+		return
+	end
+	pcall(printf, fmt, ...)
+end
+
+local function object_id(obj)
+	local type_ = type
+	if not obj then
+		return nil
+	end
+	if type_(obj) == "number" then
+		return obj
+	end
+	if type_(obj) ~= "table" and type_(obj) ~= "userdata" then
+		return nil
+	end
+	if obj.id ~= nil and type_(obj.id) ~= "function" then
+		return obj.id
+	end
+	if type_(obj.id) == "function" then
+		local ok, id = pcall(obj.id, obj)
+		if ok then
+			return id
+		end
+	end
+	return nil
+end
+
+local function object_section(obj)
+	if not obj then
+		return nil
+	end
+	if type(obj.section) == "function" then
+		local ok, section = pcall(obj.section, obj)
+		if ok and section then
+			return section
+		end
+	end
+	if type(obj.section_name) == "function" then
+		local ok, section = pcall(obj.section_name, obj)
+		if ok and section then
+			return section
+		end
+	end
+	return obj.section or obj.section_name
+end
+
+local function object_clsid(obj)
+	if not obj then
+		return nil
+	end
+	if type(obj.clsid) == "function" then
+		local ok, cls = pcall(obj.clsid, obj)
+		if ok then
+			return cls
+		end
+	end
+	if obj.clsid ~= nil and type(obj.clsid) ~= "function" then
+		return obj.clsid
+	end
+	return obj.m_tClassID or obj.cls
+end
+
+local function object_name(obj)
+	if not obj then
+		return "-"
+	end
+	if type(obj.character_name) == "function" then
+		local ok, value = pcall(obj.character_name, obj)
+		if ok and value then
+			return value
+		end
+	end
+	if type(obj.name) == "function" then
+		local ok, value = pcall(obj.name, obj)
+		if ok and value then
+			return value
+		end
+	end
+	return tostring(object_id(obj) or "-")
+end
+
+function M.is_squad_object(squad)
+	local squad_type = type(squad)
+	if squad_type ~= "table" and squad_type ~= "userdata" then
+		return false
+	end
+	local ok, squad_members = pcall(function() return squad.squad_members end)
+	return ok and type(squad_members) == "function"
+end
+
+local function online_object_by_id(id)
+	if not id then
+		return nil
+	end
+	local obj = db and db.storage and db.storage[id] and db.storage[id].object
+	if not obj and level and type(level.object_by_id) == "function" then
+		obj = level.object_by_id(id)
+	end
+	return obj
+end
+
+local function server_object_by_id(id)
+	if not (id and alife_object) then
+		return nil
+	end
+	local ok, obj = pcall(alife_object, id)
+	return ok and obj or nil
+end
+
+local function live_object(obj)
+	if not obj then
+		return nil
+	end
+	if type(obj.alive) == "function" then
+		local ok, alive = pcall(obj.alive, obj)
+		if not (ok and alive == true) then
+			return nil
+		end
+	end
+	return obj
+end
+
+local function read_ini_string_from(ini, section, key)
+	if not (ini and section and key and ini.r_string_ex) then
+		return nil
+	end
+	local ok_line, has_line = true, true
+	if ini.line_exist then
+		ok_line, has_line = pcall(ini.line_exist, ini, section, key)
+	end
+	if not (ok_line and has_line) then
+		return nil
+	end
+	local ok, value = pcall(ini.r_string_ex, ini, section, key)
+	if ok then
+		return value
+	end
+	return nil
+end
+
+local function read_job_ini_string(job_or_section, key, smart)
+	local type_ = type
+	local section = type_(job_or_section) == "table" and job_or_section.section or job_or_section
+	if type_(job_or_section) == "table" and type_(job_or_section[key]) == "string" then
+		return job_or_section[key]
+	end
+	local value = type_(job_or_section) == "table" and read_ini_string_from(job_or_section.ltx, section, key) or nil
+	if value ~= nil then
+		return value
+	end
+	if smart then
+		value = read_ini_string_from(smart.ltx, section, key)
+		if value ~= nil then
+			return value
+		end
+		value = read_ini_string_from(smart.ini, section, key)
+		if value ~= nil then
+			return value
+		end
+	end
+	return read_ini_string_from(ini_sys, section, key)
+end
+
+local function find_smart_job_by_section(smart, section)
+	local jobs = smart and smart.stalker_jobs or nil
+	if type(jobs) ~= "table" or type(section) ~= "string" then
+		return nil
+	end
+	for i = 1, #jobs do
+		local job = jobs[i]
+		if job and job.section == section then
+			return job
+		end
+	end
+	return nil
+end
+
+local function item_in_slots(npc, item_id)
+	if not (npc and item_id and type(npc.item_in_slot) == "function") then
+		return false
+	end
+	for i = 1, 12 do
+		local ok, slot = pcall(npc.item_in_slot, npc, i)
+		if ok and slot and object_id(slot) == item_id then
+			return true
+		end
+	end
+	return false
+end
+
+local function active_item(npc)
+	if not npc then
+		return nil
+	end
+	if type(npc.active_item) == "function" then
+		local ok, active = pcall(npc.active_item, npc)
+		if ok and active then
+			return active
+		end
+	end
+	return nil
+end
+
+local function best_weapon(npc)
+	if npc and type(npc.best_weapon) == "function" then
+		local ok, weapon = pcall(npc.best_weapon, npc)
+		if ok and weapon then
+			return weapon
+		end
+	end
+	return nil
+end
+
+local function active_item_id(npc)
+	return object_id(active_item(npc))
+end
+
+local function buy_sell_params(section)
+	local ini = ensure_trade_ini()
+	if not (ini and section and type(str_explode) == "function") then
+		return nil
+	end
+	local raw = nil
+
+	if trade_buy_sell_cache == nil then
+		trade_buy_sell_cache = {}
+		if utils_data and type(utils_data.collect_section) == "function" then
+			local ok_collect, collected = pcall(utils_data.collect_section, ini, "buy_sell", true)
+			if ok_collect and type(collected) == "table" then
+				for k in pairs(collected) do
+					trade_buy_sell_cache[k] = true
+				end
+			end
+		end
+	end
+
+	if trade_buy_sell_cache[section] == true then
+		local ok_raw, value = pcall(function()
+			return ini:r_string_ex("buy_sell", section)
+		end)
+		if ok_raw and value and value ~= "" then
+			raw = value
+		end
+	end
+
+	if not raw then
+		local trade_sections = { "buy_sell", "buy_sell_supplier" }
+		for i = 1, #trade_sections do
+			local trade_section = trade_sections[i]
+			local ok_line, has_line = pcall(function()
+				return ini:line_exist(trade_section, section)
+			end)
+			if ok_line and has_line then
+				local ok_raw, value = pcall(function()
+					return ini:r_string_ex(trade_section, section)
+				end)
+				if ok_raw and value and value ~= "" then
+					raw = value
+					break
+				end
+			end
+		end
+	end
+	if not raw then
+		return nil
+	end
+	return str_explode(raw, ",")
+end
+
+local function sys_string(section, key)
+	if not (ini_sys and section and key and ini_sys.r_string_ex) then
+		return nil
+	end
+	local ok, value = pcall(ini_sys.r_string_ex, ini_sys, section, key)
+	if ok then
+		return value
+	end
+	return nil
+end
+
+local function sys_float(section, key, default)
+	if not (ini_sys and section and key and ini_sys.r_float_ex) then
+		return default
+	end
+	local ok, value = pcall(ini_sys.r_float_ex, ini_sys, section, key)
+	if ok and value then
+		return value
+	end
+	return default
+end
+
+local function is_item_type(typ, section, obj)
+	if type(IsItem) ~= "function" then
+		return nil
+	end
+	local ok, value = pcall(IsItem, typ, section, obj)
+	if ok then
+		return value
+	end
+	return nil
+end
+
+local function object_is_weapon(item)
+	if type(IsWeapon) ~= "function" then
+		return false
+	end
+	local ok, value = pcall(IsWeapon, item)
+	return ok and value == true
+end
+
+local function object_is_outfit(item)
+	if type(IsOutfit) ~= "function" then
+		return false
+	end
+	local ok, value = pcall(IsOutfit, item)
+	return ok and value == true
+end
+
+local function object_is_headgear(item)
+	if type(IsHeadgear) ~= "function" then
+		return false
+	end
+	local ok, value = pcall(IsHeadgear, item)
+	return ok and value == true
+end
+
+local function item_kind(section)
+	return sys_string(section, "kind")
+end
+
+local function section_has_prefix(section, prefix)
+	return type(section) == "string" and string.sub(section, 1, #prefix) == prefix
+end
+
+local function section_contains(section, needle)
+	return type(section) == "string" and string.find(section, needle, 1, true) ~= nil
+end
+
+function M.npc_sell_price_multiplier()
+	local cfg = cfg_mod()
+	local value = C.NPC_SELL_FACTOR
+	if cfg and type(cfg.get_num) == "function" then
+		value = cfg.get_num("npc_sell_price_multiplier", C.NPC_SELL_FACTOR)
+	end
+	value = tonumber(value) or C.NPC_SELL_FACTOR
+	return math.max(0, math.min(10, value))
+end
+
+local function item_condition(item)
+	if item and type(item.condition) == "function" then
+		local ok, condition = pcall(item.condition, item)
+		if ok and condition then
+			if condition < 0 then
+				return 0
+			elseif condition > 1 then
+				return 1
+			end
+			return condition
+		end
+	end
+	if utils_stpk and type(utils_stpk.get_item_data) == "function" then
+		local ok_data, data = pcall(utils_stpk.get_item_data, item)
+		local condition = ok_data and data and tonumber(data.condition) or nil
+		if condition then
+			if condition < 0 then
+				return 0
+			elseif condition > 1 then
+				return 1
+			end
+			return condition
+		end
+	end
+	return 1
+end
+
+local function item_cost(item, section)
+	if item and type(item.cost) == "function" then
+		local ok, cost = pcall(item.cost, item)
+		if ok and cost then
+			return cost
+		end
+	end
+	if item and type(item.Cost) == "function" then
+		local ok, cost = pcall(item.Cost, item)
+		if ok and cost then
+			return cost
+		end
+	end
+	return sys_float(section, "cost", 30)
+end
+
+local function section_is_ammo(section)
+	return is_item_type("ammo", section) ~= nil or section_has_prefix(section, "ammo_")
+end
+
+local function section_is_degraded_ammo(section)
+	return section_contains(section, "_bad") or section_contains(section, "_verybad")
+end
+
+local function section_is_clean_buckshot(section)
+	return type(section) == "string"
+		and (section_contains(section, "_buck") or section_contains(section, "buckshot"))
+		and not section_contains(section, "_self")
+		and not section_is_degraded_ammo(section)
+end
+
+local function section_is_clean_fmj(section)
+	return type(section) == "string"
+		and section_contains(section, "_fmj")
+		and not section_is_degraded_ammo(section)
+end
+
+local function section_is_disfavored_fallback_ammo(section)
+	if type(section) ~= "string" or section_is_degraded_ammo(section) then
+		return true
+	end
+	return section_contains(section, "_ap")
+		or section_contains(section, "_ep")
+		or section_contains(section, "_hydro")
+		or section_contains(section, "_dart")
+		or section_contains(section, "_zhekan")
+		or section_contains(section, "_bull")
+		or section_contains(section, "_slug")
+		or section_contains(section, "_pbp")
+		or section_contains(section, "_pmm")
+end
+
+local function section_is_needed_ammo(section, needed_ammo)
+	return needed_ammo and needed_ammo[section] == true
+end
+
+local function ammo_candidate(section)
+	if type(section) == "string" then
+		return section
+	end
+	return nil
+end
+
+local function pick_buy_ammo(weapon_ammo)
+	local fallback = nil
+	if type(weapon_ammo) ~= "table" then
+		return nil
+	end
+	for k, v in pairs(weapon_ammo) do
+		local section = ammo_candidate(k) or ammo_candidate(v)
+		if section_is_clean_buckshot(section) then
+			return section
+		end
+	end
+	for k, v in pairs(weapon_ammo) do
+		local section = ammo_candidate(k) or ammo_candidate(v)
+		if section_is_clean_fmj(section) then
+			return section
+		end
+	end
+	for k, v in pairs(weapon_ammo) do
+		local section = ammo_candidate(k) or ammo_candidate(v)
+		if section and not section_is_disfavored_fallback_ammo(section) then
+			fallback = fallback or section
+		end
+	end
+	return fallback
+end
+
+local function preferred_ammo_for_weapon_section(weapon_section)
+	if not (type(weapon_section) == "string" and type(parse_list) == "function" and ini_sys) then
+		return nil
+	end
+	local ok, weapon_ammo = pcall(parse_list, ini_sys, weapon_section, "ammo_class", true)
+	if not (ok and type(weapon_ammo) == "table") then
+		return nil
+	end
+	return pick_buy_ammo(weapon_ammo)
+end
+
+local function needed_ammo_for_npc(npc)
+	if not (npc and type(parse_list) == "function" and ini_sys) then
+		return nil
+	end
+	local ammo = {}
+	local found = false
+	local checked = {}
+
+	local function add_weapon_ammo(weapon)
+		local weapon_id = object_id(weapon)
+		if not (weapon and weapon_id and not checked[weapon_id] and object_is_weapon(weapon)) then
+			return
+		end
+		checked[weapon_id] = true
+		local weapon_section = object_section(weapon)
+		if not weapon_section then
+			return
+		end
+		local section = preferred_ammo_for_weapon_section(weapon_section)
+		if section then
+			ammo[section] = true
+			found = true
+		end
+	end
+
+	add_weapon_ammo(active_item(npc))
+	add_weapon_ammo(best_weapon(npc))
+	if type(npc.item_in_slot) == "function" then
+		for i = 1, 12 do
+			local ok, slot = pcall(npc.item_in_slot, npc, i)
+			if ok and slot then
+				add_weapon_ammo(slot)
+			end
+		end
+	end
+	return found and ammo or nil
+end
+
+local function section_is_grenade(section)
+	return is_item_type("grenade_ammo", section) ~= nil
+		or section_has_prefix(section, "grenade_")
+		or section == "mine"
+		or section == "ied"
+		or section == "ied_rpg"
+end
+
+local function section_is_bandage(section)
+	return section == "bandage"
+end
+
+local function section_is_medkit(section)
+	return section_has_prefix(section, "medkit")
+end
+
+local function section_is_other_med(section)
+	if not section then
+		return false
+	end
+	if section_is_bandage(section) or section_is_medkit(section) then
+		return false
+	end
+	return section_has_prefix(section, "drug_")
+		or section_has_prefix(section, "antirad")
+		or section_has_prefix(section, "anti")
+		or section_has_prefix(section, "stimpack")
+		or section == "jgut"
+		or section == "yadylin"
+		or section == "analgetic"
+		or section == "survival_kit"
+		or section == "protein"
+		or section == "cocaine"
+		or section == "tetanus"
+		or section == "adrenalin"
+		or section == "salicidic_acid"
+		or section == "glucose"
+		or section == "glucose_s"
+		or section == "morphine"
+		or section == "rebirth"
+		or section == "akvatab"
+end
+
+local function section_is_food(section)
+	local kind = item_kind(section)
+	return kind == "i_food"
+		or kind == "i_mutant_cooked"
+		or (is_item_type("eatable", section) ~= nil and kind ~= "i_drink")
+end
+
+local function section_is_drink(section)
+	local kind = item_kind(section)
+	return kind == "i_drink"
+		or section_contains(section, "water")
+		or section_contains(section, "drink")
+		or section_contains(section, "vodka")
+		or section_contains(section, "beer")
+		or section_contains(section, "flask")
+end
+
+local function section_is_never_sell(section, item)
+	return is_item_type("quest", section, item) ~= nil
+		or is_item_type("money", section, item) ~= nil
+		or is_item_type("device", section, item) ~= nil
+		or is_item_type("map", section, item) ~= nil
+		or is_item_type("recipe", section, item) ~= nil
+		or is_item_type("letter", section, item) ~= nil
+		or is_item_type("anim", section, item) ~= nil
+		or is_item_type("release", section, item) ~= nil
+end
+
+local function section_is_upgrade(section)
+	return is_item_type("upgrade", section) ~= nil or section_has_prefix(section, "upgr_")
+end
+
+local function section_is_artifact(section)
+	return is_item_type("artefact", section) ~= nil or section_has_prefix(section, "af_")
+end
+
+local function section_is_mutant_part(section)
+	return is_item_type("part", section) ~= nil
+		or section_has_prefix(section, "mutant_part_")
+end
+
+local function trade_smart_for_npc(npc, params)
+	if params and params[1] and SIMBOARD and SIMBOARD.smarts_by_names then
+		return SIMBOARD.smarts_by_names[params[1]]
+	end
+	if xr_gulag and xr_gulag.get_npc_smart then
+		local ok, smart = pcall(xr_gulag.get_npc_smart, npc)
+		if ok then
+			return smart
+		end
+	end
+	return nil
+end
+
+local function trade_seller_for_npc(npc, params)
+	local npc_id = object_id(npc)
+	local smart = trade_smart_for_npc(npc, params)
+	local npc_info = smart and smart.npc_info and smart.npc_info[npc_id]
+	local st = npc_id and db and db.storage and db.storage[npc_id] or nil
+	local managed_seller_id = st and tonumber(st.zhopa2_trade_trader_id) or nil
+	local seller_id = nil
+	if managed_seller_id
+		and st.zhopa2_trade_squad_id
+		and tonumber(st.zhopa2_trade_force_until or 0) > tg()
+	then
+		seller_id = managed_seller_id
+	end
+	if not seller_id then
+		seller_id = npc_info and npc_info.job and npc_info.job.seller_id
+	end
+	if not seller_id then
+		seller_id = managed_seller_id
+	end
+	if not seller_id then
+		return nil, smart
+	end
+	local seller = db and db.storage and db.storage[seller_id] and db.storage[seller_id].object
+	if not seller and level and level.object_by_id then
+		seller = level.object_by_id(seller_id)
+	end
+	return live_object(seller), smart
+end
+
+local function add_plan_item(plan, item, section, reason)
+	plan[#plan + 1] = {
+		item = item,
+		section = section,
+		reason = reason,
+	}
+end
+
+local function mark_surplus(entries, keep_count, plan, reason)
+	local keep = tonumber(keep_count) or 0
+	local sell_count = #entries - keep
+	if sell_count <= 0 then
+		return
+	end
+	for i = 1, sell_count do
+		local entry = entries[i]
+		add_plan_item(plan, entry.item, entry.section, reason)
+	end
+end
+
+local function classify_provider_job_role(job_or_section, smart)
+	local section = type(job_or_section) == "table" and job_or_section.section or job_or_section
+	if type(section) ~= "string" or section == "" then
+		return nil
+	end
+
+	local cached = JOB_ROLE_CACHE[section]
+	if cached ~= nil then
+		return cached ~= C.ROLE_NONE and cached or nil
+	end
+
+	local sec_l = slower(section) or ""
+	if contains_plain(sec_l, "beh_trade_job")
+		or contains_plain(sec_l, "beh_tech_job")
+		or contains_plain(sec_l, "beh_medic_job")
+		or contains_plain(sec_l, "trade_slot")
+		or contains_plain(sec_l, "tech_slot")
+	then
+		JOB_ROLE_CACHE[section] = C.ROLE_NONE
+		return nil
+	end
+
+	local suitable = read_job_ini_string(job_or_section, "suitable", smart)
+	local suitable_l = slower(suitable)
+	if contains_plain(suitable_l, "npc_has_items_to_sell") or contains_plain(suitable_l, "npc_has_tech_items") then
+		JOB_ROLE_CACHE[section] = C.ROLE_NONE
+		return nil
+	end
+
+	local role = nil
+	if contains_plain(suitable_l, "check_npc_trader") then
+		role = "trader"
+	elseif contains_plain(suitable_l, "check_npc_barman") then
+		role = "barman"
+	elseif contains_plain(suitable_l, "check_npc_medic") then
+		role = "medic"
+	elseif contains_plain(suitable_l, "check_npc_mechanic") then
+		role = "tech"
+	end
+
+	if not role then
+		local level_spot = slower(read_job_ini_string(job_or_section, "level_spot", smart))
+		if level_spot == "trader" then
+			role = "trader"
+		elseif level_spot == "barman" then
+			role = "barman"
+		elseif level_spot == "medic" then
+			role = "medic"
+		elseif level_spot == "mechanic" then
+			role = "tech"
+		end
+	end
+
+	if not role and type(read_job_ini_string(job_or_section, "trade", smart)) == "string" then
+		if contains_plain(sec_l, "mechanic") or contains_plain(sec_l, "_tech") then
+			role = "tech"
+		elseif contains_plain(sec_l, "medic") then
+			role = "medic"
+		elseif contains_plain(sec_l, "barman") then
+			role = "barman"
+		elseif contains_plain(sec_l, "trader") then
+			role = "trader"
+		end
+	end
+
+	if not role then
+		if contains_plain(sec_l, "mechanic") or contains_plain(sec_l, "_tech") then
+			role = "tech"
+		elseif contains_plain(sec_l, "medic") then
+			role = "medic"
+		elseif contains_plain(sec_l, "barman") then
+			role = "barman"
+		elseif contains_plain(sec_l, "trader") then
+			role = "trader"
+		end
+	end
+
+	JOB_ROLE_CACHE[section] = role or C.ROLE_NONE
+	return role
+end
+
+function trade_path.role_is_auto_trade_provider(role)
+	return role == "trader" or role == "barman"
+end
+
+function trade_path.job_is_auto_trade_provider(job_or_section, smart)
+	local section = type(job_or_section) == "table" and job_or_section.section or job_or_section
+	if trade_path.trade_provider_section_blacklisted(section) then
+		return false
+	end
+	return trade_path.role_is_auto_trade_provider(classify_provider_job_role(job_or_section, smart))
+end
+
+local function resolve_npc_provider_role(npc, smart, npc_id)
+	local id = tonumber(npc_id) or object_id(npc)
+	if not (id and smart) then
+		return nil
+	end
+
+	local info = smart.npc_info and smart.npc_info[id] or nil
+	local role = classify_provider_job_role(info and info.job or nil, smart)
+	if role then
+		return role
+	end
+
+	local by_job = smart.npc_by_job_section
+	if type(by_job) ~= "table" then
+		return nil
+	end
+
+	for job_sec, owner_id in pairs(by_job) do
+		if tonumber(owner_id) == id then
+			role = classify_provider_job_role(find_smart_job_by_section(smart, job_sec) or job_sec, smart)
+			if role then
+				return role
+			end
+		end
+	end
+	return nil
+end
+
+function M.provider_role(npc, smart)
+	return resolve_npc_provider_role(npc, smart, object_id(npc))
+end
+
+local function npc_service_candidate_blocked(npc, npc_id, params)
+	local sfind = string.find
+	if not npc then
+		return true
+	end
+	local community = type(npc.character_community) == "function" and npc:character_community() or nil
+	if community == "trader" then
+		return true
+	end
+	local section = object_section(npc)
+	if type(section) == "string" then
+		local s = string.lower(section)
+		if sfind(s, "_trader", 1, true)
+			or sfind(s, "_barman", 1, true)
+			or sfind(s, "_mechanic", 1, true)
+			or sfind(s, "_medic", 1, true)
+			or sfind(s, "_guide", 1, true)
+		then
+			return true
+		end
+	end
+	local smart = params and params[1] and SIMBOARD and SIMBOARD.smarts_by_names and SIMBOARD.smarts_by_names[params[1]] or nil
+	return resolve_npc_provider_role(npc, smart, npc_id) ~= nil
+end
+
+local function npc_is_trade_provider(npc, smart)
+	local npc_id = object_id(npc)
+	if not (npc and npc_id) then
+		return false
+	end
+	if type(npc.alive) == "function" then
+		local ok, alive = pcall(npc.alive, npc)
+		if not (ok and alive == true) then
+			return false
+		end
+	end
+	local section = object_section(npc)
+	if trade_path.trade_provider_section_blacklisted(section) then
+		return false
+	end
+	local role = resolve_npc_provider_role(npc, smart, npc_id)
+	if role then
+		return trade_path.role_is_auto_trade_provider(role)
+	end
+	if type(section) == "string" then
+		local s = string.lower(section)
+		if string.find(s, "_medic", 1, true)
+			or string.find(s, "medic", 1, true)
+			or string.find(s, "_mechanic", 1, true)
+			or string.find(s, "_tech", 1, true)
+			or string.find(s, "_guide", 1, true)
+			or string.find(s, "_leader", 1, true)
+		then
+			return false
+		end
+		if string.find(s, "_trader", 1, true) or string.find(s, "_barman", 1, true) then
+			return true
+		end
+	end
+	return false
+end
+
+function M.build_online_sell_plan(npc, params)
+	local plan = {}
+	if M.enabled() ~= true then
+		return plan
+	end
+	if not (npc and type(npc.alive) == "function" and npc:alive()) then
+		return plan
+	end
+
+	local npc_id = object_id(npc)
+	local community = type(npc.character_community) == "function" and npc:character_community() or nil
+	if no_trade_comm[community] or npc_service_candidate_blocked(npc, npc_id, params) then
+		return plan
+	end
+	if type(npc.iterate_inventory) ~= "function" then
+		return plan
+	end
+
+	local active_id = active_item_id(npc)
+	local needed_ammo = needed_ammo_for_npc(npc)
+	local bandages = {}
+	local medkits = {}
+	local other_meds_by_section = {}
+	local grenades = {}
+	local foods = {}
+	local drinks = {}
+	local generic_by_section = {}
+
+	local function add_generic(item, section, params)
+		local bucket = generic_by_section[section]
+		if not bucket then
+			bucket = {
+				entries = {},
+				sell_count = tonumber(params and params[1]) or 0,
+				trigger_count = tonumber(params and params[2]) or 1,
+			}
+			generic_by_section[section] = bucket
+		end
+		bucket.entries[#bucket.entries + 1] = {
+			item = item,
+			section = section,
+		}
+	end
+
+	local function scan(_, item)
+		local item_id = object_id(item)
+		if not item_id then
+			return
+		end
+		if active_id and item_id == active_id then
+			return
+		end
+		if item_in_slots(npc, item_id) then
+			return
+		end
+
+		local section = object_section(item)
+		if not section or section_is_never_sell(section, item) then
+			return
+		end
+
+		if section_is_ammo(section) then
+			if not section_is_needed_ammo(section, needed_ammo) then
+				add_plan_item(plan, item, section, "ammo_not_for_weapon")
+			end
+			return
+		end
+
+		if object_is_weapon(item) or object_is_outfit(item) or object_is_headgear(item) then
+			add_plan_item(plan, item, section, "unequipped_gear")
+			return
+		end
+
+		if section_is_upgrade(section) then
+			return
+		end
+
+		if section_is_bandage(section) then
+			bandages[#bandages + 1] = { item = item, section = section }
+			return
+		end
+
+		if section_is_medkit(section) then
+			medkits[#medkits + 1] = { item = item, section = section }
+			return
+		end
+
+		if section_is_other_med(section) then
+			local bucket = other_meds_by_section[section] or {}
+			bucket[#bucket + 1] = { item = item, section = section }
+			other_meds_by_section[section] = bucket
+			return
+		end
+
+		if section_is_grenade(section) then
+			grenades[#grenades + 1] = { item = item, section = section }
+			return
+		end
+
+		if section_is_drink(section) then
+			drinks[#drinks + 1] = { item = item, section = section }
+			return
+		end
+
+		if section_is_food(section) then
+			foods[#foods + 1] = { item = item, section = section }
+			return
+		end
+
+		if section_is_artifact(section) or section_is_mutant_part(section) then
+			add_plan_item(plan, item, section, "valuable")
+			return
+		end
+
+		local bs = buy_sell_params(section)
+		if bs then
+			add_generic(item, section, bs)
+		end
+	end
+
+	local ok = pcall(npc.iterate_inventory, npc, scan, npc)
+	if not ok then
+		return plan
+	end
+
+	mark_surplus(bandages, C.MED_BANDAGE_KEEP, plan, "bandage_surplus")
+	mark_surplus(medkits, C.MEDKIT_KEEP, plan, "medkit_surplus")
+	for _, entries in pairs(other_meds_by_section) do
+		mark_surplus(entries, C.OTHER_MED_KEEP, plan, "other_med_surplus")
+	end
+	mark_surplus(grenades, C.GRENADE_KEEP, plan, "grenade_surplus")
+	mark_surplus(foods, C.FOOD_KEEP, plan, "food_surplus")
+	mark_surplus(drinks, C.DRINK_KEEP, plan, "drink_surplus")
+
+	for section, bucket in pairs(generic_by_section) do
+		if #bucket.entries >= bucket.trigger_count and bucket.sell_count > 0 then
+			local sell_count = math.min(bucket.sell_count, #bucket.entries)
+			for i = 1, sell_count do
+				local entry = bucket.entries[i]
+				add_plan_item(plan, entry.item, section, "trade_table")
+			end
+		end
+	end
+
+	return plan
+end
+
+function M.online_trade_sell_item_price(npc, trader, item)
+	local section = object_section(item)
+	local base_cost = item_cost(item, section)
+	local condition = item_condition(item)
+	local condition_factor = math.pow((condition * 0.9) + 0.1, C.DEFAULT_BUY_ITEM_EXPONENT)
+	local price = math.floor((base_cost or 30) * condition_factor * M.npc_sell_price_multiplier())
+	if price < 1 and (base_cost or 0) > 0 then
+		price = 1
+	end
+	return price
+end
+
+function M.online_trade_buy_item_price(npc, trader, item)
+	local section = object_section(item)
+	local base_cost = item_cost(item, section)
+	local condition = item_condition(item)
+	local condition_factor = math.pow((condition * 0.9) + 0.1, C.DEFAULT_BUY_ITEM_EXPONENT)
+	local price = math.floor((base_cost or 30) * condition_factor * C.NPC_BUY_FACTOR)
+	if price < 1 and (base_cost or 0) > 0 then
+		price = 1
+	end
+	return price
+end
+
+function M.online_trade_buy_section_price(section)
+	local base_cost = sys_float(section, "cost", 30)
+	local price = math.floor((base_cost or 30) * C.NPC_BUY_FACTOR)
+	if price < 1 and (base_cost or 0) > 0 then
+		price = 1
+	end
+	return price
+end
+
+local function sell_plan_should_start_auto_trade(npc, plan)
+	if not plan or #plan == 0 then
+		return false
+	end
+
+	local minor_value = 0
+	for i = 1, #plan do
+		local entry = plan[i]
+		local reason = entry and entry.reason
+		if reason ~= "food_surplus" and reason ~= "drink_surplus" then
+			return true
+		end
+		minor_value = minor_value + M.online_trade_sell_item_price(npc, nil, entry and entry.item)
+	end
+	return minor_value >= C.AUTO_TRADE_MIN_MINOR_SELL_VALUE
+end
+
+local function inventory_section_counts(npc)
+	local counts = {}
+	if not (npc and type(npc.iterate_inventory) == "function") then
+		return counts
+	end
+	local function scan(_, item)
+		local section = object_section(item)
+		if section then
+			counts[section] = (counts[section] or 0) + 1
+		end
+	end
+	pcall(npc.iterate_inventory, npc, scan, npc)
+	return counts
+end
+
+local function npc_money(npc)
+	if npc and type(npc.money) == "function" then
+		local ok, money = pcall(npc.money, npc)
+		if ok and money then
+			return money
+		end
+	end
+	return 0
+end
+
+local function transfer_money_between(from_npc, to_npc, amount)
+	amount = math.floor(tonumber(amount) or 0)
+	if amount <= 0 then
+		return false
+	end
+	if not (from_npc and to_npc and object_id(from_npc) ~= object_id(to_npc) and type(from_npc.transfer_money) == "function") then
+		return false
+	end
+	local ok = pcall(from_npc.transfer_money, from_npc, amount, to_npc)
+	return ok == true
+end
+
+local function transfer_all_money_to(from_npc, to_npc)
+	local amount = math.floor(tonumber(npc_money(from_npc)) or 0)
+	if amount <= 0 then
+		return 0
+	end
+	return transfer_money_between(from_npc, to_npc, amount) and amount or 0
+end
+
+local function transfer_trade_money(npc, trader, price)
+	if not (npc and trader and price and price > 0 and type(npc.transfer_money) == "function") then
+		return false
+	end
+	local ok = pcall(npc.transfer_money, npc, price, trader)
+	return ok
+end
+
+local function spawn_trade_item_to_npc(npc, section)
+	if not (npc and section and type(alife_create_item) == "function") then
+		return false
+	end
+	local ok, item = pcall(alife_create_item, section, npc)
+	return ok and item ~= nil
+end
+
+local function dynamic_news_nearby_activity_enabled()
+	if not (ui_options and type(ui_options.get) == "function") then
+		return false
+	end
+	local ok, enabled = pcall(ui_options.get, "alife/dynamic_news/nearby_activity_news")
+	return ok and enabled == true
+end
+
+local function emit_bought_items_news(npc, trader, bought_items)
+	if not (npc and trader and type(bought_items) == "table" and #bought_items > 0) then
+		return false
+	end
+	if not (dynamic_news_manager and type(dynamic_news_manager.get_dynamic_news) == "function") then
+		return false
+	end
+	if not dynamic_news_nearby_activity_enabled() then
+		return false
+	end
+	local ok_news, news = pcall(dynamic_news_manager.get_dynamic_news)
+	if not (ok_news and news and type(news.BoughtItems) == "function") then
+		return false
+	end
+	local ok = pcall(news.BoughtItems, news, npc, trader, bought_items)
+	return ok == true
+end
+
+local function buy_missing_section(npc, trader, section, target_count, counts, payer, bought_items)
+	payer = payer or npc
+	local have = counts[section] or 0
+	local target = tonumber(target_count) or 0
+	local bought = false
+	while have < target do
+		local price = M.online_trade_buy_section_price(section)
+		if npc_money(payer) < price then
+			break
+		end
+		if not transfer_trade_money(payer, trader, price) then
+			break
+		end
+		if not spawn_trade_item_to_npc(npc, section) then
+			break
+		end
+		have = have + 1
+		counts[section] = have
+		if bought_items then
+			bought_items[#bought_items + 1] = section
+		end
+		bought = true
+		M.print_trade_event("- NPC Trade | %s bought [%s] from %s for %s RU", object_name(npc), section, object_name(trader), price)
+	end
+	return bought
+end
+
+local function ammo_buy_target(bs)
+	local target = bs and tonumber(bs[3]) or nil
+	if target and target > 0 and target < C.AMMO_BUY_MIN then
+		return C.AMMO_BUY_MIN
+	end
+	return target
+end
+
+function M.execute_online_buy(npc, trader, opts)
+	if M.enabled() ~= true then
+		return false
+	end
+	if not trader then
+		return false
+	end
+	opts = opts or {}
+	local payer = opts.payer_npc or npc
+
+	local counts = inventory_section_counts(npc)
+	local bought_any = false
+	local bought_items = {}
+	local needed_ammo = needed_ammo_for_npc(npc)
+	if needed_ammo then
+		for section in pairs(needed_ammo) do
+			local bs = buy_sell_params(section)
+			local target = ammo_buy_target(bs)
+			if target and target > 0 then
+				local bought = buy_missing_section(npc, trader, section, target, counts, payer, bought_items)
+				bought_any = bought or bought_any
+			end
+		end
+	end
+
+	bought_any = buy_missing_section(npc, trader, "bandage", C.MED_BANDAGE_KEEP, counts, payer, bought_items) or bought_any
+	bought_any = buy_missing_section(npc, trader, "medkit", C.MEDKIT_KEEP, counts, payer, bought_items) or bought_any
+	emit_bought_items_news(npc, trader, bought_items)
+	return bought_any
+end
+
+local function build_online_buy_needs(npc, counts)
+	local needs = {}
+	counts = counts or inventory_section_counts(npc)
+	local function add_need(section, target)
+		target = tonumber(target) or 0
+		local have = counts[section] or 0
+		if section and target > have then
+			needs[#needs + 1] = { section = section, target = target, missing = target - have }
+		end
+	end
+
+	local needed_ammo = needed_ammo_for_npc(npc)
+	if needed_ammo then
+		for section in pairs(needed_ammo) do
+			local bs = buy_sell_params(section)
+			add_need(section, ammo_buy_target(bs))
+		end
+	end
+	add_need("bandage", C.MED_BANDAGE_KEEP)
+	add_need("medkit", C.MEDKIT_KEEP)
+	return needs
+end
+
+local function offline_round_money(amount)
+	amount = math.floor(tonumber(amount) or 0)
+	return amount > 0 and math.floor(amount / 10) * 10 or 0
+end
+
+local function virtual_money(squad)
+	local mem = memory_mod()
+	if mem and type(mem.virtual_money) == "function" then
+		return math.max(0, tonumber(mem.virtual_money(squad)) or 0)
+	end
+	return math.max(0, tonumber(squad and squad.zhopa2_virtual_money) or 0)
+end
+
+local function add_virtual_money(squad, amount, reason)
+	amount = offline_round_money(amount)
+	if amount <= 0 then
+		return true
+	end
+	local mem = memory_mod()
+	if mem and type(mem.add_virtual_money) == "function" then
+		return mem.add_virtual_money(squad, amount, reason or "virtual_money") == true
+	end
+	if not squad then
+		return false
+	end
+	squad.zhopa2_virtual_money = virtual_money(squad) + amount
+	squad.zhopa2_last_result = reason or "virtual_money"
+	return true
+end
+
+local function take_virtual_money(squad, amount, reason)
+	amount = offline_round_money(amount)
+	if amount <= 0 then
+		return true, 0
+	end
+	local mem = memory_mod()
+	if mem and type(mem.take_virtual_money) == "function" then
+		return mem.take_virtual_money(squad, amount, reason or "virtual_money_spent")
+	end
+	if not squad or virtual_money(squad) < amount then
+		return false, 0
+	end
+	squad.zhopa2_virtual_money = virtual_money(squad) - amount
+	squad.zhopa2_last_result = reason or "virtual_money_spent"
+	return true, amount
+end
+
+local function offline_trade_item_price(item)
+	local section = object_section(item)
+	local base_cost = item_cost(item, section)
+	local condition = item_condition(item)
+	local condition_factor = math.pow((condition * 0.9) + 0.1, C.DEFAULT_BUY_ITEM_EXPONENT)
+	return offline_round_money((base_cost or 30) * condition_factor * M.npc_sell_price_multiplier())
+end
+
+local function offline_buy_section_price(section)
+	return offline_round_money(M.online_trade_buy_section_price(section))
+end
+
+local function offline_collect_members(squad)
+	local members = {}
+	if not M.is_squad_object(squad) then
+		return members
+	end
+	pcall(function()
+		for member in squad:squad_members() do
+			local id = object_id(member)
+			local se_member = id and server_object_by_id(id) or member
+			local community = se_member and se_member.community
+			if type(community) == "function" then
+				local ok_comm, value = pcall(community, se_member)
+				community = ok_comm and value or nil
+			end
+			local profile = se_member and se_member.profile_name
+			if type(profile) == "function" then
+				local ok_profile, value = pcall(profile, se_member)
+				profile = ok_profile and value or nil
+			end
+			if se_member and object_id(se_member) and profile and not no_trade_comm[community] then
+				members[#members + 1] = se_member
+			end
+		end
+	end)
+	return members
+end
+
+local function offline_member_children(member)
+	local out = {}
+	local sim = alife and alife() or nil
+	if not (member and sim and type(sim.get_children) == "function") then
+		return out
+	end
+	pcall(function()
+		for id in sim:get_children(member) do
+			local item = server_object_by_id(id)
+			if item then
+				out[#out + 1] = item
+			end
+		end
+	end)
+	return out
+end
+
+local function offline_collect_wallet(squad)
+	return { total = virtual_money(squad) }
+end
+
+local function virtual_loot_raw_value(squad)
+	local mem = memory_mod()
+	if mem and type(mem.virtual_loot_value) == "function" then
+		return math.max(0, tonumber(mem.virtual_loot_value(squad)) or 0)
+	end
+	return math.max(0, tonumber(squad and squad.zhopa2_virtual_loot_value) or 0)
+end
+
+local function virtual_loot_count(squad)
+	local mem = memory_mod()
+	if mem and type(mem.virtual_loot_count) == "function" then
+		return math.max(0, tonumber(mem.virtual_loot_count(squad)) or 0)
+	end
+	return math.max(0, tonumber(squad and squad.zhopa2_virtual_loot_count) or 0)
+end
+
+local function virtual_loot_sell_price(squad)
+	return offline_round_money(virtual_loot_raw_value(squad) * M.npc_sell_price_multiplier())
+end
+
+local function virtual_loot_detail(squad)
+	local mem = memory_mod()
+	local entries = mem and type(mem.virtual_loot_entries) == "function" and mem.virtual_loot_entries(squad) or nil
+	if not (entries and #entries > 0) then
+		return "virtual_cargo"
+	end
+	local out = {}
+	local limit = math.min(#entries, 4)
+	for i = 1, limit do
+		local entry = entries[i]
+		out[#out + 1] = tostring(entry.section or "?") .. "x" .. tostring(entry.count or 0)
+	end
+	if #entries > limit then
+		out[#out + 1] = "..."
+	end
+	return table.concat(out, ",")
+end
+
+local function clear_virtual_loot(squad, reason)
+	local mem = memory_mod()
+	if mem and type(mem.clear_virtual_loot) == "function" then
+		return mem.clear_virtual_loot(squad, reason) == true
+	end
+	if not squad then
+		return false
+	end
+	squad.zhopa2_virtual_loot_count = 0
+	squad.zhopa2_virtual_loot_value = 0
+	squad.zhopa2_virtual_loot_sections = nil
+	squad.zhopa2_last_result = reason or "virtual_loot_sold"
+	return true
+end
+
+local function give_online_trade_money(npc, amount)
+	amount = offline_round_money(amount)
+	if amount <= 0 then
+		return true
+	end
+	if not (npc and type(npc.give_money) == "function") then
+		return false
+	end
+	local ok = pcall(npc.give_money, npc, amount)
+	return ok == true
+end
+
+local function materialize_virtual_money_to_npc(squad, npc, reason)
+	local amount = offline_round_money(virtual_money(squad))
+	if amount <= 0 then
+		return false, 0
+	end
+	if not give_online_trade_money(npc, amount) then
+		print_trade_error("~ ZHOPA2 trade error | reason [virtual_money_give_failed] squad [%s:%s] npc [%s:%s] amount [%s]", object_name(squad), tostring(object_id(squad) or "-"), object_name(npc), tostring(object_id(npc) or "-"), tostring(amount))
+		return false, 0
+	end
+	take_virtual_money(squad, amount, reason or "virtual_money_online")
+	return true, amount
+end
+
+local function execute_virtual_squad_sale(squad, pay_to, trader, reason)
+	local raw_value = virtual_loot_raw_value(squad)
+	local count = virtual_loot_count(squad)
+	local price = virtual_loot_sell_price(squad)
+	if raw_value <= 0 or count <= 0 or price <= 0 then
+		return 0, 0
+	end
+
+	local paid = false
+	if trader then
+		paid = give_online_trade_money(pay_to, price)
+	else
+		paid = add_virtual_money(squad, price, reason or "virtual_loot_sold") == true
+	end
+	if not paid then
+		print_trade_error("~ ZHOPA2 trade error | reason [virtual_loot_payment_failed] squad [%s:%s] pay_to [%s:%s] price [%s]", object_name(squad), tostring(object_id(squad) or "-"), object_name(pay_to), tostring(object_id(pay_to) or "-"), tostring(price))
+		return 0, 0
+	end
+
+	local detail = virtual_loot_detail(squad)
+	clear_virtual_loot(squad, reason or "virtual_loot_sold")
+	M.print_trade_event(
+		"- NPC Trade | %s sold virtual cargo [%s] to %s for %s RU",
+		object_name(pay_to),
+		detail,
+		trader and object_name(trader) or "offline trader",
+		price
+	)
+	return count, price
+end
+
+local function section_is_weapon_entry(section, item)
+	local cls = object_clsid(item)
+	local ok_cls, is_weapon = false, false
+	if cls and IsWeapon then
+		ok_cls, is_weapon = pcall(IsWeapon, nil, cls)
+	end
+	return object_is_weapon(item) or (ok_cls and is_weapon == true) or sys_string(section, "ammo_class") ~= nil
+end
+
+local function section_is_outfit_entry(section, item)
+	local cls = object_clsid(item)
+	local ok_cls, is_outfit = false, false
+	if cls and IsOutfit then
+		ok_cls, is_outfit = pcall(IsOutfit, nil, cls)
+	end
+	return object_is_outfit(item)
+		or (ok_cls and is_outfit == true)
+		or item_kind(section) == "i_outfit"
+		or section_contains(section, "_outfit")
+end
+
+local function section_is_headgear_entry(section, item)
+	local cls = object_clsid(item)
+	local ok_cls, is_headgear = false, false
+	if cls and IsHeadgear then
+		ok_cls, is_headgear = pcall(IsHeadgear, nil, cls)
+	end
+	return object_is_headgear(item)
+		or (ok_cls and is_headgear == true)
+		or item_kind(section) == "i_helmet"
+		or section_contains(section, "helmet")
+		or section_contains(section, "helm")
+end
+
+local function offline_gear_score(item, section, ammo_counts)
+	local score = (item_cost(item, section) or 0) * item_condition(item)
+	local ammo = preferred_ammo_for_weapon_section(section)
+	if ammo and ammo_counts and tonumber(ammo_counts[ammo] or 0) > 0 then
+		score = score + 500
+	end
+	return score
+end
+
+local function offline_best_gear(member, children)
+	local gear = { keep_ids = {}, needed_ammo = {} }
+	local primary = {}
+	local secondary = {}
+	local outfits = {}
+	local headgear = {}
+	local ammo_counts = {}
+
+	for i = 1, children and #children or 0 do
+		local item = children[i]
+		local section = object_section(item)
+		if section_is_ammo(section) then
+			ammo_counts[section] = (ammo_counts[section] or 0) + 1
+		end
+	end
+
+	local function add_candidate(list, item, section)
+		list[#list + 1] = {
+			item = item,
+			section = section,
+			score = offline_gear_score(item, section, ammo_counts),
+		}
+	end
+
+	for i = 1, children and #children or 0 do
+		local item = children[i]
+		local section = object_section(item)
+		if section and not section_is_never_sell(section, item) then
+			if section_is_weapon_entry(section, item) then
+				local slot = tonumber(sys_float(section, "slot", 0)) or 0
+				if slot == 2 then
+					add_candidate(secondary, item, section)
+				else
+					add_candidate(primary, item, section)
+				end
+			elseif section_is_outfit_entry(section, item) then
+				add_candidate(outfits, item, section)
+			elseif section_is_headgear_entry(section, item) then
+				add_candidate(headgear, item, section)
+			end
+		end
+	end
+
+	local function keep_best(list)
+		if #list == 0 then
+			return nil
+		end
+		table.sort(list, function(a, b)
+			return (a.score or 0) > (b.score or 0)
+		end)
+		local best = list[1]
+		local id = object_id(best.item)
+		if id then
+			gear.keep_ids[id] = true
+		end
+		return best
+	end
+
+	local kept_primary = keep_best(primary)
+	local kept_secondary = keep_best(secondary)
+	if not kept_primary and not kept_secondary then
+		kept_primary = keep_best(primary)
+	end
+	keep_best(outfits)
+	keep_best(headgear)
+
+	local function add_ammo(entry)
+		local ammo = entry and preferred_ammo_for_weapon_section(entry.section)
+		if ammo then
+			gear.needed_ammo[ammo] = true
+		end
+	end
+	add_ammo(kept_primary)
+	add_ammo(kept_secondary)
+	return gear
+end
+
+local function offline_needed_ammo_for_gear(gear)
+	return gear and gear.needed_ammo or nil
+end
+
+local function offline_build_sell_plan(members)
+	local plan = {}
+	for i = 1, members and #members or 0 do
+		local member = members[i]
+		local children = offline_member_children(member)
+		local gear = offline_best_gear(member, children)
+		local needed_ammo = offline_needed_ammo_for_gear(gear)
+		local bandages = {}
+		local medkits = {}
+		local other_meds_by_section = {}
+		local grenades = {}
+		local foods = {}
+		local drinks = {}
+
+		local function add_member_plan(item, section, reason)
+			local entry = {
+				item = item,
+				section = section,
+				reason = reason,
+				member = member,
+			}
+			plan[#plan + 1] = entry
+		end
+
+		for n = 1, #children do
+			local item = children[n]
+			local item_id = object_id(item)
+			local section = object_section(item)
+			if item_id and section and not section_is_never_sell(section, item) and not gear.keep_ids[item_id] then
+				if section_is_ammo(section) then
+					if not section_is_needed_ammo(section, needed_ammo) then
+						add_member_plan(item, section, "ammo_not_for_weapon")
+					end
+				elseif section_is_weapon_entry(section, item) or section_is_outfit_entry(section, item) or section_is_headgear_entry(section, item) then
+					add_member_plan(item, section, "surplus_gear")
+				elseif section_is_upgrade(section) then
+					-- Upgrades are held for the later technician route.
+				elseif section_is_bandage(section) then
+					bandages[#bandages + 1] = { item = item, section = section }
+				elseif section_is_medkit(section) then
+					medkits[#medkits + 1] = { item = item, section = section }
+				elseif section_is_other_med(section) then
+					local bucket = other_meds_by_section[section] or {}
+					bucket[#bucket + 1] = { item = item, section = section }
+					other_meds_by_section[section] = bucket
+				elseif section_is_grenade(section) then
+					grenades[#grenades + 1] = { item = item, section = section }
+				elseif section_is_drink(section) then
+					drinks[#drinks + 1] = { item = item, section = section }
+				elseif section_is_food(section) then
+					foods[#foods + 1] = { item = item, section = section }
+				elseif section_is_artifact(section) or section_is_mutant_part(section) then
+					add_member_plan(item, section, "valuable")
+				elseif buy_sell_params(section) then
+					add_member_plan(item, section, "trade_table")
+				end
+			end
+		end
+
+		local before = #plan
+		mark_surplus(bandages, C.MED_BANDAGE_KEEP, plan, "bandage_surplus")
+		mark_surplus(medkits, C.MEDKIT_KEEP, plan, "medkit_surplus")
+		for _, entries in pairs(other_meds_by_section) do
+			mark_surplus(entries, C.OTHER_MED_KEEP, plan, "other_med_surplus")
+		end
+		mark_surplus(grenades, C.GRENADE_KEEP, plan, "grenade_surplus")
+		mark_surplus(foods, C.FOOD_KEEP, plan, "food_surplus")
+		mark_surplus(drinks, C.DRINK_KEEP, plan, "drink_surplus")
+		for n = before + 1, #plan do
+			plan[n].member = member
+		end
+	end
+	return plan
+end
+
+local function offline_sell_plan_should_start(plan)
+	if not plan or #plan == 0 then
+		return false
+	end
+	local minor_value = 0
+	for i = 1, #plan do
+		local entry = plan[i]
+		local reason = entry and entry.reason
+		if reason ~= "food_surplus" and reason ~= "drink_surplus" then
+			return true
+		end
+		minor_value = minor_value + offline_trade_item_price(entry and entry.item)
+	end
+	return minor_value >= C.AUTO_TRADE_MIN_MINOR_SELL_VALUE
+end
+
+local function offline_build_buy_needs(members)
+	local needs = {}
+	for i = 1, members and #members or 0 do
+		local member = members[i]
+		local children = offline_member_children(member)
+		local counts = {}
+		for n = 1, #children do
+			local section = object_section(children[n])
+			if section then
+				counts[section] = (counts[section] or 0) + 1
+			end
+		end
+		local gear = offline_best_gear(member, children)
+		local needed_ammo = offline_needed_ammo_for_gear(gear)
+		local function add_need(section, target)
+			target = tonumber(target) or 0
+			local have = counts[section] or 0
+			if section and target > have then
+				needs[#needs + 1] = { member = member, section = section, target = target, missing = target - have }
+			end
+		end
+		if needed_ammo then
+			for section in pairs(needed_ammo) do
+				local target = ammo_buy_target(buy_sell_params(section)) or C.AMMO_BUY_MIN
+				add_need(section, target)
+			end
+		end
+		add_need("bandage", C.MED_BANDAGE_KEEP)
+		add_need("medkit", C.MEDKIT_KEEP)
+	end
+	return needs
+end
+
+function trade_path.clear_offline_trade_profile_cache(squad)
+	local id = object_id(squad)
+	if id then
+		trade_path.offline_profile_cache[id] = nil
+	end
+end
+
+function trade_path.cleanup_offline_trade_profile_cache(now)
+	now = tonumber(now) or tg()
+	if now < trade_path.offline_profile_cleanup_at then
+		return
+	end
+	trade_path.offline_profile_cleanup_at = now + 5000
+	for squad_id, entry in pairs(trade_path.offline_profile_cache) do
+		if not entry or (tonumber(entry.expires) or 0) <= now then
+			trade_path.offline_profile_cache[squad_id] = nil
+		end
+	end
+end
+
+function trade_path.offline_sell_plan_value(plan)
+	local value = 0
+	for i = 1, plan and #plan or 0 do
+		value = value + offline_trade_item_price(plan[i] and plan[i].item)
+	end
+	return value
+end
+
+function trade_path.offline_needs_value(needs)
+	local value = 0
+	for i = 1, needs and #needs or 0 do
+		value = value + offline_buy_section_price(needs[i] and needs[i].section)
+	end
+	return value
+end
+
+function trade_path.offline_trade_profile_needs(profile)
+	if profile and not profile.needs then
+		profile.needs = offline_build_buy_needs(profile.members)
+	end
+	return profile and profile.needs or {}
+end
+
+function trade_path.offline_trade_profile_for_squad(squad, opts)
+	opts = opts or {}
+	local squad_id = object_id(squad)
+	local now = tg()
+	trade_path.cleanup_offline_trade_profile_cache(now)
+	if not opts.force and squad_id then
+		local cached = trade_path.offline_profile_cache[squad_id]
+		if cached and (tonumber(cached.expires) or 0) > now then
+			local profile = cached.profile
+			if opts.want_value == true and profile then
+				if profile.reason == "offline_sell" and (tonumber(profile.value) or 0) <= 0 then
+					profile.value = trade_path.offline_sell_plan_value(profile.plan)
+				elseif profile.reason == "offline_buy" then
+					trade_path.offline_trade_profile_needs(profile)
+					profile.value = math.min((profile.wallet and profile.wallet.total) or 0, trade_path.offline_needs_value(profile.needs))
+				end
+			end
+			return cached.profile
+		end
+	end
+
+	local profile = {
+		members = offline_collect_members(squad),
+		plan = nil,
+		wallet = nil,
+		needs = nil,
+		has_work = false,
+		reason = "offline_nothing_to_trade",
+		value = 0,
+	}
+	if #profile.members == 0 then
+		profile.reason = "no_offline_member"
+	elseif virtual_loot_sell_price(squad) > 0 then
+		profile.has_work = true
+		profile.reason = "offline_virtual_sell"
+		profile.value = virtual_loot_sell_price(squad)
+	else
+		profile.plan = offline_build_sell_plan(profile.members)
+		if offline_sell_plan_should_start(profile.plan) then
+			profile.has_work = true
+			profile.reason = "offline_sell"
+			if opts.want_value == true then
+				profile.value = trade_path.offline_sell_plan_value(profile.plan)
+			end
+		else
+			profile.wallet = offline_collect_wallet(squad)
+			if profile.wallet.total <= 0 then
+				profile.reason = "no_trade_budget"
+			else
+				profile.needs = offline_build_buy_needs(profile.members)
+				for i = 1, #profile.needs do
+					local price = offline_buy_section_price(profile.needs[i].section)
+					if price > 0 and profile.wallet.total >= price then
+						profile.has_work = true
+						profile.reason = "offline_buy"
+						profile.value = math.min(profile.wallet.total, opts.want_value == true and trade_path.offline_needs_value(profile.needs) or price)
+						break
+					end
+				end
+			end
+		end
+	end
+
+	if squad_id then
+		trade_path.offline_profile_cache[squad_id] = {
+			expires = now + C.OFFLINE_TRADE_PROFILE_CACHE_TTL_MS,
+			profile = profile,
+		}
+	end
+	return profile
+end
+
+local function offline_trade_detail_list(entries, field, max_count)
+	local out = {}
+	max_count = tonumber(max_count) or 4
+	for i = 1, math.min(entries and #entries or 0, max_count) do
+		local entry = entries[i]
+		local value = entry and entry[field] or nil
+		if value then
+			out[#out + 1] = tostring(value)
+		end
+	end
+	if entries and #entries > max_count then
+		out[#out + 1] = "..."
+	end
+	return #out > 0 and table.concat(out, ",") or "-"
+end
+
+local function set_offline_trade_detail(squad, result, members, plan, wallet, needs)
+	local tostr = tostring
+	if not (squad and debug_print_enabled()) then
+		return
+	end
+	local child_count = 0
+	for i = 1, members and #members or 0 do
+		child_count = child_count + #offline_member_children(members[i])
+	end
+	squad.zhopa2_trade_detail = string.format(
+		"offline result=%s members=%s children=%s sell=%s wallet=%s needs=%s sell_items=%s buy_items=%s",
+		tostr(result or "-"),
+		tostr(members and #members or 0),
+		tostr(child_count),
+		tostr(plan and #plan or 0),
+		tostr(wallet and wallet.total or 0),
+		tostr(needs and #needs or 0),
+		offline_trade_detail_list(plan, "section", 4),
+		offline_trade_detail_list(needs, "section", 4)
+	)
+end
+
+local function execute_offline_sell_plan(plan, squad)
+	local sold_count = 0
+	local sold_value = 0
+	for i = 1, plan and #plan or 0 do
+		local entry = plan[i]
+		local item = entry and entry.item
+		local item_id = object_id(item)
+		local section = entry and entry.section or object_section(item)
+		local price = offline_trade_item_price(item)
+		if item_id and section and price > 0 and type(alife_release_id) == "function" then
+			local released = pcall(alife_release_id, item_id)
+			if released then
+				local paid = add_virtual_money(squad, price, "offline_sell_payment")
+				if paid then
+					sold_count = sold_count + 1
+					sold_value = sold_value + price
+					M.print_trade_event("- NPC Trade | %s sold [%s] to offline trader for %s RU", object_name(entry.member), section, price)
+				else
+					print_trade_error("~ ZHOPA2 trade error | reason [offline_sell_payment_failed] member [%s:%s] section [%s] price [%s]", object_name(entry.member), tostring(object_id(entry.member) or "-"), tostring(section), tostring(price))
+				end
+			else
+				print_trade_error("~ ZHOPA2 trade error | reason [offline_sell_release_failed] item [%s] section [%s]", tostring(item_id), tostring(section))
+			end
+		end
+	end
+	return sold_count, sold_value
+end
+
+local function execute_offline_buy_needs(squad, members, needs)
+	local bought_count = 0
+	local bought_value = 0
+	for i = 1, needs and #needs or 0 do
+		local need = needs[i]
+		local member = need.member
+		local section = need.section
+		local missing = tonumber(need.missing) or 0
+		for _ = 1, missing do
+			local price = offline_buy_section_price(section)
+			if price <= 0 then
+				break
+			end
+			local wallet = offline_collect_wallet(squad)
+			if wallet.total < price then
+				break
+			end
+			local paid = take_virtual_money(squad, price, "offline_buy_payment")
+			if not paid then
+				break
+			end
+			local ok_create, created = false, nil
+			if type(alife_create_item) == "function" then
+				ok_create, created = pcall(alife_create_item, section, member)
+			end
+			if not (ok_create and created ~= nil) then
+				add_virtual_money(squad, price, "offline_buy_refund")
+				print_trade_error("~ ZHOPA2 trade error | reason [offline_buy_spawn_failed] member [%s:%s] section [%s] price [%s]", object_name(member), tostring(object_id(member) or "-"), tostring(section), tostring(price))
+				break
+			end
+			bought_count = bought_count + 1
+			bought_value = bought_value + price
+			M.print_trade_event("- NPC Trade | %s bought [%s] from offline trader for %s RU", object_name(member), section, price)
+		end
+	end
+	return bought_count, bought_value
+end
+
+function M.offline_squad_has_trade_work(squad, smart)
+	if M.enabled() ~= true then
+		return false, "disabled"
+	end
+	local profile = trade_path.offline_trade_profile_for_squad(squad)
+	if profile.reason == "offline_buy" or profile.reason == "offline_nothing_to_trade" then
+		trade_path.offline_trade_profile_needs(profile)
+	end
+	set_offline_trade_detail(squad, profile.reason, profile.members, profile.plan, profile.wallet, profile.needs)
+	return profile.has_work == true, profile.reason
+end
+
+function M.execute_offline_squad_trade(squad, smart, reason)
+	local tostr = tostring
+	if M.enabled() ~= true then
+		return false, "disabled"
+	end
+	local profile = trade_path.offline_trade_profile_for_squad(squad)
+	local members = profile.members or {}
+	if #members == 0 then
+		return false, "no_offline_member"
+	end
+	local leader = members[1]
+	local wallet_before = (profile.wallet and profile.wallet.total) or offline_collect_wallet(squad).total
+	local plan = profile.plan or offline_build_sell_plan(members)
+	local sold_count, sold_value = 0, 0
+	local virtual_count, virtual_value = execute_virtual_squad_sale(squad, leader, nil, reason or "offline_virtual_trade")
+	sold_count = sold_count + virtual_count
+	sold_value = sold_value + virtual_value
+	if offline_sell_plan_should_start(plan) then
+		local real_count, real_value = execute_offline_sell_plan(plan, squad)
+		sold_count = sold_count + real_count
+		sold_value = sold_value + real_value
+	end
+	local needs = trade_path.offline_trade_profile_needs(profile)
+	local bought_count, bought_value = execute_offline_buy_needs(squad, members, needs)
+	local wallet_after = offline_collect_wallet(squad).total
+	trade_path.clear_offline_trade_profile_cache(squad)
+	local traded = sold_count > 0 or bought_count > 0
+	if traded then
+		set_offline_trade_detail(squad, "offline_traded", members, plan, { total = wallet_after }, needs)
+	else
+		set_offline_trade_detail(squad, "offline_nothing_to_trade", members, plan, { total = wallet_after }, needs)
+	end
+	if traded then
+		M.print_trade_event(
+			"- ZHOPA2 offline trade success | squad [%s:%s] smart [%s:%s] reason [%s] sold [%s/%s] bought [%s/%s] wallet [%s->%s]",
+			object_name(squad),
+			tostr(object_id(squad) or "-"),
+			object_name(smart),
+			tostr(object_id(smart) or "-"),
+			tostr(reason or "-"),
+			tostr(sold_count),
+			tostr(sold_value),
+			tostr(bought_count),
+			tostr(bought_value),
+			tostr(wallet_before),
+			tostr(wallet_after)
+		)
+	end
+	return traded, traded and "offline_traded" or "offline_nothing_to_trade"
+end
+
+function trade_path.clear_trade_storage(st)
+	if not st then
+		return
+	end
+	st.has_items_to_sell = false
+	st.zhopa2_trade_squad_id = nil
+	st.zhopa2_trade_smart_id = nil
+	st.zhopa2_trade_force_job_section = nil
+	st.zhopa2_trade_force_until = nil
+	st.zhopa2_trade_trader_id = nil
+	st.zhopa2_trade_reason = nil
+	st.zhopa2_trade_member_ids = nil
+	if st.trade_items then
+		clear_table(st.trade_items)
+	end
+end
+
+local function clear_npc_trade_state(npc)
+	local npc_id = object_id(npc)
+	local st = npc_id and db and db.storage and db.storage[npc_id] or nil
+	trade_path.clear_trade_storage(st)
+end
+
+local function suppress_npc_trade_state(npc, until_tg)
+	local npc_id = object_id(npc)
+	local st = npc_id and db and db.storage and db.storage[npc_id] or nil
+	if not st then
+		return
+	end
+	clear_npc_trade_state(npc)
+	st.zhopa2_trade_suppress_until = tonumber(until_tg) or (tg() + C.AUTO_TRADE_COOLDOWN_MS)
+	st.zhopa2_trade_completed_until = st.zhopa2_trade_suppress_until
+end
+
+function trade_path.session_ban_id(npc_or_id)
+	return tonumber(npc_or_id) or object_id(npc_or_id)
+end
+
+function trade_path.npc_session_banned(npc_or_id)
+	local id = trade_path.session_ban_id(npc_or_id)
+	return id ~= nil and trade_path.session_banned_npcs[id] ~= nil
+end
+
+function trade_path.ban_npc_for_session(npc_or_id, reason)
+	local id = trade_path.session_ban_id(npc_or_id)
+	if not id then
+		return false
+	end
+	trade_path.session_banned_npcs[id] = reason or true
+	local st = db and db.storage and db.storage[id] or nil
+	trade_path.clear_trade_storage(st)
+	return true
+end
+
+local function trade_context_active(st)
+	return st and st.zhopa2_trade_squad_id and tonumber(st.zhopa2_trade_force_until or 0) > tg()
+end
+
+local function squad_accepts_managed_trade_signal(squad)
+	return squad and (squad.zhopa2_task == "REST" or squad.zhopa2_task == "BASE_CAMPING" or squad.zhopa2_task == "TRADE")
+end
+
+local function squad_for_online_npc(npc)
+	local npc_id = object_id(npc)
+	local se_obj = npc_id and server_object_by_id(npc_id) or nil
+	local group_id = se_obj and tonumber(se_obj.group_id) or nil
+	if group_id and group_id ~= 0 and group_id ~= 65535 then
+		local squad = server_object_by_id(group_id)
+		if M.is_squad_object(squad) then
+			return squad, group_id
+		end
+	end
+	return nil, nil
+end
+
+local function squad_for_spawned_npc(npc, se_obj)
+	local group_id = se_obj and tonumber(se_obj.group_id) or nil
+	if group_id and group_id ~= 0 and group_id ~= 65535 then
+		local squad = server_object_by_id(group_id)
+		if M.is_squad_object(squad) then
+			return squad, group_id
+		end
+	end
+	return squad_for_online_npc(npc)
+end
+
+function M.materialize_online_virtual_money(npc, squad, reason)
+	if M.enabled() ~= true then
+		return false, 0
+	end
+	squad = M.is_squad_object(squad) and squad or squad_for_online_npc(npc)
+	if not M.is_squad_object(squad) then
+		return false, 0
+	end
+	return materialize_virtual_money_to_npc(squad, npc, reason or "virtual_money_online")
+end
+
+local function set_trade_job_idle(npc, params)
+	local npc_id = object_id(npc)
+	local smart = trade_smart_for_npc(npc, params)
+	local npc_info = smart and smart.npc_info and smart.npc_info[npc_id]
+	if npc_info and npc_info.job then
+		npc_info.job.idle = tg() + 20000
+		npc_info.job.seller_id = nil
+	end
+end
+
+local function execute_online_sell_only(npc, trader, params, collect_to)
+	local type_ = type
+	local plan = M.build_online_sell_plan(npc, params)
+	if not plan or #plan == 0 then
+		return false
+	end
+
+	local sold_any = false
+	for i = 1, #plan do
+		local entry = plan[i]
+		local item = entry and entry.item
+		local item_id = object_id(item)
+		if item and item_id then
+			local price = M.online_trade_sell_item_price(npc, trader, item)
+			if price > 0 then
+				local transferred = false
+				if trader and type_(npc.transfer_item) == "function" then
+					transferred = pcall(npc.transfer_item, npc, item, trader)
+				elseif type_(alife_release_id) == "function" then
+					transferred = pcall(alife_release_id, item_id)
+				end
+				if transferred and type_(npc.give_money) == "function" then
+					local paid = pcall(npc.give_money, npc, price)
+					if paid then
+						sold_any = true
+						M.print_trade_event("- NPC Trade | %s sold [%s] to %s for %s RU", object_name(npc), entry.section or object_section(item), object_name(trader), price)
+						if game_statistics and game_statistics.increment_npc_statistic then
+							pcall(game_statistics.increment_npc_statistic, npc, "items_sold")
+						end
+					elseif trader and type_(trader.transfer_item) == "function" then
+						pcall(trader.transfer_item, trader, item, npc)
+					end
+				end
+			end
+		end
+	end
+
+	if collect_to and object_id(collect_to) ~= object_id(npc) then
+		transfer_all_money_to(npc, collect_to)
+	end
+	return sold_any
+end
+
+function M.execute_online_trade_with_trader(npc, trader, params, opts)
+	if M.enabled() ~= true then
+		clear_npc_trade_state(npc)
+		return false
+	end
+	opts = opts or {}
+	local plan = M.build_online_sell_plan(npc, params)
+	if (not plan or #plan == 0) and not opts.allow_buy_without_sell then
+		clear_npc_trade_state(npc)
+		return false
+	end
+
+	local sold_any = execute_online_sell_only(npc, trader, params, opts.collect_sale_to)
+
+	local bought_any = false
+	if opts.skip_buy ~= true then
+		bought_any = M.execute_online_buy(npc, trader, { payer_npc = opts.payer_npc })
+	end
+	local smart = trade_smart_for_npc(npc, params)
+	clear_npc_trade_state(npc)
+	set_trade_job_idle(npc, params)
+	M.release_online_trade_npc_to_smart(npc, smart, (sold_any or bought_any) and "direct_traded" or "direct_nothing_to_trade")
+	return sold_any or bought_any
+end
+
+function M.execute_online_trade(npc, params, opts)
+	if M.enabled() ~= true then
+		clear_npc_trade_state(npc)
+		return false
+	end
+	local trader = trade_seller_for_npc(npc, params)
+	return M.execute_online_trade_with_trader(npc, trader, params, opts)
+end
+
+local function squad_member_id_set(squad)
+	local out = {}
+	if not M.is_squad_object(squad) then
+		return out
+	end
+	pcall(function()
+		for member in squad:squad_members() do
+			if member and member.id then
+				out[member.id] = true
+			end
+		end
+	end)
+	return out
+end
+
+local mark_squad_trade_result
+
+local function trade_result_terminal(result)
+	return result == "traded"
+		or result == "offline_traded"
+		or result == "nothing_to_trade"
+		or result == "offline_nothing_to_trade"
+		or result == "trade_prepared_timeout"
+end
+
+local function clear_squad_prepared_trade_state(squad)
+	if not squad then
+		return
+	end
+	squad.zhopa2_trade_prepared_until = nil
+	squad.zhopa2_trade_prepared_npc_id = nil
+	squad.zhopa2_trade_prepared_smart_id = nil
+	squad.zhopa2_trade_prepared_trader_id = nil
+	squad.zhopa2_trade_prepared_reason = nil
+end
+
+local function finalize_squad_trade_task(squad, result, reason)
+	if not (squad and trade_result_terminal(result)) then
+		return
+	end
+	if squad.zhopa2_task == "REST" then
+		squad.zhopa2_rest_trade_state = "done"
+		squad.zhopa2_rest_trade_result = result
+		squad.zhopa2_rest_trade_next_tg = nil
+		squad.zhopa2_rest_trade_started_tg = nil
+	elseif squad.zhopa2_task == "BASE_CAMPING" then
+		squad.zhopa2_base_trade_result = result
+		squad.zhopa2_base_trade_next_tg = tg() + C.AUTO_TRADE_COOLDOWN_MS
+	elseif squad.zhopa2_task == "TRADE" then
+		squad.zhopa2_trade_route_state = "done"
+		squad.zhopa2_trade_route_result = result
+		squad.zhopa2_trade_route_next_tg = nil
+	end
+	squad.zhopa2_trade_queue_state = "done"
+	squad.zhopa2_trade_queue_reason = reason
+end
+
+mark_squad_trade_result = function(squad, result, reason, smart)
+	if not squad then
+		return
+	end
+	squad.zhopa2_last_trade_time = tg()
+	squad.zhopa2_last_trade_result = result
+	squad.zhopa2_last_trade_reason = reason
+	squad.zhopa2_last_trade_smart = smart and object_id(smart) or nil
+	squad.zhopa2_last_result = result
+	if result ~= "trade_prepared" then
+		clear_squad_prepared_trade_state(squad)
+	end
+	finalize_squad_trade_task(squad, result, reason)
+end
+
+local function online_squad_trade_members(squad, smart, include_session_banned)
+	local members = {}
+	if not (smart and M.is_squad_object(squad)) then
+		return members
+	end
+	pcall(function()
+		for member in squad:squad_members() do
+			local id = member and member.id
+			local obj = id and online_object_by_id(id)
+			if obj and type(obj.alive) == "function" and obj:alive() and (include_session_banned == true or not trade_path.npc_session_banned(id)) then
+				M.materialize_online_virtual_money(obj, squad, "online_trade_members")
+				members[#members + 1] = obj
+			end
+		end
+	end)
+	return members
+end
+
+local function online_trade_members_from_ids(member_ids)
+	local members = {}
+	if type(member_ids) ~= "table" then
+		return members
+	end
+	for i = 1, #member_ids do
+		local obj = online_object_by_id(member_ids[i])
+		if obj and type(obj.alive) == "function" and obj:alive() then
+			members[#members + 1] = obj
+		end
+	end
+	return members
+end
+
+local function squad_trade_member_ids(members)
+	local ids = {}
+	for i = 1, members and #members or 0 do
+		local id = object_id(members[i])
+		if id then
+			ids[#ids + 1] = id
+		end
+	end
+	return ids
+end
+
+local function trade_member_ids_count(member_ids)
+	return type(member_ids) == "table" and #member_ids or 0
+end
+
+local function ensure_trade_source_member(members, source_npc)
+	local source_id = object_id(source_npc)
+	if not source_id then
+		return members
+	end
+	for i = 1, members and #members or 0 do
+		if object_id(members[i]) == source_id then
+			if i > 1 then
+				local source = members[i]
+				table.remove(members, i)
+				table.insert(members, 1, source)
+			end
+			return members
+		end
+	end
+	table.insert(members, 1, source_npc)
+	return members
+end
+
+local function find_online_squad_trade_npc(squad, smart)
+	local members = online_squad_trade_members(squad, smart)
+	return members[1]
+end
+
+local function squad_members_money(members)
+	local total = 0
+	for i = 1, members and #members or 0 do
+		total = total + math.max(0, tonumber(npc_money(members[i])) or 0)
+	end
+	return total
+end
+
+local function squad_members_have_trade_work(members, squad)
+	if virtual_loot_sell_price(squad) > 0 then
+		return true, "virtual_sell"
+	end
+	for i = 1, members and #members or 0 do
+		local ok_plan, plan = pcall(M.build_online_sell_plan, members[i], nil)
+		if ok_plan and type(plan) == "table" and sell_plan_should_start_auto_trade(members[i], plan) then
+			return true, "sell"
+		end
+	end
+
+	local money = squad_members_money(members) + virtual_money(squad)
+	if money <= 0 then
+		return false, "no_trade_budget"
+	end
+
+	for i = 1, members and #members or 0 do
+		local needs = build_online_buy_needs(members[i])
+		for n = 1, #needs do
+			local price = M.online_trade_buy_section_price(needs[n].section)
+			if price > 0 and money >= price then
+				return true, "buy"
+			end
+		end
+	end
+	return false, "nothing_to_trade"
+end
+
+function M._online_squad_members(squad)
+	local members = {}
+	if not M.is_squad_object(squad) then
+		return members
+	end
+	pcall(function()
+		for member in squad:squad_members() do
+			local id = member and member.id
+			local obj = id and online_object_by_id(id)
+			if obj and type(obj.alive) == "function" and obj:alive() then
+				M.materialize_online_virtual_money(obj, squad, "online_squad_members")
+				members[#members + 1] = obj
+			end
+		end
+	end)
+	return members
+end
+
+function M._online_trade_profile(members, squad)
+	local virtual_value = virtual_loot_sell_price(squad)
+	if virtual_value > 0 then
+		return true, "virtual_sell", virtual_value
+	end
+
+	local sell_value = 0
+	local has_sell = false
+	for i = 1, members and #members or 0 do
+		local ok_plan, plan = pcall(M.build_online_sell_plan, members[i], nil)
+		if ok_plan and type(plan) == "table" and sell_plan_should_start_auto_trade(members[i], plan) then
+			has_sell = true
+			for n = 1, #plan do
+				sell_value = sell_value + M.online_trade_sell_item_price(members[i], nil, plan[n] and plan[n].item)
+			end
+		end
+	end
+	if has_sell then
+		return true, "sell", sell_value
+	end
+
+	local money = squad_members_money(members) + virtual_money(squad)
+	if money <= 0 then
+		return false, "no_trade_budget", 0
+	end
+
+	local need_value = 0
+	local affordable = false
+	for i = 1, members and #members or 0 do
+		local needs = build_online_buy_needs(members[i])
+		for n = 1, #needs do
+			local price = M.online_trade_buy_section_price(needs[n].section)
+			if price > 0 then
+				need_value = need_value + price
+				if money >= price then
+					affordable = true
+				end
+			end
+		end
+	end
+	if affordable then
+		return true, "buy", math.min(money, need_value)
+	end
+	return false, "nothing_to_trade", 0
+end
+
+function M._offline_trade_profile(squad)
+	local profile = trade_path.offline_trade_profile_for_squad(squad, { want_value = true })
+	return profile.has_work == true, profile.reason, profile.value or 0
+end
+
+function M.squad_trade_route_profile(squad)
+	if cfg_bool("enabled", true) ~= true or not squad then
+		return false, "disabled", 0
+	end
+	if M.squad_trade_allowed(squad) ~= true then
+		return false, "squad_trade_blocked", 0
+	end
+	local online_members = M._online_squad_members(squad)
+	if #online_members > 0 then
+		return M._online_trade_profile(online_members, squad)
+	end
+	return M._offline_trade_profile(squad)
+end
+
+local function find_online_trader_at_smart(smart, ignore_ids)
+	if not smart or trade_path.trade_smart_blacklisted(smart) then
+		return nil
+	end
+	local checked = {}
+	local function check_id(npc_id)
+		if checked[npc_id] or (ignore_ids and ignore_ids[npc_id]) then
+			return nil
+		end
+		checked[npc_id] = true
+		local obj = online_object_by_id(npc_id)
+		if obj and npc_is_trade_provider(obj, smart) then
+			return obj
+		end
+		return nil
+	end
+
+	if type(smart.npc_info) == "table" then
+		for npc_id in pairs(smart.npc_info) do
+			local obj = check_id(npc_id)
+			if obj then
+				return obj
+			end
+		end
+	end
+
+	if type(smart.npc_by_job_section) == "table" then
+		for job_sec, npc_id in pairs(smart.npc_by_job_section) do
+			if trade_path.job_is_auto_trade_provider(find_smart_job_by_section(smart, job_sec) or job_sec, smart) then
+				local obj = check_id(npc_id)
+				if obj then
+					return obj
+				end
+			end
+		end
+	end
+
+	return nil
+end
+
+local function smart_trade_flags(smart)
+	local smart_id = object_id(smart)
+	local board = rawget(_G, "SIMBOARD")
+	local flags = board and board.zhopa2_trade_smart_flags and board.zhopa2_trade_smart_flags[smart_id] or nil
+	if flags ~= nil then
+		return flags
+	end
+	if board and smart and type(board.zhopa2_register_trade_smart) == "function" then
+		pcall(board.zhopa2_register_trade_smart, board, smart)
+		flags = board.zhopa2_trade_smart_flags and board.zhopa2_trade_smart_flags[smart_id] or nil
+	end
+	return flags
+end
+
+local function smart_has_indexed_trade_route(smart)
+	if trade_path.trade_smart_blacklisted(smart) then
+		return false
+	end
+	local flags = smart_trade_flags(smart)
+	return flags ~= nil and flags.trade_route == true
+end
+
+local function smart_has_trade_provider_job(smart)
+	local smart_id = object_id(smart)
+	if not smart_id then
+		return false
+	end
+	local cached = SMART_TRADE_PROVIDER_CACHE[smart_id]
+	if cached ~= nil then
+		return cached == true
+	end
+
+	local has_provider = false
+	if trade_path.trade_smart_blacklisted(smart) then
+		SMART_TRADE_PROVIDER_CACHE[smart_id] = false
+		return false
+	end
+	if type(smart.npc_by_job_section) == "table" then
+		for job_sec in pairs(smart.npc_by_job_section) do
+			if trade_path.job_is_auto_trade_provider(find_smart_job_by_section(smart, job_sec) or job_sec, smart) then
+				has_provider = true
+				break
+			end
+		end
+	end
+	if not has_provider and type(smart.npc_info) == "table" then
+		for _, info in pairs(smart.npc_info) do
+			if trade_path.job_is_auto_trade_provider(info and info.job or nil, smart) then
+				has_provider = true
+				break
+			end
+		end
+	end
+
+	SMART_TRADE_PROVIDER_CACHE[smart_id] = has_provider == true
+	return has_provider == true
+end
+
+local function job_is_trade_customer(job, smart)
+	if not job then
+		return false
+	end
+	local section = type(job) == "table" and job.section or job
+	local section_l = slower(section) or ""
+	if contains_plain(section_l, "beh_trade_job") or contains_plain(section_l, "trade_slot") then
+		return true
+	end
+	local suitable_l = slower(read_job_ini_string(job, "suitable", smart))
+	return contains_plain(suitable_l, "npc_has_items_to_sell") == true
+end
+
+local function smart_has_trade_customer_job(smart)
+	local smart_id = object_id(smart)
+	if not smart_id then
+		return false
+	end
+	local cached = SMART_TRADE_CUSTOMER_CACHE[smart_id]
+	if cached ~= nil then
+		return cached == true
+	end
+
+	local has_customer = false
+	local jobs = smart and smart.stalker_jobs or nil
+	if type(jobs) == "table" then
+		for i = 1, #jobs do
+			if job_is_trade_customer(jobs[i], smart) then
+				has_customer = true
+				break
+			end
+		end
+	end
+	SMART_TRADE_CUSTOMER_CACHE[smart_id] = has_customer == true
+	return has_customer == true
+end
+
+local function find_trade_customer_job(smart, npc_id)
+	local jobs = smart and smart.stalker_jobs or nil
+	if type(jobs) ~= "table" then
+		return nil, nil, "no_trade_customer_job"
+	end
+	local by_job = type(smart.npc_by_job_section) == "table" and smart.npc_by_job_section or nil
+	npc_id = tonumber(npc_id) or 0
+	local has_busy = false
+	for i = 1, #jobs do
+		local job = jobs[i]
+		local section = job and job.section or nil
+		if type(section) == "string" and job_is_trade_customer(job, smart) then
+			local owner = by_job and tonumber(by_job[section]) or nil
+			if owner == nil or owner == 0 or owner == npc_id then
+				return job, section, nil
+			end
+			has_busy = true
+		end
+	end
+	return nil, nil, has_busy and "trade_slot_busy" or "no_trade_customer_job"
+end
+
+local function smart_has_vanilla_trade_route(smart)
+	return smart_has_indexed_trade_route(smart) == true or (smart_has_trade_provider_job(smart) == true and smart_has_trade_customer_job(smart) == true)
+end
+
+local function queue_remove_squad(q, squad_id)
+	if not (q and q.queue and squad_id) then
+		return
+	end
+	local out = {}
+	for i = 1, #q.queue do
+		if q.queue[i] ~= squad_id then
+			out[#out + 1] = q.queue[i]
+		end
+	end
+	q.queue = out
+end
+
+local function queue_contains_squad(q, squad_id)
+	if not (q and q.queue and squad_id) then
+		return false
+	end
+	for i = 1, #q.queue do
+		if q.queue[i] == squad_id then
+			return true
+		end
+	end
+	return false
+end
+
+local function smart_trade_queue(smart_id)
+	local q = SMART_TRADE_QUEUE[smart_id]
+	if not q then
+		q = { queue = {} }
+		SMART_TRADE_QUEUE[smart_id] = q
+	end
+	return q
+end
+
+local function mark_squad_queue_state(squad, state, smart_id, reason)
+	if not squad then
+		return
+	end
+	squad.zhopa2_trade_queue_state = state
+	squad.zhopa2_trade_queue_smart = smart_id
+	squad.zhopa2_trade_queue_reason = reason
+end
+
+local function acquire_smart_trade_slot(squad, smart, reason, now)
+	local smart_id = object_id(smart)
+	local squad_id = object_id(squad)
+	if not (smart_id and squad_id) then
+		return false, "missing_queue_ids"
+	end
+	now = now or tg()
+	local q = smart_trade_queue(smart_id)
+	if q.active_squad_id and tonumber(q.active_until or 0) <= now then
+		q.active_squad_id = nil
+		q.active_until = nil
+	end
+
+	if q.active_squad_id and q.active_squad_id ~= squad_id then
+		if not queue_contains_squad(q, squad_id) then
+			q.queue[#q.queue + 1] = squad_id
+		end
+		mark_squad_queue_state(squad, "queued", smart_id, reason)
+		return false, "queued"
+	end
+
+	if not q.active_squad_id and #q.queue > 0 and q.queue[1] ~= squad_id then
+		if not queue_contains_squad(q, squad_id) then
+			q.queue[#q.queue + 1] = squad_id
+		end
+		mark_squad_queue_state(squad, "queued", smart_id, reason)
+		return false, "queued"
+	end
+
+	queue_remove_squad(q, squad_id)
+	q.active_squad_id = squad_id
+	q.active_until = now + C.SMART_TRADE_QUEUE_SLOT_MS
+	mark_squad_queue_state(squad, "active", smart_id, reason)
+	return true, "active"
+end
+
+local function release_smart_trade_slot(smart_id, squad_id)
+	if not smart_id then
+		return
+	end
+	local q = SMART_TRADE_QUEUE[smart_id]
+	if not q then
+		return
+	end
+	if not squad_id or q.active_squad_id == squad_id then
+		if squad_id and tonumber(q.active_remaining or 0) > 1 then
+			q.active_remaining = tonumber(q.active_remaining or 0) - 1
+			return
+		end
+		q.active_squad_id = nil
+		q.active_until = nil
+		q.active_remaining = nil
+	end
+	if q.queue and #q.queue == 0 and not q.active_squad_id then
+		SMART_TRADE_QUEUE[smart_id] = nil
+	end
+end
+
+local function set_smart_trade_slot_remaining(smart_id, squad_id, count)
+	local q = smart_id and SMART_TRADE_QUEUE[smart_id] or nil
+	if q and q.active_squad_id == squad_id then
+		q.active_remaining = math.max(1, tonumber(count) or 1)
+	end
+end
+
+local function set_squad_trade_cooldown(squad, now)
+	if squad then
+		now = now or tg()
+		squad.zhopa2_trade_next_tg = now + C.AUTO_TRADE_COOLDOWN_MS
+	end
+end
+
+local function smart_by_id(id)
+	if not (id and alife_object) then
+		return nil
+	end
+	local ok, smart = pcall(alife_object, id)
+	if ok then
+		return smart
+	end
+	return nil
+end
+
+function trade_path.force_until()
+	return tg() + math.max(C.SMART_TRADE_QUEUE_SLOT_MS, C.TRADE_PREPARED_TIMEOUT_MS + C.TRADE_FORCE_JOB_PAD_MS)
+end
+
+function trade_path.trim(value)
+	return type(value) == "string" and string.match(value, "^%s*(.-)%s*$") or ""
+end
+
+function trade_path.npc_name(npc)
+	if npc and type(npc.name) == "function" then
+		local ok, value = pcall(npc.name, npc)
+		if ok and value then
+			return value
+		end
+	end
+	return object_name(npc)
+end
+
+function trade_path.has_patrol_mode(npc)
+	if npc and type(npc.has_info) == "function" then
+		local ok, value = pcall(npc.has_info, npc, "npcx_beh_patrol_mode")
+		return ok and value == true
+	end
+	return false
+end
+
+function trade_path.set_patrol_mode(npc, enabled)
+	if not npc then
+		return
+	end
+	if enabled == true then
+		if type(npc.give_info_portion) == "function" then
+			pcall(npc.give_info_portion, npc, "npcx_beh_patrol_mode")
+		end
+	elseif type(npc.disable_info_portion) == "function" then
+		pcall(npc.disable_info_portion, npc, "npcx_beh_patrol_mode")
+	end
+end
+
+function trade_path.save_point(npc, index, value)
+	if not (npc and index and type(se_save_var) == "function") then
+		return false
+	end
+	local id = object_id(npc)
+	local name = trade_path.npc_name(npc)
+	if not (id and name) then
+		return false
+	end
+	return pcall(se_save_var, id, name, "pathpoint" .. tostring(index), value) == true
+end
+
+function trade_path.clear(npc, st)
+	if not (st and st.zhopa2_trade_path_override == true) then
+		return false
+	end
+	local count = tonumber(st.zhopa2_trade_path_points) or 8
+	for i = 1, count do
+		trade_path.save_point(npc, i, nil)
+	end
+	if st.zhopa2_trade_path_had_patrol_mode ~= true then
+		trade_path.set_patrol_mode(npc, false)
+	end
+	st.zhopa2_trade_path_override = nil
+	st.zhopa2_trade_path_points = nil
+	st.zhopa2_trade_path_had_patrol_mode = nil
+	st.zhopa2_trade_path_reason = nil
+	return true
+end
+
+function trade_path.ini_string(ini, section, field)
+	if not (ini and section and field and type(ini.r_string_ex) == "function") then
+		return nil
+	end
+	local ok, value = pcall(ini.r_string_ex, ini, section, field)
+	return ok and value or nil
+end
+
+function trade_path.parse_pos(line)
+	if type(line) ~= "string" or not vector then
+		return nil
+	end
+	local x, y, z = string.match(line, "pos:%s*([%-%d%.eE]+)%s*,%s*([%-%d%.eE]+)%s*,%s*([%-%d%.eE]+)")
+	x, y, z = tonumber(x), tonumber(y), tonumber(z)
+	if not (x and y and z) then
+		return nil
+	end
+	return vector():set(x, y, z)
+end
+
+function trade_path.object_position(obj)
+	if obj and type(obj.position) == "function" then
+		local ok, pos = pcall(obj.position, obj)
+		if ok and pos then
+			return pos
+		end
+	end
+	return nil
+end
+
+function trade_path.vertex_accessible(npc, vid)
+	vid = tonumber(vid)
+	if not (npc and vid and vid < 4294967295) then
+		return false
+	end
+	if level and type(level.vertex_position) == "function" then
+		local ok_pos, vertex_pos = pcall(level.vertex_position, vid)
+		if not (ok_pos and vertex_pos) then
+			return false
+		end
+	end
+	if type(npc.accessible) ~= "function" then
+		return true
+	end
+	local ok, value = pcall(npc.accessible, npc, vid)
+	return ok and value == true
+end
+
+function trade_path.direct_accessible_vertex(npc, pos)
+	if not (npc and pos and level and type(level.vertex_id) == "function") then
+		return nil, "missing_vertex_api"
+	end
+	local ok_direct, direct_vid = pcall(level.vertex_id, pos)
+	if ok_direct and trade_path.vertex_accessible(npc, direct_vid) then
+		return direct_vid, "direct"
+	end
+	return nil, "direct_invalid"
+end
+
+function trade_path.nearest_accessible_vertex(npc, pos)
+	if not (npc and vector and type(npc.accessible_nearest) == "function") then
+		return nil, "nearest_missing"
+	end
+	local out_pos = vector():set(0, 0, 0)
+	local ok_near, near_vid = pcall(function()
+		return npc:accessible_nearest(pos, out_pos)
+	end)
+	if ok_near and trade_path.vertex_accessible(npc, near_vid) then
+		return near_vid, "nearest"
+	end
+	return nil, "nearest_failed"
+end
+
+function trade_path.accessible_vertex(npc, pos, fallback_pos)
+	local direct_vid = nil
+	local direct_reason = nil
+	direct_vid, direct_reason = trade_path.direct_accessible_vertex(npc, pos)
+	if direct_vid then
+		return direct_vid, direct_reason
+	end
+	if fallback_pos then
+		local fallback_vid, fallback_reason = trade_path.direct_accessible_vertex(npc, fallback_pos)
+		if fallback_vid then
+			return fallback_vid, "trader_direct"
+		end
+		fallback_vid, fallback_reason = trade_path.nearest_accessible_vertex(npc, fallback_pos)
+		if fallback_vid then
+			return fallback_vid, "trader_" .. tostring(fallback_reason or "nearest")
+		end
+	end
+	local near_vid, near_reason = trade_path.nearest_accessible_vertex(npc, pos)
+	if near_vid then
+		return near_vid, near_reason
+	end
+	return nil, near_reason or direct_reason or "nearest_failed"
+end
+
+function trade_path.line_head_tail(line)
+	local pipe = string.find(line, "|", 1, true)
+	if not pipe then
+		return trade_path.trim(line), ""
+	end
+	return trade_path.trim(string.sub(line, 1, pipe - 1)), trade_path.trim(string.sub(line, pipe + 1))
+end
+
+function trade_path.head_tokens(head)
+	local out = {}
+	if type(head) ~= "string" then
+		return out
+	end
+	for part in string.gmatch(head, "([^,]+)") do
+		out[#out + 1] = trade_path.trim(part)
+	end
+	return out
+end
+
+function trade_path.drop_pos_tail(tail)
+	if type(tail) ~= "string" or tail == "" then
+		return ""
+	end
+	tail = string.gsub(tail, "pos:%s*[%-%d%.eE]+%s*,%s*[%-%d%.eE]+%s*,%s*[%-%d%.eE]+", "")
+	return trade_path.trim(tail)
+end
+
+function trade_path.rewrite_line(npc, line, fallback_pos)
+	local pos = trade_path.parse_pos(line)
+	if not pos then
+		return line, false, "no_pos"
+	end
+	local vid, reason = trade_path.accessible_vertex(npc, pos, fallback_pos)
+	if not vid then
+		return nil, true, reason or "no_vertex"
+	end
+	local head, tail = trade_path.line_head_tail(line)
+	local tokens = trade_path.head_tokens(head)
+	local delay = tokens[1] ~= nil and tokens[1] ~= "" and tokens[1] or "0"
+	local anim = tokens[2] ~= nil and tokens[2] ~= "" and tokens[2] or nil
+	local rewritten = tostring(vid) .. "," .. tostring(delay)
+	if anim then
+		rewritten = rewritten .. "," .. tostring(anim)
+	end
+	tail = trade_path.drop_pos_tail(tail)
+	if tail ~= "" then
+		rewritten = rewritten .. " | " .. tail
+	end
+	return rewritten, true, reason
+end
+
+function trade_path.prepare(npc, st, ini, fallback_pos)
+	ini = ini or st and st.ini or nil
+	if not (npc and st and ini and st.active_section and type(se_save_var) == "function") then
+		return false, "missing_context"
+	end
+	trade_path.clear(npc, st)
+	local points = {}
+	local needs_override = false
+	local last_reason = nil
+	for i = 1, 8 do
+		local line = trade_path.ini_string(ini, st.active_section, "pt" .. tostring(i))
+		if not line then
+			break
+		end
+		local rewritten, changed, reason = trade_path.rewrite_line(npc, line, fallback_pos)
+		if not rewritten then
+			return false, reason or "path_rewrite_failed"
+		end
+		points[#points + 1] = rewritten
+		needs_override = needs_override or changed == true
+		last_reason = reason or last_reason
+	end
+	if not needs_override or #points == 0 then
+		return false, last_reason or "vanilla_path_ok"
+	end
+	local had_patrol = trade_path.has_patrol_mode(npc)
+	for i = 1, #points do
+		trade_path.save_point(npc, i, points[i])
+	end
+	trade_path.save_point(npc, #points + 1, nil)
+	trade_path.set_patrol_mode(npc, true)
+	st.zhopa2_trade_path_override = true
+	st.zhopa2_trade_path_points = #points + 1
+	st.zhopa2_trade_path_had_patrol_mode = had_patrol
+	st.zhopa2_trade_path_reason = last_reason or "nearest"
+	return true, st.zhopa2_trade_path_reason
+end
+
+function trade_path.acceptable_prepare_result(reason)
+	return reason == "vanilla_path_ok" or reason == "no_pos"
+end
+
+function trade_path.prepare_active(npc, smart, st, trader)
+	local obj = st and st.object or npc
+	local fallback_pos = trade_path.object_position(trader)
+	local ini = st and st.ini or smart and smart.ini or nil
+	local ok_path, path_reason = trade_path.prepare(obj, st, ini, fallback_pos)
+	if ok_path ~= true and not trade_path.acceptable_prepare_result(path_reason) then
+		print_trade_error(
+			"~ ZHOPA2 trade error | reason [trade_path_prepare_failed] npc [%s:%s] smart [%s:%s] active [%s] trader [%s:%s] detail [%s]",
+			object_name(obj),
+			tostring(object_id(obj) or "-"),
+			object_name(smart),
+			tostring(object_id(smart) or "-"),
+			tostring(st and st.active_section or "-"),
+			object_name(trader),
+			tostring(object_id(trader) or "-"),
+			tostring(path_reason or "-")
+		)
+		return false, path_reason
+	end
+	if type(st and st.beh) == "table" then
+		st.beh.desired_target = nil
+	end
+	if obj and type(save_var) == "function" then
+		pcall(save_var, obj, "path_index", 1)
+	end
+	return true, path_reason
+end
+
+function M.clear_prepared_trade_job(smart, npc_id, reason)
+	local id = tonumber(npc_id) or npc_id
+	if not (smart and id) then
+		return false, "missing_smart_or_npc"
+	end
+	local st = db and db.storage and db.storage[id] or nil
+	local info = smart.npc_info and smart.npc_info[id] or nil
+	if st and st.object then
+		trade_path.clear(st.object, st)
+	end
+	if st and st.object and type(save_var) == "function" then
+		pcall(save_var, st.object, "path_index", 1)
+	end
+	if type(smart.clear_job) == "function" then
+		pcall(smart.clear_job, smart, id)
+	end
+	if type(smart.npc_by_job_section) == "table" then
+		for section, owner_id in pairs(smart.npc_by_job_section) do
+			if tonumber(owner_id) == tonumber(id) then
+				smart.npc_by_job_section[section] = nil
+			end
+		end
+	end
+	if db and db.offline_objects and db.offline_objects[id] then
+		clear_table(db.offline_objects[id])
+	end
+	if info then
+		info.job = nil
+		info.begin_job = false
+		info.need_job = "nil"
+		info.current_index = 1
+		if type(smart.select_npc_job) == "function" then
+			pcall(smart.select_npc_job, smart, info, true)
+		end
+		return true, reason or "cleared"
+	end
+	return true, reason or "cleared_no_info"
+end
+
+function M.release_online_trade_npc_to_smart(npc, smart, reason)
+	local npc_id = object_id(npc)
+	if not npc_id then
+		return false, "missing_npc"
+	end
+	smart = smart or trade_smart_for_npc(npc, nil)
+	local smart_id = object_id(smart)
+	local st = db and db.storage and db.storage[npc_id] or nil
+	if st then
+		st.zhopa2_trade_release_watch_until = tg() + C.TRADE_POST_RELEASE_WATCH_MS
+		st.zhopa2_trade_release_reason = reason
+	end
+	M.trade_release_watch = M.trade_release_watch or {}
+	M.trade_release_watch[npc_id] = smart_id or true
+	if not smart then
+		return false, "missing_smart"
+	end
+	local info = smart.npc_info and smart.npc_info[npc_id] or nil
+	local active_l = st and slower(st.section_logic or st.active_section) or ""
+	local needs_release = (info and info.job and job_is_trade_customer(info.job, smart))
+		or contains_plain(active_l, "beh_trade_job")
+		or contains_plain(active_l, "trade_slot")
+	if not needs_release then
+		M.trade_release_watch[npc_id] = nil
+		if st then
+			st.zhopa2_trade_release_watch_until = nil
+			st.zhopa2_trade_release_reason = nil
+		end
+		return false, "not_trade_job"
+	end
+	return M.clear_prepared_trade_job(smart, npc_id, "post_trade_release")
+end
+
+local function recover_stale_prepared_trade(squad, now)
+	if not (squad and squad.zhopa2_last_trade_result == "trade_prepared") then
+		return false, nil
+	end
+	local tonum = tonumber
+	local tostr = tostring
+	now = now or tg()
+	local deadline = tonum(squad.zhopa2_trade_prepared_until)
+	if not (deadline and deadline > 0) then
+		deadline = (tonum(squad.zhopa2_last_trade_time) or now) + C.TRADE_PREPARED_TIMEOUT_MS
+		squad.zhopa2_trade_prepared_until = deadline
+	end
+	if now < deadline then
+		return false, "trade_prepared"
+	end
+
+	local squad_id = object_id(squad)
+	local smart_id = tonum(squad.zhopa2_trade_prepared_smart_id) or tonum(squad.zhopa2_last_trade_smart)
+	local npc_id = tonum(squad.zhopa2_trade_prepared_npc_id)
+	local smart = smart_by_id(smart_id)
+	local npc = npc_id and online_object_by_id(npc_id) or nil
+	trade_path.ban_npc_for_session(npc_id, "trade_prepared_timeout")
+	if npc then
+		clear_npc_trade_state(npc)
+	else
+		trade_path.clear_trade_storage(npc_id and db and db.storage and db.storage[npc_id] or nil)
+	end
+	M.clear_prepared_trade_job(smart, npc_id, "trade_prepared_timeout")
+	release_smart_trade_slot(smart_id, squad_id)
+	set_squad_trade_cooldown(squad, now)
+	print_trade_error(
+		"~ ZHOPA2 trade error | reason [trade_prepared_timeout] squad [%s:%s] npc [%s:%s] smart [%s:%s] waited [%s]",
+		object_name(squad),
+		tostr(squad_id or "-"),
+		object_name(npc),
+		tostr(npc_id or "-"),
+		object_name(smart),
+		tostr(smart_id or "-"),
+		tostr(now - (tonum(squad.zhopa2_last_trade_time) or now))
+	)
+	mark_squad_trade_result(squad, "trade_prepared_timeout", squad.zhopa2_trade_prepared_reason or squad.zhopa2_last_trade_reason or "trade_prepared", smart)
+	return true, "trade_prepared_timeout"
+end
+
+local function squad_current_trade_smart(squad)
+	return squad and smart_by_id(squad.smart_id) or nil
+end
+
+local function server_object_alive(obj)
+	if not obj then
+		return false
+	end
+	if type(obj.alive) == "function" then
+		local ok, alive = pcall(obj.alive, obj)
+		if ok then
+			return alive == true
+		end
+	end
+	return object_id(obj) ~= nil
+end
+
+local function find_live_trader_at_smart(smart, ignore_ids)
+	if trade_path.trade_smart_blacklisted(smart) then
+		return nil
+	end
+	local trader = live_object(find_online_trader_at_smart(smart, ignore_ids))
+	if trader then
+		return trader
+	end
+	if not smart then
+		return nil
+	end
+	local checked = {}
+	local function check_id(npc_id, job)
+		if not npc_id then
+			return nil
+		end
+		if checked[npc_id] or (ignore_ids and ignore_ids[npc_id]) then
+			return nil
+		end
+		checked[npc_id] = true
+		if not trade_path.job_is_auto_trade_provider(job, smart) then
+			return nil
+		end
+		local online = live_object(online_object_by_id(npc_id))
+		if online then
+			return online
+		end
+		local se_obj = server_object_by_id(npc_id)
+		if server_object_alive(se_obj) then
+			return se_obj
+		end
+		return nil
+	end
+
+	if type(smart.npc_by_job_section) == "table" then
+		for job_sec, npc_id in pairs(smart.npc_by_job_section) do
+			local trader_obj = check_id(npc_id, find_smart_job_by_section(smart, job_sec) or job_sec)
+			if trader_obj then
+				return trader_obj
+			end
+		end
+	end
+	if type(smart.npc_info) == "table" then
+		for npc_id, info in pairs(smart.npc_info) do
+			local trader_obj = check_id(npc_id, info and info.job or nil)
+			if trader_obj then
+				return trader_obj
+			end
+		end
+	end
+	return nil
+end
+
+local function can_try_auto_trade_now(squad, now)
+	if squad.zhopa2_trade_next_tg and now < squad.zhopa2_trade_next_tg then
+		return false
+	end
+	return true
+end
+
+local function smart_for_squad_trade(squad)
+	local smart = squad_current_trade_smart(squad)
+	if smart then
+		return smart
+	end
+	local target = squad.current_target_id or squad.assigned_target_id
+	return smart_by_id(target)
+end
+
+function M.squad_has_trade_smart(squad)
+	if M.enabled() ~= true or not squad then
+		return false
+	end
+	local smart = squad_current_trade_smart(squad)
+	return smart_has_indexed_trade_route(smart) == true
+end
+
+function M.squad_has_trade_work(squad)
+	if M.enabled() ~= true or not squad then
+		return false, "disabled"
+	end
+	local smart = squad_current_trade_smart(squad)
+	local ignore_ids = squad_member_id_set(squad)
+	local members = online_squad_trade_members(squad, smart)
+	if #members == 0 then
+		if not smart_has_indexed_trade_route(smart) then
+			return false, "no_trade_smart"
+		end
+		return M.offline_squad_has_trade_work(squad, smart)
+	end
+	if not smart_has_vanilla_trade_route(smart) then
+		return false, "no_trade_smart"
+	end
+	if not find_live_trader_at_smart(smart, ignore_ids) then
+		return false, "no_live_trader_at_smart"
+	end
+	return squad_members_have_trade_work(members, squad)
+end
+
+function M._trade_route_current_level(squad, board)
+	local p = M.perception_mod()
+	if p and type(p.obj_level) == "function" then
+		local ok, level_name = pcall(p.obj_level, squad)
+		if ok and type(level_name) == "string" and level_name ~= "" then
+			return level_name
+		end
+	end
+	local squad_id = object_id(squad)
+	return board and board.zhopa2_squad_level and board.zhopa2_squad_level[squad_id] or nil
+end
+
+function M._trade_route_levels(current_level, opts)
+	local p = M.perception_mod()
+	if p and type(p.nearby_levels) == "function" and type(p.level_names_for_mode) == "function" then
+		local ok_neighbors, neighbors = pcall(p.nearby_levels, current_level)
+		neighbors = ok_neighbors and neighbors or nil
+		local ok_levels, levels = pcall(p.level_names_for_mode, current_level, opts.level_mode or "current_or_neighbor", neighbors)
+		if ok_levels and type(levels) == "table" then
+			return levels
+		end
+	end
+	return { current_level }
+end
+
+function M._trade_route_smart_allowed(squad, smart, level_name)
+	if not (smart and object_id(smart) and smart_has_indexed_trade_route(smart)) then
+		return false
+	end
+	local cfg = cfg_mod()
+	if cfg and type(cfg.is_level_blacklisted_for_squad) == "function" then
+		local ok, blocked = pcall(cfg.is_level_blacklisted_for_squad, squad, level_name)
+		if ok and blocked == true then
+			return false
+		end
+	end
+	if cfg and type(cfg.is_smart_blacklisted_for_squad) == "function" then
+		local ok, blocked = pcall(cfg.is_smart_blacklisted_for_squad, squad, smart, level_name)
+		if ok and blocked == true then
+			return false
+		end
+	end
+	if not find_live_trader_at_smart(smart, nil) then
+		return false
+	end
+	return true
+end
+
+function M.pick_trade_route_smart(squad, opts)
+	opts = opts or {}
+	if M.enabled() ~= true or not squad then
+		return nil, "disabled"
+	end
+	local board = rawget(_G, "SIMBOARD")
+	if not (board and board.zhopa2_trade_smarts_by_level) then
+		return nil, "no_trade_index"
+	end
+	if type(board.zhopa2_ensure_buckets) == "function" then
+		pcall(board.zhopa2_ensure_buckets, board)
+	end
+	local current_level = M._trade_route_current_level(squad, board)
+	if type(current_level) ~= "string" or current_level == "" then
+		return nil, "no_level"
+	end
+
+	local levels = M._trade_route_levels(current_level, opts)
+	local candidates = {}
+	for i = 1, #levels do
+		local level_name = levels[i]
+		local bucket = board.zhopa2_trade_smarts_by_level and board.zhopa2_trade_smarts_by_level[level_name] or nil
+		for _, smart in pairs(bucket or {}) do
+			if M._trade_route_smart_allowed(squad, smart, level_name) then
+				candidates[#candidates + 1] = { smart = smart, level = level_name }
+			end
+		end
+	end
+	if #candidates == 0 then
+		return nil, "no_trade_route"
+	end
+	local selected = candidates[math.random(#candidates)]
+	if not selected then
+		return nil, "no_trade_route"
+	end
+	local reason = selected.level == current_level and "trade_route_current" or "trade_route_neighbor"
+	return selected.smart, reason
+end
+
+function M.trade_route_task_weight(squad, base_weight, opts)
+	local base = tonumber(base_weight) or 0
+	if base <= 0 then
+		return 0, "weight_disabled", 0
+	end
+	local has_work, work_reason, value = M.squad_trade_route_profile(squad)
+	if not has_work then
+		return 0, work_reason or "nothing_to_trade", value or 0
+	end
+	local smart, route_reason = M.pick_trade_route_smart(squad, opts or { level_mode = "current_or_neighbor" })
+	if not smart then
+		return 0, route_reason or "no_trade_route", value or 0
+	end
+	local bonus = math.min(M.TRADE_ROUTE_MAX_VALUE_BONUS, math.floor((tonumber(value) or 0) / M.TRADE_ROUTE_VALUE_WEIGHT_STEP))
+	return math.max(1, math.floor(base + bonus)), work_reason or route_reason or "trade_route", value or 0
+end
+
+local function mark_trade_lookup_failure(squad, result, reason, smart)
+	mark_squad_trade_result(squad, result, reason, smart)
+	return false
+end
+
+local function resolve_auto_trade_context(squad, reason, now)
+	local smart = squad_current_trade_smart(squad)
+	if not smart then
+		return nil, nil, nil, mark_trade_lookup_failure(squad, "trade_no_smart", reason, nil), "no_smart"
+	end
+	if not smart_has_vanilla_trade_route(smart) then
+		return smart, nil, nil, mark_trade_lookup_failure(squad, "trade_no_trade_smart", reason, smart), "no_trade_smart"
+	end
+
+	local acquired, queue_reason = acquire_smart_trade_slot(squad, smart, reason, now)
+	if not acquired then
+		return smart, nil, nil, mark_trade_lookup_failure(squad, "trade_queued", reason, smart), queue_reason or "queued"
+	end
+
+	local ignore_ids = squad_member_id_set(squad)
+	local members = online_squad_trade_members(squad, smart)
+	if #members == 0 then
+		release_smart_trade_slot(object_id(smart), object_id(squad))
+		return smart, nil, nil, mark_trade_lookup_failure(squad, "trade_no_online_member", reason, smart), "no_online_member"
+	end
+
+	local has_work, work_reason = squad_members_have_trade_work(members, squad)
+	if not has_work then
+		release_smart_trade_slot(object_id(smart), object_id(squad))
+		return smart, members, nil, mark_trade_lookup_failure(squad, work_reason or "nothing_to_trade", reason, smart), work_reason or "nothing_to_trade"
+	end
+
+	local trader = find_online_trader_at_smart(smart, ignore_ids)
+	if not trader then
+		release_smart_trade_slot(object_id(smart), object_id(squad))
+		return smart, members, nil, mark_trade_lookup_failure(squad, "trade_no_trader", reason, smart), "no_trader"
+	end
+
+	return smart, members, trader, nil, nil
+end
+
+local function resolve_auto_trade_pair(squad, reason)
+	local smart = squad_current_trade_smart(squad)
+	if not smart then
+		return nil, nil, nil, mark_trade_lookup_failure(squad, "trade_no_smart", reason, nil), "no_smart"
+	end
+	if not smart_has_vanilla_trade_route(smart) then
+		return nil, nil, smart, mark_trade_lookup_failure(squad, "trade_no_trade_smart", reason, smart), "no_trade_smart"
+	end
+	local ignore_ids = squad_member_id_set(squad)
+	local npc = find_online_squad_trade_npc(squad, smart)
+	if not npc then
+		return nil, nil, smart, mark_trade_lookup_failure(squad, "trade_no_online_member", reason, smart), "no_online_member"
+	end
+	local trader = find_online_trader_at_smart(smart, ignore_ids)
+	if not trader then
+		return npc, nil, smart, mark_trade_lookup_failure(squad, "trade_no_trader", reason, smart), "no_trader"
+	end
+	return npc, trader, smart, nil, nil
+end
+
+function M.resolve_auto_trade_pair(squad, reason)
+	local npc, trader, smart, _, fail_reason = resolve_auto_trade_pair(squad, reason)
+	return npc, trader, smart, fail_reason
+end
+
+local function prepare_npc_vanilla_trade(npc, squad, smart, trader, reason, opts)
+	opts = opts or {}
+	local npc_id = object_id(npc)
+	local st = npc_id and db and db.storage and db.storage[npc_id] or nil
+	if not st then
+		return false
+	end
+
+	M.materialize_online_virtual_money(npc, squad, "prepare_trade")
+
+	local ok_plan, plan = pcall(M.build_online_sell_plan, npc, nil)
+	plan = ok_plan and type(plan) == "table" and plan or {}
+	local counts = inventory_section_counts(npc)
+	local needs = build_online_buy_needs(npc, counts)
+	local money = npc_money(npc)
+	local can_buy = false
+	for i = 1, #needs do
+		local price = M.online_trade_buy_section_price(needs[i].section)
+		if price > 0 and money >= price then
+			can_buy = true
+			break
+		end
+	end
+
+	if not sell_plan_should_start_auto_trade(npc, plan) and not can_buy and opts.force_intent ~= true then
+		clear_npc_trade_state(npc)
+		return false
+	end
+
+	st.trade_items = st.trade_items or {}
+	clear_table(st.trade_items)
+	for i = 1, #plan do
+		local section = plan[i] and plan[i].section
+		if section then
+			st.trade_items[section] = (st.trade_items[section] or 0) + 1
+		end
+	end
+	st.has_items_to_sell = true
+	st.zhopa2_trade_squad_id = object_id(squad)
+	st.zhopa2_trade_smart_id = object_id(smart)
+	st.zhopa2_trade_trader_id = object_id(trader)
+	st.zhopa2_trade_reason = reason
+	st.zhopa2_trade_member_ids = opts.member_ids
+	return true
+end
+
+local function unlink_npc_smart_job(smart, npc_id)
+	if type(smart.npc_by_job_section) == "table" then
+		for section, owner_id in pairs(smart.npc_by_job_section) do
+			if tonumber(owner_id) == tonumber(npc_id) then
+				smart.npc_by_job_section[section] = nil
+			end
+		end
+	end
+	if type(smart.clear_job) == "function" then
+		pcall(smart.clear_job, smart, npc_id)
+	end
+end
+
+local function setup_assigned_trade_job(npc, smart, info, job, slot_section, trader)
+	local npc_id = object_id(npc)
+	if not (npc_id and smart and info and job and slot_section) then
+		return false, "missing_trade_job"
+	end
+	local trader_id = object_id(trader)
+	local owner_id = smart.npc_by_job_section and tonumber(smart.npc_by_job_section[slot_section]) or nil
+	if owner_id and owner_id ~= tonumber(npc_id) then
+		return false, "trade_slot_busy"
+	end
+
+	unlink_npc_smart_job(smart, npc_id)
+	job.seller_id = trader_id
+	info.job = job
+	info.begin_job = true
+	info.need_job = "nil"
+	if type(smart.npc_by_job_section) == "table" then
+		smart.npc_by_job_section[slot_section] = npc_id
+	end
+
+	local st = db and db.storage and db.storage[npc_id] or nil
+	if st then
+		st.zhopa2_trade_force_job_section = slot_section
+		st.zhopa2_trade_force_until = trade_path.force_until()
+		st.zhopa2_trade_trader_id = trader_id
+	end
+	if not (st and st.object) then
+		return true, "trade_job_assigned_offline"
+	end
+	if db.offline_objects and db.offline_objects[npc_id] then
+		clear_table(db.offline_objects[npc_id])
+	end
+	if type(smart.setup_logic) ~= "function" then
+		return false, "trade_setup_logic_missing"
+	end
+	trade_path.clear(st.object, st)
+	if type(save_var) == "function" then
+		pcall(save_var, st.object, "path_index", 1)
+	end
+	local ok_setup, setup_err = pcall(smart.setup_logic, smart, st.object)
+	if not ok_setup then
+		return false, "trade_setup_logic_error:" .. tostring(setup_err)
+	end
+	if not (st.section_logic == slot_section and st.active_scheme ~= nil) then
+		return false, "trade_logic_not_active:" .. tostring(st.section_logic or "-") .. ":" .. tostring(st.active_scheme or "-")
+	end
+	local ok_path, path_reason = trade_path.prepare_active(st.object, smart, st, trader)
+	if not ok_path then
+		return false, "trade_path_prepare_failed:" .. tostring(path_reason or "-")
+	end
+	return true, "trade_job_assigned"
+end
+
+local function force_trade_job_reselect(npc, smart, trader)
+	local npc_id = object_id(npc)
+	local info = npc_id and smart and smart.npc_info and smart.npc_info[npc_id] or nil
+	if not info then
+		return false, "no_npc_info"
+	end
+
+	local job, slot_section, slot_reason = find_trade_customer_job(smart, npc_id)
+	if not (job and slot_section) then
+		return false, slot_reason or "no_trade_customer_job"
+	end
+
+	local st = db and db.storage and db.storage[npc_id] or nil
+	if st then
+		st.zhopa2_trade_force_job_section = slot_section
+		st.zhopa2_trade_force_until = trade_path.force_until()
+	end
+	info.need_job = slot_section
+	if type(smart.switch_to_desired_job) == "function" then
+		pcall(smart.switch_to_desired_job, smart, npc)
+	end
+	if info.job and info.job.section == slot_section and job_is_trade_customer(info.job, smart) then
+		info.job.seller_id = object_id(trader)
+		local active_st = db and db.storage and db.storage[npc_id] or nil
+		if not (active_st and active_st.object) or (active_st.section_logic == slot_section and active_st.active_scheme ~= nil) then
+			if active_st and active_st.object then
+				local ok_path, path_reason = trade_path.prepare_active(active_st.object, smart, active_st, trader)
+				if not ok_path then
+					return false, "trade_path_prepare_failed:" .. tostring(path_reason or "-")
+				end
+			end
+			return true, "trade_job_selected"
+		end
+	end
+
+	local assigned, assign_reason = setup_assigned_trade_job(npc, smart, info, job, slot_section, trader)
+	if not assigned and st then
+		st.zhopa2_trade_force_job_section = nil
+		st.zhopa2_trade_force_until = nil
+	end
+	return assigned, assign_reason
+end
+
+local function prepare_squad_vanilla_trade(squad, members, trader, smart, reason, opts)
+	opts = opts or {}
+	local tostr = tostring
+	local has_work, work_reason = squad_members_have_trade_work(members, squad)
+	if not has_work then
+		mark_squad_queue_state(squad, "done", object_id(smart), reason)
+		mark_squad_trade_result(squad, work_reason or "nothing_to_trade", reason, smart)
+		release_smart_trade_slot(object_id(smart), object_id(squad))
+		return false, work_reason or "nothing_to_trade"
+	end
+
+	local leader = members and members[1] or nil
+	if leader and prepare_npc_vanilla_trade(leader, squad, smart, trader, reason, { force_intent = true, member_ids = squad_trade_member_ids(members) }) then
+		local assigned, assign_reason = force_trade_job_reselect(leader, smart, trader)
+		if assigned then
+			set_smart_trade_slot_remaining(object_id(smart), object_id(squad), 1)
+			squad.zhopa2_trade_prepared_until = tg() + C.TRADE_PREPARED_TIMEOUT_MS
+			squad.zhopa2_trade_prepared_npc_id = object_id(leader)
+			squad.zhopa2_trade_prepared_smart_id = object_id(smart)
+			squad.zhopa2_trade_prepared_trader_id = object_id(trader)
+			squad.zhopa2_trade_prepared_reason = reason
+			mark_squad_trade_result(squad, "trade_prepared", reason, smart)
+			return false, "trade_prepared"
+		end
+		clear_npc_trade_state(leader)
+		M.clear_prepared_trade_job(smart, object_id(leader), "trade_assign_failed")
+		print_trade_error(
+			"~ ZHOPA2 trade error | reason [%s] squad [%s:%s] npc [%s:%s] smart [%s:%s] trader [%s:%s]",
+			tostr(assign_reason or "trade_slot_busy"),
+			object_name(squad),
+			tostr(object_id(squad) or "-"),
+			object_name(leader),
+			tostr(object_id(leader) or "-"),
+			object_name(smart),
+			tostr(object_id(smart) or "-"),
+			object_name(trader),
+			tostr(object_id(trader) or "-")
+		)
+		mark_squad_trade_result(squad, assign_reason or "trade_slot_busy", reason, smart)
+		release_smart_trade_slot(object_id(smart), object_id(squad))
+		return false, assign_reason or "trade_slot_busy"
+	end
+	mark_squad_queue_state(squad, "done", object_id(smart), reason)
+	mark_squad_trade_result(squad, "nothing_to_trade", reason, smart)
+	release_smart_trade_slot(object_id(smart), object_id(squad))
+	return false, "nothing_to_trade"
+end
+
+local function execute_offline_auto_trade(squad, smart, reason, now)
+	local tostr = tostring
+	if object_id(smart) ~= object_id(squad_current_trade_smart(squad)) then
+		mark_squad_trade_result(squad, "trade_no_current_trade_smart", reason, smart)
+		print_trade_error(
+			"~ ZHOPA2 trade error | reason [offline_not_current_smart] squad [%s:%s] smart [%s:%s] current [%s:%s]",
+			object_name(squad),
+			tostr(object_id(squad) or "-"),
+			object_name(smart),
+			tostr(object_id(smart) or "-"),
+			object_name(squad_current_trade_smart(squad)),
+			tostr(object_id(squad_current_trade_smart(squad)) or "-")
+		)
+		return false, "not_current_smart"
+	end
+	if not smart_has_indexed_trade_route(smart) then
+		mark_squad_trade_result(squad, "trade_no_trade_smart", reason, smart)
+		print_trade_error(
+			"~ ZHOPA2 trade error | reason [offline_no_trade_smart] squad [%s:%s] smart [%s:%s] trade_detail [%s]",
+			object_name(squad),
+			tostr(object_id(squad) or "-"),
+			object_name(smart),
+			tostr(object_id(smart) or "-"),
+			tostr(squad and squad.zhopa2_trade_detail or "-")
+		)
+		return false, "no_trade_smart"
+	end
+	local has_work, work_reason = M.offline_squad_has_trade_work(squad, smart)
+	if not has_work then
+		mark_squad_queue_state(squad, "done", object_id(smart), reason)
+		mark_squad_trade_result(squad, work_reason or "offline_nothing_to_trade", reason, smart)
+		return false, work_reason or "offline_nothing_to_trade"
+	end
+	local acquired, queue_reason = acquire_smart_trade_slot(squad, smart, reason, now)
+	if not acquired then
+		mark_trade_lookup_failure(squad, "trade_queued", reason, smart)
+		return false, queue_reason or "queued"
+	end
+	local ok, traded, result = pcall(M.execute_offline_squad_trade, squad, smart, reason)
+	result = ok and (traded == true and "offline_traded" or (result or "offline_nothing_to_trade")) or "offline_trade_error"
+	if not ok then
+		print_trade_error("~ ZHOPA2 trade error | reason [offline_trade_error] squad [%s:%s] smart [%s:%s] detail [%s]", object_name(squad), tostr(object_id(squad) or "-"), object_name(smart), tostr(object_id(smart) or "-"), tostr(traded))
+	end
+	set_squad_trade_cooldown(squad, now)
+	mark_squad_queue_state(squad, "done", object_id(smart), reason)
+	mark_squad_trade_result(squad, result, reason, smart)
+	release_smart_trade_slot(object_id(smart), object_id(squad))
+	return result == "offline_traded", result
+end
+
+local function try_auto_trade_resolved(squad, reason, opts, now)
+	M.patch_trade_condition()
+	M.patch_trade_effect()
+	local current_smart = squad_current_trade_smart(squad)
+	if current_smart then
+		local members = online_squad_trade_members(squad, current_smart, true)
+		if #members == 0 then
+			return execute_offline_auto_trade(squad, current_smart, reason, now)
+		end
+	end
+	local smart, members, trader, _, fail_reason = resolve_auto_trade_context(squad, reason, now)
+	if fail_reason then
+		return false, fail_reason
+	end
+	set_squad_trade_cooldown(squad, now)
+	return prepare_squad_vanilla_trade(squad, members, trader, smart, reason, opts)
+end
+
+local function alive_online_pair(npc, trader)
+	if not (npc and trader) then
+		return false
+	end
+	if type(npc.alive) == "function" then
+		local ok, alive = pcall(npc.alive, npc)
+		if not (ok and alive == true) then
+			return false
+		end
+	end
+	if type(trader.alive) == "function" then
+		local ok, alive = pcall(trader.alive, trader)
+		if not (ok and alive == true) then
+			return false
+		end
+	end
+	return true
+end
+
+local function resolve_explicit_pair(npc, trader)
+	if not alive_online_pair(npc, trader) then
+		return nil, nil
+	end
+	return npc, trader
+end
+
+function M.can_auto_trade_now(squad)
+	return M.enabled() == true and squad ~= nil and can_try_auto_trade_now(squad, tg()) == true
+end
+
+function M.debug_resolve_auto_trade_pair(squad, reason)
+	local npc, trader, smart, _, fail_reason = resolve_auto_trade_pair(squad, reason)
+	return npc, trader, smart, fail_reason
+end
+
+function M.try_auto_trade_npc(npc, trader, reason, opts)
+	if M.enabled() ~= true then
+		return false, "disabled"
+	end
+	M.ensure_runtime_ready()
+	if not runtime_ready("economy_trade_npc") then
+		runtime_not_ready_reason()
+		return false, "runtime_not_ready"
+	end
+	if not resolve_explicit_pair(npc, trader) then
+		return false, "missing_pair"
+	end
+	local ok, traded = pcall(M.execute_online_trade_with_trader, npc, trader, nil, opts or { allow_buy_without_sell = true })
+	M.flush_trade_events()
+	if not ok then
+		return false, "executor_error"
+	end
+	return traded == true, traded == true and "traded" or "nothing_to_trade"
+end
+
+function M.try_auto_trade(squad, reason, opts)
+	if M.enabled() ~= true then
+		return false, "disabled"
+	end
+	M.ensure_runtime_ready()
+	if not runtime_ready("economy_trade") then
+		runtime_not_ready_reason()
+		return false, "runtime_not_ready"
+	end
+	if not squad then
+		return false, "missing_squad"
+	end
+	local now = tg()
+	local recovered, recover_result = recover_stale_prepared_trade(squad, now)
+	if recovered then
+		M.flush_trade_events()
+		return false, recover_result
+	end
+	if recover_result == "trade_prepared" then
+		return false, "trade_prepared"
+	end
+	if not can_try_auto_trade_now(squad, now) then
+		return false, "cooldown"
+	end
+	local traded, result = try_auto_trade_resolved(squad, reason, opts, now)
+	M.flush_trade_events()
+	return traded, result
+end
+
+local function refresh_trade_items_from_inventory(npc, params, force)
+	if M.enabled() ~= true then
+		return false
+	end
+	if not (npc and type(npc.alive) == "function" and npc:alive()) then
+		return false
+	end
+
+	local npc_id = object_id(npc)
+	local st = npc_id and db and db.storage and db.storage[npc_id] or nil
+	if not st then
+		return false
+	end
+
+	if tonumber(st.zhopa2_trade_suppress_until or 0) > tg() then
+		st.has_items_to_sell = false
+		return false
+	end
+
+	if trade_context_active(st) then
+		st.has_items_to_sell = true
+		return true
+	end
+
+	if not force and st.zhopa2_trade_inventory_scan_tg and tg() < st.zhopa2_trade_inventory_scan_tg then
+		return st.has_items_to_sell == true
+	end
+	st.zhopa2_trade_inventory_scan_tg = tg() + C.TRADE_SCAN_INTERVAL_MS
+
+	local ok, plan = pcall(M.build_online_sell_plan, npc, params)
+	if not ok or type(plan) ~= "table" then
+		return st.has_items_to_sell == true
+	end
+
+	st.trade_items = st.trade_items or {}
+	clear_table(st.trade_items)
+	for i = 1, #plan do
+		local section = plan[i] and plan[i].section
+		if section then
+			st.trade_items[section] = (st.trade_items[section] or 0) + 1
+		end
+	end
+	local can_buy = false
+	local needs = build_online_buy_needs(npc)
+	local squad = squad_for_online_npc(npc)
+	M.materialize_online_virtual_money(npc, squad, "online_inventory_scan")
+	local money = npc_money(npc) + virtual_money(squad)
+	for i = 1, #needs do
+		local price = M.online_trade_buy_section_price(needs[i].section)
+		if price > 0 and money >= price then
+			can_buy = true
+			break
+		end
+	end
+	st.has_items_to_sell = sell_plan_should_start_auto_trade(npc, plan) or can_buy
+	return st.has_items_to_sell
+end
+
+function M.refresh_online_trade_inventory(npc, params, force)
+	return refresh_trade_items_from_inventory(npc, params, force)
+end
+
+function M.npc_has_items_to_sell(actor, npc, params)
+	if M.enabled() ~= true then
+		if original_npc_has_items_to_sell then
+			return original_npc_has_items_to_sell(actor, npc, params)
+		end
+		return false
+	end
+	local npc_id = object_id(npc)
+	local st = npc_id and db and db.storage and db.storage[npc_id] or nil
+	if trade_context_active(st) then
+		M.patch_trade_effect()
+		st.has_items_to_sell = true
+		return true
+	end
+	local squad = nil
+	if st and st.zhopa2_trade_squad_id then
+		squad = server_object_by_id(tonumber(st.zhopa2_trade_squad_id))
+	else
+		squad = squad_for_online_npc(npc)
+	end
+	if squad_accepts_managed_trade_signal(squad) then
+		clear_npc_trade_state(npc)
+		return false
+	end
+	if original_npc_has_items_to_sell then
+		return original_npc_has_items_to_sell(actor, npc, params)
+	end
+	return false
+end
+
+local function execute_online_squad_trade(source_npc, trader, params, squad_id, smart_id, member_ids)
+	source_npc = live_object(source_npc)
+	trader = live_object(trader)
+	if not (source_npc and trader) then
+		return false, "missing_source_or_trader"
+	end
+	local squad = squad_id and server_object_by_id(squad_id) or nil
+	if not M.is_squad_object(squad) then
+		local traded = M.execute_online_trade_with_trader(source_npc, trader, params, { allow_buy_without_sell = true })
+		return traded, traded and nil or "fallback_nothing_to_trade"
+	end
+	local smart = smart_id and smart_by_id(smart_id) or nil
+	local members = online_trade_members_from_ids(member_ids)
+	if #members == 0 then
+		members = online_squad_trade_members(squad, smart)
+	end
+	ensure_trade_source_member(members, source_npc)
+	local suppress_until = tg() + C.AUTO_TRADE_COOLDOWN_MS
+	local traded_any = false
+	local leader = source_npc
+
+	M.materialize_online_virtual_money(leader, squad, "online_trade")
+
+	for i = 1, #members do
+		local member = members[i]
+		if member and object_id(member) ~= object_id(leader) then
+			transfer_all_money_to(member, leader)
+		end
+	end
+
+	local ok_virtual, virtual_count, virtual_value = pcall(execute_virtual_squad_sale, squad, leader, trader, "online_virtual_trade")
+	traded_any = (ok_virtual and (tonumber(virtual_count) or 0) > 0 and (tonumber(virtual_value) or 0) > 0) or traded_any
+
+	for i = 1, #members do
+		local member = members[i]
+		local ok_trade, traded = pcall(execute_online_sell_only, member, trader, params, leader)
+		traded_any = (ok_trade and traded == true) or traded_any
+	end
+
+	for i = 1, #members do
+		local member = members[i]
+		local ok_buy, bought = pcall(M.execute_online_buy, member, trader, { payer_npc = leader })
+		traded_any = (ok_buy and bought == true) or traded_any
+	end
+
+	local diag = string.format(
+		"members=%s member_ids=%s leader_money=%s",
+		tostring(#members),
+		tostring(trade_member_ids_count(member_ids)),
+		tostring(npc_money(leader))
+	)
+
+	for i = 1, #members do
+		local member = members[i]
+		suppress_npc_trade_state(member, suppress_until)
+	end
+	set_trade_job_idle(source_npc, params)
+	return traded_any, traded_any and nil or diag
+end
+
+local function suppress_online_squad_trade_members(squad, smart, until_tg)
+	local members = online_squad_trade_members(squad, smart)
+	for i = 1, #members do
+		suppress_npc_trade_state(members[i], until_tg)
+	end
+end
+
+local function squad_id_for_trade_signal(npc, st)
+	if st and st.zhopa2_trade_squad_id then
+		return tonumber(st.zhopa2_trade_squad_id), true
+	end
+	local _, group_id = squad_for_online_npc(npc)
+	if group_id then
+		return group_id, false
+	end
+	return nil, false
+end
+
+local function squad_accepts_recovered_trade_signal(squad)
+	return squad_accepts_managed_trade_signal(squad)
+end
+
+local function resolve_trade_signal_context(npc, params, st)
+	local smart = trade_smart_for_npc(npc, params)
+	local squad_id, explicit = squad_id_for_trade_signal(npc, st)
+	if not squad_id then
+		return { zhopa = false, smart = smart }
+	end
+	local squad = server_object_by_id(squad_id)
+	if not explicit then
+		return { zhopa = false, managed = squad_accepts_recovered_trade_signal(squad), squad = squad, squad_id = squad_id, smart = smart }
+	end
+	local smart_id = st and tonumber(st.zhopa2_trade_smart_id) or nil
+	if not smart_id and smart then
+		smart_id = object_id(smart)
+	end
+	if not smart_id and squad then
+		smart = smart_for_squad_trade(squad)
+		smart_id = object_id(smart)
+	end
+	if not smart and smart_id then
+		smart = smart_by_id(smart_id)
+	end
+	return {
+		zhopa = true,
+		explicit = explicit == true,
+		squad = squad,
+		squad_id = squad_id,
+		smart = smart,
+		smart_id = smart_id,
+	}
+end
+
+local function resolve_trade_signal_trader(npc, params, st, ctx)
+	local trader = trade_seller_for_npc(npc, params)
+	if trader then
+		return trader
+	end
+	if ctx and ctx.smart then
+		local ignore_ids = ctx.squad and squad_member_id_set(ctx.squad) or nil
+		return live_object(find_online_trader_at_smart(ctx.smart, ignore_ids))
+	end
+	return nil
+end
+
+local function trade_job_customer_from_params(params)
+	local smart = params and params[1] and SIMBOARD and SIMBOARD.smarts_by_names and SIMBOARD.smarts_by_names[params[1]] or nil
+	local slot = params and params[2] and ("logic@" .. tostring(params[2])) or nil
+	local npc_id = smart and slot and smart.npc_by_job_section and smart.npc_by_job_section[slot] or nil
+	return npc_id and online_object_by_id(npc_id) or nil
+end
+
+local function trade_context_already_completed(st)
+	return st and tonumber(st.zhopa2_trade_completed_until or 0) > tg()
+end
+
+local function complete_trade_context(npc, params, st, ctx, trader, reason)
+	local tostr = tostring
+	local squad_id = ctx.squad_id
+	local smart_id = ctx.smart_id
+	local ok, sold, result, detail = true, false, "nothing_to_trade", nil
+	if ctx.zhopa and not ctx.squad then
+		result = "trade_squad_missing"
+	elseif ctx.zhopa and not ctx.smart then
+		result = "trade_no_smart"
+	elseif ctx.zhopa and not live_object(npc) then
+		result = "trade_source_missing"
+	elseif ctx.zhopa and not trader then
+		result = "trade_no_trader"
+	else
+		ok, sold, detail = pcall(execute_online_squad_trade, npc, trader, params, squad_id, smart_id, st and st.zhopa2_trade_member_ids or nil)
+		result = ok and (sold == true and "traded" or "nothing_to_trade") or "trade_error"
+		if not ok then
+			detail = tostr(sold)
+		end
+	end
+	if ctx.zhopa and result ~= "traded" then
+		print_trade_error(
+			"~ ZHOPA2 trade error | reason [%s] npc [%s:%s] squad [%s] smart [%s] trader [%s:%s] st_squad [%s] force_left [%s] member_ids [%s] detail [%s]",
+			tostr(result),
+			object_name(npc),
+			tostr(object_id(npc) or "-"),
+			tostr(squad_id or "-"),
+			tostr(smart_id or "-"),
+			object_name(trader),
+			tostr(object_id(trader) or "-"),
+			tostr(st and st.zhopa2_trade_squad_id or "-"),
+			tostr(st and ((tonumber(st.zhopa2_trade_force_until or 0) or 0) - tg()) or "-"),
+			tostr(trade_member_ids_count(st and st.zhopa2_trade_member_ids or nil)),
+			tostr(detail or "-")
+		)
+	end
+	if st then
+		release_smart_trade_slot(smart_id, squad_id)
+		clear_npc_trade_state(npc)
+	end
+	set_trade_job_idle(npc, params)
+	M.release_online_trade_npc_to_smart(npc, ctx.smart, result)
+	if ctx.zhopa then
+		local suppress_until = tg() + C.AUTO_TRADE_COOLDOWN_MS
+		if ctx.squad then
+			set_squad_trade_cooldown(ctx.squad, tg())
+			mark_squad_trade_result(ctx.squad, result, reason, ctx.smart)
+		end
+		suppress_online_squad_trade_members(ctx.squad, ctx.smart, suppress_until)
+		suppress_npc_trade_state(npc, suppress_until)
+		return true, result
+	end
+	return ok and sold == true, result
+end
+
+function M.trade_job_give_id(actor, npc, params)
+	local customer = trade_job_customer_from_params(params)
+	local customer_id = object_id(customer)
+	local st = customer_id and db and db.storage and db.storage[customer_id] or nil
+	local chosen_id = st and tonumber(st.zhopa2_trade_trader_id) or nil
+	local managed = chosen_id and trade_context_active(st)
+
+	if original_trade_job_give_id then
+		pcall(original_trade_job_give_id, actor, npc, params)
+	end
+	if M.enabled() ~= true then
+		return
+	end
+	if not customer_id then
+		customer = trade_job_customer_from_params(params)
+		customer_id = object_id(customer)
+		st = customer_id and db and db.storage and db.storage[customer_id] or nil
+		chosen_id = st and tonumber(st.zhopa2_trade_trader_id) or nil
+		managed = chosen_id and trade_context_active(st)
+	end
+	if not st then
+		return
+	end
+	if managed then
+		st.zhopa2_trade_trader_id = chosen_id
+		local smart = trade_smart_for_npc(customer, params)
+		local npc_info = smart and smart.npc_info and smart.npc_info[customer_id]
+		if npc_info and npc_info.job then
+			npc_info.job.seller_id = chosen_id
+		end
+	elseif npc then
+		st.zhopa2_trade_trader_id = object_id(npc)
+	end
+end
+
+function M.trade_job_sell_items(actor, npc, params)
+	local tostr = tostring
+	if M.enabled() ~= true then
+		if original_trade_job_sell_items then
+			return original_trade_job_sell_items(actor, npc, params)
+		end
+		return
+	end
+	local npc_id = object_id(npc)
+	local st = npc_id and db and db.storage and db.storage[npc_id] or nil
+	if trade_context_already_completed(st) then
+		clear_npc_trade_state(npc)
+		set_trade_job_idle(npc, params)
+		M.release_online_trade_npc_to_smart(npc, trade_smart_for_npc(npc, params), "already_completed")
+		return
+	end
+	local ctx = resolve_trade_signal_context(npc, params, st)
+	local trader = resolve_trade_signal_trader(npc, params, st, ctx)
+	if not ctx.zhopa then
+		if ctx.managed then
+			clear_npc_trade_state(npc)
+			set_trade_job_idle(npc, params)
+			M.release_online_trade_npc_to_smart(npc, ctx.smart, "managed_signal_without_context")
+			return
+		end
+		if st and (st.zhopa2_trade_force_job_section or st.zhopa2_trade_member_ids or st.zhopa2_trade_trader_id) then
+			print_trade_error(
+				"~ ZHOPA2 trade error | reason [signal_without_context] npc [%s:%s] trader [%s:%s] st_squad [%s] force_left [%s] member_ids [%s] params [%s:%s]",
+				object_name(npc),
+				tostr(object_id(npc) or "-"),
+				object_name(trader),
+				tostr(object_id(trader) or "-"),
+				tostr(st.zhopa2_trade_squad_id or "-"),
+				tostr((tonumber(st.zhopa2_trade_force_until or 0) or 0) - tg()),
+				tostr(trade_member_ids_count(st.zhopa2_trade_member_ids)),
+				tostr(params and params[1] or "-"),
+				tostr(params and params[2] or "-")
+			)
+		end
+		if original_trade_job_sell_items then
+			return original_trade_job_sell_items(actor, npc, params)
+		end
+		return
+	end
+	local handled, result = complete_trade_context(npc, params, st, ctx, trader, st and st.zhopa2_trade_reason or "vanilla_trade_signal")
+	if not handled then
+		print_trade_error(
+			"~ ZHOPA2 trade error | reason [unhandled_context] npc [%s:%s] result [%s]",
+			object_name(npc),
+			tostr(object_id(npc) or "-"),
+			tostr(result or "-")
+		)
+	end
+	return
+end
+
+function M.patch_trade_condition()
+	if not (xr_conditions and type(xr_conditions) == "table") then
+		return false
+	end
+	if xr_conditions.npc_has_items_to_sell == M.npc_has_items_to_sell then
+		patched_condition = true
+		return true
+	end
+	original_npc_has_items_to_sell = xr_conditions.npc_has_items_to_sell
+	xr_conditions.npc_has_items_to_sell = M.npc_has_items_to_sell
+	patched_condition = true
+	return true
+end
+
+function M.patch_trade_effect()
+	if not (xr_effects and type(xr_effects) == "table") then
+		return false
+	end
+	if xr_effects.trade_job_sell_items == M.trade_job_sell_items
+		and xr_effects.trade_job_give_id == M.trade_job_give_id
+	then
+		patched_effect = true
+		return true
+	end
+	if xr_effects.trade_job_sell_items ~= M.trade_job_sell_items then
+		original_trade_job_sell_items = xr_effects.trade_job_sell_items
+		xr_effects.trade_job_sell_items = M.trade_job_sell_items
+	end
+	if xr_effects.trade_job_give_id ~= M.trade_job_give_id then
+		original_trade_job_give_id = xr_effects.trade_job_give_id
+		xr_effects.trade_job_give_id = M.trade_job_give_id
+	end
+	patched_effect = true
+	return true
+end
+
+function M.watch_recent_trade_release()
+	local watch = M.trade_release_watch
+	if type(watch) ~= "table" or next(watch) == nil then
+		return
+	end
+	if M.enabled() ~= true then
+		return
+	end
+	local now = tg()
+	if tonumber(M.trade_release_watch_next_tg or 0) > now then
+		return
+	end
+	M.trade_release_watch_next_tg = now + C.TRADE_POST_RELEASE_WATCH_INTERVAL_MS
+	for npc_id, stored_smart_id in pairs(watch) do
+		local st = db and db.storage and db.storage[npc_id] or nil
+		local deadline = tonumber(st and st.zhopa2_trade_release_watch_until or 0) or 0
+		if deadline <= now then
+			watch[npc_id] = nil
+			if st then
+				st.zhopa2_trade_release_watch_until = nil
+				st.zhopa2_trade_release_reason = nil
+			end
+		else
+			local npc = st and st.object or online_object_by_id(npc_id)
+			local smart = type(stored_smart_id) == "number" and smart_by_id(stored_smart_id) or trade_smart_for_npc(npc, nil)
+			if not npc then
+				watch[npc_id] = nil
+			elseif smart then
+				local info = smart.npc_info and smart.npc_info[npc_id] or nil
+				local active_l = st and slower(st.section_logic or st.active_section) or ""
+				if (info and info.job and job_is_trade_customer(info.job, smart))
+					or contains_plain(active_l, "beh_trade_job")
+					or contains_plain(active_l, "trade_slot")
+				then
+					M.clear_prepared_trade_job(smart, npc_id, "post_trade_watch")
+				else
+					watch[npc_id] = nil
+					if st then
+						st.zhopa2_trade_release_watch_until = nil
+						st.zhopa2_trade_release_reason = nil
+					end
+				end
+			end
+		end
+	end
+end
+
+function M.actor_on_update()
+	M.watch_recent_trade_release()
+end
+
+local function npc_on_net_spawn(npc, se_obj)
+	local squad = squad_for_spawned_npc(npc, se_obj)
+	M.materialize_online_virtual_money(npc, squad, "npc_net_spawn")
+end
+
+local function on_game_load()
+	M.patch_trade_condition()
+	M.patch_trade_effect()
+	trade_path.offline_profile_cache = {}
+	trade_path.offline_profile_cleanup_at = 0
+	trade_path.session_banned_npcs = {}
+	SMART_TRADE_QUEUE = {}
+	M.flush_trade_events()
+end
+
+function M.materialize_online_squad_virtual_money()
+	local board = rawget(_G, "SIMBOARD")
+	local squads = board and board.squads
+	if type(squads) ~= "table" then
+		return
+	end
+	for _, squad in pairs(squads) do
+		if M.is_squad_object(squad) then
+			M._online_squad_members(squad)
+		end
+	end
+end
+
+local function actor_on_first_update()
+	M.patch_trade_condition()
+	M.patch_trade_effect()
+	M.flush_trade_events()
+	M.materialize_online_squad_virtual_money()
+end
+
+local function register_trade_callbacks(force)
+	if registered_callbacks and force ~= true then
+		return true
+	end
+	if not RegisterScriptCallback then
+		registered_callbacks = false
+		return false
+	end
+	if UnregisterScriptCallback then
+		pcall(UnregisterScriptCallback, "actor_on_update", M.actor_on_update)
+		pcall(UnregisterScriptCallback, "actor_on_first_update", actor_on_first_update)
+		pcall(UnregisterScriptCallback, "npc_on_net_spawn", npc_on_net_spawn)
+		pcall(UnregisterScriptCallback, "on_game_load", on_game_load)
+	end
+	local ok = true
+	ok = pcall(RegisterScriptCallback, "actor_on_update", M.actor_on_update) and ok
+	ok = pcall(RegisterScriptCallback, "actor_on_first_update", actor_on_first_update) and ok
+	ok = pcall(RegisterScriptCallback, "npc_on_net_spawn", npc_on_net_spawn) and ok
+	ok = pcall(RegisterScriptCallback, "on_game_load", on_game_load) and ok
+	registered_callbacks = ok == true
+	return registered_callbacks
+end
+
+function M.ensure_runtime_ready(force_callbacks)
+	M.patch_trade_condition()
+	M.patch_trade_effect()
+	M.flush_trade_events()
+	return register_trade_callbacks(force_callbacks)
+end
+
+function M.on_game_start()
+	M.ensure_runtime_ready(true)
+	if not registered_callbacks then
+		return false
+	end
+	return patched_condition and patched_effect
+end
+
+function on_game_start()
+	return M.on_game_start()
+end
+
+_G.zhopa2_economy = M
+
+return M

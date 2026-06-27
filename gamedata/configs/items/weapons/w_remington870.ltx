@@ -1,0 +1,535 @@
+;------------------------------------------------------------------------------------------------
+[wpn_remington870]:identity_immunities,weapon_probability,default_weapon_params,wpn_mp133_sounds
+        GroupControlSection         = spawn_group
+        $npc                        = on
+        $prefetch                   = 8
+$spawn                                   = "weapons\remington870"
+        scheduled                   = off
+        cform                       = skeleton
+parent_section                           = wpn_remington870
+        
+        class                       = WP_ASHTG
+        slot                        = 1
+        animation_slot              = 9
+        ef_main_weapon_type         = 1
+        ef_weapon_type              = 9
+        hand_dependence             = 1
+        single_handed               = 0
+        
+icons_texture      = ui\ui_icon_870_short		
+inv_grid_height                          = 1
+inv_grid_width                           = 4
+inv_grid_x                               = 70
+inv_grid_y                               = 69
+inv_name                                 = st_wpn_remington870
+inv_name_short                           = st_wpn_remington870
+description                              = st_wpn_remington870_descr
+        
+        kind                        = w_shotgun
+        inv_weight                  = 3.3
+        cost                        = 19960
+        repair_type                 = shotgun
+        weapon_class                = shotgun
+        
+        hud                         = wpn_remington870_hud
+visual                                   = dynamics\weapons\wpn_remington870\wpn_remington870.ogf
+        orientation                      = 0, -3.5, 0
+        position                         = -0.02, -0.01, -0.1
+        fire_point                       = 0, 0.07, 0.84
+        fire_point2                      = 0, 0.07, 0.84
+        strap_bone0                 = bip01_spine2
+        strap_bone1                 = bip01_spine1
+        strap_orientation                = -12, -13, 100
+        strap_position                   = -0.25, -0.115, 0.05
+        ph_mass                     = 3
+        
+        flame_particles             = weapons\generic_weapon05
+        smoke_particles             = amik\weapons\smoke_particles\smoke_particles_pump_01
+        
+        shell_point                      = 0.014947, 0.07, 0.25
+        shell_particles				= weapons\12ga
+
+        light_color                 = 0.6, 0.5, 0.3
+        light_range                 = 6.0
+        light_time                  = 0.2
+        light_var_color             = 0.05
+        light_var_range             = 0.5
+        
+upgrades                                 = up_gr_firstab_wincheaster1300, up_gr_seconab_wincheaster1300, up_gr_thirdab_wincheaster1300
+installed_upgrades                       =
+upgrade_scheme                           = upgrade_scheme_toz34
+upgr_icon_x                              = 1450
+upgr_icon_y                              = 300
+upgr_icon_width                          = 300
+upgr_icon_height                         = 50        
+		
+        tri_state_reload            = on
+        fire_modes                  = 1
+        ammo_class                  = ammo_12x70_buck, ammo_12x70_buck_bad, ammo_12x70_buck_verybad, ammo_12x76_zhekan, ammo_12x76_zhekan_bad, ammo_12x76_zhekan_verybad, ammo_12x76_dart, ammo_12x76_dart_bad, ammo_12x76_dart_verybad, ammo_12x70_buck_self
+        ammo_elapsed                = 5
+        ammo_mag_size               = 5
+        startup_ammo                = 10
+ 
+scopes                                   = ac10632, eot, c-more, specter, rmr, deltapoint, d0cter, e0t2, aim_low, aim_acro, romeo4, he510, monstrum, trihawk, tac30, c79, pk6, ekp8_18, echo1, compm4s, bossxe, t12, 0kp2, p1x42, acog
+        scope_status                = 0
+        scope_zoom_factor           = 0
+        
+        silencer_status             = 0
+        
+        grenade_launcher_status     = 0
+        
+hit_impulse                              = 200
+hit_power                                = 0.79, 0.79, 0.79, 0.79
+        hit_type                    = fire_wound
+        fire_distance               = 300
+        bullet_speed                = 340
+        rpm                         = 90
+        rpm_empty_click             = 200
+        
+        zoom_dof                    = 0.5, 1.0, 180
+        zoom_enabled                = true
+        zoom_rotate_time            = 0.25
+control_inertion_factor = 1.0f
+        crosshair_inertion          = 6.5
+        fire_dispersion_base        = 0.454
+        fire_dispersion_condition_factor = 0.001
+        
+        misfire_probability         = 0.005
+        misfire_start_condition     = 0.7 ;  0.91
+        misfire_start_prob          = 0.007
+        misfire_end_condition       = 0.16
+        misfire_end_prob            = 0.11
+        
+        condition_queue_shot_dec    = 0.0026
+        condition_shot_dec          = 0.0026
+        
+        cam_return                  = 0
+        cam_relax_speed             = 20
+        cam_dispersion              = 6.4
+        cam_dispersion_frac         = 0.9
+        cam_dispersion_inc          = 5.2
+        cam_max_angle               = 50.0
+        cam_max_angle_horz          = 50.0
+        cam_step_angle_horz         = 2.35
+        zoom_cam_relax_speed        = 16
+        zoom_cam_dispersion         = 5.84
+        zoom_cam_dispersion_frac    = 0.63
+        zoom_cam_dispersion_inc     = 4.3
+        zoom_cam_max_angle          = 50.0
+        zoom_cam_max_angle_horz     = 50.0
+        zoom_cam_step_angle_horz    = 2.28
+        
+        PDM_disp_accel_factor       = 1.85
+        PDM_disp_base               = 1.7
+        PDM_disp_crouch             = 1.0
+        PDM_disp_crouch_no_acc      = 1.0
+        PDM_disp_vel_factor         = 1.8
+        
+        cam_relax_speed_ai          = 360
+        zoom_cam_relax_speed_ai     = 120.75
+        holder_fov_modifier         = 1.0
+        holder_range_modifier       = 1.0
+        min_radius                  = 0
+        max_radius                  = 500
+        hit_probability_gd_novice   = 1.00
+        hit_probability_gd_stalker  = 1.00
+        hit_probability_gd_veteran  = 1.00
+        hit_probability_gd_master   = 1.00
+        
+        kill_msg_x                  = 171
+        kill_msg_y                  = 104
+        kill_msg_width              = 75
+        kill_msg_height             = 20
+ 
+
+[wpn_remington870_hud]:hud_base
+item_visual                              = anomaly_weapons\wpn_remington870\wpn_remington870_hud.ogf
+        attach_place_idx            = 0
+        zoom_hide_crosshair         = true
+
+        item_position				= 0, 0, 0
+        item_orientation			= 0, 0, 0
+
+        hands_orientation                = 0, 0, 0
+        hands_orientation_16x9           = 0, 0, 0
+        hands_position                   = 0, 0.0075, 0
+        hands_position_16x9              = 0, 0.0075, 0
+	
+        aim_hud_offset_pos               = 0, -0.001, 0
+        aim_hud_offset_pos_16x9          = 0, -0.001, 0
+        aim_hud_offset_rot               = -0.012, 0.001, 0.04
+        aim_hud_offset_rot_16x9          = -0.012, 0.001, 0.04
+
+        lowered_hud_offset_pos			= 0.065, -0.036, -0.02
+        lowered_hud_offset_pos_16x9		= 0.065, -0.036, -0.02
+        lowered_hud_offset_rot			= -0.1, -0.63, 0.4
+        lowered_hud_offset_rot_16x9		= -0.1, -0.63, 0.4
+
+        anm_hide                    = winchester1300_hide, idle, 0.5
+        anm_idle                    = winchester1300_idle, idle
+        anm_idle_aim                = winchester1300_aim, idle
+        anm_idle_aim_moving         = winchester1300_walk, idle, 0.75
+        anm_idle_aim_moving_crouch  = winchester1300_walk, idle
+        anm_idle_moving             = winchester1300_walk, idle
+        anm_idle_moving_crouch      = winchester1300_walk, idle
+        anm_idle_sprint             = winchester1300_sprint, idle
+        anm_shots                   = 870_shoot, winchester1300_shoot
+        anm_show                    = winchester1300_draw, idle
+        anm_ammo_check		    = winchester1300_dry, idle, 0.6
+        anm_open                    = winchester1300_zaglushka, idle
+		anm_open_empty              = winchester1300_zaglushka, idle
+		anm_close                   = winchester1300_zaglushka, winchester1300_reload_end
+		anm_add_cartridge           = winchester1300_reload_ammo, winchester1300_reload_ammo
+		anm_add_cartridge_empty     = 870_reload_empty_start, winchester1300_reload_empty_start
+        anm_reload_misfire         = 870_revival, winchester1300_revival
+		anm_shots_aim               = 870_aim_shoot, winchester1300_aim_shoot
+        anm_bore                    = winchester1300_dry, idle, 0.6
+        ;anm_idle_aim_start          = winchester1300_aim_start, winchester1300_aim_start
+        ;anm_idle_aim_end            = winchester1300_aim_end, winchester1300_aim_end
+		
+;--- Идлы клин---		
+		anm_idle_jammed                        = winchester1300_idle, idle_jammed
+		anm_hide_jammed                        = winchester1300_hide, idle_jammed         
+        anm_idle_jammed                        = winchester1300_idle, idle_jammed
+        anm_idle_aim_jammed                    = winchester1300_aim, idle_jammed
+        anm_idle_aim_moving_jammed             = winchester1300_walk, idle_jammed, 0.75
+        anm_idle_aim_moving_crouch_jammed      = winchester1300_walk, idle_jammed,  0.7
+        anm_idle_moving_jammed                 = winchester1300_walk, idle_jammed
+        anm_idle_moving_crouch_jammed          = winchester1300_walk, idle_jammed, 0.7
+        anm_idle_sprint_jammed                 = winchester1300_sprint, idle_jammed
+        anm_show_jammed                        = winchester1300_draw, idle_jammed
+		anm_bore_jammed                        = 870_dry_jammed, idle_jammed
+		anm_idle_aim_start_jammed              = winchester1300_aim_start, idle_jammed
+        anm_idle_aim_end_jammed                = winchester1300_aim_end, idle_jammed
+;--- Переходы спринта---
+
+        ;anm_sprint_start             = winchester1300_sprint_start, idle
+        ;anm_sprint_end               = winchester1300_sprint_end, idle
+		;anm_sprint_start_jammed      = winchester1300_sprint_start, idle_jammed   
+		;anm_sprint_end_jammed        = winchester1300_sprint_end, idle_jammed
+		
+
+;--- Паттерны спринта---
+
+        ;ts_pattern_sprint_start      = .+, anm_idle_sprint, anm_sprint_start, 1
+        ;ts_pattern_sprint_end        = anm_idle_sprint, ^anm_idle.*, anm_sprint_end
+        ;ts_strict_sprint_end_move    = anm_sprint_start, anm_idle_moving, anm_sprint_end 
+		
+;--- Прерывание перезарядки---
+        anm_reloadendtac_end                    = winchester1300_reload_end, idle
+        ts_pattern_reloadendstandart_end        = anm_add_cartridge, ^anm_idle.*, anm_reloadendtac_end	
+		ts_pattern_reloadendstandartopen_end    = .+, anm_close, anm_reloadendtac_end	
+		
+;--- Прерывание начальной перезарядки---
+        anm_reloadendtacnachalo_end             = winchester1300_reload_end, idle
+        ts_pattern_reloadendbegin_end           = anm_startzarada, ^anm_idle.*, anm_reloadendtacnachalo_end
+		
+;--- Прерывание пустой перезарядки---
+        anm_reloadendemptytac_end               = winchester1300_reload_empty_end, idle
+		ts_pattern_reloadend_end                = anm_add_cartridge_empty, ^anm_idle.*, anm_reloadendemptytac_end
+
+;--- Прерывание второго патрона пустой перезарядки---
+		ts_pattern_reloadendtwo_end              = anm_rotatetac_start, ^anm_idle.*, anm_reloadendtac_end		
+		
+;--- Переворот---
+      anm_rotatetac_start                       = winchester1300_reload_empty_second_ammo, winchester1300_reload_empty_second_ammo
+      ts_strict_rotate_start                    = anm_add_cartridge_empty, anm_add_cartridge, anm_rotatetac_start 
+			
+;--- Начало заряда---
+      anm_startzarada                = winchester1300_reload_start, winchester1300_reload_start
+      ts_strict_rotate_end           = anm_open, anm_add_cartridge, anm_startzarada    
+
+
+        shooting_backward_offset           = 0.05,0.03
+
+        shell_bone                  = wpn_body
+        shell_point                 = 0, -10, 0
+                
+        fire_bone                   = muzzle
+        fire_point                  = 0.0, 0.0, 0.0
+         
+        freelook_z_offset_mul		= 0.3
+		
+[wpn_remington870_ac10632]:wpn_remington870
+hud                                      = wpn_remington870_ac10632_hud
+
+1icon_layer                              = ac10632_x
+1icon_layer_x                            = 53
+1icon_layer_y                            = -24
+
+[wpn_remington870_ac10632_hud]:wpn_remington870_hud
+item_visual                              = anomaly_weapons\wpn_remington870\wpn_remington870_barska_hud.ogf
+		
+;------------------------------------------------------------------------------------------------
+[wpn_remington870_c-more]:wpn_remington870
+hud                                      = wpn_remington870_c-more_hud
+
+1icon_layer                              = c-more_x
+1icon_layer_x                            = 58
+1icon_layer_y                            = -21
+
+[wpn_remington870_c-more_hud]:wpn_remington870_ac10632_hud
+item_visual                              = anomaly_weapons\wpn_remington870\wpn_remington870_c-more_hud.ogf
+
+;------------------------------------------------------------------------------------------------
+[wpn_remington870_eot]:wpn_remington870
+hud                                      = wpn_remington870_eot_hud
+
+1icon_layer                              = eot_x
+1icon_layer_x                            = 55
+1icon_layer_y                            = -22
+
+[wpn_remington870_eot_hud]:wpn_remington870_ac10632_hud
+item_visual                              = anomaly_weapons\wpn_remington870\wpn_remington870_eot_hud.ogf
+
+;------------------------------------------------------------------------------------------------
+[wpn_remington870_rmr]:wpn_remington870
+hud                                      = wpn_remington870_rmr_hud
+
+1icon_layer                              = rmr_x
+1icon_layer_x                            = 58
+1icon_layer_y                            = -18
+
+[wpn_remington870_rmr_hud]:wpn_remington870_ac10632_hud
+item_visual                              = anomaly_weapons\wpn_remington870\wpn_remington870_rmr_hud.ogf
+
+;------------------------------------------------------------------------------------------------
+[wpn_remington870_deltapoint]:wpn_remington870
+hud                                      = wpn_remington870_deltapoint_hud
+
+1icon_layer                              = deltapoint_x
+1icon_layer_x                            = 58
+1icon_layer_y                            = -18
+
+[wpn_remington870_deltapoint_hud]:wpn_remington870_ac10632_hud
+item_visual                              = anomaly_weapons\wpn_remington870\wpn_remington870_deltapoint_hud.ogf
+
+;------------------------------------------------------------------------------------------------
+[wpn_remington870_d0cter]:wpn_remington870
+hud                                      = wpn_remington870_d0cter_hud
+
+1icon_layer                              = d0cter_x
+1icon_layer_x                            = 58
+1icon_layer_y                            = -23
+
+[wpn_remington870_d0cter_hud]:wpn_remington870_ac10632_hud
+item_visual                              = anomaly_weapons\wpn_remington870\wpn_remington870_d0cter_hud.ogf
+
+;------------------------------------------------------------------------------------------------
+[wpn_remington870_romeo4]:wpn_remington870
+hud                                      = wpn_remington870_romeo4_hud
+
+1icon_layer                              = romeo4_x
+1icon_layer_x                            = 53
+1icon_layer_y                            = -33
+
+[wpn_remington870_romeo4_hud]:wpn_remington870_ac10632_hud
+item_visual                              = anomaly_weapons\wpn_remington870\wpn_remington870_romeo4_hud.ogf
+
+;------------------------------------------------------------------------------------------------
+[wpn_remington870_e0t2]:wpn_remington870
+hud                                      = wpn_remington870_e0t2_hud
+
+1icon_layer                              = e0t2_x
+1icon_layer_x                            = 59
+1icon_layer_y                            = -25
+
+[wpn_remington870_e0t2_hud]:wpn_remington870_ac10632_hud
+item_visual                              = anomaly_weapons\wpn_remington870\wpn_remington870_e0t2_hud.ogf
+
+;------------------------------------------------------------------------------------------------
+[wpn_remington870_he510]:wpn_remington870
+hud                                      = wpn_remington870_he510_hud
+
+1icon_layer                              = he510_x
+1icon_layer_x                            = 55
+1icon_layer_y                            = -25
+
+[wpn_remington870_he510_hud]:wpn_remington870_ac10632_hud
+item_visual                              = anomaly_weapons\wpn_remington870\wpn_remington870_he510_hud.ogf
+
+;------------------------------------------------------------------------------------------------
+[wpn_remington870_aim_low]:wpn_remington870
+hud                                      = wpn_remington870_aim_low_hud
+
+1icon_layer                              = aim_low_x
+1icon_layer_x                            = 58
+1icon_layer_y                            = -19
+
+[wpn_remington870_aim_low_hud]:wpn_remington870_ac10632_hud
+item_visual                              = anomaly_weapons\wpn_remington870\wpn_remington870_aim_low_hud.ogf
+
+;------------------------------------------------------------------------------------------------
+[wpn_remington870_aim_acro]:wpn_remington870
+hud                                      = wpn_remington870_aim_acro_hud
+
+1icon_layer                              = aim_acro_x
+1icon_layer_x                            = 59
+1icon_layer_y                            = -33
+
+[wpn_remington870_aim_acro_hud]:wpn_remington870_ac10632_hud
+item_visual                              = anomaly_weapons\wpn_remington870\wpn_remington870_aim_acro_hud.ogf
+
+;------------------------------------------------------------------------------------------------
+[wpn_remington870_pk6]:wpn_remington870
+hud                                      = wpn_remington870_pk6_hud
+
+1icon_layer                              = pk6_x
+1icon_layer_x                            = 57
+1icon_layer_y                            = -23
+
+[wpn_remington870_pk6_hud]:wpn_remington870_ac10632_hud
+item_visual                              = anomaly_weapons\wpn_remington870\wpn_remington870_pk6_hud.ogf
+
+;------------------------------------------------------------------------------------------------
+[wpn_remington870_ekp8_18]:wpn_remington870
+hud                                      = wpn_remington870_ekp8_18_hud
+
+1icon_layer                              = ekp8_18_x
+1icon_layer_x                            = 55
+1icon_layer_y                            = -15
+
+[wpn_remington870_ekp8_18_hud]:wpn_remington870_ac10632_hud
+item_visual                              = anomaly_weapons\wpn_remington870\wpn_remington870_ekp8_18_hud.ogf
+
+;------------------------------------------------------------------------------------------------
+[wpn_remington870_0kp2]:wpn_remington870
+hud                                      = wpn_remington870_0kp2_hud
+
+1icon_layer                              = 0kp2_x
+1icon_layer_x                            = 57
+1icon_layer_y                            = -15
+
+[wpn_remington870_0kp2_hud]:wpn_remington870_ac10632_hud
+item_visual                              = anomaly_weapons\wpn_remington870\wpn_remington870_0kp2_hud.ogf
+
+;------------------------------------------------------------------------------------------------
+[wpn_remington870_compm4s]:wpn_remington870
+hud                                      = wpn_remington870_compm4s_hud
+
+1icon_layer                              = compm4s_x
+1icon_layer_x                            = 59
+1icon_layer_y                            = -29
+
+[wpn_remington870_compm4s_hud]:wpn_remington870_ac10632_hud
+item_visual                              = anomaly_weapons\wpn_remington870\wpn_remington870_compm4s_hud.ogf
+;------------------------------------------------------------------------------------------------
+[wpn_remington870_p1x42]:wpn_remington870
+hud                                      = wpn_remington870_p1x42_hud
+
+1icon_layer                              = p1x42_x
+1icon_layer_x                            = 59
+1icon_layer_y                            = -29
+
+[wpn_remington870_p1x42_hud]:wpn_remington870_ac10632_hud
+item_visual                              = anomaly_weapons\wpn_remington870\wpn_remington870_p1x42_hud.ogf
+
+;------------------------------------------------------------------------------------------------
+[wpn_remington870_bossxe]:wpn_remington870
+hud                                      = wpn_remington870_bossxe_hud
+
+1icon_layer                              = bossxe_x
+1icon_layer_x                            = 59
+1icon_layer_y                            = -27
+
+use_alt_aim_hud							 = true
+laser_status							 = true
+
+[wpn_remington870_bossxe_hud]:wpn_remington870_ac10632_hud
+item_visual                              = anomaly_weapons\wpn_remington870\wpn_remington870_bossxe_hud.ogf
+
+;------------------------------------------------------------------------------------------------
+[wpn_remington870_t12]:wpn_remington870
+hud                                      = wpn_remington870_t12_hud
+
+1icon_layer                              = t12_x
+1icon_layer_x                            = 59
+1icon_layer_y                            = -26
+
+[wpn_remington870_t12_hud]:wpn_remington870_ac10632_hud
+item_visual                              = anomaly_weapons\wpn_remington870\wpn_remington870_t12_hud.ogf
+
+
+;=========================================================SCOPES=================================================
+[wpn_remington870_specter]:wpn_remington870
+hud                                      = wpn_remington870_specter_hud
+
+1icon_layer                              = specter_x
+1icon_layer_x                            = 27
+1icon_layer_y                            = -28
+		
+		
+[wpn_remington870_specter_hud]:wpn_remington870_ac10632_hud
+item_visual                              = anomaly_weapons\wpn_remington870\wpn_remington870_specter_hud.ogf
+
+;------------------------------------------------------
+[wpn_remington870_acog]:wpn_remington870
+hud                                      = wpn_remington870_acog_hud
+
+1icon_layer                              = acog_x
+1icon_layer_x                            = 50
+1icon_layer_y                            = -23
+		
+		
+[wpn_remington870_acog_hud]:wpn_remington870_ac10632_hud
+item_visual                              = anomaly_weapons\wpn_remington870\wpn_remington870_acog_hud.ogf
+
+;------------------------------------------------------
+[wpn_remington870_c79]:wpn_remington870
+hud                                      = wpn_remington870_c79_hud
+
+1icon_layer                              = c79_x
+1icon_layer_x                            = 50
+1icon_layer_y                            = -23
+		
+		
+[wpn_remington870_c79_hud]:wpn_remington870_ac10632_hud
+item_visual                              = anomaly_weapons\wpn_remington870\wpn_remington870_c79_hud.ogf
+
+;------------------------------------------------------
+[wpn_remington870_monstrum]:wpn_remington870
+hud                                      = wpn_remington870_monstrum_hud
+
+1icon_layer                              = monstrum_x
+1icon_layer_x                            = 55
+1icon_layer_y                            = -27
+		
+
+[wpn_remington870_monstrum_hud]:wpn_remington870_ac10632_hud
+item_visual                              = anomaly_weapons\wpn_remington870\wpn_remington870_monstrum_hud.ogf
+
+;------------------------------------------------------
+[wpn_remington870_trihawk]:wpn_remington870
+hud                                      = wpn_remington870_trihawk_hud
+
+1icon_layer                              = trihawk_x
+1icon_layer_x                            = 52
+1icon_layer_y                            = -28
+		
+		
+[wpn_remington870_trihawk_hud]:wpn_remington870_ac10632_hud
+item_visual                              = anomaly_weapons\wpn_remington870\wpn_remington870_trihawk_hud.ogf
+
+;------------------------------------------------------
+[wpn_remington870_echo1]:wpn_remington870
+hud                                      = wpn_remington870_echo1_hud
+
+1icon_layer                              = echo1_x
+1icon_layer_x                            = 53
+1icon_layer_y                            = -26
+		
+		
+[wpn_remington870_echo1_hud]:wpn_remington870_ac10632_hud
+item_visual                              = anomaly_weapons\wpn_remington870\wpn_remington870_echo1_hud.ogf
+
+;------------------------------------------------------
+[wpn_remington870_tac30]:wpn_remington870
+hud                                      = wpn_remington870_tac30_hud
+
+1icon_layer                              = tac30_x
+1icon_layer_x                            = 39
+1icon_layer_y                            = -25
+		
+
+[wpn_remington870_tac30_hud]:wpn_remington870_ac10632_hud
+item_visual                              = anomaly_weapons\wpn_remington870\wpn_remington870_tac30_hud.ogf

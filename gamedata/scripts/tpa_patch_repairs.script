@@ -1,0 +1,146 @@
+local is_part = arti_jamming.is_part
+local can_remove = zzzz_arti_jamming_repairs.can_remove
+local remove_name = zzzz_arti_jamming_repairs.remove_name
+local act_fieldstrip = zzzz_arti_jamming_repairs.act_fieldstrip
+local get_suitable_kit = zzzz_arti_jamming_repairs.get_suitable_kit
+local replace_name = zzzz_arti_jamming_repairs.replace_name
+local replace_part = zzzz_arti_jamming_repairs.replace_part
+
+local clr_2 = utils_xml.get_color("ui_gray_1")
+local clr_r = utils_xml.get_color("d_red")
+local clr_o = utils_xml.get_color("d_orange")
+local clr_y = utils_xml.get_color("yellow")
+local clr_g = utils_xml.get_color("d_green")
+local fs_gui
+local maint_gui
+
+function get_color(condition)
+    local clr = clr_2
+		if condition >= settings.part_dots.wpo_green then clr = clr_g
+		elseif condition >= settings.part_dots.wpo_yellow then clr = clr_y
+		elseif condition >= settings.part_dots.wpo_orange then clr = clr_o
+		elseif condition > -1 then clr = clr_r
+        end
+
+    --[[
+    if condition > settings.part_dots.wpo_green then
+        clr = clr_g
+    elseif condition > settings.part_dots.wpo_yellow then
+        clr = clr_y
+    elseif condition > ui_mcm.get("item_icon_info/part_dots/wpo_orange") then
+        clr = clr_o
+    elseif condition > 0 then
+        clr = clr_r
+    end]]
+    return clr
+end
+
+zzzz_arti_jamming_repairs.init_fieldstrip_menu = function (obj)
+    local context_str = {}
+    local context_action = {}
+    local context_params = {}
+
+    local parts = item_parts.get_parts_con(obj)
+    local num = 0
+    for k, v in spairs(parts, zzzz_arti_jamming_repairs.sort_parts) do
+        -- if is_part(k) and not arti_jamming.is_barrel(k) and v > 0 then
+        if can_remove(k) and v > 0 then
+            local clr = get_color(v)
+            -- table.insert(context_str, clr .. remove_name(k) .. " (" .. v .. "%)")
+            table.insert(context_str, string.format("%s%s (%s%%)", clr, remove_name(k), v))
+            table.insert(context_action, "remove_part")
+            table.insert(context_params, { obj:id(), k, v })
+            num = num + 1
+        end
+    end
+    -- remove all
+    if num > 1 then
+        table.insert(context_str, remove_name(nil))
+        table.insert(context_action, "remove_part")
+        table.insert(context_params, { obj:id(), k, v })
+    end
+    if not fs_gui then fs_gui = utils_ui_custom.UICellPropertiesCustom(act_fieldstrip) end
+    fs_gui:Reset(GetCursorPosition(), context_action, context_str, context_params)
+    ui_inventory.GUI:PlaySND(sound_object([[interface\inv_properties_2]]))
+end
+
+
+zzzz_arti_jamming_repairs.init_maintenance_menu = function(obj)
+    local context_str = {}
+    local context_action = {}
+    local context_params = {}
+
+    local parts = item_parts.get_parts_con(obj)
+    local clean_kit = get_suitable_kit(obj, true)
+    local repair_kit = get_suitable_kit(obj, false)
+    for k, v in spairs(parts, zzzz_arti_jamming_repairs.sort_parts) do
+        if is_part(k) then
+            local clr = get_color(v)
+            if v < 60 and repair_kit then
+                -- table.insert(context_str, replace_name(k, false))
+                table.insert(context_str, string.format("%s%s (%s%%)", clr, replace_name(k, false), v))
+                table.insert(context_action, "replace_part")
+                table.insert(context_params, { obj:id(), k, repair_kit:section(), false })
+            elseif v >= 60 and v < 98 then
+                if clean_kit then
+                    -- table.insert(context_str, replace_name(k, true))
+                    table.insert(context_str, string.format("%s%s (%s%%)", clr, replace_name(k, true), v))
+                    table.insert(context_action, "clean_part")
+                    table.insert(context_params, { obj:id(), k, clean_kit:section(), true })
+                else
+                    -- table.insert(context_str, replace_name(k, true))
+                    table.insert(context_str, string.format("%s%s (%s%%)", clr, replace_name(k, true), v))
+                    table.insert(context_action, "replace_part")
+                    table.insert(context_params, { obj:id(), k, repair_kit:section(), true })
+                end
+            end
+        end
+    end
+    if not maint_gui then maint_gui = utils_ui_custom.UICellPropertiesCustom(replace_part) end
+    maint_gui:Reset(GetCursorPosition(), context_action, context_str, context_params)
+    ui_inventory.GUI:PlaySND(sound_object([[interface\inv_properties_2]]))
+end
+
+function load_defaults()
+	local t = {}
+	local op = item_icon_info_mcm.op
+	for i, v in ipairs(op.gr) do
+		if v.gr then
+			t[v.id] = {}
+			for ii, vv in ipairs(v.gr) do
+				if vv.def ~= nil then
+					t[v.id][vv.id] = vv.def
+				end
+			end
+		elseif v.def ~= nil then
+			t[v.id] = v.def
+		end
+	end
+	return t
+end
+
+settings = load_defaults()
+
+function load_settings()
+	settings = load_defaults()
+	if ui_mcm then
+		for k, v in pairs(settings) do
+			if type(settings[k]) == "table" then
+				for kk, vv in pairs(settings[k]) do
+					settings[k][kk] = ui_mcm.get("item_icon_info/" .. k .. "/" .. kk)
+				end
+			else
+				settings[k] = ui_mcm.get("item_icon_info/" .. k)
+			end
+		end
+	end
+	return settings
+end
+
+function on_game_start()
+	RegisterScriptCallback("actor_on_first_update", load_settings)
+	RegisterScriptCallback("on_option_change", load_settings)
+
+	utjan_xml = CScriptXmlInit()
+	utjan_xml:ParseFile("ui_utjan_icon_info.xml")
+end

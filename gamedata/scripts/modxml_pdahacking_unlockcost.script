@@ -1,0 +1,47 @@
+function on_xml_read()
+	RegisterScriptCallback("on_xml_read", function(xml_file_name, xml_obj)
+		if xml_file_name:find( [[\dialogs.xml]] ) then
+			local query_res = xml_obj:query("dialog[id=dm_encrypted_pda] > phrase_list > phrase[id=1] > text")
+			if not (type(query_res) == "table" and size_table(query_res) == 1) then return end
+
+			local elem = query_res[1]
+			local phrase_elem = elem.parent
+			xml_obj:removeElement(elem)
+			xml_obj:insertFromXMLString([[<script_text>modxml_pdahacking_unlockcost.dialog_pda_unlock</script_text>]], phrase_elem, #phrase_elem.kids)
+		end
+	end)
+end
+
+function on_game_start()
+	if modxml_beo_mechanic_decrypt_dialog then return end
+
+	_have_encrypted_pda_money = ui_pda_npc_tab.have_encrypted_pda_money
+	function ui_pda_npc_tab.have_encrypted_pda_money(first_speaker, second_speaker)
+		if z_pda_hacking.settings.enable_tech_unlock_cost then
+			local encrypted_pdas = ui_pda_npc_tab.get_encrypted_pdas()
+			local num = #encrypted_pdas
+			return mlr_utils.have_money(z_pda_hacking.settings.tech_unlock_cost * num)
+		else
+			_have_encrypted_pda_money(first_speaker, second_speaker)
+		end
+	end
+
+	_take_encrypted_pda_money = ui_pda_npc_tab.take_encrypted_pda_money
+	function ui_pda_npc_tab.take_encrypted_pda_money(first_speaker, second_speaker)
+		if z_pda_hacking.settings.enable_tech_unlock_cost then
+			local encrypted_pdas = ui_pda_npc_tab.get_encrypted_pdas()
+			local num = #encrypted_pdas
+			dialogs.relocate_money_from_actor(first_speaker, second_speaker, num * z_pda_hacking.settings.tech_unlock_cost)
+		else
+			_take_encrypted_pda_money(first_speaker, second_speaker)
+		end
+	end
+end
+
+function dialog_pda_unlock()
+	if z_pda_hacking.settings.enable_tech_unlock_cost and not modxml_beo_mechanic_decrypt_dialog then 
+		return strformat(game.translate_string("st_pdahacking_unlock_cost"), z_pda_hacking.settings.tech_unlock_cost)
+	else
+		return "st_encrypted_pda_text_1"
+	end
+end

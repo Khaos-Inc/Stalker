@@ -1,0 +1,17 @@
+-- ==============================================================================================
+-- Mod: No Weapon Warnings
+-- Description: Disables the NPC reaction to the player aiming a weapon at them by monkey-patching
+--              the xr_conditions.actor_has_weapon function to always return false.
+-- ==============================================================================================
+
+function on_game_start()
+    -- Monkey-patch the condition function so logic engine thinks the weapon is always lowered.
+    -- Crash Vector: None. Injecting into xr_conditions dynamically is safe.
+    -- Save-compatibility: 100% safe. Can be added or removed mid-playthrough.
+    -- Dependencies: Relies on base xr_conditions loading first (alphabetical order zz_ ensures this).
+    if xr_conditions and xr_conditions.actor_has_weapon then
+        xr_conditions.actor_has_weapon = function(actor, npc)
+            return false
+        end
+    end
+end

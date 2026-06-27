@@ -1,0 +1,89 @@
+![wpn_pm_custom]
+>scopes		= pm_upgr_kit
+
+[wpn_pm_custom_pm_upgr_kit]:wpn_pm_custom
+hud		= wpn_pm_sk1_pm_upgr_kit_hud
+		
+icons_texture      = ui\remademeowie_icon
+	inv_grid_width     = 2
+	inv_grid_height    = 1
+	inv_grid_x         = 4
+	inv_grid_y         = 0
+
+	silencer_x                  = 77
+	silencer_y                  = -19
+
+        ammo_elapsed                     = 10
+        ammo_mag_size                    = 10
+
+        inv_name                    = st_wpn_pm_upgr
+        inv_name_short              = st_wpn_pm_upgr
+        description                 = st_wpn_pm_upgr_descr
+
+	    ms_count                         = 3
+        use_alt_aim_hud                  = false
+	
+[wpn_pm_sk1_pm_upgr_kit_hud]:wpn_pm_sk1_new_hud
+item_visual		= anomaly_weapons\wpn_pm\wpn_pm_upgr_kit_hud.ogf
+        aim_hud_offset_pos               = -0.028537, 0.019186, -0.02
+        aim_hud_offset_pos_16x9          = -0.028537, 0.019186, -0.02
+        aim_hud_offset_rot               = 5e-05, 1.7e-05, -0.09
+        aim_hud_offset_rot_16x9          = 5e-05, 1.7e-05, -0.09
+		
+;--------------Extended mag reloads
+        anm_reload                  = h_pm_reload_ext, pm_reload_ammo4
+        anm_reload_ammo8            = h_pm_reload_ext, pm_reload_ammo8
+        anm_reload_ammo7            = h_pm_reload_ext, pm_reload_ammo7
+        anm_reload_ammo6            = h_pm_reload_ext, pm_reload_ammo6
+        anm_reload_ammo5            = h_pm_reload_ext, pm_reload_ammo5
+        anm_reload_ammo4            = h_pm_reload_ext, pm_reload_ammo4
+        anm_reload_ammo3            = h_pm_reload_ext, pm_reload_ammo3
+        anm_reload_ammo2            = h_pm_reload_ext, pm_reload_ammo2
+        anm_reload_ammo1            = h_pm_reload_ext, pm_reload_ammo1
+        anm_reload_empty            = h_pm_reload_empty_ext, pm_reload_empty
+        anm_ammo_check        = h_pm_magcheck_ext, pm_magcheck_ammo9
+        anm_ammo_check_ammo8  = h_pm_magcheck_ext, pm_magcheck_ammo8
+        anm_ammo_check_ammo7  = h_pm_magcheck_ext, pm_magcheck_ammo7
+        anm_ammo_check_ammo6  = h_pm_magcheck_ext, pm_magcheck_ammo6
+        anm_ammo_check_ammo5  = h_pm_magcheck_ext, pm_magcheck_ammo5
+        anm_ammo_check_ammo4  = h_pm_magcheck_ext, pm_magcheck_partial_ammo4
+        anm_ammo_check_ammo3  = h_pm_magcheck_ext, pm_magcheck_partial_ammo3
+        anm_ammo_check_ammo2  = h_pm_magcheck_ext, pm_magcheck_partial_ammo2
+        anm_ammo_check_ammo1  = h_pm_magcheck_ext, pm_magcheck_partial_ammo1
+		
+;------------------------------------------------------------------------------------------------
+![wpn_pm_actor]
+scopes		= pm_upgr_kit
+[wpn_pm_actor_pm_upgr_kit]:wpn_pm_custom_pm_upgr_kit
+hud			= wpn_pm_actor_pm_upgr_kit_hud
+icons_texture      = ui\remademeowie_icon
+	inv_grid_width     = 2
+	inv_grid_height    = 1
+	inv_grid_x         = 4
+	inv_grid_y         = 0
+
+	silencer_x                  = 77
+	silencer_y                  = -19
+
+        ammo_elapsed                     = 20
+        ammo_mag_size                    = 20
+	    ms_count                         = 3
+[wpn_pm_actor_pm_upgr_kit_hud]:wpn_pm_sk1_pm_upgr_kit_hud
+;------------------------------------------------------------------------------------------------
+![wpn_pm]
+scopes		= pm_upgr_kit
+[wpn_pm_pm_upgr_kit]:wpn_pm_custom_pm_upgr_kit
+hud			= wpn_pm_pm_upgr_kit_hud
+icons_texture      = ui\remademeowie_icon
+	inv_grid_width     = 2
+	inv_grid_height    = 1
+	inv_grid_x         = 4
+	inv_grid_y         = 0
+
+	silencer_x                  = 77
+	silencer_y                  = -19
+
+        ammo_elapsed                     = 20
+        ammo_mag_size                    = 20
+	    ms_count                         = 3
+[wpn_pm_pm_upgr_kit_hud]:wpn_pm_sk1_pm_upgr_kit_hud		

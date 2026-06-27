@@ -1,0 +1,356 @@
+local levitating_cars = {}
+local need_to_start_core = false
+local cars_spawned_once = false
+
+local ANOMALY_CORES = {
+    ["l02_garbage"] = {
+        pos = vector():set(-77.894, -2.60 + 5.5, -210.586),
+        particle_path = "anomaly2\\anomaly_teleport",
+        obj = nil
+    },
+    ["k02_trucks_cemetery"] = {
+        pos = vector():set(-155.52, 8.35, -101.82),
+        particle_path = "anomaly2\\anomaly_teleport",
+        obj = nil
+    }
+}
+
+-- All cars now float in place (no path/carousel in Truck Cemetery)
+local SPAWN_LIST = {
+    -- Garbage (floats in place)
+    {
+        section = "veh_uaz_buhanka",
+        pos = vector():set(-75.39, -2.59, -213.55),
+        angle = vector():set(math.rad(10), math.rad(45), math.rad(15)),
+        lv = 114630, gv = 665,
+        hover_height = 7.0,
+        amp = 0.15, freq = 0.8,
+        wobble_pitch = 0.05,
+        wobble_roll = 0.1
+    },
+    {
+        section = "veh_zil_130",
+        pos = vector():set(-75.69, -2.60, -205.58),
+        angle = vector():set(math.rad(135), math.rad(-90), math.rad(90)),
+        lv = 114641, gv = 790,
+        hover_height = 11.0,
+        amp = 0.1, freq = 0.5,
+        wobble_pitch = 0.05,
+        wobble_roll = 0.1
+    },
+    {
+        section = "veh_zil_131",
+        pos = vector():set(-83.91, -2.60, -212.51),
+        angle = vector():set(math.rad(-50), math.rad(270), math.rad(-15)),
+        lv = 110405, gv = 665,
+        hover_height = 13.0,
+        amp = 0.12, freq = 0.6,
+        wobble_pitch = 0.05,
+        wobble_roll = 0.1
+    },
+    {
+        section = "veh_uaz_01",
+        pos = vector():set(-80.695, -2.602, -215.553),
+        angle = vector():set(math.rad(50), math.rad(360), math.rad(15)),
+        lv = 112275, gv = 665,
+        hover_height = 10.0,
+        amp = 0.15, freq = 0.8,
+        wobble_pitch = 0.05,
+        wobble_roll = 0.1
+    },
+    {
+        section = "veh_tr13",
+        pos = vector():set(-82.001, -2.60, -205.93),
+        angle = vector():set(math.rad(50), math.rad(235), math.rad(15)),
+        lv = 111533, gv = 790,
+        hover_height = 8.0,
+        amp = 0.15, freq = 0.8,
+        wobble_pitch = 0.05,
+        wobble_roll = 0.1
+    },
+    {
+        section = "veh_moskvich",
+        pos = vector():set(-79.77, -2.627, -207.79),
+        angle = vector():set(math.rad(25), math.rad(200), math.rad(15)),
+        lv = 112626, gv = 665,
+        hover_height = 14.5,
+        amp = 0.15, freq = 0.8,
+        wobble_pitch = 0.05,
+        wobble_roll = 0.1
+    },
+
+    -- Truck Cemetery (now also floats in place: removed path/base_y/speed/turn_speed)
+    {
+        section = "veh_kamaz",
+        pos = vector():set(-158.7, -5.3, -17.5),
+        angle = vector():set(0, 0, 0), lv = 235105, gv = 5122,
+        hover_height = 14.0,
+        amp = 0.1, freq = 0.4,
+        wobble_pitch = 0.05, wobble_roll = 0.08,
+        damp = 80.0
+    },
+    {
+        section = "veh_niva",
+        pos = vector():set(-159.7, 0, -47.5),
+        angle = vector():set(0, 0, 0), lv = 235105, gv = 5122,
+        hover_height = 10.0,
+        amp = 0.2, freq = 0.7,
+        wobble_pitch = 0.2, wobble_roll = 0.3,
+        damp = 40.0
+    },
+    {
+        section = "veh_laz",
+        pos = vector():set(-160.7, 0, -77.6),
+        angle = vector():set(0, 0, 0), lv = 235105, gv = 5122,
+        hover_height = 16.0,
+        amp = 0.1, freq = 0.3,
+        wobble_pitch = 0.03, wobble_roll = 0.05,
+        damp = 90.0
+    },
+    {
+        section = "veh_uaz_01",
+        pos = vector():set(-161.7, 0, -107.6),
+        angle = vector():set(0, 0, 0), lv = 235105, gv = 5122,
+        hover_height = 11.0,
+        amp = 0.25, freq = 0.8,
+        wobble_pitch = 0.15, wobble_roll = 0.25,
+        damp = 40.0
+    },
+    {
+        section = "veh_uaz_02",
+        pos = vector():set(-162.6, 0, -137.7),
+        angle = vector():set(0, 0, 0), lv = 235105, gv = 5122,
+        hover_height = 13.5,
+        amp = 0.2, freq = 0.6,
+        wobble_pitch = 0.1, wobble_roll = 0.2,
+        damp = 40.0
+    },
+    {
+        section = "veh_zil_131",
+        pos = vector():set(-163.6, 0, -167.7),
+        angle = vector():set(0, 0, 0), lv = 227305, gv = 5107,
+        hover_height = 15.0,
+        amp = 0.12, freq = 0.5,
+        wobble_pitch = 0.08, wobble_roll = 0.1,
+        damp = 90.0
+    },
+    {
+        section = "veh_kavz",
+        pos = vector():set(-144.9, 6.1, -188.4),
+        angle = vector():set(0, 0, 0), lv = 253232, gv = 5116,
+        hover_height = 14.5,
+        amp = 0.15, freq = 0.4,
+        wobble_pitch = 0.05, wobble_roll = 0.1,
+        damp = 90.0
+    },
+    {
+        section = "veh_zaz",
+        pos = vector():set(-144.1, 0, -159.5),
+        angle = vector():set(0, 0, 0), lv = 253232, gv = 5116,
+        hover_height = 9.0,
+        amp = 0.3, freq = 0.9,
+        wobble_pitch = 0.25, wobble_roll = 0.35,
+        damp = 30.0
+    },
+    {
+        section = "veh_gaz",
+        pos = vector():set(-143.3, 0, -130.6),
+        angle = vector():set(0, 0, 0), lv = 253232, gv = 5116,
+        hover_height = 12.0,
+        amp = 0.15, freq = 0.6,
+        wobble_pitch = 0.1, wobble_roll = 0.15,
+        damp = 80.0
+    },
+    {
+        section = "veh_moskvich",
+        pos = vector():set(-142.5, 0, -101.7),
+        angle = vector():set(0, 0, 0), lv = 253232, gv = 5116,
+        hover_height = 10.5,
+        amp = 0.2, freq = 0.7,
+        wobble_pitch = 0.15, wobble_roll = 0.2,
+        damp = 40.0
+    },
+    {
+        section = "veh_zaz_968",
+        pos = vector():set(-141.6, 0, -72.8),
+        angle = vector():set(0, 0, 0), lv = 253232, gv = 5116,
+        hover_height = 11.5,
+        amp = 0.25, freq = 0.8,
+        wobble_pitch = 0.2, wobble_roll = 0.3,
+        damp = 40.0
+    },
+    {
+        section = "veh_tr13",
+        pos = vector():set(-140.8, 0, -43.9),
+        angle = vector():set(0, 0, 0), lv = 259748, gv = 5122,
+        hover_height = 12.5,
+        amp = 0.18, freq = 0.5,
+        wobble_pitch = 0.1, wobble_roll = 0.15,
+        damp = 60.0
+    }
+}
+
+function on_game_start()
+    RegisterScriptCallback("actor_on_update", actor_on_update)
+    RegisterScriptCallback("save_state", save_state)
+    RegisterScriptCallback("load_state", load_state)
+    RegisterScriptCallback("actor_on_first_update", actor_on_first_update)
+end
+
+function spawn_all_cars()
+    for _, cfg in ipairs(SPAWN_LIST) do
+        local spawn_pos = vector():set(cfg.pos.x, cfg.pos.y + (cfg.hover_height or 5.0), cfg.pos.z)
+        local se_obj = alife():create(cfg.section, spawn_pos, cfg.lv, cfg.gv)
+        if se_obj then
+            se_obj.angle = cfg.angle or vector():set(0, 0, 0)
+            levitating_cars[se_obj.id] = cfg
+        end
+    end
+end
+
+function save_state(data)
+    data.lev_data = {}
+    for id, cfg in pairs(levitating_cars) do
+        data.lev_data[id] = {
+            section = cfg.section,
+            px = cfg.pos.x, py = cfg.pos.y, pz = cfg.pos.z,
+            ax = (cfg.angle and cfg.angle.x) or 0, ay = (cfg.angle and cfg.angle.y) or 0, az = (cfg.angle and cfg.angle.z) or 0,
+            hh = cfg.hover_height,
+            amp = cfg.amp, fr = cfg.freq,
+            w_p = cfg.wobble_pitch, w_r = cfg.wobble_roll, dmp = cfg.damp,
+            lv = cfg.lv, gv = cfg.gv
+        }
+    end
+    data.cars_spawned_once = cars_spawned_once
+end
+
+function load_state(data)
+    if data.cars_spawned_once or (data.lev_data and next(data.lev_data)) then
+        cars_spawned_once = true
+    end
+
+    if data.lev_data then
+        for id, d in pairs(data.lev_data) do
+            levitating_cars[id] = {
+                section = d.section,
+                pos = vector():set(d.px, d.py, d.pz),
+                angle = vector():set(d.ax or 0, d.ay or 0, d.az or 0),
+                hover_height = d.hh,
+                amp = d.amp, freq = d.fr,
+                wobble_pitch = d.w_p, wobble_roll = d.w_r, damp = d.dmp,
+                lv = d.lv, gv = d.gv
+                -- No path fields restored; all float in place
+            }
+        end
+    end
+end
+
+function actor_on_first_update()
+    if not cars_spawned_once then
+        spawn_all_cars()
+        cars_spawned_once = true
+    end
+
+    if need_to_start_core then
+        start_anomaly_core()
+        need_to_start_core = false
+    end
+end
+
+function actor_on_update()
+    -- anomaly cores
+    local current_level = level.name()
+    for lvl, core in pairs(ANOMALY_CORES) do
+        if current_level == lvl then
+            if not core.obj then
+                core.obj = particles_object(core.particle_path)
+            end
+            if not core.obj:playing() then
+                core.obj:play_at_pos(core.pos)
+            end
+        else
+            if core.obj then
+                core.obj:stop()
+                core.obj = nil
+            end
+        end
+    end
+
+    local dead_cars = {}
+
+    for id, cfg in pairs(levitating_cars) do
+        local se_obj = alife():object(id)
+        if not se_obj then
+            table.insert(dead_cars, {old_id = id, config = cfg})
+        else
+            local obj = level.object_by_id(id)
+            if obj then
+                local shell = obj:get_physics_shell()
+                if shell then
+                    apply_levitation_physics(id, obj, shell, cfg)
+                end
+            end
+        end
+    end
+
+    -- respawn deleted cars
+    for _, data in ipairs(dead_cars) do
+        levitating_cars[data.old_id] = nil
+        local cfg = data.config
+        local spawn_pos = vector():set(cfg.pos.x, cfg.pos.y + (cfg.hover_height or 5.0), cfg.pos.z)
+        local new_se_obj = alife():create(cfg.section, spawn_pos, cfg.lv, cfg.gv)
+        if new_se_obj then
+            new_se_obj.angle = cfg.angle or vector():set(0, 0, 0)
+            levitating_cars[new_se_obj.id] = cfg
+        end
+    end
+end
+
+function apply_levitation_physics(id, obj, shell, cfg)
+    local element = shell:get_element_by_order(0)
+    if not element then return end
+
+    local mass = element:get_mass()
+    local t = time_global() / 1000
+
+    local amplitude = cfg.amp or 0.15
+    local frequency = cfg.freq or 0.8
+    local hover = cfg.hover_height or 5.0
+
+    local current_pos = obj:position()
+    local vel = vector()
+    element:get_linear_vel(vel)
+
+    -- floating target is the original spawn pos
+    local target_pos = cfg.pos
+
+    -- 1) vertical levitation
+    local base_y = cfg.pos.y
+    local target_y = base_y + hover + (math.sin(t * frequency) * amplitude)
+    local fy = ((target_y - current_pos.y) * 15.0 - vel.y * 6.0) * mass + (mass * 9.81)
+    if current_pos.y < (base_y + 1.5) then
+        fy = fy + (mass * 40.0)
+    end
+
+    -- 2) horizontal stabilization toward original xz
+    local fx = ((target_pos.x - current_pos.x) * 5.0 - vel.x * 2.0) * mass
+    local fz = ((target_pos.z - current_pos.z) * 5.0 - vel.z * 2.0) * mass
+    element:apply_force(fx, fy, fz)
+
+    -- 3) gentle wobble/rotation
+    local ang_vel = vector()
+    element:get_angular_vel(ang_vel)
+
+    local w_pitch = cfg.wobble_pitch or 0.02
+    local w_roll  = cfg.wobble_roll  or 0.02
+    local target_ang_vel_x = math.sin(t * frequency * 0.6) * w_pitch
+    local target_ang_vel_y = 0
+    local target_ang_vel_z = math.cos(t * frequency * 0.8) * w_roll
+
+    local damp = cfg.damp or 40.0
+    element:apply_torque(
+        (target_ang_vel_x - ang_vel.x) * damp * mass,
+        (target_ang_vel_y - ang_vel.y) * damp * mass,
+        (target_ang_vel_z - ang_vel.z) * damp * mass
+    )
+end

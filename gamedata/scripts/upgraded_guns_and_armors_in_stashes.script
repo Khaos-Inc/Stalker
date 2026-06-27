@@ -1,0 +1,130 @@
+minUpgrades = 1
+maxUpgrades = 6
+
+function IsValidWeapon(obj)
+	return IsWeapon(obj) and not IsItem("fake_ammo_wpn",obj:section())
+end
+
+function iterateAndUpgrade(box, obj)
+	if IsOutfit(obj) or IsValidWeapon(obj) then
+        if minUpgrades > maxUpgrades then
+            maxUpgrades, minUpgrades = minUpgrades, maxUpgrades
+        end
+
+        local upg_amount = math.random(minUpgrades, maxUpgrades)
+        if upg_amount <= 0 then return end
+
+        -- Upgrades calculating
+        local sec_wpn = obj:section()
+        local wpn = obj        
+        local picked = {}
+        local upgrades = utils_item.get_upgrades_tree(sec_wpn)
+        if is_empty(upgrades) then return end
+
+        local installed = utils_item.get_upgrades_installed(wpn, nil, true)
+
+        local function picked_set(t,gr,ind)
+            if (not t[gr]) then t[gr] = {} end
+            t[gr][ind] = true
+        end
+
+        local function picked_unchecked(t,gr,ind)
+            return not (t[gr] and t[gr][ind])
+        end
+        
+        local opposite = {
+                [1] = 2,
+                [2] = 1,
+                [3] = 4,
+                [4] = 3,
+                [5] = 6,
+                [6] = 5,
+        }
+
+        local functor = function(t,a,b) return a < b end
+        local cnt = 0
+        
+        for gr,v in spairs(upgrades,functor) do
+            for ind,v2 in spairs(v,functor) do
+                if installed[v2.section] then
+                    picked_set(picked, gr, ind)
+                end
+            end
+        end
+        
+        while (cnt < upg_amount) do
+            local gr = random_key_table(upgrades)
+            for ind, v in spairs(upgrades[gr],functor) do
+                local section = v.section
+                
+                if upgrades[gr][ind].prop
+                and (upgrades[gr][ind].prop[1] ~= "prop_not_available")
+                and picked_unchecked(picked, gr, ind)
+                and (not installed[section])
+                then
+                    if (not upgrades[gr][opposite[ind]])
+                    or (upgrades[gr][opposite[ind]] and picked_unchecked(picked, gr, opposite[ind]))
+                    then
+                        picked_set(picked, gr, ind)
+                        break
+                    end
+                end
+            end
+            cnt = cnt + 1
+        end
+
+        local to_install = {}
+        local new_install = {}
+        for gr,v in spairs(upgrades,functor) do
+            for ind,v2 in spairs(v,functor) do
+                if (picked[gr] and picked[gr][ind]) then
+                    to_install[#to_install + 1] = v2.section
+                    new_install[#new_install + 1] = v2.section
+                elseif installed[v2.section] then
+                    to_install[#to_install + 1] = v2.section
+                end
+            end
+        end
+        
+        -- Install upgrades
+        if (#to_install > #installed) then
+        	inventory_upgrades.force_upgrade = true
+
+        	local mag
+        	if IsValidWeapon(wpn) then
+            	mag = wpn:get_ammo_in_magazine()
+            end
+
+            for i=1,#new_install do
+            	-- print_tip("%s, %s, install_upgrade %s", wpn:name(), box:id(), new_install[i])
+                wpn:install_upgrade(new_install[i])
+            end
+            
+            if mag then
+            	wpn:set_ammo_elapsed(mag)
+            end
+
+            inventory_upgrades.force_upgrade = false
+        end
+	end
+end
+
+function iterateTimeEventFunc(box)
+	if IsInvbox(box) then
+		box:iterate_inventory_box(iterateAndUpgrade, box)
+	else
+		box:iterate_inventory(iterateAndUpgrade, box)
+	end
+	return true
+end
+
+try_spawn_treasure = treasure_manager.try_spawn_treasure
+treasure_manager.try_spawn_treasure = function(box, ...)
+	local id = box:id()
+	if not treasure_manager.caches[id] then return end
+	if not (type(treasure_manager.caches[id]) == "string") then return end
+	try_spawn_treasure(box, ...)
+
+	-- print_tip("%s, iterate and upgrade stuff", id)
+	CreateTimeEvent("upgrade_items", id, 0.1, iterateTimeEventFunc, box)
+end

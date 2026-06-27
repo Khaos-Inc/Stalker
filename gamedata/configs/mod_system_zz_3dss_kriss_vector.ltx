@@ -1,0 +1,405 @@
+;==============================================================================	
+![wpn_kriss_vector]
+>scopes						 = lco1, romeo4, romeo8, exps3, monstrum, trihawk, vulcan, specter, t12, e0t2_magd, c79, echo1
+
+!shell_point
+!shell_particles
+		
+lewd_lens_hide_enabled       = true
+lewd_lens_hide_bone          = sight
+lewd_lens_hide_delays        = 0.1,0
+lewd_lens_hide_aim_mode      = true, false, false
+
+use_alt_aim_hud				 = true
+laser_status				 = true
+
+snd_draw                = weapons\vector_new\vector_draw
+snd_holster				= weapons\vector_new\vector_hide
+snd_empty               = weapons\sr2m\sr2m_empty
+snd_reload              = weapons\vector_new\vector_reload_part
+snd_reload_empty        = weapons\vector_new\vector_reload_full
+snd_bore                = $no_sound
+snd_switch_mode			= weapons\vector_new\vector_fireselect
+snd_ammo_check          = weapons\vector_new\vector_magcheck
+snd_ammo_check_empty    = weapons\vector_new\vector_magcheck
+snd_reload_misfire      = $no_sound
+
+        ;   Sounds Handled In Scripts   
+        scripted_snd_bore                        = weapons\vector_new\vector_inspect
+        scripted_snd_bore_empty                  = weapons\vector_new\vector_inspect
+        scripted_snd_reload_misfire              = weapons\vector_new\vector_misfire
+		scripted_snd_reload_misfire_jammed		 = weapons\vector_new\vector_fte
+		
+![wpn_kriss_vector_hud]
+        hands_orientation                = 1.279509, -0.502016, 0
+        hands_orientation_16x9           = 1.279509, -0.502016, 0
+        hands_position                   = 0.005318, 0.003798, 0.057778
+        hands_position_16x9              = 0.005318, 0.003798, 0.057778
+
+        aim_hud_offset_pos               = -0.078263, 0.0171, -0.06
+        aim_hud_offset_pos_16x9          = -0.078263, 0.0171, -0.06
+        aim_hud_offset_rot               = 0.00013, 3e-05, -0.0225
+        aim_hud_offset_rot_16x9          = 0.00013, 3e-05, -0.0225
+
+        aim_hud_offset_alt_pos           = -0.130886, -0.069627, -0.042312
+        aim_hud_offset_alt_pos_16x9      = -0.130886, -0.069627, -0.042312
+        aim_hud_offset_alt_rot           = 0.00013, 3e-05, 0.6
+        aim_hud_offset_alt_rot_16x9      = 0.00013, 3e-05, 0.6		
+		
+        base_hud_offset_pos              = -0.026464, -0.014757, -0.016641
+        base_hud_offset_pos_16x9         = -0.026464, -0.014757, -0.016641
+        base_hud_offset_rot              = 0, 0, 0.102975
+        base_hud_offset_rot_16x9         = 0, 0, 0.102975
+;---------------------------------------------------SIGHTS---------------------------------------------------
+![wpn_kriss_vector_ac10632]
+icons_texture   = ui\ui_icon_kriss_nude
+inv_grid_x      = 0
+inv_grid_y      = 0
+1icon_layer		= ac10632_x
+1icon_layer_y   = -16
+![wpn_kriss_vector_ac10632_hud]
+        aim_hud_offset_pos               = -0.078159, 0.017588, -0.06
+        aim_hud_offset_pos_16x9          = -0.078159, 0.017588, -0.06
+        aim_hud_offset_rot               = 0.00013, 3e-05, -0.0225
+        aim_hud_offset_rot_16x9          = 0.00013, 3e-05, -0.0225
+
+![wpn_kriss_vector_0kp2]
+icons_texture   = ui\ui_icon_kriss_nude
+inv_grid_x      = 0
+inv_grid_y      = 0
+1icon_layer		= 0kp2_x		
+![wpn_kriss_vector_0kp2_hud]
+        aim_hud_offset_pos               = -0.074812, 0.023783, -0.06
+        aim_hud_offset_pos_16x9          = -0.074812, 0.023783, -0.06
+        aim_hud_offset_rot               = 0.00013, 3e-05, -0.0225
+        aim_hud_offset_rot_16x9          = 0.00013, 3e-05, -0.0225
+
+![wpn_kriss_vector_aimpoint]
+icons_texture   = ui\ui_icon_kriss_nude
+inv_grid_x      = 0
+inv_grid_y      = 0
+1icon_layer		= aimpoint_x		
+![wpn_kriss_vector_aimpoint_hud]
+        aim_hud_offset_pos               = -0.078066, 0.018779, -0.06
+        aim_hud_offset_pos_16x9          = -0.078066, 0.018779, -0.06
+        aim_hud_offset_rot               = 0.00013, 3e-05, -0.0225
+        aim_hud_offset_rot_16x9          = 0.00013, 3e-05, -0.0225
+
+![wpn_kriss_vector_c-more]
+icons_texture   = ui\ui_icon_kriss_nude
+inv_grid_x      = 0
+inv_grid_y      = 0
+1icon_layer		= c-more_x			
+![wpn_kriss_vector_c-more_hud]
+        aim_hud_offset_pos               = -0.078068, 0.017888, -0.06
+        aim_hud_offset_pos_16x9          = -0.078068, 0.017888, -0.06
+        aim_hud_offset_rot               = 0.00013, 3e-05, -0.0225
+        aim_hud_offset_rot_16x9          = 0.00013, 3e-05, -0.0225
+
+![wpn_kriss_vector_compm4s]
+icons_texture   = ui\ui_icon_kriss_nude
+inv_grid_x      = 0
+inv_grid_y      = 0
+1icon_layer		= compm4s_x			
+![wpn_kriss_vector_compm4s_hud]
+        hands_orientation                = 1.279509, -0.502016, 0
+        hands_orientation_16x9           = 1.279509, -0.502016, 0
+        hands_position                   = 0.005318, 0.003798, 0.057778
+        hands_position_16x9              = 0.005318, 0.003798, 0.057778
+		
+        aim_hud_offset_pos               = -0.077975, 0.016417, -0.06
+        aim_hud_offset_pos_16x9          = -0.077975, 0.016417, -0.06
+        aim_hud_offset_rot               = 0.00013, 3e-05, -0.0225
+        aim_hud_offset_rot_16x9          = 0.00013, 3e-05, -0.0225
+
+![wpn_kriss_vector_e0t2]
+icons_texture   = ui\ui_icon_kriss_nude
+inv_grid_x      = 0
+inv_grid_y      = 0
+1icon_layer		= e0t2_x			
+![wpn_kriss_vector_e0t2_hud]
+        aim_hud_offset_pos               = -0.07784, 0.016295, -0.06
+        aim_hud_offset_pos_16x9          = -0.07784, 0.016295, -0.06
+        aim_hud_offset_rot               = 0.00013, 3e-05, -0.0225
+        aim_hud_offset_rot_16x9          = 0.00013, 3e-05, -0.0225
+
+![wpn_kriss_vector_ekp8_18]
+icons_texture   = ui\ui_icon_kriss_nude
+inv_grid_x      = 0
+inv_grid_y      = 0
+1icon_layer		= ekp8_18_x	
+1icon_layer_y   = -7	
+![wpn_kriss_vector_ekp8_18_hud]
+        aim_hud_offset_pos               = -0.07808, 0.010083, -0.06
+        aim_hud_offset_pos_16x9          = -0.07808, 0.010083, -0.06
+        aim_hud_offset_rot               = 0.00013, 3e-05, -0.0225
+        aim_hud_offset_rot_16x9          = 0.00013, 3e-05, -0.0225
+
+![wpn_kriss_vector_eot]
+icons_texture   = ui\ui_icon_kriss_nude
+inv_grid_x      = 0
+inv_grid_y      = 0
+1icon_layer		= eot_x		
+![wpn_kriss_vector_eot_hud]
+        aim_hud_offset_pos               = -0.077685, 0.009274, -0.06
+        aim_hud_offset_pos_16x9          = -0.077685, 0.009274, -0.06
+        aim_hud_offset_rot               = 0.00013, 3e-05, -0.0225
+        aim_hud_offset_rot_16x9          = 0.00013, 3e-05, -0.0225
+
+![wpn_kriss_vector_kemper]
+icons_texture   = ui\ui_icon_kriss_nude
+inv_grid_x      = 0
+inv_grid_y      = 0
+1icon_layer		= kemper_x		
+![wpn_kriss_vector_kemper_hud]
+        aim_hud_offset_pos               = -0.078261, 0.013877, -0.06
+        aim_hud_offset_pos_16x9          = -0.078261, 0.013877, -0.06
+        aim_hud_offset_rot               = 0.00013, 3e-05, -0.0225
+        aim_hud_offset_rot_16x9          = 0.00013, 3e-05, -0.0225
+
+![wpn_kriss_vector_mepro]
+icons_texture   = ui\ui_icon_kriss_nude
+inv_grid_x      = 0
+inv_grid_y      = 0
+1icon_layer		= mepro_x		
+![wpn_kriss_vector_mepro_hud]
+        aim_hud_offset_pos               = -0.078036, 0.011905, -0.06
+        aim_hud_offset_pos_16x9          = -0.078036, 0.011905, -0.06
+        aim_hud_offset_rot               = 0.00013, 3e-05, -0.0225
+        aim_hud_offset_rot_16x9          = 0.00013, 3e-05, -0.0225
+		
+;----------------------------------------------------------------------------------------------------------------
+[wpn_kriss_vector_lco1]:wpn_kriss_vector
+hud				= wpn_kriss_vector_lco1_hud
+
+icons_texture   = ui\ui_icon_kriss_nude
+inv_grid_x      = 0
+inv_grid_y      = 0
+1icon_layer				= lco1_x
+1icon_layer_x			= 90
+1icon_layer_y			= -17
+
+[wpn_kriss_vector_lco1_hud]:wpn_kriss_vector_hud
+item_visual                	= dynamics\weapons\wpn_kriss_vector\wpn_kriss_vector_lco1_hud.ogf
+        aim_hud_offset_pos               = -0.077977, 0.014318, -0.06
+        aim_hud_offset_pos_16x9          = -0.077977, 0.014318, -0.06
+		
+;----------------------------------------------------------------------------------------------------------------
+[wpn_kriss_vector_romeo4]:wpn_kriss_vector
+hud				= wpn_kriss_vector_romeo4_hud
+
+icons_texture   = ui\ui_icon_kriss_nude
+inv_grid_x      = 0
+inv_grid_y      = 0
+1icon_layer			= romeo4_x
+1icon_layer_x			= 90
+1icon_layer_y			= -25
+
+[wpn_kriss_vector_romeo4_hud]:wpn_kriss_vector_hud
+item_visual                	= dynamics\weapons\wpn_kriss_vector\wpn_kriss_vector_romeo4_hud.ogf
+        aim_hud_offset_pos               = -0.078108, 0.015246, -0.06
+        aim_hud_offset_pos_16x9          = -0.078108, 0.015246, -0.06
+		
+;----------------------------------------------------------------------------------------------------------------
+[wpn_kriss_vector_exps3]:wpn_kriss_vector
+hud				= wpn_kriss_vector_exps3_hud
+
+icons_texture   = ui\ui_icon_kriss_nude
+inv_grid_x      = 0
+inv_grid_y      = 0
+1icon_layer			= exps3_x
+1icon_layer_x			= 95
+1icon_layer_y			= -19
+
+[wpn_kriss_vector_exps3_hud]:wpn_kriss_vector_hud
+item_visual                	= dynamics\weapons\wpn_kriss_vector\wpn_kriss_vector_exps3_hud.ogf
+        aim_hud_offset_pos               = -0.078091, 0.009105, -0.06
+        aim_hud_offset_pos_16x9          = -0.078091, 0.009105, -0.06
+		
+;----------------------------------------------------------------------------------------------------------------
+[wpn_kriss_vector_romeo8]:wpn_kriss_vector
+hud				= wpn_kriss_vector_romeo8_hud
+
+icons_texture   = ui\ui_icon_kriss_nude
+inv_grid_x      = 0
+inv_grid_y      = 0
+1icon_layer			= romeo8_x
+1icon_layer_x			= 94
+1icon_layer_y			= -24
+
+[wpn_kriss_vector_romeo8_hud]:wpn_kriss_vector_hud
+item_visual                	= dynamics\weapons\wpn_kriss_vector\wpn_kriss_vector_romeo8_hud.ogf
+        aim_hud_offset_pos               = -0.078112, 0.014738, -0.06
+        aim_hud_offset_pos_16x9          = -0.078112, 0.014738, -0.06
+		
+;--------------------------------------------------------------------------------
+[wpn_kriss_vector_t12]:wpn_kriss_vector, t12_s
+hud                                      = wpn_kriss_vector_t12_hud
+
+icons_texture   = ui\ui_icon_kriss_nude
+inv_grid_x      = 0
+inv_grid_y      = 0
+1icon_layer                              = t12_x
+1icon_layer_x                            = 101
+1icon_layer_y                            = -19
+
+[wpn_kriss_vector_t12_hud]:wpn_kriss_vector_hud
+item_visual                              = dynamics\weapons\wpn_kriss_vector\wpn_kriss_vector_t12_hud.ogf
+        aim_hud_offset_pos               = -0.078261, 0.028098, -0.06
+        aim_hud_offset_pos_16x9          = -0.078261, 0.028098, -0.06
+
+;---------------------------------------------------SCOPES---------------------------------------------------
+;---------------------------------------------------SCOPES---------------------------------------------------		
+;---------------------------------------------------SCOPES---------------------------------------------------
+![wpn_kriss_vector_acog]:acog_s
+icons_texture   = ui\ui_icon_kriss_nude
+inv_grid_x      = 0
+inv_grid_y      = 0
+1icon_layer		= acog_x	
+![wpn_kriss_vector_acog_hud]
+        aim_hud_offset_pos               = -0.078224, 0.0171, -0.140277
+        aim_hud_offset_pos_16x9          = -0.078224, 0.0171, -0.140277
+        aim_hud_offset_rot               = 0.00013, 3e-05, -0.0225
+        aim_hud_offset_rot_16x9          = 0.00013, 3e-05, -0.0225
+		
+;--------------------------------------------------------------------------------------------		
+[wpn_kriss_vector_gee36]:wpn_kriss_vector, gee36_s
+hud                     = wpn_kriss_vector_gee36_hud
+
+icons_texture   = ui\ui_icon_kriss_nude
+inv_grid_x      = 0
+inv_grid_y      = 0
+1icon_layer				= gee36_x
+1icon_layer_x			= 78
+1icon_layer_y			= -17
+
+[wpn_kriss_vector_gee36_hud]:wpn_kriss_vector_hud
+item_visual                              = dynamics\weapons\wpn_kriss_vector\wpn_kriss_vector_gee36_hud.ogf	
+
+;--------------------------------------------------------------------------------------------		
+[wpn_kriss_vector_monstrum]:wpn_kriss_vector, monstrum_s
+hud                     = wpn_kriss_vector_monstrum_hud
+
+icons_texture   = ui\ui_icon_kriss_nude
+inv_grid_x      = 0
+inv_grid_y      = 0
+1icon_layer				= monstrum_x
+1icon_layer_x			= 95
+1icon_layer_y			= -20
+
+[wpn_kriss_vector_monstrum_hud]:wpn_kriss_vector_hud
+item_visual                              = dynamics\weapons\wpn_kriss_vector\wpn_kriss_vector_monstrum_hud.ogf	
+        aim_hud_offset_pos               = -0.078396, 0.023262, -0.152005
+        aim_hud_offset_pos_16x9          = -0.078396, 0.023262, -0.152005
+		
+;--------------------------------------------------------------------------------------------		
+[wpn_kriss_vector_trihawk]:wpn_kriss_vector, trihawk_s
+hud                     = wpn_kriss_vector_trihawk_hud
+
+icons_texture   = ui\ui_icon_kriss_nude
+inv_grid_x      = 0
+inv_grid_y      = 0
+1icon_layer				= trihawk_x
+1icon_layer_x			= 95
+1icon_layer_y			= -21
+
+[wpn_kriss_vector_trihawk_hud]:wpn_kriss_vector_hud
+item_visual                              = dynamics\weapons\wpn_kriss_vector\wpn_kriss_vector_trihawk_hud.ogf	
+        aim_hud_offset_pos               = -0.078099, 0.010309, -0.105901
+        aim_hud_offset_pos_16x9          = -0.078099, 0.010309, -0.105901
+		
+;--------------------------------------------------------------------------------------------		
+[wpn_kriss_vector_vulcan]:wpn_kriss_vector, vulcan_s
+hud                     = wpn_kriss_vector_vulcan_hud
+
+icons_texture   = ui\ui_icon_kriss_nude
+inv_grid_x      = 0
+inv_grid_y      = 0
+1icon_layer				= vulcan_x
+1icon_layer_x			= 75
+1icon_layer_y			= -19
+
+[wpn_kriss_vector_vulcan_hud]:wpn_kriss_vector_hud
+item_visual                              = dynamics\weapons\wpn_kriss_vector\wpn_kriss_vector_vulcan_hud.ogf	
+        aim_hud_offset_pos               = -0.078302, 0.015796, -0.123201
+        aim_hud_offset_pos_16x9          = -0.078302, 0.015796, -0.123201
+		
+;--------------------------------------------------------------------------------
+[wpn_kriss_vector_specter]:wpn_kriss_vector, specter_s
+hud                         = wpn_kriss_vector_specter_hud
+
+icons_texture   = ui\ui_icon_kriss_nude
+inv_grid_x      = 0
+inv_grid_y      = 0
+        1icon_layer					= specter_x
+        1icon_layer_x				= 68
+        1icon_layer_y				= -19
+
+[wpn_kriss_vector_specter_hud]:wpn_kriss_vector_hud
+item_visual                              = dynamics\weapons\wpn_kriss_vector\wpn_kriss_vector_specter_hud.ogf	
+        aim_hud_offset_pos               = -0.077781, 0.015438, -0.11926
+        aim_hud_offset_pos_16x9          = -0.077781, 0.015438, -0.11926
+		
+;--------------------------------------------------------------------------------
+[wpn_kriss_vector_c79]:wpn_kriss_vector, c79_s
+hud                         = wpn_kriss_vector_c79_hud
+
+icons_texture   = ui\ui_icon_kriss_nude
+inv_grid_x      = 0
+inv_grid_y      = 0
+        1icon_layer					= c79_x
+        1icon_layer_x				= 85
+        1icon_layer_y				= -18
+
+[wpn_kriss_vector_c79_hud]:wpn_kriss_vector_hud
+item_visual                              = dynamics\weapons\wpn_kriss_vector\wpn_kriss_vector_c79_hud.ogf	
+        aim_hud_offset_pos               = -0.07827, 0.013311, -0.113103
+        aim_hud_offset_pos_16x9          = -0.07827, 0.013311, -0.113103
+		
+;--------------------------------------------------------------------------------
+[wpn_kriss_vector_e0t2_magd]:wpn_kriss_vector, e0t2_magd_s
+hud                         = wpn_kriss_vector_e0t2_magd_hud
+
+icons_texture   = ui\ui_icon_kriss_nude
+inv_grid_x      = 0
+inv_grid_y      = 0
+        1icon_layer					= e0t2_magd_x
+        1icon_layer_x				= 68
+        1icon_layer_y				= -19
+
+[wpn_kriss_vector_e0t2_magd_hud]:wpn_kriss_vector_hud
+item_visual                              = dynamics\weapons\wpn_kriss_vector\wpn_kriss_vector_e0t2_magd_hud.ogf	
+        aim_hud_offset_pos               = -0.078185, 0.016329, -0.13997
+        aim_hud_offset_pos_16x9          = -0.078185, 0.016329, -0.13997
+		
+;--------------------------------------------------------------------------------
+[wpn_kriss_vector_e0t2_magd_off]:wpn_kriss_vector
+hud                         = wpn_kriss_vector_e0t2_magd_off_hud
+
+icons_texture   = ui\ui_icon_kriss_nude
+inv_grid_x      = 0
+inv_grid_y      = 0
+        1icon_layer					= e0t2_magd_x
+        1icon_layer_x				= 68
+        1icon_layer_y				= -19
+
+[wpn_kriss_vector_e0t2_magd_off_hud]:wpn_kriss_vector_hud
+item_visual                              = dynamics\weapons\wpn_kriss_vector\wpn_kriss_vector_e0t2_magd_off_hud.ogf	
+        aim_hud_offset_pos               = -0.078185, 0.016329, -0.06
+        aim_hud_offset_pos_16x9          = -0.078185, 0.016329, -0.06
+		
+;--------------------------------------------------------------------------------
+[wpn_kriss_vector_echo1]:wpn_kriss_vector, echo1_s
+hud                         = wpn_kriss_vector_echo1_hud
+
+icons_texture   = ui\ui_icon_kriss_nude
+inv_grid_x      = 0
+inv_grid_y      = 0
+        1icon_layer					= echo1_x
+        1icon_layer_x				= 93
+        1icon_layer_y				= -19
+
+[wpn_kriss_vector_echo1_hud]:wpn_kriss_vector_hud
+item_visual                              = dynamics\weapons\wpn_kriss_vector\wpn_kriss_vector_echo1_hud.ogf	
+        aim_hud_offset_pos               = -0.078106, 0.007154, -0.06
+        aim_hud_offset_pos_16x9          = -0.078106, 0.007154, -0.06

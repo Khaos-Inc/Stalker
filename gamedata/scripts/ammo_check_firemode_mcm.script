@@ -1,0 +1,671 @@
+-- AmmoCheck: One-Key Fire Mode (ported from One-Key Weapon Controls)
+-- Optional feature, disabled by default. A single key cycles the weapon fire mode and shows the new
+-- mode on screen; modifier + key cycles backwards; hold the key to show the current mode.
+-- The key is its own MCM bind (default X), NOT the reload key, so there is no engine conflict.
+-- MCM options live in ammo_check_mcm.script (the rax_ammo_check page); this script reads them.
+
+local enabled            = false
+local mcm_key            = DIK_keys.DIK_X
+local mcm_modifier_prev  = 1            -- 1 shift, 2 ctrl, 3 alt
+local mcm_hide_hud       = false        -- hide the vanilla fire-mode HUD indicator
+local mcm_color_text     = true         -- tint the on-screen mode text per fire mode (Text style only)
+local mcm_display_style  = "text"       -- "text", "none", "dots", "dots_alt", or "custom_texture"
+local mcm_ron_texture    = "ron_text"   -- which graphic the "Custom texture" style draws: ron_text / ron_notext
+local mcm_show_letter    = false        -- append the mode letter [S]/[B]/[A] to the message
+local mcm_position       = "default"    -- "default" (follow AmmoCheck) or "screen_bottom"
+local mcm_inspect_on_hold = false        -- hold the key to inspect the weapon instead of showing the mode
+local mcm_ron_opacity    = 255          -- Ready or Not indicator alpha 0..255
+local mcm_ron_hue        = 0            -- Ready or Not indicator hue tint 0..360 (0 = neutral/no tint)
+local mcm_ron_y_offset   = 0            -- manual vertical nudge (px) for the custom texture indicator
+
+-- key_bind only resolves on MCM 1.6.0+; guard reads with the defaults above.
+local mcm_keybinds = ui_mcm and ui_mcm.key_hold
+
+local MSG_DURATION = 2
+
+function on_game_start()
+    RegisterScriptCallback("actor_on_first_update", actor_on_first_update)
+    RegisterScriptCallback("on_option_change", on_option_change)
+    RegisterScriptCallback("on_before_key_press", on_before_key_press)
+    RegisterScriptCallback("on_key_hold", on_key_hold)
+end
+
+function actor_on_first_update()
+    on_option_change()
+end
+
+-- toggle the vanilla fire-mode HUD widget by moving it on/off screen (engine widget, nil-guarded)
+local function apply_hud_visibility()
+    local mg = ActorMenu and ActorMenu.get_maingame and ActorMenu.get_maingame()
+    local widget = mg and mg.m_ui_hud_states and mg.m_ui_hud_states.m_fire_mode
+    if not widget then return end
+    local pos = widget:GetWndPos()
+    -- negate x only when the current on/off-screen state does not match the desired one
+    if (mcm_hide_hud and pos.x > 0) or ((not mcm_hide_hud) and pos.x < 0) then
+        pos.x = -1 * pos.x
+        widget:SetWndPos(pos)
+    end
+end
+
+-- ### BWais FireModeCheck compatibility
+--
+local bwais_suppressed = false
+local function set_bwais_suppressed(suppress)
+    if not (bwais_firemode and bwais_firemode.bwais_on_before_key_press) then return end
+    if suppress and not bwais_suppressed then
+        UnregisterScriptCallback("on_before_key_press", bwais_firemode.bwais_on_before_key_press)
+        if bwais_firemode.on_option_change then UnregisterScriptCallback("on_option_change", bwais_firemode.on_option_change) end
+        if bwais_firemode.actor_on_first_update then UnregisterScriptCallback("actor_on_first_update", bwais_firemode.actor_on_first_update) end
+        if bwais_firemode.actor_on_net_destroy then UnregisterScriptCallback("actor_on_net_destroy", bwais_firemode.actor_on_net_destroy) end
+        if bwais_firemode_hud and bwais_firemode_hud.deactivate_hud then bwais_firemode_hud.deactivate_hud() end
+        bwais_suppressed = true
+    elseif (not suppress) and bwais_suppressed then
+        RegisterScriptCallback("on_before_key_press", bwais_firemode.bwais_on_before_key_press)
+        if bwais_firemode.on_option_change then RegisterScriptCallback("on_option_change", bwais_firemode.on_option_change) end
+        if bwais_firemode.actor_on_first_update then RegisterScriptCallback("actor_on_first_update", bwais_firemode.actor_on_first_update) end
+        if bwais_firemode.actor_on_net_destroy then RegisterScriptCallback("actor_on_net_destroy", bwais_firemode.actor_on_net_destroy) end
+        if bwais_firemode.actor_on_first_update then bwais_firemode.actor_on_first_update() end  -- re-init its HUD
+        bwais_suppressed = false
+    end
+end
+
+function on_option_change()
+    if ui_mcm then
+        local en = ui_mcm.get("rax_ammo_check/firemode/enable")
+        enabled = (en == true or en == 1)
+        if mcm_keybinds then
+            mcm_key = ui_mcm.get("rax_ammo_check/firemode/key") or DIK_keys.DIK_X
+        end
+        mcm_modifier_prev = ui_mcm.get("rax_ammo_check/firemode/modifier_prev") or 1
+        local hh = ui_mcm.get("rax_ammo_check/hud_behavior/hide_hud")
+        mcm_hide_hud = (hh == true or hh == 1)
+        local ct = ui_mcm.get("rax_ammo_check/firemode/color_text")
+        mcm_color_text = (ct == true or ct == 1 or ct == nil)  -- default true
+        mcm_display_style = ui_mcm.get("rax_ammo_check/firemode/display_style") or "text"
+        mcm_position = ui_mcm.get("rax_ammo_check/firemode/position") or "default"
+        local sl = ui_mcm.get("rax_ammo_check/firemode/show_letter")
+        mcm_show_letter = (sl == true or sl == 1)  -- default false
+        local ioh = ui_mcm.get("rax_ammo_check/firemode/inspect_on_hold")
+        mcm_inspect_on_hold = (ioh == true or ioh == 1)  -- default false
+        mcm_ron_texture = ui_mcm.get("rax_ammo_check/firemode/texture") or "ron_text"
+        mcm_ron_opacity = ui_mcm.get("rax_ammo_check/firemode/ron_opacity") or 255
+        mcm_ron_hue = ui_mcm.get("rax_ammo_check/firemode/ron_hue") or 0
+        mcm_ron_y_offset = ui_mcm.get("rax_ammo_check/firemode/ron_y_offset") or 0
+    end
+    apply_hud_visibility()
+    set_bwais_suppressed(enabled)  -- take over the display from BWais FireModeCheck when ours is on
+end
+
+-- ### Helpers
+
+local function is_supported_weapon(wpn)
+    return wpn and IsWeapon(wpn) and (not IsItem("fake_ammo_wpn", wpn:section()))
+end
+
+local function is_weapon_ready(wpn)
+    return wpn:get_state() == 0  -- eIdle
+end
+
+local function has_multiple_fire_modes(wpn)
+    local section = wpn:section()
+    local fire_modes = parse_list(ini_sys, section, "fire_modes")
+    if fire_modes and #fire_modes > 1 then
+        return true
+    end
+
+    -- a weapon upgrade can grant extra fire modes
+    local found = false
+    wpn:iterate_installed_upgrades(function(upgr_sec)
+        local prop_sec = ini_sys:r_string_ex(upgr_sec, "section")
+        if prop_sec then
+            local up_modes = parse_list(ini_sys, prop_sec, "fire_modes")
+            if up_modes and #up_modes > 1 then
+                found = true
+                return true
+            end
+        end
+    end)
+    return found
+end
+
+local function fire_mode_label(mode)
+    if mode == -1 then
+        return game.translate_string("st_ac_fm_fullauto")
+    elseif mode == 1 then
+        return game.translate_string("st_ac_fm_single")
+    else
+        -- N-round burst (mode is the burst count)
+        return game.translate_string("st_ac_fm_burst") .. " x" .. tostring(mode)
+    end
+end
+
+-- Color by rounds-per-pull, hotter for more rounds:
+--   single    = green  (controlled)
+--   burst     = orange (middle ground)
+--   full-auto = red    (highest fire rate)
+local FM_CLR_SINGLE   = GetARGB(0xff, 0x40, 0xff, 0x40)
+local FM_CLR_BURST    = GetARGB(0xff, 0xff, 0x88, 0x00)
+local FM_CLR_FULLAUTO = GetARGB(0xff, 0xff, 0x30, 0x30)
+
+local function fire_mode_color(mode)
+    if mode == -1 then
+        return FM_CLR_FULLAUTO
+    elseif mode == 1 then
+        return FM_CLR_SINGLE
+    else
+        return FM_CLR_BURST  -- any N-round burst
+    end
+end
+
+-- ### Minimalistic (dots) display
+
+local DOT_SLOTS    = 4                              -- fixed slot count for the "Dots" style
+local DOT_GLYPH    = string.format("%c", 0x95)      -- filled bullet (cp1251 byte, renders as a dot)
+local DOT_OFF_CHAR = "o"                            -- empty-dot stand-in when colors are unavailable
+local DOT_LETTER_GAP = 6                            -- px before the letter so it clears the dots
+local FM_DOT_ON    = GetARGB(0xff, 0xff, 0xff, 0xff)  -- white, active dot
+local FM_DOT_OFF   = GetARGB(0xff, 0x19, 0x19, 0x19)  -- almost black, empty dot
+
+-- number of lit dots: single 1, full-auto fills all slots, N-round burst uses N (capped)
+local function fm_dot_count(mode)
+    if mode == -1 then return DOT_SLOTS end
+    if mode == 1 then return 1 end
+    return math.max(2, math.min(mode, DOT_SLOTS))
+end
+
+local function fm_letter(mode)
+    if mode == -1 then return "A"
+    elseif mode == 1 then return "S"
+    else return "B" end
+end
+
+-- color tinting the letter and (Text/None styles) the message. White when color is off.
+local function fm_text_color(mode)
+    return mcm_color_text and fire_mode_color(mode) or nil
+end
+
+-- Text / None styles: a single colored line. None drops the word label, so with the letter on
+-- it shows the letter alone, and with the letter off it shows nothing (returns nil).
+local function build_text_display(mode)
+    local parts = {}
+    if mcm_display_style ~= "none" then
+        parts[#parts + 1] = fire_mode_label(mode)
+    end
+    if mcm_show_letter then
+        parts[#parts + 1] = "[" .. fm_letter(mode) .. "]"
+    end
+    if #parts == 0 then return nil, nil end
+    return table.concat(parts, " "), fm_text_color(mode)
+end
+
+-- Dots styles under custom render: side-by-side single-color segments (white lit dots,
+-- almost-black empty dots, optional colored letter). No mid-string %c, so it renders correctly
+-- at any position. The letter is tinted by the fire mode color when "Color" is on, dots stay white.
+local function build_dot_segments(mode)
+    local on = fm_dot_count(mode)
+    local segs = { { str = string.rep(DOT_GLYPH, on), clr = FM_DOT_ON } }
+
+    if mcm_display_style ~= "dots_alt" then
+        local off = DOT_SLOTS - on
+        if off > 0 then
+            segs[#segs + 1] = { str = string.rep(DOT_GLYPH, off), clr = FM_DOT_OFF }
+        end
+    end
+
+    if mcm_show_letter then
+        segs[#segs + 1] = { str = "[" .. fm_letter(mode) .. "]", clr = fm_text_color(mode) or FM_DOT_ON, gap = DOT_LETTER_GAP }
+    end
+
+    return segs
+end
+
+-- Dots styles without the custom overlay: one single-color line, empty dots shown as 'o' since
+-- per-segment color is unavailable there.
+local function build_dot_plain(mode)
+    local on = fm_dot_count(mode)
+    local s = string.rep(DOT_GLYPH, on)
+    if mcm_display_style ~= "dots_alt" then
+        s = s .. string.rep(DOT_OFF_CHAR, DOT_SLOTS - on)
+    end
+    if mcm_show_letter then
+        s = s .. " [" .. fm_letter(mode) .. "]"
+    end
+    return s, FM_DOT_ON
+end
+
+-- ### Ready or Not indicator (texture + tile mapping from BWais FireModeCheck)
+-- Draws a fire-selector graphic from a 256 px tile atlas. Column = current mode (Single 0 / Burst 1 /
+-- Full-Auto 2, from GetFireMode); row = selector body, derived in-script from whether the weapon has
+-- a burst position: row 0 (with burst) when it does, row 1 (no burst) when it does not. These row/col
+-- indices match BWais FireModeCheck's atlas layout (selector_rows / firing_mode_icons), which our RoN
+-- textures follow. Deriving the row from the weapon's own fire_modes means it works for every weapon,
+-- with no per-gun selector table to maintain (the old vanilla-only list could not cover GAMMA's packs)
+
+local FM_TILE = 256
+local FM_ROW_WITH_BURST = 0     -- selector body that has a burst position (atlas row 0)
+local FM_ROW_NO_BURST   = 1     -- selector body without a burst position (atlas row 1)
+
+-- does this section's fire_modes list include a burst mode? values are the per-pull round count:
+-- burst is > 1, single is 1, full-auto is -1.
+local function fm_list_has_burst(sec)
+    local modes = parse_list(ini_sys, sec, "fire_modes")
+    if modes then
+        for i = 1, #modes do
+            local v = tonumber(modes[i])
+            if v and v > 1 then return true end
+        end
+    end
+    return false
+end
+
+-- weapon or an installed upgrade offers a burst mode
+local function fm_has_burst(weapon)
+    if fm_list_has_burst(weapon:section()) then return true end
+    local found = false
+    weapon:iterate_installed_upgrades(function(upgr_sec)
+        local prop_sec = ini_sys:r_string_ex(upgr_sec, "section")
+        if prop_sec and fm_list_has_burst(prop_sec) then
+            found = true
+            return true
+        end
+    end)
+    return found
+end
+
+local function fm_indicator_row(weapon)
+    return fm_has_burst(weapon) and FM_ROW_WITH_BURST or FM_ROW_NO_BURST
+end
+
+local function fm_mode_col(mode)
+    if mode == -1 then return 2 end  -- Full-Auto
+    if mode == 1 then return 0 end   -- Single
+    return 1                          -- Burst
+end
+
+-- effective render-position index for fire mode: pinned to the screen bottom (index 10, lower than the
+-- default bottom-center so the two are visibly distinct), or the AmmoCheck position when "default".
+local function fm_effective_pos()
+    if mcm_position == "screen_bottom" then return 10 end
+    local p = ammo_check_mcm and ammo_check_mcm.get_render_position and ammo_check_mcm.get_render_position()
+    return p or 3
+end
+
+-- top-left placement (1024x768 virtual UI space) of the RoN image for a render-position index,
+-- so the graphic lands at the same spots the text styles use
+local FM_IMG_W, FM_IMG_H = 106, 141
+local FM_CURSOR_GAP = 80
+local _fm_vec = vector2()  -- reused for the indicator SetWndPos call
+local function fm_image_xy(pos)
+    local cxl = (1024 - FM_IMG_W) / 2
+    if pos == 0 then return 20, 40
+    elseif pos == 1 then return 1024 - 20 - FM_IMG_W, 40
+    elseif pos == 2 then return cxl, 300
+    elseif pos == 3 then return cxl, 600
+    elseif pos == 4 then return (512 - FM_CURSOR_GAP) - FM_IMG_W, 384 - FM_IMG_H / 2
+    elseif pos == 5 then return cxl, 384 - FM_CURSOR_GAP - FM_IMG_H
+    elseif pos == 6 then return 512 + FM_CURSOR_GAP, 384 - FM_IMG_H / 2
+    elseif pos == 7 then return cxl, 384 + FM_CURSOR_GAP
+    elseif pos == 8 then return 1024 - 20 - FM_IMG_W, 600   -- bottom-right
+    elseif pos == 9 then return 20, 600                     -- bottom-left
+    end
+    return cxl, 600
+end
+
+-- "Screen Bottom" pins the graphic to the bottom edge
+local FM_IMG_BOTTOM_Y = 768 - 110
+local function fm_indicator_xy()
+    local x, y
+    if mcm_position == "screen_bottom" then
+        x, y = (1024 - FM_IMG_W) / 2, FM_IMG_BOTTOM_Y
+    else
+        local p = (ammo_check_mcm and ammo_check_mcm.get_render_position and ammo_check_mcm.get_render_position()) or 3
+        x, y = fm_image_xy(p)
+    end
+    return x, y + (mcm_ron_y_offset or 0)  -- manual vertical nudge from MCM
+end
+
+-- texture name for the chosen Fire Mode Texture
+local function fm_ron_texture()
+    if mcm_ron_texture == "bwais" then
+        return "ui\\bwais_firemode_indicators"
+    end
+    local notext = (mcm_ron_texture == "ron_notext")
+    if notext then
+        return mcm_color_text and "ui\\rax_ammocheck_firemode_notext_red" or "ui\\rax_ammocheck_firemode_notext_white"
+    end
+    return mcm_color_text and "ui\\rax_ammocheck_firemode_text_red" or "ui\\rax_ammocheck_firemode_text_white"
+end
+
+-- ARGB color for the RoN indicator from the opacity + hue MCM options. Hue 0 = neutral (white tint:
+-- the texture keeps its own color, so only the alpha applies). Hue 1..360 applies an HSV tint via
+-- SetTextureColor - best paired with the white texture variant, since the red one fights a tint
+local function fm_hsv_to_rgb(h, s, v)
+    h = (h or 0) % 360
+    local c = v * s
+    local x = c * (1 - math.abs(((h / 60) % 2) - 1))
+    local m = v - c
+    local r, g, b = 0, 0, 0
+    if     h < 60  then r, g, b = c, x, 0
+    elseif h < 120 then r, g, b = x, c, 0
+    elseif h < 180 then r, g, b = 0, c, x
+    elseif h < 240 then r, g, b = 0, x, c
+    elseif h < 300 then r, g, b = x, 0, c
+    else                r, g, b = c, 0, x end
+    return math.floor((r + m) * 255 + 0.5), math.floor((g + m) * 255 + 0.5), math.floor((b + m) * 255 + 0.5)
+end
+
+local function fm_ron_color()
+    local a = mcm_ron_opacity or 255
+    if a < 0 then a = 0 elseif a > 255 then a = 255 end
+    if (mcm_ron_hue or 0) <= 0 then
+        return GetARGB(a, 255, 255, 255)  -- neutral: keep the texture's own color, alpha only
+    end
+    local r, g, b = fm_hsv_to_rgb(mcm_ron_hue, 0.65, 1.0)
+    return GetARGB(a, r, g, b)
+end
+
+-- self-expiring image dialog, mirrors the main mod's text overlay lifecycle
+class "fm_indicator_hud" (CUIScriptWnd)
+
+function fm_indicator_hud:__init() super()
+    local xml = CScriptXmlInit()
+    xml:ParseFile("rax_ammocheck_firemode_hud.xml")
+    self.icon = xml:InitStatic("fireMode", self)
+    self.icon:Show(false)
+    self.cur_tex = nil   -- texture set lazily on first show
+    self.visible_until = 0
+    self.added = false
+    self.registered = false
+end
+
+function fm_indicator_hud:show(col, row, duration, ix, iy, texname)
+    if texname and texname ~= self.cur_tex then
+        self.icon:InitTexture(texname)
+        self.cur_tex = texname
+    end
+    local x = col * FM_TILE
+    local y = row * FM_TILE
+    self.icon:SetTextureRect(Frect():set(x, y, x + FM_TILE, y + FM_TILE))
+    -- opacity + optional hue tint (apply after the rect; InitTexture above can reset it)
+    if self.icon.SetTextureColor then
+        pcall(function() self.icon:SetTextureColor(fm_ron_color()) end)
+    end
+    _fm_vec:set(ix, iy)
+    self.icon:SetWndPos(_fm_vec)
+    self.icon:Show(true)
+    self.visible_until = time_global() + math.floor((duration or 2) * 1000)
+    if not self.added then
+        local hud = get_hud()
+        if hud then
+            hud:AddDialogToRender(self)
+            self.added = true
+        end
+    end
+    if not self.registered then
+        RegisterScriptCallback("actor_on_update", self)
+        self.registered = true
+    end
+end
+
+function fm_indicator_hud:hide()
+    self.icon:Show(false)
+    self.visible_until = 0
+    if self.added then
+        local hud = get_hud()
+        if hud then hud:RemoveDialogToRender(self) end
+        self.added = false
+    end
+    if self.registered then
+        UnregisterScriptCallback("actor_on_update", self)
+        self.registered = false
+    end
+end
+
+function fm_indicator_hud:actor_on_update()
+    if self.visible_until > 0 and time_global() >= self.visible_until then
+        self:hide()
+    end
+end
+
+local fm_indicator
+local function get_fm_indicator()
+    if not fm_indicator then
+        fm_indicator = fm_indicator_hud()
+    end
+    return fm_indicator
+end
+
+local function show_ready_or_not(weapon, mode)
+    local dur = (ammo_check_mcm and ammo_check_mcm.get_msg_duration and ammo_check_mcm.get_msg_duration()) or MSG_DURATION
+    local ix, iy = fm_indicator_xy()
+    get_fm_indicator():show(fm_mode_col(mode), fm_indicator_row(weapon), dur, ix, iy, fm_ron_texture())
+end
+
+-- ### Display
+
+function show_fire_mode(old_fire_mode)
+    local weapon = db.actor and db.actor:active_item()
+    if not is_supported_weapon(weapon) then return true end
+    if not has_multiple_fire_modes(weapon) then return true end
+    if not is_weapon_ready(weapon) then return true end
+
+    local fire_mode = weapon:cast_Weapon():GetFireMode()
+    -- still waiting for the fire-select animation to change the mode
+    if old_fire_mode ~= nil and fire_mode == old_fire_mode then
+        return false
+    end
+
+    -- Custom texture: draw the selected selector graphic instead of a text/dots message
+    if mcm_display_style == "custom_texture" then
+        show_ready_or_not(weapon, fire_mode)
+        return true
+    end
+
+    local pos = fm_effective_pos()
+
+    -- Dots styles: multi-color segments through the overlay (custom render), or a single-color
+    -- glyph line on the plain message line.
+    if mcm_display_style == "dots" or mcm_display_style == "dots_alt" then
+        local custom = ammo_check_mcm and ammo_check_mcm.is_custom_render and ammo_check_mcm.is_custom_render()
+        if custom and ammo_check_mcm.show_segments then
+            ammo_check_mcm.show_segments(build_dot_segments(fire_mode), pos)
+        else
+            local text, clr = build_dot_plain(fire_mode)
+            if ammo_check_mcm and ammo_check_mcm.show_single_line then
+                ammo_check_mcm.show_single_line(text, clr, pos)
+            else
+                actor_menu.set_msg(1, text, MSG_DURATION, clr)
+            end
+        end
+        return true
+    end
+
+    -- Text / None styles: a single colored line (None shows nothing when the letter is off)
+    local text, clr = build_text_display(fire_mode)
+    if not text then return true end
+    -- Route through the main mod so the text honors "Custom Text Rendering" (font/position) and the
+    -- shared message duration. Fall back to the plain message line if that script is unavailable.
+    if ammo_check_mcm and ammo_check_mcm.show_single_line then
+        ammo_check_mcm.show_single_line(text, clr, pos)
+    else
+        actor_menu.set_msg(1, text, MSG_DURATION, clr)
+    end
+    return true
+end
+
+-- ### Actions
+--
+-- Here we change the fire mode directly instead of simulating the vanilla,
+-- because if we do it otherwise the vagina malfunction can happen (yeah).
+-- We do it through `SetFireMode`.
+-- The keypress path only works when those engine actions are bound to a key, and to
+-- a key other than ours: bind_to_dik returns 0 for an unbound action, so press_action(0) does nothing
+-- and the mode never changes (only the display updates).
+-- SetFireMode sidesteps the key bindings entirely.
+-- Note: SetFireMode itself is instant and never animates;
+-- thanks to Verdatim, we got a "workaround": apply_fire_mode below plays the selector
+-- switch animation separately (anm_switch_mode) for weapons whose HUD defines it
+
+-- Fire-mode list the engine actually uses for this weapon: the base section's list, unless an
+-- installed upgrade redefines fire_modes.
+-- Entries are raw strings, compare with tonumber
+-- This list is 1-based (Lua); SetFireMode wants a 0-based index into this same list.
+local function effective_fire_modes(weapon)
+    local modes = parse_list(ini_sys, weapon:section(), "fire_modes")
+    weapon:iterate_installed_upgrades(function(upgr_sec)
+        local prop_sec = ini_sys:r_string_ex(upgr_sec, "section")
+        if prop_sec then
+            local up = parse_list(ini_sys, prop_sec, "fire_modes")
+            if up and #up > 0 then modes = up end
+        end
+    end)
+    return modes
+end
+
+-- 0-based index of the current fire mode (the GetFireMode value) within the list. Falls back to the
+-- last slot, which is the engine's own default current index when nothing matches.
+local function current_mode_index(modes, cur_value)
+    for i = 1, #modes do
+        if tonumber(modes[i]) == cur_value then return i - 1 end
+    end
+    return #modes - 1
+end
+
+local FM_SWITCH_ANIM = "anm_switch_mode"
+local FM_SWITCH_STATE = 6
+
+-- Play a weapon's snd_switch_mode. Config value is "path[, vol, dist]"
+local function play_switch_sound(sec)
+    local val = SYS_GetParam(0, sec, "snd_switch_mode")
+    if not val or val == "" then return end
+    local path = val
+    local comma = string.find(path, ",", 1, true)
+    if comma then path = string.sub(path, 1, comma - 1) end
+    path = path:gsub("%s+$", "")  -- trim trailing whitespace from the ltx value
+    if path == "" then return end
+    local snd = sound_object(path)
+    if snd then snd:play(db.actor, 0, sound_object.s2d) end
+end
+
+-- index here is a 0-based slot in the weapon's fire_modes list. Negative is never passed: SetFireMode
+-- only wraps past the end, a negative index would index out of bounds, so prev-wrap is done by caller.
+local function apply_fire_mode(weapon, index)
+    local wm = weapon and weapon:cast_WeaponMagazined()
+    if not wm then return end
+    wm:SetFireMode(index)
+
+    local sec = weapon:section()
+    local hud = SYS_GetParam(0, sec, "hud") or sec
+
+    -- HUD switch animation. anm_switch_mode is the alias the engine itself plays on the fire-mode key path
+    --
+    -- Prefer the _empty variant when the magazine is empty, mirroring the engine.
+    if weapon.play_hud_motion then
+        local empty = (weapon:get_ammo_in_magazine() == 0)
+        local anm
+        if empty and SYS_GetParam(0, hud, FM_SWITCH_ANIM .. "_empty") then
+            anm = FM_SWITCH_ANIM .. "_empty"
+        elseif SYS_GetParam(0, hud, FM_SWITCH_ANIM) then
+            anm = FM_SWITCH_ANIM
+        end
+        if anm then
+            weapon:play_hud_motion(anm, true, FM_SWITCH_STATE, 1, 0)
+        end
+    end
+
+    -- Switch sound: the engine plays snd_switch_mode on EVERY switch (with or without the anim), but
+    -- only on its native fire-mode key path. So replicate the behaviour :3
+    play_switch_sound(sec)
+
+    -- Camera Reanimation Project mod compatibility
+    -- camera_reanim_project adds a small fire-mode camera
+    -- effector, but only when the ENGINE kWPN_FIREMODE keys are pressed.
+    -- So replicate the behaviour :3 when that mod is installed and its fire-mode option is on
+    if camera_reanim_project and camera_reanim_project.play_switch_anm then
+        local cam_on = true
+        if camera_reanim_project_mcm and camera_reanim_project_mcm.get_config then
+            cam_on = camera_reanim_project_mcm.get_config("fire_mode")
+        end
+        if cam_on then camera_reanim_project.play_switch_anm() end
+    end
+end
+
+function next_fire_mode(weapon, old_fire_mode)
+    local modes = effective_fire_modes(weapon)
+    if not (modes and #modes > 1) then return end
+    local idx = current_mode_index(modes, old_fire_mode)
+    apply_fire_mode(weapon, (idx + 1) % #modes)
+    -- show immediately (pass nil): the change is instant, so there is no fire-select animation to
+    -- wait on, and a duplicate value in the list could otherwise stall the old/new comparison.
+    CreateTimeEvent("ac_firemode", "show_delayed", 0, show_fire_mode, nil)
+end
+
+function prev_fire_mode(weapon, old_fire_mode)
+    local modes = effective_fire_modes(weapon)
+    if not (modes and #modes > 1) then return end
+    local idx = current_mode_index(modes, old_fire_mode)
+    apply_fire_mode(weapon, (idx - 1 + #modes) % #modes)
+    CreateTimeEvent("ac_firemode", "show_delayed", 0, show_fire_mode, nil)
+end
+
+-- Play a weapon-inspection animation (Tarkov inspired "look the gun over" anim) instead of showing the
+-- fire mode. Tries the common inspect motions; anm_bore is the near-universal idle inspect. Returns
+-- true if one was played, false if the weapon has none (caller then falls back to showing the mode)
+local INSPECT_ANIMS = { "anm_bore", "anm_inspect", "anm_ammo_check" }
+
+local function inspect_weapon(weapon)
+    if not (weapon and weapon.play_hud_motion) then return false end
+    if not (animation_common and animation_common.has_animation) then return false end
+    local sec = weapon:section()
+    for i = 1, #INSPECT_ANIMS do
+        local anm = INSPECT_ANIMS[i]
+        if animation_common.has_animation(sec, anm) then
+            weapon:play_hud_motion(anm, true, 7, 1, 0)
+            return true
+        end
+    end
+    return false
+end
+
+-- ### Input
+
+function on_before_key_press(key, bind, dis, flags)
+    if not (enabled and ui_mcm) then return end
+    if mcm_key == DIK_keys.DIK_ESCAPE then return end  -- unbound (set to none)
+    if key ~= mcm_key then return end
+
+    local weapon = db.actor and db.actor:active_item()
+    if not is_supported_weapon(weapon) then
+        flags.ret_value = true
+        return
+    end
+
+    if has_multiple_fire_modes(weapon) and is_weapon_ready(weapon) then
+        local old_fire_mode = weapon:cast_Weapon():GetFireMode()
+        if ui_mcm.get_mod_key(mcm_modifier_prev) then
+            ui_mcm.simple_press("ac_firemode_press", key, prev_fire_mode, weapon, old_fire_mode)
+        else
+            ui_mcm.simple_press("ac_firemode_press", key, next_fire_mode, weapon, old_fire_mode)
+        end
+        flags.ret_value = false
+        return
+    end
+
+    flags.ret_value = true
+end
+
+function on_key_hold(key)
+    if not (enabled and ui_mcm) then return end
+    if mcm_key == DIK_keys.DIK_ESCAPE then return end  -- unbound
+    if key == mcm_key and ui_mcm.key_hold("ac_firemode_hold", key) then
+        -- Inspect-on-hold: play the weapon inspection animation instead of showing the mode. Falls
+        -- back to showing the mode when off, the weapon is busy, or it has no inspect animation
+        if mcm_inspect_on_hold then
+            local weapon = db.actor and db.actor:active_item()
+            if is_supported_weapon(weapon) and is_weapon_ready(weapon) and inspect_weapon(weapon) then
+                return
+            end
+        end
+        show_fire_mode(nil)
+    end
+end

@@ -1,0 +1,693 @@
+[wpn_ak74m_beard]:identity_immunities,weapon_probability,default_weapon_params,wpn_ak74_sounds
+GroupControlSection                      = spawn_group
+$npc                                     = on
+$prefetch                                = 8
+$spawn                                   = "weapons\wpn_ak74m_beard"
+scheduled                                = off
+cform                                    = skeleton
+parent_section                           = wpn_ak74m_beard
+
+class                                    = WP_AK74
+slot                                     = 2
+animation_slot                           = 2
+ef_main_weapon_type                      = 2
+ef_weapon_type                           = 8
+hand_dependence                          = 1
+single_handed                            = 0
+
+default_to_ruck                          = false
+sprint_allowed                           = true
+
+icons_texture                                       = ui\ui_icon_bas
+inv_grid_width     = 5
+inv_grid_height    = 2
+inv_grid_x         = 3
+inv_grid_y         = 0
+
+inv_name                                 = st_wpn_ak74m_beard
+inv_name_short                           = st_wpn_ak74m_beard
+description                              = st_wpn_ak74m_beard_descr
+
+kind                                     = w_rifle
+inv_weight				= 3.0
+cost                    = 38980
+repair_type                              = rifle_5
+weapon_class                             = assault_rifle
+
+hud                                      = wpn_ak74m_beard_hud
+visual                                   = dynamics\weapons\wpn_ak74m_beard\wpn_ak74m_beard_world.ogf
+position				                 = -0.026,0,0
+orientation                              = 0, 0, 0
+fire_point				= 0,0.0,0.656
+fire_point2				= 0,0.161,0.583
+strap_bone0                              = bip01_spine2
+strap_bone1                              = bip01_spine1
+strap_position		    = -0.26,-0.11,0.25
+strap_orientation	    = -15,-9,110
+ph_mass                                  = 4
+
+flame_particles                          = weapons\generic_weapon05
+;smoke_particles                          = weapons\generic_shoot_00
+grenade_flame_particles                  = weapons\generic_weapon01
+
+shell_point			                     = 0, 0.216, 0.174
+shell_dir			                     = 0.0, 0.0, 0.4
+shell_particles			                 = weapons\545x39
+
+light_disabled                           = false
+light_color                              = 0.6, 0.5, 0.3
+light_range                              = 5
+light_time                               = 0.2
+light_var_color                          = 0.05
+light_var_range                          = 0.5
+
+upgrades                          = up_gr_firstab_ak74u, up_gr_seconab_ak74u, up_gr_thirdab_ak74u, up_gr_fourtab_ak74u, up_gr_fifthab_ak74, up_gr_fifthcd_ak74
+;;installed_upgrades                       =
+upgrade_scheme                    = upgrade_scheme_ak74u
+
+upgr_icon_x                              = 0
+upgr_icon_y                              = 500
+upgr_icon_width                          = 300
+upgr_icon_height                         = 100
+
+fire_modes                               = 1, -1
+ammo_class                               = ammo_5.45x39_fmj, ammo_5.45x39_fmj_bad, ammo_5.45x39_fmj_verybad, ammo_5.45x39_ep, ammo_5.45x39_ep_bad, ammo_5.45x39_ep_verybad, ammo_5.45x39_ap, ammo_5.45x39_ap_bad, ammo_5.45x39_ap_verybad
+ammo_elapsed                             = 45
+ammo_mag_size                            = 45
+startup_ammo                             = 90
+
+scopes 					     = eot, c-more, 0kp2, ac10632, d0cter, aim_low, e0t2, rmr, kobra, ekp8_02, okp, 1p29, pka, pso2, 1pn93, deltapoint, 1pn93n2_1gs, 1p78gs, compm4s, kemper, usp1, 1p76, mepro, ekp8_18, pritseldob, kashtan_rmr, 1p63, 1p59, pso1m21, p1x42, pk6, he510, aim_acro, ps01, t12, echo1
+
+scope_status                             = 0
+scope_zoom_factor                        = 0
+
+silencer_name                            = wpn_sil_atg
+silencer_status                          = 2
+silencer_x                               = 218
+silencer_y                               = 7
+silencer_light_color                     = 0.6, 0.5, 0.3
+silencer_light_range                     = 0.01
+silencer_light_time                      = 0.2
+silencer_light_var_color                 = 0.05
+silencer_light_var_range                 = 0.5
+;silencer_smoke_particles                 = weapons\generic_shoot_00
+
+smoke_particles				             = ghost_particles\weapons\flame_eft_ak           ;particles remade incomp.
+silencer_smoke_particles   		         = ghost_particles\weapons\generic_smoke_eft_sil  ;particles remade incomp.
+
+grenade_class                            = ammo_vog-25, ammo_vog-25_bad, ammo_vog-25_verybad
+grenade_launcher_name                    = wpn_addon_grenade_launcher
+grenade_launcher_status                  = 0
+grenade_launcher_x                       = 122
+grenade_launcher_y                       = 22
+launch_speed                             = 0
+
+hit_impulse                              = 25
+hit_power                                = 0.5, 0.5, 0.5, 0.5
+hit_type                                 = fire_wound
+fire_distance                            = 1000
+bullet_speed                             = 880
+rpm                                      = 600
+rpm_empty_click                          = 200
+
+use_aim_bullet                           = false
+time_to_aim                              = 0.0 ;  3.0
+zoom_dof                                 = 0.5, 1.0, 180
+zoom_enabled                             = true
+zoom_rotate_time                         = 0.25
+reload_dof                               = 0.0, 0.5, 5, 2
+control_inertion_factor = 1.0f
+crosshair_inertion                       = 5.6
+fire_dispersion_base                     = 0.32
+fire_dispersion_condition_factor         = 0.001
+
+misfire_probability                      = 0.005
+misfire_start_condition                  = 0.7 ;  0.72
+misfire_start_prob                       = 0.007
+misfire_end_condition                    = 0.1
+misfire_end_prob                         = 0.11
+
+condition_queue_shot_dec                 = 0.0008
+condition_shot_dec                       = 0.0008
+
+cam_return                               = 0
+cam_relax_speed                          = 10
+cam_dispersion                           = 0.545
+cam_dispersion_frac                      = 1.1
+cam_dispersion_inc                       = 0.0625
+cam_max_angle                            = 50.0
+cam_max_angle_horz                       = 50.0
+cam_step_angle_horz                      = 1.15
+zoom_cam_relax_speed                     = 10
+zoom_cam_dispersion                      = 0.515
+zoom_cam_dispersion_frac                 = 0.7
+zoom_cam_dispersion_inc                  = 0.0525
+zoom_cam_max_angle                       = 50.0
+zoom_cam_max_angle_horz                  = 50.0
+zoom_cam_step_angle_horz                 = 1.05
+
+PDM_disp_accel_factor                    = 2.5
+PDM_disp_base                            = 1.0
+PDM_disp_crouch                          = 1.0
+PDM_disp_crouch_no_acc                   = 1.0
+PDM_disp_vel_factor                      = 2.5
+
+cam_relax_speed_ai                       = 360
+zoom_cam_relax_speed_ai                  = 360
+holder_fov_modifier                      = 1.0
+holder_range_modifier                    = 1.0
+min_radius                               = 0
+max_radius                               = 500
+hit_probability_gd_novice                = 1.00
+hit_probability_gd_stalker               = 1.00
+hit_probability_gd_veteran               = 1.00
+hit_probability_gd_master                = 1.00
+
+kill_msg_x                               = 0
+kill_msg_y                               = 28
+kill_msg_width                           = 84
+kill_msg_height                          = 28
+
+use_alt_aim_hud                   = true
+laser_status = true
+;-----------------------------------------------------------------SOUNDS-------------------------------------------------------------------------------
+snd_draw = weapons\ak\ak_draw
+snd_holster = weapons\rifle_holster
+snd_reload = weapons\librarian_ak74\reload_plastic
+snd_reload_empty = weapons\librarian_ak74\reload_empty_heavy_plastic
+snd_switch = $no_sound
+snd_switch_mode = weapons\librarian_ak74\firemode
+snd_bore = weapons\librarian_ak74\bored
+snd_reload_grenade = weapons\librarian_ak74\gl_reload
+
+scripted_snd_ammo_check             = weapons\librarian_ak74\ammocheck_plastic
+scripted_snd_ammo_check_empty       = weapons\librarian_ak74\ammocheck_plastic
+scripted_snd_ammo_check_w_gl        = weapons\librarian_ak74\ammocheck_plastic
+scripted_snd_ammo_check_empty_w_gl  = weapons\librarian_ak74\ammocheck_plastic
+
+;----------------------------------------------------------------HUD------------------------------------------------------------------------------------
+[wpn_ak74m_beard_hud]:hud_base
+item_visual                              = dynamics\weapons\wpn_ak74m_beard\wpn_ak74m_beard_hud.ogf
+
+attach_place_idx                         = 0
+zoom_hide_crosshair                      = true
+
+item_position                            = 0, 0, 0
+item_orientation                         = 0, 0, 0
+
+        hands_orientation                = 0.002562, 0.001138, 0
+        hands_orientation_16x9           = 0.002562, 0.001138, 0
+        hands_position                   = -0.000318, 0.000213, 0.040481
+        hands_position_16x9              = -0.000318, 0.000213, 0.040481
+
+        aim_hud_offset_pos               = -0.066647, 0.027856, -0.062392
+        aim_hud_offset_pos_16x9          = -0.066647, 0.027856, -0.062392
+        aim_hud_offset_rot               = 0.002629, 0.000751, 0
+        aim_hud_offset_rot_16x9          = 0.002629, 0.000751, 0
+		
+        lowered_hud_offset_pos           = 0.078378, -0.010447, -0.001491
+        lowered_hud_offset_pos_16x9      = 0.078378, -0.010447, -0.001491
+        lowered_hud_offset_rot           = 0.099432, -0.799841, 0.098651
+        lowered_hud_offset_rot_16x9      = 0.099432, -0.799841, 0.098651
+
+
+        gl_hud_offset_pos                = -0.025311, -0.049587, -0.112264
+        gl_hud_offset_pos_16x9           = -0.025311, -0.049587, -0.112264
+        gl_hud_offset_rot                = -0.120478, 0.079255, 0.217001
+        gl_hud_offset_rot_16x9           = -0.120478, 0.079255, 0.217001
+
+lean_hud_offset_pos                      = 0, 0, 0
+lean_hud_offset_rot                      = 0, 0, 0
+
+;------------------------------------------------------------------------------------------------------
+anm_bore								= ak_hand_bored, ak_idle
+anm_hide								= ak_hand_holster, ak_idle
+anm_idle								= ak_hand_idle, ak_idle
+anm_idle_aim							= ak_hand_idle_aim, ak_idle
+anm_idle_moving							= ak_hand_moving, ak_idle, 0.9
+anm_idle_sprint							= ak_hand_sprint, ak_idle, 1.1
+anm_show								= ak_hand_draw, ak_idle
+anm_switch_mode							= ak_hand_firemode, ak_idle
+
+anm_reload								= ak_hand_reload, ak_reload
+anm_reload_empty						= ak_hand_reload_empty_heavy, ak_reload_empty_heavy
+anm_reload_misfire						= ak_hand_unjam, ak_unjam
+
+anm_shots								= ak_hand_shoot, ak_shoot
+anm_shots_aim							= ak_hand_shoot_aim, ak_shoot
+;------------------------------------------------------------------------------------------------------
+anm_bore_w_gl							= ak_hand_bored_w_gl, ak_idle
+anm_hide_w_gl							= ak_hand_holster_w_gl, ak_idle
+anm_idle_moving_w_gl					= ak_hand_moving_w_gl, ak_idle, 0.9
+anm_idle_sprint_w_gl					= ak_hand_sprint_w_gl, ak_idle, 1.1
+anm_idle_w_gl							= ak_hand_idle_w_gl, ak_idle
+anm_idle_w_gl_aim						= ak_hand_idle_aim_w_gl, ak_idle
+anm_show_w_gl							= ak_hand_draw_w_gl, ak_idle
+anm_switch_mode_w_gl					= ak_hand_firemode_w_gl, ak_idle
+
+anm_reload_misfire_w_gl					= ak_hand_unjam_w_gl, ak_unjam
+anm_reload_empty_w_gl					= ak_hand_reload_empty_heavy_w_gl, ak_reload_empty_heavy
+anm_reload_w_gl							= ak_hand_reload_w_gl, ak_reload
+
+anm_shots_w_gl							= ak_hand_shoot_w_gl, ak_shoot
+anm_shots_w_gl_aim						= ak_hand_shoot_aim_w_gl, ak_shoot
+;GRENADE LAUNCHER ANIM---------------------------------------------------------------------------------
+anm_hide_g								= gl_ak_hand_holster, gl_idle
+anm_idle_g								= gl_ak_hand_idle, gl_idle
+anm_idle_g_aim							= gl_ak_hand_idle_aim, gl_idle
+anm_idle_moving_g						= gl_ak_hand_moving, gl_idle, 0.9
+anm_idle_sprint_g                       = gl_ak_hand_sprint, gl_idle, 1.1
+anm_shots_g								= gl_ak_hand_shoot, gl_shoot
+anm_reload_g							= gl_ak_hand_reload, gl_reload
+anm_show_g								= gl_ak_hand_draw, gl_idle
+;------------------------------------------------------------------------------------------------------
+anm_switch								= gl_to_ak, ak_idle
+anm_switch_g							= ak_to_gl, ak_idle
+;------------------------------------------------------------------------------------------------------
+anm_idle_aim_moving						= ak_hand_moving, ak_idle, 0.75
+anm_idle_aim_moving_crouch				= ak_hand_moving, ak_idle, 0.7
+anm_idle_moving_crouch					= ak_hand_moving, ak_idle, 0.7
+
+anm_idle_moving_g_aim					= gl_ak_hand_moving, gl_idle, 0.75
+anm_idle_moving_crouch_g				= gl_ak_hand_moving, gl_idle
+anm_idle_moving_crouch_g_aim			= gl_ak_hand_moving, gl_idle, 0.7
+
+anm_idle_moving_crouch_w_gl				= ak_hand_moving_w_gl, ak_idle
+anm_idle_moving_w_gl_aim				= ak_hand_moving_w_gl, ak_idle, 0.75
+;------------------------------------------------------------------------------------------------------
+anm_ammo_check                      = ak_hand_ammocheck, ak_ammocheck
+anm_ammo_check_empty                = ak_hand_ammocheck, ak_ammocheck_empty
+anm_ammo_check_w_gl                 = ak_hand_ammocheck_w_gl, ak_ammocheck
+anm_ammo_check_empty_w_gl           = ak_hand_ammocheck_w_gl, ak_ammocheck_empty
+
+
+shell_bone                               = gilza
+shell_dir                                = 0, 1, 0
+shell_point                              = 0, 0, 0
+
+fire_bone                                = muzzle
+fire_bone2                               = muzzle_gl
+fire_point                               = 0, 0, 0
+fire_point2                              = 0, 0, 0
+
+freelook_z_offset_mul					 = 0.1
+
+
+;--------------------------------------------------------------------Addons-----------------------------------------------------------------------------
+[wpn_ak74m_beard_ekp8_02]:wpn_ak74m_beard
+hud					= wpn_ak74m_beard_ekp8_02_hud
+
+1icon_layer                              = ekp8_02
+1icon_layer_x                            = 67
+1icon_layer_y                            = 4
+
+[wpn_ak74m_beard_ekp8_02_hud]:wpn_ak74m_beard_hud
+item_visual                		= dynamics\weapons\wpn_ak74m_beard\wpn_ak74m_beard_ekp8_02_hud.ogf
+
+;--------------------------------------------------------------------------------
+[wpn_ak74m_beard_kobra]:wpn_ak74m_beard
+hud					= wpn_ak74m_beard_kobra_hud
+
+1icon_layer                              = kobra
+1icon_layer_x                            = 67
+1icon_layer_y                            = 4
+
+[wpn_ak74m_beard_kobra_hud]:wpn_ak74m_beard_hud
+item_visual                		= dynamics\weapons\wpn_ak74m_beard\wpn_ak74m_beard_kobra_hud.ogf
+
+;--------------------------------------------------------------------------------------
+[wpn_ak74m_beard_okp]:wpn_ak74m_beard
+hud					= wpn_ak74m_beard_okp_hud
+
+1icon_layer                              = okp
+1icon_layer_x                            = 75
+1icon_layer_y                            = 4
+
+[wpn_ak74m_beard_okp_hud]:wpn_ak74m_beard_hud
+item_visual                		= dynamics\weapons\wpn_ak74m_beard\wpn_ak74m_beard_okp_hud.ogf
+
+;---------------------------------------------------------------------------------------------
+[wpn_ak74m_beard_1p76]:wpn_ak74m_beard
+hud					= wpn_ak74m_beard_1p76_hud
+
+1icon_layer                              = 1p76
+1icon_layer_x                            = 67
+1icon_layer_y                            = -5
+
+[wpn_ak74m_beard_1p76_hud]:wpn_ak74m_beard_hud
+item_visual                		= dynamics\weapons\wpn_ak74m_beard\wpn_ak74m_beard_1p76_hud.ogf
+
+;---------------------------------------------------------------------------------------------
+[wpn_ak74m_beard_pka]:wpn_ak74m_beard
+hud					= wpn_ak74m_beard_pka_hud
+
+1icon_layer                              = pka
+1icon_layer_x                            = 75
+1icon_layer_y                            = 0
+
+[wpn_ak74m_beard_pka_hud]:wpn_ak74m_beard_hud
+item_visual                		= dynamics\weapons\wpn_ak74m_beard\wpn_ak74m_beard_pka_hud.ogf
+
+;-----------------------------------------------------------------------------------------------------
+[wpn_ak74m_beard_0kp2]:wpn_ak74m_beard
+hud					= wpn_ak74m_beard_0kp2_hud
+
+1icon_layer                              = 0kp2
+1icon_layer_x                            = 136
+1icon_layer_y                            = 3
+
+[wpn_ak74m_beard_0kp2_hud]:wpn_ak74m_beard_hud
+item_visual                		= dynamics\weapons\wpn_ak74m_beard\wpn_ak74m_beard_0kp2_hud.ogf
+
+;---------------------------------------------------------------------------------------------
+[wpn_ak74m_beard_ac10632]:wpn_ak74m_beard
+hud				= wpn_ak74m_beard_ac10632_hud
+
+1icon_layer			= ac10632
+1icon_layer_x			= 125
+1icon_layer_y			= -4
+
+[wpn_ak74m_beard_ac10632_hud]:wpn_ak74m_beard_hud
+item_visual                	= dynamics\weapons\wpn_ak74m_beard\wpn_ak74m_beard_ac10632_hud.ogf
+
+;-------------------------------------------------------------------------------
+[wpn_ak74m_beard_eot]:wpn_ak74m_beard
+hud				= wpn_ak74m_beard_eot_hud
+
+1icon_layer			    = eot
+1icon_layer_x			= 140
+1icon_layer_y			= -4
+
+[wpn_ak74m_beard_eot_hud]:wpn_ak74m_beard_hud
+item_visual                	= dynamics\weapons\wpn_ak74m_beard\wpn_ak74m_beard_eot_hud.ogf
+
+;-----------------------------------------------------------------------------
+[wpn_ak74m_beard_c-more]:wpn_ak74m_beard
+hud						= wpn_ak74m_beard_c-more_hud
+
+1icon_layer			    = c-more
+1icon_layer_x			= 140
+1icon_layer_y			= -4
+
+[wpn_ak74m_beard_c-more_hud]:wpn_ak74m_beard_hud
+item_visual				= dynamics\weapons\wpn_ak74m_beard\wpn_ak74m_beard_c-more_hud.ogf
+
+;-----------------------------------------------------------------------------
+[wpn_ak74m_beard_p1x42]:wpn_ak74m_beard
+hud						= wpn_ak74m_beard_p1x42_hud
+
+1icon_layer			    = p1x42
+1icon_layer_x			= 140
+1icon_layer_y			= -4
+
+[wpn_ak74m_beard_p1x42_hud]:wpn_ak74m_beard_hud
+item_visual				= dynamics\weapons\wpn_ak74m_beard\wpn_ak74m_beard_p1x42_hud.ogf
+
+;--------------------------------------------------------------------------------
+[wpn_ak74m_beard_d0cter]:wpn_ak74m_beard
+hud						= wpn_ak74m_beard_d0cter_hud
+
+1icon_layer			    = d0cter
+1icon_layer_x			= 140
+1icon_layer_y			= -4
+
+[wpn_ak74m_beard_d0cter_hud]:wpn_ak74m_beard_hud
+item_visual				= dynamics\weapons\wpn_ak74m_beard\wpn_ak74m_beard_docter_hud.ogf
+
+;--------------------------------------------------------------------------------
+[wpn_ak74m_beard_pk6]:wpn_ak74m_beard
+hud						= wpn_ak74m_beard_pk6_hud
+
+1icon_layer			    = pk6
+1icon_layer_x			= 140
+1icon_layer_y			= -4
+
+[wpn_ak74m_beard_pk6_hud]:wpn_ak74m_beard_hud
+item_visual				= dynamics\weapons\wpn_ak74m_beard\wpn_ak74m_beard_pk6_hud.ogf
+
+;-------------------------------------------------------------------------------------------------------------------------------
+[wpn_ak74m_beard_mepro]:wpn_ak74m_beard
+hud						= wpn_ak74m_beard_mepro_hud
+
+1icon_layer			    = mepro
+1icon_layer_x			= 140
+1icon_layer_y			= 0
+
+[wpn_ak74m_beard_mepro_hud]:wpn_ak74m_beard_hud
+item_visual				= dynamics\weapons\wpn_ak74m_beard\wpn_ak74m_beard_mepro_hud.ogf
+
+;-------------------------------------------------------------------------------------------------------------------------------
+[wpn_ak74m_beard_aim_low]:wpn_ak74m_beard
+hud						= wpn_ak74m_beard_aim_low_hud
+
+1icon_layer			    = aim_low
+1icon_layer_x			= 140
+1icon_layer_y			= 1
+
+[wpn_ak74m_beard_aim_low_hud]:wpn_ak74m_beard_hud
+item_visual				= dynamics\weapons\wpn_ak74m_beard\wpn_ak74m_beard_aim_low_hud.ogf
+
+;-------------------------------------------------------------------------------------------------------------------------------
+[wpn_ak74m_beard_ekp8_18]:wpn_ak74m_beard
+hud						= wpn_ak74m_beard_ekp8_18_hud
+
+1icon_layer			    = ekp8_18
+1icon_layer_x			= 140
+1icon_layer_y			= 4
+
+[wpn_ak74m_beard_ekp8_18_hud]:wpn_ak74m_beard_hud
+item_visual				= dynamics\weapons\wpn_ak74m_beard\wpn_ak74m_beard_ekp8_18_hud.ogf
+
+;-------------------------------------------------------------------------------------------------------------------------------
+[wpn_ak74m_beard_e0t2]:wpn_ak74m_beard
+hud						= wpn_ak74m_beard_e0t2_hud
+
+1icon_layer			    = e0t2
+1icon_layer_x			= 140
+1icon_layer_y			= -4
+
+[wpn_ak74m_beard_e0t2_hud]:wpn_ak74m_beard_hud
+item_visual				= dynamics\weapons\wpn_ak74m_beard\wpn_ak74m_beard_e0t2_hud.ogf
+
+;-------------------------------------------------------------------------------------------------------------------------------
+[wpn_ak74m_beard_deltapoint]:wpn_ak74m_beard
+hud				= wpn_ak74m_beard_deltapoint_hud
+
+1icon_layer			    = deltapoint
+1icon_layer_x			= 140
+1icon_layer_y			= 1
+
+[wpn_ak74m_beard_deltapoint_hud]:wpn_ak74m_beard_hud
+item_visual                	= dynamics\weapons\wpn_ak74m_beard\wpn_ak74m_beard_deltapoint_hud.ogf
+
+;-------------------------------------------------------------------------------------------------------------------------------
+[wpn_ak74m_beard_aim_acro]:wpn_ak74m_beard
+hud				= wpn_ak74m_beard_aim_acro_hud
+
+1icon_layer			    = aim_acro
+1icon_layer_x			= 140
+1icon_layer_y			= 1
+
+[wpn_ak74m_beard_aim_acro_hud]:wpn_ak74m_beard_hud
+item_visual                	= dynamics\weapons\wpn_ak74m_beard\wpn_ak74m_beard_aim_acro_hud.ogf
+
+;----------------------------------------------------------------------------------------
+[wpn_ak74m_beard_rmr]:wpn_ak74m_beard
+hud				= wpn_ak74m_beard_rmr_hud
+
+1icon_layer			    = rmr
+1icon_layer_x			= 140
+1icon_layer_y			= 1
+
+[wpn_ak74m_beard_rmr_hud]:wpn_ak74m_beard_hud
+item_visual                	= dynamics\weapons\wpn_ak74m_beard\wpn_ak74m_beard_rmr_hud.ogf
+
+;-----------------------------------------------------------------------------------------------------
+[wpn_ak74m_beard_compm4s]:wpn_ak74m_beard
+hud					= wpn_ak74m_beard_compm4s_hud
+
+1icon_layer                              = compm4s
+1icon_layer_x                            = 125
+1icon_layer_y                            = -5
+
+[wpn_ak74m_beard_compm4s_hud]:wpn_ak74m_beard_hud
+item_visual                		= dynamics\weapons\wpn_ak74m_beard\wpn_ak74m_beard_compm4s_hud.ogf
+
+;---------------------------------------------------------------------------------------------
+[wpn_ak74m_beard_kemper]:wpn_ak74m_beard
+hud				= wpn_ak74m_beard_kemper_hud
+
+1icon_layer			    = kemper
+1icon_layer_x			= 125
+1icon_layer_y			= -6
+
+[wpn_ak74m_beard_kemper_hud]:wpn_ak74m_beard_hud
+item_visual                	= dynamics\weapons\wpn_ak74m_beard\wpn_ak74m_beard_kemper_hud.ogf
+
+;---------------------------------------------------------------------------------------------
+[wpn_ak74m_beard_t12]:wpn_ak74m_beard
+hud				= wpn_ak74m_beard_t12_hud
+
+1icon_layer			    = t12
+1icon_layer_x			= 125
+1icon_layer_y			= -6
+
+[wpn_ak74m_beard_t12_hud]:wpn_ak74m_beard_hud
+item_visual                	= dynamics\weapons\wpn_ak74m_beard\wpn_ak74m_beard_t12_hud.ogf
+
+;---------------------------------------------------------------------------------------------
+[wpn_ak74m_beard_he510]:wpn_ak74m_beard
+hud				= wpn_ak74m_beard_he510_hud
+
+1icon_layer			    = he510
+1icon_layer_x			= 125
+1icon_layer_y			= -6
+
+[wpn_ak74m_beard_he510_hud]:wpn_ak74m_beard_hud
+item_visual                	= dynamics\weapons\wpn_ak74m_beard\wpn_ak74m_beard_he510_hud.ogf
+
+;---------------------------------------------------------------------------------------------
+[wpn_ak74m_beard_1p63]:wpn_ak74m_beard
+hud				= wpn_ak74m_beard_1p63_hud
+
+1icon_layer			    = 1p63
+1icon_layer_x			= 125
+1icon_layer_y			= -6
+
+[wpn_ak74m_beard_1p63_hud]:wpn_ak74m_beard_hud
+item_visual                	= dynamics\weapons\wpn_ak74m_beard\wpn_ak74m_beard_1p63_hud.ogf
+
+;===========================================================SCOPES====================================================================
+[wpn_ak74m_beard_1p29]:wpn_ak74m_beard
+hud                                      = wpn_ak74m_beard_1p29_hud
+
+1icon_layer                              = 1p29
+1icon_layer_x                            = 56
+1icon_layer_y                            = 2
+
+[wpn_ak74m_beard_1p29_hud]:wpn_ak74m_beard_hud
+item_visual                              = dynamics\weapons\wpn_ak74m_beard\wpn_ak74m_beard_1p29_hud.ogf
+
+;------------------------------------------------------------------------------------------------
+[wpn_ak74m_beard_usp1]:wpn_ak74m_beard       
+hud                                      = wpn_ak74m_beard_usp1_hud
+                                                  
+1icon_layer                              = usp1
+1icon_layer_x                            = 56
+1icon_layer_y                            = 2
+
+[wpn_ak74m_beard_usp1_hud]:wpn_ak74m_beard_hud
+item_visual                              = dynamics\weapons\wpn_ak74m_beard\wpn_ak74m_beard_usp1_hud.ogf
+
+;-----------------------------------------------------------------------------------------------------
+[wpn_ak74m_beard_pso2]:wpn_ak74m_beard
+hud					= wpn_ak74m_beard_pso2_hud
+
+1icon_layer                              = pso2
+1icon_layer_x                            = 38
+1icon_layer_y                            = 3
+
+
+[wpn_ak74m_beard_pso2_hud]:wpn_ak74m_beard_hud
+item_visual                		= dynamics\weapons\wpn_ak74m_beard\wpn_ak74m_beard_pso2_hud.ogf
+
+;-----------------------------------------------------------------------------------------------------
+[wpn_ak74m_beard_pritseldob]:wpn_ak74m_beard																		;11
+hud					= wpn_ak74m_beard_pritseldob_hud
+
+inv_grid_width     = 5
+inv_grid_height    = 2
+inv_grid_x         = 153
+inv_grid_y         = 20
+
+[wpn_ak74m_beard_pritseldob_hud]:wpn_ak74m_beard_hud
+item_visual                		= dynamics\weapons\wpn_ak74m_beard\wpn_ak74m_beard_psicho_rmr_hud.ogf
+
+;-----------------------------------------------------------------------------------------------------
+[wpn_ak74m_beard_1pn93]:wpn_ak74m_beard
+hud					= wpn_ak74m_beard_1pn93_hud
+
+1icon_layer                              = 1pn93
+1icon_layer_x                            = 40
+1icon_layer_y                            = 3
+
+[wpn_ak74m_beard_1pn93_hud]:wpn_ak74m_beard_hud
+item_visual                		= dynamics\weapons\wpn_ak74m_beard\wpn_ak74m_beard_1pn93_hud.ogf
+
+;-------------------------------------------------------------------------------------------
+[wpn_ak74m_beard_1p78gs]:wpn_ak74m_beard
+hud                                      = wpn_ak74m_beard_1p78gs_hud
+
+1icon_layer                              = 1p78gs
+1icon_layer_x                            = 60
+1icon_layer_y                            = -5
+
+[wpn_ak74m_beard_1p78gs_hud]:wpn_ak74m_beard_hud
+item_visual                              = dynamics\weapons\wpn_ak74m_beard\wpn_ak74m_beard_1p78gs_hud.ogf
+
+;---------------------------------------------------------------------------------------------
+[wpn_ak74m_beard_kashtan_rmr]:wpn_ak74m_beard																;22
+hud                                      = wpn_ak74m_beard_kashtan_rmr_hud
+
+inv_grid_width     = 5
+inv_grid_height    = 2
+inv_grid_x         = 158
+inv_grid_y         = 20
+
+[wpn_ak74m_beard_kashtan_rmr_hud]:wpn_ak74m_beard_hud
+item_visual                              = dynamics\weapons\wpn_ak74m_beard\wpn_ak74m_beard_kashtan_rmr_hud.ogf
+
+;-----------------------------------------------------------------------------------------------------
+[wpn_ak74m_beard_1pn93n2_1gs]:wpn_ak74m_beard
+hud					= wpn_ak74m_beard_1pn93n2_1gs_hud
+
+1icon_layer                              = 1pn93n2_1gs
+1icon_layer_x                            = 35
+1icon_layer_y                            = 0
+
+[wpn_ak74m_beard_1pn93n2_1gs_hud]:wpn_ak74m_beard_hud
+item_visual                		= dynamics\weapons\wpn_ak74m_beard\wpn_ak74m_beard_1pn93n2_1gs_hud.ogf
+
+;---------------------------------------------------------------------------------------------
+[wpn_ak74m_beard_ps01]:wpn_ak74m_beard
+hud					= wpn_ak74m_beard_ps01_hud
+
+1icon_layer                              = ps01
+1icon_layer_x                            = 40
+1icon_layer_y                            = 3
+
+[wpn_ak74m_beard_ps01_hud]:wpn_ak74m_beard_hud
+item_visual                		= dynamics\weapons\wpn_ak74m_beard\wpn_ak74m_beard_ps01_hud.ogf
+
+;---------------------------------------------------------------------------------------------
+[wpn_ak74m_beard_pso1m21]:wpn_ak74m_beard
+hud					= wpn_ak74m_beard_pso1m21_hud
+
+1icon_layer                              = pso1m21
+1icon_layer_x                            = 40
+1icon_layer_y                            = 3
+
+[wpn_ak74m_beard_pso1m21_hud]:wpn_ak74m_beard_hud
+item_visual                		= dynamics\weapons\wpn_ak74m_beard\wpn_ak74m_beard_pso1m21_hud.ogf
+
+;---------------------------------------------------------------------------------------------
+[wpn_ak74m_beard_echo1]:wpn_ak74m_beard
+hud					= wpn_ak74m_beard_echo1_hud
+
+1icon_layer                              = echo1
+1icon_layer_x                            = 40
+1icon_layer_y                            = 3
+
+[wpn_ak74m_beard_echo1_hud]:wpn_ak74m_beard_hud
+item_visual                		= dynamics\weapons\wpn_ak74m_beard\wpn_ak74m_beard_echo1_hud.ogf
+
+;---------------------------------------------------------------------------------------------
+[wpn_ak74m_beard_1p59]:wpn_ak74m_beard
+hud					= wpn_ak74m_beard_1p59_hud
+
+1icon_layer                              = 1p59
+1icon_layer_x                            = 40
+1icon_layer_y                            = 3
+
+[wpn_ak74m_beard_1p59_hud]:wpn_ak74m_beard_hud
+item_visual                		= dynamics\weapons\wpn_ak74m_beard\wpn_ak74m_beard_1p59_hud.ogf

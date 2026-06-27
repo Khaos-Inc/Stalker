@@ -1,0 +1,48 @@
+---==================================================================================================================---
+---    Script : mags_degradation_loot
+---    Description : Assigns rank-biased wear to magazines generated for NPC loot.
+---==================================================================================================================---
+
+local rank_wear_exponent = {
+    novice = 0.18,
+    regular = 0.28,
+    experienced = 0.50,
+    veteran = 1.20,
+    master = 2.50,
+    legend = 4.00,
+}
+
+local patched = false
+
+local function random_mag_wear(rank)
+    local exponent = rank_wear_exponent[rank] or rank_wear_exponent.novice
+    local factor = math.random() ^ exponent
+    return factor * 0.40 * magazine_binder.MAG_WEAR_MAX
+end
+
+function on_game_start()
+    if patched then return end
+    if mags_degradation_core and mags_degradation_core.install then
+        mags_degradation_core.install()
+    end
+    if not magazines_loot
+        or not magazine_binder
+        or not magazine_binder.get_mag_condition
+    then
+        return
+    end
+
+    patched = true
+    local random_pop_mag_orig = magazines_loot.random_pop_mag
+    magazines_loot.random_pop_mag = function(mag_id, mag_sec, ammo_table, rank)
+        local result = random_pop_mag_orig(mag_id, mag_sec, ammo_table, rank)
+        local mag_data = magazine_binder.get_mag_loaded(mag_id)
+
+        if mag_data then
+            mag_data.wear = random_mag_wear(rank)
+            magazine_binder.set_data(mag_id, mag_data)
+        end
+
+        return result
+    end
+end

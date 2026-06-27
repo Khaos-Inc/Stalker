@@ -1,0 +1,262 @@
+-- Bwais Fire Mode Check - standalone selector-type version
+-- Built from scratch to avoid weapon-section/LTX selector mapping.
+-- It chooses the selector graphic only from the weapon's available fire modes.
+
+firing_mode_descriptions = { [1] = "Single", [2] = "Burst", [3] = "Burst", [-1] = "Full-Auto" }
+
+local handler_functions = { "handler_basic", "handler_dual_key", "handler_single_key" }
+
+local display_duration = 3 -- seconds
+local hide_after = 0
+
+local DISPLAY_TEXT = 1
+local DISPLAY_IMAGE = 2
+local SINGLE_KEY_MODE = 3
+
+local _tap_count = 0
+local _hide_gui = false
+local _user_mode = SINGLE_KEY_MODE
+local _display_mode = DISPLAY_TEXT + DISPLAY_IMAGE
+
+local k_PREV = key_bindings.kWPN_FIREMODE_PREV
+local k_NEXT = key_bindings.kWPN_FIREMODE_NEXT
+
+function on_game_start()
+    perform_setup()
+end
+
+function bwais_on_before_key_press(dik, bind, dis, flags)
+    if bind == k_PREV or bind == k_NEXT then
+        local keypress_handler = this[handler_functions[_user_mode]]
+        if keypress_handler then
+            local allow_keypress = keypress_handler(bind)
+            flags.ret_value = allow_keypress
+        end
+    end
+end
+
+-- Disabled mode.
+function handler_disabled()
+    return true
+end
+
+-- Basic mode: let the engine switch fire mode, then report the settled weapon state.
+function handler_basic()
+    show_firemode_after_switch()
+    return true
+end
+
+-- Dual key: NEXT switches normally and reports after the switch. PREV only checks current mode.
+function handler_dual_key(bind)
+    if bind == k_PREV then
+        show_firemode(0.0)
+        return false
+    end
+
+    show_firemode_after_switch()
+    return true
+end
+
+-- Single key: tap to check, double tap to switch.
+function handler_single_key()
+    _tap_count = (_tap_count or 0) + 1
+
+    if _tap_count > 1 then
+        reset_taps_immediately()
+        show_firemode_after_switch()
+        return true
+    end
+
+    show_firemode(0.0)
+    reset_taps_after_delay()
+    return false
+end
+
+function show_firemode(delay)
+    hide_after = time_global() + display_duration * 1000
+    CreateTimeEvent("bwais_firemode_check", "show_firemode_delayed", delay or 0.0, show_firemode_delayed)
+end
+
+function show_firemode_after_switch()
+    -- Let the engine process the keypress before reading GetFireMode().
+    -- The second settle pass catches cases where a weapon/mod applies the mode one frame late.
+    show_firemode(0.05)
+    CreateTimeEvent("bwais_firemode_check", "show_firemode_settle", 0.15, show_firemode_delayed)
+end
+
+function show_firemode_refresh()
+    CreateTimeEvent("bwais_firemode_check", "show_firemode_delayed", 0.1, show_firemode_delayed)
+    return true
+end
+
+function show_firemode_delayed()
+    local current_mode, selector_type = get_fire_mode_data()
+    local mode_description = firing_mode_descriptions[current_mode]
+
+    if mode_description then
+        if bit_and(_display_mode, DISPLAY_TEXT) > 0 then
+            show_message(mode_description)
+        end
+
+        if bit_and(_display_mode, DISPLAY_IMAGE) > 0 then
+            show_indicator(mode_description, selector_type)
+        end
+    else
+        hide_after = 0
+    end
+
+    if time_global() >= hide_after then
+        CreateTimeEvent("bwais_firemode_check", "hide_firemode_delayed", 0, hide_firemode_delayed)
+    else
+        CreateTimeEvent("bwais_firemode_check", "show_firemode_refresh", 0, show_firemode_refresh)
+    end
+
+    return true
+end
+
+function hide_firemode_delayed()
+    hide_all()
+    return true
+end
+
+function reset_taps_after_delay()
+    CreateTimeEvent("bwais_firemode_check", "reset_taps_delayed", 0.5, reset_taps_immediately)
+end
+
+function reset_taps_immediately()
+    _tap_count = 0
+    return true
+end
+
+function get_fire_mode_data()
+    local weapon = db.actor:active_item()
+    if weapon == nil or not IsWeapon(weapon) or IsItem("fake_ammo_wpn", nil, weapon) then
+        return
+    end
+
+    local modes = get_available_fire_modes(weapon)
+    if not modes or table.getn(modes) < 2 then
+        return
+    end
+
+    local cWeapon = weapon:cast_Weapon()
+    local fire_mode = (cWeapon and cWeapon:GetFireMode()) or 0
+    local selector_type = choose_selector_type(modes)
+
+    return fire_mode, selector_type
+end
+
+-- Returns the active available fire mode list for the weapon. If an installed
+-- upgrade defines fire_modes, that upgraded list is preferred.
+function get_available_fire_modes(weapon)
+    local section = weapon:section()
+    local modes = normalize_fire_modes(parse_list(ini_sys, section, "fire_modes"))
+
+    weapon:iterate_installed_upgrades(function(upgr_sec)
+        local upgr_prop_sec = ini_sys and ini_sys:r_string_ex(upgr_sec, "section")
+        if upgr_prop_sec then
+            local upgraded_modes = normalize_fire_modes(parse_list(ini_sys, upgr_prop_sec, "fire_modes"))
+            if upgraded_modes and table.getn(upgraded_modes) > 1 then
+                modes = upgraded_modes
+                return true
+            end
+        end
+    end)
+
+    return modes
+end
+
+function normalize_fire_modes(list)
+    if not list then
+        return nil
+    end
+
+    local modes = {}
+    for i = 1, table.getn(list) do
+        local n = tonumber(list[i])
+        if n then
+            modes[#modes + 1] = n
+        end
+    end
+
+    return modes
+end
+
+function choose_selector_type(modes)
+    local has_burst = false
+
+    for i = 1, table.getn(modes) do
+        local mode = tonumber(modes[i])
+        if mode == 2 or mode == 3 then
+            has_burst = true
+            break
+        end
+    end
+
+    return has_burst and "GENERIC_BURST3" or "GENERIC_NO_BURST"
+end
+
+function show_message(message)
+    if message and bwais_firemode_hud then
+        bwais_firemode_hud.show_text(message)
+    end
+end
+
+function show_indicator(indicator, selector_type)
+    if indicator and bwais_firemode_hud then
+        bwais_firemode_hud.show_indicator(indicator, selector_type)
+    end
+end
+
+function hide_all()
+    if bwais_firemode_hud then
+        bwais_firemode_hud.hide_all()
+    end
+end
+
+function actor_on_first_update()
+    on_option_change()
+    if bwais_firemode_hud then
+        bwais_firemode_hud.activate_hud()
+    end
+end
+
+function actor_on_net_destroy()
+    if bwais_firemode_hud then
+        bwais_firemode_hud.deactivate_hud()
+    end
+end
+
+function on_option_change()
+    _user_mode = (ui_mcm and ui_mcm.get("bwaisFireModeCheck/userMode")) or SINGLE_KEY_MODE
+    _hide_gui = (ui_mcm and ui_mcm.get("bwaisFireModeCheck/hideGui")) or (not ui_mcm and true)
+    _display_mode = (ui_mcm and ui_mcm.get("bwaisFireModeCheck/displayMode")) or DISPLAY_TEXT + DISPLAY_IMAGE
+
+    toggle_firemode_gui()
+
+    if bwais_firemode_hud and bwais_firemode_hud.apply_visual_options then
+        bwais_firemode_hud.apply_visual_options()
+    end
+end
+
+function toggle_firemode_gui()
+    if not ActorMenu or not ActorMenu.get_maingame then
+        return
+    end
+
+    local main_game = ActorMenu.get_maingame()
+    if not main_game or not main_game.m_ui_hud_states or not main_game.m_ui_hud_states.m_fire_mode then
+        return
+    end
+
+    local pos = main_game.m_ui_hud_states.m_fire_mode:GetWndPos()
+    pos.x = ((_hide_gui and pos.x > 0) or ((not _hide_gui) and pos.x < 0)) and (-1 * pos.x) or pos.x
+    main_game.m_ui_hud_states.m_fire_mode:SetWndPos(pos)
+end
+
+function perform_setup()
+    RegisterScriptCallback("on_before_key_press", bwais_on_before_key_press)
+    RegisterScriptCallback("on_option_change", on_option_change)
+    RegisterScriptCallback("actor_on_first_update", actor_on_first_update)
+    RegisterScriptCallback("actor_on_net_destroy", actor_on_net_destroy)
+end

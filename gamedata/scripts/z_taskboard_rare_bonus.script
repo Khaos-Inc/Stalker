@@ -1,0 +1,724 @@
+-- z_taskboard_rare_bonus.script
+-- Stars grow for rarely-taken tasks/locations.
+-- Bonus on completion = max(quest_reward × stars × (reward_pct/100 + mult_rate), stars × min_per_star)
+--   i.e. star bonus and location/quest multiplier are additive, both scale with quest_reward and stars.
+--   min_per_star guarantees a floor per star when quest_reward is small.
+-- Quest reward detected via deferred money-delta (CreateTimeEvent, 30s window).
+--
+-- Growth model:
+--   Two dimensions: task_id and location. Both accumulate stars independently.
+--   Final stars = min(max_stars, max(task_stars, loc_stars))
+--   Each interval: full re-roll with consecutive successes.
+--     Roll star 1 with effective_chance, if true → roll star 2, etc.
+--     Count consecutive successes; if result > current stars → update.
+--     Otherwise: fail, consec_fails++ (pity increases effective_chance).
+--   Pity system: each failed interval increases effective_chance by fail_chance_bonus,
+--     reset to 0 on successful improvement. Guarantees convergence over time.
+--   Deterministic rolls via FNV-1a hash (anti save/load abuse).
+
+rare_bonus = {
+    timers            = {},  -- [key]=game_day          key = task_id ИЛИ location string
+    real_time_timers  = {},  -- [key]=os.time()         реальное время регистрации (anti-sleep abuse)
+    stars             = {},  -- [key]=N                 текущие звёзды по каждому измерению
+    last_checked      = {},  -- [key]=N                 сколько интервалов проверено
+    is_accepted       = {},  -- [task_id]=true          квест взят — рост остановлен
+    is_repeat         = {},  -- [task_id]=true          уже проходили — без начальных звёзд
+    accepted          = {},  -- [task_id]={stars, loc, loc_key, level_id}
+    consec_fails      = {},  -- [key]=N                 подряд идущих неудачных бросков (pity)
+    seed              = 0,
+}
+
+local display_cache   = {}   -- display stars cache
+local loc_cache       = {}   -- [task_id] = {loc=string|nil, loc_key=string|nil}
+local locale_ref      = nil  -- locale ref for location extraction
+local hooks_installed = false
+local pending_bonus   = {}   -- [task_id]={money_before=N, stars=N, attempts=N, loc_key=string|nil, level_id=string|nil}
+
+-- ── Config cache ──────────────────────────────────────────────────
+-- All MCM values are cached here; refresh_config() is called from init()
+-- and should be called on any MCM change to avoid repeated lookups.
+
+local cfg = {}
+
+local function get_config(key)
+    if not ui_mcm then
+        log("[RB] ERROR: ui_mcm not loaded — cannot read config key '"..key.."'. Falling back to default.")
+        return nil
+    end
+    local val = ui_mcm.get("pda_taskboard/"..key)
+    if val == nil then
+        log("[RB] WARNING: ui_mcm is loaded but key 'pda_taskboard/"..key.."' returned nil. "..
+            "MCM page may not be registered (check pda_taskboard_mcm.script) or not yet initialized.")
+    end
+    return val
+end
+
+-- ── Helpers (must be declared before refresh_config) ────────────────
+
+local function log_rb(fmt, ...)
+    if cfg.logging == false then return end
+    log(string.format("[RB] "..fmt, ...))
+end
+
+local function game_day()
+    local year, month, day, hour = game.get_game_time():get()
+    return year * 365 + month * 30 + day + hour / 24
+end
+
+local bit = bit or require("bit")
+
+local function hash_string(str)
+    -- FNV-1a: better avalanche than simple polynomial, uniform mod 2^32
+    local hash_val = 2166136261
+    for i = 1, #str do
+        hash_val = bit.bxor(hash_val, string.byte(str, i))
+        hash_val = bit.band(hash_val * 16777619, 0xFFFFFFFF)
+    end
+    return hash_val
+end
+
+local function count_keys(tbl)
+    if not tbl then return 0 end
+    local count = 0
+    for _ in pairs(tbl) do count = count + 1 end
+    return count
+end
+
+local function get_rank_info()
+    local rank = (db.actor and db.actor:character_rank()) or 0
+    local tier = rank < 500 and 0 or rank < 3000 and 1 or rank < 10000 and 2 or rank < 30000 and 3 or 4
+    return tier, rank
+end
+
+-- ── Constants ───────────────────────────────────────────────────────
+
+local MAX_CHECK_ATTEMPTS = 60  -- 60×0.5s = 30s
+local ROLAND             = 10000  -- fine-grained modulo for deterministic rolls
+local REAL_COOLDOWN_SEC  = 600   -- 10 minutes real-time anti-sleep abuse cooldown
+
+-- ── Base chance (with optional rank multiplier) ────────────────────
+-- If rank_affects is enabled, star_chance is scaled by tier:
+--   rank_mult = 0.60 + tier × 0.10
+--   tier0=0.60  tier1=0.70  tier2=0.80  tier3=0.90  tier4=1.00
+-- Low rank → lower chance, high rank → capped at star_chance (never above).
+-- If rank_affects is disabled → rank_mult = 1.0.
+
+local RANK_MULTS = { 0.60, 0.70, 0.80, 0.90, 1.00 }
+
+local function calc_base_chance()
+    if cfg.star_chance == nil then
+        log("[RB] ERROR: cfg.star_chance is nil in calc_base_chance! This should not happen. "..
+            "Falling back to 0.50. Check MCM config and refresh_config().")
+        return 0.50
+    end
+    if not cfg.rank_affects then
+        return cfg.star_chance
+    end
+    local tier = get_rank_info()
+    local mult = RANK_MULTS[tier + 1] or 1.0  -- tier is 0-based, table is 1-based
+    return cfg.star_chance * mult
+end
+
+-- ── Config cache refresh ────────────────────────────────────────────
+-- FIX: Added fallback defaults for ALL cfg fields to prevent nil arithmetic
+-- when MCM is not yet initialized or get_config() returns nil.
+
+local function refresh_config()
+    -- NOTE: get_config() now logs a warning for each nil key,
+    -- so we can see exactly which MCM keys are missing.
+
+    cfg.enabled       = get_config("rare_bonus_enabled")       ~= nil and get_config("rare_bonus_enabled")       or true
+    cfg.max_stars     = get_config("rare_bonus_max_stars")     or 5
+    cfg.star_chance   = get_config("rare_bonus_star_chance")   or 0.50
+    cfg.rank_affects  = get_config("rare_bonus_rank_affects_chance") ~= nil and get_config("rare_bonus_rank_affects_chance") or true
+    cfg.init_chance_mult = get_config("rare_bonus_init_stars") or 0.5
+    local hours_per_star = get_config("rare_bonus_hours_per_star") or 15
+    cfg.days_per_star = (hours_per_star / 24)
+    cfg.reward_pct    = get_config("rare_bonus_reward_pct")    or 25
+    cfg.min_per_star  = get_config("rare_bonus_min_per_star")  or 1000
+    cfg.fail_bonus    = get_config("rare_bonus_fail_chance_bonus") or 0.03
+    cfg.logging       = get_config("rare_bonus_logging")
+    -- Log current settings (logging itself may have just changed)
+    local tier, rank = get_rank_info()
+    local base_chance = calc_base_chance()
+    log_rb("SETTINGS enabled=%s | rank_affects=%s star_chance=%.2f base_chance=%.1f%%(tier%d rank%d) init_mult=%.2f min_per_star=$%d reward_pct=%d%% | hours_per_star=%d (%.1fd) max_stars=%d fail_chance_bonus=%.3f | logging=%s seed=%d",
+        tostring(cfg.enabled),
+        tostring(cfg.rank_affects),
+        cfg.star_chance,
+        base_chance*100, tier, rank,
+        cfg.init_chance_mult,
+        cfg.min_per_star,
+        cfg.reward_pct,
+        hours_per_star, cfg.days_per_star,
+        cfg.max_stars,
+        cfg.fail_bonus,
+        tostring(cfg.logging),
+        rare_bonus.seed or 0)
+end
+
+-- ── Pity system (consecutive fail bonus) ─────────────────────────────
+-- Each failed interval in try_star_growth increments consec_fails[key].
+-- effective_chance = calc_base_chance() + consec_fails × fail_chance_bonus
+-- Reset to 0 on successful improvement (roll_result > current_stars).
+-- Only used in try_star_growth — NOT in roll_init_stars.
+
+local function calc_effective_chance(key)
+    local base  = calc_base_chance()
+    local fails = rare_bonus.consec_fails[key] or 0
+    return math.min(1.0, base + fails * cfg.fail_bonus)
+end
+
+-- ── Individual multipliers ──────────────────────────────────────────
+-- All multipliers stack additively:
+--   final_mult = QUEST_MULT[tid] + max(LOC_NAME_MULT[loc_key], LOC_ID_MULT[level_id])
+-- Values are BONUS RATES (over 1.0): 0.5 = +50%, 1.0 = +100%, etc.
+
+local QUEST_MULT    = { simulation_task_gambling_with_life = 1.6 }  -- [task_id] = bonus rate e.g. { jup_b1_task = 0.5 }
+local LOC_NAME_MULT = {darkscape = 0.5,radar = 0.25, red_forest = 0.25, limansk = 0.25, zaton = 0.35, jupiter = 0.35, pripyat = 0.35, outskirts = 0.5, cnpp = 1.5}
+local LOC_ID_MULT   = {}  -- [level_id] = bonus rate e.g. { zaton = 0.3, l03_agroprom = 0.5 }
+
+local function resolve_multiplier(task_id, loc_key, level_id)
+    local mult = 0
+    local quest_mult = QUEST_MULT[task_id]
+    if quest_mult then mult = mult + quest_mult end
+    local loc_name_mult = loc_key  and LOC_NAME_MULT[loc_key]  or 0
+    local loc_id_mult   = level_id and LOC_ID_MULT[level_id]   or 0
+    local best_loc_mult = math.max(loc_name_mult, loc_id_mult)
+    if best_loc_mult > 0 then mult = mult + best_loc_mult end
+    return mult
+end
+
+-- ── Location extraction ─────────────────────────────────────────────
+
+local function extract_loc(text)
+    if not text or text=="" then return nil, nil end
+    local locs = locale_ref and locale_ref.locations
+    if not locs then return nil, nil end
+    for _, key in ipairs(locs.loc_order or {}) do
+        for _, pattern in ipairs(locs[key] or {}) do
+            local match = text:match(pattern)
+            if match then return match, key end
+        end
+    end
+    return nil, nil
+end
+
+-- ── Init stars (deterministic, only on first appearance) ────────────
+-- Init stars chance is scaled by cfg.init_chance_mult (0 = off, 1.0 = full base_chance).
+-- Uses a scaled-down chance (base_chance × init_chance_mult) for a one-time roll
+-- instead of timer-based growth, so initial stars are intentionally lower
+-- than what equivalent timer growth would produce.
+-- Called ONLY when a task appears for the first time (not on repeats).
+
+local function roll_init_stars(task_id)
+    local init_chance = calc_base_chance() * cfg.init_chance_mult
+    local seed_str    = tostring(rare_bonus.seed)
+    local max_stars   = cfg.max_stars
+    local stars       = 0
+    local threshold   = math.floor(init_chance * ROLAND + 0.5)
+
+    for star = 1, max_stars do
+        local roll = hash_string(seed_str..":init:"..task_id..":"..star) % ROLAND
+        if roll < threshold then
+            stars = stars + 1
+        else
+            break
+        end
+    end
+    return stars
+end
+
+-- ── Register task ───────────────────────────────────────────────────
+-- Ensures a task (and optionally its location) is in the database.
+-- Rolls init stars only on first appearance; repeat tasks start at 0.
+
+local function register_task(task_id, location, loc_key)
+    local current_day = game_day()
+    local timers = rare_bonus.timers
+    local created = {}
+
+    if not timers[task_id] then
+        timers[task_id] = current_day
+        rare_bonus.real_time_timers[task_id] = os.time()
+        rare_bonus.last_checked[task_id] = 0
+        if not rare_bonus.is_repeat[task_id] and cfg.init_chance_mult > 0 then
+            rare_bonus.stars[task_id] = roll_init_stars(task_id)
+            log_rb("INIT [%s] stars=%d (first appearance, init roll)", task_id, rare_bonus.stars[task_id])
+        else
+            rare_bonus.stars[task_id] = 0
+            local reason = rare_bonus.is_repeat[task_id] and "repeat" or "init_stars_off"
+            log_rb("INIT [%s] stars=0 (%s, no init roll)", task_id, reason)
+        end
+        created[#created + 1] = "task"
+    end
+
+    if location and not timers[location] then
+        timers[location] = current_day
+        rare_bonus.real_time_timers[location] = os.time()
+        rare_bonus.last_checked[location] = rare_bonus.last_checked[location] or 0
+        rare_bonus.stars[location] = rare_bonus.stars[location] or 0
+        created[#created + 1] = "loc="..tostring(loc_key or location)
+    end
+
+    if #created > 0 then
+        log_rb("REGISTER [%s] day=%.1f | %s", task_id, current_day, table.concat(created, ", "))
+    end
+end
+
+-- ── Sync last_checked ───────────────────────────────────────────────
+-- Advances last_checked to current moment WITHOUT awarding stars.
+-- Used when a quest is accepted so that if it's later failed,
+-- growth resumes from the acceptance point (no catch-up).
+
+local function sync_last_checked(key)
+    if not key then return end
+    local timers = rare_bonus.timers
+    if not timers[key] then return end
+    if cfg.days_per_star <= 0 then return end
+    local elapsed = math.floor((game_day() - timers[key]) / cfg.days_per_star)
+    rare_bonus.last_checked[key] = math.max(rare_bonus.last_checked[key] or 0, elapsed)
+end
+
+-- ── Star growth with consecutive-success re-roll + pity ─────────────
+-- Deterministic rolls via FNV-1a hash (anti save/load abuse).
+-- Each interval: full re-roll from star 1, counting consecutive successes.
+--   Roll star 1 with effective_chance, if true → roll star 2, etc.
+--   Break on first failure → roll_result = number of consecutive successes.
+--   If roll_result > current_stars → update (improvement), reset pity.
+--   Otherwise → fail, consec_fails++ (pity increases effective_chance).
+-- Pity accumulates across intervals, effective_chance grows until success.
+
+local function try_star_growth(key)
+    local stars_tbl = rare_bonus.stars
+    if not stars_tbl[key] then return end
+    if stars_tbl[key] >= cfg.max_stars then return end
+
+    local start_day = rare_bonus.timers[key]
+    if not start_day then return end
+
+    local max_stars       = cfg.max_stars
+    local seed_str        = tostring(rare_bonus.seed)
+    local current_stars   = stars_tbl[key]
+
+    local elapsed = math.floor((game_day() - start_day) / cfg.days_per_star)
+    local last_ck = rare_bonus.last_checked[key] or 0
+    local new_intervals = elapsed - last_ck
+
+    if new_intervals <= 0 then return end
+
+    -- Anti-sleep abuse: if real-time cooldown hasn't passed,
+    -- shift the game-day timer forward so that game days from sleeping don't count.
+    local real_start = rare_bonus.real_time_timers[key]
+    if real_start then
+        local real_elapsed = os.time() - real_start
+        if real_elapsed < REAL_COOLDOWN_SEC then
+            rare_bonus.timers[key] = game_day()
+            rare_bonus.last_checked[key] = 0
+            log_rb("GROWTH PAUSED [%s] real_time=%.1fm < 10m, timer shifted",
+                key, real_elapsed / 60)
+            return
+        end
+    end
+
+    for interval = 1, new_intervals do
+        if current_stars >= max_stars then break end
+
+        -- Calculate effective chance for this interval (pity may have grown)
+        local effective = calc_effective_chance(key)
+        local threshold = math.floor(effective * ROLAND + 0.5)
+
+        -- Full re-roll: consecutive successes from star 1
+        local roll_result = 0
+        for star = 1, max_stars do
+            local roll = hash_string(seed_str..":"..key..":"..(last_ck + interval)..":"..star) % ROLAND
+            if roll < threshold then
+                roll_result = roll_result + 1
+            else
+                break
+            end
+        end
+
+        -- Compare: only improve if we beat current stars
+        if roll_result > current_stars then
+            current_stars = roll_result
+            rare_bonus.consec_fails[key] = 0
+        else
+            rare_bonus.consec_fails[key] = (rare_bonus.consec_fails[key] or 0) + 1
+        end
+    end
+
+    stars_tbl[key] = current_stars
+    rare_bonus.last_checked[key] = math.max(last_ck, elapsed)
+end
+
+-- ── Total stars ─────────────────────────────────────────────────────
+-- Two dimensions (task_id, location) — take the MAX of both.
+-- This motivates players to take quests in unpopular locations OR take unpopular quests.
+
+local function calc_stars(task_id, location, loc_key)
+    -- No enabled check here: local function, all callers already guard
+
+    -- If accepted, return fixed stars
+    if rare_bonus.is_accepted[task_id] then
+        local acc = rare_bonus.accepted[task_id]
+        return acc and acc.stars or 0
+    end
+
+    -- Grow both dimensions
+    try_star_growth(task_id)
+    if location then
+        try_star_growth(location)
+    end
+
+    local task_s = rare_bonus.stars[task_id] or 0
+    local loc_s  = location and (rare_bonus.stars[location] or 0) or 0
+    local total  = math.min(cfg.max_stars, math.max(task_s, loc_s))
+
+    -- Log data only when logging is active
+    if cfg.logging ~= false then
+        local tier, rank = get_rank_info()
+        local base = calc_base_chance()
+        local task_fails = rare_bonus.consec_fails[task_id] or 0
+        local loc_fails  = location and (rare_bonus.consec_fails[location] or 0) or 0
+        log_rb("CALC [%s] loc_key=%s | task_stars=%d loc_stars=%d -> total=%d (capped) | base_chance=%.1f%% tier%d rank%d | fails task=%d loc=%d",
+            task_id, tostring(loc_key), task_s, loc_s, total, base*100, tier, rank, task_fails, loc_fails)
+    end
+    return total
+end
+
+-- ── Bonus calculation ──────────────────────────────────────────────
+-- Star bonus and multiplier bonus are ADDITIVE (both applied to quest_reward × stars):
+--   bonus = max(quest_reward × stars × (reward_pct/100 + mult_rate), stars × min_per_star)
+--   total = quest_reward + bonus
+-- The min_per_star floor guarantees a minimum bonus per star when quest_reward is small.
+-- Example: 1 star × 25%, mult_rate 0.5, quest_reward 5000, min_per_star=500
+--   bonus = max(5000 × 1 × 0.75, 1×500) = max(3750, 500) = 3750, total = 8750
+--   2 stars: bonus = max(5000 × 2 × 0.75, 2×500) = max(7500, 1000) = 7500, total = 12500
+
+local function calc_bonus(stars, quest_reward, mult_rate)
+    local reward_pct   = cfg.reward_pct
+    local min_per_star = cfg.min_per_star
+    local bonus_rate  = stars * ((reward_pct / 100) + mult_rate)
+    local bonus       = math.floor(quest_reward * bonus_rate)
+    -- Floor: ensure at least min_per_star per star
+    bonus = math.max(bonus, stars * min_per_star)
+    return bonus, bonus_rate
+end
+
+-- ── Task category detection ────────────────────────────────────────
+-- Categories whose quests always get mult_rate = 0 in bonus_check.
+-- Add or remove entries here to control which categories are exempt
+-- from location / quest multipliers.
+
+local NO_MULT_CATEGORIES = {
+    setup_fetch_task = true,
+}
+
+local CAT_NORM = {
+    setup_supplies_fetch_task_lostzone_patch = "setup_fetch_task",
+    setup_generic_fetch_task = "setup_fetch_task",
+    multifetch_on_job_descr = "setup_fetch_task",
+    drx_sl_create_quest_stash = "setup_bounty_task",
+    setup_dominance_task = "setup_assault_task",
+}
+
+local function get_task_category(task_id)
+    local task_ini = task_manager and task_manager.task_ini
+    if not task_ini then return nil end
+
+    local override = task_ini:r_string_ex(task_id, "task_category_override")
+    if override then return override end
+
+    local raw = task_ini:r_string_ex(task_id, "on_job_descr") or task_ini:r_string_ex(task_id, "fetch_func")
+    local effect = raw and string.gmatch(raw, "=(.*)%(")() or "rest"
+    effect = CAT_NORM[effect] or effect
+
+    if game.translate_string("st_pda_caption_" .. effect):find("_") then
+        return nil
+    end
+    return effect
+end
+
+local function is_no_mult_category(task_id)
+    local category = get_task_category(task_id)
+    return category and NO_MULT_CATEGORIES[category] == true or false
+end
+
+-- ── Deferred bonus check ────────────────────────────────────────────
+
+local function bonus_check(task_id)
+    local pending = pending_bonus[task_id]
+    if not pending then return true end
+
+    local current_money = db.actor and db.actor:money() or 0
+    pending.attempts = pending.attempts + 1
+
+    if current_money > pending.money_before or pending.attempts >= MAX_CHECK_ATTEMPTS then
+        local quest_reward = math.max(0, current_money - pending.money_before)
+        local mult_rate    = 0
+        if not is_no_mult_category(task_id) then mult_rate = resolve_multiplier(task_id, pending.loc_key, pending.level_id) end
+        local bonus_amount, bonus_rate = calc_bonus(pending.stars, quest_reward, mult_rate)
+
+        if bonus_amount > 0 then
+            db.actor:give_money(bonus_amount)
+            news_manager.send_tip(db.actor,
+                string.format(game.translate_string("st_rb_bonus_tip"), bonus_amount))
+        end
+
+        local tag = quest_reward == 0 and " [item-reward?]"
+            or pending.attempts >= MAX_CHECK_ATTEMPTS and " [timeout]" or ""
+        log_rb("BONUS [%s] +$%d (star=%d ×%d%% + mult=%.2f = +%.0f%%, quest_reward=$%d, waited=%.1fs)%s",
+            task_id, bonus_amount, pending.stars, cfg.reward_pct, mult_rate, bonus_rate*100, quest_reward, pending.attempts*0.5, tag)
+        pending_bonus[task_id] = nil
+        return true
+    end
+    return false
+end
+
+local function schedule_bonus_check(task_id)
+    CreateTimeEvent("rb", task_id, 0.5, function() return bonus_check(task_id) end)
+end
+
+-- ── Task manager hooks ─────────────────────────────────────────────
+
+local function install_hooks()
+    if hooks_installed then return end
+    local task_mgr = task_manager and task_manager.get_task_manager()
+    if not task_mgr then return end
+
+    local original_set_completed = task_mgr.set_task_completed
+    task_mgr.set_task_completed = function(self, task_id, ...)
+        log_rb("HOOK complete [%s]", tostring(task_id))
+        local money_before = db.actor and db.actor:money() or 0
+        local result = original_set_completed(self, task_id, ...)
+        on_task_completed(task_id, money_before)
+        return result
+    end
+
+    local original_set_failed = task_mgr.set_task_failed
+    task_mgr.set_task_failed = function(self, task_id, ...)
+        log_rb("HOOK fail [%s]", tostring(task_id))
+        on_task_failed(task_id)
+        return original_set_failed(self, task_id, ...)
+    end
+
+    hooks_installed = true
+    log_rb("Hooks installed")
+end
+
+-- ── Public API ─────────────────────────────────────────────────────
+
+function on_accept(task_id, _, details_text)
+    if not cfg.enabled then return end
+    install_hooks()
+    local location, loc_key = extract_loc(details_text)
+    local level_id = level.name()
+
+    -- Ensure task is registered (first appearance or repeat)
+    register_task(task_id, location, loc_key)
+
+    -- Calculate final stars before freezing
+    local stars = calc_stars(task_id, location, loc_key)
+
+    -- Sync last_checked to current moment without awarding stars
+    -- So if the quest is later failed, growth resumes from here
+    sync_last_checked(task_id)
+    sync_last_checked(location)
+
+    -- Freeze growth
+    rare_bonus.is_accepted[task_id] = true
+
+    local mult_rate = resolve_multiplier(task_id, loc_key, level_id)
+    rare_bonus.accepted[task_id] = {
+        stars    = stars,
+        loc      = location,
+        loc_key  = loc_key,
+        level_id = level_id,
+    }
+    log_rb("ACCEPT [%s] star=%d loc_key=%s level=%s mult_rate=%.2f [GROWTH PAUSED]",
+        task_id, stars, tostring(loc_key), tostring(level_id), mult_rate)
+end
+
+function on_task_completed(task_id, pre_money)
+    if not cfg.enabled then return end
+    local accepted_info = rare_bonus.accepted[task_id]
+    if not accepted_info then
+        log_rb("COMPLETE [%s] no bonus", task_id)
+        return
+    end
+
+    pending_bonus[task_id] = {
+        money_before = pre_money,
+        stars        = accepted_info.stars,
+        attempts     = 0,
+        loc_key      = accepted_info.loc_key,
+        level_id     = accepted_info.level_id,
+    }
+    schedule_bonus_check(task_id)
+
+    -- Save location before clearing accepted
+    local loc = accepted_info.loc
+
+    -- Reset task_id dimension
+    rare_bonus.stars[task_id]             = nil
+    rare_bonus.timers[task_id]            = nil
+    rare_bonus.real_time_timers[task_id]  = nil
+    rare_bonus.last_checked[task_id]      = nil
+    rare_bonus.is_accepted[task_id]       = nil
+    rare_bonus.is_repeat[task_id]         = true  -- mark as completed — no init roll next time
+    rare_bonus.accepted[task_id]          = nil
+    rare_bonus.consec_fails[task_id]      = nil   -- reset pity on success
+
+    -- Reset location dimension
+    -- Location timer restarts only when this location appears on the taskboard again
+    if loc then
+        rare_bonus.stars[loc]             = nil
+        rare_bonus.timers[loc]            = nil
+        rare_bonus.real_time_timers[loc]  = nil
+        rare_bonus.last_checked[loc]      = nil
+        rare_bonus.consec_fails[loc]      = nil   -- reset pity on success
+    end
+
+    local dims_tag = loc and "BOTH DIMS RESET" or "TASK DIM RESET"
+    log_rb("COMPLETE [%s] star=%d waiting for quest reward (money_before=$%d) [%s]",
+        task_id, accepted_info.stars, pre_money, dims_tag)
+end
+
+function on_task_failed(task_id)
+    if not rare_bonus.accepted[task_id] then
+        log_rb("FAIL [%s] [not tracked by rare bonus]", task_id)
+        return
+    end
+    local fails = rare_bonus.consec_fails[task_id] or 0
+    log_rb("FAIL [%s] [GROWTH RESUMED, stars kept, fails=%d]", task_id, fails)
+    -- Unfreeze growth — timer, stars, consec_fails are preserved
+    rare_bonus.is_accepted[task_id] = nil
+    rare_bonus.accepted[task_id]    = nil
+    -- Stars, timers, last_checked, consec_fails are NOT touched — growth continues from current state
+end
+
+function get_display_stars(task_id, details_text)
+    if not cfg.enabled then return 0 end
+    local accepted_info = rare_bonus.accepted[task_id]
+    if accepted_info then return accepted_info.stars end
+    if display_cache[task_id] then return display_cache[task_id] end
+    local location, loc_key = extract_loc(details_text)
+    loc_cache[task_id] = { loc = location, loc_key = loc_key }
+    register_task(task_id, location, loc_key)
+    local stars = calc_stars(task_id, location, loc_key)
+    display_cache[task_id] = stars
+    return stars
+end
+
+function get_star_prefix(task_id, details_text)
+    if not cfg.enabled then return "" end
+    local stars = get_display_stars(task_id, details_text)
+    if stars == 0 then return "" end
+
+    -- Resolve multiplier for display
+    local accepted_info = rare_bonus.accepted[task_id]
+    local loc_key, level_id
+    if accepted_info then
+        loc_key  = accepted_info.loc_key
+        level_id = accepted_info.level_id
+    else
+        local lc = loc_cache[task_id]
+        if lc then
+            loc_key = lc.loc_key
+        else
+            _, loc_key = extract_loc(details_text)
+        end
+        level_id = level.name()
+    end
+    local mult_rate = 0
+    if not is_no_mult_category(task_id) then mult_rate = resolve_multiplier(task_id, loc_key, level_id) end
+
+    -- Bonus % of quest reward: stars × (reward_pct/100 + mult_rate) × 100
+    local star_rate = stars * ((cfg.reward_pct / 100) + mult_rate)
+    local bonus_pct = math.floor(star_rate * 100 + 0.5)
+    local prefix    = " "..string.rep("*", stars).." +"..bonus_pct.."%"
+    return prefix
+end
+
+function clear_display_cache() display_cache = {}; loc_cache = {} end
+function set_locale(locale_table) locale_ref = locale_table end
+
+-- ── Save / Load ────────────────────────────────────────────────────
+
+local SAVE_VERSION = 2
+local SAVE_KEY     = "tb_rare_bonus"
+
+--- Saves rare_bonus state with version wrapper for forward compatibility.
+--- Old format (pre-version) stored rare_bonus directly; new format wraps
+--- it as { version = N, data = rare_bonus }.
+function on_save_state(save_data)
+    save_data[SAVE_KEY] = {
+        version = SAVE_VERSION,
+        data    = rare_bonus,
+    }
+    log_rb("SAVE v%d: timers=%d real_time_timers=%d stars=%d last_checked=%d is_accepted=%d is_repeat=%d accepted=%d consec_fails=%d seed=%d",
+        SAVE_VERSION,
+        count_keys(rare_bonus.timers), count_keys(rare_bonus.real_time_timers),
+        count_keys(rare_bonus.stars),
+        count_keys(rare_bonus.last_checked), count_keys(rare_bonus.is_accepted),
+        count_keys(rare_bonus.is_repeat), count_keys(rare_bonus.accepted),
+        count_keys(rare_bonus.consec_fails),
+        rare_bonus.seed or 0)
+end
+
+--- Loads rare_bonus state with version check.
+--- Migration: pre-version saves stored the rare_bonus table directly
+--- (no .version field). If .version is nil, treat as legacy format.
+--- If version mismatch, discard and keep defaults.
+function on_load_state(save_data)
+    local saved = save_data[SAVE_KEY]
+    if type(saved) ~= "table" then
+        log_rb("LOAD: no data")
+        return
+    end
+
+    -- Migration from pre-version format: rare_bonus stored directly
+    if saved.version == nil then
+        log_rb("LOAD: migrating from pre-version format")
+        rare_bonus = saved
+    elseif saved.version ~= SAVE_VERSION then
+        log_rb("LOAD: version mismatch (saved=%d current=%d), discarding",
+            saved.version, SAVE_VERSION)
+        save_data[SAVE_KEY] = nil
+        return
+    else
+        rare_bonus = saved.data
+    end
+
+    -- Ensure all fields exist (protection against nil from old saves)
+    rare_bonus.timers       = rare_bonus.timers       or {}
+    rare_bonus.stars        = rare_bonus.stars        or {}
+    rare_bonus.last_checked = rare_bonus.last_checked or {}
+    rare_bonus.is_accepted  = rare_bonus.is_accepted  or {}
+    rare_bonus.is_repeat    = rare_bonus.is_repeat    or {}
+    rare_bonus.accepted     = rare_bonus.accepted     or {}
+    rare_bonus.consec_fails      = rare_bonus.consec_fails      or {}
+    rare_bonus.real_time_timers  = rare_bonus.real_time_timers  or {}
+    rare_bonus.seed              = rare_bonus.seed              or 0
+
+    log_rb("LOAD v%d: timers=%d real_time_timers=%d stars=%d last_checked=%d is_accepted=%d is_repeat=%d accepted=%d consec_fails=%d seed=%d",
+        SAVE_VERSION,
+        count_keys(rare_bonus.timers), count_keys(rare_bonus.real_time_timers),
+        count_keys(rare_bonus.stars),
+        count_keys(rare_bonus.last_checked), count_keys(rare_bonus.is_accepted),
+        count_keys(rare_bonus.is_repeat), count_keys(rare_bonus.accepted),
+        count_keys(rare_bonus.consec_fails),
+        rare_bonus.seed or 0)
+end
+
+-- ── Init (engine callback) ─────────────────────────────────────────
+
+function on_game_start()
+    RegisterScriptCallback("save_state", on_save_state)
+    RegisterScriptCallback("load_state", on_load_state)
+    RegisterScriptCallback("on_game_load", function() refresh_config() install_hooks() end)
+    RegisterScriptCallback("on_option_change", function() refresh_config() end)
+    if rare_bonus.seed == 0 then
+        rare_bonus.seed = math.random(1, 2147483647)
+    end
+end

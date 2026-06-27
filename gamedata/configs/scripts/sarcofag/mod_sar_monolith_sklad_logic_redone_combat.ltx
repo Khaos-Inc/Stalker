@@ -1,0 +1,17 @@
+![logic@sar_monolith_sklad_patrol1]
+on_combat = re_combat
+
+![logic@sar_monolith_sklad_patrol2]
+on_combat = re_combat
+
+![logic@sar_monolith_sklad_guard1]
+on_combat = re_combat
+
+![logic@sar_monolith_sklad_guard2]
+on_combat = re_combat
+
+![logic@sar_monolith_sklad_patrol_ambush]
+on_combat = re_combat
+
+[re_combat]
+combat_type = {=cond_scheme_cover_dumb()} cover, {=cond_scheme_camper_dumb()} camper, {=cond_scheme_cover_coward()} cover, {=cond_scheme_camper_coward()} camper, {=cond_scheme_stupid()} monolith

@@ -1,0 +1,363 @@
+--[[--------------------------------------------------------------------------------------------------------
+       RE:DONE AI AIM
+------------------------------------------------------------------------------------------------------------
+    'Hardcore' values exist for legacy save file compatibility and as default AI aim parameters.
+    They serve as the base for rank and environment multipliers.
+
+    NOTE: Do not enable 'hardcore AI aim' in game settings.
+          It will override these 'hardcore_*' default values entirely.
+------------------------------------------------------------------------------------------------------------]]
+local db = db
+local level = level
+---------------------------
+local redone_ai_aim = stealth_mcm.get_config("redone_ai_aim")
+local DEBUG_NPC_AIM = stealth_mcm.get_config("debug_aim")
+--------------------------------------
+local prev_hrs, hrs, prev_weather, weather, weather_manager
+local locations_change, conditions_change, surge = false, false, false
+--------------------------------------
+-- CONFIGS
+local hardcore_max_angle    = 20.0
+local hardcore_min_angle    = 15.0
+local hardcore_min_speed    = 25.0
+local hardcore_predict_time = 0.12
+
+local curr_max_angle     = hardcore_max_angle
+local curr_min_angle     = hardcore_min_angle
+local curr_min_speed     = hardcore_min_speed
+local curr_predict_time  = hardcore_predict_time
+
+local min_coeff          = 0.85
+local min_predict_coeff  = 1.25
+local med_coeff          = 0.95
+local med_predict_coeff  = 1.1
+local max_coeff          = 1.0
+local max_predict_coeff  = 1.0
+
+-- NPC RANK
+local rank_map = {
+        [0] = "novice",
+        [1] = "trainee",
+        [2] = "experienced",
+        [3] = "professional",
+        [4] = "veteran",
+        [5] = "expert",
+        [6] = "master",
+        [7] = "legend"
+}
+
+npc_rank_coeff = {
+        ["novice"]       = { angle = 1.3,  speed = 0.9,  predict = 0.9  },
+        ["trainee"]      = { angle = 1.2,  speed = 0.95, predict = 0.95 },
+        ["experienced"]  = { angle = 1.1,  speed = 1.0,  predict = 1.0  },
+        ["professional"] = { angle = 1.0,  speed = 1.0,  predict = 1.0  },
+        ["expert"]       = { angle = 0.95, speed = 1.05, predict = 1.05 },
+        ["veteran"]      = { angle = 0.9,  speed = 1.1,  predict = 1.1  },
+        ["master"]       = { angle = 0.85, speed = 1.1,  predict = 1.15 },
+        ["legend"]       = { angle = 0.8,  speed = 1.2,  predict = 1.2  }
+}
+
+-- LEVELS
+local indoor_levels = {
+        labx8                   = true,
+        jupiter_underground     = true,
+        l03u_agr_underground    = true,
+        l04u_labx18             = true,
+        l08u_brainlab           = true,
+        l10u_bunker             = true,
+        l12u_sarcofag           = true,
+        l12u_control_monolith   = true,
+        l13u_warlab             = true
+}
+
+-- UPDATE
+local NPC_UPDATE_MIN_INTERVAL = 0.5
+local last_global_aim_id = nil
+local last_global_set_time = 0
+local _last_aim = { max = nil, min = nil, speed = nil, predict = nil }
+--------------------------------------------------------------------------
+-- UTILITY FUNCTIONS
+--------------------------------------------------------------------------
+local function safe_exec(cmd)
+        if level and level.exec_console_cmd then
+                level.exec_console_cmd(cmd)
+        elseif exec_console_cmd then
+                exec_console_cmd(cmd)
+        end
+end
+
+local function clamp(val, lo, hi)
+        if val ~= val then return lo end
+        if val < lo then return lo end
+        if val > hi then return hi end
+        return val
+end
+
+local function fmt_num(v)
+        local n = tonumber(v)
+        if not n then return nil end
+        return string.format("%.6f", n)
+end
+
+local function surge_active()
+        if xr_conditions and xr_conditions.surge_started then
+            return xr_conditions.surge_started()
+        end
+        return false
+end
+
+--------------------------------------------------------------------------
+-- ENVIRONMENT CHECK FUNCTIONS
+--------------------------------------------------------------------------
+local bad_weather = {
+        w_rain1  = true, w_rain2 = true, w_rain3 = true, w_rain4 = true, w_rain5 = true,
+        w_storm1 = true, w_storm2 = true, w_storm3 = true, w_storm4 = true, w_storm5 = true
+}
+
+local function update_conditions()
+        weather = weather_manager and weather_manager.curr_weather or weather
+        hrs = level.get_time_hours()
+end
+
+local function init_conditions()
+        weather_manager = level_weathers.get_weather_manager()
+        update_conditions()
+end
+
+local function set_coefficient(coeff, predict_coeff)
+        curr_max_angle    = hardcore_max_angle    * coeff
+        curr_min_angle    = hardcore_min_angle    * coeff
+        curr_min_speed    = hardcore_min_speed    * coeff
+        curr_predict_time = hardcore_predict_time * predict_coeff
+end
+
+local function check_location()
+        local name = level.name()
+        if not name then return end
+
+        if indoor_levels[name] then
+                set_coefficient(1, 1)
+        end
+end
+
+local function check_weather()
+        if not weather then return end
+        if (weather == "w_foggy1"
+        or weather == "w_foggy2"
+        or weather == "w_foggy3"
+        or weather == "w_foggy4"
+        or weather == "w_foggy5") 
+        and (hrs >= 5 and hrs < 21) then
+                set_coefficient(med_coeff, med_predict_coeff)
+        elseif bad_weather[weather] then
+                set_coefficient(min_coeff, min_predict_coeff)
+        else
+                set_coefficient(1, 1)
+        end
+end
+
+local function check_time()
+        if not hrs then return end
+
+        if (hrs >= 21 or hrs < 5) then
+                set_coefficient(min_coeff, min_predict_coeff)
+        end
+end
+
+local function detect_conditions_change()
+        if (prev_hrs ~= hrs)
+        or (prev_weather ~= weather)
+        or (locations_change == true)
+        or (surge_active() ~= surge) then
+                conditions_change = true
+        end
+end
+
+local function apply_changes_base()
+        check_weather()
+        check_time()
+        check_location()
+end
+
+--------------------------------------------------------------------------
+-- AIM FUNCTIONS
+--------------------------------------------------------------------------
+local function set_aim_console(max_angle, min_angle, min_speed, predict_time)
+        safe_exec("ai_aim_max_angle " .. tostring(max_angle))
+        safe_exec("ai_aim_min_angle " .. tostring(min_angle))
+        safe_exec("ai_aim_min_speed " .. tostring(min_speed))
+        safe_exec("ai_aim_predict_time " .. tostring(predict_time))
+end
+
+local function set_aim(max_angle, min_angle, min_speed, predict_time)
+        local max_n     = clamp(tonumber(max_angle) or 0.0, 0.0, 180.0)
+        local min_n     = clamp(tonumber(min_angle) or 0.0, 0.0, 180.0)
+        local speed_n   = clamp(tonumber(min_speed) or 0.0, 0.001, 31.416)
+        local predict_n = clamp(tonumber(predict_time) or 0.0, 0.0, 10.0)
+
+        local max_s   = fmt_num(max_n)
+        local min_s   = fmt_num(min_n)
+        local speed_s = fmt_num(speed_n)
+        local pred_s  = fmt_num(predict_n)
+        if not (max_s and min_s and speed_s and pred_s) then return end
+
+        if _last_aim.max ~= max_s then _last_aim.max = max_s; safe_exec("ai_aim_max_angle " .. max_s) end
+        if _last_aim.min ~= min_s then _last_aim.min = min_s; safe_exec("ai_aim_min_angle " .. min_s) end
+        if _last_aim.speed ~= speed_s then _last_aim.speed = speed_s; safe_exec("ai_aim_min_speed " .. speed_s) end
+        if _last_aim.predict ~= pred_s then _last_aim.predict = pred_s; safe_exec("ai_aim_predict_time " .. pred_s) end
+end
+
+local function apply_changes_for_actor()
+        apply_changes_base()
+        set_aim(curr_max_angle, curr_min_angle, curr_min_speed, curr_predict_time)
+end
+
+local function apply_changes_for_npc(npc)
+        if not npc then return end
+
+        apply_changes_base()
+
+        local rid = npc.rank and type(npc.rank) == "function" and npc:rank()
+        local rname = rank_map[rid]
+        local rcoeff = npc_rank_coeff[rname] or { angle = 1.0, predict = 1.0 }
+
+        local base_max = tonumber(curr_max_angle) or hardcore_max_angle
+        local base_min = tonumber(curr_min_angle) or hardcore_min_angle
+        local base_speed = tonumber(curr_min_speed) or hardcore_min_speed
+        local base_predict = tonumber(curr_predict_time) or hardcore_predict_time
+
+        local final_max     = base_max     * (rcoeff.angle or 1.0)
+        local final_min     = base_min     * (rcoeff.angle or 1.0)
+        local final_speed   = base_speed   * (rcoeff.speed or 1.0)
+        local final_predict = base_predict * (rcoeff.predict or 1.0)
+
+        if final_min > final_max then final_min = final_max end
+
+        final_speed = clamp(final_speed, 0.001, 31.416)
+        set_aim(final_max, final_min, final_speed, final_predict)
+end
+
+--------------------------------------------------------------------------
+-- ACTOR UPDATE
+--------------------------------------------------------------------------
+function actor_on_update()
+        update_conditions()
+        detect_conditions_change()
+
+        if conditions_change == true then
+                if surge_active() == true then
+                        set_coefficient(max_coeff, max_predict_coeff)
+                        set_aim(curr_max_angle, curr_min_angle, curr_min_speed, curr_predict_time)
+                else
+                        apply_changes_for_actor()
+                end
+
+                surge = surge_active()
+                prev_hrs = hrs
+                prev_weather = weather
+                locations_change = false
+                conditions_change = false
+        end
+end
+
+--------------------------------------------------------------------------
+-- DEBUG
+local function d(fmt, ...)
+	if not DEBUG_NPC_AIM then return end
+	if select("#", ...) > 0 then
+		printf(fmt, ...)
+	else
+		printf(fmt)
+	end
+end
+--------------------------------------------------------------------------
+-- NPC UPDATE
+--------------------------------------------------------------------------
+function npc_on_update(npc)
+	if not redone_ai_aim then return end
+	if not (npc and npc.alive and type(npc.alive) == "function" and npc:alive()) then return end
+
+	local enemy = redone_ai_combat.get_combat_enemy(npc)
+	if not (enemy and enemy.alive and type(enemy.alive) == "function" and enemy:alive()) then return end
+	if not (db.actor and enemy:id() == db.actor:id()) then return end
+	if not (npc.see and type(npc.see) == "function" and npc:see(enemy)) then return end
+
+	local now = time_global() / 1000
+	if not now then return end
+
+	if (now - last_global_set_time) < NPC_UPDATE_MIN_INTERVAL then return end
+
+	local last_npc = last_global_aim_id and level.object_by_id(last_global_aim_id)
+	if not (last_npc and last_npc.alive and type(last_npc.alive) == "function" and last_npc:alive()) then
+		last_global_aim_id = nil
+	end
+
+	if not last_global_aim_id then
+        	apply_changes_for_npc(npc)
+        	last_global_aim_id = npc:id()
+        	last_global_set_time = now
+        	return
+	end
+
+	local last_rank_val = (last_npc.rank and last_npc:rank()) or 3
+	local this_rank_val = (npc.rank and npc:rank()) or 3
+
+	local pos_last  = last_npc:position()
+	local pos_npc   = npc:position()
+	local pos_enemy = enemy:position()
+	local last_dist = pos_last:distance_to_sqr(pos_enemy)
+	local dist = pos_npc:distance_to_sqr(pos_enemy)
+
+	local update_global = false
+
+	if this_rank_val > last_rank_val then
+        	update_global = true
+        	d("[AIM][DECISION] rank priority update")
+	elseif dist < last_dist then
+        	update_global = true
+        	d("[AIM][DECISION] distance priority update")
+    	end
+
+	if update_global then
+        	apply_changes_for_npc(npc)
+        	last_global_aim_id = npc:id()
+        	last_global_set_time = now
+        	d("[AIM][APPLY] npc id=%s rank=%s dist_update=%s",
+			npc:id(),
+			ranks.get_obj_rank_name(npc),
+			tostring(dist < last_dist)
+		)
+	end
+end
+
+--------------------------------------------------------------------------
+-- CALLBACKS
+--------------------------------------------------------------------------
+function on_level_changing()
+        locations_change = true
+end
+
+function actor_on_first_update()
+        init_conditions()
+        apply_changes_for_actor()
+end
+
+-----------------------------------------------------------------------------
+-- ON OPTION CHANGE
+-----------------------------------------------------------------------------
+function on_option_change()
+        redone_ai_aim = stealth_mcm.get_config("redone_ai_aim")
+        DEBUG_NPC_AIM = stealth_mcm.get_config("debug_aim")
+end
+
+--------------------------------------------------------------------------
+-- ON GAME START
+--------------------------------------------------------------------------
+function on_game_start()
+        on_option_change()
+
+        RegisterScriptCallback("actor_on_first_update", actor_on_first_update)
+        RegisterScriptCallback("actor_on_update", actor_on_update)
+        RegisterScriptCallback("npc_on_update", npc_on_update)
+        RegisterScriptCallback("on_level_changing", on_level_changing)
+end

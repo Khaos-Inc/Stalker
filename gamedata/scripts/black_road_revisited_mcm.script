@@ -1,0 +1,92 @@
+local defaults = {
+    ["isolated_and_hated"] = false,
+    ["yellow_chance"] = 7,
+    ["random_loadout"] = true,
+    ["advanced_factions"] = true,
+    ["starting_money"] = 0,
+    ["ironman_def"] = true,
+    ["avail_routes_def"] = true,
+    ["game_diff"] = 3,
+    ["econ_diff"] = 3,
+    ["lives_def"] = 1,
+    ["wishgranter_def"] = 1,
+    ["armor_mode"] = 1,
+    ["good_barrels"] = false,
+    ["stash_chance"] = 5,
+    ["campfire_accel"] = false,
+    ["worldspawn_file"] = 1,
+}
+
+test_preset = {
+    [1] = {
+        worldspawn_file = 2,
+        yellow_chance = 12,
+        stash_chance = 8,
+        good_barrels = true,
+        campfire_accel = true,
+        ammo_boost = true,
+        package_boost = true,
+        armor_mode = 3,
+        lives_def = 1,
+        wishgranter_def = 1,  
+    },
+    [2] = {
+        worldspawn_file = 3,
+        yellow_chance = 7,
+        stash_chance = 5,
+        good_barrels = false,
+        campfire_accel = false,
+        ammo_boost = false,
+        package_boost = false,
+        armor_mode = 1,
+        lives_def = 5,
+        wishgranter_def = 4,
+    },
+    [3] = {
+        worldspawn_file = 4,
+        yellow_chance = 16,
+        stash_chance = 16,
+        good_barrels = true,
+        campfire_accel = true,
+        ammo_boost = true,
+        package_boost = true,
+        armor_mode = 3,
+        lives_def = 1,
+        wishgranter_def = 1,
+    },
+}
+
+function on_mcm_load()
+    return {
+        id = "black_road_revisited",
+        sh = true,
+        gr = {
+            {id = "title", type = "slide", link = "ui_options_slider_player", text = "Black Road Revisted", size = {512, 50}, spacing = 20},
+            {id = "random_loadout", type = "check", val = 1, def = true},
+            {id = "starting_money", type = "track", val = 2, def = 0, min = 0, max = 50000, step = 1000},
+            {id = "blackroad_divider_1", type="line" },
+			{id = "isolated_and_hated", type = "check", val = 1, def = false},
+            {id = "iah_presets", type = "preset", val = 2, content = { {1, "preset1"}, {2, "preset2"}, {3, "preset3"}}, presets = test_preset, def = 1},
+            {id = "worldspawn_file", type = "list", val = 2, content = { {1, "worldspawn_file1"}, {2, "worldspawn_file2"}, {3, "worldspawn_file3"}, {4, "worldspawn_file4"}, {5, "worldspawn_file5"} }, def = 1},
+            {id = "yellow_chance", type = "track", val = 2, def = 7, min = 1, max = 100, step = 1},
+            {id = "stash_chance", type = "track", val = 2, def = 5, min = 1, max = 100, step = 1},
+            {id = "good_barrels", type = "check", val = 1, def = false},
+            {id = "campfire_accel", type = "check", val = 1, def = false},
+            {id = "ammo_boost", type = "check", val = 1, def = true},
+            {id = "package_boost", type = "check", val = 1, def = true},
+            {id = "armor_mode", type = "list", val = 2, content = { {1, "armor_mode1"}, {2, "armor_mode2"}, {3, "armor_mode3"} }, def = 1},
+            {id = "blackroad_divider_2", type="line" },
+            {id = "ironman_def", type = "check", val = 1, def = true},
+            {id = "avail_routes_def", type = "check", val = 1, def = true},
+            {id = "game_diff_def", type = "list", val = 2, content = { {1, "rookie"}, {2, "stalker"}, {3, "veteran"} }, def = 3},
+            {id = "econ_diff_def", type = "list", val = 2, content = { {1, "tourist"}, {2, "scavenger"}, {3, "survivalist"} }, def = 3},
+            {id = "lives_def", type = "list", val = 2, content = { {1, "onelife"}, {2, "twolives"}, {3, "threelives"}, {4, "fourlives"}, {5, "fivelives"} }, def = 1},
+            {id = "wishgranter_def", type = "list", val = 2, content = { {1, "off"}, {2, "oneday"}, {3, "threedays"}, {4, "fivedays"} }, def = 1},
+            {id = "advanced_factions", type = "check", val = 1, def = true},
+        }
+    }
+end
+
+function get_config(key)
+    if ui_mcm then return ui_mcm.get("black_road_revisited/"..key) else return defaults[key] end
+end

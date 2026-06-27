@@ -1,0 +1,196 @@
+
+[drive_upgrade_a_pack]:identity_immunities
+cform			= skeleton
+visual			= dynamics\devices\upgrade_drives_a_pack\drive_up
+
+class			= II_ATTCH
+kind			= i_device
+
+cost			= 14960	;cost=detector_advancedX2
+inv_weight		= 0.05
+use_condition		= false
+
+inv_name		= st_drive_upgrade_name_a_pack
+inv_name_short		= st_drive_upgrade_name_a_pack
+description		= st_drive_upgrade_desc_a_pack
+
+icons_texture		= ui\ui_icon_upgrade_drives_a_pack
+inv_grid_width		= 1
+inv_grid_height		= 1
+inv_grid_x		= 0
+inv_grid_y		= 0
+
+[drive_upgrade_max_a_pack]:identity_immunities
+cform			= skeleton
+visual			= dynamics\devices\upgrade_drives_a_pack\drive_upmax
+
+class			= II_ATTCH
+kind			= i_device
+
+cost			= 29920	;cost=drive_upgradeX2
+inv_weight		= 0.05
+use_condition		= false
+
+inv_name		= st_drive_upgrade_max_name_a_pack
+inv_name_short		= st_drive_upgrade_max_name_a_pack
+description		= st_drive_upgrade_max_desc_a_pack
+
+icons_texture		= ui\ui_icon_upgrade_drives_a_pack
+inv_grid_width		= 1
+inv_grid_height		= 1
+inv_grid_x		= 1
+inv_grid_y		= 0
+
+[drive_upgrade_oc_a_pack]:identity_immunities
+cform			= skeleton
+visual			= dynamics\devices\upgrade_drives_a_pack\drive_oc
+
+class			= II_ATTCH
+kind			= i_device
+
+cost			= 44880	;cost=drive_upgrade_maxX1.5
+inv_weight		= 0.05
+use_condition		= false
+
+inv_name		= st_drive_upgrade_oc_name_a_pack
+inv_name_short		= st_drive_upgrade_oc_name_a_pack
+description		= st_drive_upgrade_oc_desc_a_pack
+
+icons_texture		= ui\ui_icon_upgrade_drives_a_pack
+inv_grid_width		= 1
+inv_grid_height		= 1
+inv_grid_x		= 0
+inv_grid_y		= 1
+
+[drive_factory_reset_a_pack]:identity_immunities
+cform			= skeleton
+visual			= dynamics\devices\upgrade_drives_a_pack\drive_factory_reset
+
+class			= II_ATTCH
+kind			= i_device
+
+cost			= 1730	;detector_simple/2
+inv_weight		= 0.05
+use_condition		= false
+
+inv_name		= st_drive_factory_reset_name_a_pack
+inv_name_short		= st_drive_factory_reset_name_a_pack
+description		= st_drive_factory_reset_desc_a_pack
+
+icons_texture		= ui\ui_icon_upgrade_drives_a_pack
+inv_grid_width		= 1
+inv_grid_height		= 1
+inv_grid_x		= 1
+inv_grid_y		= 1
+
+[detector_simple_up_a_pack]:detector_simple
+inv_name		= st_detector1_up_name_a_pack
+inv_name_short		= st_detector1_up_name_a_pack
+description		= st_detector1_up_desc_a_pack
+
+cost			= 18420	;cost=detector_simple+drive_upgrade_a_pack
+
+af_vis_radius		= 4
+
+[detector_simple_upmax_a_pack]:detector_simple_up_a_pack
+inv_name		= st_detector1_upmax_name_a_pack
+inv_name_short		= st_detector1_upmax_name_a_pack
+description		= st_detector1_upmax_desc_a_pack
+
+cost			= 48340	;cost=detector_simple+drive_upgrade_a_pack+drive_upgrade_max_a_pack
+
+af_vis_radius		= 6
+
+[detector_simple_upoc_a_pack]:detector_simple_upmax_a_pack
+inv_name		= st_detector1_upoc_name_a_pack
+inv_name_short		= st_detector1_upoc_name_a_pack
+description		= st_detector1_upoc_desc_a_pack
+
+cost			= 93220	;cost=detector_simple+drive_upgrade_a_pack+drive_upgrade_max_a_pack+drive_upgrade_oc_a_pack
+
+af_radius		= 40
+af_vis_radius		= 8
+
+[detector_advanced_up_a_pack]:detector_advanced
+inv_name		= st_detector2_up_name_a_pack
+inv_name_short		= st_detector2_up_name_a_pack
+description		= st_detector2_up_desc_a_pack
+
+cost			= 22440	;cost=detector_advanced+drive_upgrade_a_pack
+
+af_vis_radius		= 5
+
+[detector_advanced_upmax_a_pack]:detector_advanced_up_a_pack
+inv_name		= st_detector2_upmax_name_a_pack
+inv_name_short		= st_detector2_upmax_name_a_pack
+description		= st_detector2_upmax_desc_a_pack
+
+cost			= 52360	;cost=detector_advanced+drive_upgrade_a_pack+drive_upgrade_max_a_pack
+
+af_vis_radius		= 7
+
+[detector_advanced_upoc_a_pack]:detector_advanced_upmax_a_pack
+inv_name		= st_detector2_upoc_name_a_pack
+inv_name_short		= st_detector2_upoc_name_a_pack
+description		= st_detector2_upoc_desc_a_pack
+
+cost			= 97240	;cost=detector_advanced+drive_upgrade_a_pack+drive_upgrade_max_a_pack+drive_upgrade_oc_a_pack
+
+af_radius		= 40
+af_vis_radius		= 9
+
+[detector_elite_up_a_pack]:detector_elite
+inv_name		= st_detector3_up_name_a_pack
+inv_name_short		= st_detector3_up_name_a_pack
+description		= st_detector3_up_desc_a_pack
+
+cost			= 61840	;cost=detector_elite+drive_upgrade_a_pack
+
+af_vis_radius		= 6
+
+[detector_elite_upmax_a_pack]:detector_elite_up_a_pack
+inv_name		= st_detector3_upmax_name_a_pack
+inv_name_short		= st_detector3_upmax_name_a_pack
+description		= st_detector3_upmax_desc_a_pack
+
+cost			= 91760	;cost=detector_elite+drive_upgrade_a_pack+drive_upgrade_max_a_pack
+
+af_vis_radius		= 8
+
+[detector_elite_upoc_a_pack]:detector_elite_upmax_a_pack
+inv_name		= st_detector3_upoc_name_a_pack
+inv_name_short		= st_detector3_upoc_name_a_pack
+description		= st_detector3_upoc_desc_a_pack
+
+cost			= 136640	;cost=detector_elite+drive_upgrade_a_pack+drive_upgrade_max_a_pack+drive_upgrade_oc_a_pack
+
+af_radius		= 40
+af_vis_radius		= 10
+
+[detector_scientific_up_a_pack]:detector_scientific
+inv_name		= st_detector4_up_name_a_pack
+inv_name_short		= st_detector4_up_name_a_pack
+description		= st_detector4_up_desc_a_pack
+
+cost			= 113640	;cost=detector_scientific+drive_upgrade_a_pack
+
+af_vis_radius		= 7
+
+[detector_scientific_upmax_a_pack]:detector_scientific_up_a_pack
+inv_name		= st_detector4_upmax_name_a_pack
+inv_name_short		= st_detector4_upmax_name_a_pack
+description		= st_detector4_upmax_desc_a_pack
+
+cost			= 143560	;cost=detector_scientific+drive_upgrade_a_pack+drive_upgrade_max_a_pack
+
+af_vis_radius		= 9
+
+[detector_scientific_upoc_a_pack]:detector_scientific_upmax_a_pack
+inv_name		= st_detector4_upoc_name_a_pack
+inv_name_short		= st_detector4_upoc_name_a_pack
+description		= st_detector4_upoc_desc_a_pack
+
+cost			= 188440	;cost=detector_scientific+drive_upgrade_a_pack+drive_upgrade_max_a_pack+drive_upgrade_oc_a_pack
+
+af_radius		= 40
+af_vis_radius		= 11

@@ -1,0 +1,21 @@
+function on_mcm_load()
+	op = {
+		id = "laser_settings", sh = true, gr = {
+			{id = "title", type = "slide", link = "ui_options_slider_player", text = "ui_mcm_title_laser_settings", size = {512, 50}, spacing = 20},
+			{id = "no_laser_primary_aim", type = "check", val = 1, def = true},
+			{id = "no_laser_alt_aim", type = "check", val = 1, def = true},
+			{id = "dist_bright", type = "check", val = 1, def = true},
+			{id = "dist_size", type = "check", val = 1, def = true},
+			{id = "config_key", type = "key_bind", val = 2, def = DIK_keys.DIK_P},
+			{id = "debug_mode", type = "check", val = 1, def = false},
+			{id = "line", type = "line"},
+			{id = "use_mcm_defaults", type = "check", val = 1, def = false},
+			{id = "mcm_brightness", type = "track", val = 2, min = 0.1, max = 5.0, step = 0.1, def = 1.0},
+			{id = "mcm_dot_size", type = "track", val = 2, min = 1.0, max = 5.0, step = 0.5, def = 1.0},
+			{id = "mcm_beam_brightness", type = "track", val = 2, min = 0.1, max = 5.0, step = 0.1, def = 1.0},
+			{id = "mcm_beam_size", type = "track", val = 2, min = 1.0, max = 5.0, step = 0.1, def = 1.0},
+			{id = "mcm_hue", type = "track", val = 2, min = 0, max = 100, step = 1, def = 0},
+		}
+	}
+	return op
+end

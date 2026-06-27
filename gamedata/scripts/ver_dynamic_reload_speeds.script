@@ -1,0 +1,514 @@
+-- add_reload_speed_increase(functor, priority)
+-- add_sound_disabler_functor(functor, priority)
+
+-- ver
+local common = animation_common
+local temp_num
+local ini_marks = {}
+--
+
+-- MCM BS
+
+-- values
+local mcm_cam_anim
+local mcm_debug_logging
+local mcm_motion_mark_def = (2/3)
+local mcm_base_speed = 1
+
+
+--
+
+function get_mcm_values()
+
+--
+mcm_cam_anim = ui_mcm.get("dynamic_reload_speeds/force_cam_anim_off")
+mcm_debug_logging = ui_mcm.get("dynamic_reload_speeds/debug_logging")
+mcm_motion_mark_def = ui_mcm.get("dynamic_reload_speeds/default_motion_mark_ratio")
+mcm_base_speed = ui_mcm.get("dynamic_reload_speeds/base_speed_increase")
+
+--
+
+end
+
+
+	
+
+function printdbg(text, ...)
+	if mcm_debug_logging then
+		printf("[Dynamic Reload Speeds]" .. text, ...)
+	end
+end
+
+--
+
+-- ADD YOUR FUNCTORS FOR RELOAD SPEED INCREASE USING THIS
+
+local reload_speed_increase = {}
+
+function add_reload_speed_increase(functor, priority)
+	table.insert(reload_speed_increase, {functor = functor, priority = priority})
+	
+	table.sort(reload_speed_increase, function(a,b) return a.priority < b.priority end)
+end
+
+function change_reload_animation_speed(anim_table, obj)
+	local anm_name = anim_table.anm_name
+	printdbg("anm_name is %s!", anm_name)
+	if not anm_name:startswith("anm_reload") and not anm_name:startswith("anm_add_cartridge") and not anm_name:startswith("anm_open") and not anm_name:startswith("anm_close") or anm_name:find("misfire") then 
+		printdbg("not the right anim!")
+		return 
+	end
+	if obj:parent() and obj:parent():id() ~= AC_ID then return end
+	
+	printdbg("change_reload_animation_speed called!")
+	local speed, cam_anim_bool
+	
+	--print_r(reload_speed_increase)
+	for i, func_table in ipairs(reload_speed_increase) do
+		speed, cam_anim_bool = func_table.functor(anim_table, obj)
+		if speed then break end
+	end
+	
+	if mcm_cam_anim then
+		cam_anim_bool = false
+	end
+	
+	if not speed then 
+		printdbg("uh oh, speed is nil!")
+		return 
+	end
+	
+	printdbg("speed is %s, cam_anim_bool is %s!", speed, cam_anim_bool)
+	
+	local wpn_sec = obj:section()
+	local hud_sec = ini_sys:r_string_ex(wpn_sec,"hud")
+	local ltx_params = ini_sys:r_string_ex(hud_sec, anm_name)
+	if not ltx_params then return end
+	local ltx_anim_speed = tonumber((str_explode(ltx_params, ","))[3]) or 1
+	
+	anim_table.anm_speed = ltx_anim_speed * speed
+	
+	-- VERDATIM:
+	local anm_name = anim_table.anm_name	
+	local wpn_sec = obj:section()
+	local hud_sec = ini_sys:r_string_ex(wpn_sec,"hud")
+	-- Some ways to get around weird camera anims during reloads. Either 1. Disable them entirely. 2. Disable them only after the animation is complete. or 3. decrease its power proportionately to speed
+	-- Only remove after anim is finished below:
+	--[[
+	local stop_cam_anim_length = game.get_motion_length(hud_sec, anm_name, anim_table.anm_speed)/1000
+	printdbg("stop_cam_anim_length is %s", stop_cam_anim_length)
+	CreateTimeEvent("ver_fast_reload_fix", "stop_cam_anim", tonumber(stop_cam_anim_length), function()
+		for i = 5000,10000 do
+			level.remove_cam_effector(i)
+			printdbg("ver: tried to remove cam anim %s!", i)
+		end
+		printdbg("ver: tried to remove cam anim!")
+		return true
+	end)
+	]]
+	-- Remove entirely if any speed bonus available
+	if not cam_anim_bool then
+		-- not ENTIRELY sure how optimised this is but its necessary, just dont reload too often yeah?
+
+		nextTick(function()
+			for i = 5000,10000 do
+				level.remove_cam_effector(i)
+				--printdbg("ver: tried to remove cam anim %s!", i)
+			end
+			return true
+		end)
+	end
+	
+	-- Scale down the power if any speed bonus available, MOST COMPLEX AND CAUSES CRASHES FOR SOME REASON 
+	--[=[
+	if (1 + (reload_bonuses[x_cxv_perks_data.perks["perk_rapid_reload"]] * 0.01) + zone_slayer_bonus + wick_mode_bonus) > 1 then
+		nextTick(function()
+			for i = 5000,10000 do
+				level.remove_cam_effector(i)
+				--printdbg("ver: tried to remove cam anim %s!", i)
+			end
+			local motion_params = ini_sys:r_string_ex(hud_sec, anm_name)
+			if not motion_params then return true end
+			local motion_params = str_explode(motion_params, ",")
+			local hand_animation = motion_params[1]
+			local camera_animation = "camera_effects\\weapon\\" .. tostring(hand_animation) .. ".anm"
+			printdbg("hand animation is %s", tostring(hand_animation)..".anm")
+			
+			printdbg(hand_animation..".anm")
+			printdbg("whatever the hell this is %s", getFS():exist("$game_anims$", "camera_effects\\weapon\\"..hand_animation..".anm"))
+			if not camera_animation or not getFS():exist("$game_anims$", "camera_effects\\weapon\\" ..hand_animation..".anm") then return true end
+			
+			local cam_power = (1 / ((1 + (reload_bonuses[x_cxv_perks_data.perks["perk_rapid_reload"]] * 0.01) + zone_slayer_bonus + wick_mode_bonus)^2)) or 0
+			level.add_cam_effector(camera_animation, 12394, false, " ", 0, false, cam_power)
+			local stop_cam_anim_length = game.get_motion_length(hud_sec, anm_name, anim_table.anm_speed)/1000
+			printdbg("stop_cam_anim_length is %s", stop_cam_anim_length)
+			CreateTimeEvent("ver_fast_reload_fix", "stop_cam_anim", tonumber(stop_cam_anim_length), function()
+				level.remove_cam_effector(12394)
+				return true
+			end)
+			return true
+		end)
+	end]=]
+	
+	-- TEST FUNCTION TO ADD CUSTOM RELOAD TIMINGS (thanks a bunch to the team behind arisaka for the inventory iterator and ammo code!)
+	local anim_length = game.get_motion_length(hud_sec, anm_name, anim_table.anm_speed)/1000
+	local motion_params = ini_sys:r_string_ex(hud_sec, anm_name)
+	local motion_params = str_explode(motion_params, ",")
+	local hand_animation = motion_params[1]
+	local motion_mark
+	local reload_time
+	if hand_animation then
+		motion_mark = ini_marks:r_float_ex("motion_marks", hand_animation)
+		--printdbg('ini_marks:r_float_ex("motion_marks", hand_animation) is %s', ini_marks:r_float_ex("motion_marks", hand_animation))
+		if not motion_mark then
+			motion_mark = mcm_motion_mark_def
+			printdbg("no motion mark found in custom_reload_speed_motion_marks.ltx! Default is %s, hand_animation is %s", mcm_motion_mark_def, hand_animation)
+		else
+			printdbg("motion mark found! multiplier is %s", motion_mark)
+		end
+	else
+		motion_mark = mcm_motion_mark_def
+		printdbg("no hand animation????? settings default motion mark to... default??")
+	end
+	reload_time = anim_length * motion_mark
+	local og_anim_length = game.get_motion_length(hud_sec, anm_name, animation_speed)/1000
+	
+	wpn_id = obj:id()
+	
+	local tri_state_reload = ini_sys:r_string_ex(wpn_sec, "tri_state_reload")
+	printdbg("tri state reload is %s", tri_state_reload)
+	if tri_state_reload ~= "on" then
+		if reload_time and speed > 1 then 
+			printdbg("attempt early reload!")
+			temp_num = nil
+			
+			-- okay why are there so many bugs
+			CreateTimeEvent("i hate my life ver", "cool_down_start", 0.02, function()
+				--RegisterScriptCallback("actor_on_item_take", prevent_ammo_pickup) -- lmao turns out i had infinite ammo on during testing which broke the script. this "fix" isnt needed.
+				return true
+			end)
+			
+			-- Cool down timer to prevent ammo duplication
+			CreateTimeEvent("i hate my life ver", "cool_down_timer", anim_length, function()
+				printdbg("removing time events and unregistering callback!")
+				RemoveTimeEvent("ver_reload_sound", "set_ammo_elapsed")
+				RemoveTimeEvent("ver_reload_sound", "set_ammo_elapsed2")
+				--UnregisterScriptCallback("actor_on_item_take", prevent_ammo_pickup)
+				return true
+			end)
+			
+			-- first reload
+			CreateTimeEvent("ver_reload_sound", "set_ammo_elapsed", reload_time, function(wpn_id)
+				local wpn = get_object_by_id(wpn_id)
+				if not wpn and not wpn:is_weapon() then return true end
+				local current_ammo = wpn:cast_Weapon():GetAmmoElapsed()
+				local mag_size = wpn:cast_Weapon():GetAmmoMagSize()
+				
+				local ammo_list = utils_item.get_ammo(nil,wpn_id)
+				local ammo_name = ammo_list[wpn:get_ammo_type() + 1]
+				local ammo_have = utils_item.get_amount(db.actor,ammo_name) or 0
+				local num = math.min(mag_size,ammo_have)
+				if (current_ammo + ammo_have) > num then
+					num = math.min(current_ammo + ammo_have, mag_size)
+				end
+				printdbg("ver stupid: ammo_list %s, ammo_name %s, ammo_have %s, num %s", ammo_list, ammo_name, ammo_have, num)
+				wpn:cast_Weapon():SetAmmoElapsed(num)
+				temp_num = num
+				reduce_ammo(ammo_name,num - current_ammo)
+				printdbg("tried to reload early!")
+				-- second reload, necessary because engine can override our reload. ---- WHY DO I KEEP USING UNLIMITED AMMO DURING TESTING. I KEEP ADDING UNECESSARY SHIT.
+				--[[
+				CreateTimeEvent("ver_reload_sound", "set_ammo_elapsed2", math.abs(og_anim_length-anim_length), function(wpn_id, temp_num)
+					local wpn = get_object_by_id(wpn_id)
+					printdbg("reset reload again!")
+					if not wpn and not wpn:is_weapon() then return true end
+					wpn:cast_Weapon():SetAmmoElapsed(temp_num)
+					temp_num = nil
+					return true
+				end, wpn_id, temp_num)]]
+				return true
+			end, wpn_id)
+		end
+	end
+	
+	
+	-- sounds boo
+	local sound_name = nil
+	
+	if anm_name:startswith("anm_reload") then 
+		sound_name = "snd_reload"
+		if string.find(anm_name, "empty") then
+			sound_name = "snd_reload_empty"
+		end
+		if string.find(anm_name, "1") then
+			sound_name = "snd_reload_1"
+		end
+	end
+	if anm_name:startswith("anm_reload_g") then
+		sound_name = "snd_reload_grenade"
+	end
+	if anm_name:startswith("anm_add_cartridge") then
+		sound_name = "snd_add_cartridge"
+	end
+	
+	
+	local scripted_snd = string.gsub(anm_name, "anm_", "scripted_snd_")
+	local scripted_sound_check = ini_sys:r_string_ex(wpn_sec, scripted_snd)
+	
+	if scripted_sound_check then
+		scripted_sound_check_table = str_explode(scripted_sound_check, ",")
+		scripted_sound_check = scripted_sound_check_table[1] or scripted_sound_check
+		printdbg("scripted_snd is %s", scripted_snd)
+		printdbg("scripted_sound_check is %s", scripted_sound_check)
+
+		common.stop_all_sound_object(wpn_sec)
+		local snd_obj = common.get_safe_sound_object(scripted_sound_check, wpn_sec)
+		snd_obj:play(db.actor, 0, 2)
+		snd_obj.frequency = snd_obj.frequency * speed
+		snd_obj.volume = snd_obj.volume * speed
+		printdbg("snd_obj.volume is %s", snd_obj.volume)
+		return
+	end
+	
+	printdbg("ver: anm_name is %s", anm_name)
+	printdbg("ver: wpn_sec is %s, sound_name is %s", wpn_sec, sound_name)
+	if not sound_name or not wpn_sec then return end
+	local sound_path = ini_sys:r_string_ex(wpn_sec, sound_name) or " "
+	local sound_path_table = str_explode(sound_path, ",")
+	local sound_path = sound_path_table[1] or sound_path
+	sound_name = nil
+	if not sound_path then return end
+	
+	snd_obj = common.get_safe_sound_object(sound_path, wpn_sec)
+	if not snd_obj then return end
+	--[[
+	CreateTimeEvent("ver_fast_reload_sound", "speed_up_sound", 0.1, function(snd_obj, ver_reload_bonus, zone_slayer_bonus, wick_mode_bonus)
+		printdbg("sound_object playing is %s", snd_obj:playing())
+		if snd_obj:playing() then
+			snd_obj.frequency = snd_obj.frequency * (1 + ver_reload_bonus + zone_slayer_bonus + wick_mode_bonus)
+			printdbg("ver: sound frequency changed to %s!", snd_obj)
+		else
+			printdbg("ver: sound not playing!")
+		end
+		return true
+	end, snd_obj, ver_reload_bonus, zone_slayer_bonus, wick_mode_bonus)]]
+	
+	--[[
+	printdbg("sound_object playing is %s", snd_obj:playing())
+		if snd_obj:playing() then
+			snd_obj.frequency = snd_obj.frequency * (1 + ver_reload_bonus + zone_slayer_bonus + wick_mode_bonus)
+			printdbg("ver: sound frequency changed to %s!", snd_obj)
+		else
+			printdbg("ver: sound not playing!")
+		end]]
+	
+	snd_obj:play(db.actor, 0, 2)
+	snd_obj.frequency = snd_obj.frequency * speed
+	snd_obj.volume = snd_obj.volume * speed
+	printdbg("snd_obj.volume is %s, frequency is %s", snd_obj.volume, snd_obj.frequency)
+	
+end
+
+function on_game_start()
+	
+	-- Verdatim
+	RegisterScriptCallback("actor_on_hud_animation_play", change_reload_animation_speed)
+	RegisterScriptCallback("on_before_play_hud_sound", remove_sound)
+	
+	-- TEST CALLBACK FOR EARLY FAST RELOADS
+	--RegisterScriptCallback("actor_on_hud_animation_mark", ver_reload_now)
+	--RegisterScriptCallback("actor_on_hud_animation_end", zero_ammo_check)
+	
+	-- INI callbacks
+	RegisterScriptCallback("on_game_load", initialize)
+    RegisterScriptCallback("on_option_change", initialize)
+	
+	-- Stop any pending processes if hide anim is initiated
+	RegisterScriptCallback("actor_on_hud_animation_play", stop_all_processes)
+	
+	-- MCM stuff
+	RegisterScriptCallback("on_option_change", get_mcm_values)
+	RegisterScriptCallback("actor_on_first_update", get_mcm_values)
+end
+
+function initialize()
+    ini_marks = ini_file("plugins\\custom_reload_speed_motion_marks.ltx")
+end
+
+function stop_all_processes(anim_table, obj)
+	if not anim_table or not obj then return end
+	anm_name = anim_table.anm_name
+	if not anm_name:startswith("anm_hide") then return end
+	printdbg("stopping all processes")
+	RemoveTimeEvent("ver_reload_sound", "set_ammo_elapsed")
+    RemoveTimeEvent("ver_reload_sound", "set_ammo_elapsed2")
+	RemoveTimeEvent("i hate my life ver", "cool_down_timer")
+	level.remove_cam_effector(12394)
+	local sec = obj:section()
+	common.stop_all_sound_object(sec)
+end
+	
+--[[
+function zero_ammo_check(wpn)
+	if not wpn or wpn:is_weapon() then return end
+	if wpn:cast_Weapon():GetAmmoElapsed() == 0 then
+		wpn_id = wpn:id()
+		CreateTimeEvent("i_hate_my_life", "zero_ammo_check", 0.02, function(wpn_id)
+		wpn = get_object_by_id(wpn_id)
+		if not wpn or wpn:is_weapon() then return true end
+		wpn:cast_Weapon():SetAmmoElapsed(0)
+		return true
+		end)
+	end
+end]]
+
+-- Verdatim woooo
+
+--[===[ UNECESSARY BECAUSE I ACCIDENTALLY HAD UNLIMITED AMMO ON WHEN TESTING LMAO
+function prevent_ammo_pickup(obj)
+	local obj_id = obj:id()
+	local wpn2 = db.actor:active_item()
+	if not wpn2 then return end
+	wpn_id2 = wpn2:id()
+	if not wpn_id2 then return end
+	local ammo_type = wpn2:cast_Weapon():GetAmmoType()
+	local ammo_elapsed = wpn2:cast_Weapon():GetAmmoElapsed()
+	local mag_size = wpn2:cast_Weapon():GetAmmoMagSize()
+	
+	local ammo_list = utils_item.get_ammo(nil,wpn_id2)
+	local ammo_name = ammo_list[wpn2:get_ammo_type() + 1]
+	local ammo_have = utils_item.get_amount(db.actor,ammo_name) or 0
+	
+	printdbg("ammo name is %s, ammo_elapsed is %s", ammo_name, ammo_elapsed)
+	reduce_ammo(ammo_name, mag_size)
+	
+	--[[local ammo_list = utils_item.get_ammo(nil,wpn_id2)
+	print_r(ammo_list)
+	obj_name = obj:section()
+	for k, v in pairs(ammo_list) do
+		if ammo_list[k] == obj_name then
+			local se_obj = alife_object(obj_id)
+			if se_obj then
+				alife_release(se_obj)
+				printdbg("deleted ammo %s!", obj_name)
+			end
+			break
+		end
+	end]]
+end
+]===]
+	
+
+function ver_reload_now(wpn_state, mark_name)
+	printdbg("wpn_state is %s", wpn_state)
+	if wpn_state ~= 7 then return end
+	local wpn1 = db.actor:active_item()
+	local wpn_id1 = wpn1:id()
+	printdbg("wpn_id1 is %s", wpn_id1)
+	if not wpn1 then return end
+	if not wpn1:is_weapon() then return end
+	if temp_num then
+		CreateTimeEvent("ver_reload_now", "reset_ammo_now", 0, (function(temp_num, wpn_id1)
+			printdbg("wpn_id1 is %s", wpn_id1)
+			printdbg("temp_num is %s", temp_num)
+			wpn1 = get_object_by_id(wpn_id1)
+			if not wpn1 then return true end
+			printdbg("ver_reload_now: tried to reset ammo to %s!", temp_num)
+			wpn1:cast_Weapon():SetAmmoElapsed(temp_num)
+			return true
+		end), temp_num, wpn_id1)
+	end
+end
+		
+
+-- ADD YOUR FUNCTORS FOR SOUND DISABLING USING THIS
+
+local sound_disabler_functors = {}
+
+function add_sound_disabler_functor(functor, priority)
+	table.insert(sound_disabler_functors, {functor = functor, priority = priority})
+	
+	table.sort(sound_disabler_functors, function(a,b) return a.priority < b.priority end)
+end
+
+function remove_sound(alias, parent, result)
+	printdbg("alias is %s, parent is %s, result is %s", alias, parent, result)
+	local stop = false
+	
+	for i, func_table in ipairs(sound_disabler_functors) do
+		stop = func_table.functor()
+		if stop then break end
+	end
+	printdbg("stop is %s", stop)
+	if not stop then return end
+	
+	wpn = db.actor:active_item()
+	if not wpn then return end
+	printdbg("sound alias is %s", alias)
+	if not (alias:startswith("sndReload")) and not (alias == "sndAddCartridge") then 
+		printdbg("alias does not coincide with recognised sounds")
+		return 
+	end
+	if (string.find(alias, "Misfire")) then
+		return
+	end
+
+	printdbg("alias coincides with recognised sounds")
+	if wpn:is_weapon() and wpn:cast_Weapon():IsZoomed() then return end
+
+	result.volume_mult = 0
+	printdbg("result.volume_multiplier is %s", result.volume_mult)
+	
+	local wpn_sec = wpn:section()
+	if not wpn_sec then 
+		return result
+	end
+	common.stop_all_sound_object(wpn_sec)
+	return result
+end
+
+function reduce_ammo(section,num)
+	local function f(_,itm)
+		if (itm and (itm:section() == section)) then
+			if (num <= 0) then
+				return
+			end
+			if (itm:ammo_get_count() > num) then
+				itm:ammo_set_count(itm:ammo_get_count() - num)
+				num = 0
+				return
+			end
+			num = num - itm:ammo_get_count()
+			alife_release(itm)
+		end
+	end
+	db.actor:iterate_inventory(f)
+end
+
+-- base stupid speed increase
+add_reload_speed_increase((function(anim_table, obj)
+	if not obj then return false end
+	local cam_anim_bool_
+	if mcm_base_speed == 1 then return false end
+	if mcm_base_speed > 1.1 or mcm_base_speed < 0.9 then
+		cam_anim_bool_ = false
+	else
+		cam_anim_bool_ = true
+	end
+	return mcm_base_speed, cam_anim_bool_
+	
+
+end), 20)
+
+
+-- base stupid reload sound disabler
+add_sound_disabler_functor((function()
+	if mcm_base_speed > 1 or mcm_base_speed < 1 then
+		return true
+	else
+		return false
+	end
+end), 20)
+
+
+--

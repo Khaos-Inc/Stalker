@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="windows-1251"?>
+
+<!-- 
+	MCM
+-->
+<string_table>
+
+
+	<string id="ui_mcm_stashesx_title">
+		<text>NPC Loot Stashes</text>
+	</string>
+	<string id="ui_mcm_menu_stashesx">
+		<text>NPC Loot Stashes</text>
+	</string>
+
+			<!-- LOOTING -->
+	<string id="ui_mcm_stashesx_header_loot">
+		<text>NPC Looting</text>
+	</string>
+
+	<string id="ui_mcm_stashesx_reward_loot">
+		<text>NPC loot all stashes</text>
+	</string>
+	<string id="ui_mcm_stashesx_reward_loot_desc">
+		<text>Allows NPCs to loot stashes that weren't made by player (ones created at new game/given as reward/found from PDA etc). Keep in mind that when you open a stash like this for the first time, it will become lootable regardless.</text>
+	</string>
+
+	<string id="ui_mcm_stashesx_update_time">
+		<text>Update Time</text>
+	</string>
+	<string id="ui_mcm_stashesx_update_time_desc">
+		<text>Time (real-life seconds) after which script picks a next random squad and checks stashes around it. Increasing it will make NPCs loot stashes less often. \n 
+				\n Default: 4.0</text>
+	</string>
+
+	<string id="ui_mcm_stashesx_sleep_freq">
+		<text>Loot during sleep</text>
+	</string>
+	<string id="ui_mcm_stashesx_sleep_freq_desc">
+		<text>Frequency of looting during sleep, in two words: you sleep one hour and it runs function "x" amount of times to match the time passed. Based on "Update Time" option. Value of "1" means real-time, I recommend lower. \n 
+				\n "0" disables this option. \n
+				\n Default: 0.25</text>
+	</string>
+
+	<string id="ui_mcm_stashesx_add_perc">
+		<text>More Random Looting</text>
+	</string>
+	<string id="ui_mcm_stashesx_add_perc_desc">
+		<text>Increase if you want low chance stashes to be looted more often, for example: two stashes are saved with proced chances 1 and 200, if you increase this slider to 100% they will have 201 and 400 (essentially increasing lower chance stash from example to be looted to 50%). \n 
+				\n Default: 20</text>
+	</string>
+
+			<!-- PAID STASHES -->
+	<string id="ui_mcm_stashesx_header_paid">
+		<text>Paid Stashes</text>
+	</string>
+
+	<string id="ui_mcm_stashesx_cost">
+		<text>Cost</text>
+	</string>
+	<string id="ui_mcm_stashesx_cost_desc">
+		<text>Cost of paid stash per day.</text>
+	</string>
+
+	<string id="ui_mcm_stashesx_max_time">
+		<text>Max Time</text>
+	</string>
+	<string id="ui_mcm_stashesx_max_time_desc">
+		<text>Maximum amount of days player is allowed to buy.</text>
+	</string>
+
+			<!-- DEBUG -->
+	<string id="ui_mcm_stashesx_header_debug">
+		<text>Debug</text>
+	</string>
+
+	<string id="ui_mcm_stashesx_debugx">
+		<text>Debug</text>
+	</string>
+	<string id="ui_mcm_stashesx_debugx_desc">
+		<text>Allows to see stuff in console for debugging.</text>
+	</string>
+
+	<string id="ui_mcm_stashesx_delete_stashes">
+		<text>DELETE ADDON (read me please)</text>
+	</string>
+	<string id="ui_mcm_stashesx_delete_stashes_desc">
+		<text>To prevent save file corruption, this option will delete all new (paid) stashes added by this addon on next load. \n 
+				\n So, if you want to delete addon: \n
+				\n 1) Enable this option; \n
+				\n 2) Save, load, save again; \n
+				\n 3) Quit game and disable addon.</text>
+	</string>
+
+
+</string_table>

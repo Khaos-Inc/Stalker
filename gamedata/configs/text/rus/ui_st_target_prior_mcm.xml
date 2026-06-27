@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="windows-1251"?>
+
+<!-- 
+	MCM
+-->
+<string_table>
+
+
+	<string id="ui_mcm_target_prior_title">
+		<text>NPC travelling</text>
+	</string>
+	<string id="ui_mcm_menu_target_prior">
+		<text>NPC travelling</text>
+	</string>
+
+	<!-- prior -->
+	<string id="ui_mcm_target_prior_prior_header">
+		<text>Travel приоритет</text>
+	</string>
+
+	<string id="ui_mcm_target_prior_ignore_best_target">
+		<text>Шанс на выбор НЕ лучшей цели</text>
+	</string>
+	<string id="ui_mcm_target_prior_ignore_best_target_desc">
+		<text>Из пяти целей с высшим приоритетом: \n 
+				"1" означает что НПС всегда выберет случайную цель и будет ходить больше; \n 
+				"0" означает что НПС почти всегда будет выбирать лучшую цель и будет оставаться на любимом месте.</text>
+	</string>
+
+	<string id="ui_mcm_target_prior_dist_ext">
+		<text>Степень расстояния</text>
+	</string>
+	<string id="ui_mcm_target_prior_dist_ext_desc">
+		<text>Как расстояние влияет на приоритет: \n 
+				"0" выключает расстояние как фактор приоритета, означает больше хаотичных путешествий для НПС.</text>
+	</string>
+
+	<string id="ui_mcm_target_prior_random_range">
+		<text>Больше случайности</text>
+	</string>
+	<string id="ui_mcm_target_prior_random_range_desc">
+		<text>Случайный диапазон для каждой цели: \n 
+				"0" без рандома; \n 
+				"0.25" возьмет число между 0.75 и 1.25 и умножит приоритет каждой цели на это значение.</text>
+	</string>
+
+
+	<!-- misc -->
+	<string id="ui_mcm_target_prior_misc_header">
+		<text>Дополнительно</text>
+	</string>
+
+	<string id="ui_mcm_target_prior_mutant_transition">
+		<text>Разрешить переходы уровней мутантам</text>
+	</string>
+	<string id="ui_mcm_target_prior_mutant_transition_desc">
+		<text>Мутанты теперь могут менять локации как сталкеры. Очень хаотично потому что используется ванильный расчет! \n 
+				Черный список для переходов мутантов в главном скрипте в "local mutants_blacklist_levels" таблице.</text>
+	</string>
+
+	<string id="ui_mcm_target_prior_replace_spawns">
+		<text>Замена спавна на основе ранга</text>
+	</string>
+	<string id="ui_mcm_target_prior_replace_spawns_desc">
+		<text>Если отряд высокого ранга попытается появиться на юге - он будет заменен другим отрядом с рангом, соответствующим таблице путешествий. \n 
+				Если вы используете аддон "ZCP" и хотите их появления, то я думаю, что лучше отключить его (NPC все равно будут путешествовать в соответствии с моей таблицей).</text>
+	</string>
+
+
+	<!-- debug -->
+	<string id="ui_mcm_target_prior_dbg_header">
+		<text>Дебаг</text>
+	</string>
+
+	<string id="ui_mcm_target_prior_debug_targets">
+		<text>Дебаг целей</text>
+	</string>
+	<string id="ui_mcm_target_prior_debug_targets_desc">
+		<text>Отображает 5 высших приоритетов, их значения и цель, которую НПС выбрал.</text>
+	</string>
+
+	<string id="ui_mcm_target_prior_debug_squads">
+		<text>Дебаг замены отрядов</text>
+	</string>
+	<string id="ui_mcm_target_prior_debug_squads_desc">
+		<text>Отображает отряды, которые были заменены.</text>
+	</string>
+
+</string_table>

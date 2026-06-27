@@ -1,0 +1,236 @@
+![wpn_pb]
+visual                                   = dynamics\weapons\wpn_pb\wpn_pb.ogf
+
+        use_alt_aim_hud                  = false
+        scopes                           = pb_upgr_kit
+        hud = wpn_pb_new_hud
+        rpm                              = 330
+        parent_section                   = wpn_pb
+
+        inv_name                    = st_wpn_pb_new
+        inv_name_short              = st_wpn_pb_new
+        description                 = st_wpn_pb_new_descr
+		
+icons_texture      = ui\remademeowie_icon
+	inv_grid_width     = 3
+	inv_grid_height    = 1
+	inv_grid_x         = 6
+	inv_grid_y         = 0
+
+snd_reload = weapons\pm\pm_reload
+snd_reload_empty = $no_sound
+snd_empty = $no_sound
+snd_bore = $no_sound
+scripted_snd_empty_fire = weapons\pm\pm_click
+scripted_snd_bore = weapons\pm\pm_inspect
+scripted_snd_bore_jammed = weapons\pm\pm_click
+scripted_snd_bore_empty_jammed = weapons\pm\pm_click_jammed
+scripted_snd_reload_misfire = weapons\pm\pm_unjam
+
+scripted_snd_reload_empty = weapons\pm\pm_reload_empty
+scripted_snd_reload_empty_no_mag = weapons\pm\pm_reload_no_mag
+
+scripted_snd_ammo_check = weapons\pm\pm_magcheck
+scripted_snd_ammo_check_ammo8 = weapons\pm\pm_magcheck
+scripted_snd_ammo_check_ammo7 = weapons\pm\pm_magcheck
+scripted_snd_ammo_check_ammo6 = weapons\pm\pm_magcheck
+scripted_snd_ammo_check_ammo5 = weapons\pm\pm_magcheck
+scripted_snd_ammo_check_ammo4 = weapons\pm\pm_magcheck_partial
+scripted_snd_ammo_check_ammo3 = weapons\pm\pm_magcheck_partial
+scripted_snd_ammo_check_ammo2 = weapons\pm\pm_magcheck_partial
+scripted_snd_ammo_check_ammo1 = weapons\pm\pm_magcheck_partial
+scripted_snd_ammo_check_empty = weapons\pm\pm_magcheck_empty
+scripted_snd_ammo_check_no_mag = weapons\pm\pm_magcheck_empty
+
+[wpn_pb_new_hud]:wpn_pm_sk1_new_hud
+        item_visual                 = anomaly_weapons\wpn_pb\wpn_pb_hud.ogf
+        attach_place_idx            = 0
+        zoom_hide_crosshair         = true
+
+        hands_orientation                = -0.00563, 0.000218, -1
+        hands_orientation_16x9           = -0.00563, 0.000218, -1
+        hands_position                   = -0.027415, -0.002601, 0.011812
+        hands_position_16x9              = -0.027415, -0.002601, 0.011812
+
+        aim_hud_offset_pos               = -0.025568, 0.024997, 0
+        aim_hud_offset_pos_16x9          = -0.025568, 0.024997, 0
+        aim_hud_offset_rot               = -1.9e-05, -0.000106, -0.0925
+        aim_hud_offset_rot_16x9          = -1.9e-05, -0.000106, -0.0925
+
+        lowered_hud_offset_pos           = 0, 0, 0.004845
+        lowered_hud_offset_pos_16x9      = 0, 0, 0.004845
+        lowered_hud_offset_rot           = 0.164122, -0.008087, 0.1
+        lowered_hud_offset_rot_16x9      = 0.164122, -0.008087, 0.1
+
+        item_orientation                 = 0.002, 0, 0
+        item_position                    = 0.000636, -0.004316, 0
+
+gl_hud_offset_pos           = 0, 0, 0
+gl_hud_offset_rot           = 0, 0, 0
+lean_hud_offset_pos         = 0, 0, 0
+lean_hud_offset_rot         = 0, 0, 0
+        
+anm_bore                    = h_pm_inspect, pm_idle
+        anm_bore_empty              = h_pm_inspect, pm_idle_empty
+        anm_bore_no_mag             = h_pm_inspect, pm_idle_no_mag
+        anm_hide                    = h_pm_holster, pm_holster
+        anm_hide_empty              = h_pm_holster_empty, pm_idle_empty
+        anm_show                    = h_pm_draw_empty, pm_draw
+        anm_show_empty              = h_pm_draw_empty, pm_idle_empty
+        anm_idle                    = h_pm_idle, pm_idle
+        anm_idle_lowered                    = h_pm_idle_safe, pm_idle
+        anm_idle_empty              = h_pm_idle, pm_idle_empty
+        anm_idle_empty_lowered                    = h_pm_idle_safe, pm_idle_empty
+        anm_idle_moving             = h_pm_walk, pm_idle
+        anm_idle_moving_empty       = h_pm_walk, pm_idle_empty
+        anm_idle_moving_crouch      = h_pm_walk, pm_idle, 0.7
+        anm_idle_moving_crouch_empty = h_pm_walk, pm_idle_empty, 0.7
+        anm_idle_sprint             = h_pm_sprint, pm_idle, 1.125
+        anm_idle_sprint_empty       = h_pm_sprint, pm_idle_empty, 1.125
+
+        ;anm_idle_aim                = h_pm_idle_aimless, pm_idle ; aim without sway
+        anm_idle_aim                = h_pm_idle_aimless, pm_idle
+        anm_idle_aim_empty          = h_pm_idle_aimless, pm_idle_empty
+        ;anm_idle_aim_move                = h_pm_walk_aim, pm_idle, 0.7
+        ;anm_idle_aim_move_empty                = h_pm_walk_aim, pm_idle, 0.7
+        ;anm_idle_aim_move_crouch                = h_pm_walk_aim, pm_idle, 0.45
+        ;anm_idle_aim_move_crouch_empty                = h_pm_walk_aim, pm_idle, 0.45
+
+        anm_shots                   = h_pm_shoot, pm_shoot
+		anm_shot_l                  = h_pm_shoot_empty, pm_shoot_empty
+        anm_shots_aim                   = h_pm_shoot_aim_3dss, pm_shoot
+        anm_shots_aim_variant1                   = h_pm_shoot_aim_3dss, pm_shoot1
+        anm_shots_aim_variant2                   = h_pm_shoot_aim_3dss, pm_shoot2
+        anm_shots_aim_variant3                   = h_pm_shoot_aim_3dss, pm_shoot3		
+        anm_shot_l_aim                  = h_pm_shoot_aim_empty, pm_shoot_empty
+
+
+        anm_empty_fire = h_pm_click, pm_click_empty
+
+
+        ; jammed
+        anm_reload_misfire           = h_pm_unjam, pm_unjam
+        anm_bore_jammed              = h_pm_click, pm_click_jammed
+        anm_hide_jammed              = h_pm_holster_empty, pm_idle_jammed
+        anm_show_jammed              = h_pm_draw_empty, pm_idle_jammed
+        anm_idle_jammed                     = h_pm_idle, pm_idle_jammed
+        anm_idle_lowered_jammed             = h_pm_idle_safe, pm_idle_jammed
+        anm_idle_moving_jammed             = h_pm_walk, pm_idle_jammed
+        anm_idle_moving_crouch_jammed      = h_pm_walk, pm_idle_jammed, 0.7
+        anm_idle_sprint_jammed             = h_pm_sprint, pm_idle_jammed, 1.125
+
+        anm_idle_aim_jammed                = h_pm_idle_aim, pm_idle_jammed
+        anm_idle_aim_move_jammed                = h_pm_walk_aim, pm_idle_jammed, 0.7
+        anm_idle_aim_move_crouch_jammed                = h_pm_walk_aim, pm_idle_jammed, 0.45
+
+        anm_shots_jammed                   = h_pm_shoot_jammed, pm_shoot_jammed
+        anm_shots_aim_jammed                   = h_pm_shoot_aim_jammed, pm_shoot_jammed
+
+        anm_ammo_check_jammed  = h_pm_magcheck_slide_empty, pm_idle_jammed
+
+
+        ; empty jammed
+        anm_reload_misfire_empty           = h_pm_unjam_empty, pm_unjam_empty
+        anm_bore_empty_jammed              = h_pm_click_empty_jammed, pm_click_empty_jammed
+        anm_hide_empty_jammed              = h_pm_holster_empty, pm_idle_empty_jammed
+        anm_show_empty_jammed              = h_pm_draw_empty, pm_idle_empty_jammed
+        anm_idle_empty_jammed                     = h_pm_idle, pm_idle_empty_jammed
+        anm_idle_lowered_empty_jammed             = h_pm_idle_safe, pm_idle_empty_jammed
+        anm_idle_moving_empty_jammed             = h_pm_walk, pm_idle_empty_jammed
+        anm_idle_moving_crouch_empty_jammed      = h_pm_walk, pm_idle_empty_jammed, 0.7
+        anm_idle_sprint_empty_jammed             = h_pm_sprint, pm_idle_empty_jammed, 1.125
+
+        anm_idle_aim_empty_jammed                = h_pm_idle_aim, pm_idle_empty_jammed
+        anm_idle_aim_move_empty_jammed                = h_pm_walk_aim, pm_idle_empty_jammed, 0.7
+        anm_idle_aim_move_crouch_empty_jammed                = h_pm_walk_aim, pm_idle_empty_jammed, 0.45
+
+        anm_shots_empty_jammed                   = h_pm_shoot_empty_jammed, pm_shoot_empty_jammed
+        anm_shots_aim_empty_jammed                   = h_pm_shoot_aim_empty_jammed, pm_shoot_empty_jammed
+
+        anm_ammo_check_empty_jammed  = h_pm_magcheck_slide_empty, pm_idle_empty_jammed
+
+        anm_empty_fire_jammed = h_pm_click_empty_jammed, pm_click_empty_jammed ; my script sucks
+
+
+        ; hell
+        anm_reload                  = h_pm_reload, pm_reload_ammo4
+        anm_reload_ammo8            = h_pm_reload, pm_reload_ammo8
+        anm_reload_ammo7            = h_pm_reload, pm_reload_ammo7
+        anm_reload_ammo6            = h_pm_reload, pm_reload_ammo6
+        anm_reload_ammo5            = h_pm_reload, pm_reload_ammo5
+        anm_reload_ammo4            = h_pm_reload, pm_reload_ammo4
+        anm_reload_ammo3            = h_pm_reload, pm_reload_ammo3
+        anm_reload_ammo2            = h_pm_reload, pm_reload_ammo2
+        anm_reload_ammo1            = h_pm_reload, pm_reload_ammo1
+        anm_reload_empty            = h_pm_reload_empty, pm_reload_empty
+        anm_reload_empty_no_mag           = h_pm_reload_no_mag, pm_reload_no_mag
+
+        anm_ammo_check        = h_pm_magcheck, pm_magcheck_ammo9
+        anm_ammo_check_ammo8  = h_pm_magcheck, pm_magcheck_ammo8
+        anm_ammo_check_ammo7  = h_pm_magcheck, pm_magcheck_ammo7
+        anm_ammo_check_ammo6  = h_pm_magcheck, pm_magcheck_ammo6
+        anm_ammo_check_ammo5  = h_pm_magcheck, pm_magcheck_ammo5
+        anm_ammo_check_ammo4  = h_pm_magcheck_partial, pm_magcheck_partial_ammo4
+        anm_ammo_check_ammo3  = h_pm_magcheck_partial, pm_magcheck_partial_ammo3
+        anm_ammo_check_ammo2  = h_pm_magcheck_partial, pm_magcheck_partial_ammo2
+        anm_ammo_check_ammo1  = h_pm_magcheck_partial, pm_magcheck_partial_ammo1
+        anm_ammo_check_empty  = h_pm_magcheck_slide_empty, pm_idle_empty
+        anm_ammo_check_no_mag = h_pm_magcheck_no_mag, pm_idle_no_mag
+
+
+        anm_idle_aim_start = h_pm_idle2aim, pm_idle, 0.95
+        anm_idle_aim_start_empty = h_pm_idle2aim, pm_idle_empty, 0.95
+        anm_idle_aim_start_jammed = h_pm_idle2aim, pm_idle_jammed, 0.95
+        anm_idle_aim_start_empty_jammed = h_pm_idle2aim, pm_idle_empty_jammed, 0.95
+        anm_idle_aim_end = h_pm_idle2aim, pm_idle, 0.925
+        anm_idle_aim_end_empty = h_pm_idle2aim, pm_idle_empty, 0.925
+        anm_idle_aim_end_jammed = h_pm_idle2aim, pm_idle_jammed, 0.925
+        anm_idle_aim_end_empty_jammed = h_pm_idle2aim, pm_idle_empty_jammed, 0.925
+
+        ;transitions
+
+        ts_pattern_idle2sprint = ^anm_idle.*, ^anm_idle_sprint.*, anm_idle2sprint, 3
+        anm_idle2sprint = h_pm_idle2sprint, pm_idle, 1
+        anm_idle2sprint_empty = h_pm_idle2sprint, pm_idle_empty, 1
+        anm_idle2sprint_jammed = h_pm_idle2sprint, pm_idle_jammed, 1
+        anm_idle2sprint_empty_jammed = h_pm_idle2sprint, pm_idle_empty_jammed, 1
+
+        ts_pattern_sprint2idle = ^anm_idle_sprint.*, ^anm_idle.*, anm_sprint2idle, 3
+        anm_sprint2idle = h_pm_sprint2idle, pm_idle, 1
+        anm_sprint2idle_empty = h_pm_sprint2idle, pm_idle_empty, 1
+        anm_sprint2idle_jammed = h_pm_sprint2idle, pm_idle_jammed, 1
+        anm_sprint2idle_empty_jammed = h_pm_sprint2idle, pm_idle_empty_jammed, 1 
+
+strafe_hud_offset_rot              = 1,-2,8
+strafe_hud_offset_pos              = -0.001,0.00420,0
+strafe_hud_offset_rot_16x9         = 1,-2,8
+strafe_hud_offset_pos_16x9         = -0.001,0.00420,0
+strafe_transition_time             = 0.45
+
+inertion_offset_LRUD_aim = 0.012, 0.012, 0.008, 0.008
+
+shooting_hud_effect                = true
+shooting_max_LRUD                  = 0.005,0.005,0.005,0.001
+shooting_max_LRUD_aim              = 0.0025,0.0025,0,0.005
+shooting_backward_offset           = 0.02,0.015
+shooting_ret_speed                 = 8
+shooting_ret_aim_speed             = 12
+shooting_min_LRUD_power            = 0.05
+
+
+empty_click_anm_speed = 0
+empty_click_anm_power = 0
+
+
+safemode_anm_speed = 1.1
+safemode_anm_power = 0.7
+
+
+safemode_anm_speed2 = 1.2
+safemode_anm_power2 = 0.4
+
+        shell_bone                  = wpn_body
+        shell_point                 = 200, 200, 200
+        
+        fire_bone                   = wpn_body
+fire_point                       = 0, 0.064, 0.32

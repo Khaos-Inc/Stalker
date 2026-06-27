@@ -1,0 +1,39 @@
+![wpn_fnx45_custom]
+>scopes			=	lazup_pl15
+silencer_status	=	2
+parent_section	=	wpn_fnx45_custom
+
+        silencer_x                  = 62
+        silencer_y                  = -13
+		
+![wpn_fnx45_sk1_hud]
+        anm_shots                                = fn509_new_shoot_aim_3dss, fn509_new_shoot_aim
+        anm_shots_aim                            = fn509_new_shoot_aim_3dss, fn509_new_shoot_aim
+        anm_shots_aim_l                          = fn509_new_shoot_aim_3dss, shoot_empty
+		
+        hands_orientation                = -0.099465, -0.281902, -0.050965
+        hands_orientation_16x9           = -0.099465, -0.281902, -0.050965
+        hands_position                   = 0, -0, 0.040786
+        hands_position_16x9              = 0, -0, 0.040786
+
+        aim_hud_offset_pos               = -0.050699, 0.022591, 0
+        aim_hud_offset_pos_16x9          = -0.050699, 0.022591, 0
+        aim_hud_offset_rot               = 0.00032, 0.000399, -0.086627
+        aim_hud_offset_rot_16x9          = 0.00032, 0.000399, -0.086627
+
+;-----------------------------------------------------------------------
+[wpn_fnx45_custom_lazup_pl15]:wpn_fnx45_custom
+hud					= wpn_fnx45_custom_lazup_pl15_hud
+
+1icon_layer			= laz_x
+1icon_layer_x		= 38
+1icon_layer_y		= -21
+
+laser_status		= true
+use_alt_aim_hud		= true
+[wpn_fnx45_custom_lazup_pl15_hud]:wpn_fnx45_sk1_hud
+item_visual                		= anomaly_weapons\wpn_fnp45\wpn_fnx45_sk1_laz_hud.ogf
+        aim_hud_offset_alt_pos           = -0.089548, -0.059162, -0.05
+        aim_hud_offset_alt_pos_16x9      = -0.089548, -0.059162, -0.05
+        aim_hud_offset_alt_rot           = 0.00032, 0.000399, 0.7
+        aim_hud_offset_alt_rot_16x9      = 0.00032, 0.000399, 0.7

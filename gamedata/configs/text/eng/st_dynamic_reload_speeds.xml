@@ -1,0 +1,36 @@
+<string_table>
+    <!-- MCM -->
+    <string id="ui_mcm_menu_dynamic_reload_speeds">
+        <text>Dynamic Reload Speeds</text>
+    </string>
+    <string id="ui_mcm_menu_dynamic_reload_speeds_Title">
+        <text>Dynamic Reload Speeds</text>
+    </string>
+	<string id="ui_mcm_dynamic_reload_speeds_force_cam_anim_off">
+        <text>Force Cam Anims Off</text>
+    </string>
+	<string id="ui_mcm_dynamic_reload_speeds_force_cam_anim_off_desc">
+        <text>By default, whether cam anims are enabled are decided by the mod adding their own mutator, but if you want the cam anims to always disable if theres any speed change, enable this.</text>
+    </string>
+	<string id="ui_mcm_dynamic_reload_speeds_default_motion_mark_ratio">
+        <text>Default Motion Mark Placement (Ratio)</text>
+    </string>
+	<string id="ui_mcm_dynamic_reload_speeds_default_motion_mark_ratio_desc">
+        <text>By default, this mod tries to emulate motion marks by making the reload end early. Unfortunately, I cannot read off of motion marks directly and instead use pre-baked values in an ltx (see plugins folder). If the hand animation isnt found in that ltx, then the fraction of the reload time at which the reload finishes is this value.</text>
+    </string>
+	<string id="ui_mcm_dynamic_reload_speeds_debug_logging">
+        <text>Debug Logging</text>
+    </string>
+	<string id="ui_mcm_dynamic_reload_speeds_debug_logging_desc">
+        <text>hmmm i wonder what debug logging does! Just allows printing in the log for debug purposes.</text>
+    </string>
+	<string id="ui_mcm_menu_dynamic_reload_speeds_base_adjusters">
+        <text>Base Speed Adjuster</text>
+    </string>
+	<string id="ui_mcm_dynamic_reload_speeds_base_speed_increase">
+        <text>Base Reload Speed</text>
+    </string>
+	<string id="ui_mcm_dynamic_reload_speeds_base_speed_increase_desc">
+        <text>Adds a mutator with low priority that changes reload speed. Basically, if no other mod uses this script, this will change the reload speed accordingly. Otherwise the other mod will override this one. Setting this to a value below 1 makes the "reload motion mark" early, otherwise its still functional. BTW, setting this to 0 makes reloads instant.</text>
+    </string>
+</string_table>

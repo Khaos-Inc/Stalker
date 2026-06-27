@@ -1,0 +1,259 @@
+--==============================================================================================
+-- Dynamic Volumetric Intensity Script
+-- For Screen Space Shaders
+--==============================================================================================
+
+-- CONFIGURATION -------------------------------------------------------------------------------
+
+local transition_speed = 0.005
+
+local weather_volumetrics = {
+
+    -- STORMS
+    ["storm1"] = 0.15,
+    ["storm2"] = 0.20,
+    ["storm3"] = 0.15,
+    ["storm4"] = 0.15,
+
+    -- RAIN
+    ["rain1"] = 0.15,
+    ["rain2"] = 0.25,
+    ["rain3"] = 0.25,
+    ["rain4"] = 0.15,
+    ["rain5"] = 0.25,
+
+    -- DARK CLOUDY
+    ["cloudy1_dark"] = 0.15,
+    ["cloudy2_dark"] = 0.20,
+    ["cloudy3_dark"] = 0.15,
+
+    -- NORMAL CLOUDY
+    ["cloudy1"] = 0.40,
+    ["cloudy2"] = 0.45,
+    ["cloudy3"] = 0.40,
+
+    -- LIGHT CLOUDY
+    ["cloudy1_light"] = 0.45,
+    ["cloudy2_light"] = 0.40,
+    ["cloudy3_light"] = 0.35,
+
+    -- FOGGY
+    ["foggy1"] = 0.40,
+    ["foggy2"] = 0.40,
+    ["foggy3"] = 0.15,
+    ["foggy4"] = 0.50,
+    ["foggy5"] = 0.15,
+    ["foggy5_alt"] = 0.15,
+
+    -- PARTLY
+    ["partly"] = 0.40,
+
+    -- CLEAR
+    ["clear"] = 0.40,
+
+    -- INDOORS
+    ["indoor"] = 0.80,
+
+    -- DEFAULT
+    ["default"] = 0.40,
+
+    -- EMISSION
+    ["blowout"] = 0.25,
+}
+
+-- VARIABLES -----------------------------------------------------------------------------------
+
+local con = nil
+
+local current_vol = 0.40
+local target_vol = 0.40
+
+local m_abs = math.abs
+local s_find = string.find
+local s_len = string.len
+local s_lower = string.lower
+local s_format = string.format
+
+local last_weather_check = 0
+local check_interval = 5000
+
+local last_force_refresh = 0
+local force_refresh_interval = 30000
+
+local cached_weather = ""
+
+-- TIME HELPERS --------------------------------------------------------------------------------
+
+local function get_hour()
+
+    local gt = game.get_game_time()
+
+    if not gt then
+        return 12
+    end
+
+    local Y, M, D, h, m, s, ms = 0, 0, 0, 0, 0, 0, 0
+
+    Y, M, D, h, m, s, ms = gt:get(
+        Y,
+        M,
+        D,
+        h,
+        m,
+        s,
+        ms
+    )
+
+    return h
+
+end
+
+-- WEATHER/TIME TARGET CALCULATION -------------------------------------------------------------
+
+local function update_target(weather_name)
+
+    target_vol = weather_volumetrics["default"]
+
+   if item_device and item_device.is_nv_active and item_device.is_nv_active() then
+    target_vol = 0.00
+    return
+end
+
+    local is_indoor = false
+
+    if weather_name then
+
+        weather_name = s_lower(weather_name)
+
+        if s_find(weather_name, "indoor", 1, true) then
+            is_indoor = true
+        end
+
+        local best_match_len = 0
+
+        for name, value in pairs(weather_volumetrics) do
+
+            if name ~= "default" then
+
+                if s_find(weather_name, name, 1, true) then
+
+                    local len = s_len(name)
+
+                    if len > best_match_len then
+
+                        target_vol = value
+                        best_match_len = len
+
+                    end
+                end
+            end
+        end
+    end
+
+    -- Night override (except indoors)
+
+    if not is_indoor then
+
+        local hour = get_hour()
+
+        if hour >= 20 or hour < 7 then
+            target_vol = 0.20
+        end
+
+    end
+
+    local mcm_int = ui_mcm and ui_mcm.get("ssfx_module/shadows/volumetric_int_mcm") or 1.0
+    target_vol = target_vol * mcm_int
+end
+
+-- STARTUP -------------------------------------------------------------------------------------
+
+function on_game_start()
+
+    con = get_console()
+
+    if con then
+        current_vol = target_vol
+    end
+
+    RegisterScriptCallback("actor_on_update", actor_on_update)
+
+end
+
+-- UPDATE --------------------------------------------------------------------------------------
+
+function actor_on_update()
+
+    local tg = time_global()
+
+    -- Weather / Time evaluation
+
+    if tg > last_weather_check then
+
+        local w_name = level.get_weather()
+
+        if w_name ~= cached_weather then
+            cached_weather = w_name
+        end
+
+        update_target(w_name)
+
+        last_weather_check = tg + check_interval
+    end
+
+    -- Periodically reclaim control if changed manually
+
+    if tg > last_force_refresh then
+
+        if con then
+
+            con:execute(
+                s_format(
+                    "ssfx_volumetric 1.000000,%.3f,4.000000,1.000000",
+                    target_vol
+                )
+            )
+
+        end
+
+        last_force_refresh = tg + force_refresh_interval
+    end
+
+    -- Smooth interpolation
+
+    local diff = current_vol - target_vol
+
+    if m_abs(diff) < 0.001 then
+        return
+    end
+
+    if current_vol < target_vol then
+
+        current_vol = current_vol + transition_speed
+
+        if current_vol > target_vol then
+            current_vol = target_vol
+        end
+
+    else
+
+        current_vol = current_vol - transition_speed
+
+        if current_vol < target_vol then
+            current_vol = target_vol
+        end
+
+    end
+
+    if con then
+
+        con:execute(
+            s_format(
+                "ssfx_volumetric 1.000000,%.3f,4.000000,1.000000",
+                current_vol
+            )
+        )
+
+    end
+
+end

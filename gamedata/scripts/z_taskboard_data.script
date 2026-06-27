@@ -1,0 +1,1213 @@
+-- Taskboard Data Layer
+-- Prepares task objects for UI display.
+-- No UI calls — communicates via dirty flags + board_data.
+-- Each task is a single flat object keyed by npc_id.."_"..task_id.
+
+-- Configuration (data-specific keys)
+
+local config = {}
+
+local function load_config_defaults()
+    local t = {}
+    local op = pda_taskboard_mcm.op
+    for _, v in ipairs(op.gr) do
+        if v.def ~= nil then t[v.id] = v.def end
+    end
+    return t
+end
+
+local function load_config()
+    config = load_config_defaults()
+    if ui_mcm then
+        for k, _ in pairs(config) do
+            config[k] = ui_mcm.get("pda_taskboard/" .. k)
+        end
+    end
+    Log.enabled = config.logging
+    Log.write("config loaded: range=%s key=%s companions=%s colorize=%s imm_thresh=%s bg_per_frame=%s bg_interval=%s logging=%s",
+        tostring(config.scanning_range), tostring(config.taskboard_key),
+        tostring(config.companions_give_tasks), tostring(config.colorize),
+        tostring(config.immediate_npc_threshold), tostring(config.bg_npcs_per_frame),
+        tostring(config.bg_frame_interval), tostring(config.logging))
+end
+
+-- Logging
+
+Log = { last = "", count = 0, enabled = false }
+
+local log_output = save_to_file and function(t) save_to_file.save(t, true) end or log
+
+function Log.write(fmt, ...)
+    if not Log.enabled then return end
+    local msg = string.format(fmt, ...)
+    if msg == Log.last then Log.count = Log.count + 1; return end
+    if Log.count > 0 then
+        log_output(string.format("[TB] ... (x%d)", Log.count))
+        Log.count = 0
+    end
+    log_output("[TB] " .. msg)
+    Log.last = msg
+end
+
+function Log.flush()
+    if Log.count > 0 then
+        log_output(string.format("[TB] ... (x%d)", Log.count))
+        Log.count = 0
+    end
+    Log.last = ""
+end
+
+-- Constants
+
+local REFRESH_COOLDOWN = 3 -- seconds between refreshes
+local last_refresh_time = -math.huge
+
+-- BG generation defaults (~60-100ms per NPC)
+local IMMEDIATE_NPC_THRESHOLD = 30   -- config.immediate_npc_threshold
+local BG_NPCS_PER_FRAME       = 1   -- config.bg_npcs_per_frame
+local BG_FRAME_INTERVAL       = 0.2 -- config.bg_frame_interval (seconds)
+local MAX_AUTO_PREPARE        = 4   -- categories with <= N tasks auto-prepare descriptions
+
+-- Filter Tables
+
+local EXCLUDED_TASKS = {
+    ["jup_b19_freedom_yar_task_1"]  = true,
+    ["merc_pri_a18_mech_mlr_task_1"] = true,
+    ["agr_u_bandit_boss_task_1"]     = true,
+}
+
+local EXCLUDED_NPC_SECTIONS = {
+    ["bar_duty_security_squad_leader"] = true,
+}
+
+local SIM_NPC_OVERRIDES = {
+    ["bar_visitors_garik_stalker_guard"]               = true,
+    ["bar_visitors_zhorik_stalker_guard2"]              = true,
+    ["bar_arena_guard"]                                 = true,
+    ["bar_dolg_general_zoneguard_stalker"]              = true,
+    ["mil_smart_terrain_7_7_freedom_bodyguard_stalker"] = true,
+    ["mil_smart_terrain_7_7_freedom_bodyguard2_stalker"] = true,
+}
+
+local STORY_NPC_IDS = { "esc_m_trader", "red_tech_forester" }
+
+local EFFECT_TO_SCRIPT = {
+    ["on_init_fate_task"]           = "tasks_fate",
+    ["setup_bounty_task"]           = "tasks_bounty",
+    ["setup_assault_task"]          = "tasks_assault",
+    ["on_init_delivery_task"]       = "tasks_delivery",
+    ["setup_fetch_task"]            = "tasks_fetch",
+    ["on_init_agent_rescue_task"]   = "tasks_agent_rescue",
+    ["on_init_chimera_scan_task"]   = "tasks_chimera_scan",
+    ["setup_dominance_task"]        = "tasks_dominance",
+    ["on_init_measure_task"]        = "tasks_measure",
+    ["on_init_recover_item_task"]   = "tasks_recover_item_on_corpse",
+    ["on_init_recover_mutant_task"] = "tasks_recover_mutant_data",
+    ["on_init_smart_control_task"]  = "tasks_smart_control",
+    ["on_init_stash_task"]          = "tasks_stash",
+    ["on_init_intercept_task"]      = "tasks_intercept_artifact",
+    ["on_init_hold_ground_task"]    = "tasks_hold_the_ground",
+    ["on_init_mystery_task"]        = "tasks_mystery_of_the_swamps",
+    ["multifetch_on_job_descr"]     = "tasks_multifetch",
+}
+
+local CATEGORY_NORMALIZER = {
+    setup_supplies_fetch_task_lostzone_patch = "setup_fetch_task",
+    setup_generic_fetch_task                 = "setup_fetch_task",
+    drx_sl_create_quest_stash               = "setup_bounty_task",
+    setup_dominance_task                    = "setup_assault_task",
+    multifetch_on_job_descr                 = "setup_fetch_task",
+}
+
+FETCH_CATEGORIES = {
+    ["setup_fetch_task"] = true,
+    ["rest"]             = true,
+}
+
+-- Capture API (read by z_taskboard_overrides)
+
+currently_processed_npc_id = nil
+currently_processed_task_data = nil
+
+local capture_next_flag = false
+
+function get_tasks_details_capture_next()
+    return capture_next_flag
+end
+
+function set_tasks_details_capture_next(val)
+    capture_next_flag = val
+end
+
+--- Writes captured details directly into the current task object fields.
+function add_tasks_details(details)
+    capture_next_flag = false
+    local td = currently_processed_task_data
+    if td then
+        td.task_title   = details.task_title
+        td.task_details = details.task_details
+        td.task_icon    = details.task_icon
+        Log.write("captured details: key=%s script=%s title=%s details=%s", 
+                        tostring(td.key), 
+                        tostring(td.script), 
+                        tostring(details.task_title), 
+                        tostring((details.task_details or ""):gsub("%%c%[[%d,]+%]", ""))
+                )
+    else
+        Log.write("captured details: no task_data (orphan capture)")
+    end
+end
+
+-- Utility
+
+function sorted_keys(tab)
+    if type(tab) ~= "table" then return {} end
+    local keys = {}
+    for k in pairs(tab) do table.insert(keys, k) end
+    table.sort(keys)
+    return keys
+end
+
+--- Shallow copy of a task object. Most fields are primitives (strings, numbers, booleans);
+--- table fields (task_var, duplicates) share references with the original.
+local function copy_task_obj(obj)
+    local c = {}
+    for k, v in pairs(obj) do c[k] = v end
+    return c
+end
+
+--- Copy for cancel_tasks: strips variant flags so the card renders as single-variant.
+--- If the accepted task is a variant without task_description, copies it from the
+--- primary entry (same task_id) in entry_cache — all variants share the same description.
+local function copy_for_cancel(obj)
+    local c = copy_task_obj(obj)
+    c.has_variants = false
+    c.duplicates   = nil
+
+    if not c.task_description or c.task_description == "" then
+        for _, cached in pairs(entry_cache) do
+            if cached.task_id == obj.task_id
+                and cached.has_variants
+                and cached.task_description
+                and cached.task_description ~= ""
+            then
+                c.task_description = cached.task_description
+                break
+            end
+        end
+    end
+
+    return c
+end
+
+-- NPC Scanning
+
+--- Scans nearby friendly NPCs + story NPCs within range, sorted by distance.
+local function scan_nearby_npcs()
+    local radius = config.scanning_range
+    local actor_pos = db.actor:position()
+    local candidates = {}
+
+    level.iterate_nearest(actor_pos, radius, function(obj)
+        local is_friendly_stalker = IsStalker(obj)
+            and obj:alive()
+            and obj:relation(db.actor) ~= game_object.enemy
+
+        if not is_friendly_stalker then return end
+        if EXCLUDED_NPC_SECTIONS[obj:section()] then return end
+
+        local is_companion = obj:has_info("npcx_is_companion")
+        if is_companion and not config.companions_give_tasks then return end
+
+        table.insert(candidates, {
+            npc      = obj,
+            distance = actor_pos:distance_to(obj:position()),
+        })
+    end)
+
+    for _, sid in ipairs(STORY_NPC_IDS) do
+        local story_id = story_objects.object_id_by_story_id[sid]
+        if story_id then
+            local npc = db.storage[story_id] and db.storage[story_id].object
+            if npc and actor_pos:distance_to(npc:position()) <= radius then
+                table.insert(candidates, {
+                    npc      = npc,
+                    distance = actor_pos:distance_to(npc:position()),
+                })
+            end
+        end
+    end
+
+    table.sort(candidates, function(a, b) return a.distance < b.distance end)
+
+    local result = {}
+    for _, entry in ipairs(candidates) do
+        table.insert(result, entry.npc)
+    end
+    Log.write("scan_nearby_npcs: found %d NPCs in radius=%.0f", #result, radius)
+    return result
+end
+
+-- Task Generation
+
+local function generate_tasks_for_npcs(npc_list)
+    Log.write("generate_tasks_for_npcs: %d NPCs", #npc_list)
+    for _, npc in ipairs(npc_list) do
+        local section = npc:section()
+        local is_sim = not not section:find("sim_")
+        local has_override = not not SIM_NPC_OVERRIDES[section]
+
+        currently_processed_npc_id = npc:id()
+        axr_task_manager.generate_available_tasks(npc, is_sim ~= has_override)
+        currently_processed_npc_id = nil
+    end
+end
+
+-- Task Categorization
+
+function get_task_effect(task_id)
+    local task_ini = task_manager.task_ini
+
+    local override = task_ini:r_string_ex(task_id, "task_category_override")
+    if override then return override end
+
+    local raw_effect = task_ini:r_string_ex(task_id, "on_job_descr")
+        or task_ini:r_string_ex(task_id, "fetch_func")
+    local effect = raw_effect and string.gmatch(raw_effect, "=(.*)%(")() or "rest"
+    effect = normalize_task_effect(effect)
+
+    local has_invalid_category = game.translate_string("st_pda_caption_" .. effect):find("_")
+    if has_invalid_category then
+        return "rest", not not raw_effect
+    else
+        return effect, not not raw_effect
+    end
+end
+
+function normalize_task_effect(task_effect)
+    return CATEGORY_NORMALIZER[task_effect] or task_effect
+end
+
+-- Task Data Preparation
+
+board_data = {}
+
+--- Creates full task objects for all NPCs in the list.
+--- Each task object is keyed by npc_id.."_"..task_id (unique per NPC+task combo).
+--- NPC info is filled immediately since the NPC object is available here.
+function get_prepared_task_data(npc_list)
+    if type(npc_list) ~= "table" then return {} end
+
+    local result = {}
+    for _, stalker in ipairs(npc_list) do
+        local task_list = (axr_task_manager
+            and axr_task_manager.available_tasks
+            and axr_task_manager.available_tasks[stalker:id()])
+            or {}
+
+        for _, task_id in ipairs(task_list) do
+            if not EXCLUDED_TASKS[task_id] and not blacklist_helper.TaskBlacklist[task_id] then
+                local task_effect, has_details = get_task_effect(task_id)
+                if not result[task_effect] then
+                    result[task_effect] = {}
+                end
+                local key = tostring(stalker:id()) .. "_" .. task_id
+                table.insert(result[task_effect], {
+                    key            = key,
+                    task_id        = task_id,
+                    npc_id         = stalker:id(),
+                    category       = task_effect,
+                    script         = EFFECT_TO_SCRIPT[task_effect] or task_effect or "",
+                    has_details    = has_details,
+                    task_title     = nil,
+                    task_details   = nil,
+                    task_icon      = nil,
+                    faulty         = false,
+                    wtf            = false,
+                    task_description = nil,
+                    npc_name       = stalker:character_name(),
+                    npc_community  = stalker:character_community(),
+                    npc_icon       = stalker:character_icon(),
+                    reached_limit  = false,
+                    priority       = 0,
+                    original_index = nil,
+                })
+            end
+        end
+    end
+
+    local task_count = 0
+    local cat_count = 0
+    for effect_name, tasks in pairs(result) do
+        cat_count = cat_count + 1
+        task_count = task_count + #tasks
+    end
+    Log.write("get_prepared_task_data: %d tasks in %d categories", task_count, cat_count)
+
+    return result
+end
+
+-- Task Filtering
+
+local function filter_valid_tasks(data)
+    local removed = 0
+    for key, tasks in pairs(data) do
+        if type(tasks) ~= "table" then
+            data[key] = nil
+        else
+            local i = 1
+            while i <= #tasks do
+                local npc_alive = level.object_by_id(tasks[i].npc_id)
+                if not npc_alive then
+                    table.remove(tasks, i)
+                    removed = removed + 1
+                else
+                    i = i + 1
+                end
+            end
+            if #tasks == 0 then
+                data[key] = nil
+            end
+        end
+    end
+    if removed > 0 then
+        Log.write("filter_valid_tasks: removed %d tasks with dead NPCs", removed)
+    end
+end
+
+-- Deduplication
+
+--- Strips formatting (spaces, punctuation, color codes) from details for dedup key.
+--- Keeps letters and digits so fate frequencies and fetch counts remain distinct.
+local function dedup_key_normalize(s)
+    if not s then return "" end
+    s = s:gsub("%%c%[[%d,]+%]", "")   -- color codes like %c[255,238,153,26]
+    s = s:gsub("[%s%p%c]", "")         -- whitespace, punctuation, control chars
+    return s:lower()
+end
+
+--- Groups tasks with the same task_id into multi-variant cards.
+--- Merge approach for task deduplication:
+---   - Same task_id + identical details  → remove duplicate (keep nearest NPC)
+---   - Same task_id + different details  → merge into multi-variant card
+--- Sets info.has_variants = true and info.duplicates = {} on the primary entry.
+--- Frequency is stripped from the title in the UI layer (task_list_element:__init),
+--- not here. All variants (duplicates) are kept in entry_cache for accept_task lookup.
+--- Only works after task_details is loaded (call after prepare_category_descriptions).
+local function merge_with_duplicates(tasks)
+    local primary_by_id = {}   -- task_id → first-seen task_obj (primary)
+    local seen_details  = {}   -- "task_id|norm_details" → key of first occurrence
+    local removed       = 0
+    local merged_count  = 0
+
+    -- Pre-populate from already-merged primaries (for re-merge after BG adds new tasks)
+    for _, t in ipairs(tasks) do
+        if t.has_variants and t.duplicates then
+            primary_by_id[t.task_id] = t
+            local norm = dedup_key_normalize(t.task_details)
+            seen_details[t.task_id .. "|" .. norm] = t.key
+            for _, dup in ipairs(t.duplicates) do
+                local dup_norm = dedup_key_normalize(dup.task_details)
+                seen_details[dup.task_id .. "|" .. dup_norm] = dup.key
+            end
+        end
+    end
+
+    local i = 1
+    while i <= #tasks do
+        local t = tasks[i]
+
+        if t.has_variants then
+            -- Already merged primary — skip
+            i = i + 1
+        else
+            local norm = dedup_key_normalize(t.task_details)
+            local dk   = t.task_id .. "|" .. norm
+
+            if not primary_by_id[t.task_id] then
+                -- First occurrence of this task_id — becomes primary
+                primary_by_id[t.task_id] = t
+                seen_details[dk] = t.key
+                i = i + 1
+
+            elseif seen_details[dk] then
+                -- Same task_id + same details as existing → exact duplicate, remove
+                Log.write("merge: removed key=%s (same task_id+details as key=%s)",
+                    tostring(t.key), tostring(seen_details[dk]))
+                entry_cache[t.key] = nil
+                table.remove(tasks, i)
+                removed = removed + 1
+
+            else
+                -- Same task_id but different details → variant
+                seen_details[dk] = t.key
+                local primary = primary_by_id[t.task_id]
+
+                if not primary.duplicates then
+                    primary.duplicates   = {}
+                    primary.has_variants = true
+                    merged_count = merged_count + 1
+                end
+
+                -- Keep in entry_cache for accept_task lookup
+                entry_cache[t.key] = t
+                table.insert(primary.duplicates, t)
+                table.remove(tasks, i)
+                -- Don't increment i — next item shifts into position
+            end
+        end
+    end
+
+    if removed > 0 or merged_count > 0 then
+        Log.write("merge: %d identical removed, %d multi-variant cards created", removed, merged_count)
+        active_category_dirty = true
+    end
+    return removed
+end
+
+-- Auto-Prepare Small Categories
+
+--- Auto-prepares descriptions for small categories (<= MAX_AUTO_PREPARE tasks).
+--- Called after Phase 1 (immediate) and Phase 2 (BG batch) so that small
+--- categories are fully populated without requiring a click.
+--- Skips categories where all tasks already have descriptions.
+local function auto_prepare_small_categories()
+    for effect_name, tasks in pairs(board_data) do
+        if #tasks <= MAX_AUTO_PREPARE then
+            local needs_prepare = false
+            for _, task_obj in ipairs(tasks) do
+                if not task_obj.task_description then
+                    needs_prepare = true
+                    break
+                end
+            end
+            if needs_prepare then
+                Log.write("auto_prepare: category=%s has %d tasks, preparing",
+                    effect_name, #tasks)
+                prepare_category_descriptions(tasks)
+                -- Clean up empty categories left by blacklist/merge removal
+                if #tasks == 0 then
+                    board_data[effect_name] = nil
+                    Log.write("auto_prepare: removed empty category=%s", effect_name)
+                end
+            end
+        end
+    end
+end
+
+-- Task Description Preparation (Heavy — Lazy Loaded on Click, Auto for Small Categories)
+
+--- Executes condlist/fetch logic for one task. Triggers give_talk_message2 intercepted by override module.
+local function prepare_task_description(task_obj)
+    Log.write("prepare_task_description: key=%s script=%s task_id=%s", tostring(task_obj.key), tostring(task_obj.script), tostring(task_obj.task_id))
+    currently_processed_npc_id = task_obj.npc_id
+
+    local task_id = task_obj.task_id
+    local task_ini = task_manager.task_ini
+
+    local on_job_descr = task_id and task_ini:r_string_ex(task_id, "on_job_descr")
+    if on_job_descr then
+        local cond = xr_logic.parse_condlist(db.actor, "task_manager", "condlist", on_job_descr)
+        if cond then
+            xr_logic.pick_section_from_condlist(db.actor, db.actor, cond)
+        end
+    end
+
+    local fetch_descr = task_id and task_ini:r_string_ex(task_id, "fetch_descr")
+    if fetch_descr then
+        axr_task_manager.trigger_fetch_func(task_id)
+    end
+
+    task_obj.task_description = get_long_task_description(task_obj)
+
+    currently_processed_npc_id = nil
+end
+
+function get_long_task_description(task_obj)
+    local is_mechanic = task_obj.task_id and task_obj.task_id:find("mechanic_task")
+    local base_desc = game.translate_string(
+        (not is_mechanic and axr_task_manager.get_fetch_task_description(task_obj.task_id))
+        or axr_task_manager.get_task_job_description(task_obj.task_id)
+    )
+    return strformat(base_desc, dialogs._FETCH_TEXT or "")
+end
+
+--- Loads descriptions for all tasks in a category (first click, or auto for small categories).
+--- Sets currently_processed_task_data + capture_next_flag so both direct and
+--- deferred give_talk_message2 calls store details directly into task_obj fields.
+--- Idempotent: skips tasks that already have task_description.
+function prepare_category_descriptions(tasks)
+    local to_prepare = 0
+    for _, task_obj in ipairs(tasks) do
+        if not task_obj.task_description then
+            to_prepare = to_prepare + 1
+        end
+    end
+    Log.write("prepare_category_descriptions: %d/%d tasks need preparation", to_prepare, #tasks)
+
+    z_taskboard_overrides.StartOverride()
+    for idx, task_obj in ipairs(tasks) do
+        if not task_obj.task_description then
+            currently_processed_task_data = task_obj
+            capture_next_flag = true
+
+            prepare_task_description(task_obj)
+
+            -- Capture save_var data while it still belongs to THIS NPC.
+            -- Next NPC's prepare_task_description may overwrite save_var
+            -- with same task_id (e.g. multiple simulation_task_52 from different NPCs).
+            task_obj.task_var = load_var(db.actor, task_obj.task_id)
+            if task_obj.task_var then
+                Log.write("task_var captured: key=%s script=%s",
+                    tostring(task_obj.key), tostring(task_obj.script))
+            end
+            -- Capture bounty target_id (bounties_by_id is per-task_id, last NPC wins)
+            if axr_task_manager and axr_task_manager.bounties_by_id and axr_task_manager.bounties_by_id[task_obj.task_id] then
+                task_obj.bounty_target_id = axr_task_manager.bounties_by_id[task_obj.task_id]
+            end
+            -- Capture fetch item data (fetch tasks use task_id.."_fetch" / task_id.."_fetch_count" keys)
+            -- Same overwrite problem as task_var: multiple NPCs with same task_id share one save_var slot.
+            if task_obj.script == "tasks_fetch" then
+                task_obj.fetch_sec   = load_var(db.actor, task_obj.task_id .. "_fetch")
+                task_obj.fetch_count = load_var(db.actor, task_obj.task_id .. "_fetch_count")
+                if task_obj.fetch_sec then
+                    Log.write("fetch captured: key=%s sec=%s count=%s",
+                        tostring(task_obj.key), tostring(task_obj.fetch_sec), tostring(task_obj.fetch_count))
+                end
+            end
+
+            capture_next_flag = false
+            currently_processed_task_data = nil
+        end
+    end
+    z_taskboard_overrides.StopOverride()
+
+    -- Execute deferred CTE(0) calls synchronously so captured details
+    -- are available in task_obj fields before DrawTaskList runs.
+    z_taskboard_overrides.ExecuteDeferredCalls()
+
+    -- Remove tasks blacklisted by their on_job_descr effects
+    local blacklisted = 0
+    local i = 1
+    while i <= #tasks do
+        if blacklist_helper.TaskBlacklist[tasks[i].task_id] then
+            table.remove(tasks, i)
+            blacklisted = blacklisted + 1
+        else
+            i = i + 1
+        end
+    end
+    if blacklisted > 0 then
+        Log.write("prepare_category_descriptions: removed %d blacklisted tasks", blacklisted)
+    end
+
+    -- Merge: group same task_id into multi-variant cards, remove exact duplicates
+    merge_with_duplicates(tasks)
+
+    Log.flush()
+end
+
+-- Task Detail Resolution
+
+--- Writes IGI details directly into task_obj. Returns true if IGI data was found.
+local function resolve_igi_details(task_obj)
+    if not igi_generic_task then return false end
+
+    local task_id = task_obj.task_id
+    local cache = task_id and igi_generic_task.TASK_SETUP[task_id]
+    if not cache then return false end
+
+    local fetch_section, fetch_amount
+
+    -- New IGI API
+    if igi_description and igi_description.get_task_text_values then
+        if cache.requirements and cache.entities then
+            for _, entity in ipairs(cache.entities) do
+                if entity.section_name then
+                    fetch_section = entity.section_name
+                    fetch_amount  = entity.amount or 1
+                    break
+                end
+            end
+        end
+
+        local title, text, icon = igi_description.get_task_text_values(cache)
+        local details_text = text or ""
+
+        if a_ui_pda_inventory_cache and fetch_section then
+            a_ui_pda_inventory_cache.register_fetch_task_params(task_id, fetch_section, fetch_amount)
+            local count_text = a_ui_pda_inventory_cache.get_cached_fetch_count_text(fetch_section, fetch_amount)
+            if count_text ~= "" then
+                details_text = details_text .. "\n" .. count_text
+            end
+        end
+
+        task_obj.task_title   = title
+        task_obj.task_details = details_text
+        task_obj.task_icon    = icon
+        task_obj.faulty       = (text:gsub("\\n", "") == "")
+        task_obj.wtf          = true
+        Log.write("resolve_igi_details: NEW api resolved key=%s", tostring(task_obj.key))
+        return true
+    end
+
+    -- Old IGI API
+    if igi_description and igi_description.get_postpone_intel then
+        if cache.setup then
+            for _, entry in pairs(cache.setup) do
+                if type(entry) == "table"
+                    and entry.entity_type == "item"
+                    and entry.section_name
+                then
+                    fetch_section = entry.section_name
+                    fetch_amount  = entry.amount or entry.how_much or 1
+                    break
+                end
+            end
+        end
+
+        local igi_details = igi_description.get_postpone_intel(cache)
+        local details_text = igi_details.text or ""
+
+        if a_ui_pda_inventory_cache and fetch_section then
+            a_ui_pda_inventory_cache.register_fetch_task_params(task_id, fetch_section, fetch_amount)
+            local count_text = a_ui_pda_inventory_cache.get_cached_fetch_count_text(fetch_section, fetch_amount)
+            if count_text ~= "" then
+                details_text = details_text .. "\n" .. count_text
+            end
+        end
+
+        task_obj.task_title   = igi_details.caption
+        task_obj.task_details = details_text
+        task_obj.task_icon    = igi_details.icon
+        task_obj.faulty       = (details_text:gsub("\\n", "") == "")
+        task_obj.wtf          = true
+        Log.write("resolve_igi_details: OLD api resolved key=%s", tostring(task_obj.key))
+        return true
+    end
+
+    Log.write("resolve_igi_details: no IGI api available for key=%s", tostring(task_obj.key))
+    return false
+end
+
+--- Resolves details for UI display. Reads/writes directly on task_obj.
+--- Returns task_obj if details found or faulty (task_obj.faulty=true), false if no details available.
+function get_task_details_for_ui(task_obj)
+    -- 1. Already captured (add_tasks_details wrote fields directly)
+    if task_obj.task_title or task_obj.task_details then
+        Log.write("get_task_details_for_ui: captured key=%s", tostring(task_obj.key))
+        return task_obj
+    end
+
+    -- 2. IGI system — writes into task_obj
+    if resolve_igi_details(task_obj) then
+        return task_obj
+    end
+
+    -- 3. Faulty: has_details=true but no data found anywhere
+    if task_obj.has_details then
+        task_obj.faulty = true
+        Log.write("get_task_details_for_ui: FAULTY key=%s task_id=%s on_job_descr=%s fetch_descr=%s",
+            tostring(task_obj.key), tostring(task_obj.task_id),
+            tostring(not not (task_obj.task_id and task_manager.task_ini:r_string_ex(task_obj.task_id, "on_job_descr"))),
+            tostring(not not (task_obj.task_id and task_manager.task_ini:r_string_ex(task_obj.task_id, "fetch_descr")))
+        )
+        return task_obj
+    end
+
+    Log.write("get_task_details_for_ui: no details key=%s", tostring(task_obj.key))
+    return false
+end
+
+-- Active Task Management
+
+cancel_tasks = {}
+
+function get_active_game_tasks()
+    local tm = task_manager.get_task_manager()
+    if not tm then return {} end
+
+    local tasks = {}
+    for task_id, task in pairs(tm.task_info) do
+        if task and task.t then
+            tasks[task_id] = task
+        end
+    end
+    return tasks
+end
+
+function purge_stale_cancel_entries()
+    local active = get_active_game_tasks()
+    local i = 1
+    local purged = 0
+    while i <= #cancel_tasks do
+        if not active[cancel_tasks[i].task_id] then
+            Log.write("purge_stale_cancel_entries: purging key=%s task_id=%s", tostring(cancel_tasks[i].key), tostring(cancel_tasks[i].task_id))
+            table.remove(cancel_tasks, i)
+            purged = purged + 1
+        else
+            i = i + 1
+        end
+    end
+    if purged > 0 then
+        Log.write("purge_stale_cancel_entries: purged %d stale entries, remaining=%d", purged, #cancel_tasks)
+    end
+end
+
+--- Removes all tasks with the same task_id from board_data (duplicate quest slots).
+--- Called after accept_task since only one instance of a task_id can be active.
+local function remove_duplicate_tasks(task_id, exclude_key)
+    local removed = 0
+    for cat_name, tasks in pairs(board_data) do
+        local i = 1
+        while i <= #tasks do
+            if tasks[i].task_id == task_id and tasks[i].key ~= exclude_key then
+                Log.write("remove_duplicate_tasks: removed key=%s (same task_id=%s as accepted)",
+                    tostring(tasks[i].key), tostring(task_id))
+                table.remove(tasks, i)
+                removed = removed + 1
+            else
+                i = i + 1
+            end
+        end
+        if #tasks == 0 then
+            board_data[cat_name] = nil
+        end
+    end
+    if removed > 0 then
+        Log.write("remove_duplicate_tasks: %d duplicates removed for task_id=%s", removed, tostring(task_id))
+        board_dirty = true
+    end
+    return removed
+end
+
+--- Accepts a task by its unique key. Copies task_obj for cancel_tasks (shallow copy).
+function accept_task(key)
+    local task_obj = entry_cache[key]
+    if not task_obj then
+        Log.write("accept_task: key=%s NOT FOUND in entry_cache", tostring(key))
+        return
+    end
+
+    Log.write("accept_task: key=%s script=%s task_id=%s npc_id=%s", tostring(key), tostring(task_obj.script), tostring(task_obj.task_id), tostring(task_obj.npc_id))
+
+    -- Write back this NPC's task_var before give_task so the correct
+    -- save_var is active (another NPC with same task_id may have overwritten it).
+    if task_obj.task_var then
+        save_var(db.actor, task_obj.task_id, task_obj.task_var)
+        Log.write("accept_task: wrote task_var for key=%s", tostring(key))
+    end
+    -- Restore bounty target_id so the correct target is assigned
+    if task_obj.bounty_target_id and axr_task_manager and axr_task_manager.bounties_by_id then
+        axr_task_manager.bounties_by_id[task_obj.task_id] = task_obj.bounty_target_id
+        Log.write("accept_task: wrote bounty_target_id=%s for key=%s",
+            tostring(task_obj.bounty_target_id), tostring(key))
+    end
+    -- Write fetch data back so the correct item is active
+    if task_obj.fetch_sec then
+        save_var(db.actor, task_obj.task_id .. "_fetch", task_obj.fetch_sec)
+        if task_obj.fetch_count then
+            save_var(db.actor, task_obj.task_id .. "_fetch_count", task_obj.fetch_count)
+        end
+        Log.write("accept_task: wrote fetch for key=%s sec=%s count=%s",
+            tostring(key), tostring(task_obj.fetch_sec), tostring(task_obj.fetch_count))
+    end
+
+    currently_processed_npc_id = task_obj.npc_id
+    task_manager.get_task_manager():give_task(task_obj.task_id, task_obj.npc_id)
+    currently_processed_npc_id = nil
+
+    -- Restore task_var if give_task's on_init overwrote it with different values
+    if task_obj.task_var then
+        local new_var = load_var(db.actor, task_obj.task_id)
+        if new_var then
+            local changed = false
+            if type(task_obj.task_var) == "table" then
+                for k, v in pairs(task_obj.task_var) do
+                    if new_var[k] ~= v then changed = true; break end
+                end
+            else
+                -- Non-table task_var (boolean, number, string): compare directly
+                if new_var ~= task_obj.task_var then changed = true end
+            end
+            if changed then
+                save_var(db.actor, task_obj.task_id, task_obj.task_var)
+                Log.write("accept_task: restored task_var for key=%s", tostring(key))
+            end
+        end
+    end
+    -- Restore bounty target_id if give_task overwrote it
+    if task_obj.bounty_target_id and axr_task_manager and axr_task_manager.bounties_by_id then
+        if axr_task_manager.bounties_by_id[task_obj.task_id] ~= task_obj.bounty_target_id then
+            axr_task_manager.bounties_by_id[task_obj.task_id] = task_obj.bounty_target_id
+            Log.write("accept_task: restored bounty_target_id=%s for key=%s",
+                tostring(task_obj.bounty_target_id), tostring(key))
+        end
+    end
+    -- Restore fetch data if give_task overwrote it
+    if task_obj.fetch_sec then
+        local new_sec = load_var(db.actor, task_obj.task_id .. "_fetch")
+        if new_sec ~= task_obj.fetch_sec then
+            save_var(db.actor, task_obj.task_id .. "_fetch", task_obj.fetch_sec)
+            if task_obj.fetch_count then
+                save_var(db.actor, task_obj.task_id .. "_fetch_count", task_obj.fetch_count)
+            end
+            Log.write("accept_task: restored fetch for key=%s sec=%s",
+                tostring(key), tostring(task_obj.fetch_sec))
+        end
+    end
+
+    -- Update NPC info in case it changed since scan
+    local npc = level.object_by_id(task_obj.npc_id)
+    if npc then
+        task_obj.npc_name      = npc:character_name()
+        task_obj.npc_community = npc:character_community()
+        task_obj.npc_icon      = npc:character_icon()
+    end
+
+    table.insert(cancel_tasks, copy_for_cancel(task_obj))
+
+    -- Remove other tasks with same task_id (only one instance can be active)
+    remove_duplicate_tasks(task_obj.task_id, task_obj.key)
+
+    Log.write("accept_task: done, cancel_tasks count=%d", #cancel_tasks)
+end
+
+function get_cancel_task_npc_name(key)
+    for _, entry in ipairs(cancel_tasks) do
+        if entry.key == key then
+            if entry.npc_name and entry.npc_name ~= "" then
+                Log.write("get_cancel_task_npc_name: key=%s -> npc_name=%s", tostring(key), tostring(entry.npc_name))
+                return entry.npc_name
+            end
+            local npc = entry.npc_id and level.object_by_id(entry.npc_id)
+            if npc then
+                local name = npc:character_name()
+                Log.write("get_cancel_task_npc_name: key=%s -> live_npc=%s", tostring(key), tostring(name))
+                return name
+            end
+            Log.write("get_cancel_task_npc_name: key=%s -> fallback task_id=%s", tostring(key), tostring(entry.task_id))
+            return entry.task_id
+        end
+    end
+    Log.write("get_cancel_task_npc_name: key=%s NOT FOUND", tostring(key))
+    return key
+end
+
+entry_cache = {}
+
+function clear_cached_data()
+    Log.write("clear_cached_data")
+    entry_cache       = {}
+    capture_next_flag = false
+
+    if a_ui_pda_inventory_cache then
+        a_ui_pda_inventory_cache.clear_fetch_task_params()
+    end
+end
+
+-- Dirty Flags (read by UI, set by data layer)
+
+board_dirty           = false  -- full rebuild of categories + task list
+categories_dirty      = false  -- incremental category update (new from BG)
+active_category_dirty = false  -- active category got new tasks, needs re-render
+
+-- Background Generation
+
+--- BG status for UI to display progress counter.
+bg_status = { processed = 0, total = 0 }
+
+--- BG state: new refresh cancels any running process by incrementing generation.
+local bg_state = {
+    generation      = 0,
+    batch_counter   = 0,
+    queue           = {},
+    total_bg_npcs   = 0,
+    processed_npcs  = 0,
+}
+
+local function update_bg_status()
+    local state = bg_state
+    local processed = state.processed_npcs
+    local total     = state.total_bg_npcs
+
+    bg_status.processed = processed
+    bg_status.total     = total
+end
+
+--- Processes one background batch. Called via pcall wrapper (process_background_batch)
+--- to avoid killing the CTE chain on error.
+local function do_background_batch()
+    local state = bg_state
+    local current_gen = state.generation
+    local queue = state.queue
+
+    if current_gen ~= bg_state.generation then
+        Log.write("BG: stale callback gen=%d current=%d -- skipped", current_gen, bg_state.generation)
+        return
+    end
+    if not queue or #queue == 0 then
+        Log.write("BG: empty queue gen=%d -- done", current_gen)
+        update_bg_status()
+        return
+    end
+
+    local threshold = config.bg_npcs_per_frame or BG_NPCS_PER_FRAME
+    local remaining = #queue
+    local batch = {}
+    for i = 1, math.min(threshold, remaining) do
+        table.insert(batch, table.remove(queue, 1))
+    end
+    state.processed_npcs = state.processed_npcs + #batch
+
+    local t0 = os.clock()
+    generate_tasks_for_npcs(batch)
+    local t_gen = os.clock()
+
+    -- Merge new tasks into existing board_data
+    local new_data = get_prepared_task_data(batch)
+    local existing = board_data
+    if type(existing) ~= "table" then existing = {} end
+
+    local new_task_count = 0
+    local dedup_skipped = 0
+    for effect_name, tasks in pairs(new_data) do
+        if not existing[effect_name] then
+            existing[effect_name] = {}
+        end
+        for _, task_obj in ipairs(tasks) do
+            -- Soft dedup: skip only if exact same key (same NPC + same task_id) already exists.
+            -- Same task_id from different NPCs are kept — they become variants after merge.
+            local is_dup = false
+            for _, existing_task in ipairs(existing[effect_name]) do
+                if existing_task.key == task_obj.key then
+                    Log.write("BG dedup: skipped key=%s (exact duplicate)", tostring(task_obj.key))
+                    entry_cache[task_obj.key] = nil
+                    is_dup = true
+                    dedup_skipped = dedup_skipped + 1
+                    break
+                end
+            end
+            if not is_dup then
+                table.insert(existing[effect_name], task_obj)
+                new_task_count = new_task_count + 1
+            end
+        end
+    end
+    if dedup_skipped > 0 then
+        Log.write("BG dedup: %d identical tasks skipped during merge", dedup_skipped)
+    end
+
+    filter_valid_tasks(existing)
+    local t_merge = os.clock()
+
+    local total_tasks = 0
+    local total_categories = 0
+    for effect_name, tasks in pairs(existing) do
+        total_categories = total_categories + 1
+        total_tasks = total_tasks + #tasks
+    end
+
+    board_data = existing
+
+    -- Set dirty flags instead of calling UI directly
+    if new_task_count > 0 then
+        categories_dirty = true
+        active_category_dirty = true
+    end
+
+    -- Auto-prepare descriptions for small categories
+    auto_prepare_small_categories()
+
+    local t_flags = os.clock()
+
+    Log.write("BG: gen=%d batch=%d/%d | gen=%.1fms merge=%.1fms flags=%.1fms total=%.1fms | +tasks=%d total=%d/%d%s",
+        current_gen, #batch, threshold,
+        (t_gen - t0) * 1000, (t_merge - t_gen) * 1000,
+        (t_flags - t_merge) * 1000, (t_flags - t0) * 1000,
+        new_task_count, total_tasks, total_categories,
+        new_task_count == 0 and " (skip redraw)" or "")
+
+    Log.flush()
+    update_bg_status()
+
+    if #queue > 0 then
+        bg_state.batch_counter = bg_state.batch_counter + 1
+        local interval = config.bg_frame_interval or BG_FRAME_INTERVAL
+        z_taskboard_overrides.original_CreateTimeEvent(
+            "z_taskboard_bg", "b" .. current_gen .. "_" .. bg_state.batch_counter,
+            interval, process_background_batch
+        )
+    else
+        Log.write("BG: gen=%d complete -- all background NPCs processed", current_gen)
+    end
+end
+
+--- CTE callback: wraps batch in pcall to keep chain alive on error.
+function process_background_batch()
+    local ok, err = pcall(do_background_batch)
+    if not ok then
+        Log.write("BG ERROR: %s", tostring(err))
+        local queue = bg_state.queue
+        if queue and #queue > 0 then
+            bg_state.batch_counter = bg_state.batch_counter + 1
+            local interval = config.bg_frame_interval or BG_FRAME_INTERVAL
+            Log.write("BG: recovering after error, remaining=%d", #queue)
+            z_taskboard_overrides.original_CreateTimeEvent(
+                "z_taskboard_bg", "b" .. bg_state.generation .. "_" .. bg_state.batch_counter,
+                interval, process_background_batch
+            )
+        else
+            Log.write("BG: no more NPCs after error -- stopping")
+        end
+    end
+    return true
+end
+
+--- Cancels running BG generation by bumping generation; stale callbacks exit on mismatch.
+local function cancel_background_generation()
+    bg_state.generation = bg_state.generation + 1
+    bg_state.queue = {}
+    Log.write("cancel_background_generation: gen=%d", bg_state.generation)
+end
+
+-- Reset Pipeline
+
+--- Board refresh: nearest NPCs immediate, rest in BG. Descriptions loaded lazily on click,
+--- or auto-prepared for small categories (<= MAX_AUTO_PREPARE tasks).
+--- No UI calls -- sets dirty flags for UI to pick up in Update().
+function reset_taskboard()
+    local current_time = time_global()
+    if current_time - last_refresh_time < REFRESH_COOLDOWN * 1000 then
+        Log.write("reset_taskboard: cooldown, skipping")
+        return
+    end
+    last_refresh_time = current_time
+
+    cancel_background_generation()
+
+    clear_cached_data()
+    purge_stale_cancel_entries()
+
+    Log.write("=== new refresh ===")
+
+    local t_start = os.clock()
+    local npc_list = scan_nearby_npcs()
+    local t_scan = os.clock()
+
+    -- Split into immediate and background groups
+    local threshold = config.immediate_npc_threshold or IMMEDIATE_NPC_THRESHOLD
+    local immediate_npcs = {}
+    local background_npcs = {}
+    for i, npc in ipairs(npc_list) do
+        if i <= threshold then
+            table.insert(immediate_npcs, npc)
+        else
+            table.insert(background_npcs, npc)
+        end
+    end
+
+    -- Phase 1: generate tasks for nearest NPCs
+    generate_tasks_for_npcs(immediate_npcs)
+    local t_gen = os.clock()
+
+    -- Phase 2: build category structure from immediate NPCs
+    board_data = get_prepared_task_data(immediate_npcs)
+    filter_valid_tasks(board_data)
+    auto_prepare_small_categories()
+    local t_prep = os.clock()
+
+    local imm_tasks = 0
+    local imm_cats = 0
+    for effect_name, tasks in pairs(board_data) do
+        imm_cats = imm_cats + 1
+        imm_tasks = imm_tasks + #tasks
+    end
+
+    -- Set dirty flag -- UI will pick this up in Update()
+    board_dirty = true
+
+    local t_draw = os.clock()
+
+    Log.write("IMMEDIATE | scan=%.1fms gen=%.1fms prep=%.1fms draw=%.1fms FREEZE=%.1fms | npcs=%d/%d tasks=%d/%d",
+        (t_scan - t_start) * 1000, (t_gen - t_scan) * 1000,
+        (t_prep - t_gen) * 1000, (t_draw - t_prep) * 1000,
+        (t_draw - t_start) * 1000,
+        #immediate_npcs, #background_npcs, imm_tasks, imm_cats)
+
+    -- Phase 3: queue remaining NPCs for BG processing
+    if #background_npcs > 0 then
+        bg_state.generation = bg_state.generation + 1
+        bg_state.batch_counter = 0
+        bg_state.queue = background_npcs
+        bg_state.total_bg_npcs = #background_npcs
+        bg_state.processed_npcs = 0
+
+        update_bg_status()
+
+        local interval = config.bg_frame_interval or BG_FRAME_INTERVAL
+        Log.write("BACKGROUND | gen=%d npcs=%d per_frame=%d interval=%.2fs",
+            bg_state.generation, #background_npcs,
+            config.bg_npcs_per_frame or BG_NPCS_PER_FRAME, interval)
+        bg_state.batch_counter = 1
+        z_taskboard_overrides.original_CreateTimeEvent(
+            "z_taskboard_bg", "b" .. bg_state.generation .. "_1", interval,
+            process_background_batch
+        )
+    else
+        bg_status.processed = 0
+        bg_status.total = 0
+    end
+
+    Log.flush()
+end
+
+-- Save / Load
+
+local SAVE_VERSION = 1
+local SAVE_KEY     = "tb_cancel_tasks"
+
+local function on_save_state(m)
+    local tasks = {}
+    for _, obj in ipairs(cancel_tasks) do
+        table.insert(tasks, copy_task_obj(obj))
+    end
+    m[SAVE_KEY] = {
+        version = SAVE_VERSION,
+        data    = tasks,
+    }
+    Log.write("on_save_state: saved %d cancel tasks", #cancel_tasks)
+end
+
+local function on_load_state(m)
+
+    local saved = m[SAVE_KEY]
+    if type(saved) ~= "table" then return end
+    if saved.version ~= SAVE_VERSION then
+        Log.write("on_load_state: old cancel_tasks version %s, discarding", tostring(saved.version))
+        m[SAVE_KEY] = nil
+        return
+    end
+
+    cancel_tasks = {}
+    for _, obj in ipairs(saved.data or {}) do
+        if obj.key and obj.task_id then
+            table.insert(cancel_tasks, obj)
+        end
+    end
+    Log.write("on_load_state: loaded %d cancel tasks", #cancel_tasks)
+end
+
+-- Entry Point
+
+local function on_settings_loaded()
+    load_config()
+end
+
+function on_game_start()
+    RegisterScriptCallback("save_state", on_save_state)
+    RegisterScriptCallback("load_state", on_load_state)
+    RegisterScriptCallback("on_game_load", on_settings_loaded)
+    RegisterScriptCallback("on_option_change", on_settings_loaded)
+    Log.write("on_game_start: registered callbacks")
+end

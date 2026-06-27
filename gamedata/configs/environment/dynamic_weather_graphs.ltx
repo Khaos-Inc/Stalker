@@ -1,0 +1,115 @@
+; AtmosFear 3 by Cromm Cruac
+
+; Tronex
+; 2018/2019
+; Global Weather
+; support for Weather cycles and presets
+
+; Every cycle has presets, those presets represent the weather files (match their names so the script will read them correctly)
+; You can have as much as you want of cycles and presets for them
+
+; Example of weather preset/profile: w_cloudy.ltx
+; Naming rule: w_(cycle preset)_(moon pharse)
+; Directory: environment\weathers\
+
+; cycle preset: a name of your choice, its better to have the cycle name included. like foggy_01 and foggy_02
+; moon pharse: only needed for clear and partly presets, used to detemind the moon pharse for the weather preset
+; NOTE: add your new presets to [dof_kernels] section too, this will help with extra weather effects based on preset parameters (and prevent crashes)
+
+
+;------------------------------------------
+;-- Weather cycles
+;------------------------------------------
+[weather_cycles]
+clear
+partly
+cloudy
+rain
+storm
+foggy
+dream
+
+;------------------------------------------
+;-- Presets per cycle
+;------------------------------------------
+[cycle_clear]
+w_clear1
+w_clear2
+w_clear3
+w_clear4
+w_clear5
+
+[cycle_partly]
+w_partly1
+w_partly2
+w_partly3
+w_partly4
+w_partly5
+
+[cycle_dream]
+w_dream1
+
+[cycle_cloudy]
+w_cloudy1
+w_cloudy1_light
+w_cloudy1_dark
+w_cloudy2
+w_cloudy2_dark
+w_cloudy2_light
+w_cloudy3
+w_cloudy3_light
+w_cloudy3_dark
+
+[cycle_rain]
+w_rain1
+w_rain2
+w_rain3
+w_rain4
+w_rain5
+
+[cycle_storm]
+w_storm1
+w_storm2
+w_storm3
+w_storm4
+
+[cycle_foggy]
+w_foggy1
+w_foggy2
+w_foggy3
+w_foggy4
+w_foggy5
+w_foggy5_alt
+
+[cycle_pre_blowout] ;-- special, only used before emission/psi-storm event
+w_rain1
+
+
+;------------------------------------------
+;-- Weather parameter modifiers
+;------------------------------------------
+
+;------------------------------------------
+;-- DoF kernals, used for effects
+;------------------------------------------
+
+;------------------------------------------
+;-- Distant storm sounds
+;------------------------------------------
+[distant_storm_sounds]
+nature\pre_storm_6
+nature\pre_storm_7
+nature\pre_storm_8
+nature\pre_storm_9
+nature\pre_storm_10
+nature\pre_storm_11
+nature\pre_storm_12
+nature\pre_storm_new_1
+nature\pre_storm_new_2
+nature\pre_storm_new_3
+nature\pre_storm_new_4
+nature\pre_storm_new_5
+nature\pre_storm_new_6
+nature\pre_storm_new_7
+nature\pre_storm_new_8
+nature\pre_storm_new_9

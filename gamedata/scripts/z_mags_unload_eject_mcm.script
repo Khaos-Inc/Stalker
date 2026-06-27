@@ -1,0 +1,95 @@
+--[[
+Built from Stimpestamp's Hover Drop and Disassemble Hotkey mod
+https://www.moddb.com/mods/stalker-anomaly/addons/drop-and-disassemble-hotkey
+All props for coding go to that mod
+
+I just removed the drop and disassemble and added in the mag unload and eject part
+
+]]
+
+local mcm_keybinds = ui_mcm and ui_mcm.key_hold
+local KEY_UNLOAD = DIK_keys.DIK_C
+
+function on_mcm_load()
+    return {
+        id = "mags_unload_eject",
+        sh = true,
+        gr = {
+            {id = "title", type = "slide", link = "ui_options_slider_player", text = "Unload Eject Mag", size = {512, 50}, spacing = 20},
+			{id = "key_unload", type = "key_bind", val = 2, def = KEY_UNLOAD},
+        }
+    }
+end
+
+local function on_option_change(mcm)
+    if mcm then
+		KEY_UNLOAD = ui_mcm.get("mags_unload_eject/key_unload") or KEY_UNLOAD
+    end
+end
+
+local function tablelength(T)
+	local count = 0
+	for _ in pairs(T) do count = count + 1 end
+	return count
+end
+
+-- find all slots, if selected item has same ID -> stop
+local function if_in_inventory(obj_inp)
+	for i = 0, tablelength(_G.SCANNED_SLOTS) + 1, 1 do
+		local tmp = db.actor:item_in_slot(i)
+		if tmp and obj_inp:id() == tmp:id() then
+			return true
+		end
+	end
+	return false
+end
+
+-- get item the mouse is over
+local function get_hover()
+	local bag = ui_inventory.GUI.hover.bag
+	local idx = ui_inventory.GUI.hover.idx
+	if idx then
+		return ui_inventory.GUI.CC[bag]:GetObj(idx)
+	end
+end
+
+function unloadeject(obj, lootMode, dik)
+    if magazine_binder.is_magazine(obj) then
+        magazines.func_unload_ammo(obj)
+    elseif magazine_binder.is_supported_weapon(obj) then
+        magazines.eject_magazine(obj)
+    end
+end
+
+function handle_KeyPress(dik, lootMode)
+	local obj = get_hover()
+	if not obj then 
+		return
+	end
+	if dik == KEY_UNLOAD then
+		unloadeject(obj, lootMode, dik)
+	end
+end
+
+local original_OnKeyboard = ui_inventory and ui_inventory.UIInventory and ui_inventory.UIInventory.OnKeyboard
+
+function ui_inventory.UIInventory:OnKeyboard(dik, keyboard_action)
+	-- call original with proper self
+	local res = original_OnKeyboard(self, dik, keyboard_action)
+
+	if keyboard_action == ui_events.WINDOW_KEY_PRESSED then
+
+		lootMode = ui_inventory.GUI.mode or nil
+		-- ignore trade and other modes
+		if lootMode == "inventory" or lootMode == "loot" then
+			handle_KeyPress(dik, lootMode)
+		end
+	end
+
+	return res
+end
+
+function on_game_start()
+	RegisterScriptCallback("on_option_change",on_option_change)
+	on_option_change(mcm_keybinds)
+end

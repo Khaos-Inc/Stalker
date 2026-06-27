@@ -1,0 +1,121 @@
+local cvars_3db = {
+    g_firepos = 0,
+    g_firepos_zoom = 0,
+    g_aimpos = 0,
+    g_aimpos_zoom = 0,
+}
+
+-- rewritten to use an external cache to store old 3db values by Verdatim 16/5/2026
+-- credits to whoever created the original
+
+local ini_cache = ini_file("ubgl_no_3db_settings_cache.ltx")
+
+-- turn this to true for some extra info for debugging
+DEBUG = false
+
+function dbg_print(text, ...)
+	if DEBUG then
+		printf("[ubgl_no_3db]: " .. text, ...)
+	end
+end
+
+function dbg_print_table(id, tbl)
+	if DEBUG then
+		printf("table id is %s", id)
+		print_r(tbl)
+	end
+end
+
+local saved_settings = {}
+
+function set_saved_settings()
+	local path = getFS():update_path('$game_config$', '') .. "ubgl_no_3db_settings_cache.ltx"
+	local ltx = io.open(path, "r")
+	if not ltx then return end
+	local text = ltx:read("*all")
+	ltx:close()
+	dbg_print("text is %s", text)
+	local params = str_explode(text, "\n")
+	dbg_print_table("text_table", params)
+	for i, v in pairs(params) do
+		local tbl = str_explode(v, "=")
+		cmd = tbl[1]
+		val = tbl[2]
+		if cmd and val then
+			exec_console_cmd(cmd..' '..val)
+		end
+	end
+end
+
+function temp_disable_3db_on_gl(obj, previous, current)
+    if current == 2 and previous ~= current then	
+        for cmd in pairs(cvars_3db) do
+            exec_console_cmd(cmd..' off')
+        end
+    else
+        set_saved_settings(); dbg_print("set_saved_settings called (temp_disable_3db_on_gl)")
+    end
+end
+
+function main_menu_on_init()
+	dbg_print("main menu on init called")
+	set_saved_settings(); dbg_print("set_saved_settings called (main_menu_on_init)")
+end
+
+function return_temp_settings()
+	dbg_print("return temp settings called")
+	nextTick(function()
+		local tbl = {}
+		tbl.anm_name = "anm_show"
+		local obj = db.actor:active_item()
+		if not obj then return end
+		check_for_gl_show_and_hide(tbl, obj)
+		return true
+	end)
+end
+
+function on_game_load()
+	dbg_print("on game load called")
+	nextTick(function()
+		local tbl = {}
+		tbl.anm_name = "anm_show"
+		local obj = db.actor:active_item()
+		if not obj then return end
+		check_for_gl_show_and_hide(tbl, obj)
+		return true
+	end)
+end
+
+function on_game_start()
+    RegisterScriptCallback('actor_on_weapon_zoom_type_changed', temp_disable_3db_on_gl)
+	RegisterScriptCallback("main_menu_on_init", main_menu_on_init)
+	RegisterScriptCallback("main_menu_on_quit", return_temp_settings)
+	RegisterScriptCallback("on_game_load", on_game_load)
+	RegisterScriptCallback("actor_on_hud_animation_play", check_for_gl_show_and_hide)
+	RegisterScriptCallback("on_option_change", on_option_change)
+	RegisterScriptCallback("on_before_level_changing", set_saved_settings)
+	RegisterScriptCallback("on_before_load_input", set_saved_settings)
+	
+end
+
+function on_option_change()
+	dbg_print("get_current_settings called on on_option_change")
+	local path = getFS():update_path('$game_config$', '') .. "ubgl_no_3db_settings_cache.ltx"
+	local ltx = io.open(path, "w")
+	if not ltx then return end
+	for cmd, typ in pairs(cvars_3db) do
+		ltx:write(cmd .. " = " .. get_console_cmd(typ, cmd) .. "\n")
+    end
+	ltx:close()
+end
+
+function check_for_gl_show_and_hide(anim_table, obj, owner)
+	if starts_with(anim_table.anm_name, "anm_hide") then
+		set_saved_settings(); dbg_print("set_saved_settings called")
+	end
+	if starts_with(anim_table.anm_name, "anm_show") and (obj:is_weapon() and obj:weapon_is_grenadelauncher() and obj:cast_WeaponMagazinedWGrenade() and obj:cast_WeaponMagazinedWGrenade():GetGrenadeLauncherMode()) then
+		-- bloody hidden engine methods
+		dbg_print("grenade launcher mode is %s", obj:cast_WeaponMagazinedWGrenade():GetGrenadeLauncherMode())
+		temp_disable_3db_on_gl(obj, 0, 2)
+	end
+end

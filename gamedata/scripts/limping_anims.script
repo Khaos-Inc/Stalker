@@ -1,0 +1,135 @@
+--DIFFERENT LIMPING STATES
+--BY VODOXLEB
+----------------------------------------------------------------------------------------------------------------------
+-- STATES
+----------------------------------------------------------------------------------------------------------------------
+
+function add_animation_list()
+	return {
+		heal_bandage	= { prop	= { maxidle = 0,sumidle = 0,rnd = 100 },
+						into	= { [0]	= {"norm_torso_12_draw_0", {a="bandage_script"}}},
+						out		= { [0]	= {"norm_torso_12_holster_0", {d="bandage_script"}}},
+						idle	= { [0]	= "norm_torso_12_attack_0"},
+						rnd = nil
+		},
+		heal_medkit	= { prop	= { maxidle = 0,sumidle = 0,rnd = 100 },
+						into	= { [0]	= {"dmg_norm_torso_11_draw_0", {a="injector_script"}}},
+						out		= { [0]	= {"dmg_norm_torso_11_draw_0", {d="injector_script"}}},
+						idle	= { [0]	= "dmg_norm_torso_11_attack_0"},
+						rnd = nil
+		},
+		wounded_heavy_4 = { prop	= { maxidle = 5,
+									sumidle = 10,
+									rnd = 70 },
+						into	= { [0]	= {"idle_to_wounded_3"}},
+						out		= { [0]	= {"wounded_3_out"}},
+						idle	= { [0]	= {"wounded_pomosh_0"} },
+						rnd		= nil 
+		},
+		wounded_monser	= { prop	= { maxidle = 0,sumidle = 0,rnd = 100 },
+						into	= { [0]	= {"idle_to_wounded_0","wounded_monser_0"}},
+						out		= { [0]	= {"wounded_monser_2","wounded_to_idle_0"}},
+						idle	= { [0]	= {"wounded_monser_2"} },
+						rnd		= { [0]	= {"wounded_monser_1"}}
+		},
+		wounded_wait		= {	prop	= { maxidle = 10,sumidle = 10,rnd = 80 },
+						into	= { [0]	= {"idle_to_wounded_0"}},
+						out		= { [0]	= {"wounded_to_idle_0"}},
+						idle	= { [0]	= {"wounded_idle_0"} },
+						rnd		= { [0]	= {"wounded_opasno_0","wounded_ruka_0"}}
+		},
+		damaged_walk	= {	prop	= { maxidle = 0,sumidle = 1,rnd = 100 },
+						into	= nil,
+						out	= nil,
+						idle	= { [0] =	"dmg_norm_torso_0_walk_0",	-- _1 - медленный шаг
+								[1] =	"dmg_norm_torso_1_walk_0",
+								[2] =	"dmg_norm_torso_2_walk_0",
+								[3] =	"dmg_norm_torso_3_walk_0",
+								[4] =	"dmg_norm_torso_4_walk_0",
+								[6] =	"dmg_norm_torso_6_walk_0",
+								[8] =	"dmg_norm_torso_8_walk_0",
+								[9] =	"dmg_norm_torso_9_walk_0",
+								[10]=	"dmg_norm_torso_10_walk_0"},
+						rnd	= nil
+		},
+		damaged_run	= {	prop	= { maxidle = 0,sumidle = 1,rnd = 100 },
+						into	= nil,
+						out	= nil,
+						idle	= { [0] =	"dmg_norm_torso_0_run_0",
+								[1] =	"dmg_norm_torso_1_run_0",
+								[2] =	"dmg_norm_torso_2_run_0",
+								[3] =	"dmg_norm_torso_3_run_0",
+								[4] =	"dmg_norm_torso_4_run_0",
+								[6] =	"dmg_norm_torso_6_run_0",
+								[8] =	"dmg_norm_torso_8_run_0",
+								[9] =	"dmg_norm_torso_9_run_0",
+								[10]=	"dmg_norm_torso_10_run_0"},
+						rnd	= nil
+		}
+	}
+end
+--copy_table(state_mgr_animation_list.animations, add_animation_list())
+state_lib.states.limping_run = {
+				weapon = nil, --"none"
+				movement = move.run,
+				mental = anim.free,
+				bodystate = move.standing,
+				animstate = nil,
+				animation = "damaged_run"
+}
+state_lib.states.limping_walk = {
+				weapon = nil, --"none", --"drop",
+				movement = move.walk,
+				mental = anim.free,
+				bodystate = move.standing,
+				animstate = nil,
+				animation = "damaged_walk"
+}
+state_lib.states.wounded_wait = {
+				weapon = "none",
+				movement = move.stand,
+				mental = anim.danger,
+				bodystate = move.crouch,
+				animstate = nil,
+				animation = "wounded_wait"
+}
+
+
+
+state_lib.states.bandage_heal = {
+				weapon = "none",
+				movement = move.stand,
+				mental = anim.free,
+				bodystate = move.standing,
+				direction = look.cur_dir,
+				animstate = nil,
+				animation = "heal_bandage",
+}
+
+state_lib.states.medkit_heal = {
+				weapon = "none",
+				movement = move.stand,
+				mental = anim.free,
+				bodystate = move.standing,
+				direction = look.cur_dir,
+				animstate = nil,
+				animation = "heal_medkit",
+}
+
+state_lib.states.wounded_monser = {
+				weapon = "none",
+				movement = move.stand,
+				mental = anim.danger,
+				bodystate = move.crouch,
+				animstate = nil,
+				animation = "wounded_monser"
+}
+
+state_lib.states.wounded_heavy_4 = { weapon = "none",
+				movement = move.stand,
+				mental = anim.danger,
+				bodystate = move.crouch,
+				direction = look.cur_dir,
+				animstate = nil,
+				animation = "wounded_heavy_4"
+}

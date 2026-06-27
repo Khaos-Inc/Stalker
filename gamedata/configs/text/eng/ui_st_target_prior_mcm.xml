@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="windows-1251"?>
+
+<!-- 
+	MCM
+-->
+<string_table>
+
+
+	<string id="ui_mcm_target_prior_title">
+		<text>NPC travelling</text>
+	</string>
+	<string id="ui_mcm_menu_target_prior">
+		<text>NPC travelling</text>
+	</string>
+
+	<!-- prior -->
+	<string id="ui_mcm_target_prior_prior_header">
+		<text>Travel priority</text>
+	</string>
+
+	<string id="ui_mcm_target_prior_ignore_best_target">
+		<text>Chance to not pick best target</text>
+	</string>
+	<string id="ui_mcm_target_prior_ignore_best_target_desc">
+		<text>From five targets with highest priority: \n 
+				"1" means that NPC will always pick random and travel more; \n 
+				"0" means that NPC will most likely stay on same favorite place.</text>
+	</string>
+
+	<string id="ui_mcm_target_prior_dist_ext">
+		<text>Distance power</text>
+	</string>
+	<string id="ui_mcm_target_prior_dist_ext_desc">
+		<text>How distance affect priority: \n 
+				"0" disables distance to be factor for priority, meaning more chaotic NPC movement.</text>
+	</string>
+
+	<string id="ui_mcm_target_prior_random_range">
+		<text>More randomness</text>
+	</string>
+	<string id="ui_mcm_target_prior_random_range_desc">
+		<text>Random range for every possible target: \n 
+				"0" is no random; \n 
+				"0.25" will pick a random number from 0.75 and 1.25 and multiply each target's priority for this value.</text>
+	</string>
+
+
+	<!-- misc -->
+	<string id="ui_mcm_target_prior_misc_header">
+		<text>Misc</text>
+	</string>
+
+	<string id="ui_mcm_target_prior_mutant_transition">
+		<text>Allow mutants level transition</text>
+	</string>
+	<string id="ui_mcm_target_prior_mutant_transition_desc">
+		<text>Mutants can now change levels like stalkers. Very chaotic because uses vanilla priority calculations! \n 
+				Mutant transition blacklist is in the main script's "local mutants_blacklist_levels" table.</text>
+	</string>
+
+	<string id="ui_mcm_target_prior_replace_spawns">
+		<text>Rank-based squads replacement</text>
+	</string>
+	<string id="ui_mcm_target_prior_replace_spawns_desc">
+		<text>If a high rank squad tries to spawn on south - it'll be replaced for another squad with rank that fits the travelling table. \n 
+				If you use "ZCP" addon and want their spawns, then I think it's better to disable it (NPCs will still travel according to my table).</text>
+	</string>
+
+
+	<!-- debug -->
+	<string id="ui_mcm_target_prior_dbg_header">
+		<text>Debug modes</text>
+	</string>
+
+	<string id="ui_mcm_target_prior_debug_targets">
+		<text>Debug targets</text>
+	</string>
+	<string id="ui_mcm_target_prior_debug_targets_desc">
+		<text>Displays 5 highest priority targets, their values and the one NPC picked.</text>
+	</string>
+
+	<string id="ui_mcm_target_prior_debug_squads">
+		<text>Debug squad replacement</text>
+	</string>
+	<string id="ui_mcm_target_prior_debug_squads_desc">
+		<text>Displays squads that were replaced.</text>
+	</string>
+
+</string_table>

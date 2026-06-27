@@ -1,0 +1,78 @@
+--[[
+    No Inspection Animation Override
+	Author: Abraham (Priler)
+    
+    Prevents the "bored" inspection animation from playing when you
+    press unjam on an unjammed weapon in WPO (Weapon Parts Overhaul).
+    
+    Also does NOT grant the "free shot" (guarantee_not_jam) since no
+    inspection was actually performed.
+    
+    Installation: Place in gamedata/scripts/
+    Load order: Loads after arti_jamming.script due to zzz_ prefix
+]]
+
+local orig_unjam
+
+local function new_unjam(wpn)
+    if not arti_jamming then return end
+    
+    local weapon = wpn or db.actor:active_item()
+    if not weapon then return end
+    
+    local id = weapon:id()
+    
+    -- If weapon IS jammed, use original behavior (play unjam animation, etc.)
+    if arti_jamming.get_jammed(id) then
+        if orig_unjam then
+            orig_unjam(wpn)
+        end
+        return
+    end
+    
+    -- Weapon is NOT jammed
+    -- Check for missing parts first (same as original)
+    if arti_jamming.has_parts and arti_jamming.has_parts(weapon) then
+        if arti_jamming.missing_parts and arti_jamming.missing_parts(weapon) then
+            arti_jamming.send_msg(game.translate_string("ui_st_missing"), 0)
+            return
+        end
+    end
+    
+    -- Build status message (same as original)
+    local str = game.translate_string("ui_st_functional")
+    
+    -- Add overheat warning if applicable
+    if arti_jamming.get_overheat_modifier then
+        local heat_lvl = arti_jamming.get_overheat_modifier(weapon, false)
+        if heat_lvl and heat_lvl > 0 then
+            str = str .. game.translate_string("ui_st_heat" .. heat_lvl)
+        end
+    end
+    
+    -- Send message using original function (respects MCM verbosity)
+    arti_jamming.send_msg(str, 1)
+    
+    -- No animation, no guarantee_not_jam
+end
+
+local function apply_patches()
+    if not arti_jamming then
+        printf("No Inspection Animation: arti_jamming not found, skipping patches")
+        return false
+    end
+    
+    if arti_jamming.unjam and arti_jamming.unjam ~= new_unjam then
+        orig_unjam = arti_jamming.unjam
+        arti_jamming.unjam = new_unjam
+        arti_jamming.unjam_wep = new_unjam
+    end
+    
+    printf("No Inspection Animation: Patches applied successfully")
+    return true
+end
+
+function on_game_start()
+    apply_patches()
+    RegisterScriptCallback("on_game_load", apply_patches)
+end

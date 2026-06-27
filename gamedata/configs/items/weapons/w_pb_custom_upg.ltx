@@ -1,0 +1,79 @@
+![wpn_pb]
+scopes                           = pb_upgr_kit
+		
+[wpn_pb_pb_upgr_kit]:wpn_pb
+        use_alt_aim_hud                  = true
+        laser_status                     = true
+
+        ammo_elapsed                     = 10
+        ammo_mag_size                    = 10
+
+	    ms_count = 3
+
+        hud				                 = wpn_pb_pb_upgr_kit_hud
+
+        inv_name                    = st_wpn_pb_upgr
+        inv_name_short              = st_wpn_pb_upgr
+        description                 = st_wpn_pb_upgr_descr
+		
+icons_texture      = ui\remademeowie_icon
+	inv_grid_width     = 3
+	inv_grid_height    = 1
+	inv_grid_x         = 9
+	inv_grid_y         = 0
+
+[wpn_pb_pb_upgr_kit_hud]:wpn_pb_new_hud
+        item_visual                      = anomaly_weapons\wpn_pb\wpn_pb_upgr_kit_hud.ogf
+
+item_position               = 0.0, 0.0, 0.0
+item_orientation            = 0.0, 0.0, 0.0
+
+        hands_orientation                = -0.00563, 0.000218, -1
+        hands_orientation_16x9           = -0.00563, 0.000218, -1
+        hands_position                   = -0.027415, -0.002601, 0.011812
+        hands_position_16x9              = -0.027415, -0.002601, 0.011812
+
+        aim_hud_offset_pos               = -0.025575, 0.017955, 0
+        aim_hud_offset_pos_16x9          = -0.025575, 0.017955, 0
+        aim_hud_offset_rot               = -1.9e-05, -0.000106, -0.0925
+        aim_hud_offset_rot_16x9          = -1.9e-05, -0.000106, -0.0925
+
+        aim_hud_offset_alt_pos           = -0.0708, -0.041259, -0.04
+        aim_hud_offset_alt_pos_16x9      = -0.0708, -0.041259, -0.04
+        aim_hud_offset_alt_rot           = -1.9e-05, -0.000106, 0.7
+        aim_hud_offset_alt_rot_16x9      = -1.9e-05, -0.000106, 0.7
+		
+        lowered_hud_offset_pos           = 0, 0, 0.004845
+        lowered_hud_offset_pos_16x9      = 0, 0, 0.004845
+        lowered_hud_offset_rot           = 0.164122, -0.008087, 0.1
+        lowered_hud_offset_rot_16x9      = 0.164122, -0.008087, 0.1
+
+        item_orientation                 = 0.002, 0, 0
+        item_position                    = 0.000636, -0.004316, 0
+
+gl_hud_offset_pos           = 0, 0, 0
+gl_hud_offset_rot           = 0, 0, 0
+lean_hud_offset_pos         = 0, 0, 0
+lean_hud_offset_rot         = 0, 0, 0
+					
+
+;--------------Extended mag reloads
+        anm_reload                  = h_pm_reload_ext, pm_reload_ammo4
+        anm_reload_ammo8            = h_pm_reload_ext, pm_reload_ammo8
+        anm_reload_ammo7            = h_pm_reload_ext, pm_reload_ammo7
+        anm_reload_ammo6            = h_pm_reload_ext, pm_reload_ammo6
+        anm_reload_ammo5            = h_pm_reload_ext, pm_reload_ammo5
+        anm_reload_ammo4            = h_pm_reload_ext, pm_reload_ammo4
+        anm_reload_ammo3            = h_pm_reload_ext, pm_reload_ammo3
+        anm_reload_ammo2            = h_pm_reload_ext, pm_reload_ammo2
+        anm_reload_ammo1            = h_pm_reload_ext, pm_reload_ammo1
+        anm_reload_empty            = h_pm_reload_empty_ext, pm_reload_empty
+        anm_ammo_check        = h_pm_magcheck_ext, pm_magcheck_ammo9
+        anm_ammo_check_ammo8  = h_pm_magcheck_ext, pm_magcheck_ammo8
+        anm_ammo_check_ammo7  = h_pm_magcheck_ext, pm_magcheck_ammo7
+        anm_ammo_check_ammo6  = h_pm_magcheck_ext, pm_magcheck_ammo6
+        anm_ammo_check_ammo5  = h_pm_magcheck_ext, pm_magcheck_ammo5
+        anm_ammo_check_ammo4  = h_pm_magcheck_ext, pm_magcheck_partial_ammo4
+        anm_ammo_check_ammo3  = h_pm_magcheck_ext, pm_magcheck_partial_ammo3
+        anm_ammo_check_ammo2  = h_pm_magcheck_ext, pm_magcheck_partial_ammo2
+        anm_ammo_check_ammo1  = h_pm_magcheck_ext, pm_magcheck_partial_ammo1

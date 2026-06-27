@@ -1,0 +1,132 @@
+---==================================================================================================================---
+---    Script : mags_degradation_core
+---    Description : Adds persistent magazine wear and wear-based jams to GAMMA Mags Reloaded.
+---                  This addon patches the active Reloaded modules without replacing their scripts.
+---==================================================================================================================---
+
+local MAG_WEAR_MAX = 1500
+local MAG_JAM_MULTIPLIER_MAX = 5.0
+local patched = false
+
+local function get_mag_condition(id)
+    local mag_data = magazine_binder.get_data(id)
+    if not mag_data or not mag_data.wear then return 1.0 end
+    return 1.0 - (math.min(math.max(mag_data.wear, 0), MAG_WEAR_MAX) / MAG_WEAR_MAX)
+end
+
+local function add_mag_wear(id, rounds)
+    local mag_data = magazine_binder.get_data(id)
+    if not mag_data or mag_data.section == "no_mag" then return end
+
+    mag_data.wear = math.min(
+        math.max((mag_data.wear or 0) + (rounds or 1), 0),
+        MAG_WEAR_MAX
+    )
+    magazine_binder.set_data(id, mag_data)
+end
+
+local function get_wear_jam_penalty(wpn)
+    if not wpn then return 0 end
+    return (1.0 - get_mag_condition(wpn:id())) * MAG_JAM_MULTIPLIER_MAX
+end
+
+local function patch_binder()
+    magazine_binder.MAG_WEAR_MAX = MAG_WEAR_MAX
+    magazine_binder.get_mag_condition = get_mag_condition
+    magazine_binder.add_mag_wear = add_mag_wear
+
+    local create_mag_data_orig = magazine_binder.create_mag_data
+    magazine_binder.create_mag_data = function(id, sec, is_weapon)
+        local mag_data = create_mag_data_orig(id, sec, is_weapon)
+        mag_data.wear = mag_data.wear or 0
+        magazine_binder.set_data(id, mag_data)
+        return mag_data
+    end
+
+    local validate_mag_orig = magazine_binder.validate_mag
+    magazine_binder.validate_mag = function(id, sec)
+        validate_mag_orig(id, sec)
+
+        local mag_data = magazine_binder.get_mag_loaded(id)
+        if mag_data then
+            mag_data.wear = math.min(
+                math.max(tonumber(mag_data.wear) or 0, 0),
+                MAG_WEAR_MAX
+            )
+            magazine_binder.set_data(id, mag_data)
+        end
+    end
+end
+
+local function patch_retool()
+    magazines.retool_mag_functor = function(obj)
+        local mag_data = magazine_binder.get_data(obj:id())
+        local tool = db.actor:object("leatherman_tool")
+        local retool_section = magazine_binder.get_retool_section(obj)
+
+        if #mag_data.loaded > 0 then
+            actor_menu.set_item_news("fail", "detail", "st_mag_err_retool")
+        elseif not tool then
+            actor_menu.set_item_news(
+                "fail",
+                "weapon",
+                "st_dis_text_3",
+                "",
+                ui_item.get_sec_name("leatherman_tool")
+            )
+        else
+            local new_obj = alife_create_item(retool_section, obj:parent())
+            if new_obj then
+                local new_data = magazine_binder.create_mag_data(new_obj.id, retool_section)
+                new_data.wear = mag_data.wear or 0
+                magazine_binder.set_data(new_obj.id, new_data)
+                alife_release(obj)
+                utils_item.degrade(tool, 0)
+            end
+        end
+    end
+end
+
+local function register_jam_penalty()
+    if big_mags_jam and big_mags_jam.register_penalty_provider then
+        big_mags_jam.register_penalty_provider("mag_degradation", get_wear_jam_penalty)
+        return true
+    end
+    return false
+end
+
+function actor_on_weapon_fired(obj, weapon, ammo_elapsed, grenade_elapsed, ammo_type, grenade_type)
+    if not weapon
+        or not magazine_binder.is_supported_weapon(weapon)
+        or weapon:weapon_in_grenade_mode()
+    then
+        return
+    end
+
+    add_mag_wear(weapon:id(), 1)
+
+    if not arti_jamming and not big_mags_jam then
+        local penalty = get_wear_jam_penalty(weapon)
+        if penalty > 0 and math.random(1000) <= penalty * 10 then
+            magazines.weapon_jammed(weapon)
+        end
+    end
+end
+
+function install()
+    if patched then return end
+    if not magazine_binder or not magazines then
+        printf("[MAGS DEGRADATION] ERROR | GAMMA Mags Reloaded was not found.")
+        return
+    end
+
+    patched = true
+    patch_binder()
+    patch_retool()
+    register_jam_penalty()
+    RegisterScriptCallback("actor_on_weapon_fired", actor_on_weapon_fired)
+end
+
+function on_game_start()
+    install()
+end
