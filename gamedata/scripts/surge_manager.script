@@ -1,4 +1,4 @@
--- Surge manager class 
+﻿-- Surge manager class 
 -- Made by Peacemaker 
 -- 05.03.07 
 
@@ -182,7 +182,7 @@ function CSurgeManager:initialize()
 	self.crows_sound = 0
 	self.siren_sec = 0                 -- Siren 25
 	self.blowout_warning_sec = 0   	-- Blowout warning 30
-	self.blowout_impact_sec = (mysurgedelay - 18)        -- Blowout impact sound 47
+	self.blowout_impact_sec = (mysurgedelay * 8 / 19) - 3.53    -- Blowout impact sound: 47 @ delay 120, 7 @ delay 25
 	self.rumble_sec = (mysurgedelay - 15)                -- Start rumble 50
 	self.first_earthquake_sec = (mysurgedelay - 10)      -- First earthquake 80
 	self.second_message_sec = (mysurgedelay - 10)        -- Second warning 90
@@ -222,7 +222,7 @@ function CSurgeManager:start(manual)
 	self.crows_sound = 0
 	self.siren_sec = 0                 -- Siren 25
 	self.blowout_warning_sec = 0   	-- Blowout warning 30
-	self.blowout_impact_sec = (mysurgedelay - 18)        -- Blowout impact sound 47
+	self.blowout_impact_sec = (mysurgedelay * 8 / 19) - 3.53    -- Blowout impact sound: 47 @ delay 120, 7 @ delay 25
 	self.rumble_sec = (mysurgedelay - 15)                -- Start rumble 50
 	self.first_earthquake_sec = (mysurgedelay - 10)      -- First earthquake 80
 	self.second_message_sec = (mysurgedelay - 10)        -- Second warning 90
