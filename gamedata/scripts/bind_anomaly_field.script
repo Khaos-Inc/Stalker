@@ -47,12 +47,6 @@ local dyn_ano_info      	= {}	-- [level][name] = info
 local dyn_anomalies_dbg 	= {}	-- [id] = name
 dyn_anomalies           	= {} 	-- [level][id] = name
 
--- ZCP
-if smr_amain_mcm.get_config("smr_enabled") then
-  dyn_ano_chance = smr_anomalies_mcm.get_config("dyn_ano_chance")
-end
--- ZCP END
-
 -- Prepare
 function ini_settings()
 
@@ -69,12 +63,6 @@ function ini_settings()
 	n = ini_ano:line_count("categories") or 0
 	for i=0,n-1 do
 		result, id, value	= ini_ano:r_line_ex("categories",i,"","")
-    -- ZCP
-    if smr_amain_mcm.get_config("smr_enabled") and (smr_anomalies_mcm.get_config(id) == false) then
-      smr_debug.get_log().info("anomalies/types", "skipping disabled anomaly type %s", id)
-      goto continue
-    end
-    -- ZCP END
 		dyn_ano_type[id] = {}
 		
 		m = ini_ano:line_count(id) or 0
@@ -88,7 +76,6 @@ function ini_settings()
 				end
 			end
 		end
-    ::continue::
 	end
 	
 	-- Gather anomaly coordinates in all levels
@@ -494,10 +481,7 @@ local function actor_on_first_update()
 end
 
 local function actor_on_update()
-	-- ZCP
-	if smr_anomalies_mcm.get_config("pulse") then
-		pulse_anomaly_update()
-	end
+	pulse_anomaly_update()
 end
 
 local function actor_on_interaction(typ, obj, name)

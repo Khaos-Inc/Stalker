@@ -1,17 +1,21 @@
 --[[
 	scheme_type: active_section
 	author: Alundaio
-
+	
 	TODO: Fix use camp
 --]]
 
+---------------
 beh_evid =  188111
 beh_actid = 188111
+---------------
+
 -----------------------------
 local level = level
 local alife = alife
 -----------------------------
-local keep_state_min_time = 1000
+
+local keep_state_min_time = 2000
 
 local function angle_dir(ang)
 	return vector():setHP(ang.y,ang.x):normalize()
@@ -23,44 +27,48 @@ local function init_custom_data(npc, ini, section, st, scheme)
 	def.behavior_state 	= "{+npcx_beh_wait} beh_wait, {+npcx_beh_patrol_mode !is_squad_commander} beh_move, {+npcx_beh_patrol_mode} beh_patrol, beh_move"
 	def.goto_target 	= "{!is_squad_commander} commander, actor"
 
-	def.walk_dist 		= "{+npcx_beh_patrol_mode} 6, 9"
-	def.jog_dist 		= "{+npcx_beh_patrol_mode} 12, 27"
+	def.walk_dist 		= "{+npcx_beh_patrol_mode} 90, 5"
+	def.jog_dist 		= "{+npcx_beh_patrol_mode} 150, 10"
 
 	def.keep_distance 	= "{+npcx_beh_distance_far} far, near"
 
-	def.near_desired_dist 	= "{+npcx_beh_patrol_mode =is_squad_commander} 3, {!is_squad_commander} 4, 4"
-	def.far_desired_dist	= "{+npcx_beh_patrol_mode =is_squad_commander} 3, {!is_squad_commander} 12, 12"
+	def.near_desired_dist 	= "{+npcx_beh_patrol_mode =is_squad_commander} 1, {!is_squad_commander} 2, 3"
+	def.far_desired_dist	= "{+npcx_beh_patrol_mode =is_squad_commander} 1, {!is_squad_commander} 2, 8"
 
 	def.wait_cond 	= "{+npcx_beh_substate_stealth} hide, guard"
 	def.walk_cond 	= "{+npcx_beh_patrol_mode -npcx_beh_substate_stealth} patrol,{+npcx_beh_substate_stealth} sneak, patrol"
 	def.jog_cond 	= "{+npcx_beh_substate_stealth} sneak_run, rush"
-	def.run_cond 	= "{+npcx_beh_substate_stealth} assault, panic"
+	def.run_cond 	= "{+npcx_beh_substate_stealth} rush, assault"
 
 	def.delay_cond	= "{+npcx_beh_substate_stealth} hide, guard"
+
 	def.use_camp_cond = "false"
 
-	st.behavior_state 	= ini:r_string_to_condlist(section,"behavior_state",def.behavior_state)
-	st.goto_target 		= ini:r_string_to_condlist(section,"target",def.goto_target)
-
-	st.walk_dist 		= ini:r_string_to_condlist(section,"walk_dist",def.walk_dist)
-	st.jog_dist 		= ini:r_string_to_condlist(section,"jog_dist",def.jog_dist)
-
-	st.keep_distance 	= ini:r_string_to_condlist(section,"keep_dist",def.keep_distance)
-
+	
+	
+	st.behavior_state 		= ini:r_string_to_condlist(section,"behavior_state",def.behavior_state)
+	st.goto_target 			= ini:r_string_to_condlist(section,"target",def.goto_target)
+	
+	st.walk_dist 			= ini:r_string_to_condlist(section,"walk_dist",def.walk_dist)
+	st.jog_dist 			= ini:r_string_to_condlist(section,"jog_dist",def.jog_dist)
+	
+	st.keep_distance 		= ini:r_string_to_condlist(section,"keep_dist",def.keep_distance)
+	
 	st.near_desired_dist 	= ini:r_string_to_condlist(section,"near_desired_dist",def.near_desired_dist)
 	st.far_desired_dist 	= ini:r_string_to_condlist(section,"far_desired_dist",def.far_desired_dist)
+	
+	st.wait_cond 			= ini:r_string_to_condlist(section,"wait_anim",def.wait_cond)
+	st.walk_cond 			= ini:r_string_to_condlist(section,"walk_anim",def.walk_cond)
+	st.jog_cond 			= ini:r_string_to_condlist(section,"jog_anim",def.jog_cond)
+	st.run_cond 			= ini:r_string_to_condlist(section,"run_anim",def.run_cond)
+	st.delay_cond 			= ini:r_string_to_condlist(section,"delay_anim",def.delay_cond)
+	
+	st.path_end 			= ini:r_string_to_condlist(section,"path_end")
+	st.sound_idle			= ini:r_string_to_condlist(section,"sound_idle")
+	
+	st.use_camp			= ini:r_bool_ex(section,"use_camp",false)
 
-	st.wait_cond 		= ini:r_string_to_condlist(section,"wait_anim",def.wait_cond)
-	st.walk_cond 		= ini:r_string_to_condlist(section,"walk_anim",def.walk_cond)
-	st.jog_cond 		= ini:r_string_to_condlist(section,"jog_anim",def.jog_cond)
-	st.run_cond 		= ini:r_string_to_condlist(section,"run_anim",def.run_cond)
-	st.delay_cond 		= ini:r_string_to_condlist(section,"delay_anim",def.delay_cond)
-
-	st.path_end 		= ini:r_string_to_condlist(section,"path_end")
-	st.sound_idle		= ini:r_string_to_condlist(section,"sound_idle")
-
-	st.use_camp		= ini:r_bool_ex(section,"use_camp",false)
-	st.signals 		= {}
+	st.signals 			= {}
 
 	st.path_index 		= load_var(npc,"path_index",1)
 	st.wait_delay		= nil
@@ -73,12 +81,11 @@ function am_i_reached(npc,index)
 	if (index) then
 		return st and st.active_scheme == "beh" and st.beh.am_i_reached and st.beh.path_index == index
 	end
-
 	return st and st.active_scheme == "beh" and st.beh.am_i_reached
 end
 --------------------------------Action Base Evaluator ---------------------------------------------------------------------
-class "evaluator_beh" (property_evaluator)
 
+class "evaluator_beh" (property_evaluator)
 function evaluator_beh:__init(storage, name) super (nil, name)
 	self.st = storage
 end
@@ -89,7 +96,6 @@ end
 
 --------------------------------------Action Base --------------------------------------------------------------------------------
 class "action_beh" (action_base)
-
 function action_beh:__init(npc_name, action_name, storage) super (nil, action_name)
 	self.st = storage
 end
@@ -106,9 +112,9 @@ function action_beh:execute()
 
 	local keep_distance 		= xr_logic.pick_section_from_condlist(db.actor, self.object, self.st.keep_distance)
 	self.st.desired_distance	= tonumber(xr_logic.pick_section_from_condlist(db.actor, self.object, self.st[keep_distance.."_desired_dist"]))
-
-	self.st.behavior 		= xr_logic.pick_section_from_condlist(db.actor, self.object, self.st.behavior_state,"behavior_state") or "beh_wait"
-
+	
+	self.st.behavior 			= xr_logic.pick_section_from_condlist(db.actor, self.object, self.st.behavior_state,"behavior_state") or "beh_wait"
+	
 	self.st.wait_animation 		= xr_logic.pick_section_from_condlist(db.actor, self.object, self.st.wait_cond)
 	self.st.walk_animation 		= xr_logic.pick_section_from_condlist(db.actor, self.object, self.st.walk_cond)
 	self.st.jog_animation 		= xr_logic.pick_section_from_condlist(db.actor, self.object, self.st.jog_cond)
@@ -120,33 +126,33 @@ function action_beh:execute()
 		self.st.rally_lvid = nil
 	end
 
-	if (self:set_desired_target() and self[self.st.behavior]) then
+	if (self:set_desired_target() and self[self.st.behavior]) then 
 		self[self.st.behavior](self)
 	end
 end
 
 function action_beh:set_desired_target()
 	local target = xr_logic.pick_section_from_condlist(db.actor, self.object, self.st.goto_target)
-
+	
 	if (target == nil or target == "" or target == "nil") then
 		return false
 	end
-
+	
 	if (self.st.desired_target) then
-
+	
 		if (self.st.target ~= target) then
 			self.st.target = target
 			self.st.desired_target.__keep_until = nil
 			self.st.rally_lvid = nil
-		end
-
+		end 
+	
 		local tg = time_global()
 		if (self.st.desired_target.__keep_until) then
 			-- do forever if keep_until is -1
-			if (self.st.desired_target.__keep_until == -1) then
-				return true
+			if (self.st.desired_target.__keep_until == -1) then 
+				return true 
 			end
-			if (tg < self.st.desired_target.__keep_until) then
+			if (tg < self.st.desired_target.__keep_until) then 
 				return true
 			end
 		end
@@ -154,7 +160,7 @@ function action_beh:set_desired_target()
 			db.used_level_vertex_ids[self.st.desired_target.level_vertex_id] = nil
 		end
 	end
-
+	
 	self.st.target = target
 
 	local t = self.st.desired_target and empty_table(self.st.desired_target) or {}
@@ -189,7 +195,7 @@ function action_beh:set_desired_target()
 		end
 	elseif (target == "cover_near_actor") then
 		local vid = utils_obj.find_close_cover(self.object,db.actor:position(),db.actor:position()) or self.object:level_vertex_id()
-		if (vid) then
+		if (vid) then 
 			t.level_vertex_id = vid
 			t.position = level.vertex_position(vid)
 			t.direction = self.object:position():sub(t.position)
@@ -212,7 +218,7 @@ function action_beh:set_desired_target()
 		end
 	elseif (target == "task_target_anomaly") then
 		local name = db.actor and load_var(db.actor,"task_target_anomaly")
-		if (name) then
+		if (name) then 
 			local anomaly = db.anomaly_by_name[name]
 			if (anomaly and anomaly.object) then
 				local vid = utils_obj.try_go_cover(self.object,anomaly.object:position(),self.st.desired_target and self.st.desired_target.level_vertex_id or nil)
@@ -266,7 +272,7 @@ function action_beh:set_desired_target()
 		if (id) then
 			set_position_data(id)
 		end
-	elseif (target == "scan_area") then
+	elseif (target == "scan_area") then 
 		self.st.behavior = "beh_cover"
 	end
 
@@ -284,20 +290,17 @@ function action_beh:beh_cover()
 		utils_obj.send_to_nearest_accessible_vertex(self.object,self.st.desired_target.level_vertex_id)
 		return
 	end
-
 	local t = time_global()
-	if (self.keep_state_until and t < self.keep_state_until) then
-		return
-	end
-
+	if (self.keep_state_until and t < self.keep_state_until) then 
+		return 
+	end 
 	self.keep_state_until = t + keep_state_min_time
 	local new_state = self.st.wait_animation or "hide"
-	if (new_state == "rand") then
+	if (new_state == "rand") then 
 		new_state = random_choice("binocular","idle","hide","caution")
 	end
-
 	state_mgr.set_state(self.object,new_state,nil,nil,{look_object = self.st.desired_target and self.st.desired_target.object or nil})
-end
+end 
 
 function action_beh:beh_wait()
 	local new_state = self.st.wait_animation
@@ -312,16 +315,16 @@ end
 
 function action_beh:set_state()
 	local t = time_global()
-	if (self.keep_state_until and t < self.keep_state_until) then
-		return
-	end
+	if (self.keep_state_until and t < self.keep_state_until) then 
+		return 
+	end 
 	self.keep_state_until = t + keep_state_min_time
-
+	
 	local new_state = self.st.wait_animation
 	local dist_walk	= tonumber(xr_logic.pick_section_from_condlist(db.actor, self.object, self.st.walk_dist) or 5) or 5
 	local dist_jog 	= tonumber(xr_logic.pick_section_from_condlist(db.actor, self.object, self.st.jog_dist) or 10) or 10
-
-	if (self.st.assist_point == nil or self.st.assist_point == self.object:level_vertex_id()) then
+	
+	if (self.st.assist_point == nil or self.st.assist_point == self.object:level_vertex_id()) then 
 		new_state = self.st.wait_animation
 	elseif (self.dist_to_assist_pt <= dist_walk ) then
 		new_state = self.st.walk_animation
@@ -330,12 +333,11 @@ function action_beh:set_state()
 	else
 		new_state = self.st.run_animation
 	end
-
+	
 	state_mgr.set_state(self.object, new_state,nil, nil, nil, { fast_set = true, animation = true })
 end
 
 class "position_node"
-
 function position_node:__init(amt)
 	self.node = {}
 	for i=1,amt do
@@ -366,7 +368,6 @@ function position_node:select_best_vertex_id(object,dir,lvid,distance)
 			end
 		end
 	end
-
 	return closest and closest ~= -1 and closest
 end
 
@@ -392,8 +393,8 @@ function action_beh:beh_move()
 			local node = position_node(2)
 			self.st.assist_point = self.st.rally_lvid or node:select_best_vertex_id(self.object,self.st.desired_target.direction,self.st.desired_target.level_vertex_id,self.st.desired_distance) or self.st.desired_target.level_vertex_id --self.object:level_vertex_id()
 			self.keep_state_until = nil
-		end
-
+		end 
+		
 		if ( self.st.assist_point ) then
 			--self.object:set_dest_level_vertex_id(self.st.assist_point)
 			self.object:set_path_type(game_object.level_path)
@@ -402,7 +403,7 @@ function action_beh:beh_move()
 			self.object:set_desired_position(level.vertex_position(self.st.assist_point))
 		end
 	end
-
+	
 	self.dist_to_assist_pt = self.st.assist_point and level.vertex_position(self.st.assist_point):distance_to(self.object:position()) or 0
 	--self.dist_from_self_to_goto_target = dist_from_self_to_goto_target
 	self:set_state()
@@ -469,8 +470,8 @@ function action_beh:beh_path()
 
 	--if (self.st.use_camp and camp_states[new_state]) then
 	if (self.st.use_camp) then
-		
-		--[[self:fill_approved_actions(new_state)
+		--[[
+		self:fill_approved_actions(new_state)
 
 		self.camp = sr_camp.get_current_camp(self.object:position())
 		if (self.camp and not self.in_camp) then
@@ -507,8 +508,8 @@ function action_beh:beh_path()
 					return
 				end
 			end
-		end]]--
-		
+		end
+		--]]
 	elseif (self.in_camp) then
 		self.camp:unregister_npc(self.object:id())
 		self.in_camp = nil
@@ -602,7 +603,7 @@ function action_beh:get_current_waypoint(use_var)
 			t.look_object = be and be:alive() and self.object:see(be) and be
 		end
 	end
-
+	
 	for s in string.gmatch(str,"look_object_f:(%S+)") do
 		local p = str_explode(s,"@")
 		if p and #p == 2 then
@@ -611,7 +612,7 @@ function action_beh:get_current_waypoint(use_var)
 			t.look_object = _G[script][func](self.object)
 		end
 	end
-
+	
 
 	for s in string.gmatch(str,"look_job:(%a+)") do
 		s = str_explode(s,",")
@@ -642,7 +643,6 @@ function action_beh:get_current_waypoint(use_var)
 		t.delay = pt[1] and tonumber(pt[1]) or 0
 		t.delay_animation = trim(pt[2])
 	end
-
 	t.direction = self.object:position():sub(t.position)
 	return t
 end
@@ -650,17 +650,17 @@ end
 function action_beh:next_waypoint_index()
 	local st = db.storage[self.object:id()]
 	local inc = self.st.path_reverse and -1 or 1
-	if (self.object:has_info("npcx_beh_patrol_mode")) then
+	if (self.object:has_info("npcx_beh_patrol_mode")) then 
 		return se_load_var(self.object:id(),self.object:name(),"pathpoint"..(self.st.path_index+inc))--load_var(self.object,"pathpoint"..tostring(self.st.path_index+inc))
-	end
-
+	end 
 	return st.active_section and st.ini:r_string_ex(st.active_section,"pt"..tostring(self.st.path_index+inc))
 end
 
 function action_beh:increment_waypoint_index()
 	local st = db.storage[self.object:id()]
-	local inc = self.st.path_reverse and -1 or 1
 
+	local inc = self.st.path_reverse and -1 or 1
+	
 	local next_index
 	if (self.object:has_info("npcx_beh_patrol_mode")) then
 		next_index = se_load_var(self.object:id(),self.object:name(),"pathpoint"..(self.st.path_index+inc))--load_var(self.object,"pathpoint"..self.st.path_index+inc)
@@ -724,14 +724,15 @@ function action_beh:finalize()
 		self.camp:unregister_npc(self.object:id())
 		self.in_camp = nil
 	end
-	if (self.st.desired_target and self.st.desired_target.level_vertex_id) then
+	if (self.st.desired_target and self.st.desired_target.level_vertex_id) then 
 		db.used_level_vertex_ids[self.st.desired_target.level_vertex_id] = nil
 	end
-
 	save_var(self.object,"path_index",1)
 end
 
+--
 -------------------------- Scheme Handlers ------------------------------------------------------------
+
 function set_scheme(npc, ini, scheme, section, gulag_name)
 	local st = xr_logic.assign_storage_and_bind(npc,ini,"beh",section)
 	st.logic = xr_logic.cfg_get_switch_conditions(ini, section, npc)
@@ -744,50 +745,50 @@ function add_to_binder(npc, ini, scheme, section, storage)
 	if not manager then return end
 
 	local wp = world_property
-
+	
 	local evaluator = evaluator_beh(storage, "evaluator_beh")
 	local action = action_beh(npc, "action_beh", storage)
 	if not evaluator or not action then return end
-
+	
 	manager:add_evaluator(beh_evid,evaluator)
-
+	
 	action:add_precondition( wp(beh_evid, true) )
 	action:add_effect( wp(beh_evid, false) )
-	action:add_effect( wp(xr_evaluators_id.state_mgr + 4, false))
-
+	action:add_effect( wp(xr_evaluators_id.state_mgr + 4, false) )	
+	
 	manager:add_action(beh_actid,action)
-
+	
 	xr_logic.subscribe_action_for_events(npc, storage, action)
+	
+	action:add_precondition( wp(stalker_ids.property_alive,true) )
+	action:add_precondition( wp(stalker_ids.property_enemy,false) )
+	action:add_precondition( wp(stalker_ids.property_danger,false) )
 
-	action:add_precondition( wp(stalker_ids.property_alive,true ))
-	action:add_precondition( wp(stalker_ids.property_enemy,false))
-	action:add_precondition( wp(stalker_ids.property_danger,false))
-
-	--if (_G.schemes["corpse_detection"]) then
-	--	action:add_precondition( wp(xr_evaluators_id.corpse_exist, false))
-	--end
-
-	-- if (_G.schemes["gather_items"]) then
-	--	action:add_precondition( wp(xr_gather_items.evaid, false))
+	-- if (_G.schemes["corpse_detection"]) then
+		-- action:add_precondition( wp(xr_evaluators_id.corpse_exist, false) )
 	-- end
-
-	--action:add_precondition( wp(stalker_ids.property_items, false))
-	action:add_precondition( wp(xr_evaluators_id.wounded_exist,false))
-	action:add_precondition( wp(xr_evaluators_id.stohe_meet_base + 1, false))
-	action:add_precondition( wp(xr_evaluators_id.sidor_wounded_base + 0, false))
-	action:add_precondition( wp(xr_evaluators_id.abuse_base, false))
+	-- if (_G.schemes["gather_items"]) then
+		-- action:add_precondition( wp(xr_gather_items.evaid, false) )
+	-- end
+	--action:add_precondition( wp(stalker_ids.property_items, false) )
+	--action:add_precondition( wp(xr_evaluators_id.wounded_exist,false) )
+	action:add_precondition( wp(xr_evaluators_id.stohe_meet_base + 1, false) )
+	-- action:add_precondition( wp(xr_evaluators_id.sidor_wounded_base + 0, false) )
+	action:add_precondition( wp(xr_evaluators_id.abuse_base, false) )
 
 	--printf("ACTION_ALIFE_ID(axr_beh.add_to_binder): " .. tostring(xr_actions_id.alife))
 	action = manager:action(xr_actions_id.alife)
-	if action then action:add_precondition( wp(beh_evid, false)) end
+	if action then action:add_precondition( wp(beh_evid, false) ) end
 
 	action = manager:action(xr_actions_id.state_mgr + 2)
-	if action then action:add_precondition( wp(beh_evid, false)) end
+	if action then action:add_precondition( wp(beh_evid, false) ) end
 end
 
---[[function reset_scheme(loading, npc)
+--[[
+function reset_scheme(loading, npc)
 	local st = db.storage[npc:id()]
 	if (st.beh) then
 		init_custom_data(npc, st.ini, section, st.beh, scheme)
 	end
-end]]--
+end
+--]]

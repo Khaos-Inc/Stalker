@@ -330,8 +330,6 @@ end
 
 function UIIndicators:InitControls()
 	local xml = utils_xml.get_hud_xml()
-	local time_xml = CScriptXmlInit()
-	time_xml:ParseFile("actor_menu.xml")
 	
 	self.dialog = xml:InitStatic("indicators", self)
 	--utils_xml.correct_ratio(self.dialog)
@@ -349,29 +347,10 @@ function UIIndicators:InitControls()
 		self.slot[i].back_f = xml:InitStatic("indicators:flashing", self.dialog)
 		self.slot[i].icon_s = xml:InitStatic("indicators:static", self.dialog)
 		self.slot[i].icon_f = xml:InitStatic("indicators:flashing", self.dialog)
-
-		-- xcvb boost time
-		self.slot[i].xcvb_time = time_xml:InitTextWnd("quick_slot3_text", self)
-		local dialog_pos = self.dialog:GetWndPos()
-		--------------------
-
 		for k, ele in pairs(self.slot[i]) do
 			ele:SetWndPos( vector2():set( x , 0 ) )
 			utils_xml.correct_ratio(ele)
 		end
-
-		-- xcvb boost time
-		local icon_pos = self.slot[i].icon_f:GetWndPos()
-		local text_x_pos = dialog_pos.x + icon_pos.x
-		local text_y_pos = dialog_pos.y + icon_pos.y - 15
-		self.slot[i].xcvb_time:SetWndPos(vector2():set( text_x_pos, text_y_pos ))
-
-		local icon_width = self.slot[i].icon_f:GetWidth()
-		local self_height = self.slot[i].xcvb_time:GetHeight()
-		self.slot[i].xcvb_time:SetWndSize(vector2():set(icon_width, self_height))
-		self.slot[i].xcvb_time:SetText("")
-		---------------------
-
 	end
 end
 
@@ -432,20 +411,6 @@ function UIIndicators:Update(force)
 				
 				ico:InitTexture( t.icon )
 				ico:Show(true)
-				
-				-- xcvb boost time
-				local show_time
-				db.actor:cast_Actor():conditions():BoosterForEach( function(boost_typ, boost_time, boost_val)
-					if name == boost_name[boost_typ] then
-						show_time = math.ceil(boost_time)
-					end
-				end)
-
-				if self.slot[i].xcvb_time then
-					self.slot[i].xcvb_time:Show(show_time and true or false)
-					self.slot[i].xcvb_time:SetText(show_time or "")
-				end
-				-----------------------
 			end
 			
 			if t.background then

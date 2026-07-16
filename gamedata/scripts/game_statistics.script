@@ -17,30 +17,30 @@
 
 -- Achievements unlocked.
 actor_achievements = {
-	["bookworm_food"]		=	{	unlocked = false,	rank = 1000,	rept = 0	},
-	["completionist"]		=	{	unlocked = false,	rank = 1000,	rept = 0	},
-	["down_to_earth"]		=	{	unlocked = false,	rank = 1000,	rept = 0	},
-	["duga_free"]			=	{	unlocked = false,	rank = 1000,	rept = 0	},
-	["geologist"]			=	{	unlocked = false,	rank = 1000,	rept = 0	},
-	["heavy_pockets"]		=	{	unlocked = false,	rank = 1000,	rept = 0	},
-	["infopreneur"]			=	{	unlocked = false,	rank = 1000,	rept = 0	},
-	["mechanized_warfare"]	=	{	unlocked = false,	rank = 1000,	rept = 0	},
-	["patriarch"]			=	{	unlocked = false,	rank = 1000,	rept = 0	},
-	["radiotherapy"]		=	{	unlocked = false,	rank = 1000,	rept = 0	},
-	["rag_and_bone"]		=	{	unlocked = false,	rank = 1000,	rept = 0	},
-	["silver_or_lead"]		=	{	unlocked = false,	rank = 1000,	rept = 0	},
-	["tourist"]				=	{	unlocked = false,	rank = 1000,	rept = 0	},
-	["well_dressed"]		=	{	unlocked = false,	rank = 1000,	rept = 0	},
-	["wishful_thinking"]	=	{	unlocked = false,	rank = 1000,	rept = 0	},
-	["infantile_pleasure"]	=	{	unlocked = false,	rank = 1000,	rept = 0	},
-	["recycler"]			=	{	unlocked = false,	rank = 1000,	rept = 0	},
-	["artificer_eagerness"]	=	{	unlocked = false,	rank = 1000,	rept = 0	},
-	["unforeseen_guest"]	=	{	unlocked = false,	rank = 1000,	rept = 0	},
-	["absolver"]	        =	{	unlocked = false,	rank = 1000,	rept = 0	},
-	["collaborator"]	    =	{	unlocked = false,	rank = 1000,	rept = 0	},
-	["iron_curtain"]	    =	{	unlocked = false,	rank = 1000,	rept = 0	},
+	["bookworm_food"]		=	{	unlocked = false,	rank = 25,		rept = 0	},
+	["completionist"]		=	{	unlocked = false,	rank = 25,		rept = 0	},
+	["down_to_earth"]		=	{	unlocked = false,	rank = 25,		rept = 0	},
+	["duga_free"]			=	{	unlocked = false,	rank = 25,		rept = 0	},
+	["geologist"]			=	{	unlocked = false,	rank = 25,		rept = 0	},
+	["heavy_pockets"]		=	{	unlocked = false,	rank = 25,		rept = 0	},
+	["infopreneur"]			=	{	unlocked = false,	rank = 25,		rept = 0	},
+	["mechanized_warfare"]	=	{	unlocked = false,	rank = 25,		rept = 0	},
+	["patriarch"]			=	{	unlocked = false,	rank = 25,		rept = 0	},
+	["radiotherapy"]		=	{	unlocked = false,	rank = 25,		rept = 0	},
+	["rag_and_bone"]		=	{	unlocked = false,	rank = 25,		rept = 0	},
+	["silver_or_lead"]		=	{	unlocked = false,	rank = 25,		rept = 0	},
+	["tourist"]				=	{	unlocked = false,	rank = 25,		rept = 0	},
+	["well_dressed"]		=	{	unlocked = false,	rank = 25,		rept = 0	},
+	["wishful_thinking"]	=	{	unlocked = false,	rank = 25,		rept = 0	},
+	["infantile_pleasure"]	=	{	unlocked = false,	rank = 25,		rept = 0	},
+	["recycler"]			=	{	unlocked = false,	rank = 25,		rept = 0	},
+	["artificer_eagerness"]	=	{	unlocked = false,	rank = 25,		rept = 0	},
+	["unforeseen_guest"]	=	{	unlocked = false,	rank = 25,		rept = 0	},
+	["absolver"]	        =	{	unlocked = false,	rank = 25,		rept = 0	},
+	["collaborator"]	    =	{	unlocked = false,	rank = 25,		rept = 0	},
+	["iron_curtain"]	    =	{	unlocked = false,	rank = 25,		rept = 0	},
 	["murky_spirit"]	    =	{	unlocked = false,	rank = 1000,	rept = 0	},
-	["invictus"]	        =	{	unlocked = false,	rank = 1000,	rept = 0	},
+	["invictus"]	        =	{	unlocked = false,	rank = 25,		rept = 0	},
 }
 
 -- Artefacts found and detected.
@@ -102,55 +102,55 @@ actor_visited_smarts = {
 
 -- Tracked player statistics and their rank and reputation rewards.
 actor_statistics = {
-	["arena_battles"]		=	{	count = 0,		rank = 50,		rept = 20	},
-	["artefacts_detected"]	=	{	count = 0,		rank = 10,		rept = 0	},
-	["artefacts_found"]		=	{	count = 0,		rank = 25,		rept = 0	},
-	["articles"]			=	{	count = 0,		rank = 10,		rept = 0	},		-- Counter is incremented but isn't used.
-	["boxes_smashed"]		=	{	count = 0,		rank = 5,		rept = 0	},
+	["arena_battles"]		=	{	count = 0,		rank = 25,		rept = 10	},
+	["artefacts_detected"]	=	{	count = 0,		rank = 5,		rept = 0	},
+	["artefacts_found"]		=	{	count = 0,		rank = 5,		rept = 0	},
+	["articles"]			=	{	count = 0,		rank = 5,		rept = 0	},		-- Counter is incremented but isn't used.
+	["boxes_smashed"]		=	{	count = 0,		rank = 1,		rept = 0	},
 	["deaths"]				=	{	count = 0,		rank = 0,		rept = 0	},
 	["donations"]			=	{	count = 0,		rank = 0,		rept = 20	},		-- Actual points given depends on item condition.
-	["emissions"]			=	{	count = 0,		rank = 15,		rept = 0	},
-	["enemies_surrendered"]	=	{	count = 0,		rank = 25,		rept = 0	},
-	["field_dressings"]		=	{	count = 0,		rank = 5,		rept = 0	},
-	["helicopters_downed"]	=	{	count = 0,		rank = 1000,	rept = 25	},
-	["helicopters_downed2"]	=	{	count = 0,		rank = 500,	    rept = 0	},		-- Bonus points for using explosives.
+	["emissions"]			=	{	count = 0,		rank = 5,		rept = 0	},
+	["enemies_surrendered"]	=	{	count = 0,		rank = 10,		rept = 0	},
+	["field_dressings"]		=	{	count = 0,		rank = 1,		rept = 0	},
+	["helicopters_downed"]	=	{	count = 0,		rank = 50,		rept = 25	},
+	["helicopters_downed2"]	=	{	count = 0,		rank = 25,		rept = 0	},		-- Bonus points for using explosives.
 	["killed_companions"]	=	{	count = 0,		rank = 0,		rept = -75	},
-	["killed_monsters"]		=	{	count = 0,		rank = 50,		rept = 0	},
+	["killed_monsters"]		=	{	count = 0,		rank = 5,		rept = 0	},
 	["killed_prisoners"]	=	{	count = 0,		rank = 0,		rept = -25	},
 	["killed_stalkers"]		=	{	count = 0,		rank = 0,		rept = 0	},		-- Unused; see below and the "rank_kill_points" config section.
 	["killed_stalkers_e"]	=	{	count = 0,		rank = 0,		rept = 10	},			-- Enemy relations.
 	["killed_stalkers_f"]	=	{	count = 0,		rank = 0,		rept = -100	},			-- Friendly relations.
 	["killed_stalkers_n"]	=	{	count = 0,		rank = 0,		rept = -75	},			-- Neutral relations.
 	["level_changes"]		=	{	count = 0,		rank = 0,		rept = 0	},
-	["pdas_delivered"]		=	{	count = 0,		rank = 20,		rept = 10	},
-	["psi_storms"]			=	{	count = 0,		rank = 10,		rept = 0	},
+	["pdas_delivered"]		=	{	count = 0,		rank = 10,		rept = 10	},
+	["psi_storms"]			=	{	count = 0,		rank = 5,		rept = 0	},
 	["stashes_found"]		=	{	count = 0,		rank = 10,		rept = 0	},
 	["tasks_cancelled"]		=	{	count = 0,		rank = 0,		rept = -25	},
-	["tasks_completed"]		=	{	count = 0,		rank = 100,		rept = 25	},
-	["tasks_failed"]		=	{	count = 0,		rank = 0,   	rept = -25	},
-	["wounded_helped"]		=	{	count = 0,		rank = 25,		rept = 100	},
+	["tasks_completed"]		=	{	count = 0,		rank = 50,		rept = 25	},
+	["tasks_failed"]		=	{	count = 0,		rank = 0,		rept = -25	},
+	["wounded_helped"]		=	{	count = 0,		rank = 10,		rept = 10	},
 	-- new
-	["items_crafted"]		=	{	count = 0,		rank = 10,		rept = 0	},
-	["items_disassembled"]	=	{	count = 0,		rank = 5,		rept = 0	},
-	["self_repairs"]		=	{	count = 0,		rank = 5,		rept = 0	},
+	["items_crafted"]		=	{	count = 0,		rank = 5,		rept = 0	},
+	["items_disassembled"]	=	{	count = 0,		rank = 1,		rept = 0	},
+	["self_repairs"]		=	{	count = 0,		rank = 1,		rept = 0	},
 	["minutes_disguised"]	=   {	count = 0,		rank = 0,		rept = 0	},
 }
 
 -- Saved NPC statistics and their rank and reputation rewards.
 npc_statistics = {
-	["artefacts_found"]		=	{	save = true,	rank = 300,		rept = 0	},
-	["boxes_smashed"]		=	{	save = false,	rank = 20,		rept = 0	},
-	["field_dressings"]		=	{	save = false,	rank = 50,		rept = 0	},
-	["helicopters_downed"]	=	{	save = false,	rank = 2500,	rept = 50	},
+	["artefacts_found"]		=	{	save = true,	rank = 40,		rept = 0	},
+	["boxes_smashed"]		=	{	save = false,	rank = 10,		rept = 0	},
+	["field_dressings"]		=	{	save = false,	rank = 25,		rept = 0	},
+	["helicopters_downed"]	=	{	save = false,	rank = 1000,	rept = 50	},
 	["helicopters_downed2"]	=	{	save = false,	rank = 1000,	rept = 50	},
-	["killed_monsters"]		=	{	save = true,	rank = 150,		rept = 0	},
+	["killed_monsters"]		=	{	save = true,	rank = 25,		rept = 0	},
 	["killed_stalkers"]		=	{	save = true,	rank = 0,		rept = 0	},			-- All
-	["killed_stalkers_e"]	=	{	save = false,	rank = 40,		rept = 10	},			-- Enemy relations.
+	["killed_stalkers_e"]	=	{	save = false,	rank = 30,		rept = 10	},			-- Enemy relations.
 	["killed_stalkers_f"]	=	{	save = false,	rank = 0,		rept = -100	},			-- Friendly relations.
 	["killed_stalkers_n"]	=	{	save = false,	rank = 0,		rept = -75	},			-- Neutral relations.
-	["corpse_looted"]		=	{	save = true,	rank = 30,		rept = 0	},
-	["wounded_helped"]		=	{	save = true,	rank = 70,		rept = 100	},
-	["items_sold"]			=	{	save = true,	rank = 20,		rept = 0	},
+	["corpse_looted"]		=	{	save = true,	rank = 10,		rept = 0	},
+	["wounded_helped"]		=	{	save = true,	rank = 50,		rept = 100	},
+	["items_sold"]			=	{	save = true,	rank = 10,		rept = 0	},
 }
 
 ---------------------
@@ -276,10 +276,9 @@ end
 -- Increments actor rank value.
 -- Impose restrictions at double the minimum and maximum ranks' values.
 function increment_rank(value)
-	value = value / 4
 	db.actor:change_character_rank(value or 0)
 	if (db.actor:character_rank() < 0) then db.actor:set_character_rank(0) end
-	if (db.actor:character_rank() > 1000000000) then db.actor:set_character_rank(1000000000) end
+	if (db.actor:character_rank() > 56000) then db.actor:set_character_rank(56000) end
 	check_for_rank_change()
 end
 function increment_npc_rank(npc, value)
@@ -287,7 +286,7 @@ function increment_npc_rank(npc, value)
 	--npc:change_character_rank(value or 0)
 	npc:set_character_rank(npc:character_rank() + (value or 0))
 	if (npc:character_rank() < 0) then npc:set_character_rank(0) end
-	if (npc:character_rank() > 1000000000) then npc:set_character_rank(1000000000) end
+	if (npc:character_rank() > 56000) then npc:set_character_rank(56000) end
 	--printf("/ NPC stats | +Rank = %s | id: %s - name: %s", npc:character_rank(), npc:id(), npc:character_name())
 end
 
@@ -319,13 +318,6 @@ function increment_statistic(value, custom_rank, custom_rept)
 	local statistic = value and actor_statistics[value] or nil
 	if (statistic and statistic.count and statistic.rank and statistic.rept) then
 		statistic.count = statistic.count + 1
-		if custom_rank then
-			custom_rank = custom_rank / 4
-		end
-		
-		if statistic.rank then
-			statistic.rank = statistic.rank / 4
-		end
 		increment_rank(custom_rank or statistic.rank)
 		increment_reputation(custom_rept or statistic.rept)
 	end

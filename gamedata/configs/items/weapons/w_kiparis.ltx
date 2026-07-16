@@ -167,53 +167,34 @@ control_inertion_factor = 1.0f
         item_position               = 0, 0, 0
         item_orientation            = 0, 0, 0
         
-        hands_position              = 0.085, -0.045, -0.12
-        hands_position_16x9         = 0.085, -0.045, -0.12
-        hands_orientation           = 1, 0.5, 1.5
-        hands_orientation_16x9      = 1, 0.5, 1.5
-
-        aim_hud_offset_pos          = -0.0845, 0.0355, -0.06
-        aim_hud_offset_pos_16x9     = -0.0845, 0.0355, -0.06
-        aim_hud_offset_rot          = 0.009, 0.017, 0.02
-        aim_hud_offset_rot_16x9     = 0.009, 0.017, 0.02
+        hands_position              = 0, -0.19, 0.1
+        hands_position_16x9         = 0, -0.19, 0.1
+        hands_orientation           = 0, 0, 0
+        hands_orientation_16x9      = 0, 0, 0
+        
+        aim_hud_offset_pos          = -0.0807, 0.05003, -0.25
+        aim_hud_offset_pos_16x9     = -0.0807, 0.05003, -0.25
+        aim_hud_offset_rot          = -0.0001, -0.00005, 0.0
+        aim_hud_offset_rot_16x9     = -0.0001, -0.00005, 0.0
         
         gl_hud_offset_pos           = 0, 0, 0
         gl_hud_offset_pos_16x9      = 0, 0, 0
         gl_hud_offset_rot           = 0, 0, 0
         gl_hud_offset_rot_16x9      = 0, 0, 0
-		
-		lowered_hud_offset_pos			= 0.065, -0.036, -0.02
-		lowered_hud_offset_pos_16x9		= 0.065, -0.036, -0.02
-		lowered_hud_offset_rot			= -0.1, -0.63, 0.4
-		lowered_hud_offset_rot_16x9		= -0.1, -0.63, 0.4
-
+        
         lean_hud_offset_pos         = 0, 0, 0
         lean_hud_offset_rot         = 0, 0, 0
         
-        anm_bore                                 = blnd_kiparis_afk_arms
-        anm_bore_empty                           = blnd_kiparis_afk_arms, idle_empty
-        anm_hide                                 = blnd_kiparis_holster_arms, holster, 1.1
-        anm_hide_empty                           = blnd_kiparis_holster_arms, holster_empty, 1.1
-        anm_idle                                 = blnd_kiparis_idle_arms, idle, 0.75
-        anm_idle_empty                           = blnd_kiparis_idle_arms, idle_empty, 0.75
-        anm_idle_aim                             = blnd_kiparis_idleads_arms, idle, 0.80
-        anm_idle_aim_empty                       = blnd_kiparis_idleads_arms, idle_empty, 0.80
-        anm_idle_aim_moving                      = blnd_kiparis_idle_arms, idle, 0.90
-        anm_idle_aim_moving_empty                = blnd_kiparis_idle_arms, idle, 0.90
-        anm_idle_aim_moving_crouch               = blnd_kiparis_idle_arms, idle, 0.95
-        anm_idle_aim_moving_crouch_empty         = blnd_kiparis_idle_arms, idle, 0.95
-        anm_idle_moving                          = blnd_kiparis_walk_arms, idle, 0.87
-        anm_idle_moving_empty                    = blnd_kiparis_walk_arms, idle_empty, 0.87
-        anm_idle_sprint                          = blnd_kiparis_sprint_arms, idle, 1.2
-        anm_idle_sprint_empty                    = blnd_kiparis_sprint_arms, idle_empty, 1.2
-        anm_reload                               = blnd_kiparis_reload_arms, reload, 1.1
-        anm_reload_empty                         = blnd_kiparis_reloadempty_arms, reload_empty, 1.1
-        anm_shot_l                               = blnd_kiparis_shoot_arms, shoot_empty
-        anm_shots                                = blnd_kiparis_shoot_arms, shoot
-        anm_show                                 = blnd_kiparis_draw_arms, draw, 1.1
-        anm_show_empty                           = blnd_kiparis_draw_arms, draw_empty, 1.1
-        anm_reload_misfire                       = blnd_kiparis_unjam_arms, unjam, 1.12
-		anm_switch_mode             			 = blnd_kiparis_firemode_arms
+        anm_hide                    = kiparis_holster
+        anm_idle                    = kiparis_idle
+        anm_idle_aim                = kiparis_aim
+        anm_idle_aim_moving         = kiparis_move, idle, 0.75
+        anm_idle_aim_moving_crouch  = kiparis_move, idle, 0.7
+        anm_idle_moving             = kiparis_move
+        anm_idle_sprint             = kiparis_sprint
+        anm_reload                  = kiparis_reload, reload
+        anm_shots                   = kiparis_shoot, shoot
+        anm_show                    = kiparis_draw
         
         shell_bone                  = gilza
         shell_dir                   = 0.0, 1.0, 0.0

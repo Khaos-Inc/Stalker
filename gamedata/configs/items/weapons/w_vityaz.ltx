@@ -19,23 +19,13 @@ single_handed                            = 0
 default_to_ruck                          = false
 sprint_allowed                           = true
 
-icons_texture                            = ui\ui_icon_vityaz
-
-inv_grid_width                           = 4
 inv_grid_height                          = 2
-inv_grid_x                               = 0
-inv_grid_y                               = 0
-
-upgr_icon_path                           = ui\ui_icon_vityaz
-
-upgr_icon_x                              = 0
-upgr_icon_y                              = 100
-upgr_icon_width                          = 300
-upgr_icon_height                         = 100
-
-inv_name                                 = st_wpn_vityaznew
-inv_name_short                           = st_wpn_vityaznew
-description                              = st_wpn_vityaznew_descr
+inv_grid_width                           = 4
+inv_grid_x                               = 40
+inv_grid_y                               = 52
+inv_name                                 = st_wpn_vityaz
+inv_name_short                           = st_wpn_vityaz
+description                              = st_wpn_vityaz_descr
 
 kind                                     = w_smg ;w_pistol
 inv_weight                               = 2.9
@@ -59,9 +49,9 @@ flame_particles                          = weapons\generic_weapon05
 smoke_particles                          = weapons\generic_shoot_00
 grenade_flame_particles                  = weapons\generic_weapon01
 
-; shell_point				                 = 0, 0.216, 0.174
-; shell_dir					             = 0, 0, 0.4
-; shell_particles				             = weapons\9x19
+shell_point				                 = 0, 0.216, 0.174
+shell_dir					             = 0, 0, 0.4
+shell_particles				             = weapons\9x19
 
 light_disabled                           = false
 light_color                              = 0.6, 0.5, 0.3
@@ -70,7 +60,7 @@ light_time                               = 0.2
 light_var_color                          = 0.05
 light_var_range                          = 0.5
 
-upgrades                                 = up_gr_firstab_vityaz, up_gr_seconab_vityaz, up_gr_thirdab_vityaz, up_gr_fourtab_vityaz, up_gr_fifthab_vityaz, up_gr_fifthcd_vityaz
+upgrades                                 = up_gr_firstab_pp2000, up_gr_seconab_pp2000, up_gr_thirdab_pp2000, up_gr_fourtab_pp2000, up_gr_fifthab_pp2000, up_gr_fifthcd_pp2000
 installed_upgrades                       =
 upgrade_scheme                           = upgrade_scheme_mp5
 upgr_icon_x                              = 900
@@ -84,7 +74,7 @@ ammo_elapsed                             = 30
 ammo_mag_size                            = 30
 startup_ammo                             = 90
 
-scopes                                   = ac10632, acog, eot, c-more
+scopes                                   = ac10632, acog, eot
 scope_status                             = 0
 scope_zoom_factor                        = 0
 
@@ -108,7 +98,7 @@ hit_power                                = 0.47, 0.47, 0.47, 0.47
 hit_type                                 = fire_wound
 fire_distance                            = 400
 bullet_speed                             = 390
-rpm                                      = 800
+rpm                                      = 700
 rpm_empty_click                          = 200
 ap_modifier                              = 1.1
 
@@ -129,14 +119,14 @@ misfire_start_prob                       = 0.007
 misfire_end_condition                    = 0.13
 misfire_end_prob                         = 0.11
 
-condition_queue_shot_dec                 = 0.0009
-condition_shot_dec                       = 0.0009
+condition_queue_shot_dec                 = 0.00115
+condition_shot_dec                       = 0.00115
 
 cam_return                               = 0
-cam_relax_speed                          = 9
-cam_dispersion                           = 0.61
-cam_dispersion_frac                      = 0.8
-cam_dispersion_inc                       = 0.042
+cam_relax_speed                          = 10
+cam_dispersion                           = 0.52
+cam_dispersion_frac                      = 1.0
+cam_dispersion_inc                       = 0.0475
 cam_max_angle                            = 42.0
 cam_max_angle_horz                       = 42.0
 cam_step_angle_horz                      = 1.5
@@ -149,7 +139,7 @@ zoom_cam_max_angle_horz                  = 42.0
 zoom_cam_step_angle_horz                 = 1.48
 
 PDM_disp_accel_factor                    = 1.155
-PDM_disp_base                            = 0.72
+PDM_disp_base                            = 0.63
 PDM_disp_crouch                          = 1.0
 PDM_disp_crouch_no_acc                   = 1.0
 PDM_disp_vel_factor                      = 1.15
@@ -170,132 +160,54 @@ kill_msg_y                               = 82
 kill_msg_width                           = 56
 kill_msg_height                          = 23
 
-snd_empty				                  = weapons\vityaz\vityaz_empty
-snd_draw        		                  = weapons\vityaz\vityaz_draw
-snd_holster        		                  = weapons\vityaz\vityaz_holster
-snd_reload					              = weapons\vityaz\vityaz_virilzed_reload
-snd_reload_empty		                  = weapons\vityaz\vityaz_virilized_reload_empty
-snd_bore				                  = weapons\vityaz\vityaz_inspect
-snd_reload_misfire                        = weapons\vityaz\vityaz_unjam
-snd_switch_mode				              = weapons\vityaz\vityaz_switch_mode
-
-scripted_snd_ammo_check                 = weapons\vityaz\vityaz_virilized_magcheck
-scripted_snd_ammo_check_empty           = weapons\vityaz\vityaz_virilized_magcheck
-scripted_snd_ammo_check_jammed          = weapons\vityaz\vityaz_virilized_magcheck
-scripted_snd_ammo_check_empty_jammed    = weapons\vityaz\vityaz_virilized_magcheck
-scripted_snd_ammo_check_no_mag          = $no_sound
-
-use_alt_aim_hud				= false
 
 [wpn_vityaz_hud]:hud_base
 item_visual                              = anomaly_weapons\wpn_vityaz\wpn_vityaz_hud.ogf
 attach_place_idx                         = 0
 zoom_hide_crosshair                      = true   
 
-item_position                            = 0, 0.00, 0
-item_orientation                         = 0, 0.00, 0
+item_position                            = 0, 0.004, 0
+item_orientation                         = -15.488927, -3.320898, 367.220154
 
-hands_orientation                = 1.145, 0.274, 0
-hands_orientation_16x9           = 1.145, 0.274, 0
-hands_position                   = 0.05, -0.137, 0.256
-hands_position_16x9              = 0.05, -0.137, 0.256
+hands_position                           = -0.12, -0.19, 0.09
+hands_position_16x9                      = -0.12, -0.19, 0.09
+hands_orientation                        = -0.75, 1.7, -4.2
+hands_orientation_16x9                   = -0.75, 1.7, -4.2
 
-aim_hud_offset_pos               = -0.0481, 0.025, -0.12
-aim_hud_offset_pos_16x9          = -0.0481, 0.025, -0.12
-aim_hud_offset_rot               = 0.0024, 0.00215, -0.01
-aim_hud_offset_rot_16x9          = 0.0024, 0.00215, -0.01
+aim_hud_offset_pos                       = -0.09654, 0.0562, -0.25
+aim_hud_offset_pos_16x9                  = -0.09654, 0.0562, -0.25
+aim_hud_offset_rot                       = 0.0098, -0.0002, -0.0064
+aim_hud_offset_rot_16x9                  = 0.0098, -0.0002, -0.0064
 
-gl_hud_offset_pos                = 0, 0, 0
-gl_hud_offset_pos_16x9           = 0, 0, 0
-gl_hud_offset_rot                = 0, 0, 0
-gl_hud_offset_rot_16x9           = 0, 0, 0
-
-lowered_hud_offset_pos           = 0.0732, 0.007, 0
-lowered_hud_offset_pos_16x9      = 0.0732, 0.007, 0
-lowered_hud_offset_rot		 = -0.075, -0.63, 0.4
-lowered_hud_offset_rot_16x9	 = -0.075, -0.63, 0.4
+gl_hud_offset_pos                        = 0, 0, 0
+gl_hud_offset_pos_16x9                   = 0, 0, 0
+gl_hud_offset_rot                        = 0, 0, 0
+gl_hud_offset_rot_16x9                   = 0, 0, 0
 
 lean_hud_offset_pos                      = 0, 0, 0
 lean_hud_offset_rot                      = 0, 0, 0
 
-anm_bore                                 = vityaz_virilized_inspect, idle_virilized
-anm_show                                 = vityaz_virilized_draw, idle_virilized
-anm_hide                                 = vityaz_virilized_holster, idle_virilized
+anm_hide                                 = lancew_ak101_holster
+anm_idle                                 = lancew_ak101_idle
+anm_idle_aim                             = lancew_ak101_idle_aim, idle_aim
+anm_idle_aim_moving                      = lancew_ak101_moving, idle, 0.75
+anm_idle_aim_moving_crouch               = lancew_ak101_moving, idle, 0.7
+anm_idle_moving                          = lancew_ak101_moving
+anm_idle_sprint                          = lancew_ak101_sprint
+anm_reload                               = lancew_ak101_reload, reload
+anm_shots                                = lancew_ak101_shoot, shoot
+anm_show                                 = lancew_ak101_draw
 
-anm_idle                                 = vityaz_virilized_idle, idle_virilized
-anm_idle_aim_moving                      = vityaz_virilized_walk, idle_virilized 
-anm_idle_aim_moving                      = vityaz_virilized_walk, idle_virilized, 0.75 
-anm_idle_aim_moving_crouch               = vityaz_virilized_walk, idle_virilized, 0.8 
-anm_idle_moving                          = vityaz_virilized_walk, idle_virilized;, 0.95
-anm_idle_moving_crouch                   = vityaz_virilized_walk, idle_virilized
-anm_idle_sprint                          = vityaz_virilized_sprint, idle_virilized, 1.1 
+shell_bone                               = wpn_body
+shell_dir                                = 0, 1, 0
+shell_point                              = 0, 0.064, 0.19
 
-anm_reload                               = vityaz_virilized_reload, reload_virilized
-anm_reload_empty                         = vityaz_virilized_reload_empty, reload_empty_virilized
-anm_reload_misfire          			 = vityaz_virilized_unjam, unjam_virilized
-anm_switch_mode                 		 = vityaz_virilized_switch_mode, switch_mode_virilized
+fire_bone                                = wpn_body
+fire_bone2                               = wpn_body
+fire_point                               = 0, 0.038159, 0.608368
+fire_point2                              = 0, -0.011, 0.553
 
-anm_shots                                = vityaz_virilized_shoot
-anm_idle_aim                             = vityaz_virilized_aim, idle_virilized
-
-anm_walk2sprint                     = vityaz_virilized_sprint_start, idle_virilized
-anm_sprint2walk                     = vityaz_virilized_sprint_end, idle_virilized
-
-anm_bore_jammed                                 = vityaz_virilized_inspect_jammed, idle_virilized_jammed
-anm_bore_empty_jammed                                 = vityaz_virilized_inspect_jammed, idle_virilized_jammed
-anm_show_jammed                                 = vityaz_virilized_draw, idle_virilized_jammed
-anm_hide_jammed                                 = vityaz_virilized_holster, idle_virilized_jammed
-
-anm_idle_jammed                                 = vityaz_virilized_idle, idle_virilized_jammed
-anm_idle_aim_moving_jammed                      = vityaz_virilized_walk, idle_virilized_jammed 
-anm_idle_aim_moving_jammed                      = vityaz_virilized_walk, idle_virilized_jammed, 0.75 
-anm_idle_aim_moving_crouch_jammed               = vityaz_virilized_walk, idle_virilized_jammed, 0.8 
-anm_idle_moving_jammed                          = vityaz_virilized_walk, idle_virilized_jammed;, 0.95
-anm_idle_moving_crouch_jammed                   = vityaz_virilized_walk, idle_virilized_jammed
-anm_idle_sprint_jammed                          = vityaz_virilized_sprint, idle_virilized_jammed, 1.1 
-
-anm_reload_misfire_jammed          			 = vityaz_virilized_unjam, unjam_virilized
-anm_switch_mode_jammed                 		 = vityaz_virilized_switch_mode, switch_mode_virilized_jammed
-
-anm_idle_aim_jammed                             = vityaz_virilized_aim, idle_virilized_jammed
-
-anm_walk2sprint_jammed                     = vityaz_virilized_sprint_start, idle_virilized_jammed
-anm_sprint2walk_jammed                     = vityaz_virilized_sprint_end, idle_virilized_jammed
-
-
-anm_ammo_check                           = vityaz_virilized_magcheck, magcheck_virilized
-anm_ammo_check_empty                     = vityaz_virilized_magcheck, magcheck_virilized_empty
-anm_ammo_check_no_mag                    = vityaz_virilized_magcheck, magcheck_virilized_empty
-;anm_ammo_check_aim                       = vityaz_virilized_magcheck_ads, magcheck_virilized_ads
-;anm_ammo_check_empty_aim                 = vityaz_virilized_magcheck_ads, magcheck_virilized_empty_ads
-anm_ammo_check_jammed                    = vityaz_virilized_magcheck, magcheck_virilized_jammed
-anm_ammo_check_empty_jammed              = vityaz_virilized_magcheck, magcheck_virilized_empty_jammed
-
-        ; Transition Definitions
-
-
-        ts_pattern_walk2sprint      = .+, anm_idle_sprint, anm_walk2sprint, 1
-
-        ts_pattern_sprint2walk      = anm_idle_sprint, ^anm_idle.*, anm_sprint2walk, 1
-        ts_pattern_sprint2walk_aim  = anm_walk2sprint, ^anm_idle_aim.*, anm_sprint2walk, 1
-        ts_strict_sprint2walk_idle  = anm_walk2sprint, anm_idle, anm_sprint2walk
-        ts_strict_sprint2walk_move  = anm_walk2sprint, anm_idle_moving, anm_sprint2walk
-
-        ;ts_pattern_idle2aim         = ^anm_idle.*, ^anm_idle_aim$, anm_idle2aim, 1
-        ts_strict_sprint2aim        = anm_idle_sprint, anm_idle_aim, anm_sprint2walk
-
-        ts_strict_sprint2inspect        = anm_idle_sprint, anm_bore, anm_sprint2walk
-        ts_strict_walk2sprint_inspect        = anm_walk2sprint, anm_bore, anm_sprint2walk
-
-        ts_pattern_reload_interrupt     = anm_add_cartridge, ^anm_idle.*, anm_close 
-        ts_pattern_reload_empty_interrupt     = anm_add_cartridge_empty, ^anm_idle.*, anm_close   
-
-; shell_bone                               = zatvor
-; shell_dir                                = 0, 1, 0
-; shell_point                              = 0, 0, 0
-
-fire_bone                                = muzzle
-fire_point                               = 0, 0,0
+rpm_anim_fix 							 = false
 
 ;------------------------------------------------------------------------------------------------
 [wpn_vityaz_ac10632]:wpn_vityaz
@@ -303,6 +215,7 @@ fire_point                               = 0, 0,0
 1icon_layer_x                            = 66
 1icon_layer_y                            = -9
 
+inv_weight                               = 3.015
 
 hud                                      = wpn_vityaz_ac10632_hud
 visual                                   = dynamics\weapons\wpn_vityaz\wpn_vityaz_ac10632.ogf
@@ -311,18 +224,35 @@ visual                                   = dynamics\weapons\wpn_vityaz\wpn_vitya
 [wpn_vityaz_ac10632_hud]:wpn_vityaz_hud
 item_visual                              = anomaly_weapons\wpn_vityaz\wpn_vityaz_ac10632_hud.ogf
 
+aim_hud_offset_pos                       = -0.09461, 0.0347, -0.25
+aim_hud_offset_pos_16x9                  = -0.09461, 0.0347, -0.25
+aim_hud_offset_rot                       = 0.0098, -0.0026, -0.006
+aim_hud_offset_rot_16x9                  = 0.0098, -0.0026, -0.006
+
 ;------------------------------------------------------------------------------------------------
 [wpn_vityaz_acog]:wpn_vityaz
 1icon_layer                              = acog
 1icon_layer_x                            = 69
 1icon_layer_y                            = -7
 
+inv_weight                               = 3.3
 
 hud                                      = wpn_vityaz_acog_hud
 visual                                   = dynamics\weapons\wpn_vityaz\wpn_vityaz_acog.ogf
 
+scope_status                             = 0
+scope_zoom_factor                        = 20
+
+zoom_rotate_time                         = 0.25
+
+
 [wpn_vityaz_acog_hud]:wpn_vityaz_hud,hud_low_interia
 item_visual                              = anomaly_weapons\wpn_vityaz\wpn_vityaz_acog_hud.ogf
+
+aim_hud_offset_pos                       = -0.0962, 0.040696, -0.33
+aim_hud_offset_pos_16x9                  = -0.0962, 0.040696, -0.33
+aim_hud_offset_rot                       = 0.008, -0.0006, -0.0065
+aim_hud_offset_rot_16x9                  = 0.008, -0.0006, -0.0065
 
 ;------------------------------------------------------------------------------------------------
 [wpn_vityaz_eot]:wpn_vityaz
@@ -330,6 +260,7 @@ item_visual                              = anomaly_weapons\wpn_vityaz\wpn_vityaz
 1icon_layer_x                            = 72
 1icon_layer_y                            = -4
 
+inv_weight                               = 3.21
 
 hud                                      = wpn_vityaz_eot_hud
 visual                                   = dynamics\weapons\wpn_vityaz\wpn_vityaz_eot.ogf
@@ -338,15 +269,8 @@ visual                                   = dynamics\weapons\wpn_vityaz\wpn_vitya
 [wpn_vityaz_eot_hud]:wpn_vityaz_hud
 item_visual                              = anomaly_weapons\wpn_vityaz\wpn_vityaz_eot_hud.ogf
 
-;------------------------------------------------------------------------------------------------
-[wpn_vityaz_c-more]:wpn_vityaz
-1icon_layer                              = c-more
-1icon_layer_x                            = 72
-1icon_layer_y                            = -4
+aim_hud_offset_pos                       = -0.096500, 0.029000, -0.275
+aim_hud_offset_pos_16x9                  = -0.096500, 0.029000, -0.275
+aim_hud_offset_rot                       = 0.008000, 0.000000, -0.006
+aim_hud_offset_rot_16x9                  = 0.008000, 0.000000, -0.006
 
-
-hud                                      = wpn_vityaz_c-more_hud
-visual                                   = dynamics\weapons\wpn_vityaz\wpn_vityaz_c-more.ogf
-
-[wpn_vityaz_c-more_hud]:wpn_vityaz_hud,hud_low_interia
-item_visual                              = anomaly_weapons\wpn_vityaz\wpn_vityaz_c-more_hud.ogf

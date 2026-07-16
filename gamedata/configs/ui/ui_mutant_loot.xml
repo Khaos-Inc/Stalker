@@ -1,30 +1,28 @@
 <w>
 	<mutant_loot>
-		<background x="348" y="128" width="328" height="512" stretch="1">
+		<background x="360" y="110" width="305" height="460" stretch="1">
 			<texture>ui_loot_window</texture>
 		</background>
-		<image x="8" y="8" width="312" height="158" stretch="1"/>
-		
-		<caption x="8" y="-30" width="312" height="30">
-			<text align="l" vert_align="c" font="letterica18"/>
+		<image  x="6" y="6" width="295" height="150" stretch="1"/>
+		<caption  x="200" y="160" width="245" height="30">
+			<text font="letterica18" align="c"/>
 		</caption>
-		
-		<frame x="0" y="0" width="0" height="0" stretch="1">
-			<!-- <texture>ui_mutant_loot_frame</texture> -->
+		<frame x="6" y="220" width="295" height="140" stretch="1">
+			<texture>ui_mutant_loot_frame</texture>
 		</frame>
-		
-		<cont_loot x="12" y="179" width="300" height="185" stretch="1"/>
-		
-		<btn_loot x="72" y="398" width="184" height="24">
-			<text y="1" align="c" vert_align="c" font="letterica16">ui_mm_loot_selected</text>
+
+		<cont_loot x="9" y="220" width="300" height="140" stretch="1"/>
+
+		<btn_loot x="67" y="367" width="170" height="25">
+			<text font="letterica16">ui_mm_loot_selected</text>
 			<texture>ui_button_ordinary</texture>
 		</btn_loot>
-		<btn_loot_all x="72" y="428" width="184" height="24">
-			<text y="1" align="c" vert_align="c" font="letterica16">ui_mm_loot_all</text>
+		<btn_loot_all x="67" y="394" width="170" height="25">
+			<text font="letterica16">ui_mm_loot_all</text>
 			<texture>ui_button_ordinary</texture>
 		</btn_loot_all>
-		<btn_cancel x="72" y="458" width="184" height="24">
-			<text y="1" align="c" vert_align="c" font="letterica16">ui_mm_cancel</text>
+		<btn_cancel x="67" y="421" width="170" height="25">
+			<text font="letterica16">ui_mm_cancel</text>
 			<texture>ui_button_ordinary</texture>
 		</btn_cancel>
 	</mutant_loot>

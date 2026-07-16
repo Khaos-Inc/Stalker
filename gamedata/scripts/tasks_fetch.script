@@ -81,9 +81,6 @@ local faction_lookup = { -- List of factions used in patch tasks
 	"monolith"
 }
 
-if smr_amain_mcm and smr_amain_mcm.get_config("smr_enabled") then
-	faction_lookup = smr_pop.get_faction_spawn_table()
-end
 
 ---------------------------< Utility >---------------------------
 function postpone_fetch_for_next_frame(task_id, section, amount)
@@ -103,7 +100,7 @@ function postpone_fetch_for_next_frame(task_id, section, amount)
 	local news_ico = task_manager.task_ini:r_string_ex(task_id, "icon") or "ui_inGame2_D_Sisshik"
 	local news_text = ui_item.get_sec_name(section) .. extra .. clr .. " (x" .. amount .. ")"
 		
-	db.actor:give_talk_message2(news_caption, news_text, news_ico, "iconed_answer_item", task_id)
+	db.actor:give_talk_message2(news_caption, news_text, news_ico, "iconed_answer_item")
 	
 	return true
 end
@@ -158,11 +155,6 @@ xr_effects.fetch_reward_and_remove = function(actor, npc, p) --	Remove fetch ite
 		local max_use = IsItem("multiuse",sec) or 1
 		local cost = ini_sys:r_float_ex(sec,"cost") * (1 / max_use)
 		
-		local belt_ids = {}
-		db.actor:iterate_belt( function(owner, arty)
-			belt_ids[arty:id()] = true
-		end)	
-	
 		local last_obj
 		local collected_itms = {}
 		local total_cost, remain = 0,0
@@ -172,32 +164,12 @@ xr_effects.fetch_reward_and_remove = function(actor, npc, p) --	Remove fetch ite
 			if (obj:section() == sec) then
 				local cnt = (max_use > 1) and obj:get_remaining_uses() or 1
 				local con = use_con and obj:condition() or 1
-				local item_type = obj:get_weapon_type()
-
-				-- item_type should be not 255 when this is a weapon
-				-- when it's a weapon, re-calculate the condition
-				-- based on the average of its parts
-				if item_type ~= 255 then
-					local parts = se_load_var(obj:id(), obj:name(), "parts")
-					local num_parts = 0
-					local total_parts_condition = 0
-
-					for k,v in pairs(parts) do
-						if string.find(k, "prt_w_") then
-							total_parts_condition = total_parts_condition + v
-							num_parts = num_parts + 1
-						end
-					end
-
-					con = (total_parts_condition / num_parts) / 100
-				end
 				
-				if not belt_ids[obj:id()] then
-					collected_itms[obj:id()] = cnt
-					total_cost = total_cost + (cost * cnt * (con * con) * mult)
-					cur_count = cur_count - cnt
-					last_obj = obj
-				end
+				collected_itms[obj:id()] = cnt
+				total_cost = total_cost + (cost * cnt * (con * con) * mult)
+				cur_count = cur_count - cnt
+				
+				last_obj = obj
 			end
 			if (cur_count <= 0) then
 				if (cur_count < 0) then
@@ -208,7 +180,6 @@ xr_effects.fetch_reward_and_remove = function(actor, npc, p) --	Remove fetch ite
 			--return false
 		end
 		db.actor:iterate_inventory(itr, nil)
-
 		
 		-- Check availability
 		if is_empty(collected_itms) then
@@ -386,14 +357,8 @@ xr_effects.setup_fetch_task = function(actor,npc,p) -- setup_supplies_fetch_task
 				end
 			end
 			
-			if smr_amain_mcm and is_empty(patches) then
-                if smr_amain_mcm.get_config("smr_enabled") then
-                    local t = smr_pop.get_faction_spawn_table()
-                    local patch = t[math.random(#t)] .. "_patch"
-                    patches[patch] = 0
-                else
-                    patches = patch_general[npc_comm]
-                end
+			if is_empty(patches) then
+				patches = patch_general[npc_comm]
 			end
 			
 			itms = patches
@@ -504,26 +469,6 @@ xr_effects.setup_supplies_fetch_task_lostzone_patch = function(actor,npc,p)
 	else
 		local comm = npc and character_community(npc) or "stalker"
 		local itms = patch_general[comm] or patch_general["stalker"]
-		-- SMR
-        if smr_amain_mcm and smr_amain_mcm.get_config("smr_enabled") then
-			local itms = {}
-			for i=1,#faction_lookup do
-				if game_relations.is_factions_enemies(faction_lookup[i], comm) then
-					if (faction_lookup[i] == "killer") then comm = "merc"
-					elseif (faction_lookup[i] == "dolg") then comm = "duty"
-					else comm = faction_lookup[i]
-					end
-					local patch =  comm .. "_patch"
-					itms[patch] = 0
-				end
-			end
-			
-			if is_empty(itms) then
-				local t = smr_pop.get_faction_spawn_table()
-				local patch = t[math.random(#t)] .. "_patch"
-				itms[patch] = 0
-			end
-        end
 		sec = random_key_table(itms)
 		cnt = math.random(p[2] and tonumber(p[2]) or 1,p[3] and tonumber(p[3]) or 1)
 
@@ -658,12 +603,6 @@ task_status_functor.actor_has_fetch_item = function(tsk,task_id)
 	end
 	
 	local item = section and actor:object(section)
-	
-	local belt_ids = {}
-	actor:iterate_belt( function(owner, arty)
-		belt_ids[arty:id()] = true
-	end)
-	
 	if (item ~= nil) then 
 		if (task_id == "esc_2_12_stalker_nimble_task_1" or task_id == "jup_b220_trapper_task_3") then 
 			if (item:condition() >= 0.9) then 
@@ -673,12 +612,8 @@ task_status_functor.actor_has_fetch_item = function(tsk,task_id)
 			end
 		else 
 			local count = load_var(actor,task_id.."_fetch_count")
-			local cnt = utils_item.get_amount(db.actor, section, 1)
-			if belt_ids[item:id()] and cnt == 1 then
-				tsk.stage = 0
-				return
-			end
 			if (count and count > 1) then
+			 	local cnt = utils_item.get_amount(db.actor, section, 1)
 				if (cnt >= count) then
 					tsk.stage = 1
 				else
@@ -688,7 +623,6 @@ task_status_functor.actor_has_fetch_item = function(tsk,task_id)
 			end
 			tsk.stage = 1 -- should never happen but in such case let player finish quest for free
 		end 
-		
 		
 	elseif section and sfind(section,"af_") then
 		if actor:object(section .. "_af_aam")

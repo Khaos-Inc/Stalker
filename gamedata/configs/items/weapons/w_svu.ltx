@@ -159,20 +159,15 @@ zoom_hide_crosshair                      = true
 item_position                            = 0, 0, 0
 item_orientation                         = 0, 0, 0
 
-hands_position                           = -0.027, -0.13, 0.03
-hands_position_16x9                      = -0.027, -0.13, 0.03
-hands_orientation                        = -0.5, 1, 0.15
-hands_orientation_16x9                   = -0.5, 1, 0.15
+hands_position                           = 0.008, -0.17, 0.25
+hands_position_16x9                      = 0.008, -0.17, 0.25
+hands_orientation                        = 0.55, 2.39, 0.15
+hands_orientation_16x9                   = 0.55, 2.39, 0.15
 
-aim_hud_offset_pos                       = -0.0721, 0.012, 0.01
-aim_hud_offset_pos_16x9                  = -0.0721, 0.012, 0.01
-aim_hud_offset_rot                       = 0.0153, 0.0039, 0.003
-aim_hud_offset_rot_16x9                  = 0.0153, 0.0039, 0.003
-
-lowered_hud_offset_pos_16x9              = 0,0,0
-lowered_hud_offset_pos                   = 0,0,0
-lowered_hud_offset_rot_16x9              = 0.1,-0.4,0.4
-lowered_hud_offset_rot                   = 0.1,-0.4,0.4
+aim_hud_offset_pos                       = -0.112465, 0.0618, -0.25
+aim_hud_offset_pos_16x9                  = -0.112465, 0.0618, -0.25
+aim_hud_offset_rot                       = 0.0397, 0.02224, 0.0007
+aim_hud_offset_rot_16x9                  = 0.0397, 0.02224, 0.0007
 
 gl_hud_offset_pos                        = 0, 0, 0
 gl_hud_offset_rot                        = 0, 0, 0
@@ -208,11 +203,22 @@ freelook_z_offset_mul					 = 0.3
 1icon_layer_x                            = 75
 1icon_layer_y                            = 9
 
+inv_weight                               = 4.22
 
 hud                                      = wpn_svu_kobra_hud
 visual                                   = dynamics\weapons\wpn_svu\wpn_svu_kobra.ogf
+
+scope_status                             = 0
+scope_dynamic_zoom                       = off
+
+
 [wpn_svu_kobra_hud]:wpn_svu_hud
 item_visual                              = anomaly_weapons\wpn_svu\wpn_svu_kobra_hud.ogf
+
+aim_hud_offset_pos                       = -0.1121, 0.0418, -0.25
+aim_hud_offset_pos_16x9                  = -0.1121, 0.0418, -0.25
+aim_hud_offset_rot                       = 0.04, 0.02205, 0.0005
+aim_hud_offset_rot_16x9                  = 0.04, 0.02205, 0.0005
 
 ;------------------------------------------------------------------------------------------------
 [wpn_svu_1p29]:wpn_svu
@@ -220,12 +226,26 @@ item_visual                              = anomaly_weapons\wpn_svu\wpn_svu_kobra
 1icon_layer_x                            = 72
 1icon_layer_y                            = 6
 
+inv_weight                               = 4.61
 
 hud                                      = wpn_svu_1p29_hud
 visual                                   = dynamics\weapons\wpn_svu\wpn_svu_1p29.ogf
 
+scope_status                             = 1
+scope_dynamic_zoom                       = off
+scope_texture                            = wpn_crosshair_1p29
+scope_zoom_factor                        = 15
+
+zoom_rotate_time                         = 0.3
+
+
 [wpn_svu_1p29_hud]:wpn_svu_hud
 item_visual                              = anomaly_weapons\wpn_svu\wpn_svu_1p29_hud.ogf
+
+aim_hud_offset_pos                       = -0.1145, 0.0415, -0.35
+aim_hud_offset_pos_16x9                  = -0.1145, 0.0415, -0.35
+aim_hud_offset_rot                       = 0.04, 0.02205, 0.0005
+aim_hud_offset_rot_16x9                  = 0.04, 0.02205, 0.0005
 
 ;------------------------------------------------------------------------------------------------
 [wpn_svu_ps01]:wpn_svu
@@ -233,12 +253,25 @@ item_visual                              = anomaly_weapons\wpn_svu\wpn_svu_1p29_
 1icon_layer_x                            = 47
 1icon_layer_y                            = 8
 
+inv_weight                               = 4.41
 
 hud                                      = wpn_svu_pso1_hud
 visual                                   = dynamics\weapons\wpn_svu\wpn_svu_pso1.ogf
 
+scope_status                             = 1
+scope_dynamic_zoom                       = on
+scope_texture                            = wpn_crosshair_pso1
+scope_zoom_factor                        = 15
+
+
 [wpn_svu_pso1_hud]:wpn_svu_hud
 item_visual                              = anomaly_weapons\wpn_svu\wpn_svu_pso1_hud.ogf
+
+aim_hud_offset_pos                       = -0.101, 0.0567, -0.3
+aim_hud_offset_pos_16x9                  = -0.101, 0.0567, -0.3
+aim_hud_offset_rot                       = 0.04, 0.02205, 0.0005
+aim_hud_offset_rot_16x9                  = 0.04, 0.02205, 0.0005
+
 
 ;------------------------------------------------------------------------------------------------
 ;-- Alt
@@ -280,9 +313,18 @@ item_visual                              = anomaly_weapons\wpn_svu\wpn_svu_sk1_h
 1icon_layer_x                            = 72
 1icon_layer_y                            = 6
 
+inv_weight                               = 4.61
 
 hud                                      = wpn_svu_1p29_sk1_hud
 visual                                   = dynamics\weapons\wpn_svu\wpn_svu_1p29_sk1.ogf
+
+scope_status                             = 1
+scope_dynamic_zoom                       = off
+scope_texture                            = wpn_crosshair_1p29
+scope_zoom_factor                        = 15
+
+zoom_rotate_time                         = 0.3
+
 
 [wpn_svu_1p29_sk1_hud]:wpn_svu_1p29_hud
 item_visual                              = anomaly_weapons\wpn_svu\wpn_svu_1p29_sk1_hud.ogf
@@ -293,9 +335,14 @@ item_visual                              = anomaly_weapons\wpn_svu\wpn_svu_1p29_
 1icon_layer_x                            = 75
 1icon_layer_y                            = 9
 
+inv_weight                               = 4.22
 
 hud                                      = wpn_svu_kobra_sk1_hud
 visual                                   = dynamics\weapons\wpn_svu\wpn_svu_kobra_sk1.ogf
+
+scope_status                             = 0
+scope_dynamic_zoom                       = off
+
 
 [wpn_svu_kobra_sk1_hud]:wpn_svu_kobra_hud
 item_visual                              = anomaly_weapons\wpn_svu\wpn_svu_kobra_sk1_hud.ogf
@@ -306,9 +353,16 @@ item_visual                              = anomaly_weapons\wpn_svu\wpn_svu_kobra
 1icon_layer_x                            = 47
 1icon_layer_y                            = 8
 
+inv_weight                               = 4.41
 
 hud                                      = wpn_svu_pso1_sk1_hud
 item_visual                              = anomaly_weapons\wpn_svu\wpn_svu_pso1_sk1.ogf
+
+scope_status                             = 1
+scope_dynamic_zoom                       = on
+scope_texture                            = wpn_crosshair_pso1
+scope_zoom_factor                        = 15
+
 
 [wpn_svu_pso1_sk1_hud]:wpn_svu_pso1_hud
 item_visual                              = anomaly_weapons\wpn_svu\wpn_svu_pso1_sk1_hud.ogf
@@ -370,8 +424,18 @@ grenade_bone                             = grenade
 1icon_layer_x                            = 72
 1icon_layer_y                            = 6
 
+inv_weight                               = 4.63
+
 hud                                      = wpn_svu_nimble_1p29_hud
 visual                                   = dynamics\weapons\wpn_svu\wpn_svu_1p29_nimble.ogf
+
+scope_status                             = 1
+scope_dynamic_zoom                       = off
+scope_texture                            = wpn_crosshair_1p29
+scope_zoom_factor                        = 15
+
+zoom_rotate_time                         = 0.3
+
 
 [wpn_svu_nimble_1p29_hud]:wpn_svu_1p29_hud
 item_visual                              = anomaly_weapons\wpn_svu\wpn_svu_1p29_nimble_hud.ogf
@@ -384,9 +448,14 @@ grenade_bone                             = grenade
 1icon_layer_x                            = 75
 1icon_layer_y                            = 9
 
+inv_weight                               = 4.25
 
 hud                                      = wpn_svu_nimble_kobra_hud
 visual                                   = dynamics\weapons\wpn_svu\wpn_svu_kobra_nimble.ogf
+
+scope_status                             = 0
+scope_dynamic_zoom                       = off
+
 
 [wpn_svu_nimble_kobra_hud]:wpn_svu_kobra_hud
 item_visual                              = anomaly_weapons\wpn_svu\wpn_svu_kobra_nimble_hud.ogf
@@ -399,9 +468,16 @@ grenade_bone                             = grenade
 1icon_layer_x                            = 47
 1icon_layer_y                            = 8
 
+inv_weight                               = 4.44
 
 hud                                      = wpn_svu_nimble_pso1_hud
 visual                                   = dynamics\weapons\wpn_svu\wpn_svu_pso1_nimble.ogf
+
+scope_status                             = 1
+scope_dynamic_zoom                       = on
+scope_texture                            = wpn_crosshair_pso1
+scope_zoom_factor                        = 15
+
 
 [wpn_svu_nimble_pso1_hud]:wpn_svu_pso1_hud
 item_visual                              = anomaly_weapons\wpn_svu\wpn_svu_pso1_nimble_hud.ogf

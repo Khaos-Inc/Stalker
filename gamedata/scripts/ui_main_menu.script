@@ -21,8 +21,7 @@ class "main_menu" (CUIScriptWnd)
 function main_menu:__init() super()
 	math.randomseed(device():time_continual())
 	self.mbox_mode = 0
-	ui_mcm.init_opt_base() 
-	self:InitControls()
+    self:InitControls()
     self:InitCallBacks()
 	SendScriptCallback("main_menu_on_init",self)
 	RegisterScriptCallback("on_localization_change",self)
@@ -73,7 +72,6 @@ end
 function main_menu:InitCallBacks()
 	self:AddCallback("btn_newgame",		ui_events.BUTTON_CLICKED,				self.OnButton_new_game,				self)
 	self:AddCallback("btn_options",     ui_events.BUTTON_CLICKED,				self.OnButton_options_clicked,		self)
-	self:AddCallback("btn_mcm",     	ui_events.BUTTON_CLICKED,				self.OnButton_mcm_clicked,			self)
 	self:AddCallback("btn_originals",   ui_events.BUTTON_CLICKED,				self.OnButton_originals_clicked,	self)
 	self:AddCallback("btn_load",        ui_events.BUTTON_CLICKED,				self.OnButton_load_clicked,			self)
 	self:AddCallback("btn_save",		ui_events.BUTTON_CLICKED,				self.OnButton_save_clicked,			self)
@@ -103,13 +101,6 @@ function main_menu:Update()
 			self.msg_wnd_timer = nil
 			self.msg_wnd:Show(false)
 		end
-	end
-	
-	if self.auto_mcm and time_continual() - self.auto_mcm > 100 then
-		self:OnButton_mcm_clicked()
-		self.mcm_dlg:Open_to(self.auto_mcm_path)
-		self.auto_mcm = nil
-		self.auto_mcm_path = nil
 	end
 end 
 
@@ -151,7 +142,8 @@ end
 
 function main_menu:OnButton_originals_clicked()
 	game.open_originals_link()
-end											   
+end
+
 function main_menu:OnButton_quit_clicked()
 	self.message_box:InitMessageBox("message_box_quit_windows")
 	self.message_box:ShowDialog(true)
@@ -203,19 +195,6 @@ function main_menu:OnButton_options_clicked()
 	self.opt_dlg:Reset_last_opt()
 end
 
-function main_menu:OnButton_mcm_clicked()
-	printf("MCMBTN press")
-	if (self.mcm_dlg == nil) then
-		self.mcm_dlg = ui_mcm.UI_MCM()
-		self.mcm_dlg.owner = self
-	end
-
-	self.mcm_dlg:ShowDialog(true)
-	self:HideDialog()
-	self:Show(false)
-	self.mcm_dlg:Reset_last_opt()
-end
-
 function main_menu:OnButton_load_clicked()
 	
 	if self.load_dlg ==nil then
@@ -237,9 +216,6 @@ end
 
 function main_menu:OnMsgOk()
 	if (self.mbox_mode == 2) then
-		if mcm_log then
-			mcm_log.close_logs()
-		end
 		exec_console_cmd("quit")
 	end
 	self.mbox_mode = 0
@@ -267,9 +243,6 @@ function main_menu:OnMessageQuitGame()
 end
 
 function main_menu:OnMessageQuitWin()
-	if mcm_log then
-		mcm_log.close_logs()
-	end
 	exec_console_cmd("quit")
 end
 
@@ -300,7 +273,6 @@ end
 
 function main_menu:on_localization_change()
 	self.opt_dlg = nil
-	self.mcm_dlg = nil
 	self.new_game_dlg = nil
 end
 

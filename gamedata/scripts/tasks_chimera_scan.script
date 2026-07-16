@@ -163,7 +163,7 @@ function on_descr(a,b,p)
 		local news_caption = game.translate_string(task_manager.task_ini:r_string_ex(p[1], "title")) or "error"
 		local news_icon = task_manager.task_ini:r_string_ex(p[1], "icon") or "ui_inGame2_Poslednie_razrabotki"
 		local news_text = game.translate_string("st_location") .. " " .. game.translate_string(_m[p[1]].level_name)
-		db.actor:give_talk_message2(news_caption, news_text, news_icon, "iconed_answer_item", p[1])
+		db.actor:give_talk_message2(news_caption, news_text, news_icon, "iconed_answer_item")
 		return true
 	end)
 end

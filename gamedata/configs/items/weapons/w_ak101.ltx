@@ -162,117 +162,76 @@ kill_msg_y                               = 28
 kill_msg_width                           = 84
 kill_msg_height                          = 28
 
-snd_draw = weapons\ak\ak_draw
-snd_holster = weapons\rifle_holster
-snd_reload = weapons\librarian_ak74\reload_plastic
-snd_reload_empty = weapons\librarian_ak74\reload_empty_heavy_plastic
-snd_reload_misfire = weapons\librarian_ak74\unjam
-snd_switch = $no_sound
-snd_switch_mode = weapons\librarian_ak74\firemode
-snd_bore = weapons\librarian_ak74\bored
-snd_reload_grenade = weapons\librarian_ak74\gl_reload
-
 
 [wpn_ak101_hud]:hud_base
 item_visual                              = anomaly_weapons\wpn_ak101\wpn_ak101_hud.ogf
 attach_place_idx                         = 0
 zoom_hide_crosshair                      = true   
 
-item_position                            = 0, 0, 0
-item_orientation                         = 0, 0, 0
+item_position                            = 0, 0.004, 0
+item_orientation                         = -15.488927, -3.320898, 367.220154
 
-        hands_orientation                = 0.002562, 0.001138, 0
-        hands_orientation_16x9           = 0.002562, 0.001138, 0
-        hands_position                   = -0.000318, 0.000213, 0.040481
-        hands_position_16x9              = -0.000318, 0.000213, 0.040481
+hands_position                           = -0.14, -0.19, 0.09
+hands_position_16x9                      = -0.14, -0.19, 0.09
+hands_orientation                        = -0.75, 1.7, -4.2
+hands_orientation_16x9                   = -0.75, 1.7, -4.2
 
-        aim_hud_offset_pos               = -0.066647, 0.027856, -0.062392
-        aim_hud_offset_pos_16x9          = -0.066647, 0.027856, -0.062392
-        aim_hud_offset_rot               = 0.002629, 0.000751, 0
-        aim_hud_offset_rot_16x9          = 0.002629, 0.000751, 0
-		
-        lowered_hud_offset_pos           = 0.078378, -0.010447, -0.001491
-        lowered_hud_offset_pos_16x9      = 0.078378, -0.010447, -0.001491
-        lowered_hud_offset_rot           = 0.099432, -0.799841, 0.098651
-        lowered_hud_offset_rot_16x9      = 0.099432, -0.799841, 0.098651
+aim_hud_offset_pos                       = -0.0767,0.0592,-0.25
+aim_hud_offset_pos_16x9                  = -0.0767,0.0592,-0.25
+aim_hud_offset_rot                       = 0.0225,0.0,-0.0057
+aim_hud_offset_rot_16x9                  = 0.0225,0.0,-0.0057
 
-
-        gl_hud_offset_pos                = -0.025311, -0.049587, -0.112264
-        gl_hud_offset_pos_16x9           = -0.025311, -0.049587, -0.112264
-        gl_hud_offset_rot                = -0.120478, 0.079255, 0.217001
-        gl_hud_offset_rot_16x9           = -0.120478, 0.079255, 0.217001
+gl_hud_offset_pos                        = -0.0395, 0.011, -0.15
+gl_hud_offset_pos_16x9                   = -0.0395, 0.011, -0.15
+gl_hud_offset_rot                        = -0.087, -0.004, -0.02
+gl_hud_offset_rot_16x9                   = -0.087, -0.004, -0.02
 
 lean_hud_offset_pos                      = 0, 0, 0
 lean_hud_offset_rot                      = 0, 0, 0
 
-;------------------------------------------------------------------------------------------------------
-anm_bore								= ak_hand_bored, ak_idle
-anm_hide								= ak_hand_holster, ak_idle
-anm_idle								= ak_hand_idle, ak_idle
-anm_idle_aim							= ak_hand_idle_aim, ak_idle
-anm_idle_moving							= ak_hand_moving, ak_idle, 0.9
-anm_idle_sprint							= ak_hand_sprint, ak_idle, 1.1
-anm_show								= ak_hand_draw, ak_idle
-anm_switch_mode							= ak_hand_firemode, ak_idle
+anm_hide                                 = lancew_ak101_holster
+anm_hide_g                               = lancew_ak101_holster_w_gl
+anm_hide_w_gl                            = lancew_ak101_holster_w_gl
+anm_idle                                 = lancew_ak101_idle
+anm_idle_aim                             = lancew_ak101_idle_aim, idle_aim
+anm_idle_aim_moving                      = lancew_ak101_moving, idle, 0.75
+anm_idle_aim_moving_crouch               = lancew_ak101_moving, idle, 0.7
+anm_idle_g                               = lancew_ak101_idle_w_gl
+anm_idle_g_aim                           = lancew_ak101_idle_aim_w_gl
+anm_idle_moving                          = lancew_ak101_moving
+anm_idle_moving_crouch_g_aim             = lancew_ak101_moving_w_gl, idle, 0.7
+anm_idle_moving_crouch_w_gl_aim          = lancew_ak101_moving_w_gl, idle_aim, 0.7
+anm_idle_moving_g                        = lancew_ak101_moving_w_gl
+anm_idle_moving_g_aim                    = lancew_ak101_moving_w_gl, idle, 0.75
+anm_idle_moving_w_gl                     = lancew_ak101_moving_w_gl
+anm_idle_moving_w_gl_aim                 = lancew_ak101_moving_w_gl, idle_aim, 0.75
+anm_idle_sprint                          = lancew_ak101_sprint
+anm_idle_sprint_g                        = lancew_ak101_sprint
+anm_idle_sprint_w_gl                     = lancew_ak101_sprint
+anm_idle_w_gl                            = lancew_ak101_idle_w_gl
+anm_idle_w_gl_aim                        = lancew_ak101_idle_aim_w_gl, idle_aim
+anm_reload                               = lancew_ak101_reload, reload
+anm_reload_g                             = lancew_ak101_reload_g, reload_g
+anm_reload_w_gl                          = lancew_ak101_reload_w_gl, reload
+anm_shots                                = lancew_ak101_shoot, shoot
+anm_shots_g                              = lancew_ak101_shoot_g, shoot_g
+anm_shots_w_gl                           = lancew_ak101_shoot_w_gl, shoot
+anm_show                                 = lancew_ak101_draw
+anm_show_g                               = lancew_ak101_draw_w_gl
+anm_show_w_gl                            = lancew_ak101_draw_w_gl
+anm_switch                               = lancew_ak101_no_reload_w_gl
+anm_switch_g                             = lancew_ak101_no_reload_w_gl
 
-anm_reload								= ak_hand_reload_556, ak_reload
-anm_reload_empty						= ak_hand_reload_empty_heavy_556, ak_reload_empty_heavy
-anm_reload_misfire						= ak_hand_unjam, ak_unjam
-
-anm_shots								= ak_hand_shoot, ak_shoot
-anm_shots_aim							= ak_hand_shoot_aim, ak_shoot
-;------------------------------------------------------------------------------------------------------
-anm_bore_w_gl							= ak_hand_bored_w_gl, ak_idle
-anm_hide_w_gl							= ak_hand_holster_w_gl, ak_idle
-anm_idle_moving_w_gl					= ak_hand_moving_w_gl, ak_idle, 0.9
-anm_idle_sprint_w_gl					= ak_hand_sprint_w_gl, ak_idle, 1.1
-anm_idle_w_gl							= ak_hand_idle_w_gl, ak_idle
-anm_idle_w_gl_aim						= ak_hand_idle_aim_w_gl, ak_idle
-anm_show_w_gl							= ak_hand_draw_w_gl, ak_idle
-anm_switch_mode_w_gl					= ak_hand_firemode_w_gl, ak_idle
-
-anm_reload_misfire_w_gl					= ak_hand_unjam_w_gl, ak_unjam
-anm_reload_empty_w_gl					= ak_hand_reload_empty_heavy_556_w_gl, ak_reload_empty_heavy
-anm_reload_w_gl							= ak_hand_reload_556_w_gl, ak_reload
-
-anm_shots_w_gl							= ak_hand_shoot_w_gl, ak_shoot
-anm_shots_w_gl_aim						= ak_hand_shoot_aim_w_gl, ak_shoot
-;GRENADE LAUNCHER ANIM---------------------------------------------------------------------------------
-anm_hide_g								= gl_ak_hand_holster, gl_idle
-anm_idle_g								= gl_ak_hand_idle, gl_idle
-anm_idle_g_aim							= gl_ak_hand_idle_aim, gl_idle
-anm_idle_moving_g						= gl_ak_hand_moving, gl_idle, 0.9
-anm_idle_sprint_g                       = gl_ak_hand_sprint, gl_idle, 1.1
-anm_shots_g								= gl_ak_hand_shoot, gl_shoot
-anm_reload_g							= gl_ak_hand_reload, gl_reload
-anm_show_g								= gl_ak_hand_draw, gl_idle
-;------------------------------------------------------------------------------------------------------
-anm_switch								= gl_to_ak, ak_idle
-anm_switch_g							= ak_to_gl, ak_idle
-;------------------------------------------------------------------------------------------------------
-anm_idle_aim_moving						= ak_hand_moving, ak_idle, 0.75
-anm_idle_aim_moving_crouch				= ak_hand_moving, ak_idle, 0.7
-anm_idle_moving_crouch					= ak_hand_moving, ak_idle, 0.7
-
-anm_idle_moving_g_aim					= gl_ak_hand_moving, gl_idle, 0.75
-anm_idle_moving_crouch_g				= gl_ak_hand_moving, gl_idle
-anm_idle_moving_crouch_g_aim			= gl_ak_hand_moving, gl_idle, 0.7
-
-anm_idle_moving_crouch_w_gl				= ak_hand_moving_w_gl, ak_idle
-anm_idle_moving_w_gl_aim				= ak_hand_moving_w_gl, ak_idle, 0.75
-;------------------------------------------------------------------------------------------------------
-;anm_ammo_check							= ak_hand_mag_check, ak_mag_check
-;anm_ammo_check_w_gl					= ak_hand_mag_check_w_gl, ak_mag_check_w_gl
-;------------------------------------------------------------------------------------------------------
-
-shell_bone                               = gilza
+shell_bone                               = wpn_body
 shell_dir                                = 0, 1, 0
-shell_point                              = 0, 0, 0
+shell_point                              = 0, 0.064, 0.19
 
-fire_bone                                = muzzle
-fire_bone2                               = muzzle_gl
-fire_point                               = 0, 0, 0
-fire_point2                              = 0, 0, 0
+fire_bone                                = wpn_body
+fire_bone2                               = wpn_body
+fire_point                               = 0, 0.038159, 0.608368
+fire_point2                              = 0, -0.011, 0.553
+
+rpm_anim_fix 							 = false
 
 ;------------------------------------------------------------------------------------------------
 [wpn_ak101_1p29]:wpn_ak101
@@ -285,11 +244,93 @@ inv_weight                               = 4.4
 hud                                      = wpn_ak101_1p29_hud
 visual                                   = dynamics\weapons\wpn_ak101\wpn_ak101_1p29.ogf
 
+scope_status                             = 1
+scope_dynamic_zoom                       = off
+scope_texture                            = wpn_crosshair_1p29
+scope_zoom_factor                        = 15
+
+zoom_rotate_time                         = 0.25
+
+
 [wpn_ak101_1p29_hud]:wpn_ak101_hud
 item_visual                              = anomaly_weapons\wpn_ak101\wpn_ak101_1p29_hud.ogf
 
-        aim_hud_offset_pos               = -0.070717, 0.00047, -0.039694
-        aim_hud_offset_pos_16x9          = -0.070717, 0.00047, -0.039694
+gl_hud_offset_pos                        = -0.04, 0.005, -0.15
+gl_hud_offset_pos_16x9                   = -0.04, 0.005, -0.15
+gl_hud_offset_rot                        = -0.085, -0.004, -0.02
+gl_hud_offset_rot_16x9                   = -0.085, -0.004, -0.02
+
+shell_bone                               = wpn_body
+shell_dir                                = 0, 1, 0
+shell_point                              = 0, 0.064, 0.19
+
+fire_bone                                = wpn_body
+fire_bone2                               = wpn_body
+fire_point                               = 0, 0.038159, 0.608368
+fire_point2                              = 0, -0.011, 0.553
+
+;------------------------------------------------------------------------------------------------
+[wpn_ak101_ac10632]:wpn_ak101
+1icon_layer                              = ac10632
+1icon_layer_x                            = 71
+1icon_layer_y                            = -8
+
+inv_weight                               = 3.715
+
+hud                                      = wpn_ak101_ac10632_hud
+visual                                   = dynamics\weapons\wpn_ak101\wpn_ak101_ac10632.ogf
+
+
+[wpn_ak101_ac10632_hud]:wpn_ak101_hud
+item_visual                              = anomaly_weapons\wpn_ak101\wpn_ak101_ac10632_hud.ogf
+
+aim_hud_offset_pos                	 	 = -0.0764,0.0386,-0.29
+aim_hud_offset_pos_16x9                  = -0.0764,0.0386,-0.29
+
+;------------------------------------------------------------------------------------------------
+[wpn_ak101_acog]:wpn_ak101
+1icon_layer                              = acog
+1icon_layer_x                            = 67
+1icon_layer_y                            = -7
+
+inv_weight                               = 3.95
+
+hud                                      = wpn_ak101_acog_hud
+
+scope_status                             = 0
+scope_zoom_factor                        = 20
+
+zoom_rotate_time                         = 0.25
+
+
+[wpn_ak101_acog_hud]:wpn_ak101_hud,hud_low_interia
+item_visual                              = anomaly_weapons\wpn_ak101\wpn_ak101_acog_hud.ogf
+
+aim_hud_offset_pos                       = -0.075695, 0.0328, -0.3
+aim_hud_offset_pos_16x9                  = -0.075695, 0.0328, -0.3
+aim_hud_offset_rot                       = 0.01, -0.0011, -0.006
+aim_hud_offset_rot_16x9                  = 0.01, -0.0011, -0.006
+
+
+;------------------------------------------------------------------------------------------------
+[wpn_ak101_eot]:wpn_ak101
+1icon_layer                              = eot
+1icon_layer_x                            = 71
+1icon_layer_y                            = -4
+
+inv_weight                               = 3.9
+
+hud                                      = wpn_ak101_eot_hud
+visual                                   = dynamics\weapons\wpn_ak101\wpn_ak101_eot.ogf
+
+
+[wpn_ak101_eot_hud]:wpn_ak101_hud
+item_visual                              = anomaly_weapons\wpn_ak101\wpn_ak101_eot_hud.ogf
+
+aim_hud_offset_pos                       = -0.0753,0.03102,-0.33
+aim_hud_offset_pos_16x9                  = -0.0753,0.03102,-0.33
+aim_hud_offset_rot                       = 0.016,-0.002,-0.006
+aim_hud_offset_rot_16x9                  = 0.016,-0.002,-0.006
 
 ;------------------------------------------------------------------------------------------------
 [wpn_ak101_kobra]:wpn_ak101
@@ -303,13 +344,13 @@ hud                                      = wpn_ak101_kobra_hud
 visual                                   = dynamics\weapons\wpn_ak101\wpn_ak101_kobra.ogf
 
 
-[wpn_ak101_kobra_hud]:wpn_ak101_hud
+[wpn_ak101_kobra_hud]:wpn_ak101_1p29_hud
 item_visual                              = anomaly_weapons\wpn_ak101\wpn_ak101_kobra_hud.ogf
 
-        aim_hud_offset_pos               = -0.064469, -0.000887, -0.08729
-        aim_hud_offset_pos_16x9          = -0.064469, -0.000887, -0.08729
-        aim_hud_offset_rot               = -0.015375, -0.000312, 0
-        aim_hud_offset_rot_16x9          = -0.015375, -0.000312, 0
+aim_hud_offset_pos                       = -0.07478,0.02387,-0.25
+aim_hud_offset_pos_16x9                  = -0.07478,0.02387,-0.25
+aim_hud_offset_rot                       = 0.01,-0.001,0
+aim_hud_offset_rot_16x9                  = 0.01,-0.001,0
 
 ;------------------------------------------------------------------------------------------------
 [wpn_ak101_ps01]:wpn_ak101
@@ -317,13 +358,20 @@ item_visual                              = anomaly_weapons\wpn_ak101\wpn_ak101_k
 1icon_layer_x                            = 30
 1icon_layer_y                            = 3
 
+inv_weight                               = 4.2
 
 hud                                      = wpn_ak101_pso1_hud
 visual                                   = dynamics\weapons\wpn_ak101\wpn_ak101_pso1.ogf
 
+scope_status                             = 1
+scope_dynamic_zoom                       = off
+scope_texture                            = wpn_crosshair_pso1
+scope_zoom_factor                        = 15
 
-[wpn_ak101_pso1_hud]:wpn_ak101_hud
-item_visual                              = anomaly_weapons\wpn_ak101\wpn_ak101_hud.ogf
+
+[wpn_ak101_pso1_hud]:wpn_ak101_1p29_hud
+item_visual                              = anomaly_weapons\wpn_ak101\wpn_ak101_pso1_hud.ogf
+
 
 ;------------------------------------------------------------------------------------------------
 ;-- Camo
@@ -362,19 +410,103 @@ condition_shot_dec                       = 0.00068
 [wpn_ak101_sk1_hud]:wpn_ak101_hud
 item_visual                              = anomaly_weapons\wpn_ak101\wpn_ak101_sk1_hud.ogf
 
+
+[wpn_ak101_1p29_sk1_hud]:wpn_ak101_hud
+item_visual                              = anomaly_weapons\wpn_ak101\wpn_ak101_1p29_sk1_hud.ogf
+
+gl_hud_offset_pos                        = -0.04, 0.005, -0.15
+gl_hud_offset_pos_16x9                   = -0.04, 0.005, -0.15
+gl_hud_offset_rot                        = -0.085, -0.004, -0.02
+gl_hud_offset_rot_16x9                   = -0.085, -0.004, -0.02
+
+shell_bone                               = wpn_body
+shell_dir                                = 0, 1, 0
+shell_point                              = 0, 0.064, 0.19
+
+fire_bone                                = wpn_body
+fire_bone2                               = wpn_body
+fire_point                               = 0, 0.038159, 0.608368
+fire_point2                              = 0, -0.011, 0.553
+
 ;------------------------------------------------------------------------------------------------
 [wpn_ak101_camo_1p29]:wpn_ak101_camo
 1icon_layer                              = 1p29
 1icon_layer_x                            = 56
 1icon_layer_y                            = 2
 
+inv_weight                               = 4.4
 
 hud                                      = wpn_ak101_1p29_sk1_hud
 visual                                   = dynamics\weapons\wpn_ak101\wpn_ak101_1p29_sk1.ogf
 
+scope_status                             = 1
+scope_dynamic_zoom                       = off
+scope_texture                            = wpn_crosshair_1p29
+scope_zoom_factor                        = 15
 
-[wpn_ak101_1p29_sk1_hud]:wpn_ak101_1p29_hud
-item_visual                              = anomaly_weapons\wpn_ak101\wpn_ak101_1p29_sk1_hud.ogf
+zoom_rotate_time                         = 0.25
+
+
+[wpn_ak101_ac10632_sk1_hud]:wpn_ak101_hud
+item_visual                              = anomaly_weapons\wpn_ak101\wpn_ak101_ac10632_sk1_hud.ogf
+
+aim_hud_offset_pos		                 = -0.0764,0.0388,-0.29
+aim_hud_offset_pos_16x9                  = -0.0764,0.0388,-0.29
+
+;------------------------------------------------------------------------------------------------
+[wpn_ak101_camo_ac10632]:wpn_ak101_camo
+1icon_layer                              = ac10632
+1icon_layer_x                            = 71
+1icon_layer_y                            = -8
+
+inv_weight                               = 3.715
+
+hud                                      = wpn_ak101_ac10632_sk1_hud
+visual                                   = dynamics\weapons\wpn_ak101\wpn_ak101_ac10632_sk1.ogf
+
+
+[wpn_ak101_acog_sk1_hud]:wpn_ak101_hud
+item_visual                              = anomaly_weapons\wpn_ak101\wpn_ak101_acog_sk1_hud.ogf
+
+aim_hud_offset_pos                       = -0.0759,0.0363,-0.3
+aim_hud_offset_pos_16x9                  = -0.0759,0.0363,-0.3
+aim_hud_offset_rot                       = 0.018,-0.0005,-0.006
+aim_hud_offset_rot_16x9                  = 0.018,-0.0005,-0.006
+
+;------------------------------------------------------------------------------------------------
+[wpn_ak101_camo_acog]:wpn_ak101_camo
+1icon_layer                              = acog
+1icon_layer_x                            = 67
+1icon_layer_y                            = -7
+
+inv_weight                               = 3.95
+
+hud                                      = wpn_ak101_acog_sk1_hud
+
+scope_status                             = 0
+scope_zoom_factor                        = 20
+
+zoom_rotate_time                         = 0.25
+
+;------------------------------------------------------------------------------------------------
+[wpn_ak101_camo_eot]:wpn_ak101_camo
+1icon_layer                              = eot
+1icon_layer_x                            = 71
+1icon_layer_y                            = -4
+
+inv_weight                               = 3.9
+
+hud                                      = wpn_ak101_eot_sk1_hud
+visual                                   = dynamics\weapons\wpn_ak101\wpn_ak101_eot_sk1.ogf
+
+
+[wpn_ak101_eot_sk1_hud]:wpn_ak101_hud
+item_visual                              = anomaly_weapons\wpn_ak101\wpn_ak101_eot_sk1_hud.ogf
+
+aim_hud_offset_pos                       = -0.07527,0.03102,-0.33
+aim_hud_offset_pos_16x9                  = -0.07527,0.03102,-0.33
+aim_hud_offset_rot                       = 0.016,-0.002,-0.006
+aim_hud_offset_rot_16x9                  = 0.016,-0.002,-0.006
 
 ;------------------------------------------------------------------------------------------------
 [wpn_ak101_camo_kobra]:wpn_ak101_camo
@@ -382,13 +514,19 @@ item_visual                              = anomaly_weapons\wpn_ak101\wpn_ak101_1
 1icon_layer_x                            = 67
 1icon_layer_y                            = 4
 
+inv_weight                               = 4.0
 
 hud                                      = wpn_ak101_kobra_sk1_hud
 visual                                   = dynamics\weapons\wpn_ak101\wpn_ak101_kobra_sk1.ogf
 
 
-[wpn_ak101_kobra_sk1_hud]:wpn_ak101_kobra_hud
+[wpn_ak101_kobra_sk1_hud]:wpn_ak101_1p29_hud
 item_visual                              = anomaly_weapons\wpn_ak101\wpn_ak101_kobra_sk1_hud.ogf
+
+aim_hud_offset_pos                       = -0.0748,0.0237,-0.25
+aim_hud_offset_pos_16x9                  = -0.0748,0.0237,-0.25
+aim_hud_offset_rot                       = 0.01,-0.001,0
+aim_hud_offset_rot_16x9                  = 0.01,-0.001,0
 
 ;------------------------------------------------------------------------------------------------
 [wpn_ak101_camo_ps01]:wpn_ak101_camo
@@ -396,7 +534,18 @@ item_visual                              = anomaly_weapons\wpn_ak101\wpn_ak101_k
 1icon_layer_x                            = 30
 1icon_layer_y                            = 3
 
+inv_weight                               = 4.2
+
 hud                                      = wpn_ak101_pso1_sk1_hud
 
-[wpn_ak101_pso1_sk1_hud]:wpn_ak101_pso1_hud
-item_visual                              = anomaly_weapons\wpn_ak101\wpn_ak101_sk1_hud.ogf
+scope_status                             = 1
+scope_dynamic_zoom                       = off
+scope_texture                            = wpn_crosshair_pso1
+scope_zoom_factor                        = 15
+
+zoom_rotate_time                         = 0.25
+
+
+[wpn_ak101_pso1_sk1_hud]:wpn_ak101_1p29_hud
+item_visual                              = anomaly_weapons\wpn_ak101\wpn_ak101_pso1_sk1_hud.ogf
+

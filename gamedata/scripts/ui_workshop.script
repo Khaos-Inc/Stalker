@@ -15,7 +15,6 @@ workshop_toolkits = {
 	"itm_expertkit",
 	"itm_drugkit",
 	"itm_ammokit",
-	"itm_artefactskit",
 }
 
 
@@ -44,6 +43,7 @@ function get_workshop_ui(...)
 		GUI:Reset(...)
 		GUI:ShowDialog(true)
 		Register_UI("UIWorkshop","ui_workshop")
+		
 		return GUI
 	end
 end
@@ -151,21 +151,13 @@ function UIWorkshop:Reset(owner, mechanic, toolkits_workshop, dbg)
 	self.mechanic = mechanic
 	self.toolkits_workshop = toolkits_workshop or {}
 	self.toolkits_state = {}
-	for i=1,6 do
+	for i=1,#workshop_toolkits do
 		if self.toolkits_workshop[i] or db.actor:object(workshop_toolkits[i]) then
 			self.toolkits_state[i] = true
 		else
 			self.toolkits_state[i] = false
 		end
 	end
-
-	if db.actor:object(workshop_toolkits[6]) then
-		if not db.actor:object(workshop_toolkits[1]) then
-			self.toolkits_state[6] = true
-			self.toolkits_state[1] = false
-		end
-	end
-	
 
 	-- Switch to state tab
 	self:OnButton_state()
@@ -176,14 +168,6 @@ function UIWorkshop:Reset(owner, mechanic, toolkits_workshop, dbg)
 	else
 		self.background:Show(false)
 	end
-
-	if self.owner.item_info then
-		self.owner.item_info:Update()
-	end
-	
-	if self.owner.upgr_info then
-		self.owner.upgr_info:Update()
-	end	
 end
 
 function UIWorkshop:OnButton_state()
@@ -274,7 +258,7 @@ function UIWorkshopState:InitControls(x, y)
 	self.toolkit_ico = {}
 	self.toolkit_ico_temp = {}
 	
-	for i=1,6 do
+	for i=1,#workshop_toolkits do
 		self.toolkit_b[i] = xml:InitStatic("workshop:state:pic_toolkit_" .. tostring(i) .. "_b", self)
 		self.toolkit_txt[i] = xml:InitTextWnd("workshop:state:txt_toolkit_" .. tostring(i), self)
 		self.toolkit_ico[i] = xml:InitStatic("workshop:state:pic_toolkit_" .. tostring(i), self)
@@ -294,11 +278,10 @@ function UIWorkshopState:Reset()
 	self.toolkits_workshop = dup_table(self.owner.toolkits_workshop or {})
 
 	-- Toolkits availability
-	for i=1,6 do
+	for i=1,#workshop_toolkits do
 		local toolkit_sec = workshop_toolkits[i]
 		local clr = clr_list["g"]
 		local avail
-
 		if self.toolkits_workshop[i] then
 			self.toolkit_ico[i]:InitTexture("ui_inGame2_btn_workshop_toolkit_" .. tostring(i) .. "_h")
 			avail = game.translate_string("st_itm_desc_state_avail_workshop")
@@ -310,7 +293,6 @@ function UIWorkshopState:Reset()
 			clr = clr_list["r"]
 			avail = game.translate_string("st_itm_desc_state_not_avail")
 		end
-			
 		--self.toolkit_ico[i]::SetStretchTexture(true)
 		local str = ui_item.get_sec_name(toolkit_sec) .. "\\n " .. clr .. avail
 		
@@ -328,15 +310,7 @@ function UIWorkshopState:Reset()
 			mech_name = obj_mech:character_name()
 		end
 	end
-	self.info_text:SetText( str_intro .. clr_list["b2"] .. " \\n - " .. strformat(str_owner,mech_name) )
-	
-	if self.owner.item_info then
-		self.owner.item_info:Update()
-	end
-	
-	if self.owner.upgr_info then
-		self.owner.upgr_info:Update()
-	end
+	self.info_text:SetText( str_intro .. clr_list["b2"] .. " \\n • " .. strformat(str_owner,mech_name) )
 end
 
 
@@ -350,9 +324,7 @@ function UIWorkshopState:OnKeyboard(dik, keyboard_action)
 		local bind = dik_to_bind(dik)
 		if keyboard_action == ui_events.WINDOW_KEY_PRESSED then
 			if dik == DIK_keys.DIK_ESCAPE then
-				self:Reset()
 				self:Close()
-				Unregister_UI("UIWorkshopState")
 			end
 		end
 	end
@@ -493,13 +465,6 @@ function UIWorkshopRepair:Reset()
 	end
 
 	self:ListInventory()
-	if self.owner.item_info then
-		self.owner.item_info:Update()
-	end
-
-	if self.owner.upgr_info then
-		self.owner.upgr_info:Update()
-	end
 end
 
 function UIWorkshopRepair:Update()
@@ -530,7 +495,7 @@ function UIWorkshopRepair:Update()
 		end
 		if focused then
 			return
-		end 
+		end
 	end
 	
 	info_box:Update()
@@ -646,7 +611,7 @@ function UIWorkshopRepair:ListSpareParts()
 			inf[size_t] = math.ceil(obj:condition() * 100)
 		end
 	end)
-	
+
 	cc:Reinit(inv, inf)
 	
 	local fnt = GetFontSmall()
@@ -659,7 +624,7 @@ function UIWorkshopRepair:ListSpareParts()
 			ci:Add_CustomText(con100.."%", nil, nil, GetARGB(255,r,g,50), fnt)
 		end
 	end
-	
+
 	-- Hide unusable parts
 	for idx,ci in pairs(cc.cell) do
 		local obj = ci:IsShown() and cc:GetObj(idx)
@@ -669,7 +634,7 @@ function UIWorkshopRepair:ListSpareParts()
 				ci:Colorize("hide")
 			else
 				ci.flags.usable = true
-				ci:Colorize("def")			
+				ci:Colorize("def")
 			end
 		end
 	end
@@ -718,7 +683,7 @@ function UIWorkshopRepair:ReplacePart()
 	self.itm_con_r:SetText(tot_con .. "%")
 	
 	-- Update remaining toolkit count
-	--self:UpdateToolkits(active)
+	self:UpdateToolkits(active)
 	
 	-- Hide part inventory
 	self.CC["parts"]:Reset()
@@ -825,17 +790,11 @@ function UIWorkshopRepair:Repair()
 		for i=1,6 do
 			if self.parts[i] and self.parts[i].sec and (self.parts[i].sec ~= "na") then
 				if self.new_con[i] and self.new_con[i].id then
-					local temp = self.parts[i].con
 					self.parts[i].con = self.new_con[i].con
 					print_ws("- UIWorkshopRepair:Repair() | replaced part spotted | part: %s - condition: %s - order: %s - id: %s", self.parts[i].sec, self.new_con[i].con, i, self.new_con[i].id)
 					
 					-- Release replacement parts
-					if temp < 0 then
-						alife_release_id(self.new_con[i].id)
-					else
-						local part = get_object_by_id(self.new_con[i].id)
-						part:set_condition(temp/100)
-					end
+					alife_release_id(self.new_con[i].id)
 				end
 				
 				tot_con = tot_con + self.parts[i].con --AdjustCon(self.parts[i].sec, self.parts[i].con, #self.parts, IsOutfit(self.object))
@@ -866,7 +825,7 @@ function UIWorkshopRepair:Repair()
 	
 	local final_con = (cnt > 0) and (clamp(math.ceil(tot_con/cnt),1,100)/100)
 	local weapon = level.object_by_id(id)
-	if weapon and not IsWeapon(weapon) and final_con and (final_con >= 0) and (final_con <= 1) then
+	if weapon and final_con and (final_con >= 0) and (final_con <= 1) then
 		weapon:set_condition(final_con)
 		print_ws("- UIWorkshopRepair:Repair() | object with id (%s) is set to a new condition: %s", id, final_con)
 	else
@@ -901,9 +860,7 @@ function UIWorkshopRepair:OnKeyboard(dik, keyboard_action)
 		local bind = dik_to_bind(dik)
 		if keyboard_action == ui_events.WINDOW_KEY_PRESSED then
 			if dik == DIK_keys.DIK_ESCAPE then
-				self:Reset()
 				self:Close()
-				Unregister_UI("UIWorkshopRepair")
 			end
 		end
 	end
@@ -983,7 +940,7 @@ function UIWorkshopUpgrade:InitControls(x, y)
 	-- Object
 	self.itm_ico_r = xml:InitStatic("workshop:upgrade:pic_item_r" , self)
 	self.itm_ico_temp_r = xml:InitStatic("workshop:upgrade:pic_item_r" , self)
-
+	
 	-- Required tookit
 	self.itm_cap_rq = xml:InitStatic("workshop:upgrade:cap_toolkit" , self)
 	self.itm_b_rq = xml:InitStatic("workshop:upgrade:pic_item_rq_b" , self)
@@ -992,7 +949,7 @@ function UIWorkshopUpgrade:InitControls(x, y)
 	self.itm_num_rq = xml:InitTextWnd("workshop:upgrade:text_item_rq_num" , self)
 	
 	self.info_text = xml:InitTextWnd("workshop:text_info" , self)
-
+	
 	-- Inventory
 	self.CC = utils_ui.UICellContainer("inventory", self, nil, "workshop:upgrade:cont_inv", self)
 	self.CC.can_select	 = true
@@ -1024,13 +981,6 @@ function UIWorkshopUpgrade:Reset()
 	self.btn_upgrade:Enable(false)
 	
 	self:LoadInventory()
-	if self.owner.item_info then
-		self.owner.item_info:Update()
-	end
-	
-	if self.owner.upgr_info then
-		self.owner.upgr_info:Update()
-	end
 end
 
 function UIWorkshopUpgrade:Update()
@@ -1296,14 +1246,14 @@ function UIWorkshopUpgrade:EvaluateUpgrade(row, col, info)
 		
 		-- Flag 1: is workshop toolkit available
 		local main_tool = self.upgr_toolkit
-		flags[1] = main_tool and self.upgr_tools[main_tool] and is_not_empty(self.upgr_tools[main_tool]) and true or true
+		flags[1] = main_tool and self.upgr_tools[main_tool] and is_not_empty(self.upgr_tools[main_tool]) and true or false
 		
 		-- Flag 2: is upgrade kit available
 		local tool = info.tool
 		flags[2] = tool and self.upgr_tools[tool] and is_not_empty(self.upgr_tools[tool]) and true or false
 		
 		-- Flag 3: is main toolkit available
-		flags[3] = self.toolkits_state[ math.ceil(col/2) ] and true or true
+		flags[3] = self.toolkits_state[ math.ceil(col/2) ] and true or false
 		
 		-- Flag 4: check if another upgrade in the same group is not installed
 		if (not info.solo) then
@@ -1408,11 +1358,6 @@ function UIWorkshopUpgrade:DischargeKit(sec)
 		print_ws("~Workshop upgrade UI: DEBUG mode - no discharged items")
 		return
 	end
-	
-	if sec == "toolkit_p" or sec == "toolkit_s" or sec == "toolkit_r5" or sec == "toolkit_r7" or
-	sec == "light_repair_kit" or sec == "medium_repair_kit" or sec == "heavy_repair_kit" or sec == "exo_repair_kit" then
-		return
-	end
 			
 	local tbl = self.upgr_tools[sec]
 	if tbl and is_not_empty(tbl) then
@@ -1496,9 +1441,7 @@ function UIWorkshopUpgrade:OnKeyboard(dik, keyboard_action)
 		local bind = dik_to_bind(dik)
 		if keyboard_action == ui_events.WINDOW_KEY_PRESSED then
 			if dik == DIK_keys.DIK_ESCAPE then
-				self:Reset()
 				self:Close()
-				Unregister_UI("UIWorkshopUpgrade")
 			end
 		end
 	end
@@ -1529,7 +1472,6 @@ function UIWorkshopCraft:__init(xml, owner, x, y) super(xml, owner, x, y)
 		["recipe_expert_0"]   = true,
 		["recipe_drug_0"]     = true,
 		["recipe_ammo_0"]     = true,
-		["recipe_artefacts_0"]   = true,
 	}
 	self.recipes_type = {}
 	-- self.recipes_type[indx] = title
@@ -1659,14 +1601,6 @@ function UIWorkshopCraft:Reset()
 	
 	-- Hide listed items
 	self.CC["list"]:Reset()
-	
-	if self.owner.item_info then
-		self.owner.item_info:Update()
-	end
-	
-	if self.owner.upgr_info then
-		self.owner.upgr_info:Update()
-	end
 end
 
 function UIWorkshopCraft:Update()
@@ -1674,6 +1608,17 @@ function UIWorkshopCraft:Update()
 
 	local info_box = self.owner.item_info
 	
+	-- Item of active recipe
+	for i=1,4 do 
+		if self.itm_ico[i] and self.itm_ico[i]:IsCursorOverWindow() then
+			local item = self.last_type and self.last_index and self.recipes[self.last_type] and self.recipes[self.last_type][self.selected_index]
+			if item and item[i] then
+				info_box:Update(nil,item[i][1])
+				return
+			end
+		end
+	end
+		
 	-- Item cells
 	local found_cell = false
 	for name,cc in pairs(self.CC) do
@@ -1683,19 +1628,7 @@ function UIWorkshopCraft:Update()
 		return
 	end
 
-	-- Item of active recipe
-	for i=1,4 do 
-		if self.itm_ico[i] and self.itm_ico[i]:IsCursorOverWindow() then
-			local item = self.recipes[self.last_type][self.selected_index]
-			if item and item[i] then
-				info_box:Update(nil,item[i][1])
-				return
-			end
-		end
-	end
-		
 	info_box:Update()
-	return	
 end 
 
 
@@ -1933,6 +1866,7 @@ function UIWorkshopCraft:UpdateItem (n, sec, amount, result, toolkit_idx, toolki
 	local counter = 0
 	local name = ui_item.get_sec_name(sec)
 	
+	
 	if (not result) then
 		-- Reset
 		self.craft_item[n] = {}
@@ -1950,14 +1884,9 @@ function UIWorkshopCraft:UpdateItem (n, sec, amount, result, toolkit_idx, toolki
 			end
 		end
 		db.actor:iterate_inventory(search,nil)
-	
-		
-
 		
 		-- Check and Allow/Prevent
 		local count = 0
-		local dischargeAmount = amount
-		
 		for _,cnt in pairs(parts_id) do
 			count = count + cnt
 		end
@@ -1991,14 +1920,6 @@ function UIWorkshopCraft:UpdateItem (n, sec, amount, result, toolkit_idx, toolki
 				self.itm_num[n]:SetTextColor(GetARGB(200, 50, 255, 50))
 				self.craft_allow[n] = true
 			end
-			
-			if sec == "itm_artefactskit" then
-				if count - amount <= 0 then
-					self.itm_num[n]:SetTextColor(GetARGB(250, 255, 50, 50))
-					self.craft_allow[n] = false
-				end
-			end
-			
 			self.itm_num[n]:SetText(tostring(count) .. "/" .. tostring(amt))
 		end
 		
@@ -2006,10 +1927,10 @@ function UIWorkshopCraft:UpdateItem (n, sec, amount, result, toolkit_idx, toolki
 		count = 0
 		for id,cnt in pairs(parts_id) do
 			count = count + cnt
+
 			-- to delete
 			if (count <= amount) then
 				self.craft_item[n][#self.craft_item[n] + 1] = id
-				dischargeAmount = dischargeAmount - count
 			end
 			
 			if count == amount then
@@ -2018,10 +1939,11 @@ function UIWorkshopCraft:UpdateItem (n, sec, amount, result, toolkit_idx, toolki
 			
 			-- to discharge
 			if count > amount then
-				self.craft_item_remain[n] = { id = id , cnt = (count - (count - dischargeAmount)) }
+				self.craft_item_remain[n] = { id = id , cnt = (count - amount) }
 				break
 			end
 		end
+		
 		utils_xml.set_icon(sec, (not self.craft_allow[n]), self.itm_ico_temp[n], self.itm_ico[n])
 		
 	-- if its the result item
@@ -2164,9 +2086,7 @@ function UIWorkshopCraft:OnKeyboard(dik, keyboard_action)
 		local bind = dik_to_bind(dik)
 		if keyboard_action == ui_events.WINDOW_KEY_PRESSED then
 			if dik == DIK_keys.DIK_ESCAPE then
-				self:Reset()
 				self:Close()
-				Unregister_UI("UIWorkshopCraft")
 			end
 		end
 	end
@@ -2180,7 +2100,7 @@ end
 -------------------------------------------------------------------
 
 function SetTip(tip, warning, solution, sec, pass, XMLtxt)
-	local str = "" -- "- "
+	local str = "" -- "• "
 	local name = sec and ui_item.get_sec_name(sec) or ""
 	if tip and pass then
 		local str_tip = game.translate_string("st_ui_workshop_info_" .. tip)

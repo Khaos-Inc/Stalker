@@ -157,10 +157,10 @@ local possible_factions = {
 	["ecolog"] = true,
 	["freedom"] = true,
 	["killer"] = true,
-	["monolith"] = false,
+	["monolith"] = true,
 	["stalker"] = true,
 	["renegade"] = true,
-	["greh"] = false,
+	["greh"] = true,
 	["isg"] = true,
 }
 function update_default(comm, now)
@@ -776,40 +776,8 @@ function calculate_npc_suspicion(npc, id, t, awareness)
 		itm_factor = 1
 	end
 
-	-- Formula: ( rank suspicion  x  faction suspicion  x  npc's awareness  x  player's behaviour  x  player's equipment )  +  player's sudden action  -  npc's current danger
-	
-	local sus_comm = 
-	{ 
-	["stalker"] = 0.7, 
-	["freedom"] = 0.9,
-	["ecolog"] = 1, 
-	["renegade"] = 1.1,
-	["bandit"] = 1.2, 
-	["dolg"] = 1.25, 
-	["csky"] = 1.3, 
-	["army"] = 1.4, 
-	["killer"] = 1.6, 
-	["greh"] = 1.8, 
-	["isg"] = 2,
-	["monolith"] = 3, 
-	}
-	
-	local sus_rank = {
-	
-	["novice"] = 0.6, 
-	["trainee"] = 0.8,
-	["experienced"] = 0.9, 
-	["professional"] = 1, 
-	["veteran"] = 1.2, 
-	["expert"] = 1.3, 
-	["master"] = 1.4, 
-	["legend"] = 1.5,
-	}
-	
-    local se_obj = alife_object(id)
-    local faction_suspicion_factor = sus_comm[se_obj:community()] or 1
-	local rank_suspicion_factor = sus_rank[se_obj:rank()] or 1
-    local suspicion = (faction_suspicion_factor * rank_suspicion_factor * awareness * ( t.stay_time * t.distance * t.speed ) * itm_factor) + ((game_achievements.has_achievement("unforeseen_guest")) and clamp(spike-15,0,spike) or spike) - (be and (be:id() ~= AC_ID) and 50 or 0)
+	-- Formula: ( npc's awareness  x  player's behaviour  x  player's equipment )  +  player's sudden action  -  npc's current danger
+	local suspicion = (awareness * ( t.stay_time * t.distance * t.speed ) * itm_factor) + ((game_achievements.has_achievement("unforeseen_guest")) and clamp(spike-15,0,spike) or spike) - (be and (be:id() ~= AC_ID) and 50 or 0)
 
 	if enable_debug then
 		printf("% Disguise calc | fraction [%s] = active_item [%s] + weapon [%s] +  outfit [%s] + helmet [%s] + backpack [%s] + inventory [%s]", fraction, (factor.active_item and 1 or 0), (factor.weapon and 1 or 0), (factor.outfit and 1 or 0), (factor.helmet and 1 or 0), (factor.backpack and 1 or 0), (factor.inventory and 1 or 0))

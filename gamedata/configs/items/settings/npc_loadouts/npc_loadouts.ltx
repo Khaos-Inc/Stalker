@@ -3,8 +3,6 @@
 ; Tronex
 ; 2019/8/5
 ; Dynamic NPC loadouts
-; 
-; Last modified by SD 2024/11/26
 ;------------------------------
 
 ; How it works
@@ -18,7 +16,7 @@
 ; 7. if not found, make me a favor and uninstall the mod
 
 ; Each loadout can have up to 3 slots (primery, secondary, extra). They are optional
-; Script will pick a random item from each defined slot (based on item weight)
+; Script will pick a random item from each defined slot (based on item chance, if chances were small enough and script couldn't pick a weapon, it will pick one randomly out of the list)
 ; Example
 
 ; 		[bandit_novice]
@@ -27,15 +25,12 @@
 ; 		extra		=   extra_something
 		
 ; 		[primery_something]
-; 		weapon:attachment_flag:ammo_type:weight:scope_chance:gl_chance:sil_chance
+; 		weapon:attachment_flag:ammo_type:chance
 
-; - weapon					- default: /  	- [string] 						- section name of the weapon
-; - attachment_flag 		- default: 0  	- [0 - (number of flags)] 		- ( 0 - no attachment, Scope +1 to flag, GL add +2 to flag, Silencer add + 4 to flag). (if it's set to "r", it will pick random attachement)
-; - ammo_type 				- default: 0  	- [0 - (number of ammo - 1)] 	- (if it's set to "r", it will pick random ammo type)
-; - weight					- default: 10 	- [0 - 100]						- weight of entry, any number should be able to work over 0, but it will spend more time creating duplicate entries (if it's set to "d", it will use default value)
-; - scope_chance			- default: 15 	- [0 - 100]						- chance for scope to spawn on npc (if it's set to "d", it will use default value)
-; - gl_chance				- default: 100 	- [0 - 100]						- chance for grenade launcher to spawn on npc (if it's set to "d", it will use default value)
-; - sil_chance				- default: 100 	- [0 - 100]						- chance for silencer to spawn on npc (if it's set to "d", it will use default value)
+; - weapon				- default: /  	- [string] 						- section name of the weapon
+; - attachment flag 	- default: 0  	- [0 - (number of flags)] 		- ( 0 - no attachment, Scope +1 to flag, GL add +2 to flag, Silencer add + 4 to flag). (if it's set to "r", it will pick random attachement)
+; - ammo type 			- default: 0  	- [0 - (number of ammo - 1)] 	- (if it's set to "r", it will pick random ammo type)
+; - chance to spawn		- default: 50 	- [0 - 100]
 
 ; NOTES
 ; -------
@@ -47,11 +42,9 @@
 
 ;---------------------------------
 [settings]
-enable					= true					;-- enable feature
-default_weight			= 10					;-- default weight of entry [0-100], used as default value for weight 
-default_scope_chance	= 20,15,10,10				;-- default scope chance [0-100] on npc, used as default value for scope_chance, from easier to harder progression difficulty
-default_gl_chance		= 15,15,15,15		;-- default grenade launcher chance [0-100] on npc, used as default value for gl_chance, from easier to harder progression difficulty
-default_sil_chance		= 25,25,25,25		;-- default silencer chance [0-100] on npc, used as default value for sil_chance, from easier to harder progression difficulty
+enable				= true				;-- enable feature
+scope_chance		= 0.15,0.07,0.03	;-- scope chance [0-1] on npc, from easier to harder progression difficulty (overrided by difficulty settings)
+
 
 ;---------------------------------
 ;-- Default loadout / safety measure
@@ -61,13 +54,13 @@ secondary 	= secondary_default
 ;extra		= extra_default
 
 [primery_default]
-wpn_ak74u:0:r
+wpn_ak74u:0:r:100
 
 [secondary_default]
-wpn_pm:0:r
+wpn_pm:0:r:100
 
 [extra_default]
-grenade_rgd5:0:1:2
+grenade_rgd5:0:1:20
 
 ;---------------------------------
 
@@ -236,42 +229,3 @@ grenade_rgd5:0:1:2
 	bar_arena_stalker_8_2  = true
 	bar_arena_stalker_8_3  = true
 	bar_arena_stalker_8_4  = true
-
-;---------------------------------
-;-- scopes to ignore from the scopes system in loadouts globally
-;-- format <scope> = true
-[scope_blacklist]
-	;1p29 = true
-	sr1upgr1 = true
-	mauser_kit = true
-	mod_x_gen3 = true
-	magpul_pro = true
-	archangel = true
-	kab_up = true
-	23_up = true
-	upg220 = true
-	mod9 = true
-	226sig_kit = true
-	mono_kit = true
-	kashtan_rmr = true
-	spec_alt = true
-	mark8_rmr = true
-	silen98 = true
-	swamp = true
-	gurza_up = true
-	lazup_pl15 = true
-	pl15_scolaz = true
-	pritseldob = true
-	shakal = true
-	u2p2g0r = true
-	kp_sr2  = true
-	sr2_upkit  = true
-	kit_aus_tri = true
-	kit_fal_leup = true
-	gauss_sight = true
-	t12 = true
-
-;-- scopes to additionally ignore from the scopes system in loadouts by weapon
-;-- format <section> = <scope>, <scope>...
-[weapon_scope_blacklist]
-	;wpn_aek = kobra

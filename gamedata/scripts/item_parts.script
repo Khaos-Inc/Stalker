@@ -274,13 +274,13 @@ function disassembly_weapon(obj, obj_d)
 	
 	-- Unload mag and get ammo
 	obj:force_unload_magazine(true)
-
+	
 	-- Collect weapon parts
 	for k,v in pairs(parts) do
 		if (k ~= sec_p) and (math.random(100) <= (disassembly_chance + con*100)) then
 			local index = #result_details
 			result_details[index + 1] = k
-			result_conditions[index + 1] = v --IsItem("part",k) and utils_item.get_cond_static(v) or v
+			result_conditions[index + 1] = IsItem("part",k) and utils_item.get_cond_static(v) or v
 		end
 	end
 	
@@ -346,7 +346,7 @@ local function timer_disassembly_outfit(npc_id, result_details, result_condition
 
 	end
 	
-	--table.sort(result_details)
+	table.sort(result_details)
 
 	-- Creating parts in inventory
 	for i=1,#result_details do
@@ -381,11 +381,11 @@ function disassembly_outfit(obj, obj_d)
 	local delay = actor_effects.is_animations_on() and 3 or 0
 
 	-- Collect outfit parts
-	for k,v in spairs(parts, zzzz_arti_jamming_repairs.sort_parts) do
+	for k,v in pairs(parts) do
 		if (k ~= sec) and (math.random(100) <= (disassembly_chance + con*100)) then
 			local index = #result_details
 			result_details[index + 1] = k
-			result_conditions[index + 1] = v
+			result_conditions[index + 1] = IsItem("part",k) and utils_item.get_cond_static(v) or v
 		end
 	end
 	
@@ -412,15 +412,15 @@ function disassembly_outfit(obj, obj_d)
 	local degr_val = itms_disassemble[obj_d:section()]
 	utils_item.degrade( obj_d , degr_val )
 	
-	--Increase Statistic
+	-- Increase Statistic
 	game_statistics.increment_statistic("items_disassembled")
 	clear_parts_con(id)
 	gameplay_disguise.clear_patch(id)
 	
-	--Play animation
+	-- Play animation
 	actor_effects.play_item_fx("disassemble_cloth_fast")
 	
-	--Process
+	-- Process
 	CreateTimeEvent(0,"delay_disassembly" .. id, delay, timer_disassembly_outfit, npc:id(), result_details, result_conditions, name)
 end
 

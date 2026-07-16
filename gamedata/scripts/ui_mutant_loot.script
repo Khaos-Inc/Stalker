@@ -104,11 +104,6 @@ function loot_mutant(section, clsid, loot_table, npc, dont_create, victim) -- Pr
 	local loot, sec, count, chance
 	local str_explode = str_explode
 	local mutant = clsdbg_to_section[kind] or clsid_to_section[clsid]
-	
-	if victim:section() == "gigant_jumper" then
-		mutant = "gigant"
-	end
-	
 	local possible_items = utils_data.collect_section(ini_mutant, mutant)
 	
 	local sim = alife()
@@ -483,8 +478,7 @@ function UIMutantLoot:FillList()
 		end
 		is_there_loot = true
 	end
-	
-	if (self.obj:clsid() ~= clsid.crow) and load_var(self.obj,"looted",nil) then
+	if load_var(self.obj,"looted",nil) then
 		is_there_loot = false
 	end
 

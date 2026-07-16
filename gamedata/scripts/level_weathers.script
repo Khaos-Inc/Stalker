@@ -11,46 +11,8 @@
 -- 2019/6/6 	- cleaning, fixed bugs
 -- 2020/2/19	- custom weather parameter modifiers for brightness
 --===============================================================================
---===============================================================================
--- WEATHER CONTROL
 
--- Weather Weights
--- Use proportional weights.
--- The probability of a weather type is its weight divided by the total sum of all weights.
--- Set a value to 0 to disable that weather cycle entirely.
-
--- Weather Progression
--- Define steps to transition smoothly between dry and wet states
---===============================================================================
-weather_weights = {}
-
-function get_weather_weights()
-    local defaults = {
-        ["clear"]  = 5.20,
-        ["partly"] = 1.80,
-        ["cloudy"] = 1.10,
-        ["rain"]   = 0.80,
-        ["foggy"]  = 0.70,
-		["storm"]  = 0.40
-    }
-
-    for k, v in pairs(defaults) do
-        weather_weights[k] = (ui_mcm and ui_mcm.get("weather_weights_control/" .. k)) or v
-    end
-end
-
-get_weather_weights()
-
-local weather_progression = {
-    ["clear"]  = { ["clear"] = true, ["partly"] = true },
-    ["partly"] = { ["clear"] = true, ["partly"] = true, ["cloudy"] = true, ["foggy"] = true },
-    ["foggy"]  = { ["clear"] = true, ["partly"] = true, ["cloudy"] = true, ["foggy"] = true, ["rain"] = true, ["storm"] = true },
-    ["cloudy"] = { ["clear"] = true, ["partly"] = true, ["foggy"] = true, ["cloudy"] = true, ["rain"] = true },
-    ["rain"]   = { ["cloudy"] = true, ["rain"] = true, ["storm"] = true },
-    ["storm"]  = { ["rain"] = true, ["storm"] = true }
-}
-
-local enable_debug = true
+local enable_debug = false
 
 local ini_weather = ini_file("environment\\dynamic_weather_graphs.ltx")
 local weather_tbl = utils_data.collect_section(ini_weather, "weather_cycles")
@@ -295,7 +257,7 @@ function WeatherManager:change_period()
 		self.cycle = self:get_next_weather_cycle(self.cycle)
 		self.preset = self.presets[self.cycle] and random_key_table(self.presets[self.cycle]) or nil
 		self:reset_change_date(true)
-		self.transition_period = false
+		self.transition_period = true
 	end
 end
 
@@ -407,13 +369,8 @@ function WeatherManager:select_weather(now)
 		elseif (weather.is_paused()) then
 			printf("~ level_weathers: weather didn't set because lerping is paused in engine")
 		else
-			-- Prevent blending reset if the weather file is already active
-			if (not now) and (level.get_weather() == self.weather_file) then
-				self:Print("select_weather skipped | %s is active. Allowing smooth blending.", tostring(self.weather_file))
-			else
-				self:Print("select_weather (%s) | self.weather_file: %s", tostring(now), tostring(self.weather_file))
-				level.set_weather(self.weather_file, now)
-			end
+			self:Print("select_weather (%s) | self.weather_file: %s", tostring(now), tostring(self.weather_file))
+			level.set_weather(self.weather_file, now)
 		end
 	end
 	
@@ -424,57 +381,60 @@ function WeatherManager:select_weather(now)
 end
 
 function WeatherManager:get_next_weather_cycle(curr_weather)
-    curr_weather = curr_weather or "clear"
-    local total_weight = 0
-    
-    -- Sum weights of all weather
-    for i=1,#weather_tbl do
-        local w_name = weather_tbl[i]
-        total_weight = total_weight + (weather_weights[w_name] or 0)
-    end
-
-    -- Fallback if all weights are zero
-    if total_weight <= 0 then return get_random_weather() end
-
-    local roll = math.random() 
-    local current_sum = 0
-    local target_weather = "clear"
-
-    -- Roll for the ideal target weather using proportional share of total weight
-    for i=1,#weather_tbl do
-        local w_name = weather_tbl[i]
-        local weight = weather_weights[w_name] or 0
-        current_sum = current_sum + (weight / total_weight)
-        if roll <= current_sum then
-            target_weather = w_name
-            break
-        end
-    end
-
-    -- If it rolled the exact same weather, skip transition
-    if target_weather == curr_weather then
-        return target_weather
-    end
-
-    -- check if progression matrix allows instant transition
-    if weather_progression[curr_weather] and weather_progression[curr_weather][target_weather] then
-        return target_weather
-    end
-
-    -- If the jump is too drastic, step to a intermediate state
-    if curr_weather == "clear" then
-        return "partly"
-    elseif curr_weather == "partly" or curr_weather == "foggy" then
-        return "cloudy"
-    elseif curr_weather == "cloudy" then
-        return "rain"
-    elseif curr_weather == "rain" then
-        return "cloudy"
-    elseif curr_weather == "storm" then
-        return "rain"
-    end
-
-    return "clear"
+	--self:Print("get_next_weather_cycle | curr_weather = " .. curr_weather)
+	local weather_table_num = {}
+	local avail_weather = {}
+	
+	-- set initiate values for (weather_table_num)
+	for i=1,#weather_tbl do
+		weather_table_num[weather_tbl[i]] = 0
+	end
+	
+	-- store correct occurrences for each stored weather cycle in (weather_table_num)
+	for i=1,#self.weather_storage do
+		for j=1,#weather_tbl do
+			if self.weather_storage[i] == weather_tbl[j] then
+				weather_table_num[self.weather_storage[i]] = weather_table_num[self.weather_storage[i]] + 1
+				break
+			end
+		end
+	end
+	
+	-- prepare a table of allowed weather cycles to pick from
+	for i=1,#weather_tbl do
+		if (weather_tbl[i] ~= curr_weather) then
+			local val = ui_options.get("video/weather/" .. weather_tbl[i] .. "_occurrence") or 3
+			if (tonumber(val) > 2.5) and (weather_table_num[weather_tbl[i]] < 2) then
+				avail_weather[#avail_weather + 1] = weather_tbl[i]
+			elseif (tonumber(val) > 1.5) and (weather_table_num[weather_tbl[i]] < 1) then
+				avail_weather[#avail_weather + 1] = weather_tbl[i]
+			end
+		end
+	end
+	
+	-- if no allowed weather cycles found, reset
+	if (#avail_weather == 0) then
+		--self:Print("get_next_weather_cycle | #avail_weather = 0")
+		self.weather_storage = {}
+		return get_random_weather()
+	end
+	
+	--[[
+	for k,v in pairs(weather_table_num) do
+		self:Print("get_next_weather_cycle | weather_table_num[" .. k .. "] = " .. v)
+	end
+	for i=1,#avail_weather do
+		self:Print("get_next_weather_cycle | avail_weather[" .. i .. "] = " .. avail_weather[i])
+	end
+	for i=1,#self.weather_storage do
+		self:Print("get_next_weather_cycle | self.weather_storage[" .. i .. "] = " .. self.weather_storage[i])
+	end
+	--]]
+	
+	local pick = avail_weather[math.random(#avail_weather)]
+	self.weather_storage[#self.weather_storage + 1] = pick -- store new value
+	printdbg("-level_weathers: get_next_weather_cycle | new_weather = %s", pick)
+	return pick
 end
 
 function WeatherManager:reset_change_date(cycle_change, _s)
@@ -489,12 +449,13 @@ function WeatherManager:reset_change_date(cycle_change, _s)
 end
 
 function WeatherManager:is_next_change_date(weather_cycle)
-    weather_cycle = weather_cycle or "clear"
-    local len = ui_mcm and ui_mcm.get("weather_weights_control/" .. weather_cycle .. "_period") or 6
-    local diff = math.ceil(game.get_game_time():diffSec(self.last_period_change_date))
+	local hour = 0
+	local len = ui_options.get("video/weather/" .. weather_cycle .. "_period") or 6
+	hour = math.random(math.ceil(len*2/3),len)
+	local diff = math.ceil(game.get_game_time():diffSec(self.last_period_change_date))
 	
 	--self:Print("is_next_change_date | current seconds difference = %s, critical difference = %s", diff, (hour*60*60))
-	return diff > (len*60*60)
+	return diff > (hour*60*60)
 end
 
 function WeatherManager:forced_weather_change()
@@ -849,41 +810,31 @@ function get_next_state(graph,state)
 			break
 		end
 	end
-	return next_state or state
+	return next_state
 end
 
 function get_random_weather()
-    local total_weight = 0
-    
-	-- Sum up the weight values
-    for i=1, #weather_tbl do
-        total_weight = total_weight + (weather_weights[weather_tbl[i]] or 0)
-    end
-    
-    if total_weight <= 0 then 
-		return weather_tbl[math.random(#weather_tbl)] 
+	local tbl = {}
+	for i=1,#weather_tbl do
+		local a = ui_options.get("video/weather/" .. weather_tbl[i] .. "_occurrence") or 3
+		if (a > 1) then
+			tbl[#tbl+1] = weather_tbl[i]
+			--self:Print("get_random_weather | " .. weather_tbl[i])
+		end
 	end
-    
-    local roll = math.random() * total_weight
-    local current_sum = 0
-    
-    -- Proportional pick based on weight values
-    for i=1, #weather_tbl do
-        current_sum = current_sum + (weather_weights[weather_tbl[i]] or 0)
-        if roll <= current_sum then
-            return weather_tbl[i]
-        end
-    end
-    return "clear"
+	if (#tbl > 0) then
+		return tbl[math.random(#tbl)]
+	end
+
+	return weather_tbl[math.random(#weather_tbl)]
 end
+
 
 --------------------------------------------------------------------------------
 -- Callbacks
 --------------------------------------------------------------------------------
 local function update_settings()
 	local wm = get_weather_manager()
-	
-	get_weather_weights()
 	
 	-- Update brightness
 	local br_new = ui_options.get("video/night/brightness")

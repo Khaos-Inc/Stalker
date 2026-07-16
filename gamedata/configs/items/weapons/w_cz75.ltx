@@ -17,18 +17,17 @@
         default_to_ruck             = false
         sprint_allowed              = true
         
-		icons_texture = ui\ui_icon_ppp
-		inv_grid_width     = 2
-		inv_grid_height    = 1
-		inv_grid_x         = 18
-		inv_grid_y         = 7
+        inv_grid_height             = 1
+        inv_grid_width              = 2
+        inv_grid_x                  = 59
+        inv_grid_y                  = 78
         inv_name                    = st_wpn_cz75
         inv_name_short              = st_wpn_cz75
         description                 = st_wpn_cz75_descr
         
         kind                        = w_pistol
         inv_weight                  = 1.12
-        cost                        = 8750
+        cost                        = 9850
         repair_type                 = pistol
         
         hud                         = wpn_cz75_hud
@@ -57,11 +56,10 @@
         upgrades                    = up_gr_firstab_cz75, up_gr_seconab_cz75, up_gr_thirdab_cz75, up_gr_fourtab_cz75, up_gr_fifthab_cz75, up_gr_fifthcd_cz75
         installed_upgrades          =
         upgrade_scheme              = upgrade_scheme_beretta
-		upgr_icon_path     = ui\ui_icon_ppp
-		upgr_icon_x        = 300
-		upgr_icon_y        = 800
-		upgr_icon_width    = 150
-		upgr_icon_height   = 100
+        upgr_icon_x                 = 1300
+        upgr_icon_y                 = 1700
+        upgr_icon_width             = 150
+        upgr_icon_height            = 100
         
         fire_modes                  = 1
         ammo_class                  = ammo_9x19_fmj, ammo_9x19_fmj_bad, ammo_9x19_fmj_verybad, ammo_9x19_pbp, ammo_9x19_pbp_bad, ammo_9x19_pbp_verybad, ammo_9x19_ap, ammo_9x19_ap_bad, ammo_9x19_ap_verybad
@@ -74,8 +72,8 @@
         
         silencer_name               = wpn_sil_9mm
         silencer_status             = 2
-        silencer_x                  = 85
-        silencer_y                  = -19
+        silencer_x                  = 68
+        silencer_y                  = -15
         silencer_light_color        = 0.6, 0.5, 0.3
         silencer_light_range        = 0.01
         silencer_light_time         = 0.2
@@ -153,13 +151,13 @@ control_inertion_factor = 1.0f
         attach_place_idx            = 0
         zoom_hide_crosshair         = true
         
-        item_position               = 0, 0, 0
-        item_orientation            = 0, 0, 0
+        item_position               = 0.000746, -0.000321, 0.003479
+        item_orientation            = 1.239378, -0.134046, -2.052052
         
         hands_position              = -0.031, -0.17, 0.0025
         hands_position_16x9         = -0.031, -0.17, 0.0025
-        hands_orientation           = -0.5, 1., 1.15
-        hands_orientation_16x9      = -0.5, 1., 1.15
+        hands_orientation           = -0.5, 1., 1.149999
+        hands_orientation_16x9      = -0.5, 1., 1.149999
         
 		safemode_anm				= 
 		safemode_anm2				= 
@@ -170,10 +168,10 @@ control_inertion_factor = 1.0f
 		lowered_hud_offset_pos_16x9		= 0,0.1,0
 		lowered_hud_offset_rot_16x9		= 0.3,-0.1,0.1
 		
-        aim_hud_offset_pos               = -0.087749, 0.046146, -0.2
-        aim_hud_offset_pos_16x9          = -0.087749, 0.046146, -0.2
-        aim_hud_offset_rot               = -0.005861, -0.016303, 0
-        aim_hud_offset_rot_16x9          = -0.005861, -0.016303, 0
+        aim_hud_offset_pos          = -0.09782, 0.0544, -0.2
+        aim_hud_offset_pos_16x9     = -0.09782, 0.0544, -0.2
+        aim_hud_offset_rot          = -0.0075, 0.0054, -0.0253
+        aim_hud_offset_rot_16x9     = -0.0075, 0.0054, -0.0253
         
         gl_hud_offset_pos           = 0, 0, 0
         gl_hud_offset_rot           = 0, 0, 0
@@ -203,20 +201,16 @@ control_inertion_factor = 1.0f
         anm_show_empty              = lancew_cz75_draw, idle_2
         
         shell_bone                  = wpn_body
-        shell_point                 = 0, 0.038, 0
+        shell_point                 = -0.015, 0.048, 0.071
         
         fire_bone                   = wpn_body
-		fire_point                       = 0, 0.035, 0.145
+        fire_point                  = 0, 0.029756, 0.129833
  
 ;------------------------------------------------------------------------------------------------
-[wpn_cz75_auto]:wpn_cz75
+[wpn_cz75_auto]:wpn_cz75,wpn_cz75_auto_sounds
         class                       = WP_LR300
         
-		icons_texture = ui\ui_icon_ppp
-		inv_grid_width     = 2
-		inv_grid_height    = 1
-		inv_grid_x         = 16
-		inv_grid_y         = 1
+        inv_grid_x                  = 63
         inv_name                    = st_wpn_cz75_auto
         inv_name_short              = st_wpn_cz75_auto
         description                 = st_wpn_cz75_auto_descr
@@ -225,18 +219,11 @@ control_inertion_factor = 1.0f
         
         hud                         = wpn_cz75_auto_hud
         visual                      = dynamics\weapons\wpn_cz75\wpn_cz75_auto.ogf
-        fire_point                  = 0.0, 0.133, 0.207
-        fire_point2                 = 0.0, 0.133, 0.207
-		
+        
         upgrades                    = up_gr_firstab_cz75_auto, up_gr_seconab_cz75_auto, up_gr_thirdab_cz75_auto, up_gr_fourtab_cz75_auto, up_gr_fifthab_cz75_auto, up_gr_fifthcd_cz75_auto
-		upgr_icon_path     = ui\ui_icon_ppp
-		upgr_icon_x        = 0
-		upgr_icon_y        = 500
-		upgr_icon_width    = 150
-		upgr_icon_height   = 100
-		
+        
         fire_modes                  = 1, -1
-        ammo_mag_size               = 20
+        ammo_mag_size               = 16
         
         silencer_name               =
         silencer_status             = 0
@@ -245,32 +232,59 @@ control_inertion_factor = 1.0f
         
         rpm                         = 1000
         
-        fire_dispersion_base        = 0.62
-
-        PDM_disp_base               = 1.01
-
-		cam_return                               = 0
-		cam_relax_speed                          = 10
-		cam_dispersion                           = 1.35
-		cam_dispersion_frac                      = 1.12
-		cam_dispersion_inc                       = 0.1
-		cam_max_angle                            = 50.0
-		cam_max_angle_horz                       = 90.0
-		cam_step_angle_horz                      = 12.6  
-        zoom_cam_relax_speed                     = 12
-		zoom_cam_dispersion                      = 1.05
-		zoom_cam_dispersion_frac                 = 0.9
-		zoom_cam_dispersion_inc                  = 0.07
-		zoom_cam_max_angle                       = 50.0
-		zoom_cam_max_angle_horz                  = 50.0
-		zoom_cam_step_angle_horz                 = 4.8
+        fire_dispersion_base        = 0.45
+        
+        misfire_start_condition     = 0.7 ;  0.82
+        misfire_end_condition       = 0.1
+        
+        condition_queue_shot_dec    = 0.0015
+        condition_shot_dec          = 0.0015
+ 
 
 [wpn_cz75_auto_hud]:wpn_cz75_hud
         item_visual                 = anomaly_weapons\wpn_cz75\wpn_cz75_auto_hud.ogf
+        
+        item_position               = 0.000746, -0.000321, 0.003479
+        item_orientation            = 1.239378, -0.134046, -2.052052
+        
+        hands_position              = -0.011, -0.18, 0
+        hands_position_16x9         = -0.011, -0.18, 0
+        hands_orientation           = -0.5, 2, 1.15
+        hands_orientation_16x9      = -0.5, 2, 1.15
+        
+        aim_hud_offset_pos          = -0.11985, 0.073, -0.2
+        aim_hud_offset_pos_16x9     = -0.11985, 0.073, -0.2
+        aim_hud_offset_rot          = 0.0252, 0.012, -0.017
+        aim_hud_offset_rot_16x9     = 0.0252, 0.012, -0.017
+        
+        anm_hide                    = cz75a_holster
+        anm_hide_empty              = cz75a_holster
+        anm_idle                    = cz75a_idle
+        anm_idle_aim                = cz75a_idle_aim
+        anm_idle_aim_empty          = cz75a_idle_aim
+        anm_idle_aim_moving         = cz75a_idle_moving, idle, 0.75
+        anm_idle_aim_moving_crouch  = cz75a_idle_moving, idle, 0.7
+        anm_idle_aim_moving_crouch_empty = cz75a_idle_moving, idle, 0.7
+        anm_idle_aim_moving_empty   = cz75a_idle_moving, idle, 0.75
+        anm_idle_empty              = cz75a_idle
+        anm_idle_moving             = cz75a_idle_moving
+        anm_idle_moving_empty       = cz75a_idle_moving
+        anm_idle_sprint             = cz75a_idle_sprint
+        anm_idle_sprint_empty       = cz75a_idle_sprint
+        anm_reload                  = cz75a_reload, reload
+        anm_reload_empty            = cz75a_reload, reload
+        anm_shot_l                  = cz75a_shoot, shoot
+        anm_shots                   = cz75a_shoot, shoot
+        anm_show                    = cz75a_draw
+        anm_show_empty              = cz75a_draw
+        
+        shell_bone                  = gilza
+        shell_point                 = 0, 0, 0
+        
+        fire_bone                   = muzzle
+        fire_point                  = 0, 0, 0
+ 
 
-		fire_point                       = 0, 0.039, 0.178
-
-;[UNUSED]------------------------------------------------------------------------------------------------
 [wpn_cz75_sk1_hud]:wpn_cz75_hud
         item_visual                 = anomaly_weapons\wpn_cz75\wpn_cz75_sk1_hud.ogf
  

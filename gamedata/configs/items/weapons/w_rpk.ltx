@@ -48,6 +48,9 @@
         smoke_particles             = weapons\generic_shoot_00
         grenade_flame_particles     = weapons\generic_weapon01
         
+		shell_point					= 0, 0.216, 0.174
+		shell_dir					= 0.0, 0.0, 0.4
+		shell_particles	 			= weapons\762x39
 
         light_disabled              = false
         light_color                 = 0.6, 0.5, 0.3
@@ -158,133 +161,51 @@ control_inertion_factor = 1.0f
         kill_msg_height             = 28
  
 
-; scopes                                   = 1p29, kobra, pso1m21, ps01
-snd_reload		        = weapons\rpk\rpk_reload
-snd_reload_empty	        = weapons\rpk\rpk_reload_empty
-
-snd_empty		        = weapons\rpk\rpk_empty
-snd_draw        	        = weapons\rpk\rpk_draw
-snd_holster        	        = weapons\rpk\rpk_holster
-snd_bore		        = $no_sound
-snd_reload_misfire              = weapons\rpk\rpk_unjam
-snd_switch_mode				              = weapons\rpk\rpk_switch_mode
-
-scripted_snd_ammo_check                 = weapons\rpk\rpk_magcheck
-scripted_snd_ammo_check_empty           = weapons\rpk\rpk_magcheck
-scripted_snd_ammo_check_jammed          = weapons\rpk\rpk_magcheck
-scripted_snd_ammo_check_empty_jammed    = weapons\rpk\rpk_magcheck
-scripted_snd_ammo_check_no_mag          = $no_sound
-scripted_snd_sprint2walk        	        = weapons\rpk\rpk_draw
-scripted_snd_walk2sprint        	        = weapons\rpk\rpk_holster   
-
-
 [wpn_rpk_hud]:hud_base
         item_visual                 = anomaly_weapons\wpn_rpk\wpn_rpk_hud.ogf
         attach_place_idx            = 0
         zoom_hide_crosshair         = true
         
-        item_position                            = 0, 0, 0
-        item_orientation                         = 0, 0, 0
-
-        hands_position                           = -0.001177, 0.001651, 0.041103
-        hands_position_16x9                      = -0.001177, 0.001651, 0.041103
-        hands_orientation                        = -1.275088, 0.00, 0
-        hands_orientation_16x9                   = -1.275088, 0.00, 0
-
-
-        aim_hud_offset_pos                       = -0.050704, 0.016534, -0.046789
-        aim_hud_offset_pos_16x9                  = -0.050704, 0.016534, -0.046789
-        aim_hud_offset_rot                       = 0.002273, -0.06639, 0
-        aim_hud_offset_rot_16x9                  = 0.002273, -0.06639, 0
-
-
-    lowered_hud_offset_pos			= 0.039731, -0.011574, 0.011684
-    lowered_hud_offset_pos_16x9		= 0.039731, -0.011574, 0.011684
-    lowered_hud_offset_rot			= -0.1,-0.6,0.4
-    lowered_hud_offset_rot_16x9		= -0.081037,-0.705504,0.4
-
-        gl_hud_offset_pos                        = 0, 0, 0
-        gl_hud_offset_pos_16x9                   = 0, 0, 0
-        gl_hud_offset_rot                        = 0, 0, 0
-        gl_hud_offset_rot_16x9                   = 0, 0, 0
-
-        lean_hud_offset_pos                      = 0, 0, 0
-        lean_hud_offset_rot                      = 0, 0, 0
+        item_position               = 0, 0.004, 0
+        item_orientation            = -15.488927, -3.320898, 367.220154
         
-anm_hide                                 = rpk_new_holster, idle
-anm_bore                                 = rpk_new_inspect, idle
-anm_idle                                 = rpk_new_idle, idle
-anm_idle_aim                             = rpk_new_aim, idle
-anm_idle_aim_moving                      = rpk_new_walk, idle, 0.75
-anm_idle_aim_moving_crouch               = rpk_new_walk, idle, 0.7
-anm_idle_moving                          = rpk_new_walk, idle
-anm_idle_sprint                          = rpk_new_sprint, idle, 1.1 
-anm_walk2sprint             = rpk_new_walk2sprint, idle
-anm_sprint2walk             = rpk_new_sprint2walk, idle
-anm_reload                               = rpk_old_reload, reload
-anm_reload_empty                         = rpk_old_reload_empty, reload_empty
-
-anm_shots                                = rpk_new_shoot
-anm_shots_aim                            = rpk_new_shoot_aim
-anm_show                                 = rpk_new_draw, idle 
-
-anm_idle_aim_start                         = rpk_new_aim_start, idle
-anm_idle_aim_end                         = rpk_new_aim_end, idle
-anm_switch_mode                 		 = rpk_new_switch_mode, idle
-anm_reload_misfire                 = rpk_new_unjam, unjam
-
-anm_hide_jammed                                 = rpk_new_holster, idle_jammed
-anm_bore_jammed                                  = rpk_new_inspect, idle_jammed
-anm_bore_empty_jammed                                  = rpk_new_inspect, idle_jammed
-anm_idle_jammed                                 = rpk_new_idle, idle_jammed
-anm_idle_aim_jammed                             = rpk_new_aim, idle_jammed
-anm_idle_aim_moving_jammed                      = rpk_new_walk, idle_jammed, 0.75
-anm_idle_aim_moving_crouch_jammed               = rpk_new_walk, idle_jammed, 0.7
-anm_idle_moving_jammed                          = rpk_new_walk, idle_jammed
-anm_idle_sprint_jammed                          = rpk_new_sprint, idle_jammed, 1.1 
-anm_walk2sprint_jammed             = rpk_new_walk2sprint, idle_jammed
-anm_sprint2walk_jammed             = rpk_new_sprint2walk, idle_jammed
-
-anm_show_jammed                                 = rpk_new_draw, idle_jammed 
-
-anm_idle_aim_start_jammed                         = rpk_new_aim_start, idle_jammed
-anm_idle_aim_end_jammed                         = rpk_new_aim_end, idle_jammed
-anm_switch_mode_jammed                 		 = rpk_new_switch_mode, idle_jammed
-
-
-anm_ammo_check                           = rpk_old_magcheck, magcheck
-anm_ammo_check_empty                     = rpk_old_magcheck, magcheck_empty
-;anm_ammo_check_no_mag                    = rpk_old_magcheck_nomag, magcheck_nomag
-;anm_ammo_check_aim                       = rpk_old_magcheck_ads, magcheck_ads
-;anm_ammo_check_empty_aim                 = rpk_old_magcheck_ads, magcheck_empty_ads
-anm_ammo_check_jammed                    = rpk_old_magcheck, magcheck_jammed
-anm_ammo_check_empty_jammed              = rpk_old_magcheck, magcheck_empty_jammed
-
-        ts_pattern_walk2sprint      = .+, anm_idle_sprint, anm_walk2sprint, 1
-
-        ts_pattern_sprint2walk      = anm_idle_sprint, ^anm_idle.*, anm_sprint2walk, 1
-        ts_pattern_sprint2walk_aim  = anm_walk2sprint, ^anm_idle_aim.*, anm_sprint2walk, 1
-        ts_strict_sprint2walk_idle  = anm_walk2sprint, anm_idle, anm_sprint2walk
-        ts_strict_sprint2walk_move  = anm_walk2sprint, anm_idle_moving, anm_sprint2walk
-
-        ;ts_pattern_idle2aim         = ^anm_idle.*, ^anm_idle_aim$, anm_idle2aim, 2
-
-        ;ts_strict_aim2idle         = anm_idle_aim, anm_idle, anm_aim2idle
-        ;ts_strict_aim2walk         = anm_idle_aim, anm_idle_moving, anm_aim2idle
-        ts_strict_sprint2aim        = anm_idle_sprint, anm_idle_aim, anm_sprint2walk
-        ts_strict_aim2sprint        = anm_idle_aim, anm_idle_sprint, anm_walk2sprint
-
-        ts_strict_sprint2aimthing        = anm_idle_sprint, anm_idle_aim_start, anm_sprint2walk
-
-        ts_strict_sprint2inspect        = anm_idle_sprint, anm_bore, anm_sprint2walk
-        ts_strict_walk2sprint_inspect        = anm_walk2sprint, anm_bore, anm_sprint2walk
-
-        ; ts_pattern_reload_interrupt     = anm_add_cartridge, ^anm_idle.*, anm_close 
-        ; ts_pattern_reload_empty_interrupt     = anm_add_cartridge_empty, ^anm_idle.*, anm_close   
-
-;firebone stuff
+        hands_position              = -0.14, -0.2, 0.15
+        hands_position_16x9         = -0.14, -0.2, 0.15
+        hands_orientation           = -0.75, 1.7, -4.2
+        hands_orientation_16x9      = -0.75, 1.7, -4.2
+        
+        aim_hud_offset_pos          = -0.07725, 0.0633, -0.292
+        aim_hud_offset_pos_16x9     = -0.07725, 0.0633, -0.292
+        aim_hud_offset_rot          = 0.0217, 0.0, -0.0061
+        aim_hud_offset_rot_16x9     = 0.0217, 0.0, -0.0061
+        
+        gl_hud_offset_pos           = 0, 0, 0
+        gl_hud_offset_pos_16x9      = 0, 0, 0
+        gl_hud_offset_rot           = 0, 0, 0
+        gl_hud_offset_rot_16x9      = 0, 0, 0
+        
+        lean_hud_offset_pos         = 0, 0, 0
+        lean_hud_offset_rot         = 0, 0, 0
+        
+        anm_hide                    = rpk_holster
+        anm_idle                    = rpk_idle
+        anm_idle_aim                = rpk_aim
+        anm_idle_aim_moving         = rpk_move, idle, 0.75
+        anm_idle_aim_moving_crouch  = rpk_move, idle, 0.7
+        anm_idle_moving             = rpk_move
+        anm_idle_sprint             = rpk_sprint
+        anm_reload                  = rpk_reload, reload
+        anm_shots                   = rpk_shoot, shoot
+        anm_show                    = rpk_draw
+        
+        shell_bone                  = gilza
+        shell_dir                   = 0, 0, 0
+        shell_point                 = 0, 0, 0
+        
         fire_bone                   = muzzle
+        fire_bone2                  = wpn_body
         fire_point                  = 0, 0, 0
+        fire_point2                 = 0, 0, 0
  
 ;------------------------------------------------------------------------------------------------
 [wpn_rpk74]:wpn_rpk
@@ -389,126 +310,71 @@ control_inertion_factor = 1.0f
  
 
 [wpn_rpk74_hud]:hud_base
-        item_visual                              = anomaly_weapons\wpn_rpk\wpn_rpk74_hud.ogf
+        item_visual                 = anomaly_weapons\wpn_rpk\wpn_rpk74_hud.ogf
         attach_place_idx            = 0
         zoom_hide_crosshair         = true
-
-
-        item_position                            = 0, 0, 0
-        item_orientation                         = 0, 0, 0
-
-        hands_position                           = -0.001177, 0.001651, 0.041103
-        hands_position_16x9                      = -0.001177, 0.001651, 0.041103
-        hands_orientation                        = -1.275088, 0.00, 0
-        hands_orientation_16x9                   = -1.275088, 0.00, 0
-
-
-        aim_hud_offset_pos                       = -0.050598, 0.016392, -0.046789
-        aim_hud_offset_pos_16x9                  = -0.050598, 0.016392, -0.046789
-        aim_hud_offset_rot                       = 0.002131, -0.06639, 0
-        aim_hud_offset_rot_16x9                  = 0.002131, -0.06639, 0
-
-
-    lowered_hud_offset_pos			= 0.039731, -0.011574, 0.011684
-    lowered_hud_offset_pos_16x9		= 0.039731, -0.011574, 0.011684
-    lowered_hud_offset_rot			= -0.1,-0.6,0.4
-    lowered_hud_offset_rot_16x9		= -0.081037,-0.705504,0.4
-
-        gl_hud_offset_pos                        = 0, 0, 0
-        gl_hud_offset_pos_16x9                   = 0, 0, 0
-        gl_hud_offset_rot                        = 0, 0, 0
-        gl_hud_offset_rot_16x9                   = 0, 0, 0
-
-        lean_hud_offset_pos                      = 0, 0, 0
-        lean_hud_offset_rot                      = 0, 0, 0
         
-anm_hide                                 = rpk_new_holster, idle
-anm_bore                                 = rpk_new_inspect, idle
-anm_idle                                 = rpk_new_idle, idle
-anm_idle_aim                             = rpk_new_aim, idle
-anm_idle_aim_moving                      = rpk_new_walk, idle, 0.75
-anm_idle_aim_moving_crouch               = rpk_new_walk, idle, 0.7
-anm_idle_moving                          = rpk_new_walk, idle
-anm_idle_sprint                          = rpk_new_sprint, idle, 1.1 
-anm_walk2sprint             = rpk_new_walk2sprint, idle
-anm_sprint2walk             = rpk_new_sprint2walk, idle
-anm_reload                               = rpk_new_reload, reload
-anm_reload_empty                         = rpk_new_reload_empty, reload_empty
-
-anm_shots                                = rpk_new_shoot
-anm_shots_aim                            = rpk_new_shoot_aim
-anm_show                                 = rpk_new_draw, idle 
-
-anm_idle_aim_start                         = rpk_new_aim_start, idle
-anm_idle_aim_end                         = rpk_new_aim_end, idle
-anm_switch_mode                 		 = rpk_new_switch_mode, idle
-anm_reload_misfire                 = rpk_new_unjam, unjam
-
-anm_hide_jammed                                 = rpk_new_holster, idle_jammed
-anm_bore_jammed                                  = rpk_new_inspect, idle_jammed
-anm_bore_empty_jammed                                  = rpk_new_inspect, idle_jammed
-anm_idle_jammed                                 = rpk_new_idle, idle_jammed
-anm_idle_aim_jammed                             = rpk_new_aim, idle_jammed
-anm_idle_aim_moving_jammed                      = rpk_new_walk, idle_jammed, 0.75
-anm_idle_aim_moving_crouch_jammed               = rpk_new_walk, idle_jammed, 0.7
-anm_idle_moving_jammed                          = rpk_new_walk, idle_jammed
-anm_idle_sprint_jammed                          = rpk_new_sprint, idle_jammed, 1.1 
-anm_walk2sprint_jammed             = rpk_new_walk2sprint, idle_jammed
-anm_sprint2walk_jammed             = rpk_new_sprint2walk, idle_jammed
-
-anm_show_jammed                                 = rpk_new_draw, idle_jammed 
-
-anm_idle_aim_start_jammed                         = rpk_new_aim_start, idle_jammed
-anm_idle_aim_end_jammed                         = rpk_new_aim_end, idle_jammed
-anm_switch_mode_jammed                 		 = rpk_new_switch_mode, idle_jammed
-
-
-anm_ammo_check                           = rpk_new_magcheck, magcheck
-anm_ammo_check_empty                     = rpk_new_magcheck, magcheck_empty
-;anm_ammo_check_no_mag                    = rpk_new_magcheck_nomag, magcheck_nomag
-;anm_ammo_check_aim                       = rpk_new_magcheck_ads, magcheck_ads
-;anm_ammo_check_empty_aim                 = rpk_new_magcheck_ads, magcheck_empty_ads
-anm_ammo_check_jammed                    = rpk_new_magcheck, magcheck_jammed
-anm_ammo_check_empty_jammed              = rpk_new_magcheck, magcheck_empty_jammed
-
-        ts_pattern_walk2sprint      = .+, anm_idle_sprint, anm_walk2sprint, 1
-
-        ts_pattern_sprint2walk      = anm_idle_sprint, ^anm_idle.*, anm_sprint2walk, 1
-        ts_pattern_sprint2walk_aim  = anm_walk2sprint, ^anm_idle_aim.*, anm_sprint2walk, 1
-        ts_strict_sprint2walk_idle  = anm_walk2sprint, anm_idle, anm_sprint2walk
-        ts_strict_sprint2walk_move  = anm_walk2sprint, anm_idle_moving, anm_sprint2walk
-
-        ;ts_pattern_idle2aim         = ^anm_idle.*, ^anm_idle_aim$, anm_idle2aim, 2
-
-        ;ts_strict_aim2idle         = anm_idle_aim, anm_idle, anm_aim2idle
-        ;ts_strict_aim2walk         = anm_idle_aim, anm_idle_moving, anm_aim2idle
-        ts_strict_sprint2aim        = anm_idle_sprint, anm_idle_aim, anm_sprint2walk
-        ts_strict_aim2sprint        = anm_idle_aim, anm_idle_sprint, anm_walk2sprint
-
-        ts_strict_sprint2aimthing        = anm_idle_sprint, anm_idle_aim_start, anm_sprint2walk
-
-        ts_strict_sprint2inspect        = anm_idle_sprint, anm_bore, anm_sprint2walk
-        ts_strict_walk2sprint_inspect        = anm_walk2sprint, anm_bore, anm_sprint2walk
-
-        ; ts_pattern_reload_interrupt     = anm_add_cartridge, ^anm_idle.*, anm_close 
-        ; ts_pattern_reload_empty_interrupt     = anm_add_cartridge_empty, ^anm_idle.*, anm_close   
-
-;firebone stuff
+        item_position               = -0, 0.004, -0
+        item_orientation            = -15.488927, -3.320898, 367.220154
+        
+        hands_position              = -0.13, -0.21, 0.15
+        hands_position_16x9         = -0.13, -0.21, 0.15
+        hands_orientation           = -0.75, 1.7, -4.2
+        hands_orientation_16x9      = -0.75, 1.7, -4.2
+        
+        aim_hud_offset_pos          = -0.0871, 0.07266, -0.3
+        aim_hud_offset_pos_16x9     = -0.0871, 0.07266, -0.3
+        aim_hud_offset_rot          = 0.02165, 0.0, -0.006
+        aim_hud_offset_rot_16x9     = 0.02165, 0.0, -0.006
+        
+        gl_hud_offset_pos           = 0, 0, 0
+        gl_hud_offset_pos_16x9      = 0, 0, 0
+        gl_hud_offset_rot           = 0, 0, 0
+        gl_hud_offset_rot_16x9      = 0, 0, 0
+        
+        lean_hud_offset_pos         = 0, 0, 0
+        lean_hud_offset_rot         = 0, 0, 0
+        
+        anm_hide                    = rpk_holster
+        anm_idle                    = rpk_idle
+        anm_idle_aim                = rpk_aim
+        anm_idle_moving             = rpk_move
+        anm_idle_sprint             = rpk_sprint
+        anm_reload                  = rpk_reload, reload
+        anm_shots                   = rpk_shoot, shoot
+        anm_show                    = rpk_draw
+        
+        shell_bone                  = gilza
+        shell_dir                   = 0, 0, 0
+        shell_point                 = 0, 0, 0
+        
         fire_bone                   = muzzle
+        fire_bone2                  = wpn_body
         fire_point                  = 0, 0, 0
+        fire_point2                 = 0, 0, 0
  
 ;------------------------------------------------------------------------------------------------
 [wpn_rpk74_1p29]:wpn_rpk74
         1icon_layer                 = 1p29
         1icon_layer_x               = 42
         1icon_layer_y               = 0
-                
+        
+        inv_weight                  = 5.6
+        
         hud                         = wpn_rpk74_1p29_hud
         visual                      = dynamics\weapons\wpn_rpk\wpn_rpk74_1p29.ogf
+        
+        scope_status                = 1
+        scope_dynamic_zoom          = off
+        scope_texture               = wpn_crosshair_1p29
+        scope_zoom_factor           = 15
+        
+        zoom_rotate_time            = 0.3
+ 
 
 [wpn_rpk74_1p29_hud]:wpn_rpk74_hud
-    item_visual                              = anomaly_weapons\wpn_rpk\wpn_rpk74_1p29_hud.ogf
-
+        item_visual                 = anomaly_weapons\wpn_rpk\wpn_rpk74_1p29_hud.ogf
+ 
 ;------------------------------------------------------------------------------------------------
 [wpn_rpk74_kobra]:wpn_rpk74
         1icon_layer                 = kobra
@@ -520,19 +386,29 @@ anm_ammo_check_empty_jammed              = rpk_new_magcheck, magcheck_empty_jamm
         hud                         = wpn_rpk74_kobra_hud
         visual                      = dynamics\weapons\wpn_rpk\wpn_rpk74_kobra.ogf
  
-[wpn_rpk74_kobra_hud]:wpn_rpk74_hud
-    item_visual                              = anomaly_weapons\wpn_rpk\wpn_rpk74_kobra_hud.ogf
 
+[wpn_rpk74_kobra_hud]:wpn_rpk74_hud
+        item_visual                 = anomaly_weapons\wpn_rpk\wpn_rpk74_kobra_hud.ogf
+        
+        aim_hud_offset_pos          = -0.08435, 0.0461, -0.26
+        aim_hud_offset_pos_16x9     = -0.08435, 0.0461, -0.26
+ 
 ;------------------------------------------------------------------------------------------------
 [wpn_rpk74_ps01]:wpn_rpk74
         1icon_layer                 = ps01
         1icon_layer_x               = 20
         1icon_layer_y               = 2
-
-        hud                         = wpn_rpk_sk1_hud
+        
+        inv_weight                  = 5.42
+        
+        scope_status                = 1
+        scope_dynamic_zoom          = off
+        scope_texture               = wpn_crosshair_pso1
+        scope_zoom_factor           = 15
+        
+        zoom_rotate_time            = 0.3
+ 
 
 [wpn_rpk_sk1_hud]:wpn_rpk_hud
-item_visual                              = anomaly_weapons\wpn_rpk\wpn_rpk74_pso1_hud.ogf
-
-anm_reload                               = rpk_new_reload, reload
-anm_reload_empty                         = rpk_new_reload_empty, reload_empty
+        item_visual                 = anomaly_weapons\wpn_rpk\wpn_rpk_sk1_hud.ogf
+ 

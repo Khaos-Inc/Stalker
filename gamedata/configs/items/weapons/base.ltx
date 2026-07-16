@@ -163,7 +163,7 @@
 ;include "m_dynamo_hand.ltx"
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
+;; Огнестрельное оружие
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 [bullet_manager]
@@ -175,23 +175,23 @@ tracer_width					= 0.065	;0.08
 tracer_length_max				= 1.5	;225		;24.0 ;14.0	
 tracer_length_min				= 0		;1.6		;0.2
 
-;пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ hit_probabilty пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+;расстояние после которого учитывается hit_probabilty полностью
 hit_probability_max_dist		= 3;
 
 gravity_const					= 9.81
-;пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ
+;сопротивление воздуха, процент, который отнимается от скорости полета пули
 air_resistance_k				= 1
 
-;пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ (пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ), пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+;размер шага времени (в милисекундах), по которому проигрываются
 time_step						= 33
-;пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ (пїЅ/пїЅ), пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+;минимальная скорость (м/с), на которой пуля еще считается и показывается
 min_bullet_speed				= 3.0
-;cпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ (пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ)
+;cколько процентов энергии потеряет пуля при столкновении с материалом (при падении под прямым углом)
 collision_energy_min			= 0.8
-;пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+;сколько процентов энергии останется у пули при любом столкновении
 collision_energy_max			= 0.5
 
-whine_sounds					= weapons\_cracks\mono\_new\NewCrack_1, weapons\_cracks\mono\_new\NewCrack_2, weapons\_cracks\mono\_new\NewCrack_3, weapons\_cracks\mono\_new\NewCrack_4, weapons\_cracks\mono\_new\NewCrack_5, weapons\_cracks\mono\_new\NewCrack_6, weapons\_cracks\mono\_new\NewCrack_8, weapons\_cracks\mono\_new\NewCrack_9, weapons\_cracks\mono\_new\NewCrack_10, weapons\_cracks\mono\_new\NewCrack_11, weapons\_cracks\mono\_new\NewCrack_12, weapons\_cracks\mono\_new\NewCrack_13, weapons\_cracks\mono\_new\NewCrack_14, weapons\_cracks\mono\_new\NewCrack_15, weapons\_cracks\mono\_new\NewCrack_16, weapons\_cracks\mono\_new\NewCrack_17, weapons\_cracks\mono\_new\NewCrack_18, weapons\_cracks\mono\_new\NewCrack_19, weapons\_cracks\mono\_new\NewCrack_20, weapons\_cracks\mono\_new\NewCrack_21, weapons\_cracks\mono\_new\NewCrack_22;
+whine_sounds					= weapons\whine_1, weapons\whine_2, weapons\whine_3, weapons\whine_4, weapons\whine01, weapons\whine02
 explode_particles				= explosions\expl_bullet,explosions\expl_bullet_00,explosions\expl_bullet_01
 
 
@@ -246,17 +246,17 @@ jump_height = 0.1 ;0
 
 wm_size         = 0.05
 
-;пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+;трассы от осколков
 fragment_speed				= 184
 
-explode_duration		 = 5		;пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ (пїЅ)
+explode_duration		 = 5		;подолжительность взрыва (с)
 
-;пїЅпїЅпїЅпїЅпїЅ
+;звуки
 snd_explode = wpn_fake_vog-25_explode
 ;wallmarks
 wallmark_section		= explosion_marks
 
-;пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+;свойства которые читаются, но не используются
 inv_name		= ammo-vog-25
 inv_name_short	= ammo-vog-25
 inv_weight		= .2
@@ -271,10 +271,10 @@ kill_msg_y			= 232
 kill_msg_width		= 21
 kill_msg_height		= 22
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ CustomRocket
+;; Свойства CustomRocket
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-engine_present		= false		;пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
-lights_enabled		= false		;пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
+engine_present		= false		;присутствует ли в ракете двигатель
+lights_enabled		= false		;свет вокруг ракеты, во время полета
 force_explode_time  = 10000
 
 [wpn_fake_missile1]:identity_immunities,default_weapon_params
@@ -317,18 +317,18 @@ ph_mass			 = 5
 
 jump_height = 1
 
-;пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+;трассы от осколков
 fragment_speed		= 240
 
 wm_size         	= 0.05
 ;wallmarks
 wallmark_section		 = explosion_marks
-explode_duration		 = 5		;пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ (пїЅ)
+explode_duration		 = 5		;подолжительность взрыва (с)
 
-;пїЅпїЅпїЅпїЅпїЅ
+;звуки
 snd_explode = wpn_fake_vog-25_explode
 
-;пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+;свойства которые читаются, но не используются
 inv_name		= ammo-vog-25p
 inv_name_short	= ammo-vog-25p
 inv_weight		= .2
@@ -345,10 +345,10 @@ kill_msg_height		= 22
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ CustomRocket
+;; Свойства CustomRocket
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-engine_present		= false		;пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
-lights_enabled 		= true			;пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
+engine_present		= false		;присутствует ли в ракете двигатель
+lights_enabled 		= true			;свет вокруг ракеты, во время полета
 trail_light_color 	= 0.6,0.5,0.3
 trail_light_range 	= 8.0
 force_explode_time  = 10000
@@ -394,18 +394,18 @@ ph_mass			 = 5
 
 jump_height = 1
 
-;пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+;трассы от осколков
 fragment_speed				= 190
 ;wallmarks
 wallmark_section			= explosion_marks
 wm_size						= 0.1 ;0.05
 
-explode_duration			 = 5		;пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ (пїЅ)
+explode_duration			 = 5		;подолжительность взрыва (с)
 
-;пїЅпїЅпїЅпїЅпїЅ
+;звуки
 snd_explode = wpn_fake_vog-25_explode
 
-;пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+;свойства которые читаются, но не используются
 inv_name		= ammo-m209
 inv_name_short	= "M209"
 inv_weight		= .2
@@ -421,10 +421,10 @@ kill_msg_width		= 19
 kill_msg_height		= 22
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ CustomRocket
+;; Свойства CustomRocket
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-engine_present		= false		;пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
-lights_enabled 		= true			;пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
+engine_present		= false		;присутствует ли в ракете двигатель
+lights_enabled 		= true			;свет вокруг ракеты, во время полета
 trail_light_color 	= 0.6,0.5,0.3
 trail_light_range 	= 8.0
 force_explode_time  = 10000
@@ -452,7 +452,7 @@ inv_grid_width     = 2
 inv_grid_height    = 2
 inv_grid_x         = 2
 inv_grid_y         = 30
-;пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+;вещь невозможно подобрать
 can_take			= true
 
 cost				= 50
@@ -481,19 +481,19 @@ light_color		         = 1.9,1.3,0.5
 light_range		         = 30.0
 light_time 		         = 1
 
-;пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
-fragment_speed				= 224		;пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ (пїЅ/пїЅ)
+;трассы от осколков
+fragment_speed				= 224		;скорость осколков (м/с)
 
-explode_duration		 = 2		;пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ (пїЅ)
+explode_duration		 = 2		;подолжительность взрыва (с)
 ;wallmarks
 wallmark_section		= explosion_marks
 
-;пїЅпїЅпїЅпїЅпїЅ
+;звуки
 snd_explode = wpn_fake_vog-25_explode
 immunities_sect			= explosive_tank_immunities_sect
 
 [explosive_tank_immunities_sect]
-;пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ
+;коэффициенты для попаданий различными типами хитов
 burn_immunity			= 0.0
 strike_immunity			= 1.0
 shock_immunity			= 1.0
@@ -521,7 +521,7 @@ inv_grid_width		= 1
 inv_grid_height		= 1
 inv_grid_x			= 9
 inv_grid_y			= 9
-;пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+;вещь невозможно подобрать
 can_take			= false
 
 cost				= 500
@@ -550,19 +550,19 @@ light_color		         = 1.9,1.4,0.5
 light_range		         = 14.0
 light_time 		         = 0.85
 
-;пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
-fragment_speed				= 186		;пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ (пїЅ/пїЅ)
+;трассы от осколков
+fragment_speed				= 186		;скорость осколков (м/с)
 
-explode_duration		 = 5		;пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ (пїЅ)
+explode_duration		 = 5		;подолжительность взрыва (с)
 
 ;wallmarks
 wallmark_section		 = explosion_marks
-;пїЅпїЅпїЅпїЅпїЅ
+;звуки
 snd_explode = wpn_fake_vog-25_explode
 immunities_sect			= explosive_barrel_low_new_immunities_sect
 
 [explosive_barrel_low_new_immunities_sect]
-;пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ
+;коэффициенты для попаданий различными типами хитов
 burn_immunity			= 0.0
 strike_immunity			= 1.0
 shock_immunity			= 1.0
@@ -592,7 +592,7 @@ inv_grid_width		= 1
 inv_grid_height		= 1
 inv_grid_x			= 9
 inv_grid_y			= 9
-;пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+;вещь невозможно подобрать
 can_take			= false
 
 cost				= 500
@@ -622,14 +622,14 @@ light_color		         = 1.9,1.4,0.5
 light_range		         = 14.0
 light_time 		         = 0.85
 
-;пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
-fragment_speed				= 204		;пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ (пїЅ/пїЅ)
+;трассы от осколков
+fragment_speed				= 204		;скорость осколков (м/с)
 
-explode_duration		 = 2		;пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ (пїЅ)
+explode_duration		 = 2		;подолжительность взрыва (с)
 
 ;wallmarks
 wallmark_section		 = explosion_marks
-;пїЅпїЅпїЅпїЅпїЅ
+;звуки
 snd_explode = wpn_fake_vog-25_explode
 immunities_sect			= explosive_explosive_grenade_immunities_sect
 
@@ -680,7 +680,7 @@ inv_grid_width		= 1
 inv_grid_height		= 1
 inv_grid_x			= 9
 inv_grid_y			= 9
-;пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+;вещь невозможно подобрать
 can_take			= false
 
 cost				= 500
@@ -710,21 +710,21 @@ light_color		         = 1.9,1.4,0.5
 light_range		         = 14.0
 light_time 		         = 0.85
 
-;пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
-fragment_speed				= 200		;пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ (пїЅ/пїЅ)
+;трассы от осколков
+fragment_speed				= 200		;скорость осколков (м/с)
 
-explode_duration		 = 5		;пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ (пїЅ)
+explode_duration		 = 5		;подолжительность взрыва (с)
 
 ;wallmarks
 wallmark_section		 = explosion_marks
-;пїЅпїЅпїЅпїЅпїЅ
+;звуки
 snd_explode = wpn_fake_vog-25_explode
 immunities_sect			= explosive_hide_immunities_sect
 
 ;time_to_explode			= 0.f
 
 [explosive_hide_immunities_sect]
-;пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ
+;коэффициенты для попаданий различными типами хитов
 burn_immunity			= 0.0
 strike_immunity			= 0.0
 shock_immunity			= 0.0
@@ -752,7 +752,7 @@ inv_grid_width		= 1
 inv_grid_height		= 1
 inv_grid_x			= 9
 inv_grid_y			= 9
-;пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+;вещь невозможно подобрать
 can_take			= false
 
 cost				= 500
@@ -781,14 +781,14 @@ light_color		         = 0,0,0
 light_range		         = 0.0
 light_time 		         = 0.85
 
-;пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
-fragment_speed				= 195		;пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ (пїЅ/пїЅ)
+;трассы от осколков
+fragment_speed				= 195		;скорость осколков (м/с)
 
-explode_duration		 = 2		;пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ (пїЅ)
+explode_duration		 = 2		;подолжительность взрыва (с)
 
 ;wallmarks
 wallmark_section		 = explosion_marks
-;пїЅпїЅпїЅпїЅпїЅ
+;звуки
 snd_explode = weapons\f1_explode_
 immunities_sect			= explosive_barrel_low_immunities_sect
 
@@ -796,7 +796,7 @@ immunities_sect			= explosive_barrel_low_immunities_sect
 
 
 [explosive_barrel_low_immunities_sect]
-;пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ
+;коэффициенты для попаданий различными типами хитов
 burn_immunity			= 0.0
 strike_immunity			= 1.0
 shock_immunity			= 1.0
@@ -825,7 +825,7 @@ inv_grid_width		= 1
 inv_grid_height		= 1
 inv_grid_x			= 9
 inv_grid_y			= 9
-;пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+;вещь невозможно подобрать
 can_take			= false
 
 cost				= 500
@@ -854,20 +854,20 @@ light_color		         = 1.9,1.4,0.5
 light_range		         = 14.0
 light_time 		         = 0.85
 
-;пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
-fragment_speed				= 215		;пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ (пїЅ/пїЅ)
+;трассы от осколков
+fragment_speed				= 215		;скорость осколков (м/с)
 
-explode_duration		 = 3		;пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ (пїЅ)
+explode_duration		 = 3		;подолжительность взрыва (с)
 
 
-;пїЅпїЅпїЅпїЅпїЅ
+;звуки
 snd_explode = barrel_explode_snd
 immunities_sect			= explosive_barrel_immunities_sect
 ;wallmarks
 wallmark_section		= explosion_marks
 
 [explosive_barrel_immunities_sect]
-;пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ
+;коэффициенты для попаданий различными типами хитов
 burn_immunity			= 0.0
 strike_immunity			= 1.0
 shock_immunity			= 1.0
@@ -908,7 +908,7 @@ inv_grid_width     = 2
 inv_grid_height    = 2
 inv_grid_x         = 2
 inv_grid_y         = 30
-;пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+;вещь невозможно подобрать
 can_take			= true
 
 cost				= 500
@@ -937,20 +937,20 @@ light_color		         = 1.9,1.2,0.5
 light_range		         = 30.0
 light_time 		         = 1
 
-;пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
-fragment_speed				= 208		;пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ (пїЅ/пїЅ)
+;трассы от осколков
+fragment_speed				= 208		;скорость осколков (м/с)
 
-explode_duration		 = 2		;пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ (пїЅ)
+explode_duration		 = 2		;подолжительность взрыва (с)
 
 
-;пїЅпїЅпїЅпїЅпїЅ
+;звуки
 snd_explode = barrel_explode_snd
 immunities_sect			= explosive_mobiltank_immunities_sect
 ;wallmarks
 wallmark_section		= explosion_marks
 
 [explosive_mobiltank_immunities_sect]
-;пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ
+;коэффициенты для попаданий различными типами хитов
 burn_immunity			= 0.0
 strike_immunity			= 1.0
 shock_immunity			= 1.0
@@ -980,7 +980,7 @@ inv_grid_height		= 1
 inv_grid_x			= 9
 inv_grid_y			= 9
 
-;пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+;вещь невозможно подобрать
 can_take			= false
 
 cost				= 50
@@ -1009,12 +1009,12 @@ light_color		         = 1.9,1.3,0.5
 light_range		         = 30.0
 light_time 		         = 1.5
 
-;пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+;трассы от осколков
 fragment_speed				= 220
 
-explode_duration		 = 3		;пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ (пїЅ)
+explode_duration		 = 3		;подолжительность взрыва (с)
 
-;пїЅпїЅпїЅпїЅпїЅ
+;звуки
 snd_explode = weapons\f1_explode
 immunities_sect			= dinamit_immunities_sect
 ;condition_to_explode        =0.f
@@ -1022,7 +1022,7 @@ immunities_sect			= dinamit_immunities_sect
 wallmark_section		= explosion_marks
 
 [dinamit_immunities_sect]
-;пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ
+;коэффициенты для попаданий различными типами хитов
 burn_immunity			= 0.0
 strike_immunity			= 1.0
 shock_immunity			= 1.0

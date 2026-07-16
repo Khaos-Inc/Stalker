@@ -93,20 +93,10 @@ attach_position_offset                                 = 0.14,0.001,0.02
 attach_bone_name                                       = bip01_l_hand
 auto_attach                                            = false
 tier                                                   = 2
+hud_fov												   = 0.45
 
-hud_fov												   = 0.68
 [device_pda_1_hud]:pda_hud
 item_visual                                            = dynamics\devices\dev_pda\dev_pda_green_hud.ogf
-
-hands_position			                               = -0.005, -0.095, -0.02
-hands_position_16x9		                               = -0.005, -0.095, -0.02
-hands_orientation		                               = 0, -5.2, -0.65
-hands_orientation_16x9	                               = 0, -5.2, -0.65
-
-aim_hud_offset_pos         							   = 0.01, -0.04, -0.127
-aim_hud_offset_pos_16x9								   = 0.01, -0.04, -0.127
-aim_hud_offset_rot        							   = -0.515, -0.034, 0
-aim_hud_offset_rot_16x9								   = -0.515, -0.034, 0
 
 ;------------------------
 [device_pda_2]:device_pda_1
@@ -123,16 +113,6 @@ hud                                      			   = device_pda_2_hud
 [device_pda_2_hud]:pda_hud
 item_visual                                            = dynamics\devices\dev_pda\dev_pda_blue_hud.ogf
 
-hands_position			                               = -0.005, -0.095, -0.02
-hands_position_16x9		                               = -0.005, -0.095, -0.02
-hands_orientation		                               = 0, -5.2, -0.65
-hands_orientation_16x9	                               = 0, -5.2, -0.65
-
-aim_hud_offset_pos         							   = 0.01, -0.04, -0.127
-aim_hud_offset_pos_16x9								   = 0.01, -0.04, -0.127
-aim_hud_offset_rot        							   = -0.515, -0.034, 0
-aim_hud_offset_rot_16x9								   = -0.515, -0.034, 0
-
 ;------------------------
 [device_pda_3]:device_pda_1
 visual                                                 = dynamics\devices\dev_pda\dev_pda_3.ogf
@@ -148,16 +128,6 @@ hud                                      			   = device_pda_3_hud
 [device_pda_3_hud]:pda_hud
 item_visual                                            = dynamics\devices\dev_pda\dev_pda_black_hud.ogf
 
-hands_position			                               = -0.005, -0.095, -0.02
-hands_position_16x9		                               = -0.005, -0.095, -0.02
-hands_orientation		                               = 0, -5.2, -0.65
-hands_orientation_16x9	                               = 0, -5.2, -0.65
-
-aim_hud_offset_pos         							   = 0.01, -0.04, -0.127
-aim_hud_offset_pos_16x9								   = 0.01, -0.04, -0.127
-aim_hud_offset_rot        							   = -0.515, -0.034, 0
-aim_hud_offset_rot_16x9								   = -0.515, -0.034, 0
-
 ;;--==========================< common PDA and Flashdrives >=============================
 [itm_pda_common]:device_pda_1
 description                                            = st_pda_mlr_descr
@@ -169,8 +139,10 @@ inv_grid_height                                        = 1
 inv_grid_x                                             = 7
 inv_grid_y                                             = 3
 cost                                                   = 0
+use1_allow_db         					          	   = true
 use1_functor                					       = ui_pda_npc_tab.menu_view
 use1_action_functor         					       = ui_pda_npc_tab.use_view
+slot												   = 13
 
 [itm_pda_uncommon]:itm_pda_common
 
@@ -203,15 +175,15 @@ kind								                   = i_device
 attach_place_idx		                               = 1
 
 ;--from beretta
-hands_position			                               = 0.055, -0.425, -0.23
-hands_position_16x9		                               = 0.055, -0.425, -0.23
-hands_orientation		                               = -1, 25, -1
-hands_orientation_16x9	                               = -1, 25, -1
+hands_position			                               = 0.05,-0.1895,-0.1
+hands_orientation		                               = 2,2,0
+hands_position_16x9		                               = 0.05,-0.1895,-0.1
+hands_orientation_16x9	                               = 2,2,0
 
-aim_hud_offset_pos         							   = -0.18, 0.14, 0.15
-aim_hud_offset_pos_16x9								   = -0.18, 0.14, 0.15
-aim_hud_offset_rot          						   = 0.3, 0.13, -0.015
-aim_hud_offset_rot_16x9     						   = 0.3, 0.13, -0.015
+aim_hud_offset_pos         							   = -0.175, 0.065, 0.06
+aim_hud_offset_pos_16x9								   = -0.175, 0.065, 0.06
+aim_hud_offset_rot          						   = 0.0005, 0.09, -0.015
+aim_hud_offset_rot_16x9     						   = 0.0005, 0.09, -0.015
 
 gl_hud_offset_pos			                           = 0,0,0
 gl_hud_offset_rot			                           = 0,0,0
@@ -465,16 +437,6 @@ snd_holster                                            = weapons\detector\detect
 item_position				                           = -0.072424,0.030392,-0.012213
 item_orientation			                           = 324.640503,-189.627350,-183.009415
 
-hands_position			                               = 0.06, -0.42, -0.11
-hands_position_16x9		                               = 0.06, -0.42, -0.11
-hands_orientation		                               = 0, 25, -1
-hands_orientation_16x9	                               = 0, 25, -1
-
-aim_hud_offset_pos         							   = -0.18, 0.11, 0.06
-aim_hud_offset_pos_16x9								   = -0.18, 0.11, 0.06
-aim_hud_offset_rot          						   = 0.1, 0.15, -0.015
-aim_hud_offset_rot_16x9     						   = 0.1, 0.15, -0.015
-
 item_visual                   	                       = dynamics\devices\dev_detector_1\dev_detector_1_hud
 
 fire_point			                                   = 0,0,-0.05
@@ -574,16 +536,6 @@ af_freq_58		                                       = 0.05, 2
 item_position				                           = -0.078949,0.039172,-0.019197
 item_orientation			                           = 320.606964,-194.089020,-186.572464
 
-hands_position			                               = 0.09, -0.44, -0.23
-hands_orientation		                               = -1, 25, -1
-hands_position_16x9		                               = 0.09, -0.44, -0.23
-hands_orientation_16x9	                               = -1, 25, -1
-
-aim_hud_offset_pos         							   = -0.2, 0.17, 0.18
-aim_hud_offset_pos_16x9								   = -0.2, 0.17, 0.18
-aim_hud_offset_rot          						   = 0.4, 0.06, -0.015
-aim_hud_offset_rot_16x9     						   = 0.4, 0.06, -0.015
-
 item_visual                   	                       = dynamics\devices\dev_detector_2\dev_detector_2_hud
 
 anm_show				                               = d2_draw, draw
@@ -675,7 +627,6 @@ af_freq_68		                                       = 0.05, 2
 
 
 [detector_elite_hud]:detector_base_hud
-
 item_position				                           = -0.071685,0.036188,-0.009934
 item_orientation			                           = 314.589233,-186.420761,-189.323669
 
@@ -817,7 +768,6 @@ zone_freq_36		                                   = 0.05, 2
 zone_freq_37		                                   = 0.05, 2
 
 [detector_scientific_hud]:detector_base_hud
-
 item_position				                           = -0.071685,0.036188,-0.009934
 item_orientation			                           = 314.589233,-186.420761,-189.323669
 
@@ -911,6 +861,7 @@ item_visual                                            = dynamics\devices\dev_de
 flash_light_range                                      = 0.0
 onoff_light_range                                      = 0.0
 
+
 ;;--======< Geiger Counter >======--
 [detector_geiger]:tch_detector
 GroupControlSection                                    = spawn_group
@@ -949,7 +900,7 @@ custom_ui_rot                                          = 0,63,0
 custom_ui_func										   = ui_dosimeter.get_UI
 custom_ui_bone										   = cover
 
-[detector_geiger_hud]:detector_simple_hud
+[detector_geiger_hud]:detector_base_hud
 attach_place_idx                                       = 1
 
 item_position                                          = -0.075000,0.036188,-0.015934
@@ -1015,19 +966,11 @@ attach_angle_offset                                    = 3.062, 0.008, -1.532
 attach_position_offset                                 = 0.134, -0.007, 0.09
 
 [device_flashlight_hud]:detector_base_hud
-
 item_position 							               = -0.053, 0.027, 0.015
 item_orientation 						               = -8, -11.5,50
 
-hands_position			                               = 0.07, -0.21, -0.22
-hands_orientation		                               = 3, 6, 0
-hands_position_16x9		                               = 0.07, -0.21, -0.22
-hands_orientation_16x9	                               = 3, 6, 0
-
-aim_hud_offset_pos         							   = -0.15, 0.045, -0.04
-aim_hud_offset_pos_16x9								   = -0.15, 0.045, -0.04
-aim_hud_offset_rot        							   = 0.05, 0.09, -0.015
-aim_hud_offset_rot_16x9								   = 0.05, 0.09, -0.015
+aim_hud_offset_pos         							   = -0.175, 0.058, -0.01
+aim_hud_offset_pos_16x9								   = -0.175, 0.058, -0.01
 
 item_visual                                            = dynamics\devices\dev_tactical_torch\dev_tactical_torch_hud
 fire_point                                             = 0,0,-0.25
@@ -1097,11 +1040,7 @@ tier                                                   = 2
 inv_name				                               = st_device_torch_nv_1_name
 inv_name_short			                               = st_device_torch_nv_1_name
 description				                               = st_device_torch_nv_1_descr
-icons_texture                                          = ui\ui_icon_bas
-inv_grid_width     = 1
-inv_grid_height    = 1
-inv_grid_x         = 143
-inv_grid_y         = 2
+inv_grid_x                                             = 5
 nv_effect										       = nightvision_1
 cost					                               = 19650
 default_to_ruck                          		       = true
@@ -1113,11 +1052,7 @@ tier                                                   = 3
 inv_name				                               = st_device_torch_nv_2_name
 inv_name_short			                               = st_device_torch_nv_2_name
 description				                               = st_device_torch_nv_2_descr
-icons_texture                                          = ui\ui_icon_bas
-inv_grid_width     = 1
-inv_grid_height    = 1
-inv_grid_x         = 142
-inv_grid_y         = 2
+inv_grid_x                                             = 6
 nv_effect										       = nightvision_2	;nightvision_bluer
 cost					                               = 24553
 default_to_ruck                          		       = true
@@ -1129,11 +1064,7 @@ tier                                                   = 4
 inv_name				                               = st_device_torch_nv_3_name
 inv_name_short			                               = st_device_torch_nv_3_name
 description				                               = st_device_torch_nv_3_descr
-icons_texture                                          = ui\ui_icon_bas
-inv_grid_width     = 1
-inv_grid_height    = 1
-inv_grid_x         = 141
-inv_grid_y         = 2
+inv_grid_x                                             = 7
 nv_effect										       = nightvision_3
 cost					                               = 31431
 default_to_ruck                          		       = true

@@ -118,36 +118,7 @@ xr_effects.on_init_fate_task = function(actor,npc,p)
 	local item_1_sec = ini_sys:section_exist(p[2]) and p[2] or nil
 	local item_2_sec = ini_sys:section_exist(p[3]) and p[3] or nil
 	local freq = item_radio.get_random_freq()
-	
---[[
-	SERIOUS NO NORTH TASKS BEFORE BS
-	AND THE NORTHERN JOB
---]]
-	local mapBlacklist = {}
-	local northernMaps = blacklist_helper.GetNorthernMaps()
-
-	if blacklist_helper.ShouldBlacklistNorth() then
-		mapBlacklist = northernMaps
-	elseif northernMaps[level.name()] then -- Player is in the Northern region and rightfully so
-		mapBlacklist = blacklist_helper.GetSouthernMaps()
-	end
-
-	if next(mapBlacklist) then
-		for i, map in pairs(p) do
-            if mapBlacklist[map] then
-                p[i] = nil
-            end
-        end
-	end
-
 	local map = p[math.random(4,#p)]
-	if map == nil then
-		return
-	end
---[[
-	SERIOUS NO NORTH TASKS BEFORE BS
-	AND THE NORTHERN JOB
---]]
 
 	if (not item_1_sec) or (not item_2_sec) then
 		printe("! TASK ERROR: %s | xr_effects.create_fate_quest - can't find item section!",var)
@@ -191,7 +162,7 @@ xr_effects.on_init_fate_task = function(actor,npc,p)
 		local news_caption = game.translate_string(task_manager.task_ini:r_string_ex(p[1], "title")) or "error"
 		news_caption = utils_data.parse_string_keys(news_caption, { ["freq"]=freq } )
 		local news_text = game.translate_string("st_location") .. " " .. game.translate_string(map)
-		db.actor:give_talk_message2(news_caption, news_text, "ui_inGame2_PD_Torgovets_informatsiey", "iconed_answer_item", p[1])
+		db.actor:give_talk_message2(news_caption, news_text, "ui_inGame2_PD_Torgovets_informatsiey", "iconed_answer_item")
 		return true
 	end
 	CreateTimeEvent(0,"on_init_fate_task",0,postpone_for_next_frame,map,freq)

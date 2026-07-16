@@ -1,16 +1,13 @@
 --[[
 	Remade by Tronex
 	New Game Menu (Fresh Start)
-	Last modification: 2025/10/12 by TheEase
+	Last modification: 2020/3/13
 
 	+ Inventory simulator
 	+ Ironman mode save killer
 	+ Setting up new games
 	+ Support for warfare
 	+ Support for new factions
-	+ Random spawn loadouts for Black Road
-	+ Support for Isolated and Hated 
-	+ Support for maintaining player default settings
 --]]
 
 
@@ -247,7 +244,7 @@ local function on_game_load(binder)
 					end
 				end
 			end
-		
+			
 			-- Faction defined here won't have access to all dialog
 			-- This is important for ISG player to prevent him from triggering main LTTZ quests, or changing their factions in Story mode
 			if faction_limited_playthrough[faction] then
@@ -282,7 +279,7 @@ local function on_game_load(binder)
 		end
 			
 		config:w_value("character_creation","new_game_story_mode") -- clear value
-
+		
 		-- Set and save the current faction for later uses
 		db.actor:set_character_community("actor_" .. faction, 0, 0)
 		alife_storage_manager.get_state().default_faction = faction
@@ -306,64 +303,59 @@ local function on_game_load(binder)
 			mlr_utils.save_var("routes_faction", faction)
 		end
 
-		if (ui_mcm and ui_mcm.get("black_road_revisited/isolated_and_hated") == true) then
-			--do nothing, generate 0 items for player
-		elseif (ui_mcm and ui_mcm.get("black_road_revisited/random_loadout") == true) then
-			blackroad_random_loadout(faction)
-		else
-			-- Loadout
-			local sim = alife()
-			local loadout = config:r_value("character_creation","new_game_loadout",3)
-			local ammo_to_spawn = {}
-			if loadout and loadout ~= "" then
-				local t = str_explode(loadout,",")
-				for i=1, #t do
-					if ini_sys:section_exist(t[i]) then
-						local to_change = { state = false }
-						if ini_sys:r_string_ex(t[i],"ammo_class") then
-							local slot = ini_sys:r_float_ex(t[i],"slot")
-							local ani_slot = ini_sys:r_float_ex(t[i],"animation_slot")
-							if slot and (((slot == 0) and (ani_slot == 1)) or (slot == 1) or (slot == 2)) then -- retarded way to know that we are dealing with weapon
-								local ammo_class = ini_sys:r_string_ex(t[i],"ammo_class")
-								local ammo_tbl = str_explode(ammo_class,",")
-								local ammo_type = ini_itm:r_string_ex("ammo_type_per_wpn",t[i])
-								local sec_ammo = ammo_tbl[1] --ammo_tbl[math.random(#ammo_tbl)]
-								if ammo_type and ini_sys:section_exist(ammo_type) then
-									to_change.state = true
-									to_change.weapon_sec = t[i]
-									to_change.ammo_sec = sec_ammo
-									sec_ammo = ammo_type
-								end
-								local box_size = (ini_sys:r_float_ex(sec_ammo, "box_size") or 50)
-								local count = ini_itm:r_float_ex("ammo_count",sec_ammo)
-								if (not count) then
-									count = (box_size < 30) and (2 * box_size) or box_size
-								end
-								ammo_to_spawn[sec_ammo] = ammo_to_spawn[sec_ammo] and (ammo_to_spawn[sec_ammo] + count) or count
+		-- Loadout
+		local sim = alife()
+		local loadout = config:r_value("character_creation","new_game_loadout",3)
+		local ammo_to_spawn = {}
+		if loadout and loadout ~= "" then
+			local t = str_explode(loadout,",")
+			for i=1, #t do
+				if ini_sys:section_exist(t[i]) then
+					local to_change = { state = false }
+					if ini_sys:r_string_ex(t[i],"ammo_class") then
+						local slot = ini_sys:r_float_ex(t[i],"slot")
+						local ani_slot = ini_sys:r_float_ex(t[i],"animation_slot")
+						if slot and (((slot == 0) and (ani_slot == 1)) or (slot == 1) or (slot == 2)) then -- retarded way to know that we are dealing with weapon
+							local ammo_class = ini_sys:r_string_ex(t[i],"ammo_class")
+							local ammo_tbl = str_explode(ammo_class,",")
+							local ammo_type = ini_itm:r_string_ex("ammo_type_per_wpn",t[i])
+							local sec_ammo = ammo_tbl[1] --ammo_tbl[math.random(#ammo_tbl)]
+							if ammo_type and ini_sys:section_exist(ammo_type) then
+								to_change.state = true
+								to_change.weapon_sec = t[i]
+								to_change.ammo_sec = sec_ammo
+								sec_ammo = ammo_type
 							end
+							local box_size = (ini_sys:r_float_ex(sec_ammo, "box_size") or 50)
+							local count = ini_itm:r_float_ex("ammo_count",sec_ammo)
+							if (not count) then
+								count = (box_size < 30) and (2 * box_size) or box_size
+							end
+							ammo_to_spawn[sec_ammo] = ammo_to_spawn[sec_ammo] and (ammo_to_spawn[sec_ammo] + count) or count
 						end
-						local se_obj = alife_create_item(t[i], db.actor)
-						
-						-- save unique ammo type
-						if se_obj and (to_change.state == true) and to_change.weapon_sec and to_change.ammo_sec then
-							if (not alife_storage_manager.get_state().start_wpn_ammo) then
-								alife_storage_manager.get_state().start_wpn_ammo = {}
-							end
-							
-							alife_storage_manager.get_state().start_wpn_ammo[se_obj.id] = sec_ammo
+					end
+					local se_obj = alife_create_item(t[i], db.actor)
+					
+					-- save unique ammo type
+					if se_obj and (to_change.state == true) and to_change.weapon_sec and to_change.ammo_sec then
+						if (not alife_storage_manager.get_state().start_wpn_ammo) then
+							alife_storage_manager.get_state().start_wpn_ammo = {}
 						end
 						
-						-- save bolt type
-						if (t[i] == "bolt") or (t[i] == "bolt_bullet") then
-							saved_bolt = t[i]
-						end
+						alife_storage_manager.get_state().start_wpn_ammo[se_obj.id] = sec_ammo
+					end
+					
+					-- save bolt type
+					if (t[i] == "bolt") or (t[i] == "bolt_bullet") then
+						saved_bolt = t[i]
 					end
 				end
 			end
-			for sec,cnt in pairs(ammo_to_spawn) do
-				alife_create_item(sec, db.actor, { ammo = cnt })
-			end
 		end
+		for sec,cnt in pairs(ammo_to_spawn) do
+			alife_create_item(sec, db.actor, { ammo = cnt })
+		end
+		--alife_create_item("device_torch", db.actor) -- base Torch
 		config:w_value("character_creation","new_game_loadout")
 		
 		se_actor:set_profile_name("actor_"..faction)
@@ -374,196 +366,6 @@ local function on_game_load(binder)
 	end
 end
 
-function blackroad_random_loadout(curr_faction)
-			--------------------------------------------------------
-		-- BLACK ROAD REVISITED RANDOM LOADOUT GEN BY TheEase --
-		--------------------------------------------------------		
-
-		-- FACTION REFERENCES
-		-- "stalker", "dolg", "freedom", "csky", "ecolog", "killer", "army", "bandit", "monolith"
-		
-		local rand_weapon = math.random(1,100)
-		local rand_antirad = math.random(1,100)
-		local rand_medical = math.random(1,100)
-		local rand_food = math.random(1,100)
-		local rand_illum = math.random(1,100)
-		local rand_knife = math.random(1,2)
-		local rand_kit = math.random(1,100)
-
-		-- I don't like how this is currently encoded, need to look into how to import configs so these loot tables don't explode out of control
-
-		local weapon_field = 4 -- Length of data needed for each weapon 
-		-- Current schema works as follows if you want to customize loadouts for factions
-		-- {"weapon_id", shares out of 100 (bigger number means larger chance), "ammo_id", how many boxes of ammo to give}
-		random_weapons = {
-			["stalker"] =  {"wpn_pm", 84, "ammo_9x18_pmm", 3, "wpn_oc33", 8, "ammo_9x18_pmm", 3, "wpn_mosin", 8, "ammo_7.62x54_7h1", 1},
-			["bandit"] =   {"wpn_pm", 40, "ammo_9x18_pmm", 3, "wpn_toz106", 40, "ammo_20x70_buck", 2, "wpn_ithacam37_stakeout", 16, "ammo_12x70_buck", 2, "wpn_vz61", 4, "ammo_9x19_fmj", 2},
-			["ecolog"] =   {"wpn_glock", 80, "ammo_9x19_fmj", 2, "wpn_beretta", 10, "ammo_9x19_fmj", 2, "wpn_colt1911", 10, "ammo_11.43x23_fmj", 2},
-			["dolg"] =     {"wpn_fort", 46, "ammo_9x18_pmm", 3, "wpn_tt33", 46, "ammo_7.62x25_p", 3, "wpn_mosin", 8, "ammo_7.62x54_7h1", 1},
-			["freedom"] =  {"wpn_hpsa", 46, "ammo_9x19_fmj", 2, "wpn_glock", 46, "ammo_9x19_fmj", 2, "wpn_k98", 8, "ammo_7.92x33_fmj", 1},
-			["killer"] =   {"wpn_colt1911", 50, "ammo_11.43x23_fmj", 2, "wpn_glock", 49, "ammo_9x19_fmj", 2, "wpn_colt1911_custom", 1, "ammo_11.43x23_fmj", 1},
-			["army"] =     {"wpn_fort", 49, "ammo_9x18_pmm", 3, "wpn_tt33", 49, "ammo_7.62x25_p", 3, "wpn_ks23", 2, "ammo_23x75_shrapnel", 1},
-			["monolith"] = {"wpn_fort", 50, "ammo_9x18_pmm", 3, "wpn_colt1911", 49, "ammo_11.43x23_fmj", 2, "wpn_colt1911_custom", 1, "ammo_11.43x23_fmj", 1},
-			["csky"] =     {"wpn_mp412", 55, "ammo_357_hp_mag", 2, "wpn_colt1911", 30, "ammo_11.43x23_fmj", 2, "wpn_winchester1873", 15, "ammo_357_hp_mag", 1},
-			["renegade"] = {"wpn_axe", 48, "", 0, "wpn_axe3", 48, "", 0, "wpn_ks23", 4, "ammo_23x75_shrapnel", 1},
-			["greh"] =     {"wpn_axe", 50, "", 0, "wpn_ithacam37_stakeout", 47, "ammo_12x70_buck", 2, "wpn_ks23", 3, "ammo_23x75_shrapnel", 1},
-			["isg"] =      {"wpn_beretta", 50, "ammo_9x19_fmj", 3, "wpn_glock", 50, "ammo_9x19_fmj", 3},
-			["zombied"] =  {"wpn_pm", 100, "ammo_9x18_pmm", 3}
-		}
-		
-		local kit_field = 2 -- Length of data needed for each kit type available for factions
-		-- Kits are basically the "previous life" of the stalker. These kits will determine extra starting item potential of a stalker to add some flavor in the random item gen
-		-- Current schema is {"kit_name", percent chance to select kit}
-		random_kits = {
-			["stalker"] =  {"explorer", 30, "musician", 10, "lostsoul", 10, "recon", 10, "hunter", 30, "medic", 10},
-			["bandit"] =   {"drugdealer", 80, "musician", 20},
-			["ecolog"] =   {"scientist", 60, "explorer", 10, "medic", 30},
-			["dolg"] =     {"soldier", 40, "recon", 40, "hunter", 10, "musician", 5, "medic", 5},
-			["freedom"] =  {"soldier", 5, "saboteur", 75, "musician", 5, "drugdealer", 15},
-			["killer"] =   {"soldier", 40, "recon", 40, "medic", 20},
-			["army"] =     {"soldier", 40, "recon", 40, "medic", 20},
-			["monolith"] = {"soldier", 40, "recon", 40, "medic", 20},
-			["csky"] =     {"recon", 10, "hunter", 20, "musician", 10, "scientist", 20, "medic", 20, "explorer", 20},
-			["renegade"] = {"freak", 66, "drugdealer", 34},
-			["greh"] =     {"lostsoul", 25, "saboteur", 25, "freak", 50},
-			["isg"] =      {"soldier", 40, "recon", 40, "medic", 20},
-			["zombied"] =  {"soldier", 25, "lostsoul", 25, "medic", 25, "explorer", 25}
-		}
-
-		local special_field = 4 -- Length of data needed for each special
-		-- -- Unlike weapons which you can only receive one of, specials are rolled independently to fill out the items from your randomly selected kit
-		-- -- Current schema is as follows if you wish to customize
-		-- -- {"item_id", percent chance of receiving the item, min amount of item received, max amount of item received}
-		random_specials = {
-			["explorer"] =   {"wpn_binoc_inv", 80, 1, 1, "novice_outfit_camo", 8, 1, 1, "helm_resp", 16, 1, 1, "sumka6_item", 20, 1, 1, "detector_radio", 35, 1, 1, "bandage", 50, 1, 1, "itm_sleepbag", 35, 1, 1},
-			["musician"] =   {"guitar_a", 100, 1, 1, "harmonica", 25, 1, 1, "marijuana", 50, 1, 3, "joint", 50, 1, 3, "vodka", 35, 1, 1, "vodka2", 35, 1, 1},
-			["lostsoul"] =   {"picture_woman", 100, 1, 1, "vodka_quality", 100, 1, 1},
-			["recon"] =      {"wpn_binoc_inv", 100, 1, 1, "sumka6_item", 20, 1, 1, "helm_resp", 8, 1, 1, "novice_outfit_camo", 16, 1, 1, "jgut", 30, 1, 1, "detector_radio", 35, 1, 1, "itm_sleepbag", 35, 1, 1},
-			["hunter"] =     {"kit_hunt", 5, 1, 1, "wpn_binoc_inv", 50, 1, 1, "novice_outfit_camo", 8, 1, 1, "bandage", 50, 1, 1, "itm_sleepbag", 35, 1, 1},
-			["medic"] =      {"jgut", 60, 1, 1, "bandage", 80, 1, 2, "medkit", 80, 1, 2, "yadylin", 50, 1, 2, "morphine", 50, 1, 1, "akvatab", 50, 1, 1},
-			["freak"] =      {"porn", 25, 1, 7, "porn2", 25, 1, 7, "redline_novice_outfit", 100, 1, 1, "cocaine", 35, 1, 2, "mine_new", 65, 1, 3, "ied_new", 33, 1, 1},
-			["soldier"] =    {"grenade_rgd5", 25, 1, 2, "cards", 35, 1, 1, "bandage", 65, 1, 1, "jgut", 20, 1, 1, "medkit", 5, 1, 1},
-			["scientist"] =  {"detector_simple", 65, 1, 1, "detector_geiger", 35, 1, 1, "detector_radio", 35, 1, 1},
-			["saboteur"] =   {"mine_new", 65, 1, 3, "ied_rpg_new", 25, 1, 1, "grenade_f1", 50, 1, 1},
-			["drugdealer"] = {"novice_outfit_camo", 100, 1, 1, "joint", 35, 1, 3, "cocaine", 35, 1, 2, "marijuana", 35, 1, 3, "tetanus", 35, 1, 1, "morphine", 35, 1, 1, "jgut", 20, 1, 2, "grenade_rgd5", 33, 1, 1}
-		}
-		
-		local illum_field = 2 -- Length of data needed for illumination
-		-- Table of starting light sources
-		-- Current schema
-		-- {"item_id", percent chance to receive the item}
-		local starting_illum = {"device_flashlight", 50, "device_glowstick", 15, "device_glowstick_blue", 10, "device_glowstick_orange", 10, "device_glowstick_red", 15}
-
-		-- Roll for kit
-		local pkit = ""
-		local temp = random_kits[curr_faction]
-		local count = 0
-		local length = t_length(temp)
-		for i=0, (length / kit_field) - 1 do
-			count = count + tonumber(temp[2 + (i*kit_field)])
-			if count >= rand_kit then
-				pkit = tostring(temp[1 + (i*kit_field)])
-				break
-			end
-		end
-
-		-- Roll for weapons
-		temp = random_weapons[curr_faction]
-		local count = 0
-		local length = t_length(temp)
-		for i=0, (length / weapon_field) - 1 do
-			count = count + tonumber(temp[2 + (i*weapon_field)])
-			if count >= rand_weapon then
-				alife_create_item(tostring(temp[1 + (i*weapon_field)]), db.actor)
-				-- 50% chance for knife, if we don't get it, award player double starting ammo
-				for a=0, (tonumber(temp[4 + (i * weapon_field)]) * rand_knife) - 1 do
-					if tostring(temp[3 + (i*weapon_field)]) ~= "" then
-						alife_create_item(tostring(temp[3 + (i*weapon_field)]), db.actor)
-					end
-				end
-
-				if rand_knife == 1 then
-					alife_create_item("wpn_knife", db.actor)
-				end
-				break
-			end
-		end
-
-		-- Roll for specials
-		-- local temp = random_specials[faction]
-		temp = random_specials[pkit]
-		local length = t_length(temp)
-		for i=0, (length / special_field) - 1 do
-			local rand_special = math.random(1,100)
-			if rand_special <= tonumber(temp[2 + (i * special_field)]) then
-				for a=0, math.random(tonumber(temp[3 + (i * special_field)]),  tonumber(temp[4 + (i * special_field)])) - 1 do
-					alife_create_item(tostring(temp[1 + (i*special_field)]), db.actor)
-				end
-			end
-		end
-
-		-- Roll for piece of antirad
-		if rand_antirad < 80 then
-			alife_create_item("vodka", db.actor)
-		elseif rand_antirad < 95 then
-			alife_create_item("antirad_kalium", db.actor)
-		else
-			alife_create_item("antirad", db.actor)
-			alife_create_item("vodka2", db.actor)
-		end
-
-		-- Roll for food
-		if rand_food < 80 then
-			-- You get nothing, good day sir
-		elseif rand_food < 90 then
-			alife_create_item("kolbasa", db.actor)
-		elseif rand_food < 97 then
-			alife_create_item("tushonka", db.actor)
-		else
-			alife_create_item("mre", db.actor)
-			alife_create_item("flask", db.actor)
-		end			
-
-		-- Roll for extra bleed control (due to 0.9.3)
-		if rand_medical < 80 then
-			alife_create_item("bandage", db.actor)
-		else
-			alife_create_item("jgut", db.actor)
-		end	
-		------------------------------------------------------------
-		-- END BLACK ROAD REVISITED RANDOM LOADOUT GEN BY TheEase --
-		------------------------------------------------------------
-end
-
-function t_length(tbl)
-	local ln = 0
-	for i in pairs(tbl) do 
-	  ln = ln + 1 
-	end
-	return ln
-end
-
-function load_player_defaults()
-	settings_tbl = {
-		["ironman"] = true,
-		["avail_routes"] = true,
-		["lives"] = 1,
-		["game_diff"] = 3,
-		["econ_diff"] = 3,
-		["wishgranter"] = 1,
-	}
-	
-	if (ui_mcm) then
-		settings_tbl["ironman"] = ui_mcm.get("black_road_revisited/ironman_def")
-		settings_tbl["avail_routes"] = ui_mcm.get("black_road_revisited/avail_routes_def")
-		settings_tbl["lives"] = ui_mcm.get("black_road_revisited/lives_def")
-		settings_tbl["game_diff"] = ui_mcm.get("black_road_revisited/game_diff_def")
-		settings_tbl["econ_diff"] = ui_mcm.get("black_road_revisited/econ_diff_def")
-		settings_tbl["wishgranter"] = ui_mcm.get("black_road_revisited/wishgranter_def")
-	end
-	return settings_tbl
-end
-
 local function actor_on_first_update(binder,delta)
 	if (spawn_path) then
 		start_pos = {}
@@ -571,7 +373,33 @@ local function actor_on_first_update(binder,delta)
 		start_pos[2] = spawn_path:game_vertex_id(0)
 		start_pos[3] = spawn_path:point(0)
 	end
+	
+	-- Survival mode
+	if (IsSurvivalMode()) then
+		game_relations.change_factions_community_num("zombied",0,-5000)
+		game_relations.change_factions_community_num("monolith",0,-5000)
 
+		local faction = character_community(db.actor):sub(7)
+		if (ini_sys:section_exist("survival_squad_"..faction) and start_pos) then
+			local squad = alife_create("survival_squad_"..faction,start_pos[3],start_pos[1],start_pos[2])
+			if (squad) then
+				axr_companions.companion_squads[squad.id] = squad
+				squad:create_npc(nil,start_pos[3],start_pos[1],start_pos[2])
+				local as
+				for k in squad:squad_members() do
+					local se_obj = k.object or k.id and alife():object(k.id)
+					if (se_obj) then
+						game_relations.change_factions_community_num("zombied",k.id,-5000)
+						SIMBOARD:setup_squad_and_group(se_obj)
+						
+						se_save_var(se_obj.id,se_obj:name(),"companion",true)
+						se_save_var(se_obj.id,se_obj:name(),"companion_cannot_dismiss",true)
+					end
+				end
+			end
+		end
+	end
+	
 	if saved_bolt then
 		alife_storage_manager.get_state().bolt_first = saved_bolt
 	end
@@ -586,16 +414,6 @@ local function actor_on_first_update(binder,delta)
 			warfare.initialize_random_starting_locations()
 		else
 			ChangeLevel(start_pos[3],start_pos[1],start_pos[2],VEC_ZERO)
-		end
-	end
-
-	-- Isolated and Hated relation change to make everyone hostile
-	if (ui_mcm and (ui_mcm.get("black_road_revisited/isolated_and_hated") == true)) then	
-		local factions_list = {"bandit", "dolg", "ecolog", "freedom", "killer", "army", "monolith", "greh", "stalker", "zombied", "csky", "isg", "renegade", "trader"}
-		my_faction = alife():actor():community()
-		for i = 1, #factions_list do
-			game_relations.change_factions_community_num(factions_list[i], 0, -5000)
-			game_relations.save_relation(factions_list[i], my_faction, -5000)
 		end
 	end
 end
@@ -629,13 +447,6 @@ function UINewGame:__init(owner) super()
 		["monolith"] = true,
 	}
 	local cfg = axr_main.config
-
-	if (ui_mcm and ui_mcm.get("black_road_revisited/advanced_factions") == true) then
-		self.table_faction["renegade"] = true
-		self.table_faction["greh"] = true
-		self.table_faction["isg"] = true
-	end
-
 	if cfg:r_value("unlocked_factions","renegade",1) == true then
 		self.table_faction["renegade"] = true
 	end
@@ -828,7 +639,6 @@ function UINewGame:Main_Controls()
 	-- Options
 	self.scroll_options = xml:InitScrollView("main_dialog:scroll_options", self.dialog)
 	self.templ_options = xml:InitStatic("main_dialog:templ_options",nil)
-	def_settings = load_player_defaults()
 	if (USE_MARSHAL) then
 		self.list_difficulty_cap = xml:InitStatic("main_dialog:list_difficulty_cap",self.dialog)
 		self.list_difficulty = xml:InitComboBox("main_dialog:list_difficulty", self.dialog)
@@ -850,8 +660,7 @@ function UINewGame:Main_Controls()
 		self.ck_hardcore_cap = xml:InitStatic("main_dialog:options:cap_check_hardcore",self.templ_options)
 		self.ck_hardcore = xml:InitCheck("main_dialog:options:check_hardcore",	self.templ_options)
 		self:Register(self.ck_hardcore,"check_hardcore")
-		self.ck_hardcore:SetCheck(def_settings["ironman"]) -- OFF by default, changed for Black Road Revisited
-
+		
 		self.ck_azazel_mode_cap = xml:InitStatic("main_dialog:options:cap_check_azazel_mode",self.templ_options)
 		self.ck_azazel_mode = xml:InitCheck("main_dialog:options:check_azazel_mode",	self.templ_options)
 		self:Register(self.ck_azazel_mode,"check_azazel_mode")
@@ -871,7 +680,7 @@ function UINewGame:Main_Controls()
 		self.ck_routes_cap = xml:InitStatic("main_dialog:options:cap_check_routes",self.templ_options)
 		self.ck_routes = xml:InitCheck("main_dialog:options:check_routes",	self.templ_options)
 		self:Register(self.ck_routes,"check_routes")
-		self.ck_routes:SetCheck(def_settings["avail_routes"]) -- ON by default
+		self.ck_routes:SetCheck(true) -- ON by default
 		
 		self.ck_conditions_cap = xml:InitStatic("main_dialog:options:cap_check_conditions",self.templ_options)
 		self.ck_conditions = xml:InitCheck("main_dialog:options:check_conditions",	self.templ_options)
@@ -924,8 +733,6 @@ function UINewGame:Main_Controls()
 	
 	-- Update info
 	self:UpdateAll(false)
-	self:LoadIcon(true)
-	self:UpdateIcon(true)
 	
 	-- Hint Window
 	self.hint_wnd = utils_ui.UIHint(self)
@@ -1008,7 +815,7 @@ function UINewGame:PopupFaction_Controls()
 	self.cap_faction = xml:InitStatic("main_dialog:popup_faction:cap_faction",self.dialog_1)
 	
 	-- Faction buttons
-self.scroll_faction = xml:InitScrollView("main_dialog:popup_faction:scroll_faction", self.dialog_1)
+	self.scroll_faction = xml:InitScrollView("main_dialog:popup_faction:scroll_faction", self.dialog_1)
 	self.btn_faction = {}
 	
 end
@@ -1050,10 +857,6 @@ function UINewGame:OnFactionSelect(faction)
 	self.selected_faction = faction
 	self:UpdateAll(false, self.selected_faction)
 	self:PopupFaction_Show(false)
-
-	self:LoadIcon(true)
-	self:UpdateIcon(true)
-
 	if faction_no_story[faction] then
 		self.ck_story:SetCheck(false)
 		self.ck_story:Enable(false)
@@ -1336,30 +1139,11 @@ function UINewGame:LoadFaction (rand, faction)
 	local pick = faction
 	if (not pick) then
 		local k = random_key_table(self.table_faction)
-		--pick = rand and k or "stalker"
-		pick = k
+		pick = rand and k or "stalker"
 	end
 	
-	-- Name
-	local subset
-	if (pick == "army" or pick == "dolg" or pick == "isg") then 
-		subset = random_choice("private","sergeant","senior_sergeant","lieutenant","captain")
-	else 
-		subset = random_choice("stalker","bandit","science")
-	end
-	local name_cnt = ini_sys:r_float_ex("stalker_names_"..subset,"name_cnt")
-	local last_name_cnt = ini_sys:r_float_ex("stalker_names_"..subset,"last_name_cnt")
-	local first_name = game.translate_string( strformat("name_%s_%s",subset,math.random(0,name_cnt-1)) )
-	local last_name = game.translate_string( strformat("lname_%s_%s",subset,math.random(0,last_name_cnt-1)) )
-	self.character_name:SetText(first_name .. " " .. last_name)
-
 	self.selected_faction = pick
-	local money
-	if (ui_mcm) then
-		money = ui_mcm.get("black_road_revisited/starting_money")
-	else
-		money = utils_data.read_from_ini(ini_itm, self.selected_faction .. "_money", "money", "float")
-	end
+	local money = utils_data.read_from_ini(ini_itm, self.selected_faction .. "_money", "money", "float")
 	self.selected_money = money
 	
 	self:UpdateFaction()
@@ -1511,8 +1295,7 @@ function UINewGame:LoadDifficulty (rand)
 	for i=1,#self.table_difficulty do
 		self.list_difficulty:AddItem(game.translate_string(self.table_difficulty[i]), i)
 	end
-	def_settings = load_player_defaults()
-	local pick = rand and self.table_difficulty[math.random(#self.table_difficulty)] or self.table_difficulty[def_settings["game_diff"]]
+	local pick = rand and self.table_difficulty[math.random(#self.table_difficulty)] or self.table_difficulty[1]
 	self.list_difficulty:SetText(game.translate_string(pick))
 	self.selected_difficulty = pick
 end
@@ -1522,8 +1305,7 @@ function UINewGame:LoadEconomy (rand)
 	for i=1,#self.table_economy do
 		self.list_economy:AddItem(game.translate_string(self.table_economy[i]), i)
 	end
-	def_settings = load_player_defaults()
-	local pick = rand and self.table_economy[math.random(#self.table_economy)] or self.table_economy[def_settings["econ_diff"]]
+	local pick = rand and self.table_economy[math.random(#self.table_economy)] or self.table_economy[1]
 	self.list_economy:SetText(game.translate_string(pick))
 	self.selected_economy = pick
 end
@@ -1535,8 +1317,7 @@ function UINewGame:LoadHardcoreLives (rand)
 		str = self.table_hardcore_lives[i][1] or ""
 		self.list_hardcore_lives:AddItem(str .. " " .. game.translate_string(self.table_hardcore_lives[i][2]), i)
 	end
-	def_settings = load_player_defaults()
-	local pick = rand and self.table_hardcore_lives[math.random(#self.table_hardcore_lives)] or self.table_hardcore_lives[def_settings["lives"]]
+	local pick = rand and self.table_hardcore_lives[math.random(#self.table_hardcore_lives)] or self.table_hardcore_lives[1]
 	str = pick[1] or ""
 	self.list_hardcore_lives:SetText(str .. " " .. game.translate_string(pick[2])) 
 	self.selected_hardcore_lives = pick
@@ -1549,8 +1330,7 @@ function UINewGame:LoadHardcoreRegen (rand)
 		str = self.table_hardcore_regen[i][1] and tostring(round_idp(self.table_hardcore_regen[i][1]/24)) or ""
 		self.list_hardcore_regen:AddItem(str .. " " .. game.translate_string(self.table_hardcore_regen[i][2]), i)
 	end
-	def_settings = load_player_defaults()
-	local pick = rand and self.table_hardcore_regen[math.random(#self.table_hardcore_regen)] or self.table_hardcore_regen[def_settings["wishgranter"]]
+	local pick = rand and self.table_hardcore_regen[math.random(#self.table_hardcore_regen)] or self.table_hardcore_regen[1]
 	str = pick[1] and tostring(round_idp(pick[1]/24)) or ""
 	self.list_hardcore_regen:SetText(str .. " " .. game.translate_string(pick[2])) 
 	self.selected_hardcore_regen = pick
@@ -1771,11 +1551,11 @@ function UINewGame:UpdateDescr()
 		if not (k == faction) then
 			local v = relation_registry.community_relation("actor_" .. faction, k)
 			if (v >= 1000) then
-				str_stats = str_stats .. "%c[0,150,150,150]˜ %c[0,50,175,50]" .. game.translate_string("st_faction_" .. k) .. "\\n"
+				str_stats = str_stats .. "%c[0,150,150,150]• %c[0,50,175,50]" .. game.translate_string("st_faction_" .. k) .. "\\n"
 			elseif (v <= -1000) then
-				str_stats = str_stats .. "%c[0,150,150,150]˜ %c[0,175,50,50]" .. game.translate_string("st_faction_" .. k) .. "\\n"
+				str_stats = str_stats .. "%c[0,150,150,150]• %c[0,175,50,50]" .. game.translate_string("st_faction_" .. k) .. "\\n"
 			else
-				str_stats = str_stats .. "%c[0,150,150,150]˜ %c[0,175,175,50]" .. game.translate_string("st_faction_" .. k) .. "\\n"
+				str_stats = str_stats .. "%c[0,150,150,150]• %c[0,175,175,50]" .. game.translate_string("st_faction_" .. k) .. "\\n"
 			end
 		end
 	end
@@ -1834,10 +1614,9 @@ function UINewGame:OnRandomize()
 	local last_name = game.translate_string( strformat("lname_%s_%s",subset,math.random(0,last_name_cnt-1)) )
 	self.character_name:SetText(first_name .. " " .. last_name)
 	
-	-- Disabled changing Difficulty for Black Road Revisited
 	-- Difficulty and Economy
-	-- self:LoadDifficulty(true)
-	-- self:LoadEconomy(true)
+	self:LoadDifficulty(true)
+	self:LoadEconomy(true)
 	
 	-- Everything else
 	self:UpdateAll(true, self.selected_faction)

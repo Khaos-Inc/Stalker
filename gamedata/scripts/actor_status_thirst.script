@@ -9,11 +9,11 @@ local feature_state
 
 local up_drink				= 30 -- step
 local in_hour				= 600 -- amount increased every sleep hour
-local start_blur_1 			= 2000 -- value at which gray indicator appear
-local start_blur_2 			= 4000 -- value at which yellow indicator appear
-local start_blur_3 			= 6000 -- value at which orange indicator appear
-local start_blur_4 			= 8000 -- value at which red indicator appear
-local force 				= 9000 -- value at which player is forced to sleep
+local start_blur_1 			= 1440 -- value at which gray indicator appear
+local start_blur_2 			= 2880 -- value at which yellow indicator appear
+local start_blur_3 			= 4320 -- value at which orange indicator appear
+local start_blur_4 			= 5760 -- value at which red indicator appear
+local force 				= 7200 -- value at which player is forced to sleep
 local force_slp				= 10001
 
 local drink_chk				= 300 -- amount of in-game seconds where indicator value increase
@@ -78,12 +78,17 @@ function test_blur()
 		elseif last_drink >= force and math.random(100) <= force_slp and not db.actor:has_info("actor_is_sleeping")==true then
 			db.actor:give_info_portion("force_slp")
 			force_sleep()
+			-- actor_menu.set_msg(1, game.translate_string("You are extremely depleted - you need to drink!"),5)
 		end
 	end
 end
 
 function force_sleep()
-	printf("You are really thirsty")
+	ui_sleep_dialog.sleep_forced()
+	if math.random(100) < die_chance then
+		actor_menu.set_msg(1, game.translate_string("st_sleep_deprived"),5)
+		db.actor:kill(db.actor)
+	end
 	disable_info("force_slp")
 end
 
@@ -103,18 +108,6 @@ function get_water_deprivation(visual)
 	return clamp( normalize(last_drink, 0, 10000) , 0 , 1)
 end
 
-function get_last_drink()
-	return last_drink or 0
-end
-
-function get_thirst_blur_4()
-	return start_blur_4 or 0
-end
-
--- Dirty function for campfire drain I&H since I don't see how else you can change last_drink without passing in a spoofed item to simulate thirst drain
-function set_last_drink(thirst_delta)
-	last_drink = last_drink + thirst_delta
-end
 
 -------------------------------------------------------------------
 -- Callbacks

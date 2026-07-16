@@ -1,6 +1,5 @@
 --** Autor - SadBlackFox
--- fixed by RavenAscendant
--- G.A.M.M.A. Story patch by Serious
+
 --==================================================< Variables and Tables >==================================================--
 local stdzarplata = 1000
 local guid = {}
@@ -11,7 +10,7 @@ local ignore_tbl	= {}
 local point_tbl		= {}
 local ret_way		= {}
 local cycle_id		= 0
-tbl_way = { 
+local tbl_way = { 
 	l01_escape			= {"k00_marsh",		"k01_darkscape",	"l02_garbage"},
 	k00_marsh			= {"l01_escape",	'l03_agroprom'},
 	k01_darkscape		= {"l01_escape",	"l04_darkvalley"},
@@ -90,7 +89,6 @@ local tbl_ignore_Locations = {
 	l12u_sarcofag			= true,
 	l13_generators			= true
 }
-
 local ignore_factions = {
 	["zombied"] = true,
 }
@@ -132,33 +130,13 @@ function get_rnd_level(start_point)
 	end
 end
 
---[[
-	SERIOUS NO NORTH TASKS BEFORE BS
---]]
-function get_rnd_level_south(start_point, mapPool)
-	local rnd = math.random(table.size(mapPool))
-	local a = 0
-	for i, name in pairs(mapPool) do
-		a = a + 1
-		if a == rnd then
-			if not (i == start_point) then
-				return i
-			end
-			return get_rnd_level_south(start_point, mapPool)
-		end
-	end
-end
---[[
-	SERIOUS NO NORTH TASKS BEFORE BS
---]]
-
 -- Find the road (count the number of locations on the way)
 -- Gathers all possible paths from A to B
 function collector_ways(start, finish, curr_level)
 	cycle_id = cycle_id + 1
 	if cycle_id == 5000 then
-		log('! Cracnricl oceer, audieili = '..cycle_id..' drc!')	
-		return --abort('Cracnricl oceer, audieili = '..cycle_id..' drc!')
+		log('! Зависание цикла, выполнен = '..cycle_id..' раз!')	
+		return --abort('Зависание цикла, выполнен = '..cycle_id..' раз!')
 	end
 	if curr_level == nil then curr_level = start end
 	point_tbl[#point_tbl + 1] = curr_level
@@ -181,7 +159,7 @@ function collector_ways(start, finish, curr_level)
 		if not check_ignore_tbl(name, point_tbl) and not check_tbl(name, point_tbl) then return collector_ways(start, finish, name) end
 	end
 	local back_level = get_back_level(point_tbl)
-	if back_level == nil and curr_level == level.name() then ignore_tbl, point_tbl, cycle_id = {}, {}, 0 return --[[log('@ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ!')]] end
+	if back_level == nil and curr_level == level.name() then ignore_tbl, point_tbl, cycle_id = {}, {}, 0 return --[[log('@ РЕКУРСИЯ ЗАВЕРШЕНА!')]] end
 	point_tbl[#point_tbl] = nil
 	if not ignore_tbl[curr_level] then ignore_tbl[curr_level] = {} end
 	ignore_tbl[curr_level][#ignore_tbl[curr_level] + 1] = table.values(point_tbl)
@@ -194,22 +172,7 @@ function go_poisk()
 	if tbl_ignore_Locations[start_point] or not level_weathers.valid_levels[start_point] then
 		return
 	end
-	
---[[
-	SERIOUS NO NORTH TASKS BEFORE BS
---]]
-	local finish_point = ""
-		
-	if blacklist_helper.ShouldBlacklistNorth() then
-		local preScorcherValidList = blacklist_helper.GetGuideDestinationsNorth()
-		finish_point = get_rnd_level_south(start_point, preScorcherValidList)
-	else
-		finish_point = get_rnd_level(start_point)
-	end
---[[
-SERIOUS NO NORTH TASKS BEFORE BS
---]]
-	
+	local finish_point = get_rnd_level(start_point)
 	if start_point == finish_point then
 		return finish_point, 1
 	end
@@ -223,7 +186,7 @@ SERIOUS NO NORTH TASKS BEFORE BS
 		end
 	end
 	ret_way, cycle_id = {}, 0
-	return finish_point, path_len or 1 -- пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅ. пїЅпїЅпїЅ-пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ(пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ!)
+	return finish_point, path_len or 1 -- конечная точка, мин. кол-во локаций(включая стартовую и конечную!)
 end
 
 
@@ -231,6 +194,8 @@ end
 function load_state()
 	guid = l_v("guid", {})
 	curr_guid = l_v("curr_guid", {})
+	local newgame = l_v("newgame")	-- хз как ещё сделать срабатывание при НИ
+	if not newgame then s_v("newgame", 'Каллбек сработал') return g_start_timer('guid_msg',0,0,15,'tasks_guide','prepare_follower') end
 end 
 function save_state()
 	s_v("guid", guid)
@@ -268,12 +233,6 @@ function actor_on_update()
 	end
 end
 function actor_on_first_update()
-	local time=tonumber(game.get_game_time():diffSec(level.get_start_time()))/60
-	local g_timers_tbl = l_v('g_timers_tbl',nil)
-	if not g_timers_tbl or g_timers_tbl.guid_msg and ( g_timers_tbl.guid_msg.delay - time  > 1400)   then
-		g_start_timer('guid_msg',0,0,15,'tasks_guide','prepare_follower')
-	end
-
 	if (not IsTestMode()) then
 		RegisterScriptCallback("actor_on_update",actor_on_update)
 	end
@@ -385,14 +344,14 @@ function prepare_follower()
 	news_manager.send_tip(db.actor, str, nil, npc, 15000)
 	return
 	-- We start the timer for the next call of this function
-	g_start_timer('guid_msg',0,math.random(1,6),0,'tasks_guide','prepare_follower')
+	g_start_timer('guid_msg',0,math.random(6),0,'tasks_guide','prepare_follower')
 end
 
 function activate()
 	curr_guid = copy_tbl(guid)
 	guid = {}
 	d_v("guid")
-	-- пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ
+	-- Старт таймера фэйла
 	g_start_timer('guid_fail',0,curr_guid.timer,0,'tasks_guide','fail_time')
 	level.map_add_object_spot_ser(curr_guid.id_smart, 'secondary_task_location', game.translate_string('st_jg_29')..curr_guid.description)
 end
@@ -414,13 +373,13 @@ function fail_time()
 end
 
 function fail()
---[[	пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ(пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ),
-		пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+--[[	На данный момент нет условий, при котором напарник был бы в оффлайне(они принудительно всегда в онлайне),
+		поэтому использование переключателя нецелесообразно
 	local func = function()
 					local squad = alife_object(curr_guid.squad_id)
 					local commander_id = squad and squad:commander_id()
 					local npc = level.object_by_id(commander_id)
-					news_manager.send_tip(db.actor, "пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ! пїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ!! пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ "..curr_guid.neustoika..' пїЅпїЅпїЅпїЅпїЅпїЅ.'..'. '..(npc:character_name() or ''))
+					news_manager.send_tip(db.actor, "Мы опоздали! Мы же договаривались!! Плати неустойку в "..curr_guid.neustoika..' рублей.'..'. '..(npc:character_name() or ''))
 					if db.actor:money() >= curr_guid.neustoika then 
 						dialogs.relocate_money(db.actor,curr_guid.neustoika,"out")
 					else
@@ -430,7 +389,7 @@ function fail()
 				end
 	local squad = alife_object(curr_guid.squad_id)
 	if not squad then return end
-	squad_switcher(squad,func) -- пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+	squad_switcher(squad,func) -- выкидыш при помощи переключателя
 ]]
 	--local m = db.actor:money()
 	--if (m >= curr_guid.neustoika) then 
@@ -445,12 +404,9 @@ function fail()
 end
 
 function get_comm_id(squad_id)
-	if not squad_id then return end
-
+	if squad_id == nil then return end
 	local squad = alife_object(squad_id)
-	return squad
-	  and squad.commander_id 
-	  and squad:commander_id()
+	return squad and squad:commander_id()
 end
 
 -- Dialog Functions
@@ -550,7 +506,7 @@ function g_start_timer(name,delay_d,delay_h,delay_m,name_script,name_func,param)
 	if action==nil then
 		action=""
 	end
-	local  time=tonumber(game.get_game_time():diffSec(level.get_start_time()))/60  --time in game minutes
+	local time=level.get_time_days()*60*24+level.get_time_hours()*60+level.get_time_minutes()  --time in game minutes
 	
 	local g_timers_tbl = l_v('g_timers_tbl',nil)
 	if g_timers_tbl == nil then
@@ -558,8 +514,6 @@ function g_start_timer(name,delay_d,delay_h,delay_m,name_script,name_func,param)
 	end
 	if g_timers_tbl[name] == nil then
 		g_timers_tbl[name] = {}
-	else
-	printf("RAX WTF timer over write!")
 	end
 	g_timers_tbl[name] = {name = name, delay = time+delay_d*60*24+delay_h*60+delay_m, action = {name_script = name_script, name_func = name_func, param = param}}
 	s_v('g_timers_tbl', g_timers_tbl)
@@ -573,19 +527,6 @@ function has_timer(name)
     end
 	return false
 end
-
-function print_timer()
-	local g_timers_tbl = l_v('g_timers_tbl',nil)
-	if g_timers_tbl~=nil and table.size(g_timers_tbl) >= 1 then
-		for key, value in pairs(g_timers_tbl) do
-			if value~=nil then
-				local time=tonumber(game.get_game_time():diffSec(level.get_start_time()))/60  --time in game minutes
-				printf("Timer %s, at %s | gametime at %s", value['name'], value['delay'],time) 
-			end
-		end
-	end
-end
-
 -- check whether the game timer has been started
 function has_g_timer(name)
 	local g_timers_tbl = l_v('g_timers_tbl',nil)
@@ -594,7 +535,7 @@ function has_g_timer(name)
     end
 	return false
 end
--- stop the timer tasks_guide.has_g_timer("guid_msg")  tasks_guide.print_timer()
+-- stop the timer
 function stop_timer(name)
 	if has_timer(name)==true then
 		local timers_tbl = l_v('timers_tbl',nil)
@@ -628,7 +569,7 @@ function check_timers()
 	if g_timers_tbl~=nil and table.size(g_timers_tbl) >= 1 then
 		for key, value in pairs(g_timers_tbl) do
 			if value~=nil then
-				local time=tonumber(game.get_game_time():diffSec(level.get_start_time()))/60  --time in game minutes
+				local time=level.get_time_days()*60*24+level.get_time_hours()*60+level.get_time_minutes()  --time in game minutes
 				if value['delay'] <= time then
 					stop_g_timer(value['name'])
 					__do_timer_action(value['name'],value['action'])
@@ -720,3 +661,76 @@ function is_not_enemy(actor,npc)
 	end
 	return not (npc:relation(db.actor) == game_object.enemy)
 end
+--[[
+function squad_switcher(npc_id,func,param2,param3)
+	local flag_off_on
+	local snpc = alife_object(npc_id)
+	local squad = get_object_squad(snpc)
+	if not squad then return log('СКВАД НЕ СУЩЕСТВУЕТ ИЛИ МЁРТВ!!!') end
+	if not squad.online then
+		alife():set_switch_offline (squad.id, false)
+		alife():set_switch_online (squad.id, true) -- Вывести онлайн (вернее поставить флаги для вывода)
+		flag_off_on = "OFF"
+		log('Первоначально: '..flag_off_on)
+	else
+		flag_off_on = "ON"
+		log('Первоначально: '..flag_off_on)
+	end
+	local wait_online = function()
+							if squad.online then
+								return true
+							end
+						end 
+	local do_online = 	function()
+							log('Сквад в онлайне')
+							--------
+							-- Действия с онлайн объектом
+							log('check flag= '..flag_off_on)
+							func(npc_id,param2,param3)
+							--------
+							if flag_off_on == "OFF" then
+								alife():set_switch_offline (squad.id, true) -- Вернуть в оффлайн
+								alife():set_switch_online (squad.id, true)
+								log('Возвращаем в оффлайн')
+							else
+								log('Возвращение в оффлайн не требуется')
+							end
+						end
+	level.add_call( wait_online, do_online )
+end
+
+function npc_switcher(npc_id,func,param2,param3)
+	local flag_off_on
+	local snpc = alife_object(npc_id)
+	if not snpc:alive() then return log('НПС НЕ СУЩЕСТВУЕТ ИЛИ МЁРТВ!!!') end
+	if not snpc.online then
+		snpc:switch_online() -- Вывести онлайн (вернее поставить флаги для вывода)
+		flag_off_on = "OFF"
+		log('Первоначально: '..flag_off_on)
+	else
+		flag_off_on = "ON"
+		log('Первоначально: '..flag_off_on)
+	end
+	local wait_online = function()
+							if snpc.online then
+								return true
+							end
+						end 
+	local do_online = 	function()
+							log('НПС в онлайне')
+							--------
+							-- Действия с онлайн объектом
+							log('check flag= '..flag_off_on)
+							func(npc_id,param2,param3)
+							--------
+							if flag_off_on == "OFF" then
+								snpc:switch_offline() -- Вернуть в оффлайн
+								log('Возвращаем в оффлайн')
+							else
+								log('Возвращение в оффлайн не требуется')
+							end
+						end
+	level.add_call( wait_online, do_online )
+end
+]]
+
