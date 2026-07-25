@@ -1,0 +1,64 @@
+-- Surge Debug Tool
+
+
+
+function render()
+	-- Always display surge and psi storm information
+	local sm = surge_manager and surge_manager.get_surge_manager and surge_manager.get_surge_manager()
+	local pm = psi_storm_manager and psi_storm_manager.get_psi_storm_manager and psi_storm_manager.get_psi_storm_manager()
+	
+	-- Surge Information
+	local first_update = "N/A"
+	local started = "false"
+	local finished = "false"
+	local last_surge_time = "N/A"
+	
+	if sm then
+		first_update = tostring(sm.first_update or "N/A")
+		started = tostring(sm.started or false)
+		finished = tostring(sm.finished or false)
+		if sm.last_surge_time and game and game.get_game_time then
+			last_surge_time = string.format("%.2f sec ago", game.get_game_time():diffSec(sm.last_surge_time))
+		end
+	else
+		first_update = "Surge manager not available"
+	end
+	
+	ImGui.Text("Surge Information:")
+	ImGui.Text("First Update: " .. first_update)
+	ImGui.Text("Started: " .. started)
+	ImGui.Text("Finished: " .. finished)
+	ImGui.Text("Last Surge Time: " .. last_surge_time)
+	
+	ImGui.Separator()
+	
+	-- Psi Storm Information
+	local psi_first_update = "N/A"
+	local psi_started = "false"
+	local psi_finished = "false"
+	local last_psi_storm_time = "N/A"
+	
+	if pm then
+		psi_first_update = tostring(pm.first_update or "N/A")
+		psi_started = tostring(pm.started or false)
+		psi_finished = tostring(pm.finished or false)
+		if pm.last_psi_storm_time and game and game.get_game_time then
+			last_psi_storm_time = string.format("%.2f sec ago", game.get_game_time():diffSec(pm.last_psi_storm_time))
+		end
+	else
+		psi_first_update = "Psi storm manager not available"
+	end
+	
+	ImGui.Text("Psi Storm Information:")
+	ImGui.Text("First Update: " .. psi_first_update)
+	ImGui.Text("Started: " .. psi_started)
+	ImGui.Text("Finished: " .. psi_finished)
+	ImGui.Text("Last Psi Storm Time: " .. last_psi_storm_time)
+end
+
+-- Tool registration
+imgui_debug_tools.register_tool("surge_hud", {
+	title = "Surge Info",
+	render = render,
+	visible = false
+})

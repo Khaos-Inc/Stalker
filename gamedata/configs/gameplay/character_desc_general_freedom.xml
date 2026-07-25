@@ -1,4 +1,3 @@
-
 <specific_character id="sim_default_freedom_0_default_0" team_default = "1">
 #include "gameplay\profiles\character_desc_freedom_0.xml"
     <icon>ui_inGame2_freedom_nov</icon>
@@ -769,16 +768,16 @@
     <snd_config>characters_voice\human\freedom_3\</snd_config>
     <visual>actors\stalker_neutral\stalker_neutral4b</visual>
 </specific_character>
- 
 
-	<!-- Special -->
+
+<!-- Special -->
 <specific_character id="sim_default_freedom_trader" team_default = "1">
 #include "gameplay\profiles\character_desc_freedom_special.xml"
     <name>GENERATE_NAME_stalker</name>
     <icon>ui_inGame2_Freedom_2</icon>
     <class>sim_default_freedom_trader</class>
     <snd_config>characters_voice\human\freedom_1\</snd_config><!--2-->
-    <visual>actors\stalker_freedom\stalker_freedom2b_old</visual>
+    <visual>actors\stalker_freedom\stalker_freedom_trader</visual>
 
 	<actor_dialog>dm_init_trader</actor_dialog>
 	<actor_dialog>dm_broker_dialog</actor_dialog>
@@ -796,8 +795,8 @@
     <icon>ui_inGame2_Freedom_1</icon>
     <class>sim_default_freedom_mechanic</class>
 	<mechanic_mode>1</mechanic_mode>
-    <snd_config>characters_voice\human\freedom_3\</snd_config>
-    <visual>actors\stalker_freedom\stalker_freedom_1</visual>
+    <snd_config>characters_voice\human\freedom_1\</snd_config>
+    <visual>actors\stalker_freedom\stalker_freedom_mechanic</visual>
 
 	<actor_dialog>dm_init_trader</actor_dialog>
 	<actor_dialog>dm_init_mechanic</actor_dialog>
@@ -814,7 +813,7 @@
     <icon>ui_inGame2_Freedom_2</icon>
     <class>sim_default_freedom_medic</class>
     <snd_config>characters_voice\human\freedom_1\</snd_config><!--2-->
-    <visual>actors\stalker_freedom\stalker_freedom2b_old</visual>
+    <visual>actors\stalker_freedom\stalker_freedom_doctor</visual>
 
 		<actor_dialog>dm_init_medic</actor_dialog>
 		<actor_dialog>dm_medic_general</actor_dialog>
@@ -829,7 +828,7 @@
     <icon>ui_inGame2_Freedom_2</icon>
     <class>sim_default_freedom_barman</class>
     <snd_config>characters_voice\human\freedom_1\</snd_config><!--2-->
-    <visual>actors\stalker_freedom\stalker_freedom2b_old</visual>
+    <visual>actors\stalker_freedom\stalker_freedom_barman</visual>
 
 	<actor_dialog>dm_init_batender</actor_dialog>
 	<actor_dialog>dm_ordered_task_dialog</actor_dialog>
@@ -840,16 +839,16 @@
 	
 <specific_character id="sim_default_freedom_dead_default_0" team_default = "1">
     <name>GENERATE_NAME_stalker</name>
-    <icon>ui_inGame2_Freedom_2_mask</icon>
+    <icon>ui_freedom_tactical_lc_1</icon>
     <map_icon x="1" y="0"></map_icon>
-    <bio>Опытный сталкер. Детальная информация отсутствует.</bio>
+    <bio>пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ.</bio>
     <class>sim_default_freedom_dead</class>
     <community>freedom</community> <terrain_sect>stalker_terrain</terrain_sect>
     <snd_config>characters_voice\human\freedom_1\</snd_config>
-    <rank>6944</rank>
+    <rank>4944</rank>
     <reputation>56</reputation>
     <money min="1000" max="2000" infinitive="0"/>
-    <visual>actors\stalker_freedom\stalker_freedom2a_mask</visual>
+    <visual>actors\stalker_freedom\stalker_freedom_tactical_lc_1</visual>
     <supplies>
         [spawn] \n
 		broken_pda = 1 \n
@@ -860,16 +859,16 @@
 
 <specific_character id="sim_default_freedom_dead_default_1" team_default = "1">
     <name>GENERATE_NAME_stalker</name>
-    <icon>ui_inGame2_Freedom_2_mask</icon>
+    <icon>ui_inGame3_ico_freedom</icon>
     <map_icon x="1" y="0"></map_icon>
-    <bio>Опытный сталкер. Детальная информация отсутствует.</bio>
+    <bio>пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ.</bio>
     <class>sim_default_freedom_dead</class>
     <community>freedom</community> <terrain_sect>stalker_terrain</terrain_sect>
     <snd_config>characters_voice\human\freedom_1\</snd_config><!--2-->
     <rank>8050</rank>
     <reputation>376</reputation>
     <money min="1500" max="2500" infinitive="0"/>
-    <visual>actors\stalker_freedom\stalker_freedom2b_mask</visual> <!-- chnaged from mas3 cause errors -->
+    <visual>actors\stalker_freedom\stalker_freedom_lc_cap_5</visual>
     <supplies>
         [spawn] \n
 		broken_pda = 1 \n
@@ -880,16 +879,16 @@
  
 <specific_character id="sim_default_freedom_dead_default_2" team_default = "1">
     <name>GENERATE_NAME_stalker</name>
-    <icon>ui_inGame2_freedom_ranger</icon>
+    <icon>ui_inGame3_ico_freedom</icon>
     <map_icon x="1" y="0"></map_icon>
-    <bio>Опытный сталкер. Детальная информация отсутствует.</bio>
+    <bio>пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ.</bio>
     <class>sim_default_freedom_dead</class>
     <community>freedom</community> <terrain_sect>stalker_terrain</terrain_sect>
     <snd_config>characters_voice\human\freedom_3\</snd_config>
     <rank>18914</rank>
     <reputation>-153</reputation>
     <money min="5000" max="10000" infinitive="0"/>
-    <visual>actors\stalker_freedom\dark_free</visual>
+    <visual>actors\stalker_freedom\stalker_freedom_berill_special_helm</visual>
     <supplies>
         [spawn] \n
 		broken_pda = 1 \n
@@ -900,16 +899,16 @@
 	
 <specific_character id="sim_default_freedom_dead_default_3" team_default = "1">
     <name>GENERATE_NAME_stalker</name>
-    <icon>ui_inGame2_Freedom_3</icon>
+    <icon>ui_inGame3_ico_freedom</icon>
     <map_icon x="1" y="0"></map_icon>
-    <bio>Опытный сталкер. Детальная информация отсутствует.</bio>
+    <bio>пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ.</bio>
     <class>sim_default_freedom_dead</class>
     <community>freedom</community> <terrain_sect>stalker_terrain</terrain_sect>
     <snd_config>characters_voice\human\freedom_3\</snd_config>
-    <rank>18373</rank>
-    <reputation>269</reputation>
+    <rank>28373</rank>
+    <reputation>1269</reputation>
     <money min="2500" max="5000" infinitive="0"/>
-    <visual>actors\stalker_freedom\stalker_freedom_3_helm_battle</visual>
+    <visual>actors\stalker_freedom\stalker_freedom_5_exolight_seva</visual>
     <supplies>
         [spawn] \n
 		broken_pda = 1 \n
@@ -917,4 +916,3 @@
 #include "gameplay\character_criticals.xml"
 #include "gameplay\character_dialogs.xml"
 </specific_character>
- 

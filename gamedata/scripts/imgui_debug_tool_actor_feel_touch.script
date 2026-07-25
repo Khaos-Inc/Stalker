@@ -1,0 +1,58 @@
+-- Actor Feel Touch Debug Tool
+
+
+
+function render()
+	local obj = level and level.get_target_obj and level.get_target_obj()
+	local cursor_obj_name = obj and obj:name() or "No Object"
+	local cursor_obj_id = obj and obj:id() or "N/A"
+	
+	ImGui.Text("Object at Cursor: " .. cursor_obj_name .. " (ID: " .. tostring(cursor_obj_id) .. ")")
+	ImGui.Separator()
+	
+	-- Always display feel touch information, even if actor is not available
+	local feel_touch_objects = {}
+	
+	if (db and db.actor and db.actor:alive()) then
+		local itr = function(id)
+			local o = id and alife_object and alife_object(id)
+			if (o) then
+				table.insert(feel_touch_objects, {id = id, name = o:name()})
+			end
+		end
+		db.actor:iterate_feel_touch(itr)
+	end
+	
+	-- Feel Touch Objects Table
+	ImGui.Text("Actor Feel Touch Objects:")
+	if ImGui.BeginTable("FeelTouchObjects", 2, 3, vector2(0, 0), 0) then
+		ImGui.TableSetupColumn("Object ID")
+		ImGui.TableSetupColumn("Object Name")
+		ImGui.TableHeadersRow()
+		
+		for _, obj_data in ipairs(feel_touch_objects) do
+			ImGui.TableNextRow()
+			ImGui.TableSetColumnIndex(0)
+			ImGui.Text(tostring(obj_data.id))
+			ImGui.TableSetColumnIndex(1)
+			ImGui.Text(obj_data.name)
+		end
+	
+		ImGui.EndTable()
+	end
+	
+	ImGui.Separator()
+	
+	-- Actor Status
+	ImGui.Text("Actor Status:")
+	local actor_available = db and db.actor and db.actor:alive()
+	ImGui.Text("Actor Available: " .. tostring(actor_available or false))
+	ImGui.Text("Feel Touch Objects Count: " .. tostring(#feel_touch_objects))
+end
+
+-- Tool registration
+imgui_debug_tools.register_tool("actor_feel_touch_hud", {
+	title = "Actor Feel Touch",
+	render = render,
+	visible = false
+})

@@ -113,26 +113,6 @@ zoom_cam_dispersion_inc                  = 0.0 ; -0.071
 zoom_cam_step_angle_horz                 = -0.044
 inv_weight                               = +0.1
 
-[up_sect_fourta_vssk]
-cost                                     = 3920
-scope_zoom_factor                        = -5
-
-[up_sect_fourtc_vssk]
-cost                                     = 5890
-scope_dynamic_zoom                       = on
-inv_weight                               = +0.01
-
-[up_sect_fourte_vssk]
-cost                                     = 5440
-scope_nightvision                        = scope_nightvision
-inv_weight                               = +0.27
-
-[up_sect_fourtf_vssk]
-cost                                     = 4320
-scope_nightvision                        = scope_contrast
-inv_weight                               = +0.05
-
-
 ;----------------------------------------------------------------------------------------------------------------------
 [up_firsta_vssk]
 scheme_index                             = 0, 0
@@ -370,78 +350,6 @@ description                              = st_up_pri_c1_descr
 icon                                     = ui_inGame2_upgrade_Vintar_VS_13
 
 
-[up_fourta_vssk]
-scheme_index                             = 0, 3
-known                                    = 1
-effects                                  = up_gr_fourtcd_vssk
-section                                  = up_sect_fourta_vssk
-property                                 = prop_scope_12x
-precondition_functor                     = inventory_upgrades.precondition_functor_a
-precondition_parameter                   = a & b
-effect_functor                           = inventory_upgrades.effect_functor_a
-effect_parameter                         = on_weapon_upgrade_something_here
-
-prereq_functor                           = inventory_upgrades.prereq_functor_a
-prereq_tooltip_functor                   = inventory_upgrades.prereq_tooltip_functor_a
-prereq_params                            =
-name                                     = st_up_opt_a4_name
-description                              = st_up_opt_a4_descr
-icon                                     = ui_inGame2_upgrade_Vintar_VS_14
-
-[up_fourtc_vssk]
-scheme_index                             = 1, 5
-known                                    = 1
-effects                                  = up_gr_fourtef_vssk
-section                                  = up_sect_fourtc_vssk
-property                                 = prop_scope
-precondition_functor                     = inventory_upgrades.precondition_functor_a
-precondition_parameter                   = a & b
-effect_functor                           = inventory_upgrades.effect_functor_a
-effect_parameter                         = something_here
-
-prereq_functor                           = inventory_upgrades.prereq_functor_a
-prereq_tooltip_functor                   = inventory_upgrades.prereq_tooltip_functor_a
-prereq_params                            =
-name                                     = st_up_opt_c3_name
-description                              = st_up_opt_c3_descr
-icon                                     = ui_inGame2_upgrade_Vintar_VS_17
-
-[up_fourte_vssk]
-scheme_index                             = 2, 5
-known                                    = 1
-effects                                  =
-section                                  = up_sect_fourte_vssk
-property                                 = prop_nightvision
-precondition_functor                     = inventory_upgrades.precondition_functor_a
-precondition_parameter                   = a & b
-effect_functor                           = inventory_upgrades.effect_functor_a
-effect_parameter                         = something_here
-
-prereq_functor                           = inventory_upgrades.prereq_functor_a
-prereq_tooltip_functor                   = inventory_upgrades.prereq_tooltip_functor_a
-prereq_params                            =
-name                                     = st_up_opt_c2_name
-description                              = st_up_opt_c2_descr
-icon                                     = ui_inGame2_upgrade_Vintar_VS_16
-
-[up_fourtf_vssk]
-scheme_index                             = 2, 6
-known                                    = 1
-effects                                  =
-section                                  = up_sect_fourtf_vssk
-property                                 = prop_contrast
-precondition_functor                     = inventory_upgrades.precondition_functor_a
-precondition_parameter                   = a & b
-effect_functor                           = inventory_upgrades.effect_functor_a
-effect_parameter                         = something_here
-
-prereq_functor                           = inventory_upgrades.prereq_functor_a
-prereq_tooltip_functor                   = inventory_upgrades.prereq_tooltip_functor_a
-prereq_params                            =
-name                                     = st_up_opt_b1_name
-description                              = st_up_opt_b1_descr
-icon                                     = ui_inGame2_upgrade_Vintar_VS_15
-
 
 ;----------------------------------------------------------------------------------------------------------------------
 [up_gr_firstab_vssk]
@@ -470,12 +378,3 @@ elements                                 = up_thirdc_vssk
 
 [up_gr_thirdef_vssk]
 elements                                 = up_thirde_vssk, up_thirdf_vssk
-
-[up_gr_fourtab_vssk]
-elements                                 = up_fourta_vssk
-
-[up_gr_fourtcd_vssk]
-elements                                 = up_fourtc_vssk
-
-[up_gr_fourtef_vssk]
-elements                                 = up_fourte_vssk, up_fourtf_vssk

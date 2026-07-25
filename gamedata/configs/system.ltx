@@ -194,17 +194,17 @@ i_upgrade           = 12
 i_part              = 13
 
 [button_sort_settings]
-button_amount = 8
+button_amount = 10
 hotkeys = true
 
 [button_sort_tab_1]
 kinds = s_all
 
 [button_sort_tab_2]
-kinds = w_base, w_pistol, w_shotgun, w_smg, w_rifle, w_sniper, w_explosive, w_melee, w_misc
+kinds = w_base, w_pistol, w_shotgun, w_smg, w_rifle, w_sniper, w_melee, w_misc, w_explosive
 
 [button_sort_tab_3]
-kinds = o_light, o_medium, o_sci, o_heavy, o_helmet, i_backpack
+kinds = o_light, o_medium, o_sci, o_heavy, o_helmet, i_backpack, i_attach
 
 [button_sort_tab_4]
 kinds = w_ammo
@@ -213,13 +213,21 @@ kinds = w_ammo
 kinds = i_arty, i_arty_junk, i_arty_cont, i_mutant_belt, i_mutant_part
 
 [button_sort_tab_6]
-kinds = i_device, i_tool, i_repair, i_upgrade, i_kit, i_attach
+kinds = i_device, i_tool, i_repair, i_kit, w_mbolt
 
 [button_sort_tab_7]
-kinds = i_mutant_raw, i_mutant_cooked, i_food, i_drink, i_medical
+kinds = i_mutant_raw, i_mutant_cooked, i_food, i_drink
 
 [button_sort_tab_8]
+kinds = i_medical
+
+
+[button_sort_tab_9]
+kinds = i_upgrade
+
+[button_sort_tab_10]
 kinds = i_misc, i_letter, i_part, i_quest
+
 
 
 ;------------------------------------------------------------------
@@ -227,7 +235,7 @@ kinds = i_misc, i_letter, i_part, i_quest
 GroupControlSection                      = spawn_group
 $spawn                                   = "physics\hanging lamp"
 class                                    = SO_HLAMP
-script_binding                           = bind_dynamic_light.init
+script_binding                           = bind_physic_object.init
 
 
 [lights_signal_light]

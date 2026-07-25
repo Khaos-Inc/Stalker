@@ -629,6 +629,7 @@ function DynamicNewsManager:npc_on_death_callback(victim,who)
 						end
 					end
 				end
+				
 			end
 		elseif IsMonster(who) then
 			say = self:SOSDeathByMutant(victim,who,comm)
@@ -1069,7 +1070,7 @@ function DynamicNewsManager:NewsToggle() -- turn off news if there is an emissio
 	elseif (not self.surge_shift) and xr_conditions.surge_complete() then
 		self.surge_shift = true
 		self:GossipEmissionEnd(self.surge_type)
-		--self:ReportDeathBySurge()
+		self:ReportDeathBySurge()
 	end
 	
 	-- run once at each surge
@@ -1141,9 +1142,9 @@ function DynamicNewsManager:ReportDeathBySurge() -- Report casualties of surges 
 	
 	local clr_1 = "%c[255,160,160,190]"
 	local clr_2 = "%c[255,220,220,220]"
-	local known_num = math.random (4,9)
+	local known_num = math.random (1,6)
 	local msg = clr_1 .. game.translate_string("st_dyn_news_death_by_surge_start") .. clr_2
-	local finish = utils_data.parse_string_keys( game.translate_string("st_dyn_news_death_by_surge_end") , { ["num"] = tostring(math.random(5,30)) } )
+	local finish = utils_data.parse_string_keys( game.translate_string("st_dyn_news_death_by_surge_end") , { ["num"] = tostring(math.random(3,16)) } )
 	local a,b,c,y1,y2,z1,z2,z3
 	
 	for i=1,known_num do
@@ -1249,7 +1250,7 @@ end
 function DynamicNewsManager:GossipDeathByStalker(sender,victim,who) -- hearing stalker killing a stalker
 	--printf(">>> Dyn News: GossipDeathByStalker - call")
 	local cls = dynamic_news_helper.GetWeaponClass(who)
-	if (cls == 1 or cls == 9) then 
+	if (cls == 1 or cls == 9 or cls == 6) then 
 		return false
 	end
 	
@@ -1267,6 +1268,12 @@ function DynamicNewsManager:GossipDeathByStalker(sender,victim,who) -- hearing s
 	if (not tbl_1) or (not tbl_2) then
 		return false
 	end
+
+	-- Chance of message when killing stalker
+    local chanceThreshold = 0.5
+    if math.random() > chanceThreshold then
+        return false
+    end
 	
 	local a = tbl_1[math.random(#tbl_1)]
 	local b = dynamic_news_helper.GetWeaponDescription(who,2)
@@ -1405,7 +1412,7 @@ end
 function DynamicNewsManager:GossipDeathOfMutant(victim,who,comm) -- hearing stalker killing a mutant
 	--printf(">>> Dyn News: GossipDeathOfMutant - call")
 	local cls = dynamic_news_helper.GetWeaponClass(who)
-	if (cls == 1 or cls == 9) then 
+	if (cls == 1 or cls == 9 or cls == 6) then 
 		return false
 	end
 	
@@ -1419,6 +1426,12 @@ function DynamicNewsManager:GossipDeathOfMutant(victim,who,comm) -- hearing stal
 	if (not tbl_1) or (not tbl_2) then
 		return false
 	end
+
+	-- Chance of message when killing mutant
+    local chanceThreshold = 0.5
+    if math.random() > chanceThreshold then
+        return false
+    end
 	
 	local a = tbl_1[math.random(#tbl_1)]
 	local b = dynamic_news_helper.GetWeaponDescription(who,2)
@@ -1684,7 +1697,7 @@ function DynamicNewsManager:BoughtItems(sender,who,list) -- trading
 	if (not tbl) then
 		return false
 	end
-	
+	inv_name = ui_item.get_plural_name(inv_name) 
 	local Se = strformat("%s, %s",sender:character_name(),dynamic_news_helper.GetCommunityDescription(sender,6))
 	local msg = utils_data.parse_string_keys( tbl[math.random(#tbl)] , { ["who"]=who:character_name() , ["what"]=inv_name } )
 
@@ -1737,7 +1750,7 @@ function DynamicNewsManager:GossipLoot(sender,best_item,all_value) -- talk about
 	
 	local tbl,msg
 	if (math.random(2) == 1) then
-		if all_value >= 1000 then
+		if all_value >= 1200 then
 			tbl = utils_data.collect_translations("st_dyn_news_loot_good_",true)
 		else
 			tbl = utils_data.collect_translations("st_dyn_news_loot_bad_",true)
@@ -1753,7 +1766,9 @@ function DynamicNewsManager:GossipLoot(sender,best_item,all_value) -- talk about
 		if (not tbl) then
 			return false
 		end
-		msg	= utils_data.parse_string_keys( tbl[math.random(#tbl)] , { ["what"] = item_name } )
+		
+		item_name = ui_item.get_article_name(item_name)
+	msg	= utils_data.parse_string_keys( tbl[math.random(#tbl)] , { ["what"] = item_name } )
 	end
 	
 	local Se = strformat("%s, %s",sender:character_name(),dynamic_news_helper.GetCommunityDescription(sender,6))

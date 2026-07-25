@@ -5,12 +5,53 @@
 < TEXT STRINGS FOR LOST TO THE ZONE: OPERATION AFTERGLOW TASKS
 <	Anomaly 1.5 - Lost to the Zone: Operation Afterglow
 <
-<	Made by: SarisKhan
-<	Last revised: 04 September 2019
-<
 <===========================================================-->
 
 <string_table>
+
+<!--
+	ITEMS
+-->
+
+	<string id="special_delivery_case_name">
+		<text>Sealed Case</text>
+	</string>
+	<string id="special_delivery_case_desc">
+		<text>A sealed case that contains undisclosed contents. It's rather heavy.\n \n
+		%c[pda_white]PROPERTIES:\n
+		%c[d_orange] • %c[pda_white] Quest Item\n
+		</text>
+	</string>
+
+	<string id="st_army_isg_spy_pendrive_name">
+		<text>Undercover Agent's Flash Drive</text>
+	</string>
+	<string id="st_army_isg_spy_pendrive_descr">
+		<text>An encrypted flash drive with information on the goals and movements of UNISG, as well as evidence that could place legal or political pressure on the UN troops to leave the Zone.\n \n
+		%c[pda_white]PROPERTIES:\n
+		%c[d_orange] • %c[pda_white] Quest Item\n
+		</text>
+	</string>
+
+	<string id="jupiter_documents_name">
+		<text>Jupiter Factory Documents</text>
+	</string>
+	<string id="jupiter_documents_desc">
+		<text>Presumably the last documents which contain secret information left in the factory. Better not let them fall into the hands of foreign agents.\n \n
+		%c[pda_white]PROPERTIES:\n
+		%c[d_orange] • %c[pda_white] Quest Item\n
+		</text>
+	</string>
+
+	<string id="decryption_radio_name">
+		<text>Military Radio</text>
+	</string>
+	<string id="decryption_radio_desc">
+		<text>This unassuming military-grade radio can intercept and decrypt nearby transmissions.\n \n
+		%c[pda_white]PROPERTIES:\n
+		%c[d_orange] • %c[pda_white] Quest Item\n
+		</text>
+	</string>
 
 	<!-- \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ -->
 
@@ -25,13 +66,6 @@
 	</string>
 	<string id="lttz_oa_encrypted_transmission_text2">
 		<text>You have detected the source of the radio transmissions. Investigate.</text>
-	</string>
-	
-	<string id="decryption_radio_name">
-		<text>Radio</text>
-	</string>
-	<string id="decryption_radio_desc">
-		<text>This unassuming military-grade radio can intercept and decrypt nearby transmissions.</text>
 	</string>
 	
 	<!-- ----------------------------------------------------------------------------------------- -->
@@ -60,10 +94,10 @@
 	</string>
 	
 	<string id="st_zat_b40_sarge_pda_name">
-		<text>Squad leader's PDA</text>
+		<text>Squad Leader's PDA</text>
 	</string>
 	<string id="st_zat_b40_sarge_pda_desc">
-		<text>This PDA used to belong to the squad leader of a UNISG special reconnaissance team. Probably contains important tactical or strategic information. Obviously, it's encrypted, so no way to know for sure.</text>
+		<text>This encrypted PDA used to belong to the squad leader of a UNISG special reconnaissance team. It probably contains important tactical or strategic information.\n \n</text>
 	</string>
 	
 	<!-- ----------------------------------------------------------------------------------------- -->
@@ -95,13 +129,6 @@
 		<text>Seems that you didn't deliver the case in time. Report to Degtyarev that you were unable to complete the task.</text>
 	</string>
 	
-	<string id="special_delivery_case_name">
-		<text>Sealed case</text>
-	</string>
-	<string id="special_delivery_case_desc">
-		<text>Sealed case that contains undisclosed contents. Rather heavy.</text>
-	</string>
-	
 	<!-- ----------------------------------------------------------------------------------------- -->
 	<!-- Operation Afterglow Task 5 -->
 	<string id="lttz_oa_undercover_agent_name">
@@ -109,20 +136,13 @@
 	</string>
 	
 	<string id="lttz_oa_undercover_agent_text">
-		<text>Meet the secret agent who infiltrated UNISG forces and retrieve useful information from him. Suspicious behaviour might put UNISG on alert and increase their vigilance.</text>
+		<text>Meet the secret agent who infiltrated UNISG forces and retrieve useful information from them. Suspicious behavior might put UNISG on alert and increase their vigilance.</text>
 	</string>
 	<string id="lttz_oa_undercover_agent_text2">
 		<text>You were able to obtain the information without alerting UNISG forces. Report back to Degtyarev.</text>
 	</string>
 	<string id="lttz_oa_undercover_agent_text3">
 		<text>You were able to obtain the information, but not without alerting UNISG forces. Report back to Degtyarev.</text>
-	</string>
-	
-	<string id="st_army_isg_spy_pendrive_name">
-		<text>Undercover agent's pendrive</text>
-	</string>
-	<string id="st_army_isg_spy_pendrive_descr">
-		<text>According to Degtyarev's somewhat cryptic briefing, the spy among UNISG has been collecting some information on their goals and movements, as well as evidence that could place legal or political pressure on the UN troops to leave the Zone. Obviously encrypted.</text>
 	</string>
 	
 	<!-- ----------------------------------------------------------------------------------------- -->
@@ -145,13 +165,6 @@
 	</string>
 	<string id="lttz_oa_search_unit_text5">
 		<text>You were too late, and the UNISG forces left with the documents. Talk with Degtyarev.</text>
-	</string>
-	
-	<string id="jupiter_documents_name">
-		<text>Jupiter factory documents</text>
-	</string>
-	<string id="jupiter_documents_desc">
-		<text>Presumably the last documents which contain secret information left in the factory. Better not let them fall into the hands of foreign agents.</text>
 	</string>
 	
 	<!-- ----------------------------------------------------------------------------------------- -->

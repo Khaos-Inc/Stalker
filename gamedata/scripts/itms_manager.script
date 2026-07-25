@@ -30,7 +30,10 @@ ini_parts = ini_file("items\\settings\\parts.ltx")
 ini_craft = ini_file("items\\settings\\craft.ltx")
 ini_death = ini_file("items\\settings\\death_generic.ltx")
 ini_reward = ini_file("items\\settings\\item_rewards.ltx")
+ini_ammo = ini_file("items\\ammo\\ammo_vanilla.ltx")
+ini_ammo_bas = ini_file("items\\ammo\\ammo_bas.ltx")
 
+local level_object_by_id = level.object_by_id
 local n = 0
 local result,id,value = "","",""
 local string_find = string.find
@@ -147,43 +150,37 @@ function actor_on_item_before_use(obj,flags)
 		pass = false
 	
 	-- older booster is still active
-	elseif old_booster["period"] and (old_booster["period"] > time_g) then
-		--printf("~ actor_on_item_before_use [%s] | older booster [%s] is still active", sec, old_booster['section'])
-		local weaker_effect
-		local stronger_effect
-		for k,v in pairs(curr_booster) do
-			if (k ~= "section") and (k ~= "period") then
-				local v2 = old_booster[k]
-				if v2  and (v > boost_min) and (v2 > boost_min) then
-					if (v <= v2) then
-						weaker_effect = k
-					else
-						stronger_effect = k
-					end
-				elseif (v2 == 0) and (v > boost_min) then
-					stronger_effect = k
-				end
-			end
-		end
+	-- elseif old_booster["period"] and (old_booster["period"] > time_g) then
+		--printf("~ on_before_item_use [%s] | older booster [%s] is still active", sec, old_booster['section'])
+		-- local weaker_effect
+		-- local stronger_effect
+		-- for k,v in pairs(curr_booster) do
+			-- if (k ~= "section") and (k ~= "period") then
+				-- local v2 = old_booster[k]
+				-- if v2  and (v > boost_min) and (v2 > boost_min) then
+					-- if (v <= v2) then
+						-- weaker_effect = k
+					-- else
+						-- stronger_effect = k
+					-- end
+				-- elseif (v2 == 0) and (v > boost_min) then
+					-- stronger_effect = k
+				-- end
+			-- end
+		-- end
 		
 		-- older booster has some stronger effect, while new one doesn't have any stronger effect
-		if weaker_effect and (not stronger_effect) then
-			--printf("~ actor_on_item_before_use [%s] | older booster [%s] has stronger effect: %s", sec, old_booster['section'], weaker_effect)
-			local boost_str = game.translate_string(booster_string[weaker_effect])
-			str = strformat(game.translate_string("st_itm_manager_greater_effect"),boost_str)
-			pass = false
-		end
-	-- prevent player to take anabiotic during combat
-	elseif sec == "drug_anabiotic" then
-		if (not is_empty(xr_combat_ignore.fighting_with_actor_npcs)) then
-			str = game.translate_string("st_anabiotic_combat")
-			pass = false
-		end
+		-- if weaker_effect and (not stronger_effect) then
+			--printf("~ on_before_item_use [%s] | older booster [%s] has stronger effect: %s", sec, old_booster['section'], weaker_effect)
+			-- local boost_str = game.translate_string(booster_string[weaker_effect])
+			-- str = strformat(game.translate_string("st_itm_manager_greater_effect"),boost_str)
+			-- pass = false
+		-- end
 	end
 	
 	-- to eat or not to eat
 	if pass then
-		--printf("- actor_on_item_before_use [%s] | pass = true", sec)
+		--printf("- on_before_item_use [%s] | pass = true", sec)
 		flags.ret_value = true
 		copy_table(old_booster, curr_booster)
 		if obj_tool then
@@ -299,11 +296,7 @@ function actor_on_item_use(obj)
 		local n = math.random(20,30)
 		for i=1,n do
 			local actor = db.actor
-			if math.random(1,100) > 50 then
-				bolts[#bolts + 1] = "bolt"
-			else
-				bolts[#bolts + 1] = "bolt_bullet"
-			end
+			bolts[#bolts + 1] = "bolt"
 		end
 		utils_item.delay_event(bolts, nil, "bolts_pack", false, 5)
 		return
@@ -453,6 +446,14 @@ function ActorMenu_on_item_focus_receive(obj) -- highlight compatible items
 		-- Parts
 		local parts_str = ini_parts:r_string_ex("con_parts_list",parent_sec)
 		local parts = parts_str and (parts_str ~= "") and str_explode(parts_str,",")
+
+		if IsItem("ammo", parent_sec) then
+			local ammo_parts_str = ini_ammo:r_string_ex("ammo_vanilla",parent_sec) or ini_ammo_bas:r_string_ex("ammo_bas",parent_sec)
+			if ammo_parts_str and ammo_parts_str ~= "" then
+				parts = str_explode(ammo_parts_str,",")
+			end
+		end
+
 		if parts then
 			for i=1,#parts do
 				focus_tbl[#focus_tbl + 1] = parts[i]
@@ -697,10 +698,10 @@ end
 function new_game_equippment()
 	-- Damage equipment
 	local function damage_items(actor,itm)
-		local sec = itm:section()
-		if (IsWeapon(itm) and (sec ~= "wpn_binoc_inv")) or IsOutfit(itm) or IsHeadgear(itm) or IsItem("device",sec) then
-			itm:set_condition(math.random(75,85)/100)
-		end
+--		local sec = itm:section()
+--		if (IsWeapon(itm) and (sec ~= "wpn_binoc_inv")) or IsOutfit(itm) or IsHeadgear(itm) or IsItem("device",sec) then
+--			itm:set_condition(math.random(75,85)/100)
+--		end
 	end
 	db.actor:iterate_inventory(damage_items,db.actor)
 	
@@ -714,7 +715,7 @@ function new_game_equippment()
 	local start_wpn_tbl = alife_storage_manager.get_state().start_wpn_ammo
 	if start_wpn_tbl then
 		for id, ammo_sec in pairs(start_wpn_tbl) do
-			local wpn = level.object_by_id(id)
+			local wpn = level_object_by_id(id)
 			if wpn then
 				local ammo_list = utils_item.get_ammo(wpn:section(), wpn:id())
 				local ammo_type
@@ -987,7 +988,7 @@ function relocate_item_to_actor(actor, npc, section, amount)
 		local id
 		if not is_empty(npc_inv) then
 			local id_pick = random_key_table(npc_inv)
-			local obj = id_pick and level.object_by_id(id_pick)
+			local obj = id_pick and level_object_by_id(id_pick)
 			if obj then
 				npc:transfer_item(obj, actor)
 				npc_inv[id_pick] = nil
@@ -1119,7 +1120,7 @@ function play_item_sound(item, vol)
 	end
 
 	local time_g = time_global()
-	if snd_obj and (time_g > time_snd_prev + 25) then
+	if snd_obj and (time_g > time_snd_prev + 75) then
 		snd_obj:play(db.actor,0,sound_object.s2d)
 		snd_obj.volume = vol or 1
 	end
@@ -1167,7 +1168,7 @@ end
 function ItemProcessor:update()
 	-- Process Condition
 	for id,con in pairs(self.Cond) do
-		local obj = level.object_by_id(id)
+		local obj = level_object_by_id(id)
 		if obj then
 			if self.Debug then
 				printf("* ItemProcessor | processing condition | id: %s - con: %s", id, con)
@@ -1196,7 +1197,7 @@ function ItemProcessor:update()
 	
 	-- Process Uses
 	for id,uses in pairs(self.Uses) do
-		local obj = level.object_by_id(id)
+		local obj = level_object_by_id(id)
 		if obj then
 			if self.Debug then
 				printf("* ItemProcessor | processing uses | id: %s - uses: %s", id, uses)
@@ -1224,7 +1225,7 @@ function ItemProcessor:update()
 	
 	-- Process Ammo
 	for id,ammo in pairs(self.Ammo) do
-		local obj = level.object_by_id(id)
+		local obj = level_object_by_id(id)
 		if obj then
 			if self.Debug then
 				printf("* ItemProcessor | processing ammo | id: %s - ammo: %s", id, ammo)
@@ -1427,7 +1428,7 @@ function ItemProcessor:Remove_Process(id, mark, str)
 		self.Remove[id] = nil
 		
 		if self.Debug then
-			local obj = level.object_by_id(id)
+			local obj = level_object_by_id(id)
 			local p = obj and obj:parent()
 			printf("%s ItemProcessor | %s: (%s) [%s] - owner: (%s) [%s]", mark, str, id, obj and obj:section(), p and p:id() or "-", p and p:section())
 		end

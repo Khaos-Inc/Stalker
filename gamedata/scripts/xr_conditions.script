@@ -1,5 +1,12 @@
-
-
+--[[----------------------------------------------------------------------------------------------------------
+	XR CONDITIONS
+------------------------------------------------------------------------------------------------------------]]
+local db = db
+local level = level
+local game = game
+local string = string
+local math = math
+-------------------------------
 -- check if actor is enemy to a specific faction (p[1]]
 function is_actor_enemy_to_faction(actor,npc,p)
 	if(p[1]~=nil) then
@@ -106,7 +113,7 @@ function if_actor_not_powerful(actor, npc)
    end
 end
 
-function in_debt(actor,npc,p) 
+function in_debt(actor,npc,p)
 	if mlr_utils.load_var("debt_" .. tostring(npc:id())) then
 		return true
 	end
@@ -143,6 +150,7 @@ end
 --	Parameters: p[1] (type:string)
 --			- Faction to check is enemy of player (stalker, dolg, freedom, csky, ecolog, killer, army, bandit, monolith, or actor_(faction))
 --	Return value (type: bool): Returns true if the faction is an enemy of the player faction, false otherwise
+--
 -- Check if faction is enemy of player:
 function drx_sl_is_enemy( actor, npc, p )
 
@@ -154,11 +162,7 @@ function drx_sl_is_enemy( actor, npc, p )
 
 end
 
-
-
 -- \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-
-
 --[[
 	modified by Alundaio (original: ???? GSC)
 
@@ -169,8 +173,6 @@ end
 	it under the terms of the Open S.T.A.L.K.E.R. Mod License version 1.0.
 -]]
 -- TODO: Remove all unused COP story functions
-
-
 
 --	Modified by DoctorX
 --	Description:
@@ -190,8 +192,6 @@ function random_chance( actor, npc, p )
 	return false
 
 end
-
-
 
 -- checks if a task has stage of equal value
 -- param 1 - task_id
@@ -256,8 +256,8 @@ end
 function check_nearest_smart_dist_le(actor,npc,p)
 
 	if (smart_terrain.nearest_to_actor_smart.id and smart_terrain.nearest_to_actor_smart.dist > tonumber(p[1])) then
-	
-	
+
+
 		return false
 	end
 
@@ -365,7 +365,7 @@ function has_given_task(actor,npc,p) -- xQd, there are duplicate assassination, 
 		for k,v in pairs(task_info) do
 			if (k == task_id and v.task_giver_id and v.task_giver_id == talking_npc:id()) then
 				return true
-			end 
+			end
 		end
 	end
 	return false
@@ -404,11 +404,118 @@ function dist_to_job_point_le(actor, npc, p)
     return false
 end
 
+--[[---------------------------------------------------------------------------
+local function init_npc_combat(npc)
+    if not npc._combat_data then
+        npc._combat_data = {
+            _selected_combat = nil,
+            _next_combat_select = 0
+        }
+    end
+    return npc._combat_data
+end
+
+local function select_combat_type(enemy, npc, actor)
+    if not enemy then
+        return nil
+    end
+
+    if redone_ai_schemes.scheme_cover_coward(enemy, npc, actor)
+       or redone_ai_schemes.scheme_cover_dumb(enemy, npc, actor) then
+        return "cover"
+    end
+
+    if redone_ai_schemes.scheme_camper_coward(enemy, npc, actor)
+       or redone_ai_schemes.scheme_camper_dumb(enemy, npc, actor) then
+        return "camper"
+    end
+
+    if redone_ai_schemes.scheme_stupid(enemy, npc, actor) then
+        return "stupid"
+    end
+
+    return nil
+end
+
+local function update_combat_selector(enemy, npc, actor)
+    local data = init_npc_combat(npc)
+    local tg = time_global()
+
+    if not data._next_combat_select or tg >= data._next_combat_select then
+        data._selected_combat = select_combat_type(enemy, npc, actor)
+        data._next_combat_select = tg + math.random(100,200)
+    end
+
+    return data._selected_combat
+end
+
+function cond_scheme_cover_coward(enemy, npc, actor)
+    local sel = update_combat_selector(enemy, npc, actor)
+    return sel == "cover"
+end
+
+function cond_scheme_camper_coward(enemy, npc, actor)
+    local sel = update_combat_selector(enemy, npc, actor)
+    return sel == "camper"
+end
+
+function cond_scheme_cover_dumb(enemy, npc, actor)
+    local sel = update_combat_selector(enemy, npc, actor)
+    return sel == "cover"
+end
+
+function cond_scheme_camper_dumb(enemy, npc, actor)
+    local sel = update_combat_selector(enemy, npc, actor)
+    return sel == "camper"
+end
+
+function cond_scheme_stupid(enemy, npc, actor)
+    local sel = update_combat_selector(enemy, npc, actor)
+    return sel == "stupid"
+end]]--------------------------------------------------------------------------
+
+function cond_scheme_cover_coward(enemy, npc, actor)
+	if redone_ai_schemes.scheme_cover_coward(enemy,npc,actor) then
+		return true
+	end
+	return false
+end
+
+function cond_scheme_camper_coward(enemy, npc, actor)
+	if redone_ai_schemes.scheme_camper_coward(enemy,npc,actor) then
+		return true
+	end
+	return false
+end
+
+function cond_scheme_cover_dumb(enemy, npc, actor)
+	if redone_ai_schemes.scheme_cover_dumb(enemy,npc,actor) then
+		return true
+	end
+	return false
+end
+
+function cond_scheme_camper_dumb(enemy, npc, actor)
+	if redone_ai_schemes.scheme_camper_dumb(enemy,npc,actor) then
+		return true
+	end
+	return false
+end
+
+function cond_scheme_stupid(enemy, npc, actor)
+	if redone_ai_schemes.scheme_stupid(enemy,npc,actor) then
+		return true
+	end
+	return false
+end
+
+--[[---------------------------------------------------------------------------
+---------------------------------------------------------------------------]]--
 function sim_avail(actor,npc,p)
 	local smart = p[1] and SIMBOARD.smarts_by_names[p[1]]
-	if not (smart) then 
-		return false 
-	end 
+	if not (smart) then
+		return false
+	end
 	return simulation_objects.available_by_id[smart.id] == true
 end
 
@@ -457,9 +564,9 @@ function dist_to_job_point_ge(actor, npc, p)
     return false
 end
 
--- Каждая функция в этом файле используется как условие xr_logic: {=функция !функция}
--- Если в функцию необходимо передавать параметры, то:  {=функция(парам1:парам2:...) !функция(парам1:парам2:...)}
--- Формат: function f(actor, npc). В случае передачи параметров: function f(actor, npc, p).
+--                                                      xr_logic: {=        !       }
+--                                               ,   :  {=       (     1:     2:...) !       (     1:     2:...)}
+--       : function f(actor, npc).                             : function f(actor, npc, p).
 -- ----------------------------------------------------------------------------------------------------
 -- Functions for working specifically with combat_ignore_cond
 -- ----------------------------------------------------------------------------------------------------
@@ -506,7 +613,7 @@ function is_enemy_actor_or_companion(enemy,npc)
 end
 
 -- current enemy at a distance greater than or equal to the specified Distance
--- для combat_ignore
+--     combat_ignore
 -- param 1 - distance^2
 function fighting_dist_ge(enemy, npc, p)
 	p[1] = p[1] and tonumber(p[1])
@@ -630,13 +737,13 @@ function pure_enemy_mem_time_le(actor, npc, p)
 	return p and p[1] and enemy and enemy:alive() and npc:memory_time(enemy) <= tonumber(p[1]) or false
 end
 -- ----------------------------------------------------------------------------------------------------
--- Общие функции
+--
 -- ----------------------------------------------------------------------------------------------------
--- видим ли мы еще "черный экран" или нет?
+--                 "            "        ?
 function black_screen(actor, npc)
 	return device().precache_frame > 1
 end
---Проверка, встречается ли в имени чувака одна из строк .
+--        ,                                             .
 function check_npc_name (actor , npc , p)
 	if npc:name() == nil then return false end
 	for k,v in pairs(p) do
@@ -667,7 +774,7 @@ function is_playing_sound (actor, npc)
 	return xr_sound.sound_table[npc:id()] ~= nil
 end
 
--- проверка, что актер жив
+--         ,
 function actor_alive(actor, npc)
 	if db.actor and db.actor:alive() then
 		return true
@@ -713,13 +820,11 @@ function dist_to_actor_ge(actor, npc, p)
 	return d and npc:position():distance_to_sqr(actor:position()) >= tonumber(d)^2
 end
 
-
-
--- проверка того что npc находится в заданной зоне
--- !!! ВЫЗЫВАТЬ ТОЛЬКО ИЗ SPACE RESTRICTOR !!!
--- параметры: [sid1:sid2:...]
--- !!! НЕКОРРЕКТНО РАБОТАЕТ ДЛЯ ОБЬЕКТОВ В offline'e !!!
--- !!! ДЛЯ ГАРАНТИИ ИСПОЛЬЗОВАТЬ one_obj_in_zone !!!
+--                   npc
+-- !!!                    SPACE RESTRICTOR !!!
+--          : [sid1:sid2:...]
+-- !!!                                     offline'e !!!
+-- !!!                           one_obj_in_zone !!!
 function obj_in_zone(actor, zone, p)
 	local sim = alife()
 	for i, v in pairs(p) do
@@ -752,8 +857,8 @@ function check_npc_from_gulag_in_zone(actor,npc,p)
 	return false
 end
 
--- параметры: [sid:def*] def=true|false
--- * параметр не обязателен
+--          : [sid:def*] def=true|false
+-- *
 function one_obj_in_zone(actor, zone, p)
 	--local def_offline = (p[2] ~= "false") -- default (true) result if npc in offline
 	local id = get_story_object_id(p[1])
@@ -777,7 +882,7 @@ end
 
 function actor_inside_me(actor,zone,p)
 	return zone:inside(actor:position())
-end   
+end
 function actor_in_zone(actor, npc, p)
 	if not (db.actor) then
 		return false
@@ -806,11 +911,11 @@ function actor_near_smart(actor, npc, p)
 	if not (db.actor) then
 		return false
 	end
-	
+
 	if not (p and p[1]) then
 		return false
 	end
-	
+
 	local dist = p[2] and tonumber(p[2]) or 50
 	local smart = SIMBOARD.smarts_by_names[p[1]]
 	if smart and smart.online then
@@ -819,7 +924,7 @@ function actor_near_smart(actor, npc, p)
 			return true
 		end
 	end
-	
+
 	return false
 end
 
@@ -839,25 +944,25 @@ function npc_in_zone(actor, npc, p)
 	return false
 end
 
--- true, если здоровье npc <= заданному значению
--- false в противном случае
+-- true,               npc <=
+-- false
 function health_le(actor, npc, p)
 	return p[1] and npc.health < p[1]
 end
 
--- true, если здоровье актера  <= заданному значению
--- false в противном случае
+-- true,                       <=
+-- false
 function actor_health_le(actor, npc, p)
 	return p[1] and actor.health < p[1]
 end
 
--- true, если здоровье вертолёта <= заданному значению
--- false в противном случае
+-- true,                        <=
+-- false
 function heli_health_le(actor, obj, p)
 	return p[1] and obj:get_helicopter():GetfHealth() < p[1]
 end
 
--- видит ли вертолёт npc (по story id)
+--                  npc (   story id)
 function heli_see_npc(actor, obj, p)
 	if p[1] then
 		local o = get_story_object( p[1] )
@@ -870,8 +975,6 @@ end
 function heli_see_actor(actor, obj)
 	return actor ~= nil and obj:get_helicopter():isVisible( actor )
 end
-
-
 
 function gulag_state(actor, npc, p)
 	if xr_gulag.getGulagState(p[1]) == p[2] then
@@ -901,7 +1004,6 @@ function npc_community(actor, npc, p)
 	return false
 end
 
-
 function npc_rank(actor, npc, p)
 	if p[1] == nil then
 		printf("Wrong number of params in npc_rank")
@@ -923,9 +1025,8 @@ function npc_profile(actor, npc, p)
 	return false
 end
 
-
--- Проверка того что удар был нанесен кем-то из npc указанных в списке.
--- Параметры это story_id персонажей. Можно задавать несколько story_id.
+--                                       -      npc                   .
+--               story_id           .                          story_id.
 function hitted_by(actor, npc, p)
 	local npc1
 	local t = db.storage[npc:id()].hit
@@ -939,7 +1040,7 @@ function hitted_by(actor, npc, p)
 	end
 	return false
 end
--- Функция проверки попадания в кость по её индексу.(Проверка только для секции hit)
+--                                                .(                           hit)
 function hitted_on_bone(actor, npc, p)
 	for k,v in pairs (p) do
 		if db.storage[npc:id()].hit.bone_index == npc:get_bone_id(v) then
@@ -949,7 +1050,7 @@ function hitted_on_bone(actor, npc, p)
 	return false
 end
 
--- Проверка, что лучшее оружие персонажа - пистолет
+--         ,                             -
 function best_pistol(actor, npc)
 	local pistol = npc:item_in_slot(1)
 	if pistol ~= nil then
@@ -959,7 +1060,7 @@ function best_pistol(actor, npc)
 	end
 end
 
--- Проверка, что персонажу нанесли смертельный хит. Проверять ТОЛЬКО на on_hit
+--         ,                                      .                     on_hit
 function deadly_hit(actor, npc)
 	if db.storage[npc:id()] == nil or db.storage[npc:id()].hit == nil then
 		--printf("deadly hit false")
@@ -970,10 +1071,8 @@ function deadly_hit(actor, npc)
 	return db.storage[npc:id()].hit.deadly_hit == true
 end
 
-
-
--- Проверка того что персонаж был убит кем-то из npc указанных в списке.
--- Параметры это story_id персонажей. Можно задавать несколько story_id.
+--                                        -      npc                   .
+--               story_id           .                          story_id.
 function killed_by(actor, npc, p)
 	local npc1
 	local t = db.storage[npc:id()].death
@@ -989,9 +1088,9 @@ function killed_by(actor, npc, p)
 	return false
 end
 
--- проверка (по story_id) все ли проверяемые сталкеры живы
--- TODO: исправить ситуацию, когда выдается неправильный результат для обьектов, которые
---       не успели проспавниться.
+--          (   story_id)
+-- TODO:                   ,                                                   ,
+--                              .
 function is_alive_all(actor, npc, p)
 	local sim = alife()
 	for i, v in pairs(p) do
@@ -1004,9 +1103,9 @@ function is_alive_all(actor, npc, p)
 	return true
 end
 
--- проверка (по story_id) того, что чотя бы один из проверяемых сталкеров жив
--- TODO: исправить ситуацию, когда выдается неправильный результат для обьектов, которые
---       не успели проспавниться.
+--          (   story_id)     ,
+-- TODO:                   ,                                                   ,
+--                              .
 function is_alive_one(actor, npc, p)
 	local sim = alife()
 	for i, v in pairs(p) do
@@ -1018,7 +1117,6 @@ function is_alive_one(actor, npc, p)
 	end
 	return false
 end
-
 
 --	Modified by DoctorX
 --	Description: Determines whether or not a npc is alive
@@ -1054,10 +1152,9 @@ function is_alive( actor, npc, p )
 
 end
 
-
--- проверка (по story_id) все ли проверяемые сталкеры мертвы
--- TODO: исправить ситуацию, когда выдается неправильный результат для обьектов, которые
---       не успели проспавниться.
+--          (   story_id)
+-- TODO:                   ,                                                   ,
+--                              .
 function is_dead_all(actor, npc, p)
 	local npc1
 	for i, v in pairs(p) do
@@ -1075,9 +1172,9 @@ function is_dead_all(actor, npc, p)
 	return true
 end
 
--- проверка (по story_id) того, что хотя бы один из проверяемых сталкеров мертв
--- TODO: исправить ситуацию, когда выдается неправильный результат для обьектов, которые
---       не успели проспавниться.
+--          (   story_id)     ,
+-- TODO:                   ,                                                   ,
+--                              .
 function is_dead_one(actor, npc, p)
 	local npc1
 	for i, v in pairs(p) do
@@ -1090,22 +1187,22 @@ function is_dead_one(actor, npc, p)
 	return false
 end
 
--- проверка (по story_id) того, что хотя бы один из проверяемых сталкеров мертв
--- TODO: исправить ситуацию, когда выдается неправильный результат для обьектов, которые
---       не успели проспавниться.
+--          (   story_id)     ,
+-- TODO:                   ,                                                   ,
+--                              .
 function is_dead(actor, npc, p)
 	local npc1 = get_story_object(p[1])
 	return not (npc1 and npc1:alive())
 end
 
--- Проверяет , существует ли обьект с заданным стори айди.
+--           ,                                           .
 function story_object_exist(actor, npc, p)
 	local npc1 = get_story_object(p[1])
 	return npc1 ~= nil
 end
 
 --[[
--- проверка (по story_id) того, что нашим врагом есть хотя бы кото-то один из списка
+--          (   story_id)     ,                                   -
 function check_fighting(actor, npc, p)
 	local enemy_id = db.storage[npc:id()].enemy_id
 	local enemy = db.storage[enemy_id] and db.storage[enemy_id].object
@@ -1126,8 +1223,8 @@ end
 ]]--
 
 
--- true, если у актёра в инвентаре есть указанный предмет
--- false, если нету, либо не задана секция предмета
+-- true,
+-- false,          ,
 function actor_has_item(actor, npc, p)
 	return p[1] ~= nil and db.actor:object( p[1] ) ~= nil
 end
@@ -1141,7 +1238,7 @@ end
 function npc_has_item(actor, npc, p)
 	return p[1] ~= nil and npc:object( p[1] ) ~= nil
 end
--- проверяет наличие заданого количества предметов в инвентаре игрока.
+--                                                                   .
 function actor_has_item_count(actor, npc, p)
 	local item_section 	= p[1]
 	local need_count 	= tonumber(p[2])
@@ -1156,7 +1253,7 @@ function actor_has_item_count(actor, npc, p)
 	return has_count >= need_count
 end
 
--- возвращает true, если в текущей схеме персонажа взведён указанный сигнал.
+--            true,                                                       .
 function signal(actor, npc, p)
 	if p[1] then
 		local st   = db.storage[npc:id()]
@@ -1168,7 +1265,7 @@ function signal(actor, npc, p)
 	end
 end
 
--- возвращает true, если значение указанного счётчика актёра больше указанного числа
+--            true,
 function counter_greater(actor, npc, p)
 	if p[1] and p[2] then
 		local c = load_var(actor, p[1], 0)
@@ -1188,13 +1285,13 @@ function counter_equal(actor, npc, p)
 end
 
 --[[
--- определяет нечётность интервала игрового времени. интервал нужно передать в p[1]
+--                                                 .                           p[1]
 function odd_time_interval(actor, npc, p)
 	return odd( game.time() / p[1] )
 end
 ]]--
 -------------------------------------------------------------------------------------------------------
--- Функции поддержки kamp
+--                   kamp
 function _kamp_talk(actor, npc)
 	if xr_kamp.kamp_stalkers[npc:id()] then
 		return xr_kamp.kamp_stalkers[npc:id()]
@@ -1208,7 +1305,7 @@ end
 -------------------------------------------------------------------------------------------------------
 
 -------------------------------------------------------------------------------------------------------
--- Функции поддержки безопасности баз
+--
 function check_smart_alarm_status(actor, npc, p)
 	local smart = p[1] and SIMBOARD:get_smart_by_name(p[1])
 	return smart and smart:check_alarm() or false
@@ -1271,7 +1368,7 @@ end
 function actor_true_enemy(actor, npc)
 	local t = db.storage[npc:id()].death
 	return npc:relation(actor) >= game_object.enemy or (t ~= nil and t.killer == actor:id())
-	
+
 	--local comm_actor = get_actor_true_community() or "none"
 	--local comm_npc = npc and character_community(npc) or "none"
 	--return game_relations.is_factions_enemies(comm_actor, comm_npc)
@@ -1279,7 +1376,7 @@ end
 
 function actor_true_friend(actor, npc)
 	return npc:relation(actor) == game_object.friend
-	
+
 	--local comm_actor = get_actor_true_community() or "none"
 	--local comm_npc = npc and character_community(npc) or "none"
 	--return game_relations.is_factions_friends(comm_actor, comm_npc)
@@ -1287,7 +1384,7 @@ end
 
 function actor_true_neutral(actor, npc)
 	return npc:relation(actor) == game_object.neutral
-	
+
 	--local comm_actor = get_actor_true_community() or "none"
 	--local comm_npc = npc and character_community(npc) or "none"
 	--return game_relations.is_factions_neutrals(comm_actor, comm_npc)
@@ -1374,15 +1471,14 @@ function is_actor_enemy_to_faction(actor,npc,p)
 	else
 		return false
 	end
-end	
-		  
--- текущий враг актёр?
+end
+
+--                  ?
 function fighting_actor(actor, npc)
 	local enemy_id = db.storage[npc:id()].enemy_id
 	local enemy = db.storage[enemy_id] and db.storage[enemy_id].object
 	return enemy and enemy:id() == actor:id() or false
 end
-
 
 function hit_by_actor(actor, npc)
 	local t = db.storage[npc:id()].hit
@@ -1391,9 +1487,12 @@ function hit_by_actor(actor, npc)
 end
 
 function killed_by_actor(actor, npc)
-	local t = db.storage[npc:id()].death
-	local killed_by_actor = t ~= nil and t.killer == actor:id()
-	return killed_by_actor
+  	if npc and type(npc) == "table" and type(npc.id) == "function" then
+  	local t = db.storage[npc:id()].death
+  	local killed_by_actor = t ~= nil and t.killer == actor:id()
+    	return killed_by_actor
+  	end
+  	return false
 end
 
 function actor_has_weapon (actor, npc)
@@ -1420,15 +1519,14 @@ function heavy_wounded(actor, npc)
 end
 
 --[[
-Проверка на заданный период времени
-Время задается в минутах
-Параметры: (time_shift:period_min)
-					 time_shift - периодичность срабатывания
-					 period - период срабатывания на котором мы получаем true
+         : (time_shift:period_min)
+					 time_shift -
+					 period -                                            true
 
-Примеры:
-time_period(60:10) - возвращает true каждый час на протяжении первых 10 минут
+       :
+time_period(60:10) -            true                                 10
 --]]
+
 function time_period(actor, npc, p)
 	local tshift, period = p[1], p[2]
 	if tshift ~= nil and period ~= nil and db.actor ~= nil then
@@ -1445,7 +1543,8 @@ function is_heavy_rain (actor, npc)
 	return db.actor ~= nil and level.rain_factor() >= 0.5
 end
 
-function is_day (actor, npc)
+-------------------------------------
+--[[function is_day (actor, npc)
 	return db.actor ~= nil and level.get_time_hours() >= 6 and level.get_time_hours() < 21
 end
 
@@ -1455,7 +1554,21 @@ end
 
 function is_night (actor, npc)
 	return db.actor ~= nil and (level.get_time_hours() < 5 or level.get_time_hours() > 19)
+end]]--
+
+-------------------------------------
+function is_day(actor, npc)
+	return db.actor ~= nil and level.get_time_hours() >= 5 and level.get_time_hours() < 21
 end
+
+function is_night(actor, npc)
+	return db.actor ~= nil and (level.get_time_hours() >= 21 or level.get_time_hours() < 5)
+end
+
+function is_dark_night(actor, npc)
+	return db.actor ~= nil and (level.get_time_hours() >= 0 and level.get_time_hours() < 4)
+end
+-------------------------------------
 
 function is_jup_a12_mercs_time (actor, npc)
 	return db.actor ~= nil and (level.get_time_hours() >= 1 and level.get_time_hours() < 5)
@@ -1468,6 +1581,7 @@ end
 function zat_b7_is_late_attack_time (actor, npc)
 	return db.actor ~= nil and (level.get_time_hours() >= 23 or level.get_time_hours() < 9)
 end
+-------------------------------------
 
 function mob_has_enemy(actor, npc)
 	-- return false
@@ -1514,13 +1628,12 @@ function treasure_exist(actor, npc, p)
 	return true
 end
 
---[[
 --'-----------------------------------------------------------------------------------
 --' Cover support
 --'-----------------------------------------------------------------------------------
---' Если возвращает true, то солдаты за каверами начинают стрелять.
+--'                 true,                                         .
 function cover_attack(actor, npc)
-	--' Берем сквад объекта
+	--'
 	local squad = get_object_squad(npc)
 
 	if squad == nil then
@@ -1529,7 +1642,6 @@ function cover_attack(actor, npc)
 
 	return squad:cover_attack()
 end
-]]--
 
 --'-----------------------------------------------------------------------------------
 --' Squad support
@@ -1671,8 +1783,7 @@ function squads_in_zone_yan_smart_terrain_6_4(actor, npc, p)
 	return true
 end
 
-
---' Проверка в таргет кондлисте задания, соответствует ли имя сквада переданному
+--'                                    ,
 function target_squad_name(actor, obj, p)
 	if p[1] == nil then
 		printf("Wrong parameters")
@@ -1694,7 +1805,7 @@ function target_squad_name(actor, obj, p)
 	return obj:section_name() == p[1]
 end
 
---' Проверка в таргет кондлисте задания, соответствует ли имя смарта переданному
+--'                                    ,
 function target_smart_name(actor, smart, p)
 	if p[1] == nil then
 		printf("Wrong parameters")
@@ -1703,7 +1814,7 @@ function target_smart_name(actor, smart, p)
 	return smart:name() == p[1]
 end
 
---' Проверяет жив ли отряд с указанным ID
+--'                                    ID
 function squad_exist(actor, npc, p)
 	local story_id = p[1]
 	if story_id == nil then
@@ -1722,12 +1833,12 @@ local cache_squad_smart = {}
 function squad_name_exist(actor, npc, p)
 	local squad_sec = p[1]
 	local smart_id = cache_squad_smart[squad_sec]
-	
+
 	if (not smart_id) then
 		if (squad_sec == nil) or (squad_sec and not ini_sys:section_exist(squad_sec)) then
 			printe("~ERROR squad_name_exist | section [%s] doesn't exist in system_ini", tostring(story_id))
 		end
-		
+
 		local smart_name = ini_sys:r_string_ex(squad_sec,"target_smart")
 		local smart = smart_name and SIMBOARD.smarts_by_names[smart_name]
 		if smart then
@@ -1737,7 +1848,7 @@ function squad_name_exist(actor, npc, p)
 			printf("~WARNING squad_name_exist | cant' get smart obeject [%s]", smart_name)
 		end
 	end
-	
+
 	local smrt = smart_id and SIMBOARD.smarts[smart_id]
 	if smrt then
 		for id,_ in pairs(smrt.squads) do
@@ -1748,7 +1859,7 @@ function squad_name_exist(actor, npc, p)
 			end
 		end
 	end
-	
+
 	--printf("~ squad_name_exist | squad [%s]",squad_sec)
 	return false
 end
@@ -1857,8 +1968,8 @@ function npc_stay_offline(actor, npc, p)
 end
 ]]--
 
--- проверка того что дистанция до обьекта >= заданной
--- параметры: [sid,dist]
+--                                        >=
+--          : [sid,dist]
 function distance_to_obj_ge(actor, npc, p)
 	local npc_id = get_story_object_id(p[1])
 	local npc1 = npc_id and alife_object(npc_id)
@@ -1908,12 +2019,12 @@ function jup_b16_is_zone_active(actor, npc)
 	return has_alife_info(npc:name())
 end
 
---Функция проверки состояния видимости кровососа.
--- Возможный набор параметров --> story_id:visibility_state(можно вызывать откуда угодно) или visibility_state(если вызывается из кастомдаты кровососа)
+--                                              .
+--                            --> story_id:visibility_state(                            )     visibility_state(                                       )
 --  visibility_state -->
---						0 - невидимый
---						1 - полувидимый
---						2 - полностью видимый
+--						0 -
+--						1 -
+--						2 -
 
 function check_bloodsucker_state(actor, npc, p)
 	if (p and p[1]) == nil then printf("Wrong parameters in function 'check_bloodsucker_state'!!!") end
@@ -2092,7 +2203,7 @@ function anomaly_has_artefact(actor, npc, p)
 
 	for k,v in pairs(anomal_zone.artefact_ways_by_id) do
 		local se_obj = alife_object(tonumber(k))
-		if (se_obj and se_obj:section_name() == af_name) then 
+		if (se_obj and se_obj:section_name() == af_name) then
 			return true
 		end
 	end
@@ -2130,7 +2241,7 @@ function zat_b29_anomaly_has_af(actor, npc, p)
 	return false
 end
 
-function jup_b221_who_will_start(actor, npc, p) -- доступные параметры: ability - проверить есть ли доступные темы, choose - выбрать групировку которая начнет перепалку
+function jup_b221_who_will_start(actor, npc, p) --                    : ability -                                 , choose -
 	local reachable_theme = {}
 	local faction_table = {}
 	local info_table = {
@@ -2149,7 +2260,7 @@ function jup_b221_who_will_start(actor, npc, p) -- доступные параметры: ability 
 		[11] = "jup_a6_freedom_leader_employ_work",
 		[12] = "jup_b207_freedom_wins"
 	}
---Составляем таблицу достыпных тем(тлько номера тем).
+--                                (                ).
 	for k,v in pairs(info_table) do
 		if k <= 6 then
 			faction_table[1] = "duty"
@@ -2167,10 +2278,10 @@ function jup_b221_who_will_start(actor, npc, p) -- доступные параметры: ability 
 		printf("No such parameters in function 'jup_b221_who_will_start'")
 	end
 	if tostring(p[1]) == "ability" then
-		return #reachable_theme ~= 0 -- если таблица пуста значит нет доступных тем и ненадо играть сцену
+		return #reachable_theme ~= 0 --
 	elseif  tostring(p[1]) == "choose" then
----------Выберем рандомам елемент составленой таблицы и проверим к какой груперовки он пренадлежит :)
-		return reachable_theme[math.random(1, #reachable_theme)] <= 6 -- если меньше 6-ти значит ДОЛГ если больше 6-ти значит СВОБОДА
+---------                                                                                          :)
+		return reachable_theme[math.random(1, #reachable_theme)] <= 6 --             6-                           6-
 	else
 		printf("Wrong parameters in function 'jup_b221_who_will_start'")
 	end
@@ -2487,8 +2598,8 @@ function smart_empty(actor,npc,p)
 	local smart_id = smart.id
 	for k,v in pairs(board.smarts[smart_id].squads) do
 		local se_obj = alife_object(k)
-		if (se_obj) then 
-			return false 
+		if (se_obj) then
+			return false
 		end
 	end
 	return true
@@ -2558,7 +2669,6 @@ function is_minigun_see_current_target(actor,npc,p)
 	return npc:get_car():IsObjectVisible(st.ph_minigun.target_obj)
 end
 
-
 function squad_hit_by_smart(actor,npc,p)
 	local squad = get_object_squad(npc)
 	if not (squad) then
@@ -2566,7 +2676,7 @@ function squad_hit_by_smart(actor,npc,p)
 	end
 
 	local storage = db.storage
-										
+
 	for k in squad:squad_members() do
 		local who = k.id and storage[k.id] and storage[k.id].hitted_by and storage[storage[k.id].hitted_by] and storage[storage[k.id].hitted_by].object
 		local smart = who and xr_gulag.get_npc_smart(who)
@@ -2609,7 +2719,7 @@ function squad_on_actor_map(actor,npc,p)
 	if not (squad) then
 		return false
 	end
-	
+
 	return get_player_level_id() == game_graph():vertex(squad.m_game_vertex_id):level_id()
 end
 
@@ -2657,7 +2767,7 @@ function job_on_point(actor,npc,p)
 		local dist = pos and obj:position():distance_to_sqr(pos)
 
 		--printf("~ job_on_point | dist: %s", dist)
-		
+
 		return dist <= tonumber(p[4])
 	end
 
@@ -2808,7 +2918,6 @@ function is_only_community_on_jobs(actor,npc,p)
 	return true
 end
 
-
 function smart_squad_by_faction_in_radius(actor,npc,p)
 	local smart = p[1] and p[2] and p[3] and SIMBOARD.smarts_by_names[p[1]]
 	if not (smart) then
@@ -2829,7 +2938,6 @@ function smart_squad_by_faction_in_radius(actor,npc,p)
 
 	return false
 end
-
 
 -- Returns true if squads by behavior faction (player_id) of a given count exist at smart out of entire population; including arriving
 -- param1 - smart_name
@@ -3034,11 +3142,11 @@ function actor_week_in_zone(actor,npc,p)
 	if not (p[1]) then
 		return false
 	end
-	
+
 	if cache_weeks[p[1]] ~= nil then
 		return cache_weeks[p[1]]
 	end
-	
+
 	local s_time = level.get_start_time()
 	local seconds = tonumber(game.get_game_time():diffSec(s_time))
 	local days = math.floor(((seconds/60)/60)/24)
@@ -3046,10 +3154,10 @@ function actor_week_in_zone(actor,npc,p)
 	if (weeks > 10) then weeks = 10 end
 
 	local result = (weeks >= p[1]) and true or false
-	
+
 	cache_weeks[p[1]] = result
 	--printf("~ Condition check | actor_week_in_zone | [%s] = %s", p[1], result)
-	
+
 	return result
 end
 
@@ -3253,7 +3361,7 @@ function any_on_level(actor,npc,faction_list)
 	for id,v in pairs(SIMBOARD.squads) do
 		local squad = alife_object(id)
 		if (squad) and simulation_objects.is_on_the_same_level(squad, se_actor) then
-			if not (squad.first_update) then 
+			if not (squad.first_update) then
 				return -- not all squads are loaded yet!
 			end
 			if not (squad:get_script_target()) then
@@ -3267,14 +3375,14 @@ function any_on_level(actor,npc,faction_list)
 								break
 							end
 						end
-						
+
 					end
 				end
 			end
 		end
 	end
 	return found
-end 
+end
 function is_actor_surge_immuned(actor,npc,p)
 	return load_var(db.actor,"surge_immuned",false) == true
 end
@@ -3292,15 +3400,15 @@ end
 
 function base_defense_is_actor_on_level(actor,npc,p)
 	local name = load_var(db.actor,"base_defense_level")
-	if (name) then 
+	if (name) then
 		return name == level.name()
-	end 
+	end
 	return true
 end
 
 function is_story(actor,npc,p)
 	return npc and get_object_story_id(type(npc.id) == "function" and npc:id() or npc.id) ~= nil
-end 
+end
 
 function is_open_routes_mode(actor,npc,p)
 	return alife_storage_manager.get_state().opened_routes

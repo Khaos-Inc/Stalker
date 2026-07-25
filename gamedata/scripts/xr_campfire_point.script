@@ -45,7 +45,7 @@ end
 class "action_point_campfire" (action_base)
 function action_point_campfire:__init (npc_name, action_name, storage) super(nil, action_name)
 	self.st = storage
-	self.st.approved_actions = {"play_harmonica","play_guitar","sit","sit_ass","sit_knee","sit_ass_weapon","sit_ass_eat_bread","sit_ass_drink_vodka","sit_ass_drink_energy","sit_ass_eat_kolbasa" }
+	self.st.approved_actions = {"play_guitar","sit","sit_ass","sit_knee","sit_ass_weapon","sit_ass_eat_bread","sit_ass_drink_vodka","sit_ass_drink_energy","sit_ass_eat_kolbasa" }
 end
 
 function action_point_campfire:initialize()

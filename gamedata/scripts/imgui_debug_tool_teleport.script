@@ -1,0 +1,92 @@
+-- Teleport Debug Tool
+local show_names = false
+local selected_level = nil
+
+function render()
+	if ImGui.Button(show_names and "Show IDs" or "Show Names") then
+		show_names = not show_names
+	end
+
+	ImGui.Separator()
+
+	if ImGui.BeginTable("TeleportLayout", 2, 3, vector2(0, 0), 0) then
+		ImGui.TableSetupColumn("Levels")
+		ImGui.TableSetupColumn("Smarts")
+		ImGui.TableHeadersRow()
+
+		ImGui.TableNextRow()
+
+		-- Left column: levels
+		ImGui.TableSetColumnIndex(0)
+		local lvls = txr_routes.maps
+		local sorted_levels = {}
+
+		-- Build table with level data
+		for i = 1, #lvls do
+		    local level_id = lvls[i]
+			local level_section = txr_routes.get_section(level_id)
+		    local display_text = show_names and game.translate_string(level_section) or level_section
+		    table.insert(sorted_levels, {id = level_id, text = display_text})
+		end
+
+		-- Sort by display text
+		table.sort(sorted_levels, function(a, b)
+		    return a.text < b.text
+		end)
+
+		-- Display sorted levels
+		for i = 1, #sorted_levels do
+		    local level = sorted_levels[i]
+		    if ImGui.Selectable(level.text ~= "" and level.text or level.id, selected_level == level.id, 0, vector2(0, 0)) then
+		        selected_level = level.id
+		    end
+		end
+
+		-- Right column: smarts for selected level
+		ImGui.TableSetColumnIndex(1)
+		if selected_level then
+			local gg = game_graph()
+			local sim = alife()
+			local sorted_smarts = {}
+			local selected_section = txr_routes.get_section(selected_level)
+
+			-- Build table with smart data
+			for name, v in pairs(SIMBOARD.smarts_by_names) do
+				local smart_level = sim:level_name(gg:vertex(v.m_game_vertex_id):level_id())
+				if smart_level == selected_section then
+					local display_text = show_names and smart_terrain_warfare.translate_smart_name(name) or name
+					table.insert(sorted_smarts, {name = name, text = display_text, obj = v})
+				end
+			end
+
+			-- Sort by display text
+			table.sort(sorted_smarts, function(a, b)
+				return a.text < b.text
+			end)
+
+			-- Display sorted smarts
+			for i = 1, #sorted_smarts do
+				local smart = sorted_smarts[i]
+				if ImGui.Selectable(smart.text, false, 0, vector2(0, 0)) then
+					local se_obj = smart.obj
+					if se_obj.online then
+						db.actor:set_actor_position(se_obj.position)
+					else
+						ChangeLevel(se_obj.position, se_obj.m_level_vertex_id, se_obj.m_game_vertex_id, VEC_ZERO, true)
+					end
+				end
+			end
+		else
+			ImGui.TextDisabled("Select a level to view smarts")
+		end
+
+		ImGui.EndTable()
+	end
+end
+
+-- Tool registration
+imgui_debug_tools.register_tool("teleport_hud", {
+	title = "Teleport",
+	render = render,
+	visible = false
+})

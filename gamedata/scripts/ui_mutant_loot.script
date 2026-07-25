@@ -104,6 +104,11 @@ function loot_mutant(section, clsid, loot_table, npc, dont_create, victim) -- Pr
 	local loot, sec, count, chance
 	local str_explode = str_explode
 	local mutant = clsdbg_to_section[kind] or clsid_to_section[clsid]
+	
+	if victim:section() == "gigant_jumper" then
+		mutant = "gigant"
+	end
+	
 	local possible_items = utils_data.collect_section(ini_mutant, mutant)
 	
 	local sim = alife()
@@ -111,6 +116,15 @@ function loot_mutant(section, clsid, loot_table, npc, dont_create, victim) -- Pr
 	local npc_pos = npc and npc:position()
 	local npc_lvl_id = npc and npc:level_vertex_id()
 	local npc_game_id = npc and npc:game_vertex_id()
+
+	local actor = db.actor
+	local backpack = actor:item_in_slot(13)
+	local is_huntkit
+	local needs_equipped_hk = ui_options.get("gameplay/general/need_equipped_hkit")
+
+	if (needs_equipped_hk and (backpack and (backpack:section() == sec_kit_hunt))) or (not needs_equipped_hk and db.actor:object(sec_kit_hunt)) then
+		is_huntkit = true
+	end
 
 	-- Spawn items on NPC if he looted the mutant
 	for i=1,#possible_items do
@@ -123,9 +137,15 @@ function loot_mutant(section, clsid, loot_table, npc, dont_create, victim) -- Pr
 			sec = loot[1]
 			count = tonumber(loot[2])
 			chance = loot[3] or 1
+			-- local old_chance = chance
+
+			if is_huntkit then
+				chance = chance + chance * (bonus_part_chance/100)
+			end
 			
 			for i=1,count do
 				if (math.random() <= tonumber(chance)) then
+					-- printf(sec .. " chance = " .. old_chance .. " to " .. chance)
 					
 					-- In case we don't want to bother with loot table
 					local se_obj
@@ -397,9 +417,9 @@ function UIMutantLoot:Loot(loot_all)
 				
 				alife_create_item(sec, db.actor, item_prop_table)
 
-				if is_huntkit and (math.random(100) < bonus_part_chance) then
-					alife_create_item(sec, db.actor, item_prop_table)
-				end
+				-- if is_huntkit and (math.random(100) < bonus_part_chance) then
+					-- alife_create_item(sec, db.actor, item_prop_table)
+				-- end
 				self.loot[sec].count = self.loot[sec].count - 1
 				if (self.loot[sec].count == 0) then
 					self.loot[sec] = nil
@@ -415,9 +435,9 @@ function UIMutantLoot:Loot(loot_all)
 				
 				alife_create_item(sec, db.actor, item_prop_table)
 
-				if is_huntkit and (math.random(100) < bonus_part_chance) then
-					alife_create_item(sec, db.actor, item_prop_table)
-				end
+				-- if is_huntkit and (math.random(100) < bonus_part_chance) then
+					-- alife_create_item(sec, db.actor, item_prop_table)
+				-- end
 				
 				self.loot[sec].count = self.loot[sec].count - 1
 				if self.loot[sec].count == 0 then
@@ -478,7 +498,8 @@ function UIMutantLoot:FillList()
 		end
 		is_there_loot = true
 	end
-	if load_var(self.obj,"looted",nil) then
+	
+	if (self.obj:clsid() ~= clsid.crow) and load_var(self.obj,"looted",nil) then
 		is_there_loot = false
 	end
 

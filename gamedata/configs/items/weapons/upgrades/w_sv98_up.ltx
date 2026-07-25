@@ -95,24 +95,41 @@ zoom_cam_step_angle_horz                 = -0.074
 inv_weight                               = +0.16
 
 [up_sect_fourta_sv98]
-cost                                     = 3820
-scope_zoom_factor                        = -3.57
+cost                                     = 4840
+value                                    = +15
+crosshair_inertion                       = -1
+PDM_disp_base                            = -0.3
+PDM_disp_vel_factor                      = -0.5
+PDM_disp_accel_factor                    = -0.5
+inv_weight                               = -0.24
 
 [up_sect_fourtc_sv98]
-cost                                     = 6880
-scope_dynamic_zoom                       = on
-inv_weight                               = +0.01
-
-[up_sect_fourte_sv98]
 cost                                     = 5240
 scope_nightvision                        = scope_nightvision
 inv_weight                               = +0.27
 
-[up_sect_fourtf_sv98]
+
+[up_sect_fourtd_sv98]
 cost                                     = 4780
 scope_nightvision                        = scope_contrast
 inv_weight                               = +0.05
 
+
+[up_sect_fourte_sv98]
+cost                                     = 6210
+value                                    = +5
+bullet_speed                             = +40
+fire_dispersion_base                     = -0.01
+inv_weight                               = +0.1
+
+[up_sect_fourtf_sv98]
+cost                                     = 5210
+value                                    = +20
+crosshair_inertion                       = -1.5
+PDM_disp_base                            = -0.5
+PDM_disp_vel_factor                      = -1.25
+PDM_disp_accel_factor                    = -1.25
+inv_weight                               = -0.22
 
 ;----------------------------------------------------------------------------------------------------------------------
 [up_firsta_sv98]
@@ -318,43 +335,25 @@ icon                                     = ui_inGame2_upgrade_SVDm2_12
 scheme_index                             = 0, 3
 known                                    = 1
 effects                                  = up_gr_fourtcd_sv98
-section                                  = up_sect_fourta_sv98
-property                                 = prop_scope_12x
+section                                  = up_sect_fourta_ak74
+property                                 = prop_weight
 precondition_functor                     = inventory_upgrades.precondition_functor_a
-precondition_parameter                   = a & b
-effect_functor                           = inventory_upgrades.effect_functor_a
-effect_parameter                         = on_weapon_upgrade_something_here
-
-prereq_functor                           = inventory_upgrades.prereq_functor_a
-prereq_tooltip_functor                   = inventory_upgrades.prereq_tooltip_functor_a
-prereq_params                            =
-name                                     = st_up_opt_a4_name
-description                              = st_up_opt_a4_descr
-icon                                     = ui_inGame2_upgrade_SVDm2_13
-
-[up_fourtc_sv98]
-scheme_index                             = 1, 5
-known                                    = 1
-effects                                  = up_gr_fourtef_sv98
-section                                  = up_sect_fourtc_sv98
-property                                 = prop_scope
-precondition_functor                     = inventory_upgrades.precondition_functor_a
-precondition_parameter                   = a & b
+precondition_parameter                   = true
 effect_functor                           = inventory_upgrades.effect_functor_a
 effect_parameter                         = something_here
 
 prereq_functor                           = inventory_upgrades.prereq_functor_a
 prereq_tooltip_functor                   = inventory_upgrades.prereq_tooltip_functor_a
 prereq_params                            =
-name                                     = st_up_opt_c3_name
-description                              = st_up_opt_c3_descr
-icon                                     = ui_inGame2_upgrade_SVDm2_16
+name                                     = st_up_stk_a1_name
+description                              = st_up_stk_a1_descr
+icon                                     = ui_inGame2_upgrade_AKM_74_2_13
 
 [up_fourte_sv98]
 scheme_index                             = 2, 3
 known                                    = 1
-effects                                  =
-section                                  = up_sect_fourte_sv98
+effects                                  = 
+section                                  = up_sect_fourtc_sv98
 property                                 = prop_nightvision
 precondition_functor                     = inventory_upgrades.precondition_functor_a
 precondition_parameter                   = a & b
@@ -367,12 +366,15 @@ prereq_params                            =
 name                                     = st_up_opt_c2_name
 description                              = st_up_opt_c2_descr
 icon                                     = ui_inGame2_upgrade_SVDm2_15
+	s3ds_image_type = 1
+	ms_count = 2
+	ms_colors = scope_black
 
 [up_fourtf_sv98]
 scheme_index                             = 2, 4
 known                                    = 1
-effects                                  =
-section                                  = up_sect_fourtf_sv98
+effects                                  = 
+section                                  = up_sect_fourtd_sv98
 property                                 = prop_contrast
 precondition_functor                     = inventory_upgrades.precondition_functor_a
 precondition_parameter                   = a & b
@@ -385,6 +387,42 @@ prereq_params                            =
 name                                     = st_up_opt_b1_name
 description                              = st_up_opt_b1_descr
 icon                                     = ui_inGame2_upgrade_SVDm2_14
+	s3ds_lens_color = lens_contrast_yellow	
+	
+[up_fourtc_sv98]
+scheme_index                             = 1, 5
+known                                    = 1
+effects                                  = up_gr_fourtef_sv98
+section                                  = up_sect_fourte_sv98
+property                                 = prop_bullet_speed
+precondition_functor                     = inventory_upgrades.precondition_functor_a
+precondition_parameter                   = a & b
+effect_functor                           = inventory_upgrades.effect_functor_a
+effect_parameter                         = something_here
+
+prereq_functor                           = inventory_upgrades.prereq_functor_a
+prereq_tooltip_functor                   = inventory_upgrades.prereq_tooltip_functor_a
+prereq_params                            =
+name                                     = st_up_auts_c1_name
+description                              = st_up_auts_c1_descr
+icon                                     = ui_inGame2_upgrade_SVUmk2_3
+
+[up_fourtd_sv98]
+scheme_index                             = 1 , 6
+known                                    = 1
+effects                                  = up_gr_fourtef_sv98
+section                                  = up_sect_fourte_ak74
+property                                 = prop_inertion
+precondition_functor                     = inventory_upgrades.precondition_functor_a
+precondition_parameter                   = true
+effect_functor                           = inventory_upgrades.effect_functor_a
+effect_parameter                         = something_here
+prereq_functor                           = inventory_upgrades.prereq_functor_a
+prereq_tooltip_functor                   = inventory_upgrades.prereq_tooltip_functor_a
+prereq_params                            =
+name                                     = st_up_stk_c3_name
+description                              = st_up_stk_c3_descr
+icon                                     = ui_inGame2_upgrade_AKM_74_2_15
 
 
 ;----------------------------------------------------------------------------------------------------------------------
@@ -417,7 +455,8 @@ elements                                 = up_thirde_sv98
 elements                                 = up_fourta_sv98
 
 [up_gr_fourtcd_sv98]
-elements                                 = up_fourtc_sv98
+elements                                 = up_fourtc_sv98, up_fourtd_sv98
+
 
 [up_gr_fourtef_sv98]
 elements                                 = up_fourte_sv98, up_fourtf_sv98

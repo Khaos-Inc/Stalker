@@ -1,26 +1,22 @@
-
---====================================================================
--- Utilities for dealing with objects
---====================================================================
-
-
+--[[----------------------------------------------------------------------------------------------------------
+    Utilities for dealing with objects
+------------------------------------------------------------------------------------------------------------]]
+--DEBUG
 local enable_debug = false
+
 function print_dbg(...)
 	if enable_debug then
 		printf(...)
 	end
 end
 
-----------------------------------------------------------------------
--- Utilities
-----------------------------------------------------------------------
+-------------------------------------------------------------------------------------
+-- UTILITIES
+-------------------------------------------------------------------------------------
 local string_find   = string.find
 local string_gmatch = string.gmatch
 local string_sub    = string.sub
-
 local math_floor    = math.floor
-
-
 
 function get_current_action_id(npc)
 	local mgr = npc:motivation_action_manager()
@@ -44,10 +40,9 @@ function get_sound(snd)
 	end
 end
 
-
-----------------------------------------------------------------------
--- Testing
-----------------------------------------------------------------------
+-------------------------------------------------------------------------------------
+-- TESTING
+-------------------------------------------------------------------------------------
 function valid_vertex(npc,vid)
 	return vid and vid < 4294967295 and npc:accessible(vid) and vid
 end
@@ -98,11 +93,11 @@ end
 function in_los(npc,be,friend)
 
 	if (npc:target_body_state() ~= move.crouch) then
-		return false 
-	end 
-	
-	if (IsWounded(friend)) then 
-		return false 
+		return false
+	end
+
+	if (IsWounded(friend)) then
+		return false
 	end
 
 	local be_pos = utils_obj.safe_bone_pos(be,"bip01_spine")
@@ -123,17 +118,16 @@ function in_los(npc,be,friend)
 	return false
 end
 
-
-----------------------------------------------------------------------
--- Distance
-----------------------------------------------------------------------
+-------------------------------------------------------------------------------------
+-- DISTANCE
+-------------------------------------------------------------------------------------
 function debug_nearest(npc,msg,...)
 	local dbg = xrs_debug_tools.get_debug_npc()
 	local id = npc and npc.id and (type(npc.id) == "function" and npc:id() or npc.id)
 	if (id and dbg and id == dbg:id()) then
 		printf("nearest=%s |"..msg,npc:name(),...)
 	end
-end 
+end
 
 function nearest_object(s,offline)
 	local dist
@@ -230,6 +224,28 @@ function get_nearest_object(npc,...)
 	end
 end
 
+function get_nearest_squad_friend(npc)
+	local squad = get_object_squad(npc)
+	if not squad then
+		return nil
+	end
+
+	local npc_pos = npc:position()
+	local nearest_friend, best_dist
+	for o in squad:squad_members() do
+		local member = db.storage[o.id] and db.storage[o.id].object
+		if member and member:alive() and member:id() ~= npc:id() then
+			local dist = npc_pos:distance_to_sqr(member:position())
+			if not best_dist or dist < best_dist then
+				nearest_friend = member
+				best_dist = dist
+			end
+		end
+    	end
+
+	return nearest_friend
+end
+
 function graph_distance(vid1, vid2)
 --' Возвращает расстояние между двумя точками графа с учетом разности уровней
 	local gg = game_graph()
@@ -241,10 +257,9 @@ function graph_distance(vid1, vid2)
 	return gg:vertex(vid1):game_point():distance_to(gg:vertex(vid2):game_point())
 end
 
-
-----------------------------------------------------------------------
--- State
-----------------------------------------------------------------------
+-------------------------------------------------------------------------------------
+-- STATE
+-------------------------------------------------------------------------------------
 function switch_online(id)
 	if id == -1 then return end
 	local sim = alife()
@@ -262,10 +277,9 @@ function switch_offline(id)
 	end
 end
 
-
-----------------------------------------------------------------------
--- Stats
-----------------------------------------------------------------------
+-------------------------------------------------------------------------------------
+-- STATS
+-------------------------------------------------------------------------------------
 local ranks
 function get_rank_list()
 	if ranks then
@@ -302,7 +316,7 @@ function get_reputation_name(value)
 	local prev = nil
 	for i,rn in ipairs(reputations) do
 		local repu = tonumber(rn)
-		if (repu and value <= repu) then 
+		if (repu and value <= repu) then
 			return prev
 		else
 			prev = rn
@@ -341,10 +355,9 @@ function get_communities_list_key()
 	return communities_key
 end
 
-
-----------------------------------------------------------------------
--- Squads
-----------------------------------------------------------------------
+-------------------------------------------------------------------------------------
+-- SQUAD
+-------------------------------------------------------------------------------------
 function get_commander(npc)
 	local squad = npc and get_object_squad(npc)
 	if (squad and squad:commander_id()) then
@@ -393,7 +406,7 @@ function smart_has_uncommon_squad(name, only_arrived)
 		printf('smart_has_uncommon_squads(%s,%s) -> invalid smart name', name, only_arrived)
 		return
 	end
-	
+
 	for id in pairs(SIMBOARD.smarts[se_sm.id].squads) do
 		local se_sq = alife_object(id)
 		if se_sq and not ini_sys:r_bool_ex(se_sq:section_name(),"common") then
@@ -475,31 +488,30 @@ function squad_in_los(npc,enemy)
 	return false
 end
 
-
-----------------------------------------------------------------------
--- Cover
-----------------------------------------------------------------------
+-------------------------------------------------------------------------------------
+-- COVER
+-------------------------------------------------------------------------------------
 local function validate(npc,vid)
-	if (vid and vid < 4294967295 and npc:accessible(vid) and vid ~= npc:level_vertex_id()) then 
+	if (vid and vid < 4294967295 and npc:accessible(vid) and vid ~= npc:level_vertex_id()) then
 		return db.used_level_vertex_ids[vid] == nil or db.used_level_vertex_ids[vid] == npc:id()
-	end 
+	end
 	return false
 end
 
 function lmove(npc,vid,old_vid)
-	if (old_vid) then 
+	if (old_vid) then
 		db.used_level_vertex_ids[old_vid] = nil
 	end
-	
-	if (vid == nil or vid >= 4294967295) then 
-		return 
+
+	if (vid == nil or vid >= 4294967295) then
+		return
 	end
-	
+
 	if (db.used_level_vertex_ids[vid] == npc:id()) then
 		npc:set_dest_level_vertex_id(vid)
-		return vid 
+		return vid
 	end
-	
+
 	if not (npc:accessible(vid)) then
 		local vtemp = VEC_ZERO
 		vid, vtemp = npc:accessible_nearest(vid and level.vertex_position(vid) or npc:position(), vtemp )
@@ -549,18 +561,18 @@ function find_close_cover(npc,base_position,pos,cover_dist,mn,mx) -- find neares
 	cover_dist = not cover_dist and 5 or cover_dist
 	while not cover and cover_dist < 30 do
 		cover = npc:best_cover(base_position,pos,cover_dist,mn or 1,mx or 60)
-		if (cover) and not (validate(npc,cover:level_vertex_id())) then 
-			cover = nil 
+		if (cover) and not (validate(npc,cover:level_vertex_id())) then
+			cover = nil
 		end
 		cover_dist = cover_dist + 1
 	end
-	
+
 	return cover and valid_vertex(npc,cover:level_vertex_id())
 end
 
 function find_cover_in_rand_direction(npc,base_point,pos)
 	local rand = math.random
-	
+
 	local dir = npc:direction()
 	local rand_dir = rand(1,6)
 	local base_vertex_id, base_position, cover, cover_dist
@@ -574,13 +586,66 @@ function find_cover_in_rand_direction(npc,base_point,pos)
 			cover = npc:best_cover(base_position,pos,cover_dist,1,30)
 			cover_dist = cover_dist - 1
 		end
-		
-		if (cover and valid_vertex(npc,cover:level_vertex_id())) then 
+
+		if (cover and valid_vertex(npc,cover:level_vertex_id())) then
 			return valid_vertex(npc,cover:level_vertex_id())
 		end
 	end
 
 	return valid_vertex(npc,base_vertex_id)
+end
+
+-------------------------------------------------------------------------------------
+-- MOVEMENT
+-------------------------------------------------------------------------------------
+function try_go_position(npc,pos,old_vid)
+	local vid = level.vertex_id(pos)
+	if (validate(npc,vid)) then
+		return utils_obj.lmove(npc,vid,old_vid)
+	end
+end
+
+function try_go_cover(npc,pos,old_vid,r)
+	local vid = utils_obj.find_close_cover(npc,npc:position(),pos,r or 8)
+	return validate(npc,vid) and utils_obj.lmove(npc,vid,old_vid)
+end
+
+function try_go_cover_backward(npc,pos,old_vid,move_radius,cover_radius)
+	--utils_data.debug_write(strformat("npc:try_go_cover_backward"))
+	--utils_obj.debug_nearest(npc,"try_go_cover_backward")
+	local dir = vector_rotate_y(vec_set(npc:direction()), math.random(160,200))
+	local vid
+	local radius = move_radius or 30
+	local base_point = npc:level_vertex_id()
+	while (radius > 0) do
+		vid = level.vertex_in_direction(base_point,dir,radius)
+		if (validate(npc,vid)) then
+			--return lmove(npc,vid,old_vid)
+			break
+		end
+		radius = radius - 1
+	end
+
+	if not (vid) then
+		return
+	end
+
+	local base_position = level.vertex_position(vid)
+	local cover
+	local cover_dist = cover_radius or 40
+	while not cover and cover_dist > 0 do
+		cover = npc:best_cover(base_position,pos,cover_dist,1,200)
+		if (cover and db.used_level_vertex_ids[cover:level_vertex_id()]) then
+			cover = nil
+		end
+		cover_dist = cover_dist - 1
+	end
+
+	vid = cover and cover:level_vertex_id() or vid
+
+	if (validate(npc,vid)) then
+		return lmove(npc,vid,old_vid)
+	end
 end
 
 function try_go_backward(npc,radius,old_vid)
@@ -595,80 +660,242 @@ function try_go_backward(npc,radius,old_vid)
 		end
 		radius = radius - 2
 	end
-end 
+end
 
 function try_go_aside_object(npc,friend,pos,old_vid)
-	if not (friend) then 
-		return 
-	end 
-	
-	local mypos = npc:position()
-	
-	if (mypos:distance_to_sqr(friend:position()) < 3) then 
-		return 
+	if not npc or not friend or not pos then
+		return
 	end
 
-	--utils_obj.debug_nearest(npc,"try_to_strafe")
+	local mypos = npc:position()
+
 	local _dir = vec_sub(mypos,pos)
 	local dir = {}
+
 	dir[1] = vector_rotate_y(vec_set(_dir),-90)
 	dir[2] = vector_rotate_y(vec_set(_dir),90)
+
 	local vid
 	local radius = 12
 	local base_point = friend:level_vertex_id()
-	
+
 	for i=1,2 do
-		while (radius > 0) do
-			vid = level.vertex_in_direction(base_point,dir[i],radius)
-			if (validate(npc,vid)) then 
-				return utils_obj.lmove(npc,vid,old_vid)
+		local r = radius
+
+		while (r > 0) do
+			vid = level.vertex_in_direction(base_point,dir[i],r)
+
+			if (validate(npc,vid)) then
+				return lmove(npc,vid,old_vid)
 			end
-			radius = radius - 2
+
+			r = r - 2
 		end
 	end
-end 
+end
 
-function try_go_position(npc,pos,old_vid)
+function try_to_stay(npc, old_vid)
+	local current_vid = npc:level_vertex_id()
+	if validate(npc, current_vid) then
+		return utils_obj.lmove(npc, current_vid, old_vid)
+	end
+
+	local nearest_vid = utils_obj.send_to_nearest_accessible_vertex(npc, current_vid)
+	if nearest_vid then
+		return utils_obj.lmove(npc, nearest_vid, old_vid)
+	end
+end
+
+function try_to_peek(npc, old_vid, radius)
+	local current_vid = npc:level_vertex_id()
+	local current_pos = npc:position()
+	local max_radius = radius or 2
+	local step_radius = max_radius
+	local new_vid
+	while step_radius > 0 do
+        	local angle = random_float(0, 2 * math.pi)
+        	local offset_vec = vector():set(
+            	math.cos(angle) * step_radius,
+            	0,
+            	math.sin(angle) * step_radius
+        	)
+
+        	--local test_pos = current_pos:add(offset_vec)
+        	local test_pos = vector():set(current_pos):add(offset_vec)
+        	local vid = level.vertex_id(test_pos)
+		if validate(npc, vid) then
+			new_vid = vid
+			break
+		end
+		step_radius = step_radius - 0.5
+	end
+
+	if not new_vid then
+		new_vid = current_vid
+	end
+
+	return utils_obj.lmove(npc, new_vid, old_vid)
+end
+
+function try_to_sneak(npc, pos, old_vid)
+	--[[if npc:body_state() ~= move.crouch then
+		return
+	end]]--
+
 	local vid = level.vertex_id(pos)
-	if (validate(npc,vid)) then 
-		return utils_obj.lmove(npc,vid,old_vid)
-	end 
-end 
+	if not validate(npc, vid) then
+		vid = utils_obj.send_to_nearest_accessible_vertex(npc, vid)
+		if not vid then return end
+	end
 
-function try_go_cover(npc,pos,old_vid,r)
-	local vid = utils_obj.find_close_cover(npc,npc:position(),pos,r or 8)
-	return validate(npc,vid) and utils_obj.lmove(npc,vid,old_vid)
-end 
+	local dist = npc:position():distance_to(pos)
+	if dist > 4 then
+		local dir = vec_sub(pos, npc:position())
+		if dir then
+			dir:normalize()
+			local offset = math.random(3, 6)
+			local sneak_pos = npc:position():add(dir:mul(offset))
+			local sneak_vid = level.vertex_id(sneak_pos)
+			if validate(npc, sneak_vid) then
+				vid = sneak_vid
+			end
+		end
+	end
+	return utils_obj.lmove(npc, vid, old_vid)
+end
 
-function try_to_strafe(npc,old_vid)
+function try_to_sneak_backward(npc, enemy, radius, old_vid)
+	if not enemy then return end
+
+	--[[if npc:body_state() ~= move.crouch then
+		return
+	end]]--
+
+	local base_point = npc:level_vertex_id()
+	local dir = vec_sub(npc:position(), enemy:position())
+	if not dir then return end
+	dir:normalize()
+
+	local vid
+	while radius > 0 do
+		local sneak_pos = npc:position():add(vec_set(dir):mul(radius))
+		local test_vid = level.vertex_id(sneak_pos)
+
+		if validate(npc, test_vid) then
+			vid = test_vid
+			break
+		end
+
+		radius = radius - 2
+	end
+
+	if not vid then
+		local back_dir = vector_rotate_y(vec_set(npc:direction()), math.random(160,200))
+		local r = 10
+		while r > 0 do
+			local test_vid = level.vertex_in_direction(base_point, back_dir, r)
+			if validate(npc, test_vid) then
+				vid = test_vid
+				break
+			end
+			r = r - 2
+		end
+	end
+
+	if validate(npc, vid) then
+		return utils_obj.lmove(npc, vid, old_vid)
+	end
+end
+
+function try_to_sneak_strafe(npc, old_vid, radius)
+	--[[if npc:body_state() ~= move.crouch then
+		return
+	end]]--
+
+	local _dir = npc:direction()
+	local dir = {}
+	dir[1] = vector_rotate_y(vec_set(_dir), -90)
+	dir[2] = vector_rotate_y(vec_set(_dir), 90)
+
+	local base_point = npc:level_vertex_id()
+	local radius = radius or 10
+
+	for i = 1, 2 do
+		local r = radius
+		while r > 0 do
+			local vid = level.vertex_in_direction(base_point, dir[i], r)
+			if validate(npc, vid) then
+				return utils_obj.lmove(npc, vid, old_vid)
+			end
+			r = r - 2
+		end
+	end
+end
+
+function try_to_sneak_strafe_behind_enemy(npc, enemy, old_vid, radius)
+	if not enemy then return end
+
+	--[[if npc:body_state() ~= move.crouch then
+		return
+	end]]--
+
+	local dir = vector_rotate_y(vec_set(enemy:direction()), 180)
+	local base_point = npc:level_vertex_id()
+
+	local radius = radius or 20
+	while radius > 0 do
+		local vid = level.vertex_in_direction(base_point, dir, radius)
+		if validate(npc, vid) then
+			return utils_obj.lmove(npc, vid, old_vid)
+		end
+		radius = radius - 1
+	end
+end
+
+function try_to_strafe(npc, old_vid, radius)
 	local _dir = npc:direction()
 	local dir = {}
 	dir[1] = vector_rotate_y(vec_set(_dir),-90)
 	dir[2] = vector_rotate_y(vec_set(_dir),90)
 	local vid
-	local radius = 10
+	local radius = radius or 10
 	local base_point = npc:level_vertex_id()
-	
+
 	for i=1,2 do
 		while (radius > 0) do
 			vid = level.vertex_in_direction(base_point,dir[i],radius)
-			if (validate(npc,vid)) then 
+			if (validate(npc,vid)) then
 				return lmove(npc,vid,old_vid)
 			end
 			radius = radius - 2
 		end
 	end
-end 
+end
+
+function try_to_strafe_behind_enemy(npc, enemy, old_vid, radius)
+	if not enemy then return end
+
+	local dir = vector_rotate_y(vec_set(enemy:direction()), 180)
+	local vid
+	local radius = radius or 40
+	local base_point = npc:level_vertex_id()
+	while (radius > 0) do
+		vid = level.vertex_in_direction(base_point, dir, radius)
+		if (validate(npc, vid)) then
+			return lmove(npc,vid,old_vid)
+		end
+		radius = radius - 1
+	end
+end
 
 function npc_in_zone(npc, zone)
 	zone = type(zone) == "string" and db.zone_by_name[zone] or zone
 	return npc and zone and zone.inside and zone:inside(npc:position())
 end
 
-
-----------------------------------------------------------------------
--- Waypoints
-----------------------------------------------------------------------
+-------------------------------------------------------------------------------------
+-- WAYPOINTS
+-------------------------------------------------------------------------------------
 function parse_waypoint_data(pathname, wpflags, wpname)
 	local rslt = {}
 
@@ -816,25 +1043,24 @@ function get_nearest_waypoint(obj, pathname, ptr, cnt)
 	return pt_chosen
 end
 
-
-----------------------------------------------------------------------
--- Level
-----------------------------------------------------------------------
+-------------------------------------------------------------------------------------
+-- LEVEL
+-------------------------------------------------------------------------------------
 function is_day()
 	local hrs = level.get_time_hours()
-	return hrs >= 5 and hrs < 22
+	return hrs >= 5 and hrs < 21
 end
 
 function is_night()
 	local hrs = level.get_time_hours()
-	return hrs < 5 and hrs >= 22
+	return hrs < 5 or hrs >= 21
 end
 
 local snd_obj
 function play_sound(path, vol)
 	snd_obj = nil
 	if (not path) or (type(path) ~= "string") then return end
-	
+
 	snd_obj = sound_object(path)
 	if snd_obj then
 		snd_obj:play(db.actor, 0, sound_object.s2d)
@@ -844,7 +1070,6 @@ function play_sound(path, vol)
 end
 
 function time_spent_in_zone(i)
-
 -- Rule: calculate and return how much time the player has spent in the zone based on a time scale
 -- Input: indicator (number from 1 to 5)
 -- Output: the time spent (number) so far, time scale depends on input
@@ -852,49 +1077,48 @@ function time_spent_in_zone(i)
 	if not (i and db.actor) then
 		return false
 	end
-	
+
 	local s_time = level.get_start_time()
-	
+
 	local seconds = tonumber(game.get_game_time():diffSec(s_time))
 	if (i == 1) then
 		return seconds
 	end
-	
+
 	local minutes = math_floor(seconds/60)
 	if (i == 2) then
 		return seconds
 	end
-	
+
 	local hours = math_floor(minutes/60)
 	if (i == 3) then
 		return hours
 	end
-	
+
 	local days = math_floor(hours/24)
 	if (i == 4) then
 		return days
 	end
-	
+
 	local weeks = math_floor(days/7)
 	if (i == 5) then
 		return weeks
 	end
-	
+
 	return false
 end
 
 function is_time_spent_in_zone(s,m,h,d,w,mo)
-
 -- Rule: return true of the time spent in the zone exceeds the input (sec,min,hrs,days,weeks,months)
 -- Input: time scales (sec,min,hrs,days,weeks,months)
-	
+
 	s = s or 0
 	m = m or 0
 	h = h or 0
 	d = d or 0
 	w = w or 0
 	mo = mo or 0
-	
+
 	local s_time = level.get_start_time()
 	local seconds = tonumber(game.get_game_time():diffSec(s_time))
 	local minutes = math_floor(seconds/60)
@@ -902,9 +1126,9 @@ function is_time_spent_in_zone(s,m,h,d,w,mo)
 	local days = math_floor(hours/24)
 	local weeks = math_floor(days/7)
 	local months = math_floor(weeks/4)
-	
+
 	--printf("/ is_time_spent_in_zone(" .. s .. ":" .. m .. ":" .. h .. "," .. d .. "," .. w .. "," .. mo .. ") | Current time: (" .. seconds .. ":" .. minutes .. ":" .. hours .. "," .. days .. "," .. weeks .. "," .. months .. ")")
-	
+
 	if (months > mo) then
 		return true
 	elseif (months == mo) and (weeks > w) then
@@ -918,10 +1142,9 @@ function is_time_spent_in_zone(s,m,h,d,w,mo)
 	elseif (months == mo) and (weeks == w) and (days == d) and (hours == h) and (minutes == m) and (seconds > s) then
 		return true
 	end
-	
+
 	return false
 end
-
 
 ----------------------------------------------------------------------
 -- Override (IMPORTANT! because engine calls alun_utils.get_reputation_name, so we override it here)

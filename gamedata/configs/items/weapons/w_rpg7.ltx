@@ -15,7 +15,7 @@
         hand_dependence             = 1
         single_handed               = 0
         
-        sprint_allowed              = false
+        sprint_allowed              = true
         
         inv_grid_height             = 1
         inv_grid_width              = 5
@@ -123,49 +123,48 @@ control_inertion_factor = 1.0f
         kill_msg_y                  = 85
         kill_msg_width              = 73
         kill_msg_height             = 19
- 
 
 [wpn_rpg7_hud]:hud_base
-        item_visual                 = anomaly_weapons\wpn_rpg7\wpn_rpg7_hud.ogf
-        attach_place_idx            = 0
-        zoom_hide_crosshair         = true
-        
-        item_position               = 0, 0, 0
-        item_orientation            = 0, 0, 0
-        
-        hands_position              = -0.0105, -0.186, 0.2095
-        hands_position_16x9         = -0.0105, -0.186, 0.2095
-        hands_orientation           = 3.65, 1.05, -0.05
-        hands_orientation_16x9      = 3.65, 1.05, -0.05
-        
-        aim_hud_offset_pos          = -0.15317, -0.0234, -0.2
-        aim_hud_offset_pos_16x9     = -0.15317, -0.0234, -0.2
-        aim_hud_offset_rot          = -0.0155, 0.06362, 0
-        aim_hud_offset_rot_16x9     = -0.0155, 0.06362, 0
-        
-        gl_hud_offset_pos           = 0, 0, 0
-        gl_hud_offset_rot           = 0, 0, 0
-        
-        lean_hud_offset_pos         = 0, 0, 0
-        lean_hud_offset_rot         = 0, 0, 0
-        
-        anm_hide                    = rpg7_holster
-        anm_idle                    = rpg7_idle
-        anm_idle_aim                = rpg7_idle_aim
-        anm_idle_aim_moving         = rpg7_idle_moving, idle, 0.75
-        anm_idle_aim_moving_crouch  = rpg7_idle_moving, idle, 0.7
-        anm_idle_moving             = rpg7_idle_moving
-        anm_idle_sprint             = rpg7_idle_sprint
-        anm_reload                  = rpg7_reload, reload
-        anm_shots                   = rpg7_shoot, shoot
-        anm_show                    = rpg7_draw
-        
-        fire_bone                   = muzzle
-        fire_point                  = -0.02, 0.05, 0.23
- 
-		freelook_z_offset_mul		= 0.1
- 
-;------------------------------------------------------------------------------------------------
+aim_hud_offset_pos_16x9							   = -0.0693,-0.021,-0.028400
+aim_hud_offset_rot_16x9							   = -0.014,-0.001750,0.137999
+aim_hud_offset_pos								   = -0.0693,-0.021,-0.028400
+aim_hud_offset_rot								   = = -0.014,-0.001750,0.137999
+anm_bore                                           = rpg7_bore
+anm_hide                                           = rpg7_holster
+anm_idle                                           = rpg7_idle
+anm_idle_aim                                       = rpg7_idle_aim, idle
+anm_idle_moving                                    = rpg7_moving
+anm_idle_moving_slow                               = rpg7_moving_slow
+anm_idle_moving_crouch                             = rpg7_crouch
+anm_idle_aim_moving				   				   = rpg7_moving_aim
+anm_reload                                         = rpg7_reload, reload
+anm_reload_empty                                   = rpg7_reload, reload
+anm_shots                                          = rpg7_shoot, shoot
+anm_show                                           = rpg7_draw
+anm_idle_sprint                                    = rpg7_sprint
+
+
+attach_place_idx                                   = 0
+fire_bone                                          = wpn_body
+fire_point				           				   = -0.020000,0.001400,0.880171
+gl_hud_offset_pos                                  = 0,0,0
+gl_hud_offset_rot                                  = 0,0,0
+hands_position_16x9								   = -0.037550,-0.011450,-0.087675
+hands_orientation_16x9			        		   = -0.053817,-0.676293,-1.050000
+hands_position				        			   = -0.037550,-0.011450,-0.087675
+hands_orientation			        			   = -0.053817,-0.676293,-1.050000
+lowered_hud_offset_pos           = 0.047728, -0.042876, -0.045367
+lowered_hud_offset_pos_16x9      = 0.047728, -0.042876, -0.045367
+lowered_hud_offset_rot           = -0.051346, -0.538767, 0.369992
+lowered_hud_offset_rot_16x9      = -0.051346, -0.538767, 0.369992
+item_orientation                                   = 0,0,0
+item_position                                      = 0,0,0
+item_visual                                        = dynamics\weapons\wpn_rpg7\wpn_rpg7_hud
+lean_hud_offset_pos                                = 0,0,0
+lean_hud_offset_rot                                = 0,0,0
+zoom_hide_crosshair                                = true
+
+
 [wpn_rpg7_missile]:identity_immunities,default_weapon_params,weapon_probability,wpn_rpg7_sounds
         GroupControlSection         = spawn_group
         discovery_dependency        =
@@ -229,3 +228,6 @@ control_inertion_factor = 1.0f
         kill_msg_width              = 73
         kill_msg_height             = 19
  
+
+
+

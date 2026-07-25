@@ -1,0 +1,94 @@
+-- Corpse Debug Tool
+
+
+function render()
+	-- Always display corpse information
+	local rbm = release_body_manager and release_body_manager.get_release_body_manager and release_body_manager.get_release_body_manager()
+	local corpses = rbm and rbm.release_objects_table
+	local count = 0
+	local corpse_data = {}
+	
+	ImGui.Text("Corpse Release Information:")
+	ImGui.Separator()
+	
+	if corpses then
+		for id, v in pairs(corpses) do
+			local obj_id = type(v) == "table" and v.id or id
+			local obj = obj_id and level and level.object_by_id and level.object_by_id(obj_id)
+			if obj then
+				local has_loot = false
+				local loot_info = "N/A"
+				local death_time_info = "N/A"
+				
+				-- Check for valuable loot
+				if xr_corpse_detection and xr_corpse_detection.has_valuable_loot then
+					has_loot = xr_corpse_detection.has_valuable_loot(obj)
+					loot_info = tostring(has_loot)
+				end
+				
+				-- Calculate death time
+				if time_global and obj.death_time then
+					local death_time = time_global() - obj:death_time()
+					death_time_info = tostring(death_time)
+				end
+				
+				table.insert(corpse_data, {
+					id = tostring(obj_id),
+					name = obj:name() or "Unknown",
+					has_loot = loot_info,
+					death_time = death_time_info
+				})
+			end
+			count = count + 1
+		end
+	end
+	
+	-- Corpse Table
+	ImGui.Text("Corpse Objects:")
+	if ImGui.BeginTable("CorpseTable", 4, 3, vector2(0, 0), 0) then
+		ImGui.TableSetupColumn("ID")
+		ImGui.TableSetupColumn("Name")
+		ImGui.TableSetupColumn("Has Loot")
+		ImGui.TableSetupColumn("Death Time")
+		ImGui.TableHeadersRow()
+		
+		for _, corpse in ipairs(corpse_data) do
+			ImGui.TableNextRow()
+			ImGui.TableSetColumnIndex(0)
+			ImGui.Text(corpse.id)
+			ImGui.TableSetColumnIndex(1)
+			ImGui.Text(corpse.name)
+			ImGui.TableSetColumnIndex(2)
+			ImGui.Text(corpse.has_loot)
+			ImGui.TableSetColumnIndex(3)
+			ImGui.Text(corpse.death_time)
+		end
+		
+		ImGui.EndTable()
+	end
+	
+	ImGui.Separator()
+	
+	-- Summary Information
+	ImGui.Text("Release Table Summary:")
+	ImGui.Text("Release Body Manager Available: " .. tostring(rbm ~= nil))
+	ImGui.Text("Total Release Objects: " .. tostring(count))
+	ImGui.Text("Valid Corpse Objects: " .. tostring(#corpse_data))
+	
+	-- Count corpses with loot
+	local loot_count = 0
+	for _, corpse in ipairs(corpse_data) do
+		if corpse.has_loot == "true" then
+			loot_count = loot_count + 1
+		end
+	end
+	
+	ImGui.Text("Corpses with Loot: " .. tostring(loot_count))
+end
+
+-- Tool registration
+imgui_debug_tools.register_tool("corpse_hud", {
+	title = "Corpse Info",
+	render = render,
+	visible = false
+})

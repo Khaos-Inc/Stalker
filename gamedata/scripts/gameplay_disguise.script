@@ -11,6 +11,15 @@
 - When the suspicion level of some NPC reach a breaking point, you will get exposed like a little bitch
 
 - Factors are controllable in-game, technical values are controllable via "configs\plugins\disguise.ltx"
+
+
+	Banjaji's Undercover communications
+	2022.03.27 v1:
+	* If player has pda v2.0 or v3.1 then the default faction is neutral even if the player is in disguise and looks like an enemy
+	* If you drop your pda currently your faction turns hostile if you look like an enemy even if you drop it in front of others.
+	2022.03.28 v1.1:
+	* Fixed a bug where in certain conditions game crashed on load. The problem was that I didn't think about callback run order on game load.
+
 --]]
 
 ------------------------------------------------------------
@@ -31,6 +40,12 @@ local is_disguised	        = false 			-- boolean: is actor disguised?
 local highest_suspicion     = {value = 0, id = false} 	-- suspicion meter, stores the highest suspicion level detected among NPCs
 local update_step           = 2000 				-- update actor every 2 secs
 local spike                 = 0		  			-- suspicion spike happens when actor do a sudden action
+
+-- Banjaji
+local previous_relation -- relation between default_comm and "actor_"..curr_comm
+local can_communicate = false -- Whether the player can communicate with their faction
+local comms_list = {"device_pda_2","device_pda_3"} -- What items need to be in the inventory to be able to communicate
+local actor_is_loaded = false -- Quick fix for actor_on_first_update being run after actor_on_item_take on load game
 
 -- Controls
 local usual_memory_limit 	= d_ini:r_float_ex("diguise_controls","usual_memory_limit") or 10 -- real seconds, memory limit of natural NPCs
@@ -146,6 +161,7 @@ local blacklisted_factions = {
 	["monolith"] = true,
 	["greh"] = true,
 	["isg"] = true,
+	["zombied"] = true,
 	--["renegade"] = true,
 }
 
@@ -162,6 +178,7 @@ local possible_factions = {
 	["renegade"] = true,
 	["greh"] = true,
 	["isg"] = true,
+	["zombied"] = true,
 }
 function update_default(comm, now)
 	if not (comm and possible_factions[comm]) then
@@ -176,16 +193,74 @@ function update_default(comm, now)
 		db.actor:set_character_community("actor_"..comm, 0, 0)
 	end
 end
-function set_comm(comm)
-	if not (comm and possible_factions[comm]) then
-		printe("! ERROR update community | community (%s) doesn't exist", tostring(comm))
+
+
+-- Checks whether a list contains the element
+function list_contains(list, element)
+  for _, value in ipairs(list) do
+    if value == element then
+      return true
+    end
+  end
+  return false
+end
+
+-- Scan inventory for pda v2.0 or v3.1
+function has_comms()
+	local could_communicate = can_communicate
+	can_communicate = false
+	db.actor:iterate_inventory( 
+		function(temp, obj)
+			if list_contains(comms_list, obj:section()) then
+				can_communicate = true
+			end
+		end 
+	)
+	
+	-- Change player actor_faction relation according to communication possibilities
+	local curr_comm = character_community(db.actor):sub(7)
+	if (not could_communicate) and can_communicate then -- Picked up comms equipment
+		game_relations.save_relation( default_comm , "actor_"..curr_comm, 300 ) -- You can notify your faction again
+	elseif (not can_communicate) and could_communicate then -- dropped comms equipment
+		game_relations.save_relation( "actor_"..curr_comm , default_comm, previous_relation ) -- You can't notify your faction anymore
+	end
+end
+
+function set_comm(new_comm)
+	if not (new_comm and possible_factions[new_comm]) then
+		printe("! ERROR update community | community (%s) doesn't exist", tostring(new_comm))
 		callstack()
 		return
 	end
 	--debug_memory()
-	db.actor:set_character_community("actor_" .. comm, 0, 0)
-	is_disguised = default_comm and (comm ~= default_comm) and true or false
+	
+	local curr_comm = character_community(db.actor):sub(7) -- current community
+	if default_comm and (new_comm ~= curr_comm) then -- if default_comm is initialized and you are changing disguise
+		
+		if curr_comm ~= default_comm then -- from one disguise into another disguise or remove disguise
+			game_relations.save_relation( "actor_"..curr_comm , default_comm, previous_relation ) -- Restores the old relation
+		end
+		
+		previous_relation = relation_registry.community_relation(default_comm, "actor_"..new_comm) -- Saves the original relation before putting on the disguise
+		
+		if can_communicate then
+			game_relations.save_relation( default_comm , "actor_"..new_comm, 300 ) -- You are neutral to your default faction, 300 is the default value
+		end
+	end
+	
+	--[[
+	printdbg("Banjaji, can communicate: "..tostring(can_communicate))
+	printdbg("Banjaji, previous relations: "..tostring(previous_relation))
+	printdbg("Banjaji, current: "..tostring(curr_comm))
+	printdbg("Banjaji, new: "..tostring(new_comm))
+	printdbg("Banjaji, relations: "..tostring(relation_registry.community_relation(default_comm, "actor_"..new_comm)))
+	printdbg("Banjaji, monolith - disguised duty: "..tostring(relation_registry.community_relation("monolith", "actor_dolg")))
+	--]]
+	
+	db.actor:set_character_community("actor_" .. new_comm, 0, 0)
+	is_disguised = default_comm and (new_comm ~= default_comm) and true or false
 end
+
 function get_default_comm()
 	local def = default_comm or alife_storage_manager.get_state().default_faction or character_community(db.actor):sub(7) or "stalker"
 	return def
@@ -212,7 +287,6 @@ function moniter_highest_suspicion(tg)
 		tg_susp2 = tg + tg_susp2_step
 		local id = highest_suspicion.id
 		local npc = db.storage[id] and db.storage[id].object or level.object_by_id(id)
-			
 		
 		if npc and IsStalker(npc) and npc:alive() then
 			-- if npc doesn't see the player, reduce
@@ -410,10 +484,10 @@ local function npc_on_update(npc)
 	end
 	
 	local id = npc:id()
-
+	local npc_squad = get_object_squad(npc)
 	--printf("-NPC Update | id: %s - comm: %s - name: %s", id, comm, npc:character_name())
 
-	if npc:see(db.actor) then
+	if npc:see(db.actor) and not (npc_squad and axr_companions.companion_squads[npc_squad.id]) then
 		
 		-- Ignore in Arena fight
 		if inside_disguise_zone() then
@@ -801,7 +875,10 @@ function try_to_disguise(new_comm, naked, no_patch)
 		return
 	end
 	
-	if no_patch then
+	if (ui_mcm and ui_mcm.get("black_road_revisited/isolated_and_hated") == true) then
+		set_msg("ui_st_disguise_zombie_scum", default_comm)
+		set_comm(default_comm)
+	elseif no_patch then
 		set_msg("ui_st_disguse_patch_torn", default_comm)
 		set_comm(default_comm)
 	elseif (new_comm == default_comm) then
@@ -874,6 +951,12 @@ local function actor_on_first_update()
 	
 	-- Control feature by its options
 	update_settings()
+	
+	if (previous_relation == nil) and is_disguised then -- initialize previous_relation in case of old save games
+		previous_relation = relation_registry.community_relation(default_comm, character_community(db.actor):sub(7)) -- read (actor_faction1 and faction2) relation from (faction1 and faction2) relation
+	end
+	actor_is_loaded = true
+	has_comms()
 end
 
 local function actor_on_update()
@@ -937,11 +1020,15 @@ end
 
 local function actor_on_item_take(obj)
 	need_inv_scan = true
+	
+	if actor_is_loaded then has_comms() end -- Otherwise it seems that this callback happens before actor_on_first_update
 end
 
 local function actor_on_item_drop(obj)
 	need_inv_scan = true
 	spike = 15
+	
+	if actor_is_loaded then has_comms() end -- Otherwise it seems that this callback happens before actor_on_first_update
 end
 
 local function actor_on_weapon_zoom_in(obj)
@@ -964,6 +1051,10 @@ local function save_state(m_data)
 	m_data.disguise_highest_suspicion = highest_suspicion
 	
 	m_data.disguise_npcs_memory = npcs_memory
+	
+	-- Banjaji
+	m_data.disguise_previous_relation = previous_relation
+	m_data.disguise_can_communicate = can_communicate
 end
 
 local function load_state(m_data)
@@ -972,6 +1063,10 @@ local function load_state(m_data)
 	highest_suspicion = m_data.disguise_highest_suspicion or highest_suspicion
 	
 	npcs_memory = m_data.disguise_npcs_memory or {}
+	
+	-- Banjaji
+	previous_relation = m_data.disguise_previous_relation
+	can_communicate = m_data.disguise_can_communicate or false
 end
 
 function on_game_start()
@@ -1032,7 +1127,7 @@ function menu_patch_action(obj)
 		local state = se_load_var(id, obj:name(), "unpatched")
 		if state and obj_patch then
 			se_save_var( id, obj:name(), "unpatched", nil )
-			alife_release(obj_patch)
+			--alife_release(obj_patch)
 			actor_effects.play_item_fx("disguise_tear_patch")
 			
 			local str = game.translate_string("ui_st_disguse_patch_attach_now")
@@ -1130,3 +1225,4 @@ function hud_val_to_str(val)
 	end
 	return str
 end
+

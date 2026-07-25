@@ -96,10 +96,9 @@ radius_min		= 0.5
 radius_max		= 0.8
 
 [postprocess_fuzz]
-pp_eff_name	= radiation.ppe
-pp_eff_cyclic	= 0
-radius_min		= 0.3
-radius_max		= 0.5
+pp_eff_name	= fuzz.ppe
+radius_min		= 0.5
+radius_max		= 0.8
 
 [postprocess_gravi]
 pp_eff_name 	= gravi.ppe
@@ -135,6 +134,7 @@ radius_max		= 1.0
 pp_eff_name		= radiation.ppe
 radius_min		= 0.5
 radius_max		= 1.1
+
 ;-------------------------------------------------------------------------------
 [effector_alcohol]
 pp_eff_name	 = alcohol.ppe
@@ -157,7 +157,7 @@ cam_eff_name		= camera_effects\shell_shock.anm
 cam_eff_hud_affect	= true
 
 [effector_fire_hit]
-pp_eff_name		= amk_shoot.ppe
+pp_eff_name		= fire_hit.ppe
 pp_eff_cyclic	= 0
 pp_eff_overlap = true
 cam_eff_cyclic	= 0
@@ -207,9 +207,8 @@ pp_eff_cyclic	= 0
 cam_eff_cyclic	= 0
 
 [effector_monster_hit]
-pp_eff_name		= bloody.ppe ; no postprocess
-pp_eff_cyclic	= 0
-pp_eff_overlap  = true
+;pp_eff_name		= fire_hit.ppe ; no postprocess
+;pp_eff_cyclic	= 0
 cam_eff_cyclic	= 0
 
 [effector_monster_hit_0]:effector_monster_hit
@@ -244,11 +243,9 @@ pp_eff_name		= nightvision_1.ppe
 pp_eff_overlap = false
 pp_eff_cyclic	= 1
 
+
 [effector_nightvision_2]
-;pp_eff_name 	= nightvision_2.ppe
-;pp_eff_name 	= nightvision_good.ppe
-;pp_eff_name 	= nightvision_good_02.ppe   ; кандидат
-pp_eff_name		= nightvision_bluer.ppe  ; кандидат
+pp_eff_name 	= nightvision_2.ppe
 pp_eff_cyclic 	= 1
 pp_eff_overlap = false
 
@@ -272,7 +269,7 @@ pp_eff_cyclic	= 0
 pp_eff_overlap = true
 cam_eff_name	= camera_effects\drunk.anm
 cam_eff_cyclic	= 1
-snd				= actor\die2
+snd				= characters_voice\human_01\dolg\help\wounded_heavy\help_8
 
 [brighten]
 pp_eff_name 	= brighten.ppe
@@ -322,6 +319,13 @@ pp_eff_overlap 	= false
 
 cam_eff_name	= camera_effects\radar_stop.anm
 cam_eff_cyclic	= 0
+
+;Eugenium Hazardous Anomalies
+
+[postprocess_orange]
+pp_eff_name 	= mine_orange.ppe
+radius_min		= 0.3
+radius_max		= 1.0
 
 ;-----------------------------------------
 [extra_controller]

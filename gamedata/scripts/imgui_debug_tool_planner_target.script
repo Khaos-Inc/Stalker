@@ -1,0 +1,256 @@
+-- Planner Target Debug Tool
+
+local TARGET_HUD_OLD_ID = nil
+
+function render()
+	-- Always display target planner information
+	local obj = level and level.get_target_obj and level.get_target_obj()
+	
+	-- Fallback to previous target if current target is invalid
+	if not obj or (obj and IsStalker and not IsStalker(obj)) then
+		obj = TARGET_HUD_OLD_ID and level and level.object_by_id and level.object_by_id(TARGET_HUD_OLD_ID)
+	end
+	
+	local has_obj = obj and IsStalker and IsStalker(obj) and obj:id() ~= 0 and obj:alive()
+	local obj_name = obj and obj:name() or "No Target"
+	local obj_id = obj and obj:id() or "N/A"
+	
+	if has_obj then
+		TARGET_HUD_OLD_ID = obj:id()
+	end
+	
+	ImGui.Text("Target NPC: " .. obj_name .. " (ID: " .. tostring(obj_id) .. ")")
+	ImGui.Separator()
+	
+	if not has_obj then
+		ImGui.Text("No valid stalker target for planner debugging")
+		return
+	end
+	
+	-- Basic Information
+	local basic_data = {}
+	local manager = obj.motivation_action_manager and obj:motivation_action_manager()
+	local manager_status = manager == nil and "doesn't exist!" or 
+		(manager and manager.initialized and tostring(manager:initialized()) or "N/A")
+	
+	table.insert(basic_data, {"Target Name", obj_name})
+	table.insert(basic_data, {"Motivation Action Manager", manager_status})
+	
+	-- Sight information
+	-- Sight information
+	local sight_type = "N/A"
+	local s = obj.sight_params and obj:sight_params()
+	if s and s.m_sight_type then
+		local sight_types = {
+			[0] = "look.cur_dir",
+			[5] = "look.danger",
+			[2] = "look.direction",
+			[10] = "look.fire_point",
+			[1] = "look.path_dir",
+			[3] = "look.point",
+			[6] = "look.search"
+		}
+		sight_type = sight_types[s.m_sight_type] or "unknown"
+	end
+	
+	ImGui.Text("Basic Information:")
+	ImGui.Text("Target Name: " .. obj_name)
+	ImGui.Text("Motivation Action Manager: " .. manager_status)
+	ImGui.Text("Sight Type: " .. sight_type)
+	
+	ImGui.Separator()
+	
+	-- Action Manager Information
+	ImGui.Text("Action Manager Information:")
+	
+	-- Always display all fields with default values
+	local manager_action = "N/A"
+	local manager_action_id = "N/A"
+	local combat_action = "N/A"
+	local combat_action_id = "N/A"
+	local danger_action = "N/A"
+	local danger_action_id = "N/A"
+	local alife_action = "N/A"
+	local alife_action_id = "N/A"
+	
+	if manager and manager.initialized and manager:initialized() then
+		-- Current main action
+		local actid = manager.current_action_id and manager:current_action_id()
+		if actid and actid < 4294967295 then
+			local name = xrs_debug_tools.actions_by_stalker_ids and xrs_debug_tools.actions_by_stalker_ids[actid] or "script"
+			manager_action = name
+			manager_action_id = tostring(actid)
+		end
+		
+		-- Combat planner
+		if stalker_ids and stalker_ids.action_combat_planner and manager.action then
+			local combat_action_obj = manager:action(stalker_ids.action_combat_planner)
+			local combat_planner = cast_planner and cast_planner(combat_action_obj)
+			if combat_planner and combat_planner.initialized and combat_planner:initialized() then
+				local combat_id = combat_planner:current_action_id()
+				if combat_id and combat_id < 4294967295 then
+					local combat_name = xrs_debug_tools.actions_by_stalker_ids and xrs_debug_tools.actions_by_stalker_ids[combat_id] or "unknown"
+					combat_action = combat_name
+					combat_action_id = tostring(combat_id)
+				else
+					combat_action = "N/A"
+				end
+			else
+				combat_action = "Not initialized"
+			end
+		end
+		
+		-- Danger planner
+		if stalker_ids and stalker_ids.action_danger_planner and manager.action then
+			local danger_action_obj = manager:action(stalker_ids.action_danger_planner)
+			local danger_planner = cast_planner and cast_planner(danger_action_obj)
+			if danger_planner and danger_planner.initialized and danger_planner:initialized() then
+				local danger_id = danger_planner:current_action_id()
+				if danger_id and danger_id < 4294967295 then
+					local danger_name = xrs_debug_tools.actions_by_stalker_ids and xrs_debug_tools.actions_by_stalker_ids[danger_id] or "unknown"
+					danger_action = danger_name
+					danger_action_id = tostring(danger_id)
+				else
+					danger_action = "N/A"
+				end
+			else
+				danger_action = "Not initialized"
+			end
+		end
+		
+		-- Alife planner
+		if stalker_ids and stalker_ids.action_alife_planner and manager.action then
+			local alife_action_obj = manager:action(stalker_ids.action_alife_planner)
+			local alife_planner = cast_planner and cast_planner(alife_action_obj)
+			if alife_planner and alife_planner.initialized and alife_planner:initialized() then
+				local alife_id = alife_planner:current_action_id()
+				if alife_id and alife_id < 4294967295 then
+					local alife_name = xrs_debug_tools.actions_by_stalker_ids and xrs_debug_tools.actions_by_stalker_ids[alife_id] or "unknown"
+					alife_action = alife_name
+					alife_action_id = tostring(alife_id)
+				else
+					alife_action = "N/A"
+				end
+			else
+				alife_action = "Not initialized"
+			end
+		end
+	else
+		manager_action = "Manager not initialized or not available"
+	end
+	
+	ImGui.Text("Manager Action: " .. manager_action)
+	ImGui.Text("Manager Action ID: " .. manager_action_id)
+	ImGui.Text("Combat Action: " .. combat_action)
+	ImGui.Text("Combat Action ID: " .. combat_action_id)
+	ImGui.Text("Danger Action: " .. danger_action)
+	ImGui.Text("Danger Action ID: " .. danger_action_id)
+	ImGui.Text("Alife Action: " .. alife_action)
+	ImGui.Text("Alife Action ID: " .. alife_action_id)
+	
+	ImGui.Separator()
+	
+	-- State Manager Information
+	ImGui.Text("State Manager Information:")
+	
+	-- Always display all fields with default values
+	local alife_state = "N/A"
+	local combat_state = "N/A"
+	local locked = "N/A"
+	local locked_external = "N/A"
+	local weapon_locked = "N/A"
+	local animstate_locked = "N/A"
+	local animation_locked = "N/A"
+	local in_smartcover = "N/A"
+	local end_state = "N/A"
+	local weapon = "N/A"
+	local movement = "N/A"
+	local mental = "N/A"
+	local bodystate = "N/A"
+	local direction = "N/A"
+	local animstate = "N/A"
+	local animation = "N/A"
+	local smartcover = "N/A"
+	
+	local st = db and db.storage and db.storage[obj:id()]
+	if st and st.state_mgr then
+		local sm = st.state_mgr
+		if sm then
+			alife_state = tostring(sm.alife or "N/A")
+			combat_state = tostring(sm.combat or "N/A")
+			
+			-- State Manager Planner evaluators
+			if sm.planner and sm.planner.initialized and sm.planner:initialized() and state_mgr_goap and state_mgr_goap.properties then
+				local properties = {
+					{"locked", "locked"},
+					{"locked_external", "locked_external"},
+					{"weapon_locked", "weapon_locked"},
+					{"animstate_locked", "animstate_locked"},
+					{"animation_locked", "animation_locked"},
+					{"in_smartcover", "in_smartcover"},
+					{"end", "end_state"},
+					{"weapon", "weapon"},
+					{"movement", "movement"},
+					{"mental", "mental"},
+					{"bodystate", "bodystate"},
+					{"direction", "direction"},
+					{"animstate", "animstate"},
+					{"animation", "animation"},
+					{"smartcover", "smartcover"}
+				}
+				
+				for _, prop_data in ipairs(properties) do
+					local prop_name = prop_data[1]
+					local var_name = prop_data[2]
+					if state_mgr_goap.properties[prop_name] and sm.planner.evaluator then
+						local evaluator = sm.planner:evaluator(state_mgr_goap.properties[prop_name])
+						if evaluator and evaluator.evaluate then
+							local value = evaluator:evaluate()
+							if var_name == "locked" then locked = tostring(value)
+							elseif var_name == "locked_external" then locked_external = tostring(value)
+							elseif var_name == "weapon_locked" then weapon_locked = tostring(value)
+							elseif var_name == "animstate_locked" then animstate_locked = tostring(value)
+							elseif var_name == "animation_locked" then animation_locked = tostring(value)
+							elseif var_name == "in_smartcover" then in_smartcover = tostring(value)
+							elseif var_name == "end_state" then end_state = tostring(value)
+							elseif var_name == "weapon" then weapon = tostring(value)
+							elseif var_name == "movement" then movement = tostring(value)
+							elseif var_name == "mental" then mental = tostring(value)
+							elseif var_name == "bodystate" then bodystate = tostring(value)
+							elseif var_name == "direction" then direction = tostring(value)
+							elseif var_name == "animstate" then animstate = tostring(value)
+							elseif var_name == "animation" then animation = tostring(value)
+							elseif var_name == "smartcover" then smartcover = tostring(value)
+							end
+						end
+					end
+				end
+			end
+		end
+	end
+	
+	ImGui.Text("Alife: " .. alife_state)
+	ImGui.Text("Combat: " .. combat_state)
+	ImGui.Text("Locked: " .. locked)
+	ImGui.Text("Locked External: " .. locked_external)
+	ImGui.Text("Weapon Locked: " .. weapon_locked)
+	ImGui.Text("Animstate Locked: " .. animstate_locked)
+	ImGui.Text("Animation Locked: " .. animation_locked)
+	ImGui.Text("In Smartcover: " .. in_smartcover)
+	ImGui.Text("End: " .. end_state)
+	ImGui.Text("Weapon: " .. weapon)
+	ImGui.Text("Movement: " .. movement)
+	ImGui.Text("Mental: " .. mental)
+	ImGui.Text("Bodystate: " .. bodystate)
+	ImGui.Text("Direction: " .. direction)
+	ImGui.Text("Animstate: " .. animstate)
+	ImGui.Text("Animation: " .. animation)
+	ImGui.Text("Smartcover: " .. smartcover)
+end
+
+-- Tool registration
+imgui_debug_tools.register_tool("planner_target_hud", {
+	title = "Planner Target",
+	render = render,
+	visible = false
+})

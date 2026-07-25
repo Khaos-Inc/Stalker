@@ -30,6 +30,8 @@ local prev_game_sec 		= -1
 local diff_sec 				= -1
 local diff_game_sec			= -1
 
+local stormtype = ui_mcm.get("melancholy/melansurge/stormtype")
+
 class "CPsiStormManager"
 function CPsiStormManager:__init()
 	self.humanParticles = {}
@@ -45,6 +47,7 @@ function CPsiStormManager:initialize()
 		self.started = false
 		self.finished = true
 		self.task_given = nil
+		self.siren_sound = sound_object("ambient\\blowout\\psi_storm_siren")
 	end 
 	
 	if not (self._delta) then 
@@ -60,7 +63,7 @@ function CPsiStormManager:initialize()
 	self.max_distance_psi_hit=200
 	self.max_distance_electro_hit=50
 	self.max_distance_npc_hit=50
-	self.psi_storm_duration = 254 -- (duration: about 40mins of game time)
+	self.psi_storm_duration = 103 -- (duration: about 40mins of game time)
 
 	self.psi_storm_message 		= ""
 	self.psi_storm_task_sect 	= ""
@@ -85,10 +88,7 @@ function CPsiStormManager:start(manual)
 	diff_sec = math.ceil(game.get_game_time():diffSec(self.inited_time)/level.get_time_factor())
 	local level_name = level.name()
 	
-	local flags = {allow = true}
-	SendScriptCallback("on_before_psi_storm",flags)
-		
-	if( (level_weathers.valid_levels[level_name] ~= true) or (not ui_options.get("alife/event/psi_storm_state")) or flags.allow == false) then
+	if( (level_weathers.valid_levels[level_name] ~= true) or (not ui_options.get("alife/event/psi_storm_state")) ) then
 		self:skip_psi_storm()
 		return
 	end
@@ -233,7 +233,11 @@ function CPsiStormManager:finish(manual)
 		if (v:playing()) then
 			v:stop()
 		end
-	end 
+	end
+	
+	if (self.siren_sound:playing()) then
+		self.siren_sound:stop()
+	end
 	
 	self.humanParticles = empty_table(self.humanParticles)
 	self.vortexes = empty_table(self.vortexes)
@@ -242,6 +246,27 @@ function CPsiStormManager:finish(manual)
 	level.set_time_factor(self.game_time_factor)
 end
 
+function CPsiStormManager:play_siren_sound()
+	local snd_obj = self.siren_sound
+	if (snd_obj == nil) then 
+		return  
+	end 
+	
+	local snd_position
+	if snd_obj:playing() then
+		snd_obj:stop()
+	end
+	if(level.name()=="zaton") then
+		snd_position= vector():set(115,8,184)
+	elseif(level.name()=="jupiter") then
+		snd_position= vector():set(-50,16,198)
+	else
+		snd_position= vector():set(147,15,-187)
+	end
+
+	snd_obj:play_at_pos(db.actor, snd_position)
+	snd_obj.volume = 1
+end
 
 ----------------------------------
 --	Update
@@ -255,11 +280,7 @@ function CPsiStormManager:update()
 	if not (self.first_update) then 
 		self.first_update = true
 		local level_name = level.name()
-		
-		local flags = {allow = true}
-		SendScriptCallback("on_before_psi_storm",flags)
-		
-		if (level_name == "l13_generators" or level_name == "l11_hospital" or has_alife_info("bar_arena_fight") or flags.allow == false
+		if (level_name == "l13_generators" or level_name == "l11_hospital" or has_alife_info("bar_arena_fight")
 		or level_weathers.valid_levels[level_name] ~= true) then
 			if (self.started) then 
 				self:finish()
@@ -314,17 +335,48 @@ function CPsiStormManager:update()
 
 		-- psi storm begins -----------------------------------------------------------------------------------------------------------------------------------------
 		if (diff_sec>=0) and (self.stages['beginning']==nil) then
-			if (level.get_time_hours() >= 5 and level.get_time_hours() <= 20) then
-				level.set_weather_fx("fx_psi_storm_day")
+			if level.get_time_hours() >= 5 and level.get_time_hours() <= 20 then
+				if stormtype == 1 then
+					level.set_weather_fx("fx_psi_storm_day_black")
+				elseif stormtype == 2 then
+					level.set_weather_fx("fx_psi_storm_day_yellow")
+				elseif stormtype == 3 then
+					level.set_weather_fx("fx_psi_storm_day")
+                elseif stormtype == 0 then
+                    local stormrand = math.random(3)
+                    if stormrand == 1 then
+                        level.set_weather_fx("fx_psi_storm_day_black")
+                    elseif stormrand == 2 then
+                        level.set_weather_fx("fx_psi_storm_day_yellow")
+					elseif stormrand == 3 then
+						level.set_weather_fx("fx_psi_storm_day")
+					end
+				end
 			else
-				level.set_weather_fx("fx_psi_storm_night")
-			end
+				if stormtype == 1 then
+					level.set_weather_fx("fx_psi_storm_night_black")
+				elseif stormtype == 2 then
+					level.set_weather_fx("fx_psi_storm_night_yellow")
+				elseif stormtype == 3 then
+					level.set_weather_fx("fx_psi_storm_night")
+				elseif stormtype == 0 then
+					local stormrand = math.random(3)
+					if stormrand == 1 then
+						level.set_weather_fx("fx_psi_storm_night_black")
+					elseif stormrand == 2 then
+						level.set_weather_fx("fx_psi_storm_night_yellow")
+					elseif stormrand == 3 then
+						level.set_weather_fx("fx_psi_storm_night")
+					
+					end
+				end
 			self.stages['beginning']=true
+			end
 		end
 		-- siren warning -----------------------------------------------------------------------------------------------------------------------------------------
 		if (diff_sec>=10) and (self.stages['siren']==nil) and (ui_options.get("alife/event/psi_storm_warning")=="siren") then
 			self:launch_rockets()
-			surge_manager.SurgeManager:play_siren_sound()
+			self:play_siren_sound()
 			self.stages['siren']=true
 		end
 		-- psi storm warning -----------------------------------------------------------------------------------------------------------------------------------------
@@ -335,7 +387,7 @@ function CPsiStormManager:update()
 			self.task_given = true
 		end
 		-- psi storm main phase -----------------------------------------------------------------------------------------------------------------------------------------
-		if (diff_sec>=40) and (diff_sec<=228) then
+		if (diff_sec>=30) and (diff_sec<=77) then
 			if self.next_vortex_at == nil then
 				self.next_vortex_at = diff_sec + math.random(self.vortex_period_min, self.vortex_period_max)
 			end
@@ -714,4 +766,15 @@ end
 function distance_3d(p1, p2)
 	--return math.sqrt( (b.x-a.x)^2 + (b.z-a.z)^2 )
 	return p1:distance_to(p2)
+end
+
+function on_game_start()    
+    RegisterScriptCallback("on_option_change", on_option_change)    
+    on_option_change()
+end
+  
+function on_option_change()    
+    if ui_mcm then    
+        stormtype = ui_mcm.get("melancholy/melansurge/stormtype")  
+    end    
 end

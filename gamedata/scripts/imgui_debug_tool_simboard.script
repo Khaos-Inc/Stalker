@@ -1,0 +1,114 @@
+-- Register this tool
+--[[
+Disabled originally
+imgui_debug_tools.register_tool("SimboardHud", {
+    title = "Simboard Info",
+    render = function()
+        render_simboard_hud()
+    end,
+    visible = false
+})
+]]
+
+function render_simboard_hud()
+    local populations = calculate_population_totals()
+    
+    ImGui.Text("-----Totals-----")
+    local table_flags = 3 -- Borders(1) + RowBg(2)
+    if ImGui.BeginTable("SimboardTotalsTable", 3, table_flags, vector2(0, 0), 0) then
+        ImGui.TableSetupColumn("Community", 2, 0, 0)
+        ImGui.TableSetupColumn("Population", 2, 0, 0)
+        ImGui.TableSetupColumn("Max Population", 2, 0, 0)
+        ImGui.TableHeadersRow()
+        
+        for community, data in pairs(populations) do
+            ImGui.TableNextRow()
+            
+            ImGui.TableNextColumn()
+            ImGui.Text(community)
+            
+            ImGui.TableNextColumn()
+            ImGui.Text(tostring(data.population))
+            
+            ImGui.TableNextColumn()
+            ImGui.Text(tostring(data.max_population))
+        end
+        
+        ImGui.EndTable()
+    end
+    
+    ImGui.Separator()
+    
+    local linked_populations = calculate_linked_population_totals()
+    
+    ImGui.Text("-----Linked Levels Only-----")
+    if ImGui.BeginTable("SimboardLinkedTable", 3, table_flags, vector2(0, 0), 0) then
+        ImGui.TableSetupColumn("Community", 2, 0, 0)
+        ImGui.TableSetupColumn("Population", 2, 0, 0)
+        ImGui.TableSetupColumn("Max Population", 2, 0, 0)
+        ImGui.TableHeadersRow()
+        
+        for community, data in pairs(linked_populations) do
+            ImGui.TableNextRow()
+            
+            ImGui.TableNextColumn()
+            ImGui.Text(community)
+            
+            ImGui.TableNextColumn()
+            ImGui.Text(tostring(data.population))
+            
+            ImGui.TableNextColumn()
+            ImGui.Text(tostring(data.max_population))
+        end
+        
+        ImGui.EndTable()
+    end
+end
+
+function calculate_population_totals()
+    local populations = {}
+    
+    for community, t in pairs(sim_board.smart_bases) do
+        for smart_name, v in pairs(t) do
+            local smart = SIMBOARD.smarts_by_names[smart_name]
+            if smart then
+                if not populations[community] then
+                    populations[community] = {
+                        population = 0,
+                        max_population = 0
+                    }
+                end
+                
+                if SIMBOARD.smarts[smart.id] then
+                    populations[community].population = populations[community].population + SIMBOARD.smarts[smart.id].population
+                end
+                populations[community].max_population = populations[community].max_population + smart.max_population
+            end
+        end
+    end
+    
+    return populations
+end
+
+function calculate_linked_population_totals()
+    local populations = {}
+    
+    for community, t in pairs(sim_board.smart_bases) do
+        for smart_name, v in pairs(t) do
+            local smart = SIMBOARD.smarts_by_names[smart_name]
+            if smart and SIMBOARD.smarts[smart.id] then
+                if not populations[community] then
+                    populations[community] = {
+                        population = 0,
+                        max_population = 0
+                    }
+                end
+                
+                populations[community].population = populations[community].population + SIMBOARD.smarts[smart.id].population
+                populations[community].max_population = populations[community].max_population + smart.max_population
+            end
+        end
+    end
+    
+    return populations
+end

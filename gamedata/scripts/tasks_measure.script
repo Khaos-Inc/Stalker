@@ -171,7 +171,7 @@ end
 function postpone_for_next_frame(task_id,level_target)
 	local news_caption = game.translate_string(task_manager.task_ini:r_string_ex(task_id, "title")) or "error"
 	local news_text = game.translate_string("st_location") .. " " .. game.translate_string(level_target)
-	db.actor:give_talk_message2(news_caption, news_text, "ui_inGame2_PD_Opitniy_stalker", "iconed_answer_item")
+	db.actor:give_talk_message2(news_caption, news_text, "ui_inGame2_PD_Opitniy_stalker", "iconed_answer_item", task_id)
 	return true
 end
 
@@ -223,6 +223,28 @@ xr_conditions.validate_measure_task = function(actor,npc,p)
 		end
 	end
 	
+	--[[
+		SERIOUS NO NORTH TASKS BEFORE BS
+		AND THE NORTHERN JOB
+	--]]
+	local additionalBlacklist = {}
+	local mcm_scanMode = blacklist_helper.GetMcmDropdownValue()
+	local northernMaps = blacklist_helper.GetNorthernMaps()
+
+	if mcm_scanMode > 0  then
+		scan_mode = mcm_scanMode
+	end
+
+	if blacklist_helper.ShouldBlacklistNorth() then
+		additionalBlacklist = northernMaps
+	elseif northernMaps[level.name()] then -- Player is in the Northern region and rightfully so
+		additionalBlacklist = blacklist_helper.GetSouthernMaps()
+	end
+	--[[
+		SERIOUS NO NORTH TASKS BEFORE BS
+		AND THE NORTHERN JOB
+	--]]
+
 	local targets = {}
 	local actor_level = level.name()
 	local gg = game_graph()
@@ -232,7 +254,7 @@ xr_conditions.validate_measure_task = function(actor,npc,p)
 		local se_obj = sim:object(i)
 		if se_obj and ano_tbl[se_obj:section_name()] then
 			local lvl_name = sim:level_name( gg:vertex(se_obj.m_game_vertex_id):level_id())
-			if (not blacklisted_maps[lvl_name]) -- not in a blacklisted level
+			if (not blacklisted_maps[lvl_name] and not additionalBlacklist[lvl_name]) -- not in a blacklisted level
 			and (not (dyn_anomalies[lvl_name] and dyn_anomalies[lvl_name][i] ~= nil)) -- not a dynamic anomaly
 			then
 				local is_online = se_obj.online

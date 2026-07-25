@@ -665,7 +665,7 @@ states = {
 	help_victim_1 = {weapon = "strapped",
 				movement = move.stand,
 				mental = anim.danger,
-				bodystate = move.crouch,
+				bodystate = move.standing,
 				animstate = nil,
 				animation = "cr_medical_1"
 			},
@@ -673,7 +673,7 @@ states = {
 	help_victim_2 = {weapon = "unstrapped",
 				movement = move.stand,
 				mental = anim.danger,
-				bodystate = move.crouch,
+				bodystate = move.standing,
 				animstate = nil,
 				animation = "cr_medical_2"
 			},

@@ -36,6 +36,38 @@ local function get_mag_prop(rank, prop)
     return ini_loadouts:r_float_ex(rank.."_mag_loadout", prop)
 end
 
+function random_pop_mag(mag_id, mag_sec, ammo_table, rank)  
+    local quality = get_config("deathquality") or 1  
+    local amount = math_random(0, get_mag_prop(rank, "mag_fill_max"))  
+    amount = clamp(amount * (get_config("deathammo") or 1), 0, 100)/100  
+    local mag_data = get_mag_loaded(mag_id) or create_mag_data(mag_id, mag_sec)  
+    empty_table(mag_data.loaded)  
+    local to_fill = math_floor(amount * SYS_GetParam(2, mag_sec, "max_mag_size"))  
+  
+    local good_ammo = {}  
+    for _, v in ipairs(ammo_table) do  
+        if not string.find(v, "bad") then  
+            good_ammo[#good_ammo + 1] = v  
+        end  
+    end  
+    if #good_ammo > 0 then  
+        ammo_table = good_ammo  
+    end  
+  
+    local ammo_to_pick = math_random(#ammo_table)  
+    if #ammo_table == 1 then  
+        to_fill = math_floor(to_fill/2)  
+    end  
+  
+    local ammo_to_use = determine_ammo(ammo_table[ammo_to_pick], mag_sec, rank)  
+    print_dbg("Filling mag %s to %s with %s (num %s)", mag_sec, to_fill, ammo_to_use, ammo_to_pick)  
+    for i=1,to_fill do  
+        stack.push(mag_data.loaded, ammo_to_use)  
+    end  
+    set_data(mag_id, mag_data)  
+    return true  
+end
+--[[
 -- called on each created magazine, autofill with the appropriate crap
 function random_pop_mag(mag_id, mag_sec, ammo_table, rank)
     local quality = get_config("deathquality") or 1
@@ -62,7 +94,7 @@ function random_pop_mag(mag_id, mag_sec, ammo_table, rank)
 	set_data(mag_id, mag_data)
     return true
 end
-
+]]
 function determine_ammo(ammo_to_pick, mag_sec, rank)
     return ammo_to_pick
 end

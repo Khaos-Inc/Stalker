@@ -193,6 +193,12 @@ function utils_ui.UICellContainer.FindFreeCell(self,obj, sec)
 	local w = axis.w
 	local h = axis.h
 
+	-- demonized: HD Inventory Icons Framework
+	local icon_override = aaa_rax_icon_override_mcm and aaa_rax_icon_override_mcm.icon_override
+    local scale = icon_override and icon_override:section_exist(sec) and (icon_override:r_float_ex(sec, "inv_grid_scale") or 1) or SYS_GetParam(2, sec, "inv_grid_scale", 1)
+	w = math.ceil(w / scale)
+	h = math.ceil(h / scale)
+
 	-- Avoid icons that don't fit
 	if w > self.cols then
 		return false

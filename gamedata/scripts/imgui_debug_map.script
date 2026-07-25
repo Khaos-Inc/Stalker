@@ -1,0 +1,165 @@
+-- ImGui window state
+local map_debug_window_open = false
+local show_fast_travel = false
+local show_filled_stashes = false
+local show_opened_stashes = false
+local show_anomaly_zones = false
+local show_artefacts = false
+local show_rank_spots = false
+
+-- ImGui rendering functions
+function render_map_debug_menu_item()
+	local _
+	_, map_debug_window_open = ImGui.MenuItem("Map Debug", nil, map_debug_window_open, true)
+end
+
+function render_map_debug_window()
+	if not map_debug_window_open then
+		return
+	end
+	
+	if has_alife_info("ui_pda_hide") then
+		return
+	end
+	
+	local expanded
+	expanded, map_debug_window_open = ImGui.Begin("Map Debug Tools", map_debug_window_open, 0)
+	if expanded then
+		-- Fast Travel Gates
+		local changed
+		changed, show_fast_travel = ImGui.Checkbox("Show Fast Travel Gates", show_fast_travel)
+		if changed then
+			if show_fast_travel then
+				if ui_map_debug_ex.gates == nil then
+					ui_map_debug_ex.hide_fast_travel()
+				end
+				ui_map_debug_ex.unhide_fast_travel()
+			else
+				ui_map_debug_ex.hide_fast_travel()
+			end
+		end
+
+		-- Stashes
+		ImGui.Separator()
+		ImGui.Text("Stashes:")
+		
+		changed, show_filled_stashes = ImGui.Checkbox("Show Filled Stashes", show_filled_stashes)
+		if changed then
+			if show_filled_stashes then
+				if show_opened_stashes then
+					ui_map_debug_ex.hide_stash_opened()
+					show_opened_stashes = false
+					stashes_opened = nil
+				end
+				ui_map_debug_ex.show_stash()
+				ui_map_debug_ex.stashes = true
+			else
+				ui_map_debug_ex.hide_stash()
+				ui_map_debug_ex.stashes = nil
+			end
+		end
+		
+		changed, show_opened_stashes = ImGui.Checkbox("Show Opened Stashes", show_opened_stashes)
+		if changed then
+			if show_opened_stashes then
+				if show_filled_stashes then
+					ui_map_debug_ex.hide_stash()
+					show_filled_stashes = false
+					ui_map_debug_ex.stashes = nil
+				end
+				ui_map_debug_ex.show_stash_opened()
+				ui_map_debug_ex.stashes_opened = true
+			else
+				ui_map_debug_ex.hide_stash_opened()
+				ui_map_debug_ex.stashes_opened = nil
+			end
+		end
+
+		-- Anomaly Zones and Artefacts
+		ImGui.Separator()
+		ImGui.Text("Anomalies & Artefacts:")
+		
+		changed, show_anomaly_zones = ImGui.Checkbox("Show Anomaly Zones", show_anomaly_zones)
+		if changed then
+			if show_anomaly_zones then
+				if show_artefacts then
+					ui_map_debug_ex.hide_artefacts()
+					show_artefacts = false
+					ui_map_debug_ex.artefact_show = nil
+				end
+				ui_map_debug_ex.show_anom_zones()
+				ui_map_debug_ex.anom_zone_show = true
+			else
+				ui_map_debug_ex.hide_anom_zones()
+				ui_map_debug_ex.anom_zone_show = nil
+			end
+		end
+		
+		changed, show_artefacts = ImGui.Checkbox("Show Artefacts", show_artefacts)
+		if changed then
+			if show_artefacts then
+				if show_anomaly_zones then
+					ui_map_debug_ex.hide_anom_zones()
+					show_anomaly_zones = false
+					ui_map_debug_ex.anom_zone_show = nil
+				end
+				ui_map_debug_ex.show_artefacts()
+				ui_map_debug_ex.artefact_show = true
+			else
+				ui_map_debug_ex.hide_artefacts()
+				ui_map_debug_ex.artefact_show = nil
+			end
+		end
+
+		-- Rank Spots
+		ImGui.Separator()
+		ImGui.Text("Rank Spots:")
+		
+		changed, show_rank_spots = ImGui.Checkbox("Show Rank Spots", show_rank_spots)
+		if changed then
+			if show_rank_spots then
+				ui_map_debug_ex.set_rank_spots()
+			else
+				ui_map_debug_ex.clear_rank_spots()
+			end
+		end
+		
+		if show_rank_spots then
+			ImGui.Text("Count:")
+			ImGui.SameLine()
+			
+			if ImGui.Button("-", vector2(20, 0)) then
+				if ui_map_debug_ex.cnt == 1 then
+					ui_map_debug_ex.cnt = #display_cnt
+				else
+					ui_map_debug_ex.cnt = ui_map_debug_ex.cnt - 1
+				end
+				ui_map_debug_ex.clear_rank_spots()
+				ui_map_debug_ex.set_rank_spots()
+			end
+			
+			ImGui.SameLine()
+			ImGui.Text(tostring(ui_map_debug_ex.display_cnt[ui_map_debug_ex.cnt]))
+			ImGui.SameLine()
+			
+			if ImGui.Button("+", vector2(20, 0)) then
+				if ui_map_debug_ex.cnt == #ui_map_debug_ex.display_cnt then
+					ui_map_debug_ex.cnt = 1
+				else
+					ui_map_debug_ex.cnt = ui_map_debug_ex.cnt + 1
+				end
+				ui_map_debug_ex.clear_rank_spots()
+				ui_map_debug_ex.set_rank_spots()
+			end
+		end
+
+		SendScriptCallback("imgui_on_render", "MapDebug")
+	end
+
+	ImGui.End()
+end
+
+function on_game_start()
+	ImGui.Groups.Debug.Widget(render_map_debug_menu_item)
+	ImGui.Groups.Unique.Widget(render_map_debug_window)
+end

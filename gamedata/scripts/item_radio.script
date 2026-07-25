@@ -4,6 +4,9 @@
 	Made by Tronex
 	2018/10/15
 	
+	Edited By Tweaki_Breeki
+	18/06/2021
+	
 	RF Receiver and sources management
 	2020/4/26: Added 3D UI to the detector
 
@@ -52,6 +55,8 @@ for i=1,33 do snd_talk[i] = sound_object("detectors\\RF\\talk\\talk_" .. tostrin
 
 -- Sound path
 local path_beep = "detectors\\RF\\beep_02"
+--[TB ADDED]
+local tb_beep = "detectors\\tb_detector_radio_beep"
 local path_random = {}
 for i=1,13 do path_random[i] = "detectors\\RF\\random\\random_" .. tostring(i) end
 
@@ -202,8 +207,15 @@ function scan_online_sources()
 			
 			-- Specific Targets (Quests)
 			if RF_targets[id] and (dist_pos < RF_targets[id].dist) then
-				print_dbg("found active_source | section: %s - clsid: %s - distance: %s", sec, cls, dist_pos)
-				active_sources[#active_sources + 1] = create_rf_table( id, cls, dist_pos, RF_targets[id].freq, RF_targets[id].dist, { path_beep } )
+				--[TB MODIFIED]
+				if string.find(sec,"quest_tb_package_") then
+					print_dbg("found tb_package | section: %s - clsid: %s - distance: %s", sec, cls, dist_pos)
+					active_sources[#active_sources + 1] = create_rf_table( id, cls, dist_pos, RF_targets[id].freq, RF_targets[id].dist, { tb_beep } )
+				-- Default beeps
+				else
+					print_dbg("found active_source | section: %s - clsid: %s - distance: %s", sec, cls, dist_pos)
+					active_sources[#active_sources + 1] = create_rf_table( id, cls, dist_pos, RF_targets[id].freq, RF_targets[id].dist, { path_beep } )
+				end
 
 			-- Common RF Sources
 			elseif RF_database[cls] and (dist_pos < RF_database[cls].dist) then

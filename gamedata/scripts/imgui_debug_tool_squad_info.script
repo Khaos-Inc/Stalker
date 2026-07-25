@@ -1,0 +1,61 @@
+-- Register this tool
+imgui_debug_tools.register_tool("SquadInfoHud", {
+    title = "Squad Info",
+    render = function()
+        render_squad_info_hud()
+    end,
+    visible = false
+})
+
+function render_squad_info_hud()
+    local near = xrs_debug_tools.get_debug_npc()
+    
+    if not (near and near:alive()) then
+        ImGui.Text("No NPC selected or NPC not alive")
+        return
+    end
+    
+    local st = db.storage[near:id()]
+    if not st then
+        ImGui.Text("No storage data found for NPC")
+        return
+    end
+    
+    local squad = get_object_squad(near)
+    if not squad then
+        ImGui.Text("No squad found for NPC")
+        return
+    end
+    
+    -- Basic squad info - always displayed
+    ImGui.Text("Section Name: " .. tostring(squad:section_name()))
+    ImGui.Text("ID: " .. tostring(squad.id))
+    ImGui.Text("Behavior Community: " .. tostring(squad.player_id))
+    
+    -- Smart terrain info - always displayed
+    local smart = squad.smart_id and alife_object(squad.smart_id)
+    ImGui.Text("Smart: " .. (smart and smart:name() or "None"))
+    
+    -- Target info - always displayed
+    local current_target = squad.current_target_id and alife_object(squad.current_target_id)
+    ImGui.Text("Current Target: " .. (current_target and current_target:name() or "None"))
+    
+    local assigned_target = squad.assigned_target_id and alife_object(squad.assigned_target_id)
+    ImGui.Text("Assigned Target: " .. (assigned_target and assigned_target:name() or "None"))
+    
+    -- NPC info - always displayed
+    local npc_info = smart and smart.npc_info[near:id()]
+    ImGui.Text("NPC Info: " .. (npc_info and "Present" or "None"))
+    
+    -- Job info - always displayed
+    local job = npc_info and npc_info.job
+    local job_section = job and tostring(job.section) or "None"
+    local job_priority = job and tostring(gulag_general.get_job_prior(job)) or "N/A"
+    local job_exclusive = job and tostring(job.exclusive) or "N/A"
+    local job_iterator = npc_info and tostring(npc_info.current_index) or "N/A"
+    
+    ImGui.Text("Job Section: " .. job_section)
+    ImGui.Text("Job Priority: " .. job_priority)
+    ImGui.Text("Job Exclusive: " .. job_exclusive)
+    ImGui.Text("Job Iterator: " .. job_iterator)
+end

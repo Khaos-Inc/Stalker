@@ -14,22 +14,20 @@ dialog_closed = true
 function set_active_subdialog(section)
 	--printf("set_active_subdialog | section=%s",section)
 	
+	-- SMR
+	if smr_amain_mcm.get_config("smr_enabled") and smr_amain_mcm.get_config("glitched_pda") then
+		return ui_pda_glitched_tab.get_ui()
+	end
+
 	-- For NPCs PDA
-	if (section == "eptNPC") then
-		local obj = db.actor:active_item() or db.actor:item_in_slot(14)
-		if obj then
-			local sec = obj and obj:section()
-			if item_device.device_npc_pda[sec] then
-				return ui_pda_npc_tab.get_ui( se_load_var(obj:id(), obj:name(), "info") )
-			end
-		end
-		
-		-- Fallback to normal UI
-		ActorMenu.get_pda_menu():SetActiveSubdialog("eptTasks")
-		return 
+	local obj = db.actor:item_in_slot(8)
+	local sec = obj and obj:section()
+	if item_device.device_npc_pda[sec] then
+		return ui_pda_npc_tab.get_ui( se_load_var(obj:id(), obj:name(), "info") )
+	end
 	
 	-- For Actor PDA
-	elseif (section == "eptTasks") then 
+	if (section == "eptTasks") then 
 	
 	elseif (section == "eptRanking") then 
 	

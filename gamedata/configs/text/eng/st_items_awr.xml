@@ -114,13 +114,13 @@
 	</string>
 	<!-- ListBox status texts -->
 	<string id="st_ending_1">
-		<text>û</text>
+		<text>?</text>
 	</string>
 	<string id="st_ending_2">
-		<text>à</text>
+		<text>?</text>
 	</string>
 	<string id="st_ending_3">
-		<text>î</text>
+		<text>?</text>
 	</string>
 	<string id="st_text_status">
 		<text>[CONDITION]:%s%s%%</text>
@@ -178,7 +178,7 @@
 		<text>[AWR]</text>
 	</string>
 	<string id="st_dis_count">
-		<text>øò.</text>
+		<text>??.</text>
 	</string>
 	<string id="st_dis_text_1">
 		<text>%s%s %s%s has been disassembled</text>
@@ -187,7 +187,7 @@
 		<text>%sYou attempted to disassemble %s %s, but no parts have been obtained.</text>
 	</string>
 	<string id="st_dis_text_3">
-		<text>%sRequired tools missing %s %s</text>
+		<text>%sRequired tools missing%s:%s %s</text>
 	</string>
 	<string id="st_dis_text_4">
 		<text>\nThe cartridges were removed: %iPC type %s\nItems Received: </text>
@@ -267,19 +267,19 @@
 		<text>Instructions</text>
 	</string>
 	<string id="st_awr_help_1">
-		<text>The repair procedure is affected by the overall quality of the weapon (new, worn, rusty) and its current condition. Moreover, the terms 0–65, 0–75 and 0–85 determine the weapon status for each of the quality types: 0–65% for rusty weapons, 0–75% for worn weapons and 0–85% for new weapons.</text>
+		<text>The repair procedure is affected by the overall quality of the weapon (new, worn, rusty) and its current condition. Moreover, the terms 0?65, 0?75 and 0?85 determine the weapon status for each of the quality types: 0?65% for rusty weapons, 0?75% for worn weapons and 0?85% for new weapons.</text>
 	</string>
 	<string id="st_awr_help_2">
-		<text>Repair and upgrade procedure (weapons with condition from 0–65/0–75/0–85):</text>
+		<text>Repair and upgrade procedure (weapons with condition from 0?65/0?75/0?85):</text>
 	</string>
 	<string id="st_awr_help_3">
-		<text>1. Select a repair kit to replace the weapon barrel with another barrel of the same calibre with the weapon status from 0–20/0–25/0–30 or using a weapon upgrade kit in a condition from 20–65/25–75/30–85 by double clicking on the name of the set with the list.\n2. Select a part in the list with a single mouse click. Replacing parts when repairing weapons with a low state occurs in a certain sequence:\n \nAt condition 0–20/0–25/0–30%: Replacement of barrel\nAt condition 20–35/25–45/30–55%: Replacement of trigger (shock–trigger mechanism)\nAt condition 35–45/45–60/55–70%: Replacement of breech head\nAt condition 45–55/60–70/70–80%: Replacement of gas tube\nAt condition 55–65/70–75/80–85%: Replacement of breech block\n \n3. Click on the image of the part that is being currently replaced (the part selected for the replacement that is available for replacement is indicated by a green light). Attempting to replace one part spends one charge of a belt. set\n4. In case the replacement is successful, this procedure is repeated for all parts in the specified order\n5. In case the part has been damaged, try again if there is a repair kit and any more weapon parts.\n6. All replaced parts are retained until the condition of the weapon is lowered. In this case, to improve the quality, the parts will need to be replaced anew.\n7. When all five parts have been replaced, the quality of the weapon will be changed to the corresponding one. On that note, if at least one of the replaced items has been worn out, the quality of the weapon will be changed to "worn", even if other weapon parts are replaced with new ones.</text>
+		<text>1. Select a repair kit to replace the weapon barrel with another barrel of the same calibre with the weapon status from 0?20/0?25/0?30 or using a weapon upgrade kit in a condition from 20?65/25?75/30?85 by double clicking on the name of the set with the list.\n2. Select a part in the list with a single mouse click. Replacing parts when repairing weapons with a low state occurs in a certain sequence:\n \nAt condition 0?20/0?25/0?30%: Replacement of barrel\nAt condition 20?35/25?45/30?55%: Replacement of trigger (shock?trigger mechanism)\nAt condition 35?45/45?60/55?70%: Replacement of breech head\nAt condition 45?55/60?70/70?80%: Replacement of gas tube\nAt condition 55?65/70?75/80?85%: Replacement of breech block\n \n3. Click on the image of the part that is being currently replaced (the part selected for the replacement that is available for replacement is indicated by a green light). Attempting to replace one part spends one charge of a belt. set\n4. In case the replacement is successful, this procedure is repeated for all parts in the specified order\n5. In case the part has been damaged, try again if there is a repair kit and any more weapon parts.\n6. All replaced parts are retained until the condition of the weapon is lowered. In this case, to improve the quality, the parts will need to be replaced anew.\n7. When all five parts have been replaced, the quality of the weapon will be changed to the corresponding one. On that note, if at least one of the replaced items has been worn out, the quality of the weapon will be changed to "worn", even if other weapon parts are replaced with new ones.</text>
 	</string>
 	<string id="st_awr_help_4">
 		<text>The predetermined order of replacing weapon parts is due to the need to match the parts to the state of the weapon, since all replaced parts for each weapon that have ever been partially repaired in the vice are stored in the game memory. This allows you to continue repairs from the same location without having to re-replace parts, provided that the weapon condition has not been lowered after repair.</text>
 	</string>
 	<string id="st_awr_help_5">
-		<text>Weapon upgrade procedure is only available at a condition of 95–100% for weapons of rusty or worn quality:</text>
+		<text>Weapon upgrade procedure is only available at a condition of 95?100% for weapons of rusty or worn quality:</text>
 	</string>
 	<string id="st_awr_help_6">
 		<text>1. Select a repair kit for the replacement of barrel or a weapon upgrade kit in the list by double clicking on the name of the set in the list. The replacement order is not available for upgrades.\n2. Select a part corresponding to the repair kit in the list with a single mouse click. When upgrading, only working parts can be used.\n3. Click on the image of the part that is being currently replaced\n4. In case the replacement is successful, this procedure remains the same for all other weapon parts.\n5. In case the part has been damaged, try again if there is a repair kit and any more weapon parts.\n6. All replaced parts are retained until the state of the weapon is lowered. In this case, to improve the quality, the parts will require further replacements.\n7. When all five parts have been replaced with new ones, the quality of the weapon will be changed to "new".</text>

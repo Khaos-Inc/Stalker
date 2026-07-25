@@ -6,7 +6,7 @@
         $spawn                      = "weapons\beretta"
         scheduled                   = off
         cform                       = skeleton
-        
+        hud_fov                                  = 0.65
         class                       = WP_LR300
         slot                        = 1
         animation_slot              = 1
@@ -67,7 +67,7 @@
         scope_zoom_factor           = 0
         
         silencer_name               = wpn_sil_aps
-        silencer_status             = 0
+        silencer_status             = 2
         silencer_x                  = 59
         silencer_y                  = -18
         silencer_light_color        = 0.6, 0.5, 0.3
@@ -140,58 +140,37 @@ control_inertion_factor = 1.0f
         kill_msg_height             = 23
 		weapon_lower_speed			= 0.2
 		
+snd_draw				                                          = weapons\glock\gluck_draw
+snd_holster				                                          = weapons\glock\gluck_holster
+snd_reload				                                          = weapons\glock\glock17_reload
+snd_reload_empty                                                  = weapons\glock\glock17_reload_full
+snd_close				                                          = weapons\glock\walther_close
+snd_reload_misfire                                                = weapons\glock\glock17_revival
+snd_switch_mode                                                   = weapons\glock\glock17_firemode
+snd_silncer_shot				                                  = weapons\glock\glock17_shoot_s
+		
 
-[wpn_oc33_hud]:hud_base
+[wpn_oc33_hud]:wpn_glock_hud
         item_visual                 = anomaly_weapons\wpn_oc33\wpn_oc33_hud.ogf
-        attach_place_idx            = 0
-        zoom_hide_crosshair         = true
-        
-        item_position               = 0.000746, -0.000321, 0.003479
-        item_orientation            = 1.239378, -0.134046, -2.052052
-        
-        hands_position              = -0.031, -0.17, 0.0025
-        hands_position_16x9         = -0.031, -0.17, 0.0025
-        hands_orientation           = -0.5, 1., 1.15
-        hands_orientation_16x9      = -0.5, 1., 1.15
-        
-		safemode_anm				= 
-		safemode_anm2				= 
 		
-		lowered_hud_offset_pos			= 0,0.1,0
-		lowered_hud_offset_rot			= 0.3,-0.1,0.1
-
-		lowered_hud_offset_pos_16x9		= 0,0.1,0
-		lowered_hud_offset_rot_16x9		= 0.3,-0.1,0.1
+        anm_reload                  = gluck_auto_reload, glock18_reload
+        anm_reload_empty            = gluck_auto_reload_empty, glock18_reload_full
+        anm_shot_l                  = gluck_shoot_auto, glock17_shoot_empty
+        anm_shots                   = gluck_shoot_auto, glock17_shoot
+		anm_shots_aim               = gluck_aim_shoot_auto, glock17_shoot
+        anm_shots_aim_l             = gluck_aim_shoot_auto, glock17_shoot_empty
 		
-        aim_hud_offset_pos          = -0.0973, 0.0599, -0.2
-        aim_hud_offset_pos_16x9     = -0.0973, 0.0599, -0.2
-        aim_hud_offset_rot          = 0.003, 0.006, -0.023
-        aim_hud_offset_rot_16x9     = 0.003, 0.006, -0.023
-        
-        gl_hud_offset_pos           = 0, 0, 0
-        gl_hud_offset_rot           = 0, 0, 0
-        
-        lean_hud_offset_pos         = 0, 0, 0
-        lean_hud_offset_rot         = 0, 0, 0
-        
-        anm_hide                    = lancew_oc33_holster, idle, 0.5
-        anm_idle                    = lancew_oc33_idle
-        anm_idle_aim                = lancew_oc33_idle_aim
-        anm_idle_aim_moving         = lancew_oc33_moving, idle, 0.75
-        anm_idle_aim_moving_crouch  = lancew_oc33_moving, idle, 0.7
-        anm_idle_moving             = lancew_oc33_moving
-        anm_idle_sprint             = cz75a_idle_sprint
-        anm_reload                  = lancew_oc33_reload, reload
-        anm_shots                   = lancew_oc33_shoot, shoot
-        anm_show                    = lancew_oc33_draw, idle, 0.5
-        
-        shell_bone                  = wpn_body
-        shell_point                 = -0.015, 0.048, 0.071
+ 		shell_bone                  = wpn_body
+        shell_point                 = 200, 200, 200
+		shell_dir                   = 0, 1, 0
         
         fire_bone                   = wpn_body
-        fire_point                  = 0.0, 0.030917, 0.110026
- 
-
+        fire_point                  = 0, 0.07, 0.3
+		
+        aim_hud_offset_pos               = 0.025019, -0.003124, -0.049632
+        aim_hud_offset_pos_16x9          = 0.025019, -0.003124, -0.049632
+        aim_hud_offset_rot               = -0.017059, 0.025277, -0.084266
+        aim_hud_offset_rot_16x9          = -0.017059, 0.025277, -0.084266
 [wpn_oc33_sk1_hud]:wpn_oc33_hud
         item_visual                 = anomaly_weapons\wpn_oc33\wpn_oc33_sk1_hud.ogf
  

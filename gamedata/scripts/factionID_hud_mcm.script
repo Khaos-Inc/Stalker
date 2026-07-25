@@ -471,7 +471,6 @@ function actor_on_update()
 end
 
 
-
 function npc_on_death_callback(npc, who)
 	if not LastHitObject then return end
 	if npc:id() == LastHitObject:id() then

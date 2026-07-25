@@ -1,0 +1,82 @@
+-- Actor Slot Debug Tool
+
+
+
+function render()
+	-- Always display actor slot information
+	local has_actor = db and db.actor
+	
+	-- Slot names mapping
+	local slot_names = {
+		[1] = "Knife",
+		[2] = "Pistol",
+		[3] = "Automatic",
+		[4] = "Grenade",
+		[5] = "Binocular",
+		[6] = "Bolt",
+		[7] = "Outfit",
+		[8] = "PDA",
+		[9] = "Detector",
+		[10] = "Torch",
+		[11] = "Artefact",
+		[12] = "Helmet",
+		[13] = "Backpack",
+		[14] = "Script"
+	}
+	
+	-- Actor Slots Table
+	ImGui.Text("Actor Slots Information:")
+	if ImGui.BeginTable("ActorSlots", 3, 3, vector2(0, 0), 0) then
+		ImGui.TableSetupColumn("Slot #")
+		ImGui.TableSetupColumn("Slot Name")
+		ImGui.TableSetupColumn("Item")
+		ImGui.TableHeadersRow()
+		
+		for i = 1, 14 do
+			ImGui.TableNextRow()
+			ImGui.TableSetColumnIndex(0)
+			ImGui.Text(tostring(i))
+			ImGui.TableSetColumnIndex(1)
+			ImGui.Text(slot_names[i])
+			ImGui.TableSetColumnIndex(2)
+			
+			local item_name = "Empty"
+			if has_actor then
+				local itm = db.actor:item_in_slot(i)
+				item_name = itm and itm:name() or "Empty"
+			else
+				item_name = "Actor N/A"
+			end
+			ImGui.Text(item_name)
+		end
+		
+		ImGui.EndTable()
+	end
+	
+	ImGui.Separator()
+	
+	-- Summary Information
+	ImGui.Text("Summary:")
+	ImGui.Text("Actor Available: " .. tostring(not not has_actor))
+	ImGui.Text("Total Slots: 14")
+	
+	-- Count occupied slots
+	local occupied_count = 0
+	if has_actor then
+		for i = 1, 14 do
+			local itm = db.actor:item_in_slot(i)
+			if itm then
+				occupied_count = occupied_count + 1
+			end
+		end
+	end
+	
+	ImGui.Text("Occupied Slots: " .. tostring(occupied_count))
+end
+
+-- Tool registration
+imgui_debug_tools.register_tool("actor_slot_hud", {
+	title = "Actor Slots",
+	render = render,
+	visible = false
+})

@@ -19,6 +19,8 @@ single_handed                            = 0
 default_to_ruck                          = false
 sprint_allowed                           = true
 
+bullet_bones        = bullet_1,bullet_2,bullet_3,bullet_4,bullet_5,bullet_6,bullet_7,bullet_8,bullet_9,bullet_10,bullet_11,bullet_12,bullet_13,bullet_14,bullet_15,bullet_16
+
 inv_grid_height                          = 2
 inv_grid_width                           = 5
 inv_grid_x                               = 45
@@ -37,8 +39,8 @@ hud                                      = wpn_m249_hud
 visual                                   = dynamics\weapons\wpn_m249\wpn_m249.ogf
 position                                 = -0.027, -0.097, 0.042
 orientation                              = 0, -2, 0
-fire_point                               = 0, 0.158, 0.845
-fire_point2                              = 0, 0.097, 0.722
+fire_point                               = 0.039422, -0.019473, 0.340718
+fire_point2                              = 0.039422, -0.019473, 0.340718
 strap_bone0                              = bip01_spine2
 strap_bone1                              = bip01_spine1
 strap_position                           = -0.26, -0.11, 0.25
@@ -68,7 +70,7 @@ upgr_icon_y                              = 1850
 upgr_icon_width                          = 300
 upgr_icon_height                         = 100
 
-fire_modes                               = 1, 3, -1
+fire_modes                               = -1
 ammo_class                               = ammo_5.56x45_fmj, ammo_5.56x45_fmj_bad, ammo_5.56x45_fmj_verybad, ammo_5.56x45_ss190, ammo_5.56x45_ss190_bad, ammo_5.56x45_ss190_verybad, ammo_5.56x45_ap, ammo_5.56x45_ap_bad, ammo_5.56x45_ap_verybad
 ammo_elapsed                             = 100
 ammo_mag_size                            = 100
@@ -78,7 +80,10 @@ scopes                                   = ac10632, acog, eot
 scope_status                             = 0
 scope_zoom_factor                        = 0
 
-silencer_status                          = 0
+silencer_name               			 = wpn_sil_nato
+silencer_status             			 = 2
+silencer_x                  			 = 221
+silencer_y                  			 = 22
 silencer_light_color                     = 0.6, 0.5, 0.3
 silencer_light_range                     = 0.01
 silencer_light_time                      = 0.2
@@ -156,6 +161,12 @@ kill_msg_y                               = 59
 kill_msg_width                           = 87
 kill_msg_height                          = 24
 
+		snd_reload							= weapons\librarian_m249\reload
+		snd_reload_empty					= weapons\librarian_m249\reload_empty
+;snd_reload_misfire					= $no_sound
+		scripted_snd_reload_misfire			= weapons\librarian_m249\unjam
+		scripted_snd_reload_misfire_empty	= weapons\librarian_m249\unjam_empty
+
 
 [wpn_m249_hud]:hud_base
 item_visual                              = anomaly_weapons\wpn_m249\wpn_m249_hud.ogf
@@ -165,15 +176,20 @@ zoom_hide_crosshair                      = true
 item_position                            = 0, 0, 0
 item_orientation                         = 0, 0, 0
 
-hands_position                           = -0.054, -0.21, 0.1355
-hands_position_16x9                      = -0.054, -0.21, 0.1355
-hands_orientation                        = 0.55, 2.4, 0.15
-hands_orientation_16x9                   = 0.55, 2.4, 0.15
+        hands_orientation                = 0.0026, -0.001066, 0.005066
+        hands_orientation_16x9           = 0.0026, -0.001066, 0.005066
+        hands_position                   = 0.00096, -0.000142, 0.05227
+        hands_position_16x9              = 0.00096, -0.000142, 0.05227
 
-aim_hud_offset_pos                       = -0.0992, 0.0635, -0.2
-aim_hud_offset_pos_16x9                  = -0.0992, 0.0635, -0.2
-aim_hud_offset_rot                       = 0.0386, 0.00882, -0.0039
-aim_hud_offset_rot_16x9                  = 0.0386, 0.00882, -0.0039
+        aim_hud_offset_pos               = -0.093969, 0.025583, -0.045366
+        aim_hud_offset_pos_16x9          = -0.093969, 0.025583, -0.045366
+        aim_hud_offset_rot               = -0.000142, -0.000106, -0.000284
+        aim_hud_offset_rot_16x9          = -0.000142, -0.000106, -0.000284
+
+        lowered_hud_offset_pos           = 0.083893, 0.001276, -0.005262
+        lowered_hud_offset_pos_16x9      = 0.083893, 0.001276, -0.005262
+        lowered_hud_offset_rot           = 0.140946, -0.747407, 0.027521
+        lowered_hud_offset_rot_16x9      = 0.140946, -0.747407, 0.027521
 
 gl_hud_offset_pos                        = 0, 0, 0
 gl_hud_offset_pos_16x9                   = 0, 0, 0
@@ -183,25 +199,44 @@ gl_hud_offset_rot_16x9                   = 0, 0, 0
 lean_hud_offset_pos                      = 0, 0, 0
 lean_hud_offset_rot                      = 0, 0, 0
 
-anm_hide                                 = lancew_m249_holster
-anm_idle                                 = lancew_m249_idle
-anm_idle_aim                             = lancew_m249_idle_aim, idle_aim
-anm_idle_aim_moving                      = lancew_m249_moving, moving, 0.75
-anm_idle_aim_moving_crouch               = lancew_m249_moving, moving, 0.7
-anm_idle_moving                          = lancew_m249_moving, moving
-anm_idle_sprint                          = lancew_m249_sprint
-anm_reload                               = lancew_m249_reload, reload
-anm_shots                                = lancew_m249_shoot, shoot
-anm_show                                 = lancew_m249_draw
+anm_hide								 = m249_hand_holster, m249_idle
+anm_idle								 = m249_hand_idle, m249_idle
+anm_idle_aim							 = m249_hand_idle_aim, m249_idle
+anm_idle_aim_moving						 = m249_hand_moving, m249_idle, 0.75
+anm_idle_aim_moving_crouch				 = m249_hand_moving, m249_idle 0.7
+anm_idle_moving							 = m249_hand_moving, m249_idle
+anm_idle_moving_crouch					 = m249_hand_moving, m249_idle, 0.75
+anm_idle_sprint							 = m249_hand_sprint, m249_idle, 1.1
+anm_reload								 = m249_hand_reload, m249_reload
+anm_reload_empty						 = m249_hand_reload_empty, m249_reload_empty
+anm_reload_misfire						 = m249_hand_unjam, m249_unjam
+anm_shots								 = m249_hand_shoot, m249_shoot
+anm_shots_variant1						 = m249_hand_shoot1, m249_shoot
+anm_shots_aim							 = m249_hand_shoot_aim, m249_shoot
+anm_show								 = m249_hand_draw, m249_idle
 
-shell_bone                               = wpn_body
-shell_dir                                = 0, 1, 0
-shell_point                              = 0.028, 0.078, 0.113
+anm_hide_empty                     		 = m249_hand_holster, m249_idle_empty
+anm_idle_empty                     		 = m249_hand_idle, m249_idle_empty
+anm_idle_aim_empty                 		 = m249_hand_idle_aim, m249_idle_empty
+anm_idle_aim_moving_empty          		 = m249_hand_moving, m249_idle_empty, 0.75
+anm_idle_aim_moving_crouch_empty   		 = m249_hand_moving, m249_idle_empty, 0.7
+anm_idle_moving_empty              		 = m249_hand_moving, m249_idle_empty
+anm_idle_moving_crouch_empty       		 = m249_hand_moving, m249_idle_empty, 0.75
+anm_idle_sprint_empty              		 = m249_hand_sprint, m249_idle_empty, 1.1
+anm_shot_l                         		 = m249_hand_shoot, m249_shoot_last
+anm_show_empty                     		 = m249_hand_draw, m249_idle_empty
+anm_shots_aim_l                    		 = m249_hand_shoot_aim, m249_shoot_last
+anm_reload_misfire_empty				 = m249_hand_unjam_charge, m249_unjam_charge_empty
 
-fire_bone                                = wpn_body
-fire_bone2                               = wpn_body
-fire_point                               = 0, 0.096359, 0.587885
-fire_point2                              = 0, -0.009, 0.601
+
+shell_bone                               = palak
+shell_dir                                = 0, 0, 0
+shell_point                      		 = 0, 0, -2.552033
+
+fire_bone                                = muzzle
+fire_bone2                               = muzzle
+fire_point                       		 = 0.039422, -0.019473, 0.340718
+fire_point2                              = 0.039422, -0.019473, 0.340718
 
 freelook_z_offset_mul					 = 0.4
 
@@ -220,12 +255,10 @@ visual                                   = dynamics\weapons\wpn_m249\wpn_m249_ac
 [wpn_m249_ac10632_hud]:wpn_m249_hud
 item_visual                              = anomaly_weapons\wpn_m249\wpn_m249_ac10632_hud.ogf
 
-aim_hud_offset_pos                       = -0.09965, 0.03235, -0.15
-aim_hud_offset_pos_16x9                  = -0.09965, 0.03235, -0.15
-aim_hud_offset_rot                       = 0.0366, 0.011, 0
-aim_hud_offset_rot_16x9                  = 0.0366, 0.011, 0
-
-anm_reload                               = lancew_m249_reload_eotech, reload
+        aim_hud_offset_pos               = -0.093286, 0.00149, -0.001137
+        aim_hud_offset_pos_16x9          = -0.093286, 0.00149, -0.001137
+        aim_hud_offset_rot               = -0.007811, 0.000312, -0.000568
+        aim_hud_offset_rot_16x9          = -0.007811, 0.000312, -0.000568
 
 ;------------------------------------------------------------------------------------------------
 [wpn_m249_acog]:wpn_m249
@@ -233,30 +266,22 @@ anm_reload                               = lancew_m249_reload_eotech, reload
 1icon_layer_x                            = 81
 1icon_layer_y                            = 0
 
-inv_weight                               = 8.08
-
 hud                                      = wpn_m249_acog_hud
 visual                                   = dynamics\weapons\wpn_m249\wpn_m249_acog.ogf
-
-scope_status                             = 0
-scope_zoom_factor                        = 20
-
 
 [wpn_m249_acog_hud]:wpn_m249_hud,hud_low_interia
 item_visual                              = anomaly_weapons\wpn_m249\wpn_m249_acog_hud.ogf
 
-aim_hud_offset_pos                       = -0.09821, 0.035405, -0.3
-aim_hud_offset_pos_16x9                  = -0.09821, 0.035405, -0.3
-aim_hud_offset_rot                       = 0.03815, 0.0076, 0.00025
-aim_hud_offset_rot_16x9                  = 0.03815, 0.0076, 0.00025
+        aim_hud_offset_pos               = -0.093605, 0.0022, -0.001137
+        aim_hud_offset_pos_16x9          = -0.093605, 0.0022, -0.001137
+        aim_hud_offset_rot               = -0.007811, -0.001824, -0.000568
+        aim_hud_offset_rot_16x9          = -0.007811, -0.001824, -0.000568
 
 ;------------------------------------------------------------------------------------------------
 [wpn_m249_eot]:wpn_m249
 1icon_layer                              = eot
 1icon_layer_x                            = 85
 1icon_layer_y                            = 2
-
-inv_weight                               = 7.99
 
 hud                                      = wpn_m249_eot_hud
 visual                                   = dynamics\weapons\wpn_m249\wpn_m249_eot.ogf
@@ -265,10 +290,7 @@ visual                                   = dynamics\weapons\wpn_m249\wpn_m249_eo
 [wpn_m249_eot_hud]:wpn_m249_hud
 item_visual                              = anomaly_weapons\wpn_m249\wpn_m249_eot_hud.ogf
 
-aim_hud_offset_pos                       = -0.0981,0.0276,-0.19
-aim_hud_offset_pos_16x9                  = -0.0981,0.0276,-0.19
-aim_hud_offset_rot                       = 0.036, 0.008, 0
-aim_hud_offset_rot_16x9                  = 0.036, 0.008, 0
-
-anm_reload                               = lancew_m249_reload_eotech, reload
-
+        aim_hud_offset_pos               = -0.093339, -0.000853, -0.001137
+        aim_hud_offset_pos_16x9          = -0.093339, -0.000853, -0.001137
+        aim_hud_offset_rot               = -0.007811, 0.000312, -0.000568
+        aim_hud_offset_rot_16x9          = -0.007811, 0.000312, -0.000568

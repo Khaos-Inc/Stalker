@@ -535,7 +535,7 @@ layer_functors.prop_layers = function(sec, cell, xml)
     return prop_layers
 end
 
-function add_texture_layer(self, ele, base, tbl)
+local function add_texture_layer(self, ele, base, tbl)
     local ratio = utils_xml.screen_ratio()
     local grid_size = self.grid_size
     local x = tbl.x or 0
@@ -650,8 +650,9 @@ function get_upgrade_val(sec, prop)
     return upgr_props[prop][sec] and 1 or 0
 end
 
-function is_artefact(sec)
-    return IsItem("artefact", sec) and (SYS_GetParam(0, sec, "kind", "na") ~= "i_attach") -- attachments have the dumb upgrade icon
+function is_artefact(sec)  
+    return IsItem("artefact", sec) and (SYS_GetParam(0, sec, "kind", "na") ~= "i_attach")  
+        and (SYS_GetParam(0, sec, "1icon_layer") == nil)  -- skip container artifacts  
 end
 
 function is_consumable(sec)

@@ -614,13 +614,13 @@
     <name>GENERATE_NAME_sergeant</name>
     <icon>ui_inGame2_Soldier_2</icon>
     <map_icon x="1" y="0"></map_icon>
-    <bio>Опытный сталкер. Детальная информация отсутствует.</bio>
+    <bio>пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ.</bio>
     <class>sim_default_military_3_sniper</class>
     <community>army</community> <terrain_sect>stalker_terrain</terrain_sect>
     <snd_config>characters_voice\human\military_1\</snd_config><!--2-->
     <rank>11972</rank>
     <reputation>-1000</reputation>
-    <visual>actors\stalker_soldier\stalker_soldier_2</visual>
+    <visual>actors\stalker_soldier\stalker_soldier5b_sniper</visual>
     <supplies></supplies>
 #include "gameplay\character_criticals.xml"
 #include "gameplay\character_dialogs.xml"
@@ -634,7 +634,7 @@
     <icon>ui_inGame2_Soldier_2</icon>
     <class>sim_default_army_trader</class>
     <snd_config>characters_voice\human\military_1\</snd_config><!--2-->
-    <visual>actors\stalker_soldier\stalker_soldier_2</visual>
+    <visual>actors\stalker_soldier\stalker_soldier_trader</visual>
 	
 	<actor_dialog>dm_init_trader</actor_dialog>
 	<actor_dialog>dm_broker_dialog</actor_dialog>
@@ -653,7 +653,7 @@
     <class>sim_default_army_mechanic</class>
 	<mechanic_mode>1</mechanic_mode>
     <snd_config>characters_voice\human\military_1\</snd_config>
-    <visual>actors\stalker_soldier\stalker_soldier_1</visual>
+    <visual>actors\stalker_soldier\stalker_soldier_mechanic</visual>
 	
 	<actor_dialog>dm_init_trader</actor_dialog>
 	<actor_dialog>dm_init_mechanic</actor_dialog>
@@ -670,7 +670,7 @@
     <icon>ui_inGame2_Soldier_2</icon>
     <class>sim_default_army_medic</class>
     <snd_config>characters_voice\human\military_1\</snd_config><!--2-->
-    <visual>actors\stalker_soldier\stalker_soldier_2</visual>
+    <visual>actors\stalker_soldier\stalker_soldier_doctor</visual>
 	
 	<actor_dialog>dm_init_medic</actor_dialog>
 	<actor_dialog>dm_medic_general</actor_dialog>
@@ -685,7 +685,7 @@
     <icon>ui_inGame2_Soldier_2</icon>
     <class>sim_default_army_barman</class>
     <snd_config>characters_voice\human\military_1\</snd_config><!--2-->
-    <visual>actors\stalker_soldier\stalker_soldier_2</visual>
+    <visual>actors\stalker_soldier\stalker_soldier_barman</visual>
 
 	<actor_dialog>dm_init_batender</actor_dialog>
 	<actor_dialog>dm_ordered_task_dialog</actor_dialog>
@@ -695,16 +695,16 @@
 	
 	
 <specific_character id="sim_default_military_dead_default_0" team_default = "1">
-    <name>GENERATE_NAME_sergeant</name>
-    <icon>ui_inGame2_soldier_green_mask</icon>
+    <name>GENERATE_NAME_senior_sergeant</name>
+    <icon>ui_inGame3_ico_army</icon>
     <map_icon x="1" y="0"></map_icon>
-    <bio>Опытный сталкер. Детальная информация отсутствует.</bio>
+    <bio>пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ.</bio>
     <class>sim_default_military_dead</class>
     <community>army</community> <terrain_sect>stalker_terrain</terrain_sect>
-    <snd_config>characters_voice\human\military_1\</snd_config><!--2-->
-    <rank>6997</rank>
+    <snd_config>characters_voice\human\military_3\</snd_config><!--2-->
+    <rank>8997</rank>
     <reputation>-500</reputation>
-    <visual>actors\stalker_soldier\soldier_mask_green</visual>
+    <visual>actors\stalker_soldier\3_2</visual>
     <supplies>
         [spawn] \n
 		broken_pda = 1 \n
@@ -714,16 +714,16 @@
 </specific_character>
 
 <specific_character id="sim_default_military_dead_default_1" team_default = "1">
-    <name>GENERATE_NAME_senior_sergeant</name>
-    <icon>ui_inGame2_soldier_green_mask</icon>
+    <name>GENERATE_NAME_lieutenant</name>
+    <icon>ui_inGame3_ico_army</icon>
     <map_icon x="1" y="0"></map_icon>
-    <bio>Опытный сталкер. Детальная информация отсутствует.</bio>
+    <bio>пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ.</bio>
     <class>sim_default_military_dead</class>
     <community>army</community> <terrain_sect>stalker_terrain</terrain_sect>
-    <snd_config>characters_voice\human\military_1\</snd_config><!--2-->
-    <rank>10215</rank>
+    <snd_config>characters_voice\human\military_3\</snd_config><!--2-->
+    <rank>17215</rank>
     <reputation>-500</reputation>
-    <visual>actors\stalker_soldier\soldier_mask_green</visual>
+    <visual>actors\stalker_soldier\stalker_special_berill_8</visual>
     <supplies>
         [spawn] \n
 		broken_pda = 1 \n
@@ -733,16 +733,16 @@
 </specific_character>
 
 <specific_character id="sim_default_military_dead_default_2" team_default = "1">
-    <name>GENERATE_NAME_lieutenant</name>
-    <icon>ui_inGame2_soldier_3_beret</icon>
+    <name>GENERATE_NAME_captain</name>
+    <icon>ui_inGame3_ico_army</icon>
     <map_icon x="1" y="0"></map_icon>
-    <bio>Опытный сталкер. Детальная информация отсутствует.</bio>
+    <bio>пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ.</bio>
     <class>sim_default_military_dead</class>
     <community>army</community> <terrain_sect>stalker_terrain</terrain_sect>
-    <snd_config>characters_voice\human\military_1\</snd_config><!--2-->
-    <rank>10188</rank>
+    <snd_config>characters_voice\human\military_3\</snd_config><!--2-->
+    <rank>23188</rank>
     <reputation>-500</reputation>
-    <visual>actors\stalker_soldier\stalker_soldier3d_beret</visual>
+    <visual>actors\stalker_soldier\stalker_soldier5a_alytn_2</visual>
     <supplies>
         [spawn] \n
 		broken_pda = 1 \n
@@ -752,16 +752,16 @@
 </specific_character>
     
 <specific_character id="sim_default_military_dead_default_3" team_default = "1">
-    <name>GENERATE_NAME_lieutenant</name>
-    <icon>ui_inGame2_soldier_3_beret</icon>
+    <name>GENERATE_NAME_captain</name>
+    <icon>ui_inGame3_ico_army</icon>
     <map_icon x="1" y="0"></map_icon>
-    <bio>Опытный сталкер. Детальная информация отсутствует.</bio>
+    <bio>пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ.</bio>
     <class>sim_default_military_dead</class>
     <community>army</community> <terrain_sect>stalker_terrain</terrain_sect>
-    <snd_config>characters_voice\human\military_1\</snd_config><!--2-->
-    <rank>10296</rank>
+    <snd_config>characters_voice\human\military_3\</snd_config><!--2-->
+    <rank>26296</rank>
     <reputation>-500</reputation>
-    <visual>actors\stalker_soldier\stalker_soldier3e_beret</visual>
+    <visual>actors\stalker_soldier\stalker_soldier_ssu_berill_3</visual>
     <supplies>
         [spawn] \n
 		broken_pda = 1 \n

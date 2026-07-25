@@ -312,146 +312,143 @@ function relocate_ammo_from_actor(actor, npc, section, amount)
 	news_manager.relocate_item(actor, "out", section, amount)
 end
 
--- demonized: Ammo aggregation script that waits for game objects to spawn, proceed after
--- Different aggregation algorithm
-function ammo_aggregation_full(npc_id)
-	-- Some shitty mods send objects there
-	if type(npc_id) == "userdata" then
-		npc_id = type(npc_id.id) == "function" and npc_id:id() or npc_id.id
+function ammo_aggregation(obj, npc) -- Sort ammo boxes (called from game_setup)
+	
+	if (not npc) then
+		npc = db.actor
 	end
 	
-	local npc = level.object_by_id(npc_id)
-	if not npc then
-		return true
+	local is_box = IsInvbox(npc)
+	local section = obj:section()
+	local size = obj:ammo_get_count()
+	local box_size = obj:ammo_box_size()
+
+--:::::::::::::::::::::::::::::::
+--edits for Less Items start here
+--:::::::::::::::::::::::::::::::
+	
+	--[[ vanilla:
+	-- Replace damaged ammo with old
+	if _NO_DAMAGED_AMMO and string_find(section,"verybad") then
+		local new_section = string_gsub(section,"verybad","bad")
+		if ini_sys:section_exist(new_section) then
+			alife_release(obj)
+			alife_create_item(new_section, npc, {ammo = size})
+			--printf("~ replaced [%s] with [%s]", section, new_section)
+			return
+		end
+	end --]]
+
+	-- Replace damaged ammo with new
+	if _NO_DAMAGED_AMMO and string_find(section,"_verybad") then
+		local new_section = string_gsub(section,"_verybad","")
+		if ini_sys:section_exist(new_section) then
+			alife_release(obj)
+			alife_create_item(new_section, npc, {ammo = size})
+			--printf("~ replaced [%s] with [%s]", section, new_section)
+			return true
+		end
 	end
-	local se_npc = alife_object(npc_id)
-	if not se_npc then
+	
+	-- Replace damaged ammo with new
+	if _NO_DAMAGED_AMMO and string_find(section,"_bad") then
+		local new_section = string_gsub(section,"_bad","")
+		if ini_sys:section_exist(new_section) then
+			alife_release(obj)
+			alife_create_item(new_section, npc, {ammo = size})
+			--printf("~ replaced [%s] with [%s]", section, new_section)
+			return
+		end
+	end
+--:::::::::::::::::::::::::::::::
+--edits for Less Items end here
+--:::::::::::::::::::::::::::::::
+
+	-- Replace home-made buck ammo with regular type
+	if (section == "ammo_12x70_buck_self") then
+		local new_section = "ammo_12x70_buck"
+		if ini_sys:section_exist(new_section) then
+			alife_release(obj)
+			alife_create_item(new_section, npc, {ammo = size})
+			--printf("~ replaced [%s] with [%s]", section, new_section)
+			return true
+		end
+	end
+	
+	if (size == box_size) then 
 		return true
 	end
 
-	-- printf_me("item_weapon.ammo_aggregation_full %s", npc:name())
-
-	-- Collect all alife ammo objects
-	local ammoObjectIds = {}
-	for id in alife():get_children(se_npc) do
-		local se_item = alife_object(id)
-		if se_item and IsAmmo(nil,se_item:clsid()) then
-			table.insert(ammoObjectIds, id)
+	local ammos = {}
+	
+	-- collect ammos except this one; we use it for remainder
+	function collect(temp, item)
+		if (section == item:section() and item:id() ~= obj:id() and item:ammo_get_count() < box_size) then
+			ammos[#ammos+1] = item:id()
+			size = size + item:ammo_get_count()
 		end
 	end
 
-	-- Wait for objects to come online if any needed
-	CreateTimeEvent("ammo_aggregation_full_wait_for_gobj", npc_id, 0, function()
-		local ammoObjectsBySection = {}
-		for i = #ammoObjectIds, 1, -1 do
-			local id = ammoObjectIds[i]
+    if is_box then
+        npc:iterate_inventory_box(collect)
+    else
+        npc:iterate_inventory(collect)
+    end
+	
+	-- didn't find any others
+	if (size == obj:ammo_get_count()) then 
+		return true
+	end
 
-			-- If for some reason id is not in alife, remove that id
-			if not alife_object(id) then
-				table.remove(ammoObjectIds, i)
+	local fill = math.floor(size/box_size)
+	local remainder = size - (box_size*fill)
+	if (remainder > 0) then 
+		obj:ammo_set_count(remainder)
+	else 
+		ammos[#ammos+1] = obj:id()
+	end
+	
+	for i=1,#ammos do 
+		local item = level.object_by_id(ammos[i])
+		if (item) then
+			if (fill > 0) then
+				item:ammo_set_count(box_size)
+				fill = fill - 1
 			else
-
-				-- If object is not online - try next frame
-				local obj = level.object_by_id(id)
-				if not obj then return false end
-
-				-- Replace damaged ammo with old, and wait until its online
-				if _NO_DAMAGED_AMMO and string.find(obj:section(), "verybad") then
-					local new_section = string.gsub(obj:section(), "verybad", "bad")
-					if ini_sys:section_exist(new_section) then
-						alife_release(obj)
-						table.remove(ammoObjectIds, i)
-						local new_obj = alife_create_item(new_section, npc, {ammo = obj:ammo_get_count()})
-						if new_obj then
-							table.insert(ammoObjectIds, new_obj.id)
-							return false
-						end
-					end
+				if not is_box then
+					npc:drop_item(item)
 				end
-				
-				-- Replace home-made buck ammo with regular type, and wait until its online
-				if (obj:section() == "ammo_12x70_buck_self") then
-					local new_section = "ammo_12x70_buck"
-					if ini_sys:section_exist(new_section) then
-						alife_release(obj)
-						table.remove(ammoObjectIds, i)
-						local new_obj = alife_create_item(new_section, npc, {ammo = obj:ammo_get_count()})
-						if new_obj then
-							table.insert(ammoObjectIds, new_obj.id)
-							return false
-						end
-					end
-				end
-
-				-- If object has less ammo count then possible, add it to process
-				if obj:ammo_get_count() < obj:ammo_box_size() then
-					local sec = obj:section()
-					ammoObjectsBySection[sec] = ammoObjectsBySection[sec] or {}
-					table.insert(ammoObjectsBySection[sec], obj)
-				end	
+				alife_release_id(ammos[i])
 			end
 		end
-
-		-- Process not full ammo boxes
-		for sec, objects in pairs(ammoObjectsBySection) do
-
-			-- Sort it first descending
-			table.sort(objects, function(a, b) return a:ammo_get_count() > b:ammo_get_count() end)
-
-			local indexToAddAmmo = 1
-			local currentIndex = #objects
-
-			-- Double loop, fill close to full boxes starting from almost empty boxes
-			while currentIndex > indexToAddAmmo do
-				local curObj = objects[currentIndex]
-				local targetObj = objects[indexToAddAmmo]
-
-				local ammoNeededToAdd = targetObj:ammo_box_size() - targetObj:ammo_get_count()
-				local ammoPossibleToAdd = curObj:ammo_get_count()
-				local ammoToAdd = math.min(ammoNeededToAdd, ammoPossibleToAdd)
-				local ammoResult = targetObj:ammo_get_count() + ammoToAdd
-
-				targetObj:ammo_set_count(ammoResult)
-
-				-- Release empty box and move to the next small one
-				if ammoToAdd == ammoPossibleToAdd then
-					alife_release_id(curObj:id())
-					currentIndex = currentIndex - 1
-				else
-					-- Decrease amount of ammo in box
-					curObj:ammo_set_count(curObj:ammo_get_count() - ammoToAdd)
-				end
-
-				-- If box is filled, move to the next big one
-				if ammoResult == targetObj:ammo_box_size() then
-					indexToAddAmmo = indexToAddAmmo + 1
-				end
-			end
-		end
-
-		return true
-	end)
+	end
 
 	return true
 end
 
--- Perform full ammo aggregation when ammo is picked up
--- No reason to check for a specific object since we iterate all inventory anyway
-function ammo_aggregation(obj, npc)
-	if IsAmmo(obj) and obj:parent() then
-
-		-- Do on next frame in order to combine all calls on a frame into one, in case of picking multiple ammo items at once
-		-- Ensure parent is still online
-		local parent_id = obj:parent():id()
-		CreateTimeEvent("ammo_aggregation_next_frame", ("%s_%s"):format(device():time_global(), parent_id), 0, function()
-			local parent = level.object_by_id(parent_id)
-			if parent then
-				-- printf_me("item_weapon.ammo_aggregation %s", parent:name())
-				ammo_aggregation_full(parent_id)
-			end
-			return true
-		end)	
+function ammo_aggregation_full(npc_id)
+	local npc = npc_id and db.storage[npc_id] and db.storage[npc_id].object or level.object_by_id(npc_id)
+	if (not npc) then
+		return true
 	end
+	
+	-- Ammo aggregation
+	local ammo_sec_list = {}
+	local function itr_ammo(npc,itm)
+		local sec = itm:section()
+		if IsItem("ammo",sec) and (not ammo_sec_list[sec]) then
+			ammo_sec_list[sec] = true
+		end
+	end
+	npc:iterate_inventory(itr_ammo,npc)
+	
+	for sec,_ in pairs(ammo_sec_list) do
+		local obj = npc:object(sec)
+		if obj then
+			ammo_aggregation(obj, npc)
+		end
+	end
+	
 	return true
 end
 
@@ -707,7 +704,6 @@ function get_grenades(section)
 	local x = s and str_explode(s,",")
 	return x
 end
-
 function UIWheelAmmo:Reset(obj)
 	self.object    = obj
 	self.id        = obj:id()
@@ -734,7 +730,6 @@ function UIWheelAmmo:Reset(obj)
 		printf("ERROR: could not find ammo list for [%s] - grenade mode: %s", self.section, self.grenade_mode)
 		self:Close()
 	end
-	
 	
 	-- Collect all ammo in inventory
 	empty_table(self.ammo_inv)
@@ -848,6 +843,7 @@ function UIWheelAmmo:OnKeyboard(dik, keyboard_action)
 			if (bind == key_bindings.kWPN_NEXT) then
 				ui_delay = time_global() + ui_delay_const				
 				self:SwitchNextAmmo()
+				
 			elseif num and self.key[num] then
 				self:OnAmmo( self.key[num] )
 			elseif (bind == key_bindings.kQUIT or bind == key_bindings.kUSE) then
@@ -1029,15 +1025,11 @@ local function actor_on_update()
 end
 
 local function move(npc_id, obj, mode, bag_from)
-	if mode == "loot" and bag_from == EDDListType.iActorBag and IsAmmo(obj) then
-		CreateTimeEvent("box", "box_agg", 0, function(ammo_id, box_id)
-			local box = get_object_by_id(box_id)
-			local ammo = get_object_by_id(ammo_id)
-			if box and ammo then  
-				ammo_aggregation(ammo, box)
-			end
-			return true
-		end, obj:id(), npc_id)
+    if mode == "loot" and bag_from == EDDListType.iActorBag and IsAmmo(obj) then
+		local box = level.object_by_id(npc_id)
+		if box then
+			CreateTimeEvent("box", "box_agg", 0, ammo_aggregation, obj, box)
+		end
 	end
 end
 

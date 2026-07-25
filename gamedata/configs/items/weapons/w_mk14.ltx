@@ -161,6 +161,8 @@ kill_msg_y                               = 0
 kill_msg_width                           = 82
 kill_msg_height                          = 28
 
+snd_reload_empty                                                  = weapons\m14\m14_reload_empty
+snd_reload_misfire				                                  = weapons\m14\m14_misfire
 
 [wpn_mk14_hud]:hud_base
 item_visual                              = anomaly_weapons\wpn_m14\wpn_mk14_hud.ogf
@@ -170,15 +172,20 @@ zoom_hide_crosshair                      = true
 item_position                            = 0, 0, 0
 item_orientation                         = 0, 0, 0
 
-hands_position                           = -0.062, -0.17, 0.1
-hands_position_16x9                      = -0.062, -0.17, 0.1
-hands_orientation                        = 0.55, 2.4, 0.15
-hands_orientation_16x9                   = 0.55, 2.4, 0.15
+hands_position                           = -0.08, -0.13, -0.19
+hands_position_16x9                      = -0.08, -0.13, -0.19
+hands_orientation                        = 0.55, 0.0, 0.15
+hands_orientation_16x9                   = 0.55, 0.0, 0.15
 
-aim_hud_offset_pos                       = -0.0897, 0.067, -0.28
-aim_hud_offset_pos_16x9                  = -0.0897, 0.067, -0.28
-aim_hud_offset_rot                       = 0.0305, 0.0088, -0.005
-aim_hud_offset_rot_16x9                  = 0.0305, 0.0088, -0.005
+aim_hud_offset_pos                       = -0.0695, 0.024, 0.01
+aim_hud_offset_pos_16x9                  = -0.0695, 0.024, 0.01
+aim_hud_offset_rot                       = -0.0135, 0.009, -0.003
+aim_hud_offset_rot_16x9                  = -0.0135, 0.009, -0.003
+
+lowered_hud_offset_pos			= 0.065, -0.03, -0.02
+lowered_hud_offset_pos_16x9		= 0.065, -0.03, -0.02
+lowered_hud_offset_rot			= -0.1, -0.65, 0.4
+lowered_hud_offset_rot_16x9		= -0.1, -0.65, 0.4
 
 gl_hud_offset_pos                        = 0, 0, 0
 gl_hud_offset_pos_16x9                   = 0, 0, 0
@@ -191,12 +198,14 @@ lean_hud_offset_rot                      = 0, 0, 0
 anm_hide                                 = lancew_m14_holster
 anm_idle                                 = lancew_m14_idle
 anm_idle_aim                             = lancew_m14_idle_aim, idle_aim
-anm_idle_aim_moving                      = lancew_m14_moving, idle, 0.75
-anm_idle_aim_moving_crouch               = lancew_m14_moving, idle, 0.7
-anm_idle_moving                          = lancew_m14_moving
-anm_idle_sprint                          = lancew_m14_sprint
-anm_reload                               = lancew_m14_reload, reload
-anm_shots                                = lancew_m14_shoot, shoot
+anm_idle_aim_moving                      = lancew_m14_moving_v2, idle, 0.75
+anm_idle_aim_moving_crouch               = lancew_m14_moving_v2, idle, 0.7
+anm_idle_moving                          = lancew_m14_moving_v2
+anm_idle_sprint                          = m14_sprint_v2
+anm_reload                               = mk14_reload, reload
+anm_reload_empty                         = lancew_m14_reload, reload
+anm_reload_misfire          			 = mk14_misfire, misfire
+anm_shots                                = m14_shoot_v2, shoot2
 anm_show                                 = lancew_m14_draw
 
 shell_bone                               = wpn_body
@@ -204,7 +213,7 @@ shell_dir                                = 0, 1, 0
 shell_point                              = 0.025, 0.055, 0.221
 
 fire_bone                                = wpn_body
-fire_point                               = 0, 0.070908, 0.872161
+fire_point                               = 0.008, 0.062, 0.872161
 
 freelook_z_offset_mul					 = 0.4
 
@@ -225,8 +234,10 @@ visual                                   = dynamics\weapons\wpn_m14\wpn_mk14_bar
 [wpn_mk14_ac10632_hud]:wpn_mk14_hud
 item_visual                              = anomaly_weapons\wpn_m14\wpn_mk14_barska_hud.ogf
 
-aim_hud_offset_pos                       = -0.08942,0.0398,-0.28
-aim_hud_offset_pos_16x9                  = -0.08942,0.0398,-0.28
+aim_hud_offset_pos                       = -0.069, -0.0025, -0.03
+aim_hud_offset_pos_16x9                  = -0.069, -0.0025, -0.03
+aim_hud_offset_rot                       = -0.0135, 0.009, -0.003
+aim_hud_offset_rot_16x9                  = -0.0135, 0.009, -0.003
 
 ;------------------------------------------------------------------------------------------------
 [wpn_mk14_acog]:wpn_mk14
@@ -244,15 +255,20 @@ scope_status                             = 0
 scope_zoom_factor                        = 20
 
 zoom_rotate_time                         = 0.3
-
+use_alt_aim_hud  		         = true
 
 [wpn_mk14_acog_hud]:wpn_mk14_ac10632_hud,hud_low_interia
 item_visual                              = anomaly_weapons\wpn_m14\wpn_mk14_acog_hud.ogf
 
-aim_hud_offset_pos                       = -0.089405, 0.043055, -0.345
-aim_hud_offset_pos_16x9                  = -0.089405, 0.043055, -0.345
-aim_hud_offset_rot                       = 0.0295, 0.0087, -0.0081
-aim_hud_offset_rot_16x9                  = 0.0295, 0.0087, -0.0081
+aim_hud_offset_pos                       = -0.0692, 0.0045, -0.025
+aim_hud_offset_pos_16x9                  = -0.0692, 0.0045, -0.025
+aim_hud_offset_rot                       = 0.0015, 0.0085, -0.003
+aim_hud_offset_rot_16x9                  = 0.0015, 0.0085, -0.003
+
+aim_hud_offset_alt_pos	  		 = -0.0693, 0.0219, -0.03
+aim_hud_offset_alt_pos_16x9 		 = -0.0693, 0.0219, -0.03
+aim_hud_offset_alt_rot			 = -0.0155, 0.0086, -0.003
+aim_hud_offset_alt_rot_16x9 		 = -0.0155, 0.0086, -0.003
 
 ;------------------------------------------------------------------------------------------------
 [wpn_mk14_c-more]:wpn_mk14
@@ -270,8 +286,10 @@ visual                                   = dynamics\weapons\wpn_m14\wpn_mk14_c-m
 [wpn_mk14_c-more_hud]:wpn_mk14_hud
 item_visual                              = anomaly_weapons\wpn_m14\wpn_mk14_c-more_hud.ogf
 
-aim_hud_offset_pos                       = -0.0897,0.0385,-0.28
-aim_hud_offset_pos_16x9                  = -0.0897,0.0385,-0.28
+aim_hud_offset_pos                       = -0.0695, -0.003, -0.03
+aim_hud_offset_pos_16x9                  = -0.0695, -0.003, -0.03
+aim_hud_offset_rot                       = -0.0135, 0.007, -0.003
+aim_hud_offset_rot_16x9                  = -0.0135, 0.007, -0.003
 
 ;------------------------------------------------------------------------------------------------
 [wpn_mk14_eot]:wpn_mk14
@@ -290,6 +308,7 @@ visual                                   = dynamics\weapons\wpn_m14\wpn_mk14_eot
 [wpn_mk14_eot_hud]:wpn_mk14_hud
 item_visual                              = anomaly_weapons\wpn_m14\wpn_mk14_eot_hud.ogf
 
-aim_hud_offset_pos                       = -0.0894, 0.0317, -0.28
-aim_hud_offset_pos_16x9                  = -0.0894, 0.0317, -0.28
-
+aim_hud_offset_pos                       = -0.069, -0.01, -0.01
+aim_hud_offset_pos_16x9                  = -0.069, -0.01, -0.01
+aim_hud_offset_rot                       = -0.0135, 0.008, -0.003
+aim_hud_offset_rot_16x9                  = -0.0135, 0.008, -0.003

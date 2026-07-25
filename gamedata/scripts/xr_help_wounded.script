@@ -18,6 +18,7 @@ local AnimFree = ini:r_float_ex("settings","anim_free_type") or 1
 local AlwaysHelpDistance = ini:r_float_ex("settings","always_help_distance") or 900
 local HelpInCombatVisuals = utils_data.collect_sections(ini,{"help_in_combat_visuals"})
 ini = nil
+look_pos = nil
 
 function help_wounded(npc)
 	if not (db.actor) then 
@@ -180,7 +181,8 @@ function evaluator_wounded_exist:find_valid_target()
 		return false 
 	end
 
-	local vo_position = vec_set(vo:position())
+	local vo_position = vec_set(vo:position():add(vo:direction():mul(1)))
+	look_pos = vec_set(vo:position())
 	local dist = npc:position():distance_to_sqr(vo_position)	
 	if (has_enemy(npc) and not combat_can_help(npc,vo,dist)) then 
 		return false 
@@ -293,22 +295,11 @@ function action_help_wounded:execute()
 	end
 
 	if (npc:level_vertex_id() == st.vertex_id) then
-		if (UseNewAnim) then
-			--if not (npc:object("medkit_script")) then
-				--alife_create_item("medkit_script", npc)
-			--end
-
-			if (npc:active_item() and npc:best_weapon() and npc:weapon_unstrapped()) then
-				state_mgr.set_state(npc, "help_victim_"..AnimCombat,nil,nil,nil,{fast_set = true})
-			else
-				state_mgr.set_state(npc, "help_victim_"..AnimFree,nil,nil,nil,{fast_set = true})
-			end
-			
-			-- increase stalker rank for helping an ally
-			npc:set_character_rank(npc:character_rank()+math.random(10,20))
-		else
-			state_mgr.set_state(npc, "help_wounded",nil,nil,nil,{fast_set = true})
-		end
+		local pos = look_pos
+		state_mgr.set_state(npc, "help_victim_1",nil,nil,{look_position = pos},{fast_set = true})
+		
+		-- increase stalker rank for helping an ally
+		npc:set_character_rank(npc:character_rank()+math.random(10,20))
 	else
 		if (npc:path_type() ~= game_object.level_path) then 
 			npc:set_path_type(game_object.level_path)
@@ -336,7 +327,7 @@ function action_help_wounded:finalize()
 	st.nearest_position = nil
 	st.nearest_id = nil
 	st.index = 1
-
+	look_pos = nil
 	--[[
 	local medkit = self.object:object("medkit_script")
 	local se_obj = medkit and alife_object(medkit:id())

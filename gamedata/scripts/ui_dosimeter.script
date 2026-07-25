@@ -20,7 +20,7 @@ function ui_dosimeter:__init() super()
 	self.m_seg3					= xml:InitStatic("dosimeter:seg3", self)
 	self.m_seg4					= xml:InitStatic("dosimeter:seg4", self)
 	
-	self.m_workIndicator		= xml:InitStatic("dosimeter:work", self)
+--	self.m_workIndicator		= xml:InitStatic("dosimeter:work", self)
 end
 
 function ui_dosimeter:__finalize() 
@@ -33,10 +33,10 @@ function ui_dosimeter:Update()
 	
 	local tg = time_global()
 	
-	if (tg > workIndicatorTimer + 1000) then
-		workIndicatorTimer = tg
-		self.m_workIndicator:Show(not self.m_workIndicator:IsShown())
-	end
+--	if (tg > workIndicatorTimer + 1000) then
+--		workIndicatorTimer = tg
+--		self.m_workIndicator:Show(not self.m_workIndicator:IsShown())
+--	end
 	
 	if (tg < updateTimer) then
 		return

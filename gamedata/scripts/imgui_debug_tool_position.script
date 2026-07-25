@@ -1,0 +1,256 @@
+-- Position Debug Tool
+
+
+function render()
+	-- Always display position information
+	local has_actor = db and db.actor
+	
+	if not has_actor then
+		ImGui.Text("Actor not available")
+		return
+	end
+	
+	-- Position and camera data
+	local pos = db.actor:position()
+	local cam = false
+	if pos and device and device().cam_pos and pos:distance_to_sqr(device().cam_pos) > 25 then
+		cam = true
+		pos = device().cam_pos
+	end
+	
+	local lvid = cam and level and level.vertex_id and level.vertex_id(pos) or db.actor:level_vertex_id()
+	local gvid = cam and nil or db.actor:game_vertex_id()
+	local dir = device and device().cam_dir
+	local pos2 = level and level.vertex_position and level.vertex_position(lvid)
+	local valid = lvid and lvid < 4294967295 and pos2 and pos2:distance_to(pos) <= 0.7
+	local se_actor = not cam and AC_ID and alife_object and alife_object(AC_ID)
+	
+	ImGui.Text("Actor Position Information:")
+	ImGui.Separator()
+	
+	-- Position Information
+	local level_vertex_id = tostring(lvid or "N/A")
+	local game_vertex_id = tostring(gvid or "N/A")
+	local position = "N/A"
+	local direction = "N/A"
+	local angle = "N/A"
+	local position_valid = tostring(valid or false)
+	local using_camera = tostring(cam)
+	local fov = "N/A"
+	
+	if pos then
+		position = string.format("%.4f, %.4f, %.4f", pos.x, pos.y, pos.z)
+	end
+	
+	if dir then
+		direction = string.format("%.3f, %.3f, %.3f HP = %.3f, %.3f", dir.x, dir.y, dir.z, 
+			dir.getH and dir:getH() or 0, dir.getP and dir:getP() or 0)
+	end
+	
+	if se_actor and se_actor.angle then
+		angle = string.format("%.3f, %.3f, %.3f", se_actor.angle.x, se_actor.angle.y, se_actor.angle.z)
+	end
+	
+	if device and device().fov then
+		fov = tostring(math.floor(device().fov))
+	end
+	
+	ImGui.Text("Position Data:")
+	ImGui.Text("Level Vertex ID: " .. level_vertex_id)
+	ImGui.Text("Game Vertex ID: " .. game_vertex_id)
+	ImGui.Text("Position: " .. position)
+	ImGui.Text("Direction: " .. direction)
+	ImGui.Text("Angle: " .. angle)
+	ImGui.Text("Position Valid: " .. position_valid)
+	ImGui.Text("Using Camera: " .. using_camera)
+	ImGui.Text("FOV: " .. fov)
+	
+	ImGui.Separator()
+	
+	-- Game Time Information
+	local time_data = {}
+	if game and game.get_game_time then
+		local Y, M, D, h, m, s, ms = 0, 0, 0, 0, 0, 0, 0
+		Y, M, D, h, m, s, ms = game.get_game_time():get(Y, M, D, h, m, s, ms)
+		local time_str = string.format("Y:%d M:%d D:%d h:%d m:%d s:%d ms:%d", Y, M, D, h, m, s, ms)
+		table.insert(time_data, {"Game Time", time_str})
+	else
+		table.insert(time_data, {"Game Time", "N/A"})
+	end
+	
+	-- Psy antenna information
+	if sr_psy_antenna and sr_psy_antenna.psy_antenna and sr_psy_antenna.psy_antenna.global_state then
+		table.insert(time_data, {"Psy Antenna State", tostring(sr_psy_antenna.psy_antenna.global_state)})
+	else
+		table.insert(time_data, {"Psy Antenna State", "N/A"})
+	end
+	
+	ImGui.Text("Time & Environment:")
+	if ImGui.BeginTable("TimeData", 2, 3, vector2(0, 0), 0) then
+		ImGui.TableSetupColumn("Property")
+		ImGui.TableSetupColumn("Value")
+		ImGui.TableHeadersRow()
+		
+		for _, data in ipairs(time_data) do
+			ImGui.TableNextRow()
+			ImGui.TableSetColumnIndex(0)
+			ImGui.Text(data[1])
+			ImGui.TableSetColumnIndex(1)
+			ImGui.Text(data[2])
+		end
+		
+		ImGui.EndTable()
+	end
+	
+	ImGui.Separator()
+	
+	-- Nearest Campfires Table
+	local campfire_data = {}
+	if smart_terrain and smart_terrain.nearest_to_actor_smart and smart_terrain.nearest_to_actor_smart.id then
+		local smart = alife_object and alife_object(smart_terrain.nearest_to_actor_smart.id)
+		if smart and db and db.campfire_table_by_smart_names then
+			local campfires = db.campfire_table_by_smart_names[smart:name()]
+			if campfires then
+				for id, binder in pairs(campfires) do
+					local camp = binder.object
+					if camp and binder.campfire then
+						local is_on = binder.campfire.is_on and binder.campfire:is_on() or false
+						local selected = axr_turn_on_campfire and axr_turn_on_campfire.already_selected and 
+							axr_turn_on_campfire.already_selected[id] or false
+						table.insert(campfire_data, {
+							name = camp:name() or "Unknown",
+							id = tostring(id),
+							is_on = tostring(is_on),
+							selected = tostring(selected)
+						})
+					end
+				end
+			end
+		end
+	end
+	
+	ImGui.Text("Nearest Campfires:")
+	if ImGui.BeginTable("CampfireData", 4, 3, vector2(0, 0), 0) then
+		ImGui.TableSetupColumn("Name")
+		ImGui.TableSetupColumn("ID")
+		ImGui.TableSetupColumn("Is On")
+		ImGui.TableSetupColumn("Selected")
+		ImGui.TableHeadersRow()
+		
+		if #campfire_data > 0 then
+			for _, campfire in ipairs(campfire_data) do
+				ImGui.TableNextRow()
+				ImGui.TableSetColumnIndex(0)
+				ImGui.Text(campfire.name)
+				ImGui.TableSetColumnIndex(1)
+				ImGui.Text(campfire.id)
+				ImGui.TableSetColumnIndex(2)
+				ImGui.Text(campfire.is_on)
+				ImGui.TableSetColumnIndex(3)
+				ImGui.Text(campfire.selected)
+			end
+		else
+			ImGui.TableNextRow()
+			ImGui.TableSetColumnIndex(0)
+			ImGui.Text("No campfires")
+			ImGui.TableSetColumnIndex(1)
+			ImGui.Text("N/A")
+			ImGui.TableSetColumnIndex(2)
+			ImGui.Text("N/A")
+			ImGui.TableSetColumnIndex(3)
+			ImGui.Text("N/A")
+		end
+		
+		ImGui.EndTable()
+	end
+	
+	ImGui.Separator()
+	
+	-- Miscellaneous Information
+	local luminosity_hemi = "N/A"
+	local luminosity = "N/A"
+	local gameobject_ids = "N/A"
+	
+	-- Luminosity information
+	if has_actor then
+		local lumi_hemi = db.actor.get_luminocity_hemi and db.actor:get_luminocity_hemi() or "N/A"
+		local lumi = db.actor.get_luminocity and db.actor:get_luminocity() or "N/A"
+		luminosity_hemi = tostring(lumi_hemi)
+		luminosity = tostring(lumi)
+	end
+	
+	-- GameObject count (cached for performance)
+	local __tmr_pos_hud = __tmr_pos_hud or 0
+	local _g_o_count = _g_o_count or 0
+	local current_time = time_global and time_global() or 0
+	
+	if current_time > __tmr_pos_hud then
+		__tmr_pos_hud = current_time + 5000
+		_g_o_count = 0
+		local sim = alife and alife()
+		if sim then
+			for i = 1, 65534 do
+				if sim:object(i) then
+					_g_o_count = _g_o_count + 1
+				end
+			end
+		end
+	end
+	gameobject_ids = tostring(_g_o_count)
+	
+	ImGui.Text("Miscellaneous:")
+	ImGui.Text("Luminosity Hemi: " .. luminosity_hemi)
+	ImGui.Text("Luminosity: " .. luminosity)
+	ImGui.Text("GameObject IDs: " .. gameobject_ids)
+	
+	ImGui.Separator()
+	
+	-- Inside Zones Table
+	local zone_data = {}
+	if db and db.zone_by_name and has_actor then
+		for name, zone in pairs(db.zone_by_name) do
+			if zone and zone.inside and zone:inside(db.actor:position()) then
+				local active_section = "N/A"
+				if db.storage and db.storage[zone:id()] and db.storage[zone:id()].active_section then
+					active_section = db.storage[zone:id()].active_section
+				end
+				table.insert(zone_data, {
+					name = zone:name() or name,
+					active_section = active_section
+				})
+			end
+		end
+	end
+	
+	ImGui.Text("Inside Zones:")
+	if ImGui.BeginTable("ZoneData", 2, 3, vector2(0, 0), 0) then
+		ImGui.TableSetupColumn("Zone Name")
+		ImGui.TableSetupColumn("Active Section")
+		ImGui.TableHeadersRow()
+		
+		if #zone_data > 0 then
+			for _, zone in ipairs(zone_data) do
+				ImGui.TableNextRow()
+				ImGui.TableSetColumnIndex(0)
+				ImGui.Text(zone.name)
+				ImGui.TableSetColumnIndex(1)
+				ImGui.Text(zone.active_section)
+			end
+		else
+			ImGui.TableNextRow()
+			ImGui.TableSetColumnIndex(0)
+			ImGui.Text("Not inside any zones")
+			ImGui.TableSetColumnIndex(1)
+			ImGui.Text("N/A")
+		end
+		
+		ImGui.EndTable()
+	end
+end
+
+-- Tool registration
+imgui_debug_tools.register_tool("position_hud", {
+	title = "Position Info",
+	render = render,
+	visible = false
+})

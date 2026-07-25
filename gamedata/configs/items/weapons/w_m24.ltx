@@ -1,5 +1,35 @@
+[wpn_m24_mmg_snd_shoot]
+		snd_1_layer					= weapons\librarian_m24\core
+		snd_2_layer					= weapons\librarian_m24\bolt
+		
+[wpn_m24_mmg_silncer_snd_shoot]
+snd_1_layer			                                          	  = weapons\_sd\stereo\big\sd_close_1
+snd_1_layer1			                                          = weapons\_sd\stereo\big\sd_close_2
+snd_1_layer2			                                       	  = weapons\_sd\stereo\big\sd_close_3
+snd_1_layer3			                                       	  = weapons\_sd\stereo\big\sd_close_4
+snd_2_layer			                                          	  = weapons\_sd\stereo\big\tail_sd_1, 0.5
+snd_2_layer1		                                              = weapons\_sd\stereo\big\tail_sd_2, 0.5
+snd_2_layer2			                                       	  = weapons\_sd\stereo\big\tail_sd_3, 0.5
+snd_2_layer3			                                       	  = weapons\_sd\stereo\big\tail_sd_4, 0.5
+snd_3_layer			                                          	  = weapons\_shared\stereo\echo_9, 0.25
+snd_3_layer1			                                          = weapons\_shared\stereo\echo_2, 0.25
+snd_3_layer2			                                       	  = weapons\_shared\stereo\echo_3, 0.25
+snd_3_layer3			                                       	  = weapons\_shared\stereo\echo_4, 0.25
+snd_4_layer			                                       	 	  = weapons\_bass\bass_mid_sd
+snd_5_layer					= weapons\librarian_m24\bolt
+		
+[wpn_m24_kntl_sounds]:base_sounds
+		snd_draw						= weapons\generic\eastern_draw
+		snd_holster						= weapons\sniper_holster
+		snd_shoot						= wpn_m24_mmg_snd_shoot
+		snd_silncer_shot				= wpn_m24_mmg_silncer_snd_shoot
+		snd_reload						= weapons\librarian_m24\reload
+		snd_reload_empty				= weapons\librarian_m24\reload_empty
+		snd_reload_misfire				= weapons\librarian_m24\unjam
+
+
 ;------------------------------------------------------------------------------------------------
-[wpn_m24]:identity_immunities,weapon_probability,default_weapon_params,wpn_m24_sounds
+[wpn_m24]:identity_immunities,weapon_probability,default_weapon_params,wpn_m24_kntl_sounds, big_common_s
         GroupControlSection         = spawn_group
         $npc                        = on
         $prefetch                   = 8
@@ -17,14 +47,16 @@
         
         default_to_ruck             = false
         sprint_allowed              = true
-        
+		
+        icons_texture      						 = ui\ui_icon_m24
+		
         inv_grid_height             = 2
         inv_grid_width              = 6
-        inv_grid_x                  = 75
-        inv_grid_y                  = 71
-        inv_name                    = st_wpn_m24
-        inv_name_short              = st_wpn_m24
-        description                 = st_wpn_m24_descr
+        inv_grid_x                  = 0
+        inv_grid_y                  = 0
+        inv_name                    = st_wpn_m24_new
+        inv_name_short              = st_wpn_m24_new
+        description                 = st_wpn_m24_new_descr
         
         kind                        = w_sniper
         inv_weight                  = 5.4
@@ -68,19 +100,20 @@
         
         fire_modes                  = 1
         ammo_class                  = ammo_magnum_300, ammo_magnum_300_bad, ammo_magnum_300_verybad
-        ammo_elapsed                = 5
-        ammo_mag_size               = 5
+        ammo_elapsed                = 10
+        ammo_mag_size               = 10
         startup_ammo                = 10
         
         scope_status                = 1
 		scope_dynamic_zoom          = on
         scope_name                  = wpn_addon_scope
-        scope_texture               = wpn_crosshair_mark4
         scope_x                     = 60
         scope_y                     = -2
-        scope_zoom_factor           = 10
         
-        silencer_status             = 0
+		silencer_name               = wpn_sil_timberwolf
+		silencer_status             = 0
+		silencer_x                  = 271
+		silencer_y                  = 24
         silencer_light_color        = 0.6, 0.5, 0.3
         silencer_light_range        = 0.01
         silencer_light_time         = 0.2
@@ -92,11 +125,11 @@
         launch_speed                = 0
         
         hit_impulse                 = 45
-        hit_power                   = 1.35, 1.35, 1.35, 1.35
+        hit_power                   = 1, 1, 1, 1
         hit_type                    = fire_wound
         fire_distance               = 1500
         bullet_speed                = 845
-        rpm                         = 20
+        rpm                         = 35
         rpm_empty_click             = 200
         
         use_aim_bullet              = false
@@ -155,39 +188,32 @@ control_inertion_factor = 1.0f
         kill_msg_y                  = 0
         kill_msg_width              = 98
         kill_msg_height             = 23
- 
+
 
 [wpn_m24_hud]:hud_base
-        item_visual                 = anomaly_weapons\wpn_m24\wpn_m24_hud
+        item_visual                 = anomaly_weapons\wpn_m24\wpn_m24_hud.ogf
         attach_place_idx            = 0
         zoom_hide_crosshair         = true
         
         item_position               = 0.0, 0.0, 0.0
         item_orientation            = 0.0, 0.0, 0.0
-        
-        hands_position              = -0.03, -0.145, 0.2
-        hands_position_16x9         = -0.03, -0.145, 0.2
-        hands_orientation           = 0, 0, 0
-        hands_orientation_16x9      = 0, 0, 0
-        
-        aim_hud_offset_pos          = -0.108100, 0.01, -0.3
-        aim_hud_offset_pos_16x9     = -0.108100, 0.01, -0.3
-        aim_hud_offset_rot          = 0, 0, 0
-        aim_hud_offset_rot_16x9     = 0, 0, 0
-        
+ 
         lean_hud_offset_pos         = 0, 0, 0
         lean_hud_offset_rot         = 0, 0, 0
         
-        anm_hide                    = m2s_holster
-        anm_idle                    = m2s_idle
-        anm_idle_aim                = m2s_idle_aim
-        anm_idle_aim_moving         = m2s_idle_moving, idle, 0.75
-        anm_idle_aim_moving_crouch  = m2s_idle_moving, idle, 0.7
-        anm_idle_moving             = m2s_idle_moving
-        anm_idle_sprint             = m2s_idle_sprint
-        anm_reload                  = m2s_reload, reload
-        anm_shots                   = m2s_shoot, shoot
-        anm_show                    = m2s_draw
+        anm_hide                    = m24_hand_holster, m24_idle
+        anm_idle                    = m24_hand_idle, m24_idle
+        anm_idle_aim                = m24_hand_idle_aim, m24_idle
+        anm_idle_aim_moving         = m24_hand_moving, m24_idle, 0.75
+        anm_idle_aim_moving_crouch  = m24_hand_moving, m24_idle, 0.7
+        anm_idle_moving             = m24_hand_moving, m24_idle
+        anm_idle_sprint             = m24_hand_sprint, m24_idle
+		anm_reload		            = m24_hand_reload, m24_reload
+		anm_reload_empty		    = m24_hand_reload_empty, m24_reload_empty
+		anm_reload_misfire          = m24_hand_unjam, m24_unjam
+        anm_shots                   = m24_hand_shoot, m24_shoot
+		anm_shots_variant1			= m24_hand_shoot1, m24_shoot
+        anm_show                    = m24_hand_draw, m24_idle
         
         shell_bone                  = gilza
         shell_dir                   = 0.0, 1.0, 0.0

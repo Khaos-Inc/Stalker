@@ -108,6 +108,13 @@ function get_water_deprivation(visual)
 	return clamp( normalize(last_drink, 0, 10000) , 0 , 1)
 end
 
+function get_last_drink()
+	return last_drink or 0
+end
+
+function get_thirst_blur_4()
+	return start_blur_4 or 0
+end
 
 -------------------------------------------------------------------
 -- Callbacks

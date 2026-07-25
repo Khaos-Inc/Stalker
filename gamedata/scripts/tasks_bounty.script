@@ -50,7 +50,7 @@ local function is_smart_valid(squad_id)
 	end
 	return true
 end
-	
+
 ---------------------------< Effects >---------------------------
 xr_effects.setup_bounty_task = function(actor,npc,p)
 -- p[1]: task_id
@@ -116,6 +116,23 @@ xr_effects.setup_bounty_task = function(actor,npc,p)
 		end
 	end
 		
+--[[
+	SERIOUS NO NORTH TASKS BEFORE BS
+	AND THE NORTHERN JOB
+--]]
+	local additionalBlacklist = {}
+	local northernMaps = blacklist_helper.GetNorthernMaps()
+
+	if blacklist_helper.ShouldBlacklistNorth() then
+		additionalBlacklist = northernMaps
+	elseif northernMaps[level.name()] then -- Player is in the Northern region and rightfully so
+		additionalBlacklist = blacklist_helper.GetSouthernMaps()
+	end
+--[[
+	SERIOUS NO NORTH TASKS BEFORE BS
+	AND THE NORTHERN JOB
+--]]
+
 	-- show up to only 3 targets
 	if (bounty_cache[p[1]] == nil or #bounty_cache[p[1]] < 3) then
 		local gg = game_graph()
@@ -123,7 +140,8 @@ xr_effects.setup_bounty_task = function(actor,npc,p)
 			local se_obj = sim:object(id)
 			local t,rela = find_stalker(id,se_obj)
 			local map = t and sim:level_name(gg:vertex(se_obj.m_game_vertex_id):level_id())
-			if (t) and (not blacklisted_maps[map]) and is_smart_valid(se_obj.group_id) then
+			
+			if (t) and (not blacklisted_maps[map] and not additionalBlacklist[map]) and is_smart_valid(se_obj.group_id) then
 				if (p[3] == "true") then
 					if simulation_objects.is_on_the_nearby_level(sim:actor(), se_obj) then
 					--if simulation_objects.is_on_the_same_level(sim:actor(), se_obj) or simulation_objects.is_on_the_linked_level(sim:actor(), se_obj) then
@@ -162,12 +180,13 @@ xr_effects.setup_bounty_task = function(actor,npc,p)
 	else
 		target_id = bounty_cache[p[1]][math.random(#bounty_cache[p[1]])]
 	end
-	
 	if (target_id == nil or target_id == AC_ID) then
 		printf("! %s - no target found for task",p[1])
+		blacklist_helper.TaskBlacklist[p[1]] = true
 		return
 	end
-		
+
+	blacklist_helper.TaskBlacklist[p[1]] = nil
 	axr_task_manager.bounties_by_id[p[1]] = target_id
 	
 	local se_target = alife_object(target_id)
@@ -197,9 +216,10 @@ xr_effects.setup_bounty_task = function(actor,npc,p)
 	local function postpone_for_next_frame(target_id)
 		local news_caption = game.translate_string(task_manager.task_ini:r_string_ex(p[1], "title")) or "error"
 		local news_text = game.translate_string("st_mm_new_game_name") .. " " .. se_target:character_name() .. "\\n " .. game.translate_string("st_mm_new_game_faction_2") .. " " .. game.translate_string(se_target:community()) .. "\\n " .. game.translate_string("st_location") .. " " .. game.translate_string(level_target)
-		db.actor:give_talk_message2(news_caption, news_text, se_target:character_icon(), "iconed_answer_item")
+		db.actor:give_talk_message2(news_caption, news_text, se_target:character_icon(), "iconed_answer_item", p[1])
 		return true
 	end
+
 	CreateTimeEvent(0,"setup_bounty_task",0,postpone_for_next_frame,target_id)
 end 
 

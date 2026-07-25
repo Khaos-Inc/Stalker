@@ -1,4 +1,3 @@
-
 <specific_character id="sim_default_ecolog_0_default_0" team_default = "1">
 #include "gameplay\profiles\character_desc_ecolog_0.xml"
     <icon>ui_inGame2_ecolog_guard_blue</icon>
@@ -518,6 +517,20 @@
     <visual>actors\stalker_ecologist\stalker_ecolog_exolight</visual>
 </specific_character>
 
+<specific_character id="sim_default_ecolog_4_default_8" team_default = "1">
+#include "gameplay\profiles\character_desc_ecolog_4.xml"
+    <icon>ui_inGame2_Dolg_4</icon>
+    <snd_config>characters_voice\human\ecolog_3\</snd_config>
+    <visual>actors\stalker_ecologist\stalker_ecolog_exo</visual>
+</specific_character>
+
+<specific_character id="sim_default_ecolog_4_default_9" team_default = "1">
+#include "gameplay\profiles\character_desc_ecolog_4.xml"
+    <icon>ui_inGame2_stalker_dolg_exoseva</icon>
+    <snd_config>characters_voice\human\ecolog_3\</snd_config>
+    <visual>actors\stalker_ecologist\stalker_ecolog_exoseva</visual>
+</specific_character>
+
 
 <specific_character id="sim_default_ecolog_5_default_0" team_default = "1">
 #include "gameplay\profiles\character_desc_ecolog_5.xml"
@@ -554,8 +567,8 @@
     <name>GENERATE_NAME_stalker</name>
     <icon>ui_inGame2_neutral_2</icon>
     <class>sim_default_ecolog_trader</class>
-    <snd_config>characters_voice\human\ecolog_3\</snd_config>
-    <visual>actors\stalker_ecologist\stalker_ecolog_guard</visual>
+    <snd_config>characters_voice\human\ecolog_1\</snd_config>
+    <visual>actors\stalker_ecologist\stalker_ecolog_trader</visual>
 
 	<actor_dialog>dm_init_trader</actor_dialog>
 	<actor_dialog>dm_broker_dialog</actor_dialog>
@@ -573,8 +586,8 @@
     <icon>ui_inGame2_neutral_2</icon>
     <class>sim_default_ecolog_mechanic</class>
 	<mechanic_mode>1</mechanic_mode>
-    <snd_config>characters_voice\human\ecolog_3\</snd_config>
-    <visual>actors\stalker_ecologist\stalker_ecolog_guard</visual>
+    <snd_config>characters_voice\human\ecolog_1\</snd_config>
+    <visual>actors\stalker_ecologist\stalker_ecolog_mechanic</visual>
 
 	<actor_dialog>dm_init_trader</actor_dialog>
 	<actor_dialog>dm_init_mechanic</actor_dialog>
@@ -590,8 +603,8 @@
     <name>GENERATE_NAME_stalker</name>
     <icon>ui_inGame2_neutral_2</icon>
     <class>sim_default_ecolog_medic</class>
-    <snd_config>characters_voice\human\ecolog_3\</snd_config>
-    <visual>actors\stalker_ecologist\stalker_ecolog_guard</visual>
+    <snd_config>characters_voice\human\ecolog_1\</snd_config>
+    <visual>actors\stalker_ecologist\stalker_ecolog_doctor</visual>
 
 		<actor_dialog>dm_init_medic</actor_dialog>
 		<actor_dialog>dm_medic_general</actor_dialog>
@@ -605,8 +618,8 @@
     <name>GENERATE_NAME_stalker</name>
     <icon>ui_inGame2_neutral_2</icon>
     <class>sim_default_ecolog_barman</class>
-    <snd_config>characters_voice\human\ecolog_3\</snd_config>
-    <visual>actors\stalker_ecologist\stalker_ecolog_guard</visual>
+    <snd_config>characters_voice\human\ecolog_1\</snd_config>
+    <visual>actors\stalker_ecologist\stalker_ecolog_barman</visual>
 
 	<actor_dialog>dm_init_batender</actor_dialog>
 	<actor_dialog>dm_ordered_task_dialog</actor_dialog>
@@ -622,7 +635,7 @@
     <bio>Member of mobile science camp. Detailed information is missing.</bio>
     <class>sim_default_ecolog_dead</class>
     <community>ecolog</community> <terrain_sect>stalker_terrain</terrain_sect>
-    <rank>5000</rank>
+    <rank>5432</rank>
     <reputation>520</reputation>
     <visual>actors\stalker_ecologist\stalker_ecolog</visual>
     <snd_config>characters_voice\human\ecolog_3\</snd_config>
@@ -636,16 +649,16 @@
 
 <specific_character id="sim_default_ecolog_dead_default_1" team_default = "1">
     <name>GENERATE_NAME_science</name>
-    <icon>ui_inGame2_neutral_2_old</icon>
+    <icon>ui_inGame3_ico_ecolog</icon>
     <map_icon x="1" y="0"></map_icon>
-    <bio>Опытный сталкер. Детальная информация отсутствует.</bio>
+    <bio>пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ.</bio>
     <class>sim_default_ecolog_dead</class>
     <community>ecolog</community> <terrain_sect>stalker_terrain</terrain_sect>
-    <snd_config>characters_voice\human\stalker_3\</snd_config>
-    <rank>7000</rank>
+    <snd_config>characters_voice\human\ecolog_3\</snd_config>
+    <rank>10520</rank>
     <money min="500" max="5000" infinitive="0"/>
-    <reputation>200</reputation>
-    <visual>actors\stalker_neutral\stalker_neutral_2_old</visual>
+    <reputation>1200</reputation>
+    <visual>actors\stalker_ecologist\stalker_ecolog_military_ssp</visual>
     <supplies>
         [spawn] \n
 		broken_pda = 1 \n
@@ -656,16 +669,16 @@
 
 <specific_character id="sim_default_ecolog_dead_default_2" team_default = "1">
     <name>GENERATE_NAME_science</name>
-    <icon>ui_inGame2_neutral_nauchniy</icon>
+    <icon>ui_eco_lc_5</icon>
     <map_icon x="1" y="0"></map_icon>
-    <bio>Опытный сталкер. Детальная информация отсутствует.</bio>
+    <bio>пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ.</bio>
     <class>sim_default_ecolog_dead</class>
     <community>ecolog</community> <terrain_sect>stalker_terrain</terrain_sect>
-    <snd_config>characters_voice\human\stalker_3\</snd_config>
-    <rank>12000</rank>
+    <snd_config>characters_voice\human\ecolog_3\</snd_config>
+    <rank>19522</rank>
     <money min="1000" max="8000" infinitive="0"/>
-    <reputation>150</reputation>
-    <visual>actors\stalker_neutral\stalker_neutral_nauchniy</visual>
+    <reputation>1150</reputation>
+    <visual>actors\stalker_ecologist\stalker_ecolog_lc_5</visual>
     <supplies>
         [spawn] \n
 		broken_pda = 1 \n
@@ -676,16 +689,16 @@
 
 <specific_character id="sim_default_ecolog_dead_default_3" team_default = "1">
     <name>GENERATE_NAME_science</name>
-    <icon>ui_inGame2_ecolog_green</icon>
+    <icon>ui_inGame3_ico_ecolog</icon>
     <map_icon x="1" y="0"></map_icon>
-    <bio>Опытный сталкер. Детальная информация отсутствует.</bio>
+    <bio>пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ.</bio>
     <class>sim_default_ecolog_dead</class>
     <community>ecolog</community> <terrain_sect>stalker_terrain</terrain_sect>
-    <snd_config>characters_voice\human\stalker_3\</snd_config>
-    <rank>12000</rank>
+    <snd_config>characters_voice\human\ecolog_3\</snd_config>
+    <rank>26325</rank>
     <money min="1000" max="8000" infinitive="0"/>
-    <reputation>420</reputation>
-    <visual>actors\stalker_ecologist\stalker_ecolog_military</visual>
+    <reputation>1420</reputation>
+    <visual>actors\stalker_ecologist\stalker_ecolog_experimental_sci_exolight_2</visual>
     <supplies>
         [spawn] \n
 		broken_pda = 1 \n

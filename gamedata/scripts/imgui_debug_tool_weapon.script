@@ -1,0 +1,141 @@
+-- Weapon Debug Tool
+
+
+
+function render()
+	local near = xrs_debug_tools.get_debug_npc and xrs_debug_tools.get_debug_npc()
+	local wpn = (near and near:alive() and near:active_item()) or (db and db.actor and db.actor:active_item())
+	
+	local has_weapon = wpn ~= nil
+	local weapon_name = has_weapon and wpn:name() or "No Weapon"
+	
+	ImGui.Text("Active Weapon: " .. weapon_name)
+	ImGui.Separator()
+	
+	-- Always display weapon information
+	local sobj = has_weapon and alife_object and alife_object(wpn:id())
+	local data = sobj and IsWeapon and IsWeapon(wpn) and utils_stpk and utils_stpk.get_weapon_data and utils_stpk.get_weapon_data(sobj)
+	local sec = has_weapon and wpn:section() or "N/A"
+	
+	-- Basic Weapon Information
+	ImGui.Text("Basic Weapon Information:")
+	ImGui.Text("Weapon Section: " .. sec)
+	
+	-- Owner
+	local owner_name = "None"
+	if (sobj and sobj.parent_id ~= 65535 and level and level.object_by_id) then
+		local owner = level.object_by_id(sobj.parent_id)
+		owner_name = owner and owner:name() or "Unknown"
+	end
+	ImGui.Text("Owner: " .. owner_name)
+	
+	-- Weapon Types
+	local ef_main_weapon_type = "nil"
+	if (ini_sys and ini_sys.r_string_ex) then
+		ef_main_weapon_type = ini_sys:r_string_ex(sec, "ef_main_weapon_type", "nil")
+	end
+	ImGui.Text("ef_main_weapon_type: " .. ef_main_weapon_type)
+	
+	local ef_weapon_type = "nil"
+	if (ini_sys and ini_sys.r_string_ex) then
+		ef_weapon_type = ini_sys:r_string_ex(sec, "ef_weapon_type", "nil")
+	end
+	ImGui.Text("ef_weapon_type: " .. ef_weapon_type)
+	
+	ImGui.Separator()
+	
+	-- Weapon Data
+	local visual = "N/A"
+	local visual_flag = "N/A"
+	local condition = "N/A"
+	local upgrades = "None"
+	local scope = "N/A"
+	local addon_flag = "N/A"
+	local ammo_type = "N/A"
+	local nv_status = "N/A"
+	
+	if (data) then
+		visual = data.visual_name or "N/A"
+		visual_flag = tostring(data.visual_flags or "N/A")
+		condition = data.condition and string.format("%d%%", math.floor(data.condition * 100)) or "N/A"
+		upgrades = data.upgrades and table.concat(data.upgrades, ",") or "None"
+		scope = tostring(data.scope or "N/A")
+		addon_flag = tostring(data.addon_flags or "N/A")
+		ammo_type = tostring(data.ammo_type or "N/A")
+		nv_status = tostring(data.remember_nv_status or "N/A")
+	end
+	
+	ImGui.Text("Weapon Data:")
+	ImGui.Text("Visual: " .. visual)
+	ImGui.Text("Visual Flag: " .. visual_flag)
+	ImGui.Text("Condition: " .. condition)
+	ImGui.Text("Upgrades: " .. upgrades)
+	ImGui.Text("Scope: " .. scope)
+	ImGui.Text("Addon Flag: " .. addon_flag)
+	ImGui.Text("Ammo Type: " .. ammo_type)
+	ImGui.Text("NV Status: " .. nv_status)
+	
+	ImGui.Separator()
+	
+	-- Weapon State and Statistics
+	local state = "N/A"
+	local substate = "N/A"
+	local ammo_count_total = "N/A"
+	local main_weapon_type = "N/A"
+	local weapon_type = "N/A"
+	
+	if (has_weapon) then
+		local states = {
+			[eIdle or 0] = "eIdle",
+			[eShowing or 1] = "eShowing",
+			[eHiding or 2] = "eHiding",
+			[eHidden or 3] = "eHidden",
+			[eBore or 4] = "eBore",
+			[eFire or 5] = "eFire",
+			[eFire2 or 6] = "eFire2",
+			[eReload or 7] = "eReload",
+			[eMisfire or 8] = "eMisfire",
+			[eMagEmpty or 9] = "eMagEmpty",
+			[eSwitch or 10] = "eSwitch"
+		}
+		
+		-- Get state info
+		local success, state_id = pcall(function() return wpn:get_state() end)
+		if success then
+			local state_name = states[state_id] or "unknown"
+			state = string.format("%s (%s)", state_name, state_id)
+		else
+			state = "Error"
+		end
+		
+		-- Get substate
+		local success2, result2 = pcall(function() return tostring(wpn:get_weapon_substate()) end)
+		substate = success2 and result2 or "Error"
+		
+		-- Get ammo count
+		local success3, result3 = pcall(function() return tostring(wpn:get_ammo_count_for_type(0)) end)
+		ammo_count_total = success3 and result3 or "Error"
+		
+		-- Get main weapon type
+		local success4, result4 = pcall(function() return tostring(wpn:get_main_weapon_type()) end)
+		main_weapon_type = success4 and result4 or "Error"
+		
+		-- Get weapon type
+		local success5, result5 = pcall(function() return tostring(wpn:get_weapon_type()) end)
+		weapon_type = success5 and result5 or "Error"
+	end
+	
+	ImGui.Text("Weapon State and Statistics:")
+	ImGui.Text("State: " .. state)
+	ImGui.Text("SubState: " .. substate)
+	ImGui.Text("Ammo Count Total: " .. ammo_count_total)
+	ImGui.Text("Main Weapon Type: " .. main_weapon_type)
+	ImGui.Text("Weapon Type: " .. weapon_type)
+end
+
+-- Tool registration
+imgui_debug_tools.register_tool("weapon_hud", {
+	title = "Weapon Info",
+	render = render,
+	visible = false
+})

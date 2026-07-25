@@ -102,7 +102,7 @@
         rpm                         = 650
         rpm_empty_click             = 200
         
-        use_aim_bullet = false
+        use_aim_bullet              = true
         time_to_aim                 = 0.0 ;  3.0
         zoom_dof                    = 0.5, 1.0, 180
         zoom_enabled                = true
@@ -164,6 +164,8 @@ control_inertion_factor = 1.0f
         kill_msg_width              = 87
         kill_msg_height             = 24
  
+		snd_reload				                                          = weapons\vityaz\vityaz_reload
+		snd_reload_empty				                                  = weapons\vityaz\vityaz_reload_empty
 
 [wpn_fnc_hud]:hud_base
         item_visual                 = anomaly_weapons\wpn_fnc\wpn_fnc_hud.ogf
@@ -173,18 +175,23 @@ control_inertion_factor = 1.0f
         item_position               = 0, 0.004, 0
         item_orientation            = -15.488927, -3.320898, 367.220154
         
-        hands_position              = -0.14, -0.19, 0.09
-        hands_position_16x9         = -0.14, -0.19, 0.09
-        hands_orientation           = -0.75, 1.7, -4.2
-        hands_orientation_16x9      = -0.75, 1.7, -4.2
-        
-        aim_hud_offset_pos          = -0.076905, 0.0667, -0.2
-        aim_hud_offset_pos_16x9     = -0.076905, 0.0667, -0.2
-        aim_hud_offset_rot          = 0.0269, 0.0003, -0.0061
-        aim_hud_offset_rot_16x9     = 0.0269, 0.0003, -0.0061
-        
-        gl_hud_offset_pos           = -0.0395, 0.011, -0.15
-        gl_hud_offset_pos_16x9      = -0.0395, 0.011, -0.15
+        hands_position              = -0.15, -0.16, -0.13
+        hands_position_16x9         = -0.15, -0.16, -0.13
+        hands_orientation           = 0.0, -0.5, -4.2
+        hands_orientation_16x9      = 0.0, -0.5, -4.2
+
+        aim_hud_offset_pos          = -0.0654, 0.036, -0.01
+        aim_hud_offset_pos_16x9     = -0.0654, 0.036, -0.01
+        aim_hud_offset_rot          = -0.011, 0.0137, -0.007
+        aim_hud_offset_rot_16x9     = -0.011, 0.0137, -0.007
+
+		lowered_hud_offset_pos			= 0.06, -0.025, -0.02
+		lowered_hud_offset_pos_16x9		= 0.06, -0.025, -0.02
+		lowered_hud_offset_rot			= -0.1, -0.65, 0.4
+		lowered_hud_offset_rot_16x9		= -0.1, -0.65, 0.4
+
+        gl_hud_offset_pos           = -0.0395, 0.011, 0
+        gl_hud_offset_pos_16x9      = -0.0395, 0.011, 0
         gl_hud_offset_rot           = -0.087, -0.004, -0.02
         gl_hud_offset_rot_16x9      = -0.087, -0.004, -0.02
         
@@ -194,11 +201,12 @@ control_inertion_factor = 1.0f
         anm_hide                    = lancew_ak101_holster
         anm_idle                    = lancew_ak101_idle
         anm_idle_aim                = lancew_ak101_idle_aim, idle_aim
-        anm_idle_aim_moving         = lancew_ak101_moving, idle, 0.75
-        anm_idle_aim_moving_crouch  = lancew_ak101_moving, idle, 0.7
-        anm_idle_moving             = lancew_ak101_moving
-        anm_idle_sprint             = lancew_ak101_sprint
-        anm_reload                  = lancew_ak101_reload, reload
+        anm_idle_aim_moving         = lancew_aks74_moving_v2, idle, 0.75
+        anm_idle_aim_moving_crouch  = lancew_aks74_moving_v2, idle, 0.7
+        anm_idle_moving             = lancew_aks74_moving_v2
+        anm_idle_sprint             = lancew_aks74_sprint_v2
+		anm_reload                  = aks74_reload_short, reload_short
+        anm_reload_empty            = lancew_ak101_reload, reload
         anm_shots                   = lancew_ak101_shoot, shoot
         anm_show                    = lancew_ak101_draw
         
@@ -208,7 +216,6 @@ control_inertion_factor = 1.0f
         
         fire_bone                   = wpn_body
         fire_bone2                  = wpn_body
-        fire_point                  = 0, 0.038159, 0.608368
+        fire_point                  = 0.006, 0.0381, 0.608
         fire_point2                 = 0, -0.011, 0.553
  
-		rpm_anim_fix 				= false

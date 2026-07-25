@@ -5,12 +5,46 @@
 < TEXT STRINGS FOR LOST TO THE ZONE: LIVING LEGEND TASKS
 <	Anomaly 1.5 - Lost to the Zone: Living Legend
 <
-<	Made by: SarisKhan
-<	Last revised: 04 September 2019
-<
 <===========================================================-->
 
 <string_table>
+
+<!--
+	ITEMS
+-->
+
+	<string id="item_doc_x8_ll_name">
+		<text>X-8 Documents</text>
+	</string>
+	<string id="item_doc_x8_ll_desc">
+		<text>These documents briefly touch on the results of extensive experiments in psy-research conducted by an unknown group. Most notably, the results seem to confirm the existence of a non-contact field of psychic energy which envelops the Earth and a brief description of the sophisticated machinery that could potentially influence the field.\n
+		However, The bulk of these documents are a long list of human test subjects who were exposed to psy-emissions of various frequencies and intensities. Many were noted to have seemingly developed superhuman endurance, intellect or telepathic abilities during the testing. Some are recorded to have later died, others were transferred, and many were left completely unaccounted for, as if they disappeared or escaped.\n
+		Scribbled along one of the margins is a cryptic note: "Already we have perverted the human form far beyond recognition for the sake of our vision! How much longer will it be before our hubris and sin catches up to us?".\n
+		Strelok will definitely be interested in this.\n \n
+		%c[pda_white]PROPERTIES:\n
+		%c[d_orange] • %c[pda_white] Quest Item\n
+		</text>
+	</string>
+
+	<string id="strelok_notes_name">
+		<text>Strelok's Notebook</text>
+	</string>
+	<string id="strelok_notes_desc">
+		<text>This notebook used to belong to Strelok. A quick read reveals many rather disjointed and cryptic notes. It seems the stalker had a crisis about an important decision he had made a few years ago, and wanted to quickly resupply at Rostok before pushing north to verify his choices.\n \n
+		%c[pda_white]PROPERTIES:\n
+		%c[d_orange] • %c[pda_white] Quest Item\n
+		</text>
+	</string>
+
+	<string id="st_strelok_pendrive_name">
+		<text>Strelok's Flash Drive</text>
+	</string>
+	<string id="st_strelok_pendrive_descr">
+		<text>An encrypted flash drive containing a backup copy of Strelok's many findings throughout the years. It is an invaluable piece of evidence regarding the top secret experiments that allegedly created the Zone.\n \n
+		%c[pda_white]PROPERTIES:\n
+		%c[d_orange] • %c[pda_white] Quest Item\n
+		</text>
+	</string>
 
 	<!-- \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ -->
 
@@ -32,14 +66,7 @@
 		<text>Doctor suggested visiting Strelok's hideout in Agroprom Underground for clues on his whereabouts.</text>
 	</string>
 	<string id="lttz_ll_visit_agro_ug_text_2">
-		<text>A thorough read of Doctor's notes reveals Strelok's got a hideout in Agroprom Underground. Visit it for clues on his whereabouts.</text>
-	</string>
-	
-	<string id="strelok_notes_name">
-		<text>Strelok's notebook</text>
-	</string>
-	<string id="strelok_notes_desc">
-		<text>This notebook used to belong to Strelok. A quick read reveals many rather disjointed and cryptic notes. Seems the stalker had a crisis about an important decision he had made a few years ago, and wanted to quickly resupply at Rostok before pushing north to verify his choices.</text>
+		<text>A thorough read of Doctor's notes reveals Strelok's got a hideout in the Agroprom Underground. Visit it for clues on his whereabouts.</text>
 	</string>
 	
 	<!-- ----------------------------------------------------------------------------------------- -->
@@ -127,7 +154,11 @@
 		<text>"Item ¹62"</text>
 	</string>
 	<string id="lttz_ll_wpn_gauss_quest_descr">
-		<text>Extremely powerful and highly accurate electromagnetic accelerator gun. Obtains energy from electric-type artefacts. Can penetrate even the best armour. Someone apparently abandoned this hand-held version on the shooting range of its much bigger prototype.</text>
+		<text>A highly experimental, extremely accurate, artefact-powered weapon made in the Zone. Instead of gunpowder, the gauss rifle utilizes electromagnetic forces to launch projectiles at incredible speeds similar to a railgun. Proportionate to its tremendous firepower, the recoil is surprisingly controllable. Among other weapons of its class, its accuracy and firepower is unmatched.\n \n
+		%c[pda_white]CHARACTERISTICS:\n
+		%c[d_cyan] • %c[pda_white] Origin: %c[ui_gray_2]Russia\n
+		%c[d_cyan] • %c[pda_white] Manufacturer: %c[ui_gray_2]Redacted\n
+		</text>
 	</string>
 	
 	<!-- ----------------------------------------------------------------------------------------- -->
@@ -136,13 +167,13 @@
 		<text>Living Legend: Path to Pripyat</text>
 	</string>
 	<string id="lttz_ll_path_pripyat_task_descr">
-		<text>Pass through the Jupiter Underground. Rogue will accompany you.</text>
+		<text>Pass through the Jupiter Underground with Rogue.</text>
 	</string>
 	<string id="lttz_ll_talk_rogue_underpass_task_descr">
-		<text>You have defeated a Monolith ambush. Consult Rogue about the situation.</text>
+		<text>The Monolith ambush has been defeated. Consult Rogue about the situation.</text>
 	</string>
 	<string id="lttz_ll_reach_pripyat_task_descr">
-		<text>Reach Strelok's hideout in Pripyat. Rogue will accompany you.</text>
+		<text>Reach Strelok's hideout in Pripyat with Rogue.</text>
 	</string>
 	
 	<!-- ----------------------------------------------------------------------------------------- -->
@@ -151,7 +182,7 @@
 		<text>Living Legend: Medical Supplies</text>
 	</string>
 	<string id="lttz_ll_medical_supplies_text">
-		<text>Stitch, Strelok's combat medic, has asked you to procure %s.</text>
+		<text>Stitch, Strelok's combat medic, needs %s.</text>
 	</string>
 	
 	<!-- ----------------------------------------------------------------------------------------- -->
@@ -160,10 +191,10 @@
 		<text>Living Legend: Attack on Titan</text>
 	</string>
 	<string id="lttz_ll_attack_on_titan_text">
-		<text>A dangerous pseudogiant roams Pripyat. Kill it in advance to avoid a lethal distraction.</text>
+		<text>A dangerous Pseudogiant roams Pripyat. Kill it in advance to avoid a lethal distraction.</text>
 	</string>
 	<string id="lttz_ll_return_rogue_attack_on_titan_task_descr">
-		<text>You have defeated the pseudogiant. Return to Rogue to inform him about your success.</text>
+		<text>The Pseudogiant has been defeated. Return to Rogue.</text>
 	</string>
 	
 	<!-- ----------------------------------------------------------------------------------------- -->
@@ -173,13 +204,6 @@
 	</string>
 	<string id="lttz_ll_find_documents_text">
 		<text>Lab X-8 contains top secret information on the Zone. Find the documents and bring them to Strelok.</text>
-	</string>
-	
-	<string id="item_doc_x8_ll_name">
-		<text>X-8 documents</text>
-	</string>
-	<string id="item_doc_x8_ll_desc">
-		<text>These documents briefly touch on the results of extensive experiments in psy-research conducted by an unknown group. Most notably, the results seem to confirm the existence of a non-contact field of psychic energy which envelops the Earth.\n \nAlso contained is the brief description of sophisticated machinery that could potentially influence said field in a controlled fashion.\n  \nThe bulk of these documents, however, are simply a long list of human test subjects who were exposed to psy-emissions of various frequencies and intensities. Many were noted to have seemingly developed superhuman endurance, intellect or telepathic abilities during the testing. Some are recorded to have later died, others were transferred, and many were left completely unaccounted for, as if they disappeared or escaped.\n \nScribbled along one of the margins is a cryptic note: "Already we have perverted the human form far beyond recognition for the sake of our vision! How much longer will it be before our hubris and sin catches up to us?". Strelok will definitely be interested in this.</text>
 	</string>
 	
 	<!-- ----------------------------------------------------------------------------------------- -->
@@ -224,14 +248,14 @@
 		<text>Living Legend: Crucible</text>
 	</string>
 	<string id="lttz_ll_crucible_task_descr">
-		<text>Fight your way to the Monolith Control Centre, defeat the Phantom Guard and find the Shard of the Monolith.</text>
+		<text>Fight your way to the Monolith Control Center, defeat the Phantom Guard and find the Shard of the Monolith.</text>
 	</string>
 	
 	<string id="item_monolith_shard_name">
 		<text>Shard of the Monolith</text>
 	</string>
 	<string id="item_monolith_shard_desc">
-		<text>This object was, according to legend, split from the Wish Granter itself. Displays properties not unlike an artefact. It crackles with unnerving energy, and may boast insidious powers that aren't immediately apparent.</text>
+		<text>This object was, according to legend, split from the Wish Granter itself and displays properties not unlike an artefact. It crackles with unnerving energy and may boast insidious powers currently unknown to man.</text>
 	</string>
 	
 	<!-- ----------------------------------------------------------------------------------------- -->
@@ -240,14 +264,7 @@
 		<text>Living Legend: Answers</text>
 	</string>
 	<string id="lttz_ll_answers_task_descr">
-		<text>You have obtained a shard of the Monolith. The time for answers has come.</text>
-	</string>
-	
-	<string id="st_strelok_pendrive_name">
-		<text>Strelok's pendrive</text>
-	</string>
-	<string id="st_strelok_pendrive_descr">
-		<text>This pendrive contains plenty of encrypted data: the backup copy of Strelok's many findings throughout the years. Invaluable piece of evidence regarding the top secret experiments that allegedly created the Zone.</text>
+		<text>A shard of the Monolith has been obtained. The time for answers has come.</text>
 	</string>
 	
 	<!-- ----------------------------------------------------------------------------------------- -->

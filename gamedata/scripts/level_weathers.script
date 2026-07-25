@@ -1,850 +1,1301 @@
 --===============================================================================
---18.02.2008 - added dynamic weather
---25.06.2011 - modified for AtmosFear 3 by Cromm Cruac
---28.12.2013 - modified by Alundaio for all levels
---8.02.2016  - modified by Alundaio to USE_MARSHAL
---===============================================================================
--- Tronex:
--- 2018/4/17  	- global weather system
--- 2018/11/8 	- added new particle effects Dead Air
--- 2018/11/19 	- changed cycle check to be based on date instead of hours
--- 2019/6/6 	- cleaning, fixed bugs
--- 2020/2/19	- custom weather parameter modifiers for brightness
+-- Melancholy Weathers scheduler
+-- Replaces the vanilla AtmosFear-style WeatherManager with a category-first,
+-- scheduled weather-day system driven by dynamic_weather_graphs.ltx.
 --===============================================================================
 
-local enable_debug = false
+local enable_debug = true
+local enable_event_debug = false
+
+local SAVE_VERSION = 1
+local DAY_START_MIN = 4 * 60
+local LOCKOUT_START_MIN = 19 * 60
+local LAST_TRANSITION_START_MIN = (18 * 60) + 30
+local TRANSITION_MINUTES = 30
+local MIN_TRANSITION_SPACING = 60
+local HISTORY_LIMIT = 10
+local EVENT_LEAD_SECONDS = 2 * 60 * 60
+local EVENT_DEBUG_INTERVAL_MS = 10 * 1000
+local MONTH_DAYS = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31}
+local TRANSITION_JITTER_MIN = 0.75
+local TRANSITION_JITTER_MAX = 1.25
+local EDGE_HISTORY_LIMIT = 8
+local EDGE_REPEAT_PENALTY = 0.45
+local EDGE_BACKTRACK_PENALTY = 0.65
+local pre_blowout_excluded_categories = {
+	clear = true,
+	partly = true,
+	cloudy_light = true,
+	dream = true,
+}
 
 local ini_weather = ini_file("environment\\dynamic_weather_graphs.ltx")
 local weather_tbl = utils_data.collect_section(ini_weather, "weather_cycles")
 
-local prev_sec = 0
-local diff_sec = 0
-local last_amb = {}
 valid_levels = {}
 bLevelUnderground = false
 
-local big_maps = {
-	["jupiter"] = true,
-	["zaton"] = true,
-	["pripyat"] = true,
-	["l12_stancia"] = true,
-	["l12_stancia_2"] = true,
-	["k00_marsh"] = true,
+local last_amb = {}
+local weather_manager = nil
+
+-- Fallbacks for missing/broken graph sections; keep synced with dynamic_weather_graphs.ltx.
+local default_start_weights = {
+	clear = 13,
+	partly = 12,
+	cloudy = 9,
+	cloudy_light = 11,
+	cloudy_dark = 4,
+	rain = 9,
+	storm = 4,
+	foggy = 9,
+	dream = 0,
 }
- 
- 
+
+local default_day_count_weights = {
+	[1] = 5,
+	[2] = 15,
+	[3] = 35,
+	[4] = 30,
+	[5] = 15,
+}
+
+local default_transition_weights = {
+	clear = {
+		partly = 7,
+		cloudy_light = 5,
+		foggy = 1,
+	},
+	partly = {
+		clear = 6,
+		cloudy_light = 4,
+		cloudy = 3,
+		foggy = 2,
+	},
+	cloudy = {
+		partly = 3,
+		cloudy_light = 4,
+		foggy = 4,
+		rain = 4,
+		cloudy_dark = 3,
+		storm = 2,
+	},
+	cloudy_light = {
+		clear = 6,
+		partly = 5,
+		cloudy = 4,
+		cloudy_dark = 1,
+		foggy = 2,
+		rain = 3,
+	},
+	cloudy_dark = {
+		cloudy_light = 3,
+		cloudy = 5,
+		rain = 6,
+		foggy = 3,
+		storm = 4,
+	},
+	rain = {
+		clear = 2,
+		partly = 2,
+		cloudy = 4,
+		cloudy_light = 5,
+		cloudy_dark = 3,
+		foggy = 3,
+		storm = 3,
+	},
+	foggy = {
+		clear = 4,
+		partly = 2,
+		cloudy = 4,
+		cloudy_dark = 2,
+		cloudy_light = 5,
+		rain = 3,
+		storm = 1,
+	},
+	storm = {
+		cloudy_dark = 3,
+		rain = 3,
+		foggy = 3,
+		cloudy_light = 5,
+		cloudy = 4,
+		dream = 1,
+	    clear = 3,
+	},
+	dream = {
+		clear = 5,
+		partly = 3,
+		cloudy = 4,
+		cloudy_light = 4,
+		cloudy_dark = 3,
+		rain = 4,
+		foggy = 4,
+	},
+}
+
+local function dbg(fmt, ...)
+	if enable_debug then
+		printf("MelWeather | " .. fmt, ...)
+	end
+end
+
+local function event_dbg(fmt, ...)
+	if enable_event_debug then
+		printf("MelWeatherEvent | " .. fmt, ...)
+	end
+end
+
+local function warn(fmt, ...)
+	printe("! MelWeather | " .. fmt, ...)
+end
+
+local function copy_array(src)
+	local out = {}
+	if src then
+		for i = 1, #src do
+			out[i] = src[i]
+		end
+	end
+	return out
+end
+
+local function copy_weights(src)
+	local out = {}
+	if src then
+		for k, v in pairs(src) do
+			out[k] = v
+		end
+	end
+	return out
+end
+
+local function contains(tbl, value)
+	if not tbl then
+		return false
+	end
+	for i = 1, #tbl do
+		if tbl[i] == value then
+			return true
+		end
+	end
+	return false
+end
+
+local function count_table(tbl)
+	local n = 0
+	if tbl then
+		for _ in pairs(tbl) do
+			n = n + 1
+		end
+	end
+	return n
+end
+
+local function valid_pre_blowout_category(category)
+	return not pre_blowout_excluded_categories[category]
+end
+
+local function trim_history(history)
+	while history and #history > HISTORY_LIMIT do
+		table.remove(history, 1)
+	end
+	return history or {}
+end
+
+local function edge_key(from_category, to_category)
+	if not (from_category and to_category) then
+		return nil
+	end
+	return tostring(from_category) .. ">" .. tostring(to_category)
+end
+
+local function trim_edge_history(history)
+	while history and #history > EDGE_HISTORY_LIMIT do
+		table.remove(history, 1)
+	end
+	return history or {}
+end
+
+local function current_minutes_raw()
+	return (level.get_time_hours() * 60) + level.get_time_minutes()
+end
+
+local function current_schedule_minute()
+	local m = current_minutes_raw()
+	if m < DAY_START_MIN then
+		return m + (24 * 60)
+	end
+	return m
+end
+
+local function calendar_day_index()
+	local g_time = game.get_game_time()
+	local Y, M, D, h, m, s, ms = 0, 0, 0, 0, 0, 0, 0
+	Y, M, D, h, m, s, ms = g_time:get(Y, M, D, h, m, s, ms)
+
+	-- level.get_time_days() wraps at month boundaries; use a stable calendar index.
+	local day = 365 * (Y - 2010) + D
+	for mm = 1, M - 1 do
+		day = day + MONTH_DAYS[mm]
+	end
+	return day
+end
+
+local function weather_day_id()
+	local day = calendar_day_index()
+	if current_minutes_raw() < DAY_START_MIN then
+		day = day - 1
+	end
+	return day
+end
+
+local function minute_to_string(minute)
+	local m = minute
+	if m >= (24 * 60) then
+		m = m - (24 * 60)
+	end
+	local h = math.floor(m / 60)
+	local mi = m - (h * 60)
+	local hs = h < 10 and ("0" .. tostring(h)) or tostring(h)
+	local ms = mi < 10 and ("0" .. tostring(mi)) or tostring(mi)
+	return hs .. ":" .. ms
+end
+
+local function valid_weather_file(preset)
+	return preset and getFS():exist("$game_config$", "environment\\weathers\\" .. preset .. ".ltx") ~= nil
+end
+
+local function weighted_pick(weights)
+	local total = 0
+	for _, w in pairs(weights or {}) do
+		if w and w > 0 then
+			total = total + w
+		end
+	end
+	if total <= 0 then
+		return nil
+	end
+	local r = math.random() * total
+	for k, w in pairs(weights) do
+		if w and w > 0 then
+			r = r - w
+			if r <= 0 then
+				return k
+			end
+		end
+	end
+	return nil
+end
+
+local function section_weights(ini, section, valid_keys, fallback, strict_counts)
+	local out = {}
+	local found = false
+	if ini and ini:section_exist(section) then
+		found = true
+		for i = 0, ini:line_count(section) - 1 do
+			local _, id, value = ini:r_line_ex(section, i, "", "")
+			local key = id
+			local weight = tonumber(value)
+			if strict_counts then
+				key = tonumber(id)
+				if not key or key < 1 or key > 5 then
+					warn("[%s] ignores out-of-range day count key '%s'", section, tostring(id))
+				elseif not weight or weight < 0 then
+					warn("[%s] ignores malformed weight '%s = %s'", section, tostring(id), tostring(value))
+				else
+					out[key] = weight
+				end
+			elseif not valid_keys[id] then
+				warn("[%s] ignores unknown category '%s'", section, tostring(id))
+			elseif not weight or weight < 0 then
+				warn("[%s] ignores malformed weight '%s = %s'", section, tostring(id), tostring(value))
+			else
+				out[key] = weight
+			end
+		end
+	end
+
+	if count_table(out) == 0 then
+		if found then
+			warn("[%s] has no usable weights; using fallback", section)
+		end
+		return copy_weights(fallback or {})
+	end
+
+	return out
+end
+
+local function make_time_table()
+	local now = game.get_game_time()
+	return now and utils_data.CTime_to_table(now) or nil
+end
+
 --------------------------------------
 class "WeatherManager"
 
 function WeatherManager:__init()
-	--self:Print("__init")
-	
-	self.weather_file = nil
-	self.transition_period = false
-	self.pre_blowout_period = false
-	self.curr_weather = ""
-	self.next_weather = ""
-	self.last_hour = 0
-	self.next_hour = 0
-	self.last_period_change_date = game.get_game_time()
-	self.forced_weather_change_on_time_change = false
-	
-	self.wfx_time = 0
-	self.weather_fx = nil
-	self.weatherType = "[default]"
-	self.update_time = 0
 	self.ini = ini_weather
 	if not self.ini then
-		printe("!ERROR when open weather_dynamic_graphs.ltx")
+		warn("failed to open environment\\dynamic_weather_graphs.ltx")
 	end
-	self.dof_factor = 1
-	
+
+	self.category_set = {}
+	self.weather_order = {}
+	for i = 1, #weather_tbl do
+		local cat = weather_tbl[i]
+		self.category_set[cat] = true
+		self.weather_order[#self.weather_order + 1] = cat
+	end
+
 	self.presets = {}
-	for i=1,#weather_tbl do
-		self.presets[weather_tbl[i]] = utils_data.parse_ini_section_to_bool_array(self.ini, "cycle_" .. weather_tbl[i], true)
-	end
-	self.presets_pre_blowout = utils_data.parse_ini_section_to_bool_array(self.ini, "cycle_pre_blowout", true)
-	
-	self.weather_storage = {}
-	self.cycle = get_random_weather()
-	self.preset = self.presets[self.cycle] and random_key_table(self.presets[self.cycle]) or nil
-	
-	self.inited_time = 0
-	self.meteorites_particle = nil
-	self.meteorites_on = false
-	self.boundaries = {
-		--distant lightning feature
-		--map front view bounding box x/y coordinates: 1. left above 2. left bottom 3. right bottom 4. right above
-		k00_marsh 			= {{-550,760},{-550,-736},{940,-737},{940,760}},
-		k01_darkscape 		= {{-494,697},{-673,-485},{447,-591},{308,678}},
-		k02_trucks_cemetery = {{-386,468},{-386,-468},{386,-468},{386,468}},
-		l01_escape 			= {{-464,963},{-315,-630},{403,-633},{404,965}},
-		l02_garbage			= {{-367,315},{-367,-420},{368,-420},{368,315}},
-		l03_agroprom 		= {{-268,245},{-263,-373},{351,-377},{352,242}},
-		l04_darkvalley		= {{-524,499},{-517,-930},{518,-934},{516,502}},
-		l05_bar 			= {{-511,511},{-511,-511},{510,-511},{511,511}},
-		l06_rostok 			= {{-511,511},{-511,-511},{511,-511},{511,511}},
-		l07_military 		= {{-443,508},{-443,-131},{196,-131},{195,507}},
-		l08_yantar 			= {{-282,137},{-282,-431},{282,-431},{286,136}},
-		l09_deadcity 		= {{-324,313},{-362,-328},{279,-328},{279,313}},
-		l10_limansk 		= {{-500,582},{-500,-416},{500,-417},{500,582}},
-		l10_radar 			= {{-318,557},{-318,-658},{890,-658},{890,557}},
-		l10_red_forest 		= {{-317,196},{-317,-503},{381,-503},{382,196}},
-		l11_hospital		= {{-121,919},{-121,535},{-50,536},{-50,919}},
-		l11_pripyat 		= {{-628,778},{-627,-520},{670,-520},{671,779}},
-		l12_stancia 		= {{-600,850},{-600,-747},{1525,-747},{1728,849}},
-		l12_stancia_2 		= {{-600,850},{-600,-747},{1525,-747},{1728,849}},
-		l13_generators 		= {{-499,209},{-499,-853},{540,-853},{540,209}},
-		zaton 				= {{0,-600},{400,-590},{580,-460},{800,-390},{800,830},{-445,820},{-490,715},{-567,607},{-620,423},{-622,-231},{-615,-470},{-568,-568},{-400,-590}},
-		jupiter 			= {{-660,640},{-660,-680},{660,-680},{660,640}},
-		pripyat 			= {{700,700},{-700,700},{-700,-700},{700,-700}}
-	}
-	
-	self.storm_directions = {
-		{-50,10},		{30,90},		{40,130},		{-110,-70},
-		{10,60},		{-140,-70},		{-40,20},		{90,160},
-		{-190,-140},	{10,90},		{120,170},		{-90,-20},
-		{30,130},		{130,170},		{-130,-70},		{-10,50},
-		{-170,-110},	{-80,-20},		{-190,-150},	{-60,-20},
-		{-60,-30},		{-190,-150},	{-80,-20},		{50,110}
-	}
-
-	self.distant_sounds = utils_data.collect_section(self.ini, "distant_storm_sounds")
-	self.thunders = {}
-	self.thunder_index = 1
-	self.distant_storm_prob = 0.5
-
-	if (is_empty(valid_levels)) then 
-		local gini  = game_ini()
-		local levels = utils_data.collect_section(gini,"level_maps_single")
-		for i = 1,#levels do
-			local wthr = gini:r_string_ex(levels[i],"weathers")
-			if (wthr == "atmosfear") then
-				valid_levels[levels[i]] = true
+	self.preset_lists = {}
+	for i = 1, #self.weather_order do
+		local cat = self.weather_order[i]
+		self.presets[cat] = {}
+		self.preset_lists[cat] = {}
+		local raw = utils_data.collect_section(self.ini, "cycle_" .. cat)
+		for j = 1, #raw do
+			local preset = raw[j]
+			if valid_weather_file(preset) then
+				self.presets[cat][preset] = true
+				self.preset_lists[cat][#self.preset_lists[cat] + 1] = preset
+			else
+				warn("[cycle_%s] ignores missing preset '%s'", cat, tostring(preset))
 			end
 		end
 	end
 
-	bLevelUnderground = valid_levels[level.name()] == nil
-	SetEvent("underground", bLevelUnderground)
-	
-	-- Parse brightness table
-	self.brightness = ui_options.get("video/night/brightness") or "slight"
-	self.brightness_table = { -- self.brightness_table[brightness][weather][parameter] = { value = number , [1] = true , [2] = true ... } -- keys are hours
-		["bright"] = {},
-		["medium"] = {},
-		["slight"] = {},
-		["dark"]   = {},
-	}
-	
-	local r_curr = get_console_cmd(0,"renderer")
-	local r_tbl = {
-		["renderer_r1"]     = "r1",
-		["renderer_r2a"]    = "r2",
-		["renderer_r2"]     = "r2",
-		["renderer_r2.5"]   = "r2",
-		["renderer_r3"]     = "r3",
-		["renderer_r4"]     = "r4",
-	}
-	
-	for br,_ in pairs(self.brightness_table) do
-		local result, param, value = "","",""
-		local sec = "brightness_" .. br
-		if ini_weather:section_exist(sec) then
-			local n = ini_weather:line_count(sec)
-			for i=0,n-1 do
-				result, param, value = ini_weather:r_line_ex(sec,i,"","")
-				local str = str_explode(param,"%.")
-				local r = str[2]
-				local w = str[3]
-				local name = str[4]
-				if r and w and name and value and ((r_tbl[r_curr] == r) or (r == "rr")) then
-					local v = str_explode(value,",")
-					if v and v[2] then
-						if (not self.brightness_table[br][w]) then self.brightness_table[br][w] = {} end
-						if (not self.brightness_table[br][w][name]) then self.brightness_table[br][w][name] = {} end
-					
-						-- Collect hours
-						local h = str_explode(v[2],":")
-						for ii=1,#h do
-							self.brightness_table[br][w][name][tonumber(h[ii])] = true
-						end
-						
-						-- Collect value
-						local v1 = tonumber(v[1]) or 0
-						local vp = self.brightness_table[br][w][name].value
-						self.brightness_table[br][w][name].value = vp and vp + v1 or v1
-					end
-				end
-			end
+	self.start_weights = section_weights(self.ini, "mel_weather_start_weights", self.category_set, default_start_weights)
+	self.day_count_weights = section_weights(self.ini, "mel_weather_day_count_weights", self.category_set, default_day_count_weights, true)
+	self.transition_weights = {}
+	for i = 1, #self.weather_order do
+		local cat = self.weather_order[i]
+		local section = "mel_weather_transition_" .. cat
+		if self.ini and self.ini:section_exist(section) then
+			self.transition_weights[cat] = section_weights(self.ini, section, self.category_set, default_transition_weights[cat] or {})
+		else
+			warn("[%s] missing; using built-in fallback", section)
+			self.transition_weights[cat] = copy_weights(default_transition_weights[cat] or {})
 		end
 	end
-	--utils_data.print_table(self.brightness_table)
-end
 
-function WeatherManager:reset() -- Called after load (). Weather status already loaded. called from bind_stalker
-	--self:Print("reset")
-	local ini = ini_file("game.ltx")
-	local wthr = ini:r_string_ex(level.name(),"weathers") or "[default]"
-	self.weatherType = wthr
+	self.weather_file = nil
+	self.weatherType = "[default]"
+	self.levelWeather = "[default]"
+	self.cycle = nil
+	self.preset = nil
+	self.natural_cycle = nil
+	self.natural_preset = nil
+	self.category_history = {}
+	self.edge_history = {}
 
-	-- prepare periods
+	self.day_id = nil
+	self.transition_budget = 0
+	self.used_transition_count = 0
+	self.day_plan = {}
+
+	self.pre_blowout = nil
+	self.pre_blowout_suppressed = false
+	self.weather_fx = nil
+	self.wfx_time = 0
+	self.wfx_was_playing = false
+	self.force_reconcile = false
+	self.event_debug_next_log = 0
+	self.event_debug_last_state = nil
+	self.___timer = nil
 	self.inited_time = game.get_game_time()
 	self.last_hour = level.get_time_hours()
 	self.next_hour = self.last_hour + 1
-	if (self.next_hour > 23) then
+	if self.next_hour > 23 then
 		self.next_hour = self.next_hour - 24
 	end
-	
-	-- enable distant storms
-	local rnd = (math.random(1,100)/100)
-	if (rnd <= self.distant_storm_prob) and valid_levels[level.name()] then
-		self.distant_storm_on = true
-	else
-		self.distant_storm_on = false
+
+	self:build_valid_levels()
+end
+
+function WeatherManager:build_valid_levels()
+	if is_not_empty(valid_levels) then
+		return
 	end
-    self:select_weather(true)
+	local gini = game_ini()
+	local levels = utils_data.collect_section(gini, "level_maps_single")
+	for i = 1, #levels do
+		local wthr = gini:r_string_ex(levels[i], "weathers")
+		if wthr == "atmosfear" then
+			valid_levels[levels[i]] = true
+		end
+	end
+end
+
+function WeatherManager:update_level_weather_type()
+	local ini = ini_file("game.ltx")
+	self.weatherType = ini:r_string_ex(level.name(), "weathers") or "[default]"
+	bLevelUnderground = valid_levels[level.name()] == nil
+	SetEvent("underground", bLevelUnderground)
+end
+
+function WeatherManager:is_outdoor_weather()
+	return self.weatherType == "atmosfear" and not bLevelUnderground
+end
+
+function WeatherManager:add_history(category, target_history)
+	if not category then
+		return
+	end
+	local h = target_history or self.category_history
+	h[#h + 1] = category
+	trim_history(h)
+end
+
+function WeatherManager:add_edge_history(from_category, to_category, target_history)
+	local key = edge_key(from_category, to_category)
+	if not key then
+		return
+	end
+	local h = target_history or self.edge_history
+	h[#h + 1] = key
+	trim_edge_history(h)
+end
+
+function WeatherManager:history_blocks(category, history)
+	local h = history or self.category_history
+	if not category or #h < HISTORY_LIMIT then
+		return false
+	end
+	local count = 0
+	for i = 1, #h do
+		if h[i] == category then
+			count = count + 1
+		end
+	end
+	return count >= 5
+end
+
+function WeatherManager:edge_penalty(from_category, to_category, edge_history)
+	local key = edge_key(from_category, to_category)
+	if not key then
+		return 1
+	end
+	local h = edge_history or self.edge_history or {}
+	local penalty = 1
+	for i = 1, #h do
+		if h[i] == key then
+			penalty = penalty * EDGE_REPEAT_PENALTY
+		end
+	end
+	if #h > 0 and h[#h] == edge_key(to_category, from_category) then
+		penalty = penalty * EDGE_BACKTRACK_PENALTY
+	end
+	return penalty
+end
+
+function WeatherManager:valid_category(category)
+	return category and self.category_set[category] and self.preset_lists[category] and #self.preset_lists[category] > 0
+end
+
+function WeatherManager:choose_preset(category, avoid_preset)
+	local list = self.preset_lists[category]
+	if not list or #list == 0 then
+		return nil
+	end
+
+	local candidates = {}
+	for i = 1, #list do
+		local preset = list[i]
+		if preset ~= avoid_preset or #list == 1 then
+			candidates[#candidates + 1] = preset
+		end
+	end
+	if #candidates == 0 then
+		candidates = list
+	end
+	return candidates[math.random(#candidates)]
+end
+
+function WeatherManager:build_day_transition_weights()
+	local out = {}
+	for i = 1, #self.weather_order do
+		local cat = self.weather_order[i]
+		out[cat] = {}
+		local weights = self.transition_weights[cat] or default_transition_weights[cat] or {}
+		for target, weight in pairs(weights) do
+			if weight and weight > 0 then
+				local jitter = TRANSITION_JITTER_MIN + (math.random() * (TRANSITION_JITTER_MAX - TRANSITION_JITTER_MIN))
+				out[cat][target] = weight * jitter
+			else
+				out[cat][target] = weight
+			end
+		end
+	end
+	return out
+end
+
+function WeatherManager:filter_candidate_weights(weights, current_category, history, ignore_history, edge_history)
+	local out = {}
+	for category, weight in pairs(weights or {}) do
+		if weight and weight > 0 and category ~= current_category and self:valid_category(category) then
+			if ignore_history or not self:history_blocks(category, history) then
+				out[category] = weight * self:edge_penalty(current_category, category, edge_history)
+			end
+		end
+	end
+	return out
+end
+
+function WeatherManager:choose_next_category(current_category, history, transition_weights, edge_history)
+	local base = (transition_weights and transition_weights[current_category]) or self.transition_weights[current_category] or default_transition_weights[current_category] or {}
+	local candidates = self:filter_candidate_weights(base, current_category, history, false, edge_history)
+	if count_table(candidates) == 0 then
+		candidates = self:filter_candidate_weights(base, current_category, history, true, edge_history)
+	end
+	local pick = weighted_pick(candidates)
+	if pick then
+		return pick
+	end
+	warn("no valid transition candidates from '%s'; keeping current weather", tostring(current_category))
+	return current_category
+end
+
+function WeatherManager:choose_initial_category()
+	local candidates = {}
+	for category, weight in pairs(self.start_weights or {}) do
+		if category ~= "dream" and weight and weight > 0 and self:valid_category(category) then
+			candidates[category] = weight
+		end
+	end
+	local pick = weighted_pick(candidates)
+	if pick then
+		return pick
+	end
+	warn("no valid start weights; falling back to first valid category")
+	for i = 1, #self.weather_order do
+		local cat = self.weather_order[i]
+		if cat ~= "dream" and self:valid_category(cat) then
+			return cat
+		end
+	end
+	return nil
+end
+
+function WeatherManager:choose_day_count()
+	local count = weighted_pick(self.day_count_weights)
+	count = tonumber(count) or 1
+	return clamp(count, 1, 5)
+end
+
+function WeatherManager:roll_transition_times(count)
+	local times = {}
+	if count <= 1 then
+		times[1] = math.random(DAY_START_MIN, LAST_TRANSITION_START_MIN)
+		return times
+	end
+
+	local span = LAST_TRANSITION_START_MIN - DAY_START_MIN + 1
+	for attempt = 1, 50 do
+		times = {}
+		for i = 1, count do
+			local slot_start = DAY_START_MIN + math.floor(((i - 1) * span) / count)
+			local slot_end = DAY_START_MIN + math.floor((i * span) / count) - 1
+			if i == count then
+				slot_end = LAST_TRANSITION_START_MIN
+			end
+			times[i] = math.random(slot_start, slot_end)
+		end
+		table.sort(times)
+		local ok = true
+		for i = 2, #times do
+			if times[i] - times[i - 1] < MIN_TRANSITION_SPACING then
+				ok = false
+				break
+			end
+		end
+		if ok then
+			return times
+		end
+	end
+
+	times = {}
+	if count == 1 then
+		times[1] = DAY_START_MIN
+	else
+		local step = math.floor((LAST_TRANSITION_START_MIN - DAY_START_MIN) / (count - 1))
+		for i = 1, count do
+			times[i] = DAY_START_MIN + ((i - 1) * step)
+		end
+	end
+	return times
+end
+
+function WeatherManager:roll_day_plan(day_id)
+	if not self:valid_category(self.natural_cycle) then
+		self.natural_cycle = self:choose_initial_category()
+		self.natural_preset = self:choose_preset(self.natural_cycle)
+		self:add_history(self.natural_cycle)
+	end
+
+	self.day_id = day_id or weather_day_id()
+	self.transition_budget = self:choose_day_count()
+	self.used_transition_count = 0
+	self.day_plan = {}
+
+	local times = self:roll_transition_times(self.transition_budget)
+	local day_transition_weights = self:build_day_transition_weights()
+	local sim_history = copy_array(self.category_history)
+	local sim_edge_history = copy_array(self.edge_history)
+	local sim_category = self.natural_cycle
+	local sim_preset = self.natural_preset
+
+	for i = 1, #times do
+		local next_category = self:choose_next_category(sim_category, sim_history, day_transition_weights, sim_edge_history)
+		local next_preset = nil
+		if next_category ~= sim_category then
+			next_preset = self:choose_preset(next_category, sim_preset)
+		end
+		if next_category and next_preset then
+			self.day_plan[#self.day_plan + 1] = {
+				start_min = times[i],
+				end_min = times[i] + TRANSITION_MINUTES,
+				from_category = sim_category,
+				category = next_category,
+				preset = next_preset,
+				consumed = false,
+			}
+			self:add_edge_history(sim_category, next_category, sim_edge_history)
+			sim_category = next_category
+			sim_preset = next_preset
+			sim_history[#sim_history + 1] = next_category
+			trim_history(sim_history)
+		end
+	end
+
+	self.transition_budget = #self.day_plan
+	self:debug_plan()
+end
+
+function WeatherManager:debug_plan()
+	dbg("rolled day=%s budget=%s current=%s/%s", tostring(self.day_id), tostring(self.transition_budget), tostring(self.natural_cycle), tostring(self.natural_preset))
+	for i = 1, #self.day_plan do
+		local tr = self.day_plan[i]
+		dbg("  #%s %s-%s -> %s/%s", tostring(i), minute_to_string(tr.start_min), minute_to_string(tr.end_min), tostring(tr.category), tostring(tr.preset))
+	end
+end
+
+function WeatherManager:ensure_current_weather()
+	if self:valid_category(self.natural_cycle) and self.natural_preset and valid_weather_file(self.natural_preset) then
+		return
+	end
+	self.natural_cycle = self:choose_initial_category()
+	self.natural_preset = self:choose_preset(self.natural_cycle)
+	self:add_history(self.natural_cycle)
+end
+
+function WeatherManager:validate_loaded_plan()
+	if not self.day_plan then
+		self.day_plan = {}
+	end
+	for i = 1, #self.day_plan do
+		local tr = self.day_plan[i]
+		if not (tr and self:valid_category(tr.category) and tr.preset and valid_weather_file(tr.preset)) then
+			warn("discarding saved day plan with invalid entry")
+			self.day_plan = {}
+			self.day_id = nil
+			return false
+		end
+	end
+	return true
+end
+
+function WeatherManager:apply_loaded_state()
+	self:update_level_weather_type()
+	if not self:is_outdoor_weather() then
+		self.levelWeather = self.weatherType
+		if self.weatherType and not weather.is_paused() then
+			level.set_weather(self.weatherType, true)
+		end
+		return
+	end
+
+	if self.weather_fx then
+		level.start_weather_fx_from_time(self.weather_fx, self.wfx_time or 0)
+		self.weather_fx = nil
+		self.wfx_time = 0
+		self.wfx_was_playing = true
+		return
+	end
+
+	if self.pre_blowout and self.pre_blowout.active then
+		if self:valid_category(self.pre_blowout.category) and self.pre_blowout.preset and valid_weather_file(self.pre_blowout.preset) then
+			self:set_visible(self.pre_blowout.category, self.pre_blowout.preset)
+			local mode = current_schedule_minute() < (self.pre_blowout.blend_end_min or 0) and "smooth" or "force"
+			self:apply_weather(self.pre_blowout.preset, mode)
+			return
+		end
+		warn("discarding invalid saved pre-blowout state")
+		self.pre_blowout = nil
+	end
+
+	self:reconcile(true, "load_state")
+end
+
+function WeatherManager:ensure_day_plan()
+	local did = weather_day_id()
+	if self.day_id ~= did or not self.day_plan or #self.day_plan == 0 then
+		self:roll_day_plan(did)
+	end
+end
+
+function WeatherManager:set_visible(category, preset)
+	self.cycle = category
+	self.preset = preset
+	self.weather_file = preset
+	self.levelWeather = category and ("atmosfear_" .. category) or self.weatherType
+end
+
+function WeatherManager:apply_weather(preset, mode)
+	if not preset then
+		warn("apply_weather called without a preset")
+		return
+	end
+	if weather.is_paused() then
+		printf("~ MelWeather: weather did not set because lerping is paused in engine")
+		return
+	end
+	if not valid_weather_file(preset) then
+		warn("refusing to apply missing weather preset '%s'", tostring(preset))
+		return
+	end
+
+	if mode == "smooth" then
+		-- set_weather_smooth can inherit the current clock lerp weight and jump
+		-- most of the way into the target preset. The non-forced engine path
+		-- waits for the normal descriptor boundary and blends from there.
+		level.set_weather(preset, false)
+	else
+		level.set_weather(preset, true)
+	end
+	dbg("apply %s weather %s", tostring(mode), tostring(preset))
+end
+
+function WeatherManager:apply_natural(mode)
+	self:set_visible(self.natural_cycle, self.natural_preset)
+	self:apply_weather(self.natural_preset, mode or "force")
+end
+
+function WeatherManager:restore_visible_weather(reason)
+	if self.pre_blowout and self.pre_blowout.active then
+		if self:valid_category(self.pre_blowout.category) and self.pre_blowout.preset and valid_weather_file(self.pre_blowout.preset) then
+			self:set_visible(self.pre_blowout.category, self.pre_blowout.preset)
+			self:apply_weather(self.pre_blowout.preset, "force")
+			dbg("restore visible pre-blowout %s/%s (%s)", tostring(self.pre_blowout.category), tostring(self.pre_blowout.preset), tostring(reason))
+			return true
+		end
+		warn("discarding invalid cached pre-blowout state during %s", tostring(reason))
+		self.pre_blowout = nil
+	end
+
+	if self.weather_file and valid_weather_file(self.weather_file) then
+		self:apply_weather(self.weather_file, "force")
+		dbg("restore visible weather %s/%s (%s)", tostring(self.cycle), tostring(self.weather_file), tostring(reason))
+		return true
+	end
+
+	if self:valid_category(self.natural_cycle) and self.natural_preset and valid_weather_file(self.natural_preset) then
+		self:apply_natural("force")
+		dbg("restore natural weather %s/%s (%s)", tostring(self.natural_cycle), tostring(self.natural_preset), tostring(reason))
+		return true
+	end
+
+	return false
+end
+
+function WeatherManager:consume_due_transitions(now_min)
+	local latest = nil
+	for i = 1, #self.day_plan do
+		local tr = self.day_plan[i]
+		if not tr.consumed and now_min >= tr.start_min then
+			local from_category = tr.from_category or self.natural_cycle
+			tr.consumed = true
+			self.used_transition_count = self.used_transition_count + 1
+			self.natural_cycle = tr.category
+			self.natural_preset = tr.preset
+			self:add_history(tr.category)
+			self:add_edge_history(from_category, tr.category)
+			latest = tr
+		end
+	end
+	return latest
+end
+
+function WeatherManager:wfx_active()
+	return level.is_wfx_playing()
+end
+
+function WeatherManager:reconcile(force_apply, reason)
+	if not self:is_outdoor_weather() then
+		return false
+	end
+
+	self:ensure_current_weather()
+	self:ensure_day_plan()
+
+	local now_min = current_schedule_minute()
+	local latest = self:consume_due_transitions(now_min)
+	local wfx_now = self:wfx_active()
+
+	if latest then
+		dbg("consume transition %s -> %s/%s (%s)", minute_to_string(latest.start_min), latest.category, latest.preset, tostring(reason))
+	end
+
+	if wfx_now then
+		return false
+	end
+
+	if self.pre_blowout and self.pre_blowout.active then
+		return false
+	end
+
+	if latest then
+		local mode = force_apply and "force" or "smooth"
+		self:apply_natural(mode)
+		return true
+	elseif force_apply then
+		self:apply_natural("smooth")
+		return true
+	end
+	return false
+end
+
+function WeatherManager:event_state()
+	local current_date = game.get_game_time()
+	local surge_due = nil
+	local psi_due = nil
+	local surge_ready = surge_manager and surge_manager.SurgeManager and surge_manager.SurgeManager.last_surge_time and surge_manager.SurgeManager._delta
+	local psi_ready = psi_storm_manager and psi_storm_manager.PsiStormManager and psi_storm_manager.PsiStormManager.last_psi_storm_time and psi_storm_manager.PsiStormManager._delta
+
+	if surge_ready then
+		--surge_due = math.floor(surge_manager.SurgeManager._delta - current_date:diffSec(surge_manager.SurgeManager.last_surge_time))
+	end
+	if psi_ready then
+		--psi_due = math.floor(psi_storm_manager.PsiStormManager._delta - current_date:diffSec(psi_storm_manager.PsiStormManager.last_psi_storm_time))
+	end
+
+	local emission_enabled = ui_options.get("alife/event/emission_state")
+	local psi_enabled = ui_options.get("alife/event/psi_storm_state")
+	local surge_on = surge_due and surge_due < EVENT_LEAD_SECONDS and emission_enabled
+	local psi_on = psi_due and psi_due < EVENT_LEAD_SECONDS and psi_enabled
+	local level_name = level.name()
+	local details = {
+		level_name = level_name,
+		level_valid = valid_levels[level_name] == true,
+		surge_ready = surge_ready and true or false,
+		psi_ready = psi_ready and true or false,
+		surge_due = surge_due,
+		psi_due = psi_due,
+		emission_enabled = emission_enabled,
+		psi_enabled = psi_enabled,
+		surge_started = surge_manager and surge_manager.SurgeManager and surge_manager.SurgeManager.started or false,
+		psi_started = psi_storm_manager and psi_storm_manager.PsiStormManager and psi_storm_manager.PsiStormManager.started or false,
+	}
+
+	if surge_on and psi_on then
+		if surge_due <= psi_due then
+			return true, "surge", details
+		end
+		return true, "psi_storm", details
+	elseif surge_on then
+		return true, "surge", details
+	elseif psi_on then
+		return true, "psi_storm", details
+	end
+	return false, nil, details
+end
+
+function WeatherManager:debug_event_state(event_on, event_kind, details, wfx_now)
+	if not enable_event_debug or not details then
+		return
+	end
+
+	local now_ms = time_global and time_global() or 0
+	local pre_active = self.pre_blowout and self.pre_blowout.active or false
+	local state = strformat(
+		"%s|%s|%s|%s|%s|%s|%s|%s|%s|%s|%s",
+		tostring(event_on),
+		tostring(event_kind),
+		tostring(wfx_now),
+		tostring(pre_active),
+		tostring(self.pre_blowout_suppressed),
+		tostring(details.level_valid),
+		tostring(details.emission_enabled),
+		tostring(details.psi_enabled),
+		tostring(details.surge_started),
+		tostring(details.psi_started),
+		tostring(details.level_name)
+	)
+
+	if now_ms < self.event_debug_next_log and state == self.event_debug_last_state then
+		return
+	end
+
+	self.event_debug_next_log = now_ms + EVENT_DEBUG_INTERVAL_MS
+	self.event_debug_last_state = state
+	event_dbg(
+		"state level=%s valid=%s event_on=%s kind=%s surge_due=%s psi_due=%s emission_enabled=%s psi_enabled=%s surge_ready=%s psi_ready=%s surge_started=%s psi_started=%s wfx=%s wfx_time=%s pre_active=%s pre_suppressed=%s natural=%s/%s visible=%s/%s",
+		tostring(details.level_name),
+		tostring(details.level_valid),
+		tostring(event_on),
+		tostring(event_kind),
+		tostring(details.surge_due),
+		tostring(details.psi_due),
+		tostring(details.emission_enabled),
+		tostring(details.psi_enabled),
+		tostring(details.surge_ready),
+		tostring(details.psi_ready),
+		tostring(details.surge_started),
+		tostring(details.psi_started),
+		tostring(wfx_now),
+		tostring(level.get_wfx_time and level.get_wfx_time() or nil),
+		tostring(pre_active),
+		tostring(self.pre_blowout_suppressed),
+		tostring(self.natural_cycle),
+		tostring(self.natural_preset),
+		tostring(self.cycle),
+		tostring(self.preset)
+	)
+end
+
+function WeatherManager:choose_pre_blowout()
+	local candidates = {}
+	for i = 1, #self.weather_order do
+		local cat = self.weather_order[i]
+		if valid_pre_blowout_category(cat) and self:valid_category(cat) and not self:history_blocks(cat) then
+			candidates[cat] = 1
+		end
+	end
+	if count_table(candidates) == 0 then
+		for i = 1, #self.weather_order do
+			local cat = self.weather_order[i]
+			if valid_pre_blowout_category(cat) and self:valid_category(cat) then
+				candidates[cat] = 1
+			end
+		end
+	end
+	local category = weighted_pick(candidates)
+	local preset = self:choose_preset(category, self.weather_file)
+	return category, preset
+end
+
+function WeatherManager:start_pre_blowout(event_kind, mode)
+	local category, preset = self:choose_pre_blowout()
+	if not (category and preset) then
+		warn("pre-blowout could not pick a valid graph preset")
+		return
+	end
+
+	local now = current_schedule_minute()
+	self.pre_blowout = {
+		active = true,
+		event_kind = event_kind,
+		category = category,
+		preset = preset,
+		blend_start_min = now,
+		blend_end_min = now + TRANSITION_MINUTES,
+		start_time = make_time_table(),
+	}
+	self.pre_blowout_suppressed = false
+	self:add_history(category)
+	self:set_visible(category, preset)
+	self:apply_weather(preset, mode or "smooth")
+	dbg("pre-blowout start kind=%s weather=%s/%s", tostring(event_kind), tostring(category), tostring(preset))
+	event_dbg("pre-blowout start kind=%s weather=%s/%s mode=%s", tostring(event_kind), tostring(category), tostring(preset), tostring(mode or "smooth"))
+end
+
+function WeatherManager:stop_pre_blowout()
+	if self.pre_blowout and self.pre_blowout.active then
+		dbg("pre-blowout ended")
+		event_dbg("pre-blowout ended kind=%s weather=%s/%s", tostring(self.pre_blowout.event_kind), tostring(self.pre_blowout.category), tostring(self.pre_blowout.preset))
+	end
+	self.pre_blowout = nil
+	self.pre_blowout_suppressed = false
+	if not self:reconcile(false, "pre_blowout_end") then
+		self:apply_natural("smooth")
+	end
+end
+
+function WeatherManager:update_pre_blowout()
+	local wfx_now = self:wfx_active()
+	local event_on, event_kind, event_details = self:event_state()
+
+	self:debug_event_state(event_on, event_kind, event_details, wfx_now)
+
+	if wfx_now then
+		return
+	end
+
+	if event_on then
+		if self.pre_blowout_suppressed then
+			return
+		end
+		if not (self.pre_blowout and self.pre_blowout.active) then
+			self:start_pre_blowout(event_kind, "smooth")
+		end
+	elseif self.pre_blowout and self.pre_blowout.active then
+		self:stop_pre_blowout()
+	else
+		self.pre_blowout_suppressed = false
+	end
+end
+
+function WeatherManager:update_wfx_edge()
+	local wfx_now = self:wfx_active()
+	if not self.wfx_was_playing and wfx_now then
+		event_dbg("wfx started time=%s natural=%s/%s visible=%s/%s", tostring(level.get_wfx_time and level.get_wfx_time() or nil), tostring(self.natural_cycle), tostring(self.natural_preset), tostring(self.cycle), tostring(self.preset))
+	end
+	if self.wfx_was_playing and not wfx_now then
+		event_dbg("wfx ended natural=%s/%s visible=%s/%s", tostring(self.natural_cycle), tostring(self.natural_preset), tostring(self.cycle), tostring(self.preset))
+		self.pre_blowout = nil
+		self.pre_blowout_suppressed = true
+		self:reconcile(true, "wfx_end")
+	end
+	self.wfx_was_playing = wfx_now
+end
+
+function WeatherManager:reset()
+	self:update_level_weather_type()
+	self.inited_time = game.get_game_time()
+	self.last_hour = level.get_time_hours()
+	self.next_hour = self.last_hour + 1
+	if self.next_hour > 23 then
+		self.next_hour = self.next_hour - 24
+	end
+
+	if not self:is_outdoor_weather() then
+		self.levelWeather = self.weatherType
+		if self.weatherType and not weather.is_paused() then
+			level.set_weather(self.weatherType, true)
+		end
+		return
+	end
+
+	if self.weather_fx then
+		level.start_weather_fx_from_time(self.weather_fx, self.wfx_time or 0)
+		self.weather_fx = nil
+		self.wfx_time = 0
+		self.wfx_was_playing = true
+		return
+	end
+
+	if not self:restore_visible_weather("reset") then
+		self:ensure_current_weather()
+		if not contains(self.category_history, self.natural_cycle) then
+			self:add_history(self.natural_cycle)
+		end
+		self:ensure_day_plan()
+		self:apply_natural("force")
+	end
 end
 
 function WeatherManager:update()
-	if (self.___timer and time_global() < self.___timer) then 
+	if self.___timer and time_global() < self.___timer then
 		return
 	end
 	self.___timer = time_global() + 3000
-	
-	-- update every 1 hour, apply weather change if necessary
-	if self.last_hour ~= level.get_time_hours() then
-		--self:Print("update")
-		self.last_hour = level.get_time_hours()
-		self.next_hour = self.last_hour + 1
-		if (self.next_hour > 23) then
-			self.next_hour = self.next_hour - 24
-		end
-		self:change_period()
-		self:select_weather(false)
+
+	self:update_level_weather_type()
+	if not self:is_outdoor_weather() then
+		return
 	end
 
-	if not (axr_main.weapon_is_zoomed) then
-		self:apply_dof()
-	end
-	
-	-- apply distant storms and meteorites for "atmosfear" weather type only
-	diff_sec = math.ceil(game.get_game_time():diffSec(self.inited_time)/level.get_time_factor())
-	if (prev_sec ~= diff_sec) then
-		prev_sec = diff_sec
-		if (string.sub(self.levelWeather,1,9) == "atmosfear") then
-			self:meteorites()
-			self:distant_storm()
-		end
-	end
-end
+	self:reconcile(self.force_reconcile, self.force_reconcile and "forced" or "update")
+	self.force_reconcile = false
+	self:update_wfx_edge()
+	self:update_pre_blowout()
 
-function WeatherManager:change_period()
-	--self:Print("change_period")
-	local current_date = game.get_game_time()
-
-	-- if a surge is close, shift next period's last hour further.
-	local diff_s = math.floor(surge_manager.SurgeManager._delta - current_date:diffSec(surge_manager.SurgeManager.last_surge_time))
-	local diff_p = psi_storm_manager and math.floor(psi_storm_manager.PsiStormManager._delta - current_date:diffSec(psi_storm_manager.PsiStormManager.last_psi_storm_time)) or 0
-
-	if (diff_s < 7200 and ui_options.get("alife/event/emission_state")) or (diff_p < 7200 and ui_options.get("alife/event/psi_storm_state")) or level.is_wfx_playing() then
-		self.pre_blowout_period = true
-		self:reset_change_date(false, 1*60*60)
-	end
-
-	-- if current hour is next period's last hour, switch period type, set next period's hour, transition is true
-	if self:is_next_change_date(self.cycle) then
-		self.cycle = self:get_next_weather_cycle(self.cycle)
-		self.preset = self.presets[self.cycle] and random_key_table(self.presets[self.cycle]) or nil
-		self:reset_change_date(true)
-		self.transition_period = true
+	self.last_hour = level.get_time_hours()
+	self.next_hour = self.last_hour + 1
+	if self.next_hour > 23 then
+		self.next_hour = self.next_hour - 24
 	end
 end
 
 function WeatherManager:select_weather(now)
-	self:Print("select_weather (%s) | current hour: %s", tostring(now), tostring(level.get_time_hours()) )
-	
-	-- get type ("atmosfear","indoor","[default]")
-	local weather_valid = false
-	local weather_cycle
-	local wthr = self.weatherType
-	if not (wthr) then 
+	self:update_level_weather_type()
+	if not self:is_outdoor_weather() then
+		self.levelWeather = self.weatherType
+		if self.weatherType and not weather.is_paused() then
+			level.set_weather(self.weatherType, now and true or false)
+		end
 		return
 	end
-	
-	-- if its atmosfear, pick proper event
-	if (wthr == "atmosfear") then
-		weather_valid = true
-		local level_name = level.name()
-		
-		-- transition weather
-		if (self.transition_period == true) then
-			wthr = wthr .. "_transition"
-			weather_cycle = "cloudy"
-			self.transition_period = false
-			
-		-- pre-surge weather
-		elseif (self.pre_blowout_period == true) then
-			wthr = wthr .. "_pre_blowout"
-			weather_cycle = "pre_blowout"
-			self.pre_blowout_period = false
-			
-		-- normal weather
-		else 
-			if not (self.cycle) then
-				self.cycle = "clear"
-			end
-			
-			weather_cycle = self.cycle
-			wthr = wthr .. "_" .. weather_cycle
-		end
-	end
-	
-	self.levelWeather = wthr -- save for transition periods
-
-	-- get proper weather name
-	self.weather_file = nil
-	if weather_valid then
-		
-		-- pick weather preset
-		if self.presets[weather_cycle] then
-			if self.preset and self.presets[weather_cycle][self.preset] then
-				self.weather_file = self.preset
-			else
-				self.preset = random_key_table(self.presets[weather_cycle])
-				self.weather_file = self.preset
-			end
-			
-		elseif (weather_cycle == "pre_blowout") then
-			self.weather_file = random_key_table(self.presets_pre_blowout)
-		end
-		
-		-- pick moon phase, and large maps profiles
-		if (weather_cycle == "clear") or (weather_cycle == "partly") then
-			--[[
-			if big_maps[level.name()] then
-				self.weather_file = self.weather_file .. "_large"
-			end
-			--]]
-			
-			--self.weather_file = self.weather_file .. "_0" --self:get_moon_phase()
-		end
-		
-		-- set up current and next weather, used for many things like distant storms/Meteorites/DOF
-		if now then
-			self.curr_weather = self.preset
-			self.next_weather = self.preset
-		else
-			self.curr_weather = self.next_weather
-			self.next_weather = self.preset
-		end
-	else
-		self.weather_file = wthr
-	end
-	
-	-- hour correction
-	if now then
-		self.last_hour = level.get_time_hours()
-		self.next_hour = self.last_hour + 1
-		if (self.next_hour > 23) then
-			self.next_hour = self.next_hour - 24
-		end
-	end
-	
-	-- reset forced weather call
-	if self.forced_weather_change_on_time_change then
-		now = true
-		self.forced_weather_change_on_time_change = false
-	end
-		
-	-- apply weather change
-	if (self.weather_fx) then
-		self:Print("select_weather (%s) | weather_fx: %s", tostring(now), tostring(self.weather_fx))
-		level.start_weather_fx_from_time(self.weather_fx, self.wfx_time)
-		self.weather_fx = nil 
-		self.wfx_time = 0
-	else
-		if (not self.weather_file) then
-			printe("! level_weathers: self.weather_file not generated!")
-		elseif (weather.is_paused()) then
-			printf("~ level_weathers: weather didn't set because lerping is paused in engine")
-		else
-			self:Print("select_weather (%s) | self.weather_file: %s", tostring(now), tostring(self.weather_file))
-			level.set_weather(self.weather_file, now)
-		end
-	end
-	
-	-- Set brightness
-	self:set_brightness_boosts()
-	
-	self:Print("select_weather (%s) | cycle: %s - preset: %s - curr_weather: %s - next_weather: %s", tostring(now), weather_cycle, self.preset, self.curr_weather, self.next_weather)
-end
-
-function WeatherManager:get_next_weather_cycle(curr_weather)
-	--self:Print("get_next_weather_cycle | curr_weather = " .. curr_weather)
-	local weather_table_num = {}
-	local avail_weather = {}
-	
-	-- set initiate values for (weather_table_num)
-	for i=1,#weather_tbl do
-		weather_table_num[weather_tbl[i]] = 0
-	end
-	
-	-- store correct occurrences for each stored weather cycle in (weather_table_num)
-	for i=1,#self.weather_storage do
-		for j=1,#weather_tbl do
-			if self.weather_storage[i] == weather_tbl[j] then
-				weather_table_num[self.weather_storage[i]] = weather_table_num[self.weather_storage[i]] + 1
-				break
-			end
-		end
-	end
-	
-	-- prepare a table of allowed weather cycles to pick from
-	for i=1,#weather_tbl do
-		if (weather_tbl[i] ~= curr_weather) then
-			local val = ui_options.get("video/weather/" .. weather_tbl[i] .. "_occurrence") or 3
-			if (tonumber(val) > 2.5) and (weather_table_num[weather_tbl[i]] < 2) then
-				avail_weather[#avail_weather + 1] = weather_tbl[i]
-			elseif (tonumber(val) > 1.5) and (weather_table_num[weather_tbl[i]] < 1) then
-				avail_weather[#avail_weather + 1] = weather_tbl[i]
-			end
-		end
-	end
-	
-	-- if no allowed weather cycles found, reset
-	if (#avail_weather == 0) then
-		--self:Print("get_next_weather_cycle | #avail_weather = 0")
-		self.weather_storage = {}
-		return get_random_weather()
-	end
-	
-	--[[
-	for k,v in pairs(weather_table_num) do
-		self:Print("get_next_weather_cycle | weather_table_num[" .. k .. "] = " .. v)
-	end
-	for i=1,#avail_weather do
-		self:Print("get_next_weather_cycle | avail_weather[" .. i .. "] = " .. avail_weather[i])
-	end
-	for i=1,#self.weather_storage do
-		self:Print("get_next_weather_cycle | self.weather_storage[" .. i .. "] = " .. self.weather_storage[i])
-	end
-	--]]
-	
-	local pick = avail_weather[math.random(#avail_weather)]
-	self.weather_storage[#self.weather_storage + 1] = pick -- store new value
-	printdbg("-level_weathers: get_next_weather_cycle | new_weather = %s", pick)
-	return pick
-end
-
-function WeatherManager:reset_change_date(cycle_change, _s)
-	--self:Print("reset_change_date = %s",tostring(cycle_change))
-	local Y, M, D, h, m, s, ms = 0, 0, 0, 0, 0, 0, 0
-	Y, M, D, h, m, s, ms = self.last_period_change_date:get(Y, M, D, h, m, s, ms)
-	if (not cycle_change) then
-		self.last_period_change_date:set(Y, M, D, h, m, s + _s, ms)
-	else
-		self.last_period_change_date = game.get_game_time()
-	end
-end
-
-function WeatherManager:is_next_change_date(weather_cycle)
-	local hour = 0
-	local len = ui_options.get("video/weather/" .. weather_cycle .. "_period") or 6
-	hour = math.random(math.ceil(len*2/3),len)
-	local diff = math.ceil(game.get_game_time():diffSec(self.last_period_change_date))
-	
-	--self:Print("is_next_change_date | current seconds difference = %s, critical difference = %s", diff, (hour*60*60))
-	return diff > (hour*60*60)
+	self:reconcile(now == true, "select_weather")
 end
 
 function WeatherManager:forced_weather_change()
-	self.forced_weather_change_on_time_change = true
-	--callstack()
-end
-
-function WeatherManager:get_hour_as_string(h)
-	local hour_str = ""
-	if (h > 23) then
-		h = h-24
-	end
-	if (h < 10) then
-		hour_str = "0" .. tostring(h) .. ":00:00"
-	else
-		hour_str = tostring(h) .. ":00:00"
-	end
-	return	hour_str
-end
-
-function WeatherManager:get_moon_phase()
-	local months = {31,28,31,30,31,30,31,31,30,31,30,31}
-	local g_time=game.get_game_time()
-	local Y, M, D, h, m, s, ms = 0, 0, 0, 0, 0, 0, 0
-	Y, M, D, h, m, s, ms = g_time:get(Y, M, D, h, m, s, ms)
-	local day = 365*(Y-2010)+D
-	for mm = 1, M-1 do
-		day = day + months[mm]
-	end
-	if h >=12 then
-		day = day+1
-	end
-	local moon = ui_options.get("video/night/moon_cycle")
-	local phase
-	if moon == 28 then
-		phase = math.floor(math.mod(day,28)/3.5)
-	elseif moon == 8 then
-		phase = math.mod(day,8)
-	else
-		phase = string.sub(moon,5)
-	end
-	--atmosfear.debugMessages[3]:SetText("phase=" ..tostring(phase))
-	--atmosfear.debugMessages[4]:SetText("opt=" ..tostring(atmosfear.opt_moon_phase))
-	return tostring(phase)
-end
-
-function WeatherManager:set_brightness_boosts()
-
-	if (type(weather.boost_reset) ~= "function") then
-		printf("WeatherManager | weather.boost_value and weather.boost_reset don't exist")
-		return
-	end
-	
-	weather.boost_reset() -- reset all modifiers
-	
-	local wr = self.weather_file
-	local br = self.brightness
-	if not (wr and br and self.brightness_table[br]) then
-		return
-	end
-	
-	local function gather_params(param_table, br_table)
-		if (br_table) then
-			local hour = self.last_hour
-			for param,v in pairs(br_table) do
-				if v[hour] then
-					local value = v.value
-					if value and value ~= 0 then
-						param_table[param] = param_table[param] and (param_table[param] + value) or value
-					end
-				end
-			end
-		end
-	end
-	
-	local t = {}
-	gather_params(t, self.brightness_table[br][wr])
-	gather_params(t, self.brightness_table[br]["all"])
-	
-	if is_not_empty(t) then
-		for param,value in pairs(t) do
-			--printf("$[%s][%s] BOOSTING param: %s - value: %s", br, self.last_hour, param, value)
-			weather.boost_value(param, value)
-		end
-	end
+	self.force_reconcile = true
+	self:reconcile(true, "forced_weather_change")
 end
 
 function WeatherManager:get_curr_weather()
-	return self.cycle
+	return self.cycle or self.natural_cycle
 end
 
 function WeatherManager:get_curr_weather_preset()
-	return self.preset
+	return self.preset or self.natural_preset
+end
+
+function WeatherManager:get_hour_as_string(h)
+	if h > 23 then
+		h = h - 24
+	end
+	return (h < 10 and ("0" .. tostring(h)) or tostring(h)) .. ":00:00"
 end
 
 function WeatherManager:get_curr_ambient()
-	-- Check
 	local hr = level.get_time_hours()
 	local wthr = level.get_weather()
 	if (hr == last_amb.hr) and (wthr == last_amb.wthr) and last_amb.amb then
 		return last_amb.amb
 	end
-	
-	-- Read
+
 	local ini = wthr and ini_file("environment\\weathers\\" .. wthr .. ".ltx")
 	local hr_string = self:get_hour_as_string(hr)
-	local amb = ini and hr_string and ini:section_exist(hr_string) and ini:r_string_ex(hr_string,"ambient") or ""
-	
-	-- Cache
+	local amb = ini and hr_string and ini:section_exist(hr_string) and ini:r_string_ex(hr_string, "ambient") or ""
+
 	last_amb.hr = hr
 	last_amb.wthr = wthr
 	last_amb.amb = amb
-	
-	self:Print("get_curr_ambient | file: %s - ambient: %s", wthr, amb)
-	
 	return amb
 end
 
-function WeatherManager:apply_dof() -- not used
-
-end
-
-
---------------------------------------------------------------------------------
--- METEORITES
---------------------------------------------------------------------------------
-function WeatherManager:launch_meteorites()
-	if self.meteorites_particle ~= nil then
-		self.meteorites_particle:stop()
-	end
-	self.meteorites_particle = particles_object("crommcruac\\meteorites")
-	local actor_pos = db.actor:position()
-	local particle_pos = vector():set(actor_pos.x, actor_pos.y + 500, actor_pos.z)
-	self.meteorites_particle:play_at_pos(particle_pos)
-end
-
-function WeatherManager:stop_meteorites()
-	if (self.meteorites_particle ~= nil) then
-		self.meteorites_particle:stop()
-		self.meteorites_particle = nil
-	end
-end
-
-function WeatherManager:meteorites()
-	if (level.get_time_hours() >= 22 or level.get_time_hours() < 4) and ((string.find(self.curr_weather,"clear") and level.get_time_minutes() <= 30) or (string.find(self.next_weather,"clear") and level.get_time_minutes() >= 30)) and (not level.is_wfx_playing()) then
-		if self.meteorites_particle==nil then
-			self:launch_meteorites()
-		else
-			local actor_pos = db.actor:position()
-			local particle_pos = vector():set(actor_pos.x, actor_pos.y + 500, actor_pos.z)
-			self.meteorites_particle:move_to(particle_pos,VEC_Z)
-		end
-	else
-		self:stop_meteorites()
-	end
-end
-
-
---------------------------------------------------------------------------------
--- DISTANT STORMS
---------------------------------------------------------------------------------
-function WeatherManager:distant_storm()
-	if self.distant_storm_on == nil and (string.find(self.next_weather,"cloudy") and level.get_time_minutes() >= 30) then
-		local rnd = (math.random(1,100)/100)
-		if (rnd <= self.distant_storm_prob) then
-			self.distant_storm_on = true
-			self.thunders = {}
-			self.thunder_index = 1
-		else
-			self.distant_storm_on = false
+function WeatherManager:validate_history()
+	local out = {}
+	for i = 1, #(self.category_history or {}) do
+		local cat = self.category_history[i]
+		if self.category_set[cat] then
+			out[#out + 1] = cat
 		end
 	end
-
-	for key,thunder in pairs(self.thunders) do
-		local life_time = diff_sec-thunder.start_time
-		if (life_time >= 30) then
-			if thunder.sound ~= nil and thunder.sound:playing() then
-				thunder.sound:stop()
-			end
-			self.thunders[key] = nil
-		end
-		if life_time >= 4 and life_time < 30 and thunder.hit == false then
-			if thunder.sound ~= nil and thunder.sound:playing() then
-				thunder.sound:stop()
-			end
-			if thunder.sound ~= nil then
-				thunder.sound:play_at_pos(db.actor, thunder.sound_pos)
-				thunder.sound.volume = 0.33
-			end
-			thunder.hit = true
-		end
-	end
-	
-	if self.distant_storm_on == true and ((string.find(self.curr_weather,"cloudy") and level.get_time_minutes() <= 30) or (string.find(self.next_weather,"cloudy") and level.get_time_minutes() >= 30)) and (not level.is_wfx_playing()) then
-		if self.next_thunder_at == nil then
-			self.next_thunder_at = diff_sec + math.random(5, 10)
-		end
-		if self.next_thunder_at <= diff_sec then
-			--self:lightning()
-			self.next_thunder_at = diff_sec + math.random(5, 10)
-		end
-	end
-
-	if self.distant_storm_on ~= nil and ((not string.find(self.next_weather,"cloudy")) and level.get_time_minutes() >= 30) then
-		self.distant_storm_on = nil
-		self.next_thunder_at = nil
-	end
+	self.category_history = trim_history(out)
 end
 
-function WeatherManager:inside_boundaries(x, y)
-	local inside = false
-	if self.boundaries[level.name()] ~= nil then
-		local vert = self.boundaries[level.name()]
-		local i = 0
-		local j = #vert
-		for i = 1, #vert do
-			if (vert[i][2] < y and vert[j][2] >= y or vert[j][2] < y and vert[i][2] >= y) then
-				if (vert[i][1] + (y - vert[i][2])/(vert[j][2] - vert[i][2])*(vert[j][1] - vert[i][1]) < x) then
-					inside = not inside
-				end
-			end
-			j = i
+function WeatherManager:validate_edge_history()
+	local out = {}
+	for i = 1, #(self.edge_history or {}) do
+		local key = self.edge_history[i]
+		local from_category, to_category = string.match(tostring(key), "^([^>]+)>([^>]+)$")
+		if self.category_set[from_category] and self.category_set[to_category] then
+			out[#out + 1] = from_category .. ">" .. to_category
 		end
 	end
-	return inside
+	self.edge_history = trim_edge_history(out)
 end
 
-function WeatherManager:lightning()
-	local effect = particles_object("crommcruac\\thunderbolts_distant_00")
-	local sound = sound_object(self.distant_sounds[math.random(1,#self.distant_sounds)])
-	local actor_pos = db.actor:position()
-	local h
-	if level.get_time_minutes() < 30 then
-		h=level.get_time_hours()
-	else
-		h=level.get_time_hours() + 1
-	end
-	if (h >= 24) then
-		h = h - 24
-	end
-
-	direction = self.storm_directions[h + 1]
-	local angle_dec = math.random(direction[1],direction[2])
-	local angle_rad = math.rad(angle_dec)
-	local current_far_distance = weather.get_value_numric("fog_distance")
-
-	local distance = current_far_distance - 50
-	local safe_distance = current_far_distance
-	local sound_distance = 100
-	local pos_x = math.sin(angle_rad)*distance
-	local pos_z = math.cos(angle_rad)*distance
-	local safe_pos_x = math.sin(angle_rad)*safe_distance
-	local safe_pos_z = math.cos(angle_rad)*safe_distance
-	local sound_pos_x = math.sin(angle_rad)*sound_distance
-	local sound_pos_z = math.cos(angle_rad)*sound_distance
-	if self:inside_boundaries(actor_pos.x + safe_pos_x, actor_pos.z + safe_pos_z) then
-		local particle_pos = vector():set(actor_pos.x + pos_x, actor_pos.y + 10, actor_pos.z+pos_z)
-		local sound_pos = vector():set(actor_pos.x + sound_pos_x, actor_pos.y, actor_pos.z + sound_pos_z)
-		self.thunders[self.thunder_index] = {effect = effect, particle_pos = particle_pos, sound = sound, sound_pos = sound_pos, start_time = diff_sec, hit = false}
-		self.thunders[self.thunder_index].effect:play_at_pos(self.thunders[self.thunder_index].particle_pos)
-		self.thunder_index = self.thunder_index + 1
-	else
-		--atmosfear.debugMessages[13]:SetText("(" ..tostring(self.thunder_index) .. ") beyond the map - not launched")
-	end
-end
-
-
---------------------------------------------------------------------------------
--- SAVE/LOAD
---------------------------------------------------------------------------------
 function WeatherManager:load_state(m_data)
-	if not (m_data.weather_manager) then 
+	local data = m_data and m_data.weather_manager
+	if not data then
 		return
 	end
-	self.levelWeather = m_data.weather_manager.levelWeather
-	self.cycle = m_data.weather_manager.cycle or get_random_weather() -- new
-	self.preset = m_data.weather_manager.preset or (self.presets[self.cycle] and random_key_table(self.presets[self.cycle])) or nil -- new
-	self.weather_storage = m_data.weather_manager.weather_storage or {} -- new
-	self.last_period_change_date = m_data.weather_manager.last_period_change_date and utils_data.CTime_from_table(m_data.weather_manager.last_period_change_date) or game.get_game_time()
-	if (not bLevelUnderground) then 
-		self.update_time = m_data.weather_manager.update_time
-		self.weather_fx = m_data.weather_manager.weather_fx
-		self.wfx_time = m_data.weather_manager.weather_fx_time or 0
+
+	if data.mel_scheduler_version == SAVE_VERSION then
+		self.day_id = data.day_id
+		self.transition_budget = data.transition_budget or 0
+		self.used_transition_count = data.used_transition_count or 0
+		self.day_plan = data.day_plan or {}
+		self.category_history = data.category_history or {}
+		self.edge_history = data.edge_history or {}
+		self.natural_cycle = data.natural_cycle or data.cycle
+		self.natural_preset = data.natural_preset or data.preset
+		self.pre_blowout = data.pre_blowout
+		self.cycle = data.visible_cycle or self.natural_cycle
+		self.preset = data.visible_preset or self.natural_preset
+		self.weather_file = data.weather_file or self.preset
+	elseif data.mel_scheduler_version ~= nil then
+		warn("unknown or malformed scheduler save version '%s'; repairing state", tostring(data.mel_scheduler_version))
+		self.category_history = data.category_history or data.weather_storage or {}
+		self.edge_history = data.edge_history or {}
+		self.natural_cycle = data.natural_cycle or data.cycle
+		self.natural_preset = data.natural_preset or data.preset
+		self.day_plan = {}
+		self.day_id = nil
+	else
+		self.natural_cycle = data.cycle
+		self.natural_preset = data.preset
+		self.category_history = {}
+		self.edge_history = {}
+		if self:valid_category(self.natural_cycle) then
+			self:add_history(self.natural_cycle)
+		end
+		self.day_plan = {}
+		self.day_id = nil
 	end
-	if (self.levelWeather == "atmosfear_transition") then 
-		self.transition_period = true
-	elseif (self.levelWeather == "atmosfear_pre_blowout") then
-		self.pre_blowout_period = true
+
+	self:validate_history()
+	self:validate_edge_history()
+	if not (self:valid_category(self.natural_cycle) and self.natural_preset and valid_weather_file(self.natural_preset)) then
+		self.natural_cycle = nil
+		self.natural_preset = nil
+		self:ensure_current_weather()
 	end
-	
-	printdbg("# LOADING: level_weather | cycle: %s - preset: %s - is_underground: %s - weather_storage size: %s", self.cycle, tostring(self.preset), tostring(bLevelUnderground), #self.weather_storage)
-end 
+
+	if not self:validate_loaded_plan() then
+		self:roll_day_plan(weather_day_id())
+	end
+
+	if not bLevelUnderground then
+		self.weather_fx = data.weather_fx
+		self.wfx_time = data.weather_fx_time or 0
+	end
+	self:apply_loaded_state()
+	dbg("loaded scheduler day=%s natural=%s/%s history=%s", tostring(self.day_id), tostring(self.natural_cycle), tostring(self.natural_preset), tostring(#self.category_history))
+end
 
 function WeatherManager:save_state(m_data)
-	m_data.weather_manager = {}
-	m_data.weather_manager.levelWeather = self.levelWeather
-	m_data.weather_manager.cycle = self.cycle -- new
-	m_data.weather_manager.preset = self.preset -- new
-	m_data.weather_manager.weather_storage = self.weather_storage -- new
-	m_data.weather_manager.last_period_change_date = self.last_period_change_date and utils_data.CTime_to_table(self.last_period_change_date) or game.get_game_time()
-	
-	if (not bLevelUnderground) then 
-		m_data.weather_manager.update_time = self.update_time
-		if (level.is_wfx_playing()) then
-			m_data.weather_manager.weather_fx = level.get_weather()
-			m_data.weather_manager.weather_fx_time = level.get_wfx_time() or 0
-		end
+	m_data.weather_manager = {
+		mel_scheduler_version = SAVE_VERSION,
+		day_id = self.day_id,
+		transition_budget = self.transition_budget,
+		used_transition_count = self.used_transition_count,
+		day_plan = self.day_plan,
+		category_history = self.category_history,
+		edge_history = self.edge_history,
+		natural_cycle = self.natural_cycle,
+		natural_preset = self.natural_preset,
+		visible_cycle = self.cycle,
+		visible_preset = self.preset,
+		weather_file = self.weather_file,
+		pre_blowout = self.pre_blowout,
+		-- Legacy fields kept for older debug tools and save inspection.
+		levelWeather = self.levelWeather,
+		cycle = self.cycle,
+		preset = self.preset,
+		weather_storage = self.category_history,
+	}
+
+	if not bLevelUnderground and level.is_wfx_playing() then
+		m_data.weather_manager.weather_fx = level.get_weather()
+		m_data.weather_manager.weather_fx_time = level.get_wfx_time() or 0
 	end
-	
-	printdbg("# SAVING: level_weather | cycle: %s - preset: %s - is_underground: %s - weather_storage size: %s", self.cycle, tostring(self.preset), tostring(bLevelUnderground), #self.weather_storage)
-end 
+end
 
 function WeatherManager:finalize()
-	if (self.meteorites_particle and self.meteorites_particle:playing()) then
-		self.meteorites_particle:stop()
-	end
-	for key,thunder in pairs(self.thunders) do
-		if (thunder.effect and thunder.effect:playing()) then 
-			thunder.effect:stop()
-		end
-	end
 end
 
-function WeatherManager:Print(fmt, ...)
-	if enable_debug then
-		printf("WeatherManager [%s] [%s] | " .. fmt, self.preset, self.last_hour, ...)
-	end
-end
+-- Future-work references:
+-- Vanilla AtmosFear particles/sounds were stubbed in Melancholy assets, so the MVP
+-- omits them. If experimenting later, see vanilla level_weathers.script update
+-- calls 231-237, meteorites 583-614, distant storms 620-666, lightning 686-723.
+-- Vanilla brightness boosts are also unused by Melancholy's active graph. If
+-- experimenting later, see vanilla call 378, set_brightness_boosts 505-544, and
+-- on_option_change refresh 836-845.
 
-
---------------------------------------------------------------------------------
--- Utilities
---------------------------------------------------------------------------------
-local weather_manager = nil
 function get_weather_manager()
-	--self:Print("get_weather_manager")
 	weather_manager = weather_manager or WeatherManager()
 	return weather_manager
 end
 
-function get_next_state(graph,state)
-	local sum = 0
-	for st,prob in pairs(graph) do
-		sum = sum+prob
-	end
-	local rnd = (math.random(1,100)/100)*sum
-	local next_state
-	for st,prob in pairs(graph) do
-		next_state = st
-		rnd = rnd-prob
-		if (rnd <= 0) then
-			break
-		end
-	end
-	return next_state
-end
-
-function get_random_weather()
-	local tbl = {}
-	for i=1,#weather_tbl do
-		local a = ui_options.get("video/weather/" .. weather_tbl[i] .. "_occurrence") or 3
-		if (a > 1) then
-			tbl[#tbl+1] = weather_tbl[i]
-			--self:Print("get_random_weather | " .. weather_tbl[i])
-		end
-	end
-	if (#tbl > 0) then
-		return tbl[math.random(#tbl)]
-	end
-
-	return weather_tbl[math.random(#weather_tbl)]
-end
-
-
---------------------------------------------------------------------------------
--- Callbacks
---------------------------------------------------------------------------------
 local function update_settings()
-	local wm = get_weather_manager()
-	
-	-- Update brightness
-	local br_new = ui_options.get("video/night/brightness")
-	local br_prev = wm and wm.brightness
-	if (br_new ~= br_prev) then
-		wm.brightness = br_new
-		wm:set_brightness_boosts()
-	end
+	-- Kept as a callback anchor for compatibility. Brightness boosts are intentionally
+	-- omitted from the Melancholy MVP; see future-work references above.
 end
 
 function on_game_start()
-	RegisterScriptCallback("on_option_change",update_settings)
+	RegisterScriptCallback("on_option_change", update_settings)
 end

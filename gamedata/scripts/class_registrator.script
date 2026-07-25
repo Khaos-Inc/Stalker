@@ -130,6 +130,9 @@ function register(object_factory)
 
 	-- ONLINE_OFFLINE_GROUP --------------------------------------------------------------------------------------------------------------
 	s_register	(object_factory, 							"sim_squad_scripted.sim_squad_scripted",	"ON_OFF_S",			"online_offline_group_s")
+	
+	cs_register	(object_factory, "CAI_Bloodsucker",				"se_legs.se_legs",    					"SWM_LEGS",			"legs_s")	
+	
 end
 
 -- TODO: consider adding II_ATTCH and changing II_FOOD to S_FOOD in the future to register the rest of items in se_item binder
