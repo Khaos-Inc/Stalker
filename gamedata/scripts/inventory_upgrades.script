@@ -285,17 +285,13 @@ local property_table = {
 
 function get_upgrade_cost(section)
 	-- The text variable to be displayed
-	
-	-- Edited by Sota - local str = " "
-    local str = ""
-	
+	local str = " "
 	if db.actor then
 		-- Read the amount necessary for installation
 		local price = math.floor(char_ini:r_u32(section, "cost")*cur_price_percent)
 		
 		-- Enter into the text variable the cost of the upgrade
-		-- Edited by Sota - str = " " .. game.translate_string("st_upgr_cost") .. ": " .. price
-		str = game.translate_string("st_upgr_cost") .. ": " .. price
+		str = " " .. game.translate_string("st_upgr_cost") .. ": " .. price
 	end
 	return str
 end
@@ -304,8 +300,7 @@ function get_possibility_string(mechanic_name, possibility_table)
 	local str = ""
 	if (cur_hint) then
 		for k,v in pairs(cur_hint) do
-			-- Edited by Sota - "\\n - "
-			str = str .. "\\n • " .. game.translate_string(v)
+			str = str.."\\n - "..game.translate_string(v)
 		end
 	end
 	if (str == "") then
@@ -483,13 +478,11 @@ function prereq_functor_a( param3, section )
 		-- check if mechanic has tools suitable upgrade's tier
 		if (tier_con == 0) then
 			if (not has_alife_info(mechanic_name .. "_upgrade_tier_" .. tier)) then
-				-- Edited by Sota - "\\n - "
-				str = str .. "\\n • " .. game.translate_string("st_upgr_condlist")
+				str = str .. "\\n - " .. game.translate_string("st_upgr_condlist")
 			end
 		-- permanently locked
 		elseif (tier_con == 1) then
-			-- Edited by Sota - "\\n - "
-			str = str .. "\\n • " .. game.translate_string("st_upgr_cant_do")
+			str = str .. "\\n - " .. game.translate_string("st_upgr_cant_do")
 		end
 	end
 	
@@ -502,8 +495,7 @@ function prereq_functor_a( param3, section )
 		local cash = actor:money()
 		-- If the bubble is not enough, then we list the corresponding line
 		if (cash < price) then
-			-- Edited by Sota - str = str .. "\\n - "..game.translate_string("st_upgr_enough_money").."\\n   • "..price-cash.." RU"
-			str = str .. "\\n • " .. game.translate_string("st_upgr_enough_money") .. ": " .. price-cash .. " RU"
+			str = str .. "\\n - "..game.translate_string("st_upgr_enough_money").."\\n   • "..price-cash.." RU"
 		end
 	end
 	--
@@ -520,8 +512,7 @@ function prereq_functor_a( param3, section )
 			if (#scheme > 0) then
 				local upgr_tier = tonumber(scheme[1]) or 1
 				if upgr_tier_con[upgr_tier] and (con < upgr_tier_con[upgr_tier]) then
-					-- Edited by Sota - "\\n - "
-					str = str .. "\\n • " ..  game.translate_string("st_ui_workshop_no_upgr_3") .. "\\n • " .. game.translate_string("st_ui_upgr_required_con") .. ": " .. math.ceil(con*100) .. " %"
+					str = str.."\\n - ".. game.translate_string("st_ui_workshop_no_upgr_3") .."\\n   • " .. game.translate_string("st_ui_upgr_required_con") .. ": " .. math.ceil(con*100).." %"
 				end
 			end
 		end

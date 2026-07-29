@@ -52,7 +52,7 @@ AC_ID                    	= 0				-- Used for getting actor id
 -- AC_LVL_ID					= nil			-- Used for getting actor's level id, set by simulation_objects ------- replaced with function because crashes
 mus_vol                  	= 0             -- Used for temp sound muting
 amb_vol                  	= 0             -- Used for temp sound muting
-timer_transparent        	= 0 			--пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+timer_transparent        	= 0 			--маскхалат
 KEYS_UNLOCK					= true			-- Used for scripted GUI to disable action keybinds while they are active
 ----------------------------------------------------------------------
 -- Utilities
@@ -533,7 +533,7 @@ function TeleportSquad(squad,pos,lvid,gvid)
 end
 
 function in_time_interval(val1, val2)
---пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ.
+--Проверка по временному интервалу.
 	local game_hours = level.get_time_hours()
 	if val1 >= val2 then
 		return game_hours < val2 or game_hours >= val1
@@ -543,8 +543,8 @@ function in_time_interval(val1, val2)
 end
 
 function level_changing()
--- пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ?
--- пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ
+-- происходит ли в данный момент смена уровня?
+-- нужно для того, чтобы объекты знали, какую информацию записывать при сохранении, а какую нет
 	local sim = alife()
 
 	if (not sim) then
@@ -755,7 +755,7 @@ end
 -------------------------------------------------------------------------------------------------------
 -- 											MATHEMATICAL
 -------------------------------------------------------------------------------------------------------
--- пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+-- іонстанта, которуі использовать в местах, где нужно задать неограниченное время действия
 time_infinite = 100000000
 
 function time_global()
@@ -816,7 +816,7 @@ function random_float(min_value, max_value)
     return min_value + math.random() * (max_value - min_value)
 end
 
---TvпїЅпїЅпїЅпїЅпїЅпїЅпїЅ yaw пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+--Tvчисляет yaw в радианах
 function yaw( v1, v2 )
 	return  math_acos( ( (v1.x*v2.x) + (v1.z*v2.z ) ) / ( math_sqrt(v1.x*v1.x + v1.z*v1.z ) * math_sqrt(v2.x*v2.x + v2.z*v2.z ) ) )
 end
@@ -829,12 +829,12 @@ end
 function vector_cross(v1, v2)
 	return vector():set(v1.y  * v2.z  - v1.z  * v2.y, v1.z  * v2.x  - v1.x  * v2.z, v1.x  * v2.y  - v1.y  * v2.x)
 end
-function vec_to_str (vector) -- пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ.
+function vec_to_str (vector) -- переводит вектор в строку.
 	if vector == nil then return "nil" end
 	return string_format("[%s:%s:%s]", vector.x, vector.y, vector.z)
 end
 
---пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ y пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ.
+--Поворачивает вектор вокруг оси y против часовой стрелки.
 function vector_rotate_y(v, angle)
 	angle = angle * 0.017453292519943295769236907684886
 	local c = math_cos (angle)
@@ -976,7 +976,7 @@ function has_translation(string_id)
 	return (game.translate_string(string_id) ~= string_id)
 end
 
-function get_param_string(src_string, obj) -- пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+function get_param_string(src_string, obj) -- преобразует строку в соответствии со значением
 	--printf("src_string is [%s] obj name is [%s]", tostring(src_string), obj:name())
 	local script_ids = db.script_ids[obj:id()]
 	local out_string, num = string_gsub(src_string, "%$script_id%$", tostring(script_ids))
@@ -1063,7 +1063,7 @@ function action_first(obj,...)
 	return entity_action(e_act)
 end
 
--- +пїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅvпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅvпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ-пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅvпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅvпїЅ пїЅпїЅпїЅпїЅпїЅ
+-- +сли в даннvй момент вvполняется какое-то действие, прерvвает его и отклічает скриптовvй режим
 function interrupt_action(who, script_name)
 	if who:get_script() then
 		who:script(false, script_name)
@@ -1084,7 +1084,7 @@ function get_clsid(obj)
 	return obj:clsid()
 end
 
---' LпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+--' Lсталость
 function on_actor_critical_power()
 
 end
@@ -1092,7 +1092,7 @@ end
 function on_actor_critical_max_power()
 end
 
---' пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+--' іровотечение
 function on_actor_bleeding()
 
 end
@@ -1100,27 +1100,27 @@ end
 function on_actor_satiety()
 end
 
---' пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+--' іадиация
 function on_actor_radiation()
 
 end
 
---' пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
+--' іаклинило оружие
 function on_actor_weapon_jammed()
 
 end
 
---' пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ
+--' не может ходить изза веса
 function on_actor_cant_walk_weight()
 
 end
 
---' пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+--' пси воздействие
 function on_actor_psy()
 end
 
 local save_marker_result = {}
--- пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ
+-- Функции для проверки корректности сейв лоад
 function set_save_marker(p, mode, check, prefix)
 	prefix = tostring(prefix)
 		if (check ~= true) then
@@ -1374,7 +1374,7 @@ function CALifeUpdateManager__on_before_change_level(packet)
 	end
 end
 
--- 'пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ.
+-- 'Запуск динамического окна.
 function run_dynamic_element(folder,close_inv)
    if close_inv==false then
       folder:ShowDialog(true)
@@ -1387,7 +1387,7 @@ function run_dynamic_element(folder,close_inv)
    end
 end
 
--- 'пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ.
+-- 'Создание предмета в рюкзаке ГГ.
 function give_object_to_actor(sec,count)
 	if count==nil then count=1 end
 	for i=1, count do
@@ -1797,7 +1797,7 @@ end
 function copy_table(dest, src)
 	for k,v in pairs(src) do
 		if type(v) == "table" then
-			--' пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+			--' рекурсивный вызов себя же для подтаблиц
 			dest[k] = {}
 			copy_table(dest[k], v)
 		else
@@ -2452,7 +2452,7 @@ function set_actor_true_community(new_comm, now) -- no "actor_"
 	end
 end
 
-function get_object_squad(object,caller) -- пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ!!!!!
+function get_object_squad(object,caller) -- Получить сквад обьекта!!!!!
 	if not (object) then
 		return
 	end
@@ -2470,7 +2470,7 @@ function set_inactivate_input_time(delta)
 	level.disable_input()
 end
 
-function npc_in_actor_frustrum(npc) --' пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ NPC пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
+function npc_in_actor_frustrum(npc) --' находится ли NPC во фруструме игрока
 	local actor_dir = device().cam_dir
 	--local actor_dir = db.actor:direction()
 	local npc_dir = vec_sub(npc:position(),db.actor:position())
@@ -2479,7 +2479,7 @@ function npc_in_actor_frustrum(npc) --' пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ NPC п
 	return yaw < 35
 end
 
-function change_team_squad_group(se_obj, team, squad, group) -- пїЅпїЅпїЅпїЅпїЅпїЅ team:squad:group пїЅпїЅпїЅпїЅпїЅпїЅпїЅ.
+function change_team_squad_group(se_obj, team, squad, group) -- меняет team:squad:group обьекта.
 	local cl_obj = db.storage[se_obj.id] and db.storage[se_obj.id].object
 	if cl_obj ~= nil then
 		cl_obj:change_team(team, squad, group)

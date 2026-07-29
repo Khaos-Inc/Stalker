@@ -65,38 +65,40 @@ cr_turn_right_0				=	1,	  0.2,	    0.1,   0.65,     0.1
 cl_run_back_0				=	1,	  0.2,	    1,       0.4,     1
 cl_run_fwd_0				=	1,	  0.2,	    1,       0.4,     1
 
-; Formula for Visibility
-;Value = time_delta / time_quant * luminocity_factor * (1.f + velocity_factor*object_velocity) * (distance - object_distance) / (distance - always_visible_distance)
-;Value >= visibility_threshold
+; if u really interested...
 
+;((((get_luminocity() + get_luminocity()^0.5 + lights_lum()) / 3.02) * 33.3 * (distance - (object_distance / 1.35)) / distance) + gunshot) *
+; * (1 + velocity_factor * velocity) * (outfit_mult * (-0.0002 * object_distance^2 - 0.0064 * object_distance + 0.9958) *
+; * (0.0002 * weight^2 + 0.0032 * weight + 0.9237)) * (0.003 / time_quant) * crouch * ((distance - (object_distance / 1.15)) / distance) * camo
+
+;formula >= visibility_threshold
 ;transparency_threshold is done during ray_query
 ;Note that improper values, no matter how high transparency_threshold will result in stalkers shooting at walls
 
-
 [stalker_vision_free]
-min_view_distance   		        = 0.25		; min range of cone based on eye_range
-max_view_distance	 		        = 1.11		; max range of cone based on eye_range
-visibility_threshold	         	= 150.0		;Threshold in which object becomes visible based on factors
-always_visible_distance 	        = 0.05		;Distance object is always considered visible (float)
-time_quant			            	= 0.001		;step increment to for sight calculations
-decrease_value				        = 0.01   	;Decrease over time to overall threshold
-velocity_factor		            	= 1.0		;Higher value = greater bonus to detection speed when target is moving (depended on movement speed)
-luminocity_factor		        	= 0.75		;Low value = easier to see at night
-transparency_threshold	        	= 0.73 		;Low value = easier to see through objects
-still_visible_time                  = 0 		;The time (milliseconds) that the object is still considered visible , even if it is not in the frustum (u32)
+min_view_distance   		        = 0.15		; min range of cone based on eye_range (fov edge)
+max_view_distance	 		        = 1.11		; max (center of fov, ex.: approx for clear weather and "eye_range = 180" 1.11 = 86m, 2.11 = 133m, 1.75 = 102m)
+visibility_threshold	         	= 150.0		;Threshold in which object becomes visible, visible if (formula * frames(?) = visibility_threshold)
+always_visible_distance 	        = 0.05		;0.5 = 5 meters always visible (ignoring formula)
+time_quant			            	= 0.5		;equation mult for different states and also test for people who overwrite this file
+decrease_value				        = 0.01   	;doesn't seem to do anything
+velocity_factor		            	= 0.35		; 0.35, higher = easier to notice moving objects
+luminocity_factor		        	= 0.75 ;0.3 		;don't change
+transparency_threshold	        	= 0.73 		;change if u want (higher = harder to see)
+still_visible_time                  = 0		;NPCs will shoot at target's previous position if they lose vision on it, i.e. they will shoot walls for "still_visible_time" in ms
 
 
 [stalker_vision_danger]
-min_view_distance   	        	= 0.45		; min range of cone based on eye_range
-max_view_distance	 		        = 1.77		; max range of cone based on eye_range
-visibility_threshold	 	        = 75.0		;Threshold in which object becomes visible based on factors
-always_visible_distance 	        = 0.05		;Distance object is always considered visible (float)
-time_quant				            = 0.001		;step increment to for sight calculations
-decrease_value				        = 0.01		;Decrease over time to overall threshold
-velocity_factor		            	= 1.0		;Higher value = greater bonus to detection speed when target is moving (depended on movement speed)
-luminocity_factor			        = 0.65		;Low value = easier to see at night
-transparency_threshold	        	= 0.6		;Low value = easier to see through objects (if greater then 1 then enemies are blind)
-still_visible_time                  = 200		;The time (milliseconds) that the object is still considered visible , even if it is not in the frustum (u32)
+min_view_distance   	        	= 0.25		; same as above
+max_view_distance	 		        = 1.77		; same
+visibility_threshold	 	        = 75.0		;same
+always_visible_distance 	        = 0.05		;same
+time_quant				            = 1.0		;same
+decrease_value				        = 0.01		;same
+velocity_factor		            	= 0.55		;same
+luminocity_factor			        = 0.65 ;0.3 		;same
+transparency_threshold	        	= 0.6		;same
+still_visible_time                  = 200		;same
 
 
 
@@ -399,8 +401,8 @@ max_hear_dist	            	= 250
 ;---VISIBILITY--------------------------------------------------------
 vision_danger_section			= stalker_vision_danger
 vision_free_section				= stalker_vision_free
-eye_fov							= 160
-eye_range						= 150
+eye_fov							= 175
+eye_range						= 160
 far_plane_factor				= 1.0		; фактор дальности тумана
 fog_density_factor				= 0.25		; фактор плотности тумана
 

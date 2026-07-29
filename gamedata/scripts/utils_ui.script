@@ -34,8 +34,14 @@ TODO:
 
 --]]
 
+-- Added by Sota
+-- check if it's gamma
+local is_gamma = ui_inventory.is_gamma
+-- custom stat rounding function
+local stats_round_idp = ui_inventory.stats_round_idp
 
-local ratio = utils_xml.screen_ratio()
+-- Edited by Sota - commented out because it’s better to get the actual ratio value in functions
+--local ratio = utils_xml.screen_ratio()
 
 local XMLP = CScriptXmlInit()
 XMLP:ParseFile("utils.xml")
@@ -82,7 +88,6 @@ local bar_list = {
 local K_M1      = DIK_keys.MOUSE_1
 local K_M2      = DIK_keys.MOUSE_2
 local K_SHFT    = DIK_keys.DIK_LSHIFT
-local K_ALT    = DIK_keys.DIK_LMENU
 local E_PRESS   = ui_events.WINDOW_KEY_PRESSED
 local E_RELEASE = ui_events.WINDOW_KEY_RELEASED
 
@@ -94,6 +99,26 @@ local get_item_axis         = utils_xml.get_item_axis
 local get_item_trade_status = utils_item.get_item_trade_status
 local get_item_cost         = utils_item.get_item_cost
 local lerp_color			= utils_xml.lerp_color
+
+-- Main Menu
+local mm_active = true
+
+function main_menu_on()
+	mm_active = true
+end
+
+function main_menu_off()
+	mm_active = false
+end
+
+function on_game_start()
+	RegisterScriptCallback("main_menu_on_init", main_menu_on)
+	RegisterScriptCallback("main_menu_on_quit", main_menu_off)
+end
+
+function get_time()
+	return mm_active and time_continual() or time_global()
+end
 
 -- Item order
 local item_order = {}
@@ -362,8 +387,15 @@ function get_stats_value(obj, sec, gr, stat)
 		value = utils_item.get_param(sect, obj and obj:id(), stat, (gr.typ or "float"), true)
 	end
 	
+	-- Edited by Sota - GAMMA v0.9.3 compatibility
 	if obj and value and gr.condition then
-		value = value * obj:condition()
+		local cond = obj:condition()
+		if is_gamma then
+			cond = ui_inventory.show_full_stats and 1 or cond
+		else
+			cond = ui_inventory.show_full_stats and 1/cond or 1
+		end
+		value = value * cond
 	end
 	
 	return (value ~= 0) and value
@@ -388,14 +420,22 @@ function get_stats_string_value(obj, sec, gr, stat, to_text)
 		return
 	end
 	
+	-- Added by Sota - number of decimal places
+	local idp_stats_tt = ui_inventory.color_settings.idp_stats_tt
+	
 	if gr.track then
 		local valbar = clamp((math.abs(value) * gr.magnitude), 0, 1)
-		return to_text and (math.ceil(valbar * 100) .. "%") or valbar
+		-- Edited by Sota - change rounding method
+--		return to_text and (math.ceil(valbar * 100) .. "%") or valbar
+		return to_text and (stats_round_idp( valbar * 100 , idp_stats_tt ) .. "%") or valbar
 	else
-		local valbar = value * gr.magnitude
+		-- Edited by Sota - round value before color determination
+--		local valbar = value * gr.magnitude
+		local valbar = stats_round_idp( value * gr.magnitude , idp_stats_tt )
 		local unit = gr.unit and gr.unit ~= "" and game.translate_string(gr.unit) or ""
 		local clr = valbar >= 0 and clr_list["p1"] or clr_list["n1"]
-		valbar = math.ceil(valbar)
+		-- Edited by Sota - value is already rounded
+--		valbar = math.ceil(valbar)
 		
 		if gr.sign_inverse then
 			clr = valbar < 0 and clr_list["p1"] or clr_list["n1"]
@@ -518,7 +558,33 @@ function UICellItem:InitControls(path, st)
 	sync_element(self.hl, self.cell)
 end
 
+function UICellItem:FindChildIdByBestCondition(orElse)
+	if self.childs then
+		local id_child
+		local max_condition_so_far = -1
+		for id, cnt in pairs(self.childs) do
+			local obj = level.object_by_id(id)
+			local condition = (obj and obj:condition()) or 0
+
+			if (max_condition_so_far < condition) then
+				id_child = id
+				max_condition_so_far = condition
+			end
+		end
+
+		return id_child or orElse;
+	else
+		return orElse
+	end
+end
+
 function UICellItem:Set(obj, area)
+	-- Added by Sota - always up to date screen ratio
+	local ratio = utils_xml.screen_ratio()
+	-- lazy fix for 16:10 ratio (specifically for 1600x1024)
+	local ratio_1610 = (4/3) / (16/10)
+	ratio = (ratio > ratio_1610) and (ratio < 1) and ratio_1610 or ratio
+	
 	local xml = self:GetXML()
 	local path = self.path
 	local is_obj = (self.showcase == 0)
@@ -538,16 +604,29 @@ function UICellItem:Set(obj, area)
 	
 	x = x * grid_size
 	y = y * grid_size
-	w = w * grid_size
-	h = h * grid_size
+	
+	-- Edited by G_FLAT - inventory cells use grid line thickness, separate dimensions for icons
+--	w = w * grid_size
+--	h = h * grid_size
+
+	-- demonized: HD Inventory Icons Framework
+	local scale = zz_hd_inventory_icons_patches and SYS_GetParam(2, sec, "inv_grid_scale", 1) or 1
+	local icon_w = math.ceil(w * grid_size / scale)
+	local icon_h = math.ceil(h * grid_size / scale)
+	
+	-- Added by G_FLAT - inventory cells use grid line thickness
+	local grid_line = self.grid_line
+	w = math.ceil(w * grid_size / scale) + (math.ceil(w / scale) - 1) * grid_line
+	h = math.ceil(h * grid_size / scale) + (math.ceil(h / scale) - 1) * grid_line
 	
 	self.ID = is_obj and obj:id() or nil
 	self.section = sec
 	self.area = area
-	--self.X = x
-	--self.Y = y
+	self.X = x
+	self.Y = y
 	self.W = w
 	self.H = h
+	self.scale = scale
 
 	-- Trade mode
 	--if self:Check_TradeMode(obj, sec) then
@@ -558,8 +637,11 @@ function UICellItem:Set(obj, area)
 	if area and (not self.manual) then
 		local area_x = ((area.x * grid_size) - grid_size) * ratio
 		local area_y = (area.y * grid_size) - grid_size
-		local area_xl = self.grid_line * area.x
-		local area_yl = self.grid_line * area.y
+		-- Edited by Sota - fix gap between cells for wide/uwide screens
+--		local area_xl = self.grid_line * area.x
+		local area_xl = grid_line * area.x * ratio
+		
+		local area_yl = grid_line * area.y
 		
 		self.cell:SetWndPos(vector2():set( area_x + area_xl , area_y + area_yl ))
 		self.cell:SetWndSize(vector2():set(w * ratio , h))
@@ -577,8 +659,11 @@ function UICellItem:Set(obj, area)
 	end
 	
 	-- Icon
-	self:Add_Icon(sec, w, h)
-	self:Add_Shadow(sec, w, h)
+	-- Edited by G_FLAT - inventory cells use grid line thickness, separate dimensions for icons
+--	self:Add_Icon(sec, w, h)
+--	self:Add_Shadow(sec, w, h)
+	self:Add_Icon(sec, icon_w, icon_h)
+	self:Add_Shadow(sec, icon_w, icon_h)
 	
 	-- Icon layers
 	self:Add_Layers(xml, obj, sec, clsid)
@@ -622,6 +707,12 @@ function UICellItem:Update(obj)
 	-- Update upgrade indicator
 	self:Add_Upgrade(xml, obj, sec)
 	
+	-- Added by Sota - change upgrade indicator icon
+	if self.upgr then
+		local str_upgr = ui_inventory.ui_rework_support.str_upgr_lst[ ui_inventory.color_settings.use_alt_upgr ]
+		self.upgr:InitTexture( "ui_upgrade_arrow2" .. str_upgr )
+	end
+	
 	-- Update trade mode
 	if self:Check_TradeMode(obj, sec) then
 		return false
@@ -634,6 +725,9 @@ function UICellItem:Update(obj)
 end
 
 function UICellItem:Add_Icon(sec, w, h)
+	-- Added by Sota - always up to date screen ratio
+	local ratio = utils_xml.screen_ratio()
+	
 	local rot = self.ico:GetHeading() > 0
 
 	self.ico:InitTexture( utils_xml.get_icons_texture(sec) )
@@ -647,6 +741,9 @@ function UICellItem:Add_Icon(sec, w, h)
 end
 
 function UICellItem:Add_Shadow(sec, w, h)
+	-- Added by Sota - always up to date screen ratio
+	local ratio = utils_xml.screen_ratio()
+	
 	local rot = self.shadow:GetHeading() > 0
 
 	self.shadow:InitTexture( utils_xml.get_icons_texture(sec) )
@@ -658,7 +755,9 @@ function UICellItem:Add_Shadow(sec, w, h)
 	utils_xml.align_to_center(self.shadow, self.cell)
 	
 	local pos = self.ico:GetWndPos()
-	self.shadow:SetWndPos( vector2():set( pos.x + 1 , pos.y + 2 ) )
+	-- Edited by Sota - shadow now moves exactly diagonally by 1
+--	self.shadow:SetWndPos( vector2():set( pos.x + 1 , pos.y + 2 ) )
+	self.shadow:SetWndPos( vector2():set( pos.x + 1 * ratio , pos.y + 1 ) )
 	self.shadow:SetTextureColor( clr_list["shadow"] )
 	
 	self:Print(nil, "Show shadow")
@@ -728,6 +827,14 @@ function UICellItem:Add_ProgressBar(xml, obj, sec, clsid)
 		end
 		self.bar = xml:InitProgressBar(self.path .. ":" .. self.cx .. ":bar", self.cell)
 		--self.bar:UseColor( true )
+		
+		-- Added by Sota - GAMMA v0.9.3 compatibility, offset wpn cond bars for gamma (cell_2 - Pistol(secondary), cell_3 - Automatic(primary))
+		if is_gamma and IsWeapon(obj) and ( not IsMelee(obj) ) and ( (self.cx == "cell_2") or (self.cx == "cell_3") ) then
+			local bar_pos = self.bar:GetWndPos()
+			local bar_h = self.bar:GetHeight()
+			bar_pos.y = bar_pos.y + bar_h
+			self.bar:SetWndPos( bar_pos )
+		end
 	end
 
 	-- Not manual -> bar is set at the left-bottom corner
@@ -753,7 +860,9 @@ function UICellItem:Add_ProgressBar(xml, obj, sec, clsid)
 	end
 	
 	self.bar:ShowBackground( props.background )
-	self.bar:Show(true)
+	-- Edited by Sota - GAMMA v0.9.3 compatibility, hide wpn cond bars for gamma
+--	self.bar:Show(true)
+	self.bar:Show( not ( is_gamma and IsWeapon(obj) and not IsMelee(obj) ) )
 	
 	self:Print(nil, "Show progress bar: %s - cond: %s", str, cond)
 end
@@ -915,6 +1024,9 @@ function UICellItem:Add_Attachements(xml, obj, sec, clsid)
 end
 
 function UICellItem:Add_CustomText(txt, align_h, align_v, clr, fnt)
+	-- Added by Sota - always up to date screen ratio
+	local ratio = utils_xml.screen_ratio()
+	
 	if self.ctxt then
 		self.ctxt:Show(false)
 		self.ctxts:Show(false)
@@ -935,7 +1047,9 @@ function UICellItem:Add_CustomText(txt, align_h, align_v, clr, fnt)
 	utils_xml.sync_size(self.ctxt, self.ctxts)
 	
 	local pos = self.ctxt:GetWndPos()
-	self.ctxts:SetWndPos(vector2():set( pos.x+1 , pos.y+1 ))
+	-- Edited by Sota - shadow now moves exactly diagonally by 1
+--	self.ctxts:SetWndPos(vector2():set( pos.x+1 , pos.y+1 ))
+	self.ctxts:SetWndPos(vector2():set( pos.x+1*ratio , pos.y+1 ))
 	
 	self.ctxt:SetText(txt)
 	self.ctxts:SetText(txt)
@@ -963,11 +1077,18 @@ function UICellItem:Add_CustomText(txt, align_h, align_v, clr, fnt)
 end
 
 function UICellItem:Create_Layer(ele, base, sec_m, sec_l, str_x, str_y, str_scale)
+	-- Added by Sota - always up to date screen ratio
+	local ratio = utils_xml.screen_ratio()
+	
 	local grid_size = self.grid_size
 	local x = str_x and SYS_GetParam(2,sec_m, str_x) or 0 
 	local y = str_y and SYS_GetParam(2,sec_m, str_y) or 0
-	local w = SYS_GetParam(2,sec_l, "inv_grid_width",1) * grid_size
-	local h = SYS_GetParam(2,sec_l, "inv_grid_height",1) * grid_size
+
+	-- demonized: HD Inventory Icons Framework
+	local scale = zz_hd_inventory_icons_patches and SYS_GetParam(2, sec_l, "inv_grid_scale", 1) or 1
+	local w = math.ceil(SYS_GetParam(2,sec_l, "inv_grid_width",1) * grid_size / scale)
+	local h = math.ceil(SYS_GetParam(2,sec_l, "inv_grid_height",1) * grid_size / scale)
+
 	local scale = str_scale and SYS_GetParam(2,sec_m, str_scale) or 1
 	local scale_pos = scale * (grid_size/50)
 
@@ -1089,6 +1210,12 @@ function UICellItem:AddChild(obj)
 	if (not self.childs) then
 		self.childs = {}
 	end
+
+	local current_obj = self.ID and level.object_by_id(self.ID)
+	if current_obj and (current_obj:condition() < obj:condition()) then
+		self:Set(obj)               -- whatever we set here is visible as the icon in the main invetory section, we make sure to always show item with best condition
+		return self:AddChild(current_obj) -- we need to make sure that previously "top of the stack" is preserved so we insert it as the new UICellItem.childs instead
+	end
 	
 	-- Real
 	local sec = obj:section()
@@ -1151,10 +1278,11 @@ end
 function UICellItem:ResetToChild()
 	local id_child
 	if self.childs then
-		for id,cnt in pairs(self.childs) do
-			id_child = id
-			break
-		end
+--		for id,cnt in pairs(self.childs) do
+--			id_child = id
+--			break
+--		end
+		id_child = self:FindChildIdByBestCondition()
 	end
 	
 	if id_child then
@@ -1203,7 +1331,13 @@ function UICellItem:Reset()
 		if (self.showcase ~= 2) and self.container["FreeRoom"] then
 			-- Freeing cell area
 			local a = self.area
-			self.container:FreeRoom(a.y, a.x, a.w, a.h)
+			-- Edited by Sota - prevent crash if self.area is nil
+--			self.container:FreeRoom(a.y, a.x, a.w, a.h)
+			if a then
+				self.container:FreeRoom(a.y, a.x, a.w, a.h)
+			else
+				self:Show(false)
+			end
 		end
 		
 		self:Show(false)
@@ -1279,11 +1413,6 @@ function UICellContainer:__init(id, owner, path, prof, ele_base, manual, use_fra
 	self.disable_info        = false
 	self.disable_stack	     = false
 	self.disable_bar         = false
-	
-	--eric7237cire
-	self.shift_transfer_mode = false 
-	self.alt_transfer_mode = false
-	
 	self.disable_callback    = {} --[name] = true
 	self.scolling_power_up   = 3
 	
@@ -1304,6 +1433,10 @@ function UICellContainer:__init(id, owner, path, prof, ele_base, manual, use_fra
 end
 
 function UICellContainer:InitControls(owner, prof, ele_base)
+	-- Added by Sota - always up to date screen ratio
+	local ratio = utils_xml.screen_ratio()
+	local uwide_ratio = (ratio < 0.75) and 0.75 or 1
+	
 	local xml = self.xml
 	local path = self.path
 
@@ -1334,9 +1467,11 @@ function UICellContainer:InitControls(owner, prof, ele_base)
 	self.pad:InitTexture("ui_inGame2_white_rect")
 	self.pad:SetTextureColor( GetARGB(100,255,255,255) )
 	self.pad:SetWndPos(vector2():set( self.prof:GetWidth() , 0 ))
-	self.pad:SetWndSize(vector2():set( 5 , self.prof:GetHeight() ))
-	self.pad:Show(false)
+	-- Edited by Sota - scrollbar width for uwide screens the same as wide screens
+--	self.pad:SetWndSize(vector2():set( 5 , self.prof:GetHeight() ))
+	self.pad:SetWndSize(vector2():set( 5 * uwide_ratio , self.prof:GetHeight() ))
 	
+	self.pad:Show(false)
 	self:SetGridSpecs()
 end
 
@@ -1709,6 +1844,11 @@ function UICellContainer:FindFreeCell(obj, sec)
 	local w = SYS_GetParam(2,sec, "inv_grid_width",1)
 	local h = SYS_GetParam(2,sec, "inv_grid_height",1)
 
+	-- demonized: HD Inventory Icons Framework
+	local scale = zz_hd_inventory_icons_patches and SYS_GetParam(2, sec, "inv_grid_scale", 1) or 1
+	w = math.ceil(w / scale)
+	h = math.ceil(h / scale)
+
 	-- Avoid icons that don't fit
 	if w > self.cols then
 		return false
@@ -1931,7 +2071,9 @@ function UICellContainer:On_Select(idx)
 end
 
 function UICellContainer:On_Drag(idx, tg, set)
-
+	-- Added by Sota - always up to date screen ratio
+	local ratio = utils_xml.screen_ratio()
+	
 	-- Hold icon should be declared after everything else, so it stays on top
 	-- Also it must be assigned on the base UI because we need x and y to start from absolute screen corner
 	if (not self.hold.ico) then
@@ -1983,8 +2125,10 @@ function UICellContainer:On_Drag(idx, tg, set)
 			local sec = self.cell[self.hold.idx].section
 			
 			if sec then
-				self.hold.w = SYS_GetParam(2,sec, "inv_grid_width") * self.grid_size * ratio
-				self.hold.h = SYS_GetParam(2,sec, "inv_grid_height") * self.grid_size
+				-- demonized: HD Inventory Icons Framework
+				local scale = zz_hd_inventory_icons_patches and SYS_GetParam(2, sec, "inv_grid_scale", 1) or 1
+				self.hold.w = math.ceil(SYS_GetParam(2,sec, "inv_grid_width") * self.grid_size * ratio / scale)
+				self.hold.h = math.ceil(SYS_GetParam(2,sec, "inv_grid_height") * self.grid_size / scale)
 				
 				self.hold.ico:InitTexture( utils_xml.get_icons_texture(sec) )
 				self.hold.ico:SetTextureRect(Frect():set( get_item_axis(sec, nil, true) ))
@@ -2002,36 +2146,6 @@ function UICellContainer:On_Drag(idx, tg, set)
 end
 
 function UICellContainer:On_Hover(idx)
-
-	--printf("On hover %s", idx)
-	--Thanks to AssHat and by proxy  RavenAscendant or xcvb for the fix for using when 
-	--to not do anything if only the players inventory is open (and not transfering stuff)
-	if idx and (self.hover.idx ~= idx) and self.shift_transfer_mode and ( (not db.actor:has_info("inventory_wnd_open")) or self.alt_transfer_mode) then 
-		-- printf("Double clicking 1 %s", idx)
-		
-		--ensure item is not highlighted
-		
-		-- UnHighlight old cell
-		if self.hover.idx then
-			local ci = self.cell[self.hover.idx]
-			if ci then
-				ci:Highlight(false)
-			end
-		end
-		
-		-- Unmark hovering
-		self.hover.idx = false
-		
-		self.hover.idx = idx
-		
-		--simulate click 
-		self:On_Mouse1(idx)
-		
-		--simulate double click 
-		self:On_Mouse1_DB(idx)
-		return
-	end 
-
 	if (not idx) then
 		-- UnHighlight old cell
 		if self.hover.idx then
@@ -2073,13 +2187,23 @@ end
 function UICellContainer:On_Mouse1(idx)
 
 	-- Anticipate double click
-	local tg = time_continual()
+	local tg = get_time()
 	
-	if (idx == self.db.idx) and (tg - self.db.tg < 400) then
-		self.db.idx = false
+	if (tg - self.db.tg < 400) then
+		self.db.idx = idx --false
+		self.db.tg = tg
 		
-		self:On_Mouse1_DB(idx)
-		return
+		local db_continue = self:On_Mouse1_DB(idx)
+		
+		-- when there's a value returned, allow consecutive db clicks
+		if (not db_continue) then
+			self.db.idx = false
+		end
+		
+		-- db_continue is false if no db callback is found in owner class, so we can pass the return and treat db click as normal click 
+		if (db_continue ~= false) then
+			return
+		end
 	end
 	
 	self.db.idx = idx
@@ -2090,7 +2214,7 @@ function UICellContainer:On_Mouse1(idx)
 end
 
 function UICellContainer:On_Mouse1_DB(idx)
-	self:Callback( "On_CC_Mouse1_DB", self.ID, idx )
+	return self:Callback( "On_CC_Mouse1_DB", self.ID, idx ) -- Returning true means no cooldown on double clicking if you keep clicking!
 end
 
 function UICellContainer:On_Mouse2(idx)
@@ -2135,12 +2259,19 @@ function UICellContainer:On_Scroll()
 	
 	-- small delay
 	if (not self.scroll_tg) then
-		self.scroll_tg = time_continual()
+		self.scroll_tg = get_time()
 	end
-	if self.scroll_tg > (time_continual() + 25) then
+	
+	-- Added by Sota - Alt Tab Scroll Issue fix by DPurple
+	-- get_time() may unreliable , try reset delay
+	if get_time() - self.scroll_tg < 0 then
+		self.scroll_tg = get_time()
+	end
+	
+	if self.scroll_tg > (get_time() + 25) then -- at -25 the container contents will flicker when scrolling at the end
 		return
 	end
-	self.scroll_tg = time_continual()
+	self.scroll_tg = get_time()
 	
 	-- Amplify scrolling
 	local curr_pos = self.scroll:GetCurrentScrollPos()
@@ -2156,7 +2287,7 @@ end
 
 function UICellContainer:Update(item_info, no_info, hide)
 
-	self:On_Drag(false, time_continual())
+	self:On_Drag(false, get_time())
 	self:On_Select()
 	self:On_Scroll()
 	if hide then
@@ -2197,23 +2328,6 @@ end
 
 function UICellContainer:OnKeyboard(dik, keyboard_action)
 	
-	if dik == K_SHFT and keyboard_action == E_PRESS then
-		self.shift_transfer_mode = true 
-		--printf("Shift transfer mode is %s", self.shift_transfer_mode)
-	end 
-	if dik == K_SHFT and keyboard_action == E_RELEASE then
-		self.shift_transfer_mode = false 		
-		--printf("Shift transfer mode is %s", self.shift_transfer_mode)
-	end 
-	if dik == K_ALT and keyboard_action == E_PRESS then
-		self.alt_transfer_mode = true 
-		--printf("Alt transfer mode is %s", self.alt_transfer_mode)
-	end 
-	if dik == K_ALT and keyboard_action == E_RELEASE then
-		self.alt_transfer_mode = false 		
-		--printf("Alt transfer mode is %s", self.alt_transfer_mode)
-	end 
-	
 	-- Pause scrolling when holding M1
 	if (dik == K_M1) then
 		if (keyboard_action == E_PRESS) then
@@ -2230,7 +2344,7 @@ function UICellContainer:OnKeyboard(dik, keyboard_action)
 		-- Mouse 1
 		if (dik == K_M1) then
 			if (keyboard_action == E_PRESS) then
-				self:On_Drag(idx, time_continual(), true)
+				self:On_Drag(idx, get_time(), true)
 				
 			elseif (keyboard_action == E_RELEASE) then
 				self:On_Drag(false, 0, true)
@@ -2262,7 +2376,10 @@ function UICellContainer:Callback(func, ...)
 	end
 	
 	if self.owner[func] then
-		self.owner[func](self.owner,...)
+		return self.owner[func](self.owner,...)
+		
+	elseif (func == "On_CC_Mouse1_DB") then
+		return false
 	end
 end
 
@@ -2284,12 +2401,22 @@ function UICellContainer:Reset()
 	self.rKind.last = false
 	self.rKind.current = false
 	self.rKind.row = 1
-	self.shift_transfer_mode = false
-	self.alt_transfer_mode = false
 	self.line_cnt = 0
 	empty_table(self.indx_id)
 	empty_table(self.indx_sec)
 	self.pad:Show(false)
+	
+	self.selected  = nil
+	self.hold.idx = false
+	self.hold.tg = 0
+	self.hold.w = 0
+	self.hold.h = 0
+	if self.hold.ico then
+		self.hold.ico:Show(false)
+	end
+
+	self.db.idx = false
+	self.db.tg = 0 
 	
 	-- Reset Grid
 	for row,v in pairs(self.grid) do
@@ -2398,14 +2525,14 @@ function UICellContainer:Scroll_DragDrop_Ctrl()
 		return false
 	end
 	
-	if (dir == 1) and (time_continual() - self.drag_area.up > self.drag_area.step) then
-		self.drag_area.up = time_continual()
+	if (dir == 1) and (get_time() - self.drag_area.up > self.drag_area.step) then
+		self.drag_area.up = get_time()
 		self:Scroll_SetPos( self.scroll_pos - ((self.grid_size + self.grid_line) * self.scolling_power) )
 		--printf("On_Scroll_DragDrop UP | old: %s - new: %s", self.scroll_pos, new_pos)
 		return true
 		
-	elseif (dir == 2) and (time_continual() - self.drag_area.down > self.drag_area.step) then
-		self.drag_area.down = time_continual()
+	elseif (dir == 2) and (get_time() - self.drag_area.down > self.drag_area.step) then
+		self.drag_area.down = get_time()
 		self:Scroll_SetPos( self.scroll_pos + ((self.grid_size + self.grid_line) * self.scolling_power) )
 		--printf("On_Scroll_DragDrop DOWN | old: %s - new: %s", self.scroll_pos, new_pos)
 		return true
@@ -2414,6 +2541,9 @@ function UICellContainer:Scroll_DragDrop_Ctrl()
 end
 
 function UICellContainer:Scroll_Pad_Ctrl(update)
+	-- Added by Sota - always up to date screen ratio
+	local ratio = utils_xml.screen_ratio()
+	local uwide_ratio = (ratio < 0.75) and 0.75 or 1
 	
 	-- Scroll pad state and size
 	if update then
@@ -2428,7 +2558,10 @@ function UICellContainer:Scroll_Pad_Ctrl(update)
 			self.pd.power = h_scroll/(h_view - h_pad)
 			--printf("h_view: %s - h_scroll: %s - h_max: %s - h_pad: %s - ratio: %s - power: %s", h_view, h_scroll, h_max, h_pad, ratio, self.pd.power)
 			self.pad:SetWndPos(vector2():set( self.prof:GetWidth() , self.scroll_pos / self.pd.power ))
-			self.pad:SetWndSize(vector2():set( 5 , math.floor(h_pad) ))
+			-- Edited by Sota - scrollbar width for uwide screens the same as wide screens
+--			self.pad:SetWndSize(vector2():set( 5 , math.floor(h_pad) ))
+			self.pad:SetWndSize(vector2():set( 5 * uwide_ratio , math.floor(h_pad) ))
+			
 			self.pad:Show(true)
 		end
 		return
@@ -2490,6 +2623,9 @@ function UICellContainer:AdjustHeightToCell()
 end
 
 function UICellContainer:AdjustWidthToCell()
+	-- Added by Sota - always up to date screen ratio
+	local ratio = utils_xml.screen_ratio()
+	
 	local w = self.col_end * (self.grid_size + self.grid_line)
 	w = w * ratio
 	if self.use_frame then
@@ -2509,6 +2645,9 @@ function UICellContainer:SetBackground(path, clr)
 end
 
 function UICellContainer:SetGridSpecs(size, line)
+	-- Added by Sota - always up to date screen ratio
+	local ratio = utils_xml.screen_ratio()
+	
 	self.grid_size = size or self.grid_size
 	self.grid_line = line or self.grid_line
 	self.cols = math.floor( (self.scroll:GetWidth() * (1/ratio)) / (self.grid_size + self.grid_line) )
@@ -2619,7 +2758,11 @@ function UIInfoItem:Update(obj, sec, flags)
 		self:Show(false)
 		return
 	end
-
+	
+	-- Added by Sota - set transparency for tooltip
+	local clr_a = ui_inventory.color_settings.inv_hint_alpha
+	self.frame:SetColor( GetARGB(clr_a, 255, 255, 255) )
+	
 	-- item info box is shown at cursor
 	sync_cursor(self.dialog, self.frame, 0, 0)
 	
@@ -2770,10 +2913,23 @@ function UIInfoItem:Update(obj, sec, flags)
 					
 				-- Text
 				elseif ele.txt then
-					local valbar_a = val_a * gr.magnitude
+					-- Added by Sota - number of decimal places
+					local idp_stats_tt = ui_inventory.color_settings.idp_stats_tt
+					-- fix rounding accuracy for weight property
+					if (stat == "additional_inventory_weight") or (stat == "boost_max_weight") then
+						idp_stats_tt = 1
+					-- display hts values in %
+					elseif (stat == "eat_satiety") then
+						gr.magnitude = 100
+						gr.unit = "st_perc"
+					end
+					-- Edited by Sota - round value before calculating difference
+--					local valbar_a = val_a * gr.magnitude
+					local valbar_a = stats_round_idp( val_a * gr.magnitude , idp_stats_tt )
 					local unit = gr.unit and gr.unit ~= "" and game.translate_string(gr.unit) or ""
 					local clr = valbar_a >= 0 and clr_list["p1"] or clr_list["n1"]
-					valbar_a = math.ceil(valbar_a)
+					-- Edited by Sota - value is already rounded
+--					valbar_a = math.ceil(valbar_a)
 					
 					if gr.sign_inverse then
 						clr = valbar_a < 0 and clr_list["p1"] or clr_list["n1"]
@@ -2783,9 +2939,13 @@ function UIInfoItem:Update(obj, sec, flags)
 
 					-- Comparison item
 					local val_b = obj_b and get_stats_value(obj_b, obj_b:section(), gr, stat)
-					local valbar_b = val_b and val_b * gr.magnitude
+					-- Edited by Sota - round value before calculating difference
+--					local valbar_b = val_b and val_b * gr.magnitude
+					local valbar_b = val_b and stats_round_idp( val_b * gr.magnitude , idp_stats_tt )
 					if valbar_b and (valbar_a ~= valbar_b) then
-						local diff_val = math.ceil(valbar_a - valbar_b)
+						-- Edited by Sota - no need to round the result
+--						local diff_val = math.ceil(valbar_a - valbar_b)
+						local diff_val = valbar_a - valbar_b
 						ele.comp:SetText( "(" .. (diff_val > 0 and "+" or "") .. diff_val .. ")" )
 						ele.comp:Show(true)
 						clr = (valbar_a > valbar_b) and clr_list["info_p_txt"] or clr_list["info_n_txt"]
@@ -2894,7 +3054,7 @@ function UIInfoItem:Pass(obj, sec)
 	end
 	
 	-- delay
-	local tg = time_continual()
+	local tg = get_time()
 	if (tg < self.timer + self.delay) then
 		return false
 	end
@@ -2965,7 +3125,8 @@ function UIInfoItem:Sync_H(parent, child, offset)
 	local pos_p = parent:GetWndPos()
 	local h_p = parent:GetHeight()
 	local h = pos_p.y + h_p + offset
-	if h < 300 then h = 300 end
+	-- Edited by Sota - fix item tooltip height
+--	if h < 300 then h = 300 end
 	child:SetWndSize(vector2():set( child:GetWidth() , h ))
 	return h
 end
@@ -2977,7 +3138,7 @@ end
 function UIInfoItem:Reset()
 	self.id = nil
 	self.section = nil
-	self.timer = time_continual()
+	self.timer = get_time()
 end
 
 function UIInfoItem:IsShown()
@@ -3020,6 +3181,10 @@ function UIInfoUpgr:InitControls()
 	self.prereq     = XMLP:InitTextWnd("upgrade_info:info_prerequisites", self.dialog)
 
 	self.prop_frame = XMLP:InitStatic("upgrade_info:properties", self.dialog)
+	
+	-- Added by Sota - return back descr and upgrade stat separator line for upgrade tooltip
+	self.upgr_line = XMLP:InitStatic("upgrade_info:properties:upgr_line", self.prop_frame)
+	
 	self.prop = {}
 	self.prop_h = self.prop_frame:GetHeight()
 	local pos
@@ -3040,6 +3205,10 @@ function UIInfoUpgr:Update(upgr, prereq, installed)
 		self:Show(false)
 		return
 	end
+	
+	-- Added by Sota - set transparency for tooltip
+--	local clr_a = ui_inventory.color_settings.inv_hint_alpha
+--	self.frame:SetColor( GetARGB(clr_a, 255, 255, 255) )
 	
 	-- info box is shown at cursor
 	sync_cursor(self.dialog, self.frame, 0, 0)
@@ -3090,14 +3259,17 @@ function UIInfoUpgr:Update(upgr, prereq, installed)
 	end
 	
 	self:Sync_Y(self.prereq, self.prop_frame, 10)
-	self:Sync_H(self.prop_frame, self.frame, (self.prop_h * #props) )
+	-- Edited by Sota - fix upgrade tooltip height
+--	self:Sync_H(self.prop_frame, self.frame, (self.prop_h * #props) )
+	self:Sync_H(self.prop_frame, self.frame, (self.prop_h * #props) + 20 )
+	
 	return
 end
 
 function UIInfoUpgr:Pass(sec)
 
 	-- hide when no info is passed
-	local tg = time_continual()
+	local tg = get_time()
 	if (not sec) then
 		self.timer   = tg
 		self.section = nil
@@ -3144,16 +3316,17 @@ end
 
 function UIInfoUpgr:Sync_H(parent, child, offset)
 	local h = parent:GetWndPos().y + parent:GetHeight() + offset
-	if (h < 265) then
-		h = 265
-	end
+	-- Edited by Sota - fix upgrade tooltip height
+--	if (h < 265) then
+--		h = 265
+--	end
 	child:SetWndSize(vector2():set( child:GetWidth() , h ))
 	return h
 end
 
 function UIInfoUpgr:Reset()
 	self.section = nil
-	self.timer = time_continual()
+	self.timer = get_time()
 end
 
 function UIInfoUpgr:IsShown()
@@ -3250,6 +3423,7 @@ function UICellProperties:Update()
 	end
 	
 	self.highlight:Show(false)
+	self:AllowMovement( ui_inventory.GUI.mode == "inventory" )
 end
 
 function UICellProperties:Reset(pos_override, action_list, name_list, params_list)
@@ -3321,7 +3495,7 @@ function UICellProperties:OnListItemDbClicked()
 			self.owner[item.func](self.owner)
 		end
 		
-		self.action_moment = time_continual()
+		self.action_moment = get_time()
 	end
 	
 	if (self:IsShown()) then
@@ -3430,25 +3604,27 @@ function UIHint:Update(txt)
 		self:Show(false)
 		return
 	end
-
+	
 	-- no need to process if it's same txt
 	if (txt == self.txt) then
 		sync_cursor(self.dialog)
 		self:Show(true)
 		return
 	end
-
+	
 	-- Set text
 	self.dialog_text:SetText(txt)
 	self.dialog_text:AdjustHeightToText()
 	
 	-- Set wnd size
+	-- Edited by Sota - fix hint size
 	local w = self.dialog:GetWidth()
-	w = w >= 96 and w or 96
-	local h = self.dialog_text:GetHeight()+44
-	h = h >= 96 and h or 96
+--	w = w >= 96 and w or 96
+--	local h = self.dialog_text:GetHeight()+40
+	local h = self.dialog_text:GetHeight() + self.dialog_text:GetWndPos().y * 2
+--	h = h >= 96 and h or 96
 	self.dialog:SetWndSize(vector2():set(w,h))
-
+	
 	FitInRect(self.dialog,Frect():set(0,0,1024,768),0,100)
 	
 	-- box is shown at cursor
@@ -3461,7 +3637,7 @@ end
 function UIHint:Pass(txt)
 
 	-- hide when no info is passed
-	local tg = time_continual()
+	local tg = get_time()
 	if not (txt and txt ~= "") then
 		self.timer   = tg
 		self.txt      = nil
@@ -3521,7 +3697,9 @@ function prop_rpm(obj,sec)
 end
 
 function prop_condition(obj,sec)
-	return obj and obj:condition() or 1
+	-- Edited by Sota - show full condition when full stats key is pressed
+--	return obj and obj:condition() or 1
+	return obj and (not ui_inventory.show_full_stats) and math.ceil(obj:condition()*100)/100 or 1
 end
 
 function get_utils_xml()

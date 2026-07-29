@@ -137,8 +137,8 @@ local msg_tg, msg_tm, msg_FI, msg_FO = 0,2000,500,1500
 local msg_R,msg_G,msg_B = 255,255,255
 
 local msg_list = {
-	[1] = { hud= "gameplay_notification" , 	typ= "text" ,	clr= GetARGB(200,245,245,240) 	, 	tg= false 	, last_id= false },
-	[2] = { hud= "showcase_notification" , 	typ= "text" ,	clr= GetARGB(200,245,245,240)	, 	tg= false 	, last_id= false },
+	[1] = { hud= "gameplay_notification" , 	typ= "text" ,	clr= GetARGB(255,240,217,182) 	, 	tg= false 	, last_id= false },
+	[2] = { hud= "showcase_notification" , 	typ= "text" ,	clr= GetARGB(255,255,232,208)	, 	tg= false 	, last_id= false },
 	[3] = { hud= "notify_icon" 			 , 	typ= "icon"	, 										tg= false 	, last_id= false },
 }
 
@@ -191,9 +191,9 @@ function set_fade_msg(msg, tm, cl, snd)
 		{
 			msg = tostring(msg),
 			sec = tm or 5,
-			R = cl and cl.R or 245,
-			G = cl and cl.G or 245,
-			B = cl and cl.B or 240,
+			R = cl and cl.R or 240,
+			G = cl and cl.G or 217,
+			B = cl and cl.B or 182,
 			snd = snd or false,
 		}
 	)

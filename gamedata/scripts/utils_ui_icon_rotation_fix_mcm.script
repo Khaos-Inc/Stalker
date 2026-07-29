@@ -27,7 +27,7 @@
 		local y = str_y and SYS_GetParam(2,sec_m, str_y) or 0
 
 		-- demonized: HD Inventory Icons Framework
-		local scale = SYS_GetParam(2, sec_l, "inv_grid_scale", 1)
+		local scale = zz_hd_inventory_icons_patches and SYS_GetParam(2, sec_l, "inv_grid_scale", 1) or 1
 		local w = math.ceil(SYS_GetParam(2,sec_l, "inv_grid_width",1) * grid_size / scale)
 		local h = math.ceil(SYS_GetParam(2,sec_l, "inv_grid_height",1) * grid_size / scale)
 		

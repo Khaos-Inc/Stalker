@@ -1,90 +1,109 @@
-
-<!-- ENHANCED GUI © 2007 INCBOX INC TEAM -->
-
 <w>
-	<player x="398" y="0" width="606" height="768" stretch="1">
-		<background x="-38" y="0" width="664" height="768" stretch="1">
-			<texture>ui_inGame2_left_side_16</texture>
-		</background>
-
-		<cont_bag x="0" y="307" width="606" height="430" stretch="1"/>
-		<cont_trade x="0" y="343" width="212" height="394" stretch="1"/>
-		<cont_trade_bag x="237" y="307" width="370" height="430" stretch="1"/>
-
-		<community_overlay x="-38" y="0" width="398" height="154" stretch="1" />
-		<community_icon x="-280" y="28" width="25" height="32" stretch="1" />
-		<rank x="67" y="55" width="217" height="14">
-			<text align="l" font="letterica16" color="ui_3"/>
+#include "ui\actor_menu_side_plugs.xml"
+	
+	<trade_bg x="0" y="0" width="1025" height="769" stretch="1">
+		<texture>ui\ui_actor_menu_background</texture>
+	</trade_bg>
+	
+	<!-- Right side -->
+	<player x="686.5" y="0" width="339" height="768" stretch="1">
+		<background x="0" y="0" width="339" height="768" stretch="1"/>
+			<!-- texture is now controlled in "ui_inventory.script" -->
+		
+		<!-- inventory grid -->
+		<grid x="13" y="121.5" width="302" height="603" stretch="1"/>
+		
+		<!-- item containers -->
+		<cont_bag x="12.375" y="121" width="302" height="602" stretch="1"/>
+		<cont_trade x="12.375" y="121" width="302" height="172" stretch="1"/>
+		<cont_trade_bag x="12.375" y="379" width="302" height="344" stretch="1"/>
+		
+		<!-- info -->
+		<icon x="202.25" y="17.25" width="119.5" height="84" stretch="1"/>
+		<community_bg x="8" y="8" width="323" height="102.25" stretch="1"/>
+		<community_overlay x="201.25" y="16" width="121.5" height="86" stretch="1"/>
+		<community_icon x="135" y="16" width="56" height="56" stretch="1"/>
+		
+		<rank x="24" y="46" width="111" height="18">
+			<text color="ui_3" align="r" font="letterica16"/>
 		</rank>
-		<rank_icon x="86" y="52" width="37" height="47" stretch="1"/>
-
-		<name x="91" y="10" width="217" height="16">
-			<text align="l" font="letterica18" color="ui_white"/>
+		<rank_icon x="111" y="40" width="28" height="28" stretch="1"/>
+		
+		<name x="24" y="26" width="111" height="18">
+			<text color="ui_white" align="l" font="letterica18"/>
 		</name>
-		<community x="91" y="28" width="217" height="14">
-			<text align="l" font="letterica16" color="ui_3"/>
+		<community x="24" y="46" width="111" height="18">
+			<text color="ui_3" align="l" font="letterica16"/>
 		</community>
-		<icon x="-30" y="9" width="110" height="103" stretch="1"/>
-		<money x="0" y="125" width="104" height="22">
-			<text align="l" font="graffiti22" r="200" g="200" b="200"/>
+		<money x="24" y="79" width="139" height="20">
+			<text align="r" font="graffiti19"/>
 		</money>
-
-		<weight_caption x="200" y="742" width="57" height="16">
-			<text align="r" font="letterica16" color="ui_3">ui_total_weight</text>
+		<money_icon x="168.5" y="80" width="16.5" height="16.5" stretch="1">
+			<texture>ui_inGame2_faction_roubles</texture>
+		</money_icon>
+		
+		<!-- weight -->
+		<weight_caption x="111" y="739" width="88" height="18">
+			<text color="ui_3" align="r" font="letterica16">ui_total_weight</text>
 		</weight_caption>
-		<weight x="260" y="742" width="35" height="16">
-			<text align="c" font="letterica16"/>
+		<weight x="203" y="739" width="122" height="18">
+			<text align="l" font="letterica16"/>
 		</weight>
-		<weight_max x="302" y="742" width="68" height="16">
-			<text align="l" font="letterica16" color="ui_3"/>
+		<weight_max x="203" y="739" width="122" height="18">
+			<text color="ui_3" align="r" font="letterica16"/>
 		</weight_max>
-
-		<putall_button x="0" y="736" width="140" height="24" stretch="1" hint="ui_st_put_all_hint">
+		
+		<!-- put all -->
+		<putall_button x="8" y="732" width="123" height="28" stretch="1" hint="ui_st_put_all_hint">
 			<window_name>putall_button</window_name>
-			<texture>ui_inGame2_inventory_button</texture>
-			<text font="graffiti22" align="c">ui_st_put_all</text>
+			<!-- <texture>ui_inGame2_big_inventory_button</texture> -->
+			<text y="2" align="c" font="graffiti22">ui_st_put_all</text>
 			<text_color>
-				<e r="200" g="200" b="200"/>
-				<t color ="ui_white"/> 
-				<d color ="ui_black"/>
-				<h color ="ui_black"/>
+				<e color ="ui_6"/>
+				<t color ="ui_white"/>
+				<d color ="ui_5"/>
+				<h color ="ui_white"/>
 			</text_color>
 		</putall_button>
-
-		<trade_delimiter x="-8" y="233" width="375" height="163" stretch="1">
-			<texture>ui_inGame2_center_trade_devider_16</texture>
-			<trade_caption x="114" y="80" width="48" height="16">
-				<text align="r" font="letterica16" color="ui_3">ui_total_price</text>
+		
+		<!-- trade info -->
+		<trade_delimiter x="8" y="307.5" width="323" height="59" stretch="1">
+			<texture>ui_inGame2_center_trade_devider</texture>
+			<trade_caption x="169" y="22" width="132.5" height="18">
+				<text color="ui_3" align="l" font="letterica18">ui_total_price</text>
 			</trade_caption>
-			<trade_price x="183" y="80" width="40" height="16">
+			<trade_price x="169" y="22" width="132.5" height="18">
 				<text align="r" font="letterica18"/>
 			</trade_price>
-			<trade_weight_max x="206" y="80" width="40" height="16">
-				<text align="l" font="letterica16" color="ui_3"/>
+			<trade_weight_max x="169" y="22" width="132.5" height="18">
+				<text color="ui_3" align="l" font="letterica16"/>
 			</trade_weight_max>
-			<trade_sell_button x="11" y="76" width="107" height="26" stretch="1" hint="ui_st_sell_hint">
+			<trade_sell_button x="15.5" y="15.5" width="140" height="28" stretch="1" hint="ui_st_sell_hint">
 				<window_name>trade_sell_button</window_name>
-				<texture>ui_inGame2_inventory_button</texture>
-				<text font="graffiti22" align="c">ui_st_sell</text>
+				<texture>ui_button_ordinary</texture>
+				<text y="2" align="c" font="graffiti22">ui_st_sell</text>
 				<text_color>
-					<e r="200" g="200" b="200"/>
-					<t color ="ui_white"/> 
-					<d r="100" g="100" b="100"/>
-					<h color ="ui_black"/>
+					<e color ="ui_6"/>
+					<t color ="ui_white"/>
+					<d color ="ui_5"/>
+					<h color ="ui_white"/>
 				</text_color>
 			</trade_sell_button>
 		</trade_delimiter>
 	</player>
-
-	<equipment x="359" y="0" width="650" height="768" stretch="1">
-		<background x="394" y="-571" width="273" height="768" stretch="1">
-		</background>
-
-		<cont_equ x="0" y="0" width="650" height="768" stretch="1">
-			<scroll width="273" height="425" stretch="1" right_ident="0" left_ident="0" top_indent ="0" bottom_indent="0" vert_interval="0" always_show_scroll="0"/>
-			<st width="273" height="425" stretch="1"/>
+	
+	<!-- Middle side -->
+	<equipment x="339.5" y="0" width="347" height="768" stretch="1">
+		<background x="0" y="0" width="347" height="768" stretch="1"/>
+			<!-- texture is now controlled in "ui_inventory.script" -->
+		
+		<!-- Slots -->
+		<cont_equ x="14.5" y="8" width="356" height="480" stretch="1"><!-- width = 318 + 38 -->
+			<scroll width="318" height="480" stretch="1" right_ident="0" left_ident="0" top_indent ="0" bottom_indent="0" vert_interval="0" always_show_scroll="0"/>
+			<st width="318" height="480" stretch="1"/>
+			
 			<cell stretch="1">
-				<upgrade x="0" y="0" width="10" height="12" stretch="1">
+				<upgrade x="0" y="0" width="12" height="12" stretch="1">
 					<texture a="180">ui_upgrade_arrow2</texture>
 				</upgrade>
 				<highlight stretch="1">
@@ -92,594 +111,498 @@
 				</highlight>
 				<pic stretch="1" align="c" alignment="c"/>
 			</cell>
-
-			<cell_1 x="-10" y="220" width="133" height="76" stretch="1"> <!--1 Knife -->
+			
+		<!-- 1 Knife -->
+			<cell_1 x="217" y="163" width="100" height="42" stretch="1">
 				<pic stretch="1" align="c" alignment="c"/>
 				<highlight stretch="1">
 					<texture>ui_inGame2_detector_highlighter</texture>
 				</highlight>
-				<bar x="11" y="75" width="116" height="2" horz="1" min="0" max="1" pos="0" stretch="1">
+				<bar x="20" y="44" width="60" height="5" horz="1" min="0" max="1" pos="0" stretch="1">
 					<progress stretch="1">
-						<texture r="142" g="149" b="149">ui_svui_condition_bar</texture>
+						<texture r="142" g="149" b="149">ui_inGame2_inventory_status_bar</texture>
 					</progress>
 				</bar>
+				<txt x="0" y="-1" width="100" height="42">
+					<text a="230" align="l" vert_align="t" font="arial_14">st_equ_knife_cell</text>
+				</txt>
 			</cell_1>
-
-			<cell_2 x="108" y="220" width="233" height="76" stretch="1"> <!--2 Pistol -->
-				<pic stretch="1" align="c" alignment="c"/>
+			
+		<!-- 2 Pistol -->
+			<cell_2 x="1" y="217" width="316" height="96" stretch="1">
+				<pic stretch="1" align="c" alignment="c"/> <!-- heading="1" heading_angle="90" -->
 				<highlight stretch="1">
-					<texture>ui_inGame2_weapon_highlighter</texture>
+					<texture>ui_inGame2_weapon_horizontal_highlighter</texture>
 				</highlight>
-				<bar x="11" y="75" width="214" height="2" horz="1" min="0" max="1" pos="0" stretch="1">
+				<bar x="128" y="98" width="60" height="5" horz="1" min="0" max="1" pos="0" stretch="1">
 					<progress stretch="1">
-						<texture r="142" g="149" b="149">ui_svui_condition_bar</texture>
+						<texture r="142" g="149" b="149">ui_inGame2_inventory_status_bar</texture>
 					</progress>
 				</bar>
+				<txt x="0" y="-1" width="316" height="96">
+					<text a="230" align="l" vert_align="t" font="arial_14">st_equ_pistol_cell</text>
+				</txt>
 			</cell_2>
-
-			<cell_3 x="324" y="220" width="233" height="76" stretch="1"> <!--3 Automatic -->
-				<pic stretch="1" align="c" alignment="c"/>
+			
+		<!-- 3 Automatic -->
+			<cell_3 x="1" y="325" width="316" height="96" stretch="1">
+				<pic stretch="1" align="c" alignment="c"/> <!-- heading="1" heading_angle="90" -->
 				<highlight stretch="1">
-					<texture>ui_inGame2_weapon_highlighter</texture>
+					<texture>ui_inGame2_weapon_horizontal_highlighter</texture>
 				</highlight>
-				<bar x="11" y="75" width="214" height="2" horz="1" min="0" max="1" pos="0" stretch="1">
+				<bar x="128" y="98" width="60" height="5" horz="1" min="0" max="1" pos="0" stretch="1">
 					<progress stretch="1">
-						<texture r="142" g="149" b="149">ui_svui_condition_bar</texture>
+						<texture r="142" g="149" b="149">ui_inGame2_inventory_status_bar</texture>
 					</progress>
 				</bar>
+				<txt x="0" y="-1" width="316" height="96">
+					<text a="230" align="l" vert_align="t" font="arial_14">st_equ_automatic_cell</text>
+				</txt>
 			</cell_3>
-
-			<cell_4 x="50" y="160" width="73" height="47" stretch="1"><!--4 Grenade -->
+			
+		<!-- 4 Grenade -->
+			<cell_4 x="271" y="433" width="46" height="46" stretch="1">
 				<pic stretch="1" align="c" alignment="c"/>
 				<highlight stretch="1">
-					<texture>ui_inGame2_detector_highlighter</texture>
+					<texture>ui_inGame2_artefakt_highlighter</texture>
 				</highlight>
+				<txt x="0" y="-1" width="46" height="46">
+					<text a="230" align="l" vert_align="t" font="arial_14">st_equ_grenade_cell</text>
+				</txt>
 			</cell_4>
-
-			<cell_5 x="540" y="220" width="133" height="76" stretch="1"><!--5 Binocular -->
+			
+		<!-- 5 Binocular -->
+			<cell_5 x="217" y="109" width="100" height="42" stretch="1">
 				<pic stretch="1" align="c" alignment="c"/>
 				<highlight stretch="1">
 					<texture>ui_inGame2_detector_highlighter</texture>
 				</highlight>
-				<bar x="11" y="75" width="116" height="2" horz="1" min="0" max="1" pos="0" stretch="1">
+				<bar x="20" y="44" width="60" height="5" horz="1" min="0" max="1" pos="0" stretch="1">
 					<progress stretch="1">
-						<texture r="142" g="149" b="149">ui_svui_condition_bar</texture>
+						<texture r="142" g="149" b="149">ui_inGame2_inventory_status_bar</texture>
 					</progress>
 				</bar>
+				<txt x="0" y="-1" width="100" height="42">
+					<text a="230" align="l" vert_align="t" font="arial_14">st_equ_binocular_cell</text>
+				</txt>
 			</cell_5>
-
-			<cell_6 x="0" y="160" width="73" height="47" stretch="1"><!--6 Bolt -->
+			
+		<!-- 6 Bolt -->
+			<cell_6 x="217" y="433" width="46" height="46" stretch="1">
 				<pic stretch="1" align="c" alignment="c"/>
 				<highlight stretch="1">
-					<texture>ui_inGame2_detector_highlighter</texture>
+					<texture>ui_inGame2_artefakt_highlighter</texture>
 				</highlight>
+				<txt x="0" y="-1" width="46" height="46">
+					<text a="230" align="l" vert_align="t" font="arial_14">st_equ_bolt_cell</text>
+				</txt>
 			</cell_6>
-
-			<cell_7 x="245" y="10" width="89" height="150" stretch="1"><!--7 Outfit -->
+			
+		<!-- 7 Outfit -->
+			<cell_7 x="109" y="55" width="100" height="150" stretch="1">
 				<pic stretch="1" align="c" alignment="c"/>
 				<highlight stretch="1">
 					<texture>ui_inGame2_armor_highlighter</texture>
 				</highlight>
-				<bar x="12" y="142" width="65" height="3" horz="1" min="0" max="1" pos="0" stretch="1">
+				<bar x="20" y="152" width="60" height="5" horz="1" min="0" max="1" pos="0" stretch="1">
 					<progress stretch="1">
-						<texture r="142" g="149" b="149">ui_svui_condition_bar</texture>
+						<texture r="142" g="149" b="149">ui_inGame2_inventory_status_bar</texture>
 					</progress>
 				</bar>
+				<txt x="0" y="-1" width="100" height="150">
+					<text a="230" align="l" vert_align="t" font="arial_14">st_equ_outfit_cell</text>
+				</txt>
 			</cell_7>
-
-			<cell_8 x="100" y="160" width="73" height="47" stretch="1"><!--8 PDA -->
+			
+		<!-- 8 PDA -->
+			<cell_8 x="217" y="1" width="100" height="42" stretch="1">
 				<pic stretch="1" align="c" alignment="c"/>
 				<highlight stretch="1">
 					<texture>ui_inGame2_detector_highlighter</texture>
 				</highlight>
-				<bar x="11" y="49" width="48" height="2" horz="1" min="0" max="1" pos="0" stretch="1">
+				<bar x="20" y="44" width="60" height="5" horz="1" min="0" max="1" pos="0" stretch="1">
 					<progress stretch="1">
-						<texture r="142" g="149" b="149">ui_svui_condition_bar</texture>
+						<texture r="142" g="149" b="149">ui_inGame2_inventory_status_bar</texture>
 					</progress>
 				</bar>
+				<txt x="0" y="-1" width="100" height="42">
+					<text a="230" align="l" vert_align="t" font="arial_14">st_equ_pda_cell</text>
+				</txt>
 			</cell_8>
-
-			<cell_9 x="150" y="160" width="73" height="47" stretch="1"><!--9 Detector -->
+			
+		<!-- 9 Detector -->
+			<cell_9 x="217" y="55" width="100" height="42" stretch="1">
 				<pic stretch="1" align="c" alignment="c"/>
 				<highlight stretch="1">
 					<texture>ui_inGame2_detector_highlighter</texture>
 				</highlight>
-				<bar x="11" y="49" width="48" height="2" horz="1" min="0" max="1" pos="0" stretch="1">
+				<bar x="20" y="44" width="60" height="5" horz="1" min="0" max="1" pos="0" stretch="1">
 					<progress stretch="1">
-						<texture r="142" g="149" b="149">ui_svui_condition_bar</texture>
+						<texture r="142" g="149" b="149">ui_inGame2_inventory_status_bar</texture>
 					</progress>
 				</bar>
+				<txt x="0" y="-1" width="100" height="42">
+					<text a="230" align="l" vert_align="t" font="arial_14">st_equ_detector_cell</text>
+				</txt>
 			</cell_9>
-
-			<cell_10 x="200" y="160" width="73" height="47" stretch="1"><!--10 Torch -->
+			
+		<!-- 10 Torch -->
+			<cell_10 x="109" y="1" width="100" height="42" stretch="1">
 				<pic stretch="1" align="c" alignment="c"/>
 				<highlight stretch="1">
 					<texture>ui_inGame2_detector_highlighter</texture>
 				</highlight>
-				<bar x="11" y="49" width="48" height="2" horz="1" min="0" max="1" pos="0" stretch="1">
+				<bar x="20" y="44" width="60" height="5" horz="1" min="0" max="1" pos="0" stretch="1">
 					<progress stretch="1">
-						<texture r="142" g="149" b="149">ui_svui_condition_bar</texture>
+						<texture r="142" g="149" b="149">ui_inGame2_inventory_status_bar</texture>
 					</progress>
 				</bar>
+				<txt x="0" y="-1" width="100" height="42">
+					<text a="230" align="l" vert_align="t" font="arial_14">st_equ_torch_cell</text>
+				</txt>
 			</cell_10>
-
-			<cell_11 x="190" y="-1000" width="73" height="47" stretch="1"><!--11 Artefact -->
+			
+		<!-- 11 Artefact -->
+			<cell_11 x="109" y="-1000" width="100" height="42" stretch="1">
 				<pic stretch="1" align="c" alignment="c"/>
 				<highlight stretch="1">
 					<texture>ui_inGame2_detector_highlighter</texture>
 				</highlight>
-				<bar x="11" y="49" width="48" height="2" horz="1" min="0" max="1" pos="0" stretch="1">
+				<bar x="20" y="44" width="60" height="5" horz="1" min="0" max="1" pos="0" stretch="1">
 					<progress stretch="1">
-						<texture r="142" g="149" b="149">ui_svui_condition_bar</texture>
+						<texture r="142" g="149" b="149">ui_inGame2_inventory_status_bar</texture>
 					</progress>
 				</bar>
+				<txt x="0" y="-1" width="100" height="42">
+					<text a="230" align="l" vert_align="t" font="arial_14"></text>
+				</txt>
 			</cell_11>
-
-			<cell_12 x="176" y="10" width="89" height="150" stretch="1"><!--12 Helmet -->
+			
+		<!-- 12 Helmet -->
+			<cell_12 x="1" y="1" width="100" height="96" stretch="1">
 				<pic stretch="1" align="c" alignment="c"/>
 				<highlight stretch="1">
 					<texture>ui_inGame2_helmet_highlighter</texture>
 				</highlight>
-				<bar x="12" y="142" width="65" height="3" horz="1" min="0" max="1" pos="0" stretch="1">
+				<bar x="20" y="98" width="60" height="5" horz="1" min="0" max="1" pos="0" stretch="1">
 					<progress stretch="1">
-						<texture r="142" g="149" b="149">ui_svui_condition_bar</texture>
+						<texture r="142" g="149" b="149">ui_inGame2_inventory_status_bar</texture>
 					</progress>
 				</bar>
+				<txt x="0" y="-1" width="100" height="96">
+					<text a="230" align="l" vert_align="t" font="arial_14">st_equ_helmet_cell</text>
+				</txt>
 			</cell_12>
-			<blocker_12 x="184" y="9" width="91" height="115" stretch="1">
+			<blocker_12 x="1" y="1" width="100" height="96" stretch="1">
 				<texture>ui_inGame2_helmet_blocker</texture>
 			</blocker_12>
-
-			<cell_13 x="314" y="10" width="89" height="150" stretch="1"><!--13 Backpack -->
+			
+		<!-- 13 Backpack -->
+			<cell_13 x="1" y="109" width="100" height="96" stretch="1">
 				<pic stretch="1" align="c" alignment="c"/>
 				<highlight stretch="1">
 					<texture>ui_inGame2_helmet_highlighter</texture>
 				</highlight>
-				<bar x="12" y="142" width="65" height="3" horz="1" min="0" max="1" pos="0" stretch="1">
+				<bar x="20" y="98" width="60" height="5" horz="1" min="0" max="1" pos="0" stretch="1">
 					<progress stretch="1">
-						<texture r="142" g="149" b="149">ui_svui_condition_bar</texture>
+						<texture r="142" g="149" b="149">ui_inGame2_inventory_status_bar</texture>
 					</progress>
 				</bar>
+				<txt x="0" y="-1" width="100" height="96">
+					<text a="230" align="l" vert_align="t" font="arial_14">st_equ_backpack_cell</text>
+				</txt>
 			</cell_13>
-			<blocker_13 x="316" y="9" width="91" height="103" stretch="1">
+			<blocker_13 x="1" y="109" width="100" height="96" stretch="1">
 				<texture>ui_inGame2_helmet_blocker</texture>
 			</blocker_13>
-		</cont_equ> 
-
-		<cont_belt x="257" y="165" width="273" height="50" stretch="1">
-			<scroll width="273" height="50" stretch="1" right_ident="0" left_ident="0" top_indent ="0" bottom_indent="0" vert_interval="0" always_show_scroll="0"/>
-			<st width="273" height="50" stretch="1"/>
-			<cell width="35" height="35" stretch="1">
+		</cont_equ>
+		
+		
+		<!-- Arty Belt -->
+		<cont_belt x="14.5" y="510" width="318" height="58" stretch="1">
+			<scroll width="318" height="58" stretch="1" right_ident="0" left_ident="0" top_indent ="0" bottom_indent="0" vert_interval="0" always_show_scroll="0"/>
+			<st width="318" height="58" stretch="1"/>
+			
+			<cell width="41" height="41" stretch="1">
 				<highlight stretch="1"/>
 				<pic stretch="1" align="c" alignment="c"/>
 			</cell>
-
-			<cell_1 x="12" y="0" width="33" height="41" stretch="1">
+			
+			<cell_1 x="8.5" y="8.5" width="41" height="41" stretch="1">
 				<pic stretch="1" align="c" alignment="c"/>
 				<highlight stretch="1">
 					<texture>ui_inGame2_artefakt_highlighter</texture>
 				</highlight>
 			</cell_1>
-			<blocker_1 x="4" y="-10" width="48" height="61" stretch="1">
+			<blocker_1 x="0" y="0" width="58" height="58" stretch="1">
 				<texture>ui_inGame2_artefact_blocker</texture>
 			</blocker_1>
-
-			<cell_2 x="54" y="0" width="33" height="41" stretch="1">
+			
+			<cell_2 x="73.5" y="8.5" width="41" height="41" stretch="1">
 				<pic stretch="1" align="c" alignment="c"/>
 				<highlight stretch="1">
 					<texture>ui_inGame2_artefakt_highlighter</texture>
 				</highlight>
 			</cell_2>
-			<blocker_2 x="46" y="-10" width="48" height="61" stretch="1">
+			<blocker_2 x="65" y="0" width="58" height="58" stretch="1">
 				<texture>ui_inGame2_artefact_blocker</texture>
 			</blocker_2>
-
-			<cell_3 x="96" y="0" width="33" height="41" stretch="1">
+			
+			<cell_3 x="138.5" y="8.5" width="41" height="41" stretch="1">
 				<pic stretch="1" align="c" alignment="c"/>
 				<highlight stretch="1">
 					<texture>ui_inGame2_artefakt_highlighter</texture>
 				</highlight>
 			</cell_3>
-			<blocker_3 x="91" y="-10" width="48" height="61" stretch="1">
+			<blocker_3 x="130" y="0" width="58" height="58" stretch="1">
 				<texture>ui_inGame2_artefact_blocker</texture>
 			</blocker_3>
-
-			<cell_4 x="138" y="0" width="33" height="41" stretch="1">
+			
+			<cell_4 x="203.5" y="8.5" width="41" height="41" stretch="1">
 				<pic stretch="1" align="c" alignment="c"/>
 				<highlight stretch="1">
 					<texture>ui_inGame2_artefakt_highlighter</texture>
 				</highlight>
 			</cell_4>
-			<blocker_4 x="133" y="-10" width="48" height="61" stretch="1">
+			<blocker_4 x="195" y="0" width="58" height="58" stretch="1">
 				<texture>ui_inGame2_artefact_blocker</texture>
 			</blocker_4>
-
-			<cell_5 x="180" y="0" width="33" height="41" stretch="1">
+			
+			<cell_5 x="268.5" y="8.5" width="41" height="41" stretch="1">
 				<pic stretch="1" align="c" alignment="c"/>
 				<highlight stretch="1">
 					<texture>ui_inGame2_artefakt_highlighter</texture>
 				</highlight>
 			</cell_5>
-			<blocker_5 x="175" y="-10" width="48" height="61" stretch="1">
+			<blocker_5 x="260" y="0" width="58" height="58" stretch="1">
 				<texture>ui_inGame2_artefact_blocker</texture>
 			</blocker_5>
 		</cont_belt>
-
-		<cont_quick x="474" y="160" width="253" height="54">
-			<scroll width="253" height="54" stretch="1" right_ident="0" left_ident="0" top_indent ="0" bottom_indent="0" vert_interval="0" always_show_scroll="0"/>
-			<st width="253" height="54" stretch="1"/>
-			<cell width="35" height="35" stretch="1">
+		
+		
+		<!-- Quick Items -->
+		<cont_quick x="14.5" y="440" width="210" height="48">
+			<scroll width="210" height="48" stretch="1" right_ident="0" left_ident="0" top_indent ="0" bottom_indent="0" vert_interval="0" always_show_scroll="0"/>
+			<st width="210" height="48" stretch="1"/>
+			
+			<cell width="44" height="44" stretch="1">
 				<highlight stretch="1"/>
 				<pic stretch="1" align="c" alignment="c"/>
 			</cell>
-
-			<cell_1 x="0" y="0" width="52" height="52" stretch="1">
+			
+			<cell_1 x="2" y="2" width="44" height="44" stretch="1">
 				<pic stretch="1" align="c" alignment="c"/>
 				<highlight stretch="1">
 					<texture>ui_inGame2_quick_item_highlighter</texture>
 				</highlight>
-				<txt x="0" y="0" width="14" height="13">
-					<text align="c" font="letterica16">quick_use_str_1</text>
+				<txt x="0" y="0" width="44" height="44">
+					<text align="l" vert_align="t" font="arial_14">quick_use_str_1</text>
 				</txt>
 			</cell_1>
-			<cell_2 x="45" y="0" width="52" height="52" stretch="1">
+			
+			<cell_2 x="56" y="2" width="44" height="44" stretch="1">
 				<pic stretch="1" align="c" alignment="c"/>
 				<highlight stretch="1">
 					<texture>ui_inGame2_quick_item_highlighter</texture>
 				</highlight>
-				<txt x="0" y="0" width="14" height="13">
-					<text align="c" font="letterica16">quick_use_str_2</text>
+				<txt x="0" y="0" width="44" height="44">
+					<text align="l" vert_align="t" font="arial_14">quick_use_str_2</text>
 				</txt>
 			</cell_2>
-			<cell_3 x="90" y="0" width="52" height="52" stretch="1">
+			
+			<cell_3 x="110" y="2" width="44" height="44" stretch="1">
 				<pic stretch="1" align="c" alignment="c"/>
 				<highlight stretch="1">
 					<texture>ui_inGame2_quick_item_highlighter</texture>
 				</highlight>
-				<txt x="0" y="0" width="14" height="13">
-					<text align="c" font="letterica16">quick_use_str_3</text>
+				<txt x="0" y="0" width="44" height="44">
+					<text align="l" vert_align="t" font="arial_14">quick_use_str_3</text>
 				</txt>
 			</cell_3>
-			<cell_4 x="135" y="0" width="52" height="52" stretch="1">
+			
+			<cell_4 x="164" y="2" width="44" height="44" stretch="1">
 				<pic stretch="1" align="c" alignment="c"/>
 				<highlight stretch="1">
 					<texture>ui_inGame2_quick_item_highlighter</texture>
 				</highlight>
-				<txt x="0" y="0" width="14" height="13">
-					<text align="c" font="letterica16">quick_use_str_4</text>
+				<txt x="0" y="0" width="44" height="44">
+					<text align="l" vert_align="t" font="arial_14">quick_use_str_4</text>
 				</txt>
 			</cell_4>
 		</cont_quick>
-
-		<cont_picker x="400" y="5" width="255" height="154" stretch="1">
-			<texture>ui_item_picker_background</texture>
-		</cont_picker>
-
-		<sorter x="1" y="310" width="70" height="500">
-			<btn_1 x="0" y="0" width="27" height="32" hint="ui_st_tab_all" stretch="1">
-				<texture>ui_inGame2_btn_sort_all</texture>
-			</btn_1>
-			<txt_1 x="6" y="4" width="20" height="25" stretch="1">
-				<text complex_mode="1" font="letterica18" align="r" vert_align="b" a="100" r="187" g="159" b="100"/>
-			</txt_1>
-
-			<btn_2 x="0" y="35" width="27" height="32" hint="ui_st_tab_weapons" stretch="1">
-				<texture>ui_inGame2_btn_sort_weapon</texture>
-			</btn_2>
-			<txt_2 x="6" y="39" width="20" height="25" stretch="1">
-				<text complex_mode="1" font="letterica18" align="r" vert_align="b" a="100" r="187" g="159" b="100"/>
-			</txt_2>
-
-			<btn_3 x="0" y="70" width="27" height="32" hint="ui_st_tab_armor" stretch="1">
-				<texture>ui_inGame2_btn_sort_outfit</texture>
-			</btn_3>
-			<txt_3 x="6" y="74" width="20" height="25" stretch="1">
-				<text complex_mode="1" font="letterica18" align="r" vert_align="b" a="100" r="187" g="159" b="100"/>
-			</txt_3>
-
-			<btn_4 x="0" y="105" width="27" height="32" hint="ui_st_tab_ammo" stretch="1">
-				<texture>ui_inGame2_btn_sort_ammo</texture>
-			</btn_4>
-			<txt_4 x="6" y="109" width="20" height="25" stretch="1">
-				<text complex_mode="1" font="letterica18" align="r" vert_align="b" a="100" r="187" g="159" b="100"/>
-			</txt_4>
-
-			<btn_5 x="0" y="140" width="27" height="32" hint="ui_st_tab_artefact" stretch="1">
-				<texture>ui_inGame2_btn_sort_arty</texture>
-			</btn_5>
-			<txt_5 x="6" y="144" width="20" height="25" stretch="1">
-				<text complex_mode="1" font="letterica18" align="r" vert_align="b" a="100" r="187" g="159" b="100"/>
-			</txt_5>
-
-			<btn_6 x="0" y="175" width="27" height="32" hint="ui_st_tab_tools" stretch="1">
-				<texture>ui_inGame2_btn_sort_utility</texture>
-			</btn_6>
-			<txt_6 x="6" y="179" width="20" height="25" stretch="1">
-				<text complex_mode="1" font="letterica18" align="r" vert_align="b" a="100" r="187" g="159" b="100"/>
-			</txt_6>
-
-			<btn_7 x="0" y="210" width="27" height="32" hint="ui_st_tab_food" stretch="1">
-				<texture>ui_inGame2_btn_sort_food</texture>
-			</btn_7>
-			<txt_7 x="6" y="214" width="20" height="25" stretch="1">
-				<text complex_mode="1" font="letterica18" align="r" vert_align="b" a="100" r="187" g="159" b="100"/>
-			</txt_7>
-			
-			<btn_8 x="0" y="245" width="27" height="32" hint="ui_st_tab_meds" stretch="1">
-				<texture>ui_inGame2_btn_sort_meds</texture>
-			</btn_8>
-			<txt_8 x="6" y="249" width="20" height="25" stretch="1">
-				<text complex_mode="1" font="letterica18" align="r" vert_align="b" a="100" r="187" g="159" b="100"/>
-			</txt_8>
-			
-			<btn_9 x="0" y="280" width="27" height="32" hint="ui_st_tab_upgrades" stretch="1">
-				<texture>ui_inGame2_btn_sort_upgrades</texture>
-			</btn_9>
-			<txt_9 x="6" y="284" width="20" height="25" stretch="1">
-				<text complex_mode="1" font="letterica18" align="r" vert_align="b" a="100" r="187" g="159" b="100"/>
-			</txt_9>
-			
-			<btn_10 x="0" y="315" width="27" height="32" hint="ui_st_tab_misc" stretch="1">
-				<texture>ui_inGame2_btn_sort_misc</texture>
-			</btn_10>
-			<txt_10 x="6" y="319" width="20" height="25" stretch="1">
-				<text complex_mode="1" font="letterica18" align="r" vert_align="b" a="100" r="187" g="159" b="100"/>
-			</txt_10>
-		</sorter>
-
-		<actor_state_info x="394" y="-32" width="274" height="190">
-			<hint_wnd x="0" y="0" width="446" height="170">
-				<background x="0" y="0" width="446" height="170">
-					<texture>ui_inGame2_hint_wnd_main_window</texture>
-				</background>
-				<text x="16" y="20" width="402" height="130" always_show_scroll="0" fit_to_height="1" complex_mode="1">
-					<font font="letterica16" r="170" g="170" b="170" align="l" vert_align="t"/>
-				</text>
-			</hint_wnd>
-
-			<icon x="-3" y="-5">
-				<normal width="22" height="28" stretch="1"/>
-				<active width="22" height="28" stretch="1" light_anim="ui_slow_blinking_alpha"/>
-			</icon>
-
-			<health_sensor x="12" y="42" width="225" height="18">
-				<state_progress x="19" y="0" width="225" height="18" horz="1" min="0" max="1" pos="0">
-					<progress stretch="1">
-						<texture r="100" g="100" b="100">ui_inGame2_inventory_health_bar</texture>
-					</progress>
-				</state_progress>
-			</health_sensor>
-
-			<radia_sensor x="12" y="72" width="116" height="18">
-				<state_progress x="19" y="1" width="98" height="18" horz="1" min="0" max="1" pos="0">
-					<progress stretch="1">
-						<texture r="100" g="100" b="100">ui_inGame2_inventory_progress_bar</texture>
-					</progress>
-				</state_progress>
-			</radia_sensor>
-
-			<acid_sensor x="12" y="100" width="116" height="18">
-				<state_progress x="19" y="1" width="98" height="18" horz="1" min="0" max="1" pos="0">
-					<progress stretch="1">
-						<texture r="100" g="100" b="100">ui_inGame2_inventory_progress_bar</texture>
-					</progress>
-				</state_progress>
-			</acid_sensor>
-
-			<shock_sensor x="12" y="128" width="116" height="18">
-				<state_progress x="19" y="1" width="98" height="18" horz="1" min="0" max="1" pos="0">
-					<progress stretch="1">
-						<texture r="100" g="100" b="100">ui_inGame2_inventory_progress_bar</texture>
-					</progress>
-				</state_progress>
-			</shock_sensor>
-
-			<fire_sensor x="12" y="156" width="116" height="18">
-				<state_progress x="19" y="1" width="98" height="18" horz="1" min="0" max="1" pos="0">
-					<progress stretch="1">
-						<texture r="100" g="100" b="100">ui_inGame2_inventory_progress_bar</texture>
-					</progress>
-				</state_progress>
-			</fire_sensor>
-
-			<psi_sensor x="139" y="72" width="116" height="18">
-				<state_progress x="19" y="1" width="98" height="18" horz="1" min="0" max="1" pos="0">
-					<progress stretch="1">
-						<texture r="100" g="100" b="100">ui_inGame2_inventory_progress_bar</texture>
-					</progress>
-				</state_progress>
-			</psi_sensor>
-
-			<wound_sensor x="139" y="100" width="116" height="18">
-				<state_progress x="19" y="1" width="98" height="18" horz="1" min="0" max="1" pos="0">
-					<progress stretch="1">
-						<texture r="100" g="100" b="100">ui_inGame2_inventory_progress_bar</texture>
-					</progress>
-				</state_progress>
-			</wound_sensor>
-	
-			<fire_wound_sensor x="139" y="128" width="116" height="18">
-				<state_progress x="19" y="1" width="98" height="18" horz="1" min="0" max="1" pos="0">
-					<progress stretch="1">
-						<texture r="100" g="100" b="100">ui_inGame2_inventory_progress_bar</texture>
-					</progress>
-				</state_progress>
-			</fire_wound_sensor>
-
-			<power_sensor x="139" y="156" width="116" height="18">
-				<state_progress x="19" y="1" width="98" height="18" horz="1" min="0" max="1" pos="0">
-					<progress stretch="1">
-						<texture r="100" g="100" b="100">ui_inGame2_inventory_progress_bar</texture>
-					</progress>
-				</state_progress>
-			</power_sensor>
-			
-			<hunger_sensor x="99999" y="157" width="116" height="18">
-				<texture r="190" g="0" b="0" a="0">none.dds</texture>
-				<state_progress x="0" y="0" width="98" height="18" horz="1" min="0" max="1" pos="0">
-					<progress stretch="1">
-						<texture r="100" g="100" b="100">ui_inGame2_inventory_progress_bar</texture>
-					</progress>
-				</state_progress>
-			</hunger_sensor>
-			
-			<thirst_sensor x="198" y="157" width="116" height="18">
-				<texture r="190" g="0" b="0" a="0">none.dds</texture>
-				<state_progress x="0" y="0" width="98" height="18" horz="1" min="0" max="1" pos="0">
-					<progress stretch="1">
-						<texture r="100" g="100" b="100">ui_inGame2_inventory_progress_bar</texture>
-					</progress>
-				</state_progress>
-			</thirst_sensor>
-			
-			<sleep_sensor x="238" y="157" width="116" height="18">
-				<texture r="190" g="0" b="0" a="0">none.dds</texture>
-				<state_progress x="0" y="0" width="98" height="18" horz="1" min="0" max="1" pos="0">
-					<progress stretch="1">
-						<texture r="100" g="100" b="100">ui_inGame2_inventory_progress_bar</texture>
-					</progress>
-				</state_progress>
-			</sleep_sensor>
-		</actor_state_info>
+		
+		
+		<!-- Sorter -->
+#include "ui\actor_menu_sorter.xml"
+		
+		
+		<!-- Picker -->
+		<cont_picker x="14.5" y="576" width="318" height="148" stretch="1"/>
+			<!-- texture is now controlled in "ui_inventory.script" -->
+		
+		
+		<!-- Status -->
+#include "ui\actor_menu_state_info.xml"
+		
 	</equipment>
-
-	<npc x="0" y="0" width="360" height="768" stretch="1">
-		<background x="0" y="0" width="360" height="768" stretch="1">
-			<texture>ui_inGame2_repair_panel_16</texture>
-		</background>
-
-		<cont_bag x="12" y="122" width="342" height="600" stretch="1"/>
-		<cont_trade x="12" y="122" width="342" height="164" stretch="1"/>
-		<cont_trade_bag x="12" y="343" width="342" height="390" stretch="1"/>
-
-		<trash x="0" y="0" width="375" height="768" stretch="1"/>
-
-		<community_overlay x="216" y="14" width="153" height="89" stretch="1" />
-		<community_icon x="-9999" y="28" width="25" height="32" stretch="1" />
-
-		<rank x="17" y="55" width="217" height="14">
-			<text align="l" font="letterica16" color="ui_3"/>
+	
+	<!-- Left Side -->
+	<npc x="0" y="0" width="339" height="768" stretch="1">
+		<background x="0" y="0" width="339" height="768" stretch="1"/>	
+			<!-- texture is now controlled in "ui_inventory.script" -->
+		
+		<!-- inventory grid -->
+		<grid x="13" y="121.5" width="302" height="603" stretch="1"/>
+		
+		<!-- item containers -->
+		<cont_bag x="12.375" y="121" width="302" height="602" stretch="1"/>
+		<cont_trade x="12.375" y="121" width="302" height="172" stretch="1"/>
+		<cont_trade_bag x="12.375" y="379" width="302" height="344" stretch="1"/>
+		
+		<trash x="0" y="0" width="339" height="768" stretch="1"/>
+		
+		<!-- info -->
+		<icon x="202.25" y="17.25" width="119.5" height="84" stretch="1"/>
+		<community_bg x="8" y="8" width="323" height="102.25" stretch="1"/>
+		<community_overlay x="201.25" y="16" width="121.5" height="86" stretch="1"/>
+		<community_icon x="135" y="16" width="56" height="56" stretch="1"/>
+		
+		<rank x="24" y="46" width="111" height="18">
+			<text color="ui_3" align="r" font="letterica16"/>
 		</rank>
-		<rank_icon x="20" y="52" width="37" height="47" stretch="1"/>
-
-		<name x="25" y="10" width="217" height="16">
-			<text align="l" font="letterica18" color="ui_white"/>
+		<rank_icon x="111" y="40" width="28" height="28" stretch="1"/>
+		
+		<name x="24" y="26" width="111" height="18">
+			<text color="ui_white" align="l" font="letterica18"/>
 		</name>
-		<community x="25" y="28" width="217" height="14">
-			<text align="l" font="letterica16" color="ui_3"/>
+		<community x="24" y="46" width="111" height="18">
+			<text color="ui_3" align="l" font="letterica16"/>
 		</community>
-		<icon x="240" y="9" width="110" height="103" stretch="1"/>
-		<money x="122" y="84" width="104" height="22">
-			<text align="r" font="graffiti22" r="200" g="200" b="200"/>
+		<money x="24" y="79" width="139" height="20">
+			<text align="r" font="graffiti19"/>
 		</money>
-
-		<weight_caption x="200" y="742" width="57" height="16">
-			<text align="r" font="letterica16" color="ui_3">ui_total_weight</text>
+		<money_icon x="168.5" y="80" width="16.5" height="16.5" stretch="1">
+			<texture>ui_inGame2_faction_roubles</texture>
+		</money_icon>
+		
+		<!-- Trader Level -->
+		<trader_level x="202" y="83" width="120" height="18">
+			<text color="ui_2" align="c" font="letterica18"/>
+		</trader_level>
+		
+		<!-- weight -->
+		<weight_caption x="111" y="739" width="88" height="18">
+			<text color="ui_3" align="r" font="letterica16">ui_total_weight</text>
 		</weight_caption>
-		<weight x="260" y="742" width="35" height="16">
-			<text align="c" font="letterica16"/>
+		<weight x="203" y="739" width="122" height="18">
+			<text align="l" font="letterica16"/>
 		</weight>
-		<weight_max x="302" y="742" width="68" height="16">
-			<text align="l" font="letterica16" color="ui_3"/>
+		<weight_max x="203" y="739" width="122" height="18">
+			<text color="ui_3" align="r" font="letterica16"/>
 		</weight_max>
-
-		<takeall_button x="12" y="90" width="140" height="24" stretch="1" hint="ui_st_take_all_hint">
+		
+		<!-- take all -->
+		<takeall_button x="8" y="732" width="123" height="28" stretch="1" hint="ui_st_take_all_hint">
 			<window_name>takeall_button</window_name>
-			<texture>ui_inGame2_inventory_button</texture>
-			<text font="graffiti22" align="c">ui_st_take_all</text>
+			<!-- <texture>ui_inGame2_big_inventory_button</texture> -->
+			<text y="2" align="c" font="graffiti22">ui_st_take_all</text>
 			<text_color>
-				<e r="200" g="200" b="200"/>
+				<e color ="ui_6"/>
 				<t color ="ui_white"/>
-				<d color ="ui_black"/>
-				<h color ="ui_black"/>
+				<d color ="ui_5"/>
+				<h color ="ui_white"/>
 			</text_color>
 		</takeall_button>
-
-		<trade_delimiter x="0" y="233" width="375" height="163" stretch="1">
-			<texture>ui_inGame2_center_trade_devider_16</texture>
-			<trade_caption x="116" y="80" width="48" height="16">
-				<text align="r" font="letterica16" color="ui_3">ui_total_price</text>
+		
+		<!-- trade info -->
+		<trade_delimiter x="8" y="307.5" width="323" height="59" stretch="1">
+			<texture>ui_inGame2_center_trade_devider</texture>
+			<trade_caption x="169" y="22" width="132.5" height="18">
+				<text color="ui_3" align="l" font="letterica18">ui_total_price</text>
 			</trade_caption>
-			<trade_price x="185" y="80" width="40" height="16">
+			<trade_price x="169" y="22" width="132.5" height="18">
 				<text align="r" font="letterica18"/>
 			</trade_price>
-			<trade_weight_max x="208" y="80" width="40" height="16">
-				<text align="l" font="letterica16" color="ui_3"/>
+			<trade_weight_max x="169" y="22" width="132.5" height="1184">
+				<text color="ui_3" align="l" font="letterica16"/>
 			</trade_weight_max>
-			<trade_buy_button x="13" y="76" width="107" height="26" stretch="1" hint="ui_st_buy_hint">
+			<trade_buy_button x="15.5" y="15.5" width="140" height="28" stretch="1" hint="ui_st_buy_hint">
 				<window_name>trade_buy_button</window_name>
-				<texture>ui_inGame2_inventory_button</texture>
-				<text font="graffiti22" align="c">ui_st_buy</text>
+				<texture>ui_button_ordinary</texture>
+				<text y="2" align="c" font="graffiti22">ui_st_buy</text>
 				<text_color>
-					<e r="200" g="200" b="200"/>
-					<t color ="ui_white"/> 
-					<d r="100" g="100" b="100"/>
-					<h color ="ui_black"/>
+					<e color ="ui_6"/>
+					<t color ="ui_white"/>
+					<d color ="ui_5"/>
+					<h color ="ui_white"/>
 				</text_color>
 			</trade_buy_button>
 		</trade_delimiter>
 	</npc>
-
-	<upgrade x="0" y="0" width="360" height="768">
-	    <background x="0" y="0" width="360" height="768" stretch="1">
-		    <texture>ui_inGame2_repair_panel_16</texture>
-	    </background>
-
-		<community_overlay x="216" y="14" width="153" height="89" stretch="1" />
-		<community_icon x="-9999" y="28" width="25" height="32" stretch="1" />
+	
+	<!-- Left Side - Upgrade mode -->
+	<upgrade x="0" y="0" width="339" height="768">
+		<background x="0" y="0" width="339" height="768" stretch="1"/>
+			<!-- texture is now controlled in "ui_inventory.script" -->
 		
-		<rank x="220" y="55" width="217" height="14">
-			<text align="l" font="letterica16" color="ui_3"/>
+		<!-- info -->
+		<icon x="202.25" y="17.25" width="119.5" height="84" stretch="1"/>
+		<community_bg x="8" y="8" width="323" height="102.25" stretch="1"/>
+		<community_overlay x="201.25" y="16" width="121.5" height="86" stretch="1"/>
+		<community_icon x="135" y="16" width="56" height="56" stretch="1"/>
+		
+		<rank x="24" y="46" width="111" height="18">
+			<text color="ui_3" align="r" font="letterica16"/>
 		</rank>
-		<rank_icon x="20" y="52" width="37" height="47" stretch="1"/>
-
-		<name x="25" y="10" width="217" height="16">
-			<text align="l" font="letterica18" color="ui_white"/>
+		<rank_icon x="111" y="40" width="28" height="28" stretch="1"/>
+		
+		<name x="24" y="26" width="111" height="18">
+			<text color="ui_white" align="l" font="letterica18"/>
 		</name>
-		<community x="25" y="28" width="217" height="14">
-			<text align="l" font="letterica16" color="ui_3"/>
+		<community x="24" y="46" width="111" height="18">
+			<text color="ui_3" align="l" font="letterica16"/>
 		</community>
-		<icon x="240" y="9" width="110" height="103" stretch="1"/>
-		<money x="122" y="84" width="104" height="22">
-			<text align="r" font="graffiti22"/>
+		<money x="24" y="79" width="139" height="20">
+			<text align="r" font="graffiti19"/>
 		</money>
-
-		<repair_button x="300" y="156" width="47" height="57" stretch="1">
-			<window_name>repair_button</window_name>
-			<texture>ui_bt_repair</texture>
-			<hint_text delay="800">ui_repair_button_hint</hint_text>
+		<money_icon x="168.5" y="80" width="16.5" height="16.5" stretch="1">
+			<texture>ui_inGame2_faction_roubles</texture>
+		</money_icon>
+		
+		<!-- upgrade window -->
+		<repair_button x="235" y="124" width="88" height="32" hint="ui_repair_button_hint" stretch="1">
+			<texture>ui_inGame2_repair_button</texture>
 		</repair_button>
-
-		<scheme x="0" y="260" width="360" height="497" right_ident="0" left_ident="0" top_indent ="0" bottom_indent="0" vert_interval="0" always_show_scroll="0" scroll_profile="hidden"/>
-		<st x="0" y="0" width="360" height="102"/>
-		<item_static x="176" y="187" width="360" height="135" stretch="1" align="c" alignment="c"/>
+		<scheme x="28.5" y="288" width="282" height="472" right_ident="0" left_ident="0" top_indent="0" bottom_indent="0" vert_interval="0" always_show_scroll="0" scroll_profile="hidden"/>
+		<st x="0" y="0" width="282" height="98"/>
+		<item_static x="169.5" y="202" width="323" height="117" stretch="1" align="c" alignment="c"/>
 		<row_cells>
-			<cell_1  x="60" y="0" width="90" height="44"/>
-			<cell_1b x="60" y="24" width="90" height="44"/>
-			<cell_2  x="60" y="49" width="90" height="44"/>
-
-			<cell_3  x="140" y="0" width="90" height="44"/>
-			<cell_3b x="140" y="24" width="90" height="44"/>
-			<cell_4  x="140" y="49" width="90" height="44"/>
-
-			<cell_5  x="220" y="0" width="90" height="44"/>
-			<cell_5b x="220" y="24" width="90" height="44"/>
-			<cell_6  x="220" y="49" width="90" height="44"/>
+			<cell_1	 x="0" y="0" width="90" height="44"/>
+			<cell_1b x="0" y="24" width="90" height="44"/>
+			<cell_2	 x="0" y="49" width="90" height="44"/>
+			
+			<cell_3	 x="96" y="0" width="90" height="44"/>
+			<cell_3b x="96" y="24" width="90" height="44"/>
+			<cell_4	 x="96" y="49" width="90" height="44"/>
+			
+			<cell_5	 x="192" y="0" width="90" height="44"/>
+			<cell_5b x="192" y="24" width="90" height="44"/>
+			<cell_6	 x="192" y="49" width="90" height="44"/>
 		</row_cells>
 		<cell_upgrade>
-			<btn x="0" y="0" width="72" height="44">
+			<btn x="0" y="0" width="90" height="44">
 				<texture>ui_button_upgr</texture>
 			</btn>
-			<ico x="0" y="0" width="72" height="44"/>
+			<ico x="0" y="0" width="90" height="44"/>
 		</cell_upgrade>
 	</upgrade>
-
-	<hint_wnd x="0" y="0" width="446" height="170">
-	    <background x="0" y="0" width="446" height="170">
-		    <texture>ui_inGame2_hint_wnd_main_window</texture>
-	    </background>
-	    <text x="16" y="20" width="402" height="130" always_show_scroll="0" fit_to_height="1" complex_mode="1">
-			<font font="letterica16" r="170" g="170" b="170" align="l" vert_align="t"/>
+	
+	<hint_wnd x="0" y="0" width="300" height="100">
+		<background x="0" y="0" width="300" height="100">
+			<texture>ui_inGame2_hint_wnd_main_window</texture>
+		</background>
+		<text x="20" y="20" width="260" height="100" always_show_scroll="0" fit_to_height="1" complex_mode="1">
+			<font r="170" g="170" b="170" align="l" vert_align="t" font="letterica16"/>
 		</text>
 	</hint_wnd>
 </w>

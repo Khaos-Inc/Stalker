@@ -7,7 +7,7 @@ function on_xml_read()
 			local res = xml_obj:query("indicators")
 			if res[1] then
 				local el = res[1]
-				xml_obj:setElementAttr(el, {x=136*ratio, y=734})
+				xml_obj:setElementAttr(el, {x=208*ratio, y=728})
 			end
 			local res = xml_obj:query("belt")
 			if res[1] then

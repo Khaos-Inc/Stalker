@@ -1,136 +1,133 @@
 <w>
-
-	<background width="1024" height="768">
-		<auto_static x="0" y="0" width="1024" height="768" stretch="1">
-			<texture x="0" y="1024" width="1280" height="768">ui\ui_actor_main_menu_one</texture>
-		</auto_static>
+	<background x="0" y="0" width="1025" height="769">
+#include "ui\ui_mm_faction_select_background_16.xml"
 	</background>
-
+	
 	<main_dialog>
-		<frame_back x="62" y="72" width="899" height="623"> <!-- base -->
-			<auto_static x="0" y="0" width="899" height="623" stretch="1">
+		<frame_back x="0" y="70" width="1024" height="628"> <!-- base -->
+			<auto_static x="0" y="0" width="1024" height="628" stretch="1">
 				<texture>ui_new_game_back</texture>
 			</auto_static>
 		</frame_back>
 		
-		<frame_front x="0" y="0" width="999" height="723">
-			<auto_static x="0" y="0" width="999" height="723" stretch="1">
+		<frame_front x="0" y="0" width="1024" height="628">
+			<auto_static x="0" y="0" width="1024" height="628" stretch="1">
 				<texture>ui_new_game_main</texture>
 			</auto_static>
 		</frame_front>
 		
 		<!-- Static Text -->
-		<cap_character x="10" y="5" width="132" height="22">
-			<text r="250" g="250" b="250" font="letterica18"  align="c">st_mm_new_game_character</text>
+		<cap_character x="8" y="12" width="156" height="20">
+			<text r="250" g="250" b="250" align="c" vert_align="c" font="letterica18">st_mm_new_game_character</text>
 		</cap_character>
-		<cap_options x="10" y="391" width="132" height="22">
-			<text r="250" g="250" b="250" font="letterica18"  align="c">st_mm_new_game_options</text>
+		<cap_options x="8" y="400" width="156" height="20">
+			<text r="250" g="250" b="250" align="c" vert_align="c" font="letterica18">st_mm_new_game_options</text>
 		</cap_options>
-		<cap_inventory x="465" y="5" width="132" height="22">
-			<text r="250" g="250" b="250" font="letterica18"  align="c">st_mm_new_game_inventory</text>
+		<cap_inventory x="524" y="12" width="156" height="20">
+			<text r="250" g="250" b="250" align="c" vert_align="c" font="letterica18">st_mm_new_game_inventory</text>
 		</cap_inventory>
-		<cap_loadout x="685" y="5" width="132" height="22">
-			<text r="250" g="250" b="250" font="letterica18"  align="c">st_mm_new_game_loadout</text>
+		<cap_loadout x="782" y="12" width="156" height="20">
+			<text r="250" g="250" b="250" align="c" vert_align="c" font="letterica18">st_mm_new_game_loadout</text>
 		</cap_loadout>
 		
-		<cap_name x="194" y="284" width="61" height="17">
-			<text r="200" g="200" b="200" font="letterica18"  align="c">st_mm_new_game_name</text>
+		<cap_name x="206" y="280" width="64" height="18">
+			<text r="150" g="150" b="150" align="r" vert_align="c" font="letterica18">st_mm_new_game_name</text>
 		</cap_name>
-		<cap_money x="251" y="315" width="61" height="17">
-			<text r="150" g="150" b="150" font="letterica16"  align="c">st_mm_new_game_money</text>
+		<cap_money x="206" y="310" width="64" height="18">
+			<text r="150" g="150" b="150" align="r" vert_align="c" font="letterica18">st_mm_new_game_money</text>
 		</cap_money>
-		<cap_points_left x="517" y="348" width="86" height="18">
-			<text r="150" g="150" b="150" font="letterica16">st_mm_new_game_points_left</text>
+		<cap_points_left x="524" y="351" width="117" height="16">
+			<text r="150" g="150" b="150" align="r" font="letterica16">st_mm_new_game_points_left</text>
 		</cap_points_left>
-		<cap_points_used x="737" y="348" width="86" height="18">
-			<text r="150" g="150" b="150" font="letterica16">st_mm_new_game_points_used</text>
+		<cap_points_used x="782" y="351" width="117" height="16">
+			<text r="150" g="150" b="150" align="r" font="letterica16">st_mm_new_game_points_used</text>
 		</cap_points_used>
 		
 		<!-- Interactive Text -->
-		<input_name x="259" y="285" width="164" height="17">
-			<text complex_mode="1" r="150" g="150" b="150" align="l"  vert_align="c" font="letterica18" />
+		<input_name x="278" y="280" width="222" height="18">
+			<text complex_mode="1" r="250" g="250" b="250" align="l" vert_align="c" font="letterica18" />
 		</input_name>
-		<text_money x="316" y="316" width="102" height="17">
-			<text complex_mode="1" r="150" g="150" b="150" align="l"  vert_align="c" font="letterica16" />
+		<text_money x="278" y="310" width="222" height="18">
+			<text complex_mode="1" r="150" g="150" b="150" align="l" vert_align="c" font="letterica18" />
 		</text_money>
-		<text_points_left x="608" y="348" width="55" height="18">
-			<text complex_mode="1" r="150" g="150" b="150" align="l"  vert_align="c" font="letterica16" />
+		<text_points_left x="649" y="351" width="81" height="16">
+			<text complex_mode="1" r="150" g="150" b="150" align="l" font="letterica16" />
 		</text_points_left>
-		<text_points_used x="828" y="348" width="55" height="18">
-			<text complex_mode="1" r="150" g="150" b="150" align="l"  vert_align="c" font="letterica16" />
+		<text_points_used x="907" y="351" width="81" height="16">
+			<text complex_mode="1" r="150" g="150" b="150" align="l" font="letterica16" />
 		</text_points_used>
 		
-		<text_relations x="33" y="76" width="122" height="150">
-			<text complex_mode="1" r="150" g="150" b="150" align="l"  vert_align="c" font="letterica16" />
+		<text_relations x="36" y="46" width="128" height="210">
+			<text complex_mode="1" r="150" g="150" b="150" align="l" vert_align="t" font="letterica16" />
 		</text_relations>
-		<text_descr x="164" y="42" width="254" height="220">
-			<text complex_mode="1" r="150" g="150" b="150" align="l"  vert_align="c" font="letterica16" />
+		<text_descr x="164" y="8" width="308" height="256">
+			<text complex_mode="1" r="150" g="150" b="150" align="l" vert_align="t" font="letterica16" />
 		</text_descr>
 		
 		
 		<!-- Droplists -->
-		<list_map x="184" y="346" width="254" height="21">
-            <list_font r="190" g="190" b="190" font="letterica16"/>
-            <text_color>
-	            <e r="170" g="170" b="170"/>
-	            <d r="70" g="70" b="70"/>
-            </text_color>
-        </list_map>
+		<list_map x="214" y="349" width="278" height="20">
+			<list_font r="190" g="190" b="190" font="letterica16"/>
+			<text_color>
+				<e r="170" g="170" b="170"/>
+				<d r="70" g="70" b="70"/>
+			</text_color>
+		</list_map>
 		
 		<!-- Item Lists -->
-		<check_reset x="639" y="345" width="35" height="23" stretch="1">
+		<check_reset x="730" y="344" width="28" height="28" stretch="1">
 			<texture>ui_new_game_btn_checkbox</texture>
 		</check_reset>
-
-		<cont_inv x="468" y="38" width="197" height="300" stretch="1"/>
-		<cont_loadout x="690" y="38" width="197" height="300" stretch="1"/>
+		
+		<cont_inv x="527" y="40" width="232" height="296" stretch="1"/>
+		<cont_loadout x="785" y="40" width="232" height="296" stretch="1"/>
 		
 		<!-- Main buttons -->
-		<btn_faction x="4" y="346" width="86" height="21" stretch="1">
-			<text r="150" g="150" b="150" font="letterica16" align="c">st_mm_btn_new_game_faction</text>
+		<btn_faction x="16" y="346" width="91" height="24" stretch="1">
+			<text y="1" r="150" g="150" b="150" align="c" vert_align="c" font="letterica16">st_mm_btn_new_game_faction</text>
 			<texture>ui_inGame2_button</texture>
 		</btn_faction>
 		
-		<btn_icon x="94" y="346" width="86" height="21" stretch="1">
-			<text r="150" g="150" b="150" font="letterica16" align="c">st_mm_btn_new_game_icon</text>
+		<btn_icon x="115" y="346" width="91" height="24" stretch="1">
+			<text y="1" r="150" g="150" b="150" align="c" vert_align="c" font="letterica16">st_mm_btn_new_game_icon</text>
 			<texture>ui_inGame2_button</texture>
 		</btn_icon>
 		
-		<btn_back x="237" y="591" width="136" height="27" stretch="1">
-			<text r="150" g="150" b="150" font="letterica18" align="c">st_mm_btn_new_game_back</text>
+		<btn_back x="577" y="594" width="114" height="24" stretch="1">
+			<text y="1" r="150" g="150" b="150" align="c" vert_align="c" font="letterica18">st_mm_btn_new_game_back</text>
 			<texture>ui_inGame2_button</texture>
 		</btn_back>
 		
-		<btn_random x="381" y="591" width="136" height="27" stretch="1">
-			<text r="150" g="150" b="150" font="letterica18" align="c">st_mm_btn_new_game_rand</text>
+		<btn_random x="455" y="594" width="114" height="24" stretch="1">
+			<text y="1" r="150" g="150" b="150" align="c" vert_align="c" font="letterica18">st_mm_btn_new_game_rand</text>
 			<texture>ui_inGame2_button</texture>
 		</btn_random>
-
-		<btn_start x="525" y="591" width="136" height="27" stretch="1">
-			<text r="150" g="150" b="150" font="letterica18" align="c">st_mm_btn_new_game_submit</text>
+		
+		<btn_start x="333" y="594" width="114" height="24" stretch="1">
+			<text y="1" r="150" g="150" b="150" align="c" vert_align="c" font="letterica18">st_mm_btn_new_game_submit</text>
 			<texture>ui_inGame2_button</texture>
 		</btn_start>
 		
 		
-		<!-- Frames  -->
-		<box_map x="2" y="2" width="438" height="270"/>
-		<box_faction x="4" y="274" width="86" height="63"/>
-		<box_icon x="94" y="274" width="86" height="63"/>
-		<box_item x="464" y="279" width="125" height="87"/>
+		<!-- Frames -->
+		<box_map x="6" y="6" width="496" height="260"/>
+		<box_faction x="11" y="272" width="85" height="66"/>
+		<box_icon x="107" y="272" width="93" height="66"/>
+		<box_item x="0" y="0" width="0" height="0"/>
 		
 		
 		<!-- temp -->
-		<templ_options x="0" y="0" width="880" height="180"/>
+		<templ_options x="0" y="0" width="1008" height="188"/>
 		
 		<!-- Scrolls -->
-		<scroll_desc x="164" y="42" width="264" height="220" right_ident="0" left_ident="0" top_indent="0" bottom_indent="0" vert_interval="0" always_show_scroll="0"/>
-		<scroll_options x="9" y="420" width="880" height="160" right_ident="0" left_ident="0" top_indent="0" bottom_indent="0" vert_interval="0" always_show_scroll="0"/>
+		<scroll_desc x="164" y="8" width="338" height="256" right_ident="0" left_ident="30" top_indent="38" bottom_indent="0" vert_interval="0" always_show_scroll="0"/>
+		<scroll_options x="8" y="396" width="1008" height="189" right_ident="0" left_ident="0" top_indent="0" bottom_indent="0" vert_interval="0" always_show_scroll="0"/>
 		
 		<!-- Options -->
-		<list_difficulty_cap x="462" y="400" width="152" height="27">
-			<text r="245" g="245" b="245" font="letterica16" align="l" vert_align="c">st_cap_list_difficulty</text>
+		<list_difficulty_cap x="540" y="406" width="186" height="20">
+			<text r="245" g="245" b="245" align="l" vert_align="c" font="letterica16">st_cap_list_difficulty</text>
 		</list_difficulty_cap>
-		<list_difficulty x="347" y="403" width="110" height="27">
+		<list_difficulty x="384" y="406" width="144" height="20">
 			<list_font r="245" g="245" b="245" font="letterica16"/>
 			<text_color>
 				<e r="245" g="245" b="245"/>
@@ -138,10 +135,10 @@
 			</text_color>
 		</list_difficulty>
 		
-		<list_economy_cap x="702" y="400" width="152" height="27">
-			<text r="245" g="245" b="245" font="letterica16" align="l" vert_align="c">st_cap_list_economy</text>
+		<list_economy_cap x="834" y="406" width="186" height="20">
+			<text r="245" g="245" b="245" align="l" vert_align="c" font="letterica16">st_cap_list_economy</text>
 		</list_economy_cap>
-		<list_economy x="587" y="403" width="110" height="27">
+		<list_economy x="680" y="406" width="144" height="20">
 			<list_font r="245" g="245" b="245" font="letterica16"/>
 			<text_color>
 				<e r="245" g="245" b="245"/>
@@ -149,54 +146,55 @@
 			</text_color>
 		</list_economy>
 		
+		
 		<options> <!-- start for x=0 y=0--> <!-- ui_inGame2_checkbox -->
-			<cap_check_story x="100" y="30" width="40" height="20" stretch="1">
-				<text r="170" g="170" b="170" font="letterica16" align="l" vert_align="c">st_cap_check_story</text>
-			</cap_check_story>		
-			<check_story x="60" y="29" width="35" height="23" stretch="1">
+			<cap_check_story x="110" y="55" width="186" height="18" stretch="1">
+				<text r="170" g="170" b="170" align="l" vert_align="c" font="letterica16">st_cap_check_story</text>
+			</cap_check_story>
+			<check_story x="80" y="49" width="20" height="30" stretch="1">
 				<texture>ui_inGame2_checkbox</texture>
 			</check_story>
-		
-			<cap_check_azazel_mode x="100" y="60" width="40" height="20" stretch="1">
-				<text r="170" g="170" b="170" font="letterica16" align="l" vert_align="c">st_cap_check_azazel_mode</text>
-			</cap_check_azazel_mode>		
-			<check_azazel_mode x="60" y="59" width="35" height="23" stretch="1">
-				<texture>ui_inGame2_checkbox</texture>
-			</check_azazel_mode>
 			
-			<cap_check_survival x="100" y="90" width="40" height="20" stretch="1">
-				<text r="170" g="170" b="170" font="letterica16" align="l" vert_align="c">st_cap_check_survival</text>
-			</cap_check_survival>		
-			<check_survival x="60" y="89" width="35" height="23" stretch="1">
-				<texture>ui_inGame2_checkbox</texture>
-			</check_survival>
-			
-			<cap_check_routes x="100" y="120" width="40" height="20" stretch="1">
-				<text r="170" g="170" b="170" font="letterica16" align="l" vert_align="c">st_cap_check_routes</text>
-			</cap_check_routes>		
-			<check_routes x="60" y="119" width="35" height="23" stretch="1">
-				<texture>ui_inGame2_checkbox</texture>
-			</check_routes>
-			
-		
-			<cap_check_warfare x="371" y="30" width="40" height="20" stretch="1">
-				<text r="170" g="170" b="170" font="letterica16" align="l" vert_align="c">st_cap_check_warfare</text>
-			</cap_check_warfare>		
-			<check_warfare x="331" y="29" width="35" height="23" stretch="1">
+			<cap_check_warfare x="110" y="85" width="186" height="18" stretch="1">
+				<text r="170" g="170" b="170" align="l" vert_align="c" font="letterica16">st_cap_check_warfare</text>
+			</cap_check_warfare>
+			<check_warfare x="80" y="79" width="20" height="30" stretch="1">
 				<texture>ui_inGame2_checkbox</texture>
 			</check_warfare>
 			
-			<cap_check_hardcore x="371" y="60" width="40" height="20" stretch="1">
-				<text r="170" g="170" b="170" font="letterica16" align="l" vert_align="c">st_cap_check_hardcore</text>
-			</cap_check_hardcore>		
-			<check_hardcore x="331" y="59" width="35" height="23" stretch="1">
+			<cap_check_survival x="110" y="115" width="186" height="18" stretch="1">
+				<text r="170" g="170" b="170" align="l" vert_align="c" font="letterica16">st_cap_check_survival</text>
+			</cap_check_survival>
+			<check_survival x="80" y="109" width="20" height="30" stretch="1">
+				<texture>ui_inGame2_checkbox</texture>
+			</check_survival>
+			
+			<cap_check_routes x="110" y="145" width="186" height="18" stretch="1">
+				<text r="170" g="170" b="170" align="l" vert_align="c" font="letterica16">st_cap_check_routes</text>
+			</cap_check_routes>
+			<check_routes x="80" y="139" width="20" height="30" stretch="1">
+				<texture>ui_inGame2_checkbox</texture>
+			</check_routes>
+			
+			
+			<cap_check_azazel_mode x="406" y="55" width="186" height="18" stretch="1">
+				<text r="170" g="170" b="170" align="l" vert_align="c" font="letterica16">st_cap_check_azazel_mode</text>
+			</cap_check_azazel_mode>
+			<check_azazel_mode x="376" y="49" width="20" height="30" stretch="1">
+				<texture>ui_inGame2_checkbox</texture>
+			</check_azazel_mode>
+			
+			<cap_check_hardcore x="406" y="85" width="186" height="18" stretch="1">
+				<text r="170" g="170" b="170" align="l" vert_align="c" font="letterica16">st_cap_check_hardcore</text>
+			</cap_check_hardcore>
+			<check_hardcore x="376" y="79" width="20" height="30" stretch="1">
 				<texture>ui_inGame2_checkbox</texture>
 			</check_hardcore>
 			
-			<cap_list_hardcore_lives x="406" y="90" width="40" height="20" stretch="1">
-				<text r="170" g="170" b="170" font="letterica16" align="l" vert_align="c">st_cap_list_hardcore_lives</text>
+			<cap_list_hardcore_lives x="466" y="115" width="186" height="18" stretch="1">
+				<text r="170" g="170" b="170" align="l" vert_align="c" font="letterica16">st_cap_list_hardcore_lives</text>
 			</cap_list_hardcore_lives>
-			<list_hardcore_lives x="326" y="89" width="75" height="29">
+			<list_hardcore_lives x="376" y="114" width="80" height="20">
 				<list_font r="190" g="190" b="190" font="letterica16"/>
 				<text_color>
 					<e r="170" g="170" b="170"/>
@@ -204,10 +202,10 @@
 				</text_color>
 			</list_hardcore_lives>
 			
-			<cap_list_hardcore_regen x="406" y="120" width="40" height="20" stretch="1">
-				<text r="170" g="170" b="170" font="letterica16" align="l" vert_align="c">st_cap_list_hardcore_regen</text>
+			<cap_list_hardcore_regen x="466" y="145" width="186" height="18" stretch="1">
+				<text r="170" g="170" b="170" align="l" vert_align="c" font="letterica16">st_cap_list_hardcore_regen</text>
 			</cap_list_hardcore_regen>
-			<list_hardcore_regen x="326" y="119" width="75" height="29">
+			<list_hardcore_regen x="376" y="144" width="80" height="20">
 				<list_font r="190" g="190" b="190" font="letterica16"/>
 				<text_color>
 					<e r="170" g="170" b="170"/>
@@ -216,31 +214,31 @@
 			</list_hardcore_regen>
 			
 			
-			<cap_check_drx x="679" y="30" width="40" height="20" stretch="1">
-				<text r="170" g="170" b="170" font="letterica16" align="l" vert_align="c">st_cap_check_drx</text>
-			</cap_check_drx>		
-			<check_drx x="639" y="29" width="35" height="23" stretch="1">
+			<cap_check_drx x="702" y="55" width="186" height="18" stretch="1">
+				<text r="170" g="170" b="170" align="l" vert_align="c" font="letterica16">st_cap_check_drx</text>
+			</cap_check_drx>
+			<check_drx x="672" y="49" width="20" height="30" stretch="1">
 				<texture>ui_inGame2_checkbox</texture>
 			</check_drx>
 			
-			<cap_check_campfire x="679" y="60" width="40" height="20" stretch="1">
-				<text r="170" g="170" b="170" font="letterica16" align="l" vert_align="c">st_cap_check_campfire</text>
-			</cap_check_campfire>		
-			<check_campfire x="639" y="59" width="35" height="23" stretch="1">
+			<cap_check_campfire x="702" y="85" width="186" height="18" stretch="1">
+				<text r="170" g="170" b="170" align="l" vert_align="c" font="letterica16">st_cap_check_campfire</text>
+			</cap_check_campfire>
+			<check_campfire x="672" y="79" width="20" height="30" stretch="1">
 				<texture>ui_inGame2_checkbox</texture>
 			</check_campfire>
 			
-			<cap_check_conditions x="679" y="90" width="40" height="20" stretch="1">
-				<text r="170" g="170" b="170" font="letterica16" align="l" vert_align="c">st_cap_check_conditions</text>
-			</cap_check_conditions>		
-			<check_conditions x="639" y="89" width="35" height="23" stretch="1">
+			<cap_check_conditions x="702" y="115" width="186" height="18" stretch="1">
+				<text r="170" g="170" b="170" align="l" vert_align="c" font="letterica16">st_cap_check_conditions</text>
+			</cap_check_conditions>
+			<check_conditions x="672" y="109" width="20" height="30" stretch="1">
 				<texture>ui_inGame2_checkbox</texture>
 			</check_conditions>
 			
-			<cap_list_timer x="715" y="120" width="40" height="20" stretch="1">
-				<text r="170" g="170" b="170" font="letterica16" align="l" vert_align="c">st_cap_list_timer</text>
-			</cap_list_timer>		
-			<list_timer x="635" y="119" width="75" height="29">
+			<cap_list_timer x="762" y="145" width="186" height="18" stretch="1">
+				<text r="170" g="170" b="170" align="l" vert_align="c" font="letterica16">st_cap_list_timer</text>
+			</cap_list_timer>
+			<list_timer x="672" y="144" width="80" height="20">
 				<list_font r="190" g="190" b="190" font="letterica16"/>
 				<text_color>
 					<e r="170" g="170" b="170"/>
@@ -250,23 +248,23 @@
 		</options>
 		
 		<popup_faction>
-			<frame x="264" y="115" width="376" height="395"> <!-- base -->
-				<auto_static x="0" y="0" width="376" height="395" stretch="1">
+			<frame x="328" y="101" width="368" height="398"> <!-- base -->
+				<auto_static x="0" y="0" width="368" height="398" stretch="1">
 					<texture>ui_new_game_popup_faction</texture>
 				</auto_static>
 			</frame>
-			<frame_black x="-270" y="-77" width="1280" height="778">
-				<auto_static x="0" y="0" width="1280" height="778" stretch="1">
+			<frame_black x="-10" y="-80" width="1044" height="788">
+				<auto_static x="0" y="0" width="1044" height="788" stretch="1">
 					<texture>ui_new_game_black_back</texture>
 				</auto_static>
 			</frame_black>
 			
-			<cap_faction x="9" y="5" width="132" height="22">
-				<text r="250" g="250" b="250" font="letterica18"  align="c">st_mm_new_game_faction</text>
+			<cap_faction x="8" y="12" width="156" height="20">
+				<text r="250" g="250" b="250" align="c" vert_align="c" font="letterica18">st_mm_new_game_faction</text>
 			</cap_faction>
 			
-			<scroll_faction x="14" y="42" width="348" height="338" right_ident="0" left_ident="0" top_indent="0" bottom_indent="0" vert_interval="0" always_show_scroll="0"/>
-			<templ_faction x="0" y="0" width="348" height="338"/>
+			<scroll_faction x="8" y="38" width="352" height="353" right_ident="0" left_ident="0" top_indent="0" bottom_indent="0" vert_interval="0" always_show_scroll="0"/>
+			<templ_faction x="0" y="0" width="352" height="352"/>
 			
 			<btn_stalker x="0" y="0" width="88" height="88" stretch="1">
 				<texture>ui_new_game_btn_stalker</texture>
@@ -307,27 +305,27 @@
 		</popup_faction>
 		
 		<popup_icon>
-			<frame x="404" y="60" width="216" height="515"> <!-- base -->
-				<auto_static x="0" y="0" width="216" height="515" stretch="1">
+			<frame x="402" y="65" width="220" height="498"> <!-- base -->
+				<auto_static x="0" y="0" width="220" height="498" stretch="1">
 					<texture>ui_new_game_popup_icon</texture>
 				</auto_static>
 			</frame>
-			<frame_black x="-410" y="-77" width="1280" height="778">
-				<auto_static x="0" y="0" width="1280" height="778" stretch="1">
+			<frame_black x="-10" y="-80" width="1044" height="788">
+				<auto_static x="0" y="0" width="1044" height="788" stretch="1">
 					<texture>ui_new_game_black_back</texture>
 				</auto_static>
 			</frame_black>
 			
-			<cap_icon x="9" y="5" width="132" height="22">
-				<text r="250" g="250" b="250" font="letterica18"  align="c">st_mm_new_game_icon</text>
+			<cap_icon x="8" y="12" width="156" height="20">
+				<text r="250" g="250" b="250" align="c" vert_align="c" font="letterica18">st_mm_new_game_icon</text>
 			</cap_icon>
 			
-			<scroll_icon x="14" y="42" width="187" height="460" right_ident="0" left_ident="0" top_indent="0" bottom_indent="0" vert_interval="0" always_show_scroll="0"/>
-			<templ_icon x="0" y="0" width="187" height="460"/>
+			<scroll_icon x="8" y="8" width="206" height="482" right_ident="36" left_ident="0" top_indent="30" bottom_indent="0" vert_interval="0" always_show_scroll="0"/>
+			<templ_icon x="0" y="0" width="206" height="481"/>
 			
-			<!-- original values: width="123" height="87"-->
-			<temp_icon x="0" y="0" width="86" height="60" stretch="1"/>
-			<btn_icon x="0" y="0" width="86" height="60" stretch="1">
+			<!-- original values: width="98" height="87"-->
+			<temp_icon x="0" y="0" width="92" height="64" stretch="1"/>
+			<btn_icon x="0" y="0" width="92" height="64" stretch="1">
 				<texture>ui_new_game_btn_icon</texture>
 			</btn_icon>
 		</popup_icon>

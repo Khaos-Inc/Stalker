@@ -1,32 +1,34 @@
 <?xml version="1.0" encoding="windows-1251"?>
+
 <string_table>
+
 	<!-- Sorter -->
 	<string id="ui_st_tab_all">
 		<text>All Items (1)</text>
 	</string>
 	<string id="ui_st_tab_weapons">
-		<text>Weapons and Explosives (2)</text>
+		<text>Weapons &amp; Explosives (2)</text>
 	</string>
 	<string id="ui_st_tab_armor">
-		<text>Armour, Helmets, Backpacks and Attachements (3)</text>
+		<text>Armor, Helmets, Backpacks &amp; Attachments (3)</text>
 	</string>
 	<string id="ui_st_tab_ammo">
 		<text>Ammo (4)</text>
 	</string>
 	<string id="ui_st_tab_artefact">
-		<text>Artefacts and Mutant Parts (5)</text>
+		<text>Artefacts &amp; Mutant Parts (5)</text>
 	</string>
 	<string id="ui_st_tab_tools">
-		<text>Devices, Tools and Repair Items (6)</text>
+		<text>Devices, Tools &amp; Repair Items (6)</text>
 	</string>
 	<string id="ui_st_tab_food">
-		<text>Drinks, Food, Cooking and Cigarettes (7)</text>
+		<text>Drinks, Food, Cooking &amp; Cigarettes (7)</text>
 	</string>
 	<string id="ui_st_tab_meds">
 		<text>Medicine (8)</text>
 	</string>
 	<string id="ui_st_tab_upgrades">
-		<text>Upgrades (for weapons and armor) (9)</text>
+		<text>Upgrades (Weapons &amp; Armor) (9)</text>
 	</string>
 	<string id="ui_st_tab_misc">
 		<text>Miscellaneous Items (10)</text>
@@ -34,27 +36,27 @@
 		
 	<!-- Loot mode -->
 	<string id="ui_st_put_all">
-		<text>MOVE ALL</text>
+		<text>Move all</text>
 	</string>
 	<string id="ui_st_put_all_hint">
-		<text>MOVE ALL ITEMS (SHIFT + P)</text>
+		<text>Move all items (SHIFT + P)</text>
 	</string>
 	<string id="ui_st_take_all">
-		<text>TAKE ALL</text>
+		<text>Take all</text>
 	</string>
 	<string id="ui_st_take_all_hint">
-		<text>MOVE ALL ITEMS TO BACKPACK (SHIFT + T)</text>
+		<text>Move all items > backpack (SHIFT + T)</text>
 	</string>
 	
 	<!-- Trade mode -->
 	<string id="ui_total_price">
-		<text>TOTAL</text>
+		<text>Total</text>
 	</string>
 	<string id="ui_st_buy">
-		<text>BUY</text>
+		<text>Buy</text>
 	</string>
 	<string id="ui_st_sell">
-		<text>SELL</text>
+		<text>Sell</text>
 	</string>
 	<string id="ui_st_sell_hint">
 		<text>Sell selected items</text>
@@ -66,13 +68,13 @@
 		<text>Not enough money</text>
 	</string>
 	<string id="not_enough_money_partner">
-		<text>The character does not have enough money.</text>
+		<text>They do not have enough money.</text>
 	</string>
 	<string id="st_no_trade_tip_1">
-		<text>The trader isn’t interested in items like this.</text>
+		<text>Trader isn’t interested.</text>
 	</string>
 	<string id="st_no_trade_tip_2">
-		<text>The item is too damaged to be traded.</text>
+		<text>Item is too damaged to be traded.</text>
 	</string>
 
 	<!-- Upgrade mode -->
@@ -102,13 +104,13 @@
 		<text>activate artefact</text>
 	</string>
 	<string id="st_attach_gl_to_rifle">
-		<text>attach grenade launcher to</text>
+		<text>attach grenade launcher ></text>
 	</string>
 	<string id="st_attach_scope_to_pistol">
-		<text>attach scope to</text>
+		<text>attach scope ></text>
 	</string>
 	<string id="st_attach_silencer_to_pistol">
-		<text>attach suppressor to</text>
+		<text>attach suppressor ></text>
 	</string>
 	<string id="st_base_cost">
 		<text>Price</text>
@@ -117,7 +119,7 @@
 		<text>Group:</text>
 	</string>
 	<string id="st_condition">
-		<text>Condition</text>
+		<text>%c[0,255,255,255]Condition</text>
 	</string>
 	<string id="st_detach_gl">
 		<text>detach grenade launcher</text>
@@ -141,10 +143,10 @@
 		<text>donate</text>
 	</string>
 	<string id="st_move_on_belt">
-		<text>attach to belt</text>
+		<text>attach > belt</text>
 	</string>
 	<string id="st_move_to_bag">
-		<text>move to backpack</text>
+		<text>move > backpack</text>
 	</string>
 	<string id="st_move_to">
 		<text>move</text>
@@ -156,7 +158,7 @@
 		<text>unequip</text>
 	</string>
 	<string id="st_move_to_slot">
-		<text>move to slot</text>
+		<text>move > slot</text>
 	</string>
 	<string id="st_play">
 		<text>play</text>
@@ -253,13 +255,13 @@
 	</string>
 
 	<string id="st_plant_explosive_prox">
-		<text>plant with proximity trigger</text>
+		<text>plant [proximity trigger]</text>
 	</string>
 	<string id="st_plant_explosive_timer_10">
-		<text>plant with 10 second timer</text>
+		<text>plant [10 second timer]</text>
 	</string>
 	<string id="st_plant_explosive_timer_30">
-		<text>plant with 30 second timer</text>
+		<text>plant [30 second timer]</text>
 	</string>
 
 	<!-- Units -->
@@ -338,98 +340,240 @@
 	<string id="ui_inv_seconds">
 		<text>seconds</text>
 	</string>
-	
-	<!-- Player states -->
-	<string id="st_ui_main_sensor">
-		<text>%c[0,255,255,255]RADIATION\n
-		%c[ui_gray_2]This stat determines how much radiation is currently stored within the actor's body.\n
-		Exposure to ionizing radiation poses an extreme, perhaps even fatal, risk. For this reason, the ability to adequately measure radiation levels is a vital skill. The basic unit is the millisievert (mSv).\n\n
-		%c[0,255,255,255]Mitigation Strategy:\n
-		%c[d_cyan] • %c[0,255,255,255]Useful Items: %c[ui_gray_2]Anti-radiation drugs, Cystamine, Potassium Iodide, Radopprotectant, AI-2 Medkit, Scientific Medkit, Axyltallisal, Scientific Stimpack, Small Survival Kit\n
-		%c[d_cyan] • %c[0,255,255,255]Useful Equipment: %c[ui_gray_2]Protective suits, radiation suits and mask\breathing apparatus.\n
+
+<!--
+	PLAYER STATES
+-->
+
+	<string id="st_ui_health_sensor_inv">
+		<text>%c[0,255,255,255]HEALTH:\n \n
+		%c[ui_gray_2]The overall vitality of the player.\n
+		Death will occur if this reaches zero.\n
+		This is equivalent to the overall body health. \n
+		Each limb has separated health points that can be recovered using first-heal items (bandages, medkits...) followed by post-heal items (yadulin, ibuprofen, antidot, fentanyl...).\n \n
+		%c[0,255,255,255]USEFUL ITEMS: %c[ui_gray_2]%c[0,255,255,255]:\n
+		%c[d_blue] • %c[0,255,255,255]%c[ui_gray_2]Medkits\n
+		%c[d_blue] • %c[0,255,255,255]%c[ui_gray_2]Stimpacks\n \n
+		%c[0,255,255,255]USEFUL EQUIPMENT: %c[ui_gray_2]%c[0,255,255,255]:\n
+		%c[d_cyan] • %c[0,255,255,255]Artefacts\n
+		%c[d_cyan] • %c[0,255,255,255]Mutant Pelts\n
+		%c[d_cyan] • %c[0,255,255,255]Technological belt items\n
+		%c[d_cyan] • %c[0,255,255,255]Protective Suits and Masks Upgrades
 		</text>
 	</string>
+
+	<string id="ui_inv_power_restore">
+		<text>%c[0,255,255,255]STAMINA RECOVERY:\n \n
+		%c[ui_gray_2]Represents available physical energy.\n
+		This energy is used for a variety of purposes like running, jumping and climbing. \n \n
+		%c[0,255,255,255]USEFUL ITEMS: %c[ui_gray_2]%c[0,255,255,255]:\n
+		%c[d_blue] • %c[0,255,255,255]%c[ui_gray_2]Caffeine Tablets\n
+		%c[d_blue] • %c[0,255,255,255]%c[ui_gray_2]Epinephrine Shot\n
+		%c[d_blue] • %c[0,255,255,255]%c[ui_gray_2]Glucose Shot\n
+		%c[d_blue] • %c[0,255,255,255]%c[ui_gray_2]Cocaine\n		
+		%c[d_blue] • %c[0,255,255,255]%c[ui_gray_2]Coffee\n	
+		%c[d_blue] • %c[0,255,255,255]%c[ui_gray_2]Energy Drinks\n	
+		%c[d_blue] • %c[0,255,255,255]%c[ui_gray_2]Hercules\n \n
+		%c[0,255,255,255]USEFUL EQUIPMENT: %c[ui_gray_2]%c[0,255,255,255]:\n
+		%c[d_cyan] • %c[0,255,255,255]Artefacts\n
+		%c[d_cyan] • %c[0,255,255,255]Mutant Pelts\n
+		%c[d_cyan] • %c[0,255,255,255]Technological belt items\n
+		%c[d_cyan] • %c[0,255,255,255]Protective Suits and Masks Upgrades
+		</text>
+	</string>
+	
+	<string id="st_ui_main_sensor">
+		<text>%c[0,255,255,255]RADIATION:\n \n
+		%c[ui_gray_2]Overall absorbed radiation.\n
+		Exposure to ionizing radiation poses an extreme, perhaps even fatal, risk. For this reason, the ability to adequately measure radiation is a vital skill.\n
+		The basic unit is the millisievert (mSv).\n \n
+		%c[0,255,255,255]USEFUL ITEMS: %c[ui_gray_2]%c[0,255,255,255]:\n
+		%c[d_cyan] • %c[0,255,255,255]Anti-radiation drugs\n
+		%c[d_cyan] • %c[0,255,255,255]Cystamine\n
+		%c[d_cyan] • %c[0,255,255,255]Potassium Iodide\n
+		%c[d_cyan] • %c[0,255,255,255]Radioprotectant\n \n
+		%c[0,255,255,255]USEFUL EQUIPMENT: %c[ui_gray_2]%c[0,255,255,255]:\n
+		%c[d_cyan] • %c[0,255,255,255]Protective Suits\n
+		%c[d_cyan] • %c[0,255,255,255]Mask/Breathing Apparatus
+		</text>
+	</string>
+
+	<string id="ui_inv_radiation_protection">
+		<text>%c[0,255,255,255]RADIATION RESISTANCE:\n \n
+		%c[ui_gray_2]Determines the active reduction of incoming radiations.\n
+		This does NOT determine how fast radiations will be purged from your body.\n
+		A high enough resistance will completely avoid accumulating radiations from certain areas (from water or air):\n \n
+		%c[0,255,255,255]USEFUL ITEMS: %c[ui_gray_2]%c[0,255,255,255]:\n
+		%c[d_cyan] • %c[0,255,255,255]Anti-radiation drugs\n
+		%c[d_cyan] • %c[0,255,255,255]Cystamine\n
+		%c[d_cyan] • %c[0,255,255,255]Potassium Iodide\n
+		%c[d_cyan] • %c[0,255,255,255]Radioprotectant\n \n
+		%c[0,255,255,255]USEFUL EQUIPMENT: %c[ui_gray_2]%c[0,255,255,255]:\n
+		%c[d_cyan] • %c[0,255,255,255]Artefacts\n
+		%c[d_cyan] • %c[0,255,255,255]Mutant Pelts\n
+		%c[d_cyan] • %c[0,255,255,255]Technological belt items\n
+		%c[d_cyan] • %c[0,255,255,255]Protective Suits\n
+		%c[d_cyan] • %c[0,255,255,255]Mask/Breathing Apparatus
+		</text>
+	</string>
+
 	<string id="ui_inv_burn_protection">
-		<text>%c[0,255,255,255]BURN RESISTANCE\n
-		%c[ui_gray_2]This stat determines the actor's resistance to the typical fire anomaly within the Chernobyl Exclusion Zone:\n
-		%c[0,255,255,255]Mitigation Strategy:\n
-		%c[d_cyan] • %c[0,255,255,255]Useful Equipment: %c[ui_gray_2]Protective suits\equipment\armor.\n
+		<text>%c[0,255,255,255]BURN RESISTANCE:\n \n
+		%c[ui_gray_2]Determines resistance to fire and heat anomalies (the red streams).\n \n
+		%c[0,255,255,255]USEFUL EQUIPMENT: %c[ui_gray_2]%c[0,255,255,255]:\n
+		%c[d_cyan] • %c[0,255,255,255]Artefacts\n
+		%c[d_cyan] • %c[0,255,255,255]Mutant Pelts\n
+		%c[d_cyan] • %c[0,255,255,255]Technological belt items\n
+		%c[d_cyan] • %c[0,255,255,255]Protective Suits\n
+		%c[d_cyan] • %c[0,255,255,255]Mask/Breathing Apparatus
 		</text> 
 	</string>
+
 	<string id="ui_inv_chemical_burn_protection">
-		<text>%c[0,255,255,255]CHEMICAL RESISTANCE\n
-		%c[ui_gray_2]This stat determines the actor's resistance to the typical chemical anomaly within the Chernobyl Exclusion Zone:\n
-		%c[0,255,255,255]Mitigation Strategy:\n
-		%c[d_cyan] • %c[0,255,255,255]Useful Items: %c[ui_gray_2]Chlortetracycline, Sulfadimethoxine, Antidote\n
-		%c[d_cyan] • %c[0,255,255,255]Useful Equipment: %c[ui_gray_2]Protective suits\equipment\armor.\n
+		<text>%c[0,255,255,255]CHEMICAL RESISTANCE:\n \n
+		%c[ui_gray_2]Determines resistance to chemical and toxic anomalies (the green gurgling ones).\n \n
+		%c[0,255,255,255]USEFUL ITEMS: %c[ui_gray_2]%c[0,255,255,255]:\n
+		%c[d_cyan] • %c[0,255,255,255]Chlortetracycline\n
+		%c[d_cyan] • %c[0,255,255,255]Sulfadimethoxine\n
+		%c[d_cyan] • %c[0,255,255,255]Antidote\n \n
+		%c[0,255,255,255]USEFUL EQUIPMENT: %c[ui_gray_2]%c[0,255,255,255]:\n
+		%c[d_cyan] • %c[0,255,255,255]Artefacts\n
+		%c[d_cyan] • %c[0,255,255,255]Mutant Pelts\n
+		%c[d_cyan] • %c[0,255,255,255]Technological belt items\n
+		%c[d_cyan] • %c[0,255,255,255]Protective Suits\n
+		%c[d_cyan] • %c[0,255,255,255]Mask/Breathing Apparatus
 		</text>
 	</string>
-	<string id="ui_inv_fire_wound_protection">
-		<text>%c[0,255,255,255]BALLISTIC RESISTANCE\n
-		%c[ui_gray_2]Ballistic resistance indicates the anti-ballistic properties of your body armor (the ability to safely absorb the kinetic energy of small, high-velocity objects such as bullets or shrapnel). For assessment purposes, the internationally recognized, American National Institute of Justice (NIJ) system is used:\n\n
-		%c[d_cyan] • %c[ui_gray_2] ARMOR GRADATION CHART:\n
-		%c[d_cyan] • %c[ui_gray_2] NONE:%c[ui_gray_2] 9x18mm, .45 ACP, 12x70 shot\n
-		%c[d_cyan] • %c[ui_gray_2] CLASS I:%c[ui_gray_2] 9x18mm +P+, 9x19mm FMJ, 9x19mm JHP, grenade shrapnel\n
-		%c[d_cyan] • %c[ui_gray_2] CLASS IIA and II:%c[ui_gray_2] 9x18mm RG028, .45 HS, 5.7x28mm SS195, .357 HP, 12x76 slug\n
-		%c[d_cyan] • %c[ui_gray_2] CLASS IIIA:%c[ui_gray_2] 9x19mm AP, 5.45x39mm FMJ/EP, 5.56x45mm FMJ, 7.62x51mm NATO ball, 9x39mm SP-5, 12x76 dart\n
-		%c[d_cyan] • %c[ui_gray_2] CLASS III:%c[ui_gray_2] 5.56x45mm EP/AP, 7.62x39mm FMJ/AP, 7.62x54mm ZN1/PP, 7.92x57mm Mauser, 9x39mm SP-6, 12.7x55mm STs-130\n
-		%c[d_cyan] • %c[ui_gray_2] CLASS IV:%c[ui_gray_2] 5.45x39mm AP, 7.62x51mm NATO AP, 7.62x54mm AP/7H14, 7.92x57mm SA, .338 Lapua Magnum, 12.7x55mm STs-130 VPS\n
-		%c[d_cyan] • %c[ui_gray_2] CLASS V (exoskeleton):%c[d_red] classified\n
-		%c[0,255,255,255]NOTE:\n
-		%c[ui_gray_2]The above-mentioned protection levels only relate to counter-penetration properties of armour. Bullet impact is still capable of inflicting damage by means of blunt trauma due to pure kinetic energy.\n
-		</text>
-	</string>
-	<string id="ui_inv_radiation_protection">
-		<text>%c[0,255,255,255]Radiation Resistance\n
-		%c[ui_gray_2]This stat determines the actor's resistance to radiation:\n
-		%c[0,255,255,255]Mitigation Strategy:\n
-		%c[d_cyan] • %c[0,255,255,255]Useful Items: %c[ui_gray_2]Anti-radiation drugs, Cystamine, Potassium Iodide, Radopprotectant, AI-2 Medkit, Scientific Medkit, Axyltallisal, Scientific Stimpack, Small Survival Kit.\n
-		%c[d_cyan] • %c[0,255,255,255]Useful Equipment: %c[ui_gray_2]Protective suits\armor, radiation suits and\or mask\breathing apparatus.\n
-		</text>
-	</string>
+
 	<string id="ui_inv_shock_protection">
-		<text>%c[0,255,255,255]Electrical Resistance\n
-		%c[ui_gray_2]This stat determines the actor's resistance to the typical electrical anomaly within the Chernobyl Exclusion Zone:\n
-		%c[0,255,255,255]Mitigation Strategy:\n
-		%c[d_cyan] • %c[0,255,255,255]Useful Equipment: %c[ui_gray_2]Protective suits\equipment\armor.\n
+		<text>%c[0,255,255,255]SHOCK RESISTANCE:\n \n
+		%c[ui_gray_2]Determines resistance to electrical anomalies (the blue arcs).\n \n
+		%c[0,255,255,255]USEFUL EQUIPMENT: %c[ui_gray_2]%c[0,255,255,255]:\n
+		%c[d_cyan] • %c[0,255,255,255]Artefacts\n
+		%c[d_cyan] • %c[0,255,255,255]Mutant Pelts\n
+		%c[d_cyan] • %c[0,255,255,255]Technological belt items\n
+		%c[d_cyan] • %c[0,255,255,255]Protective Suits\n
+		%c[d_cyan] • %c[0,255,255,255]Mask/Breathing Apparatus
 		</text>
 	</string>
+
 	<string id="ui_inv_telepatic_protection">
-		<text>%c[0,255,255,255]Psychic Resistance\n
-		%c[ui_gray_2]This stat determines the actor's resistance to psy fields within the Chernobyl Exclusion Zone:\n
-		%c[0,255,255,255]Mitigation Strategy:\n
-		%c[d_cyan] • %c[0,255,255,255]Useful Items: %c[ui_gray_2]Etperazine, Psy-block, Sleeping Pills, Cannabis Joint, Marijuana\n
+		<text>%c[0,255,255,255]PSYCHIC RESISTANCE:\n \n
+		%c[ui_gray_2]Determines resistance to psi-fields and anomalies (nasty brain stuff).\n \n
+		%c[0,255,255,255]USEFUL ITEMS: %c[ui_gray_2]%c[0,255,255,255]:\n
+		%c[d_cyan] • %c[0,255,255,255]Cannabis Joint\n
+		%c[d_cyan] • %c[0,255,255,255]Etperazine\n
+		%c[d_cyan] • %c[0,255,255,255]Marijuana\n
+		%c[d_cyan] • %c[0,255,255,255]Psy-block\n
+		%c[d_cyan] • %c[0,255,255,255]Sleeping Pills\n \n
+		%c[0,255,255,255]USEFUL EQUIPMENT: %c[ui_gray_2]%c[0,255,255,255]:\n
+		%c[d_cyan] • %c[0,255,255,255]Artefacts\n
+		%c[d_cyan] • %c[0,255,255,255]Mutant Pelts\n
+		%c[d_cyan] • %c[0,255,255,255]Technological belt items\n
+		%c[d_cyan] • %c[0,255,255,255]Protective Suits\n
+		%c[d_cyan] • %c[0,255,255,255]Mask/Breathing Apparatus
 		</text>
 	</string>
+
+	<string id="ui_inv_fire_wound_protection">
+		<text>%c[0,255,255,255]BALLISTIC RESISTANCE (BR%):\n \n
+		%c[ui_gray_2]Determines resistance to incoming bullets.\n 
+		This acts as a flat reduction to incoming damage (like any other resistance) but which is separated between your head and the rest of your body.\n 
+		Artefacts and pelts ballistic resistances apply to both the head and the body while helmets and body armors only protect their respective areas (head or rest of the body).\n \n
+		%c[0,255,255,255]USEFUL ITEMS: %c[ui_gray_2]%c[0,255,255,255]:\n
+		%c[d_cyan] • %c[0,255,255,255]Diclofenac Sodium\n
+		%c[d_cyan] • %c[0,255,255,255]Metamizole\n		
+		%c[d_cyan] • %c[0,255,255,255]Morphine\n \n
+		%c[0,255,255,255]USEFUL EQUIPMENT: %c[ui_gray_2]%c[0,255,255,255]:\n
+		%c[d_cyan] • %c[0,255,255,255]Artefacts\n
+		%c[d_cyan] • %c[0,255,255,255]Mutant Pelts\n	
+		%c[d_cyan] • %c[0,255,255,255]Protective Suits\n
+		%c[d_cyan] • %c[0,255,255,255]Protective Helmets
+		</text>
+	</string>
+
 	<string id="ui_inv_wound_protection">
-		<text>%c[0,255,255,255]Rupture Resistance\n
-		%c[ui_gray_2]Rupture resistance represents your armor's ability to absorb and displace trauma imparted by all sorts of physical blows and impacts. These include-but are not limited to-attempted punches, kicks, stabs, cuts, bites and telekinetically thrown debris.\n
-		%c[0,255,255,255]Mitigation Strategy:\n
-		%c[d_cyan] • %c[0,255,255,255]Useful Equipment: %c[ui_gray_2]Protective suits\equipment\armor.\n
+		<text>%c[0,255,255,255]RUPTURE RESISTANCE:\n \n
+		%c[ui_gray_2]Represents your armor's ability to absorb and displace trauma caused by mutants claws and teeth.\n
+		The resistance is global and the same for both your head and your body. \n \n
+		%c[0,255,255,255]USEFUL ITEMS: %c[ui_gray_2]%c[0,255,255,255]:\n
+		%c[d_cyan] • %c[0,255,255,255]Diclofenac Sodium\n
+		%c[d_cyan] • %c[0,255,255,255]Metamizole\n		
+		%c[d_cyan] • %c[0,255,255,255]Morphine\n \n
+		%c[0,255,255,255]USEFUL EQUIPMENT: %c[ui_gray_2]%c[0,255,255,255]:\n
+		%c[d_cyan] • %c[0,255,255,255]Artefacts\n
+		%c[d_cyan] • %c[0,255,255,255]Mutant Pelts\n		
+		%c[d_cyan] • %c[0,255,255,255]Protective Suits
 		</text>
 	</string>
-	<string id="ui_inv_power_restore">
-		<text>%c[0,255,255,255]Stamina Recovery\n
-		%c[ui_gray_2]Your stamina level represents the available physical energy stored in the actor's body. This energy is used for a variety of purposes, most notably running. Severe loss of stamina may cause loss of movement. It is thus vital to eat, drink and sleep to regain your energy, and to check the weight of your backpack as the amount carried influences the rate of exhaustion. Drugs and artefacts can provide a boost to stamina recovery.\n
-		%c[0,255,255,255]Mitigation Strategy:\n
-		%c[d_cyan] • %c[0,255,255,255]Useful Items: %c[ui_gray_2]Epinephrine Shot, Caffeine Tablets, Cocaine, Hercules, Glucose Shot, Large Glucose Shot, Army Medkit\n
+
+	<string id="ui_inv_explosion_protection">
+		<text>%c[0,255,255,255]EXPLOSITION RESISTANCE:\n \n
+		%c[ui_gray_2]Determines resistance to explosives.\n
+		The resistance is global and the same for both your head and your body. \n \n
+		%c[0,255,255,255]USEFUL EQUIPMENT: %c[ui_gray_2]%c[0,255,255,255]:\n
+		%c[d_cyan] • %c[0,255,255,255]Artefacts\n
+		%c[d_cyan] • %c[0,255,255,255]Mutant Pelts\n	
+		%c[d_cyan] • %c[0,255,255,255]Protective Suits
 		</text>
 	</string>
+
+	<string id="ui_inv_strike_protection">
+		<text>%c[0,255,255,255]STRIKE RESISTANCE:\n \n
+		%c[ui_gray_2]Determines resistance to gravity-based and shockwave-based damages.\n
+		The resistance is global and the same for both your head and your body. \n \n
+		%c[0,255,255,255]USEFUL EQUIPMENT: %c[ui_gray_2]%c[0,255,255,255]:\n
+		%c[d_cyan] • %c[0,255,255,255]Artefacts\n
+		%c[d_cyan] • %c[0,255,255,255]Mutant Pelts\n		
+		%c[d_cyan] • %c[0,255,255,255]Protective Suits
+		</text>
+	</string>
+
+	<string id="ui_inv_br_protection">
+		<text>%c[0,255,255,255]BR CLASS (BRC and BRC MITIGATION%):\n \n
+		%c[ui_gray_2]Represents your body armor or helmet resistance to bullet penetration.\n
+		This value compares directly to incoming bullet Armor Penetration (AP) value. It allows bullets damage to be mitigated if their AP value is below the BR Class:\n 
+		 • If the BR Class (BRC) is above the bullet AP value, the incoming bullet damage is reduced by the BR Class Mitigation (BRC Mitigation% = 40% + belt items bonus).\n
+		 • If the BR Class is below the bullet AP value, no BR Class Mitigation bonus is applied (BRC Mitigation% = 0%).\n
+		 • Ballistic Resistance (BR%) bonuses from the armor, the artefacts, and the drugs is further applied to the remaining damage independently of the bullet penetration.\n \n
+		 
+		The formula is:\n
+		Damage * (1 - BR%) * (1 - BRC Mitigation%)\n \n
+		
+		Since the BRC Mitigation% and BR% interaction is multiplicative, there are diminishing returns in trying to increase both at the same time. Example:\n \n
+		 • With 1 - ((1 - BR%) * (1 - BRC Mitigation%)) = X% damage reduction \n
+		 • 1 - ((1 - 40%) * (1 - 60%)) = 76% damage reduction\n
+		 • 1 - ((1 - 15%) * (1 - 85%)) = 87% damage reduction\n \n
+
+		Thus, when creating your build, increaase either BR% or BRC and BRC Mitigation.\n \n
+		
+		BRC Mitigation% is not capped, unlike BR%, but is only applied when bullets do not penetrate your BRC.\n \n
+
+		%c[0,255,255,255]USEFUL EQUIPMENT: %c[ui_gray_2]%c[0,255,255,255]:\n	
+		%c[d_cyan] • %c[0,255,255,255]Ballistic Plates\n	
+		%c[d_cyan] • %c[0,255,255,255]Pelts\n
+		%c[d_cyan] • %c[0,255,255,255]Artefacts\n	
+		%c[d_cyan] • %c[0,255,255,255]Perk Artefacts\n
+		%c[d_cyan] • %c[0,255,255,255]Protective Suits\n
+		%c[d_cyan] • %c[0,255,255,255]Protective Helmets\n
+		</text>
+	</string>
+
 	<string id="st_ui_bleeding_sensor">
-		<text>%c[0,255,255,255]Bleeding\n
-		%c[ui_gray_2]Bleeding can drain vitality at a very fast rate if not treated promptly. Bleeding wounds are most often the result of external physical force penetrating body armor and rupturing the skin and are sometimes accompanied by damage to internal organs. Bleeding can also be the effect of open bone fractures caused by blunt trauma.\n
-		%c[0,255,255,255]Mitigation Strategy:\n
-		%c[d_cyan] • %c[0,255,255,255]Useful Items: %c[ui_gray_2]Bandage, Vinca, Army Medkit, Scientific Medkit, Small Survival Kit\n
+		<text>%c[0,255,255,255]BLEEDING:\n \n
+		%c[ui_gray_2]Drain vitality at a very fast rate if not treated promptly.\n \n
+		%c[0,255,255,255]USEFUL ITEMS: %c[ui_gray_2](not limited to)%c[0,255,255,255]:\n
+		%c[d_cyan] • %c[0,255,255,255]Bandage\n
+		%c[d_cyan] • %c[0,255,255,255]Tourniquet\n
+		%c[d_cyan] • %c[0,255,255,255]Vinca\n \n
+		%c[0,255,255,255]USEFUL EQUIPMENT: %c[ui_gray_2]%c[0,255,255,255]:\n
+		%c[d_cyan] • %c[0,255,255,255]Artefacts\n
+		%c[d_cyan] • %c[0,255,255,255]Mutant Pelts\n		
+		%c[d_cyan] • %c[0,255,255,255]Protective Suits Upgrades
 		</text>
 	</string>
-	<string id="st_ui_health_sensor_inv">
-		<text>%c[0,255,255,255]Health\n
-		%c[ui_gray_2]Health is the overall vitality of the actor. Death will occur if this reaches zero.\n
-		In GAMMA, this is equivalent to the overall body health for Body Health System.
-		%c[0,255,255,255]Mitigation Strategy:\n
-		%c[d_cyan] • %c[0,255,255,255]Useful Items: %c[ui_gray_2]Diclofenac Sodium, AI-2 Medkit, Army Medkit, Scientific Medkit, Axyltallisal, Improvised Stimpack, Military Stimpack, Scientific Stimpack Small Survival Kit\n
-		</text>
-	</string>
+
+
 	
 	<!-- Item description-->
 	<string id="st_cap_old">
@@ -485,98 +629,103 @@
 	</string>
 
 	<string id="st_ui_armor_static">
-		<text>Armour condition</text>
+		<text>%c[0,255,255,255]Armor Condition:</text>
 	</string>
 	<string id="st_weight">
-		<text>WGT.</text>
+		<text>Wgt.</text>
 	</string>
 	<string id="st_weight_full">
-		<text>WEIGHT</text>
+		<text>%c[0,255,255,255]Weight:</text>
 	</string>
 	<string id="ui_ammo_count">
-		<text>Mag. size</text>
+		<text>%c[0,255,255,255]Mag. Size:</text>
 	</string>
 	<string id="ui_inv_accuracy">
-		<text>Accuracy</text>
+		<text>%c[0,255,255,255]Accuracy:</text>
 	</string>
 	<string id="ui_inv_damage">
-		<text>Damage</text>
+		<text>%c[0,255,255,255]Damage:</text>
 	</string>
 	<string id="ui_inv_handling">
-		<text>Handling</text>
+		<text>%c[0,255,255,255]Handling:</text>
 	</string>
-	
 	<string id="ui_inv_health">
-		<text>Health restoration</text>
+		<text>%c[0,255,255,255]Health Restoration:</text>
 	</string>
 	<string id="ui_inv_power">
-		<text>Stamina Recovery</text>
+		<text>%c[0,255,255,255]Stamina Recovery:</text>
 	</string>
-	
 	<string id="ui_inv_outfit_additional_weight">
-		<text>Weight carried</text>
+		<text>%c[0,255,255,255]Weight Carried:</text>
 	</string>
 	<string id="ui_inv_outfit_artefact_count">
-		<text>Belt slots</text>
+		<text>%c[0,255,255,255]Belt Slots:</text>
 	</string>
 	<string id="ui_inv_outfit_burn_protection">
-		<text>Burn Res.</text>
+		<text>%c[0,255,255,255]Burn Res:</text>
 	</string>
 	<string id="ui_inv_outfit_chemical_burn_protection">
-		<text>Chemical Res.</text>
+		<text>%c[0,255,255,255]Chemical Res:</text>
 	</string>
 	<string id="ui_inv_outfit_fire_wound_protection">
-		<text>Ballistic Res.</text>
+		<text>%c[0,255,255,255]Ballistic Res:</text>
 	</string>
 	<string id="ui_inv_outfit_radiation_protection">
-		<text>Ext. Radiation Res.</text>
+		<text>%c[0,255,255,255]Radiation Res:</text>
 	</string>
 	<string id="ui_inv_outfit_shock_protection">
-		<text>Electrical Res.</text>
+		<text>%c[0,255,255,255]Electrical Res:</text>
 	</string>
 	<string id="ui_inv_outfit_telepatic_protection">
-		<text>Psychic Res.</text>
+		<text>%c[0,255,255,255]Psychic Res:</text>
 	</string>
 	<string id="ui_inv_outfit_wound_protection">
-		<text>Rupture Res.</text>
+		<text>%c[0,255,255,255]Rupture Res:</text>
 	</string>
 	<string id="ui_inv_outfit_explosion_protection">
-		<text>Explosive Res.</text>
+		<text>%c[0,255,255,255]Explosive Res:</text>
 	</string>
 	<string id="ui_inv_outfit_strike_protection">
-		<text>Impact Res.</text>
+		<text>%c[0,255,255,255]Impact Res:</text>
 	</string>
 	<string id="ui_inv_outfit_hit_fraction_actor">
 		<text>Strength</text>
 	</string>
-	
 	<string id="ui_inv_satiety">
-		<text>Satiety level</text>
+		<text>%c[0,255,255,255]Satiety:</text>
+	</string>
+	<string id="ui_inv_sleep">
+		<text>%c[0,255,255,255]Sleep:</text>
+	</string>
+	<string id="ui_inv_thirst">
+		<text>%c[0,255,255,255]Thirst:</text>
 	</string>
 	<string id="ui_inv_outfit_power_restore">
-		<text>Stamina Recovery</text>
+		<text>%c[0,255,255,255]Stamina Recovery:</text>
 	</string>
 	<string id="ui_inv_weight">
-		<text>Conv. encumbrance</text>
+		<text>%c[0,255,255,255]Conv. Encumbrance:</text>
 	</string>
 	<string id="ui_inv_af_condition">
-		<text>Efficiency</text>
+		<text>%c[0,255,255,255]Efficiency:</text>
 	</string>
+
 	<string id="ui_total_weight">
 		<text>Weight:</text>
 	</string>
 	<string id="st_ui_health_sensor">
-		<text>Health</text>
+		<text>Health:</text>
 	</string>
+	
 	<string id="ui_ammo_types">
-		<text>Ammo</text>
+		<text>Ammo:</text>
 	</string>
 	<string id="ui_inv_effect_time">
-		<text>Duration</text>
+		<text>%c[0,255,255,255]Duration:</text>
 	</string>
 	
 	<string id="st_itm_desc_properties">
-		<text>PROPERTIES</text>
+		<text>\n%c[0,255,255,255]PROPERTIES</text>
 	</string>
 	<string id="st_itm_desc_details">
 		<text>DETAILS</text>
@@ -586,16 +735,16 @@
 	</string>
 	
 	<string id="st_itm_desc_state_possible">
-		<text>possible</text>
+		<text>%c[ui_green]YES</text>
 	</string>
 	<string id="st_itm_desc_state_not_possible">
-		<text>not possible</text>
+		<text>%c[ui_red]NO\n</text>
 	</string>
 	<string id="st_itm_desc_state_avail">
 		<text>included</text>
 	</string>
 	<string id="st_itm_desc_state_avail_workshop">
-		<text>available (by the mechanic)</text>
+		<text>available (by mechanic)</text>
 	</string>
 	<string id="st_itm_desc_state_not_avail">
 		<text>not available</text>
@@ -622,7 +771,7 @@
 		<text>significant</text>
 	</string>
 	<string id="st_itm_desc_state_increase">
-		<text>increment</text>
+		<text>increase</text>
 	</string>
 	<string id="st_itm_desc_state_decrease">
 		<text>reduction</text>
@@ -642,7 +791,7 @@
 		<text>%s thirstiness %s</text>
 	</string>
 	<string id="st_itm_desc_eat_radiation">
-		<text>radiation poisoning</text>
+		<text>%c[0,255,255,255]Radiation Contamination</text>
 	</string>
 	<string id="st_itm_desc_eat_health">
 		<text>unhealthy</text>
@@ -652,7 +801,7 @@
 		<text>upgradable</text>
 	</string>
 	<string id="st_itm_desc_outfit_heardgear">
-		<text>headgear</text>
+		<text>%c[0,255,255,255]Headgear</text>
 	</string>
 	<string id="st_itm_desc_outfit_num_of_slots">
 		<text>attachments for extra slots</text>
@@ -661,37 +810,37 @@
 		<text>carry weight increment</text>
 	</string>
 	<string id="st_itm_desc_outfit_run">
-		<text>sprinting is</text>
+		<text>%c[0,255,255,255]Sprinting?:</text>
 	</string>
 	<string id="st_itm_desc_outfit_patch_torn">
-		<text>The %s on this outfit has been torn</text>
+		<text>%s torn off</text>
 	</string>
 	<string id="st_itm_desc_outfit_faction">
-		<text>faction</text>
+		<text>%c[0,255,255,255]Faction</text>
 	</string>
 	
 	<string id="st_itm_desc_outfit_repair_bonus">
-		<text>repair bonus</text>
+		<text>%c[0,255,255,255]Repair Bonus</text>
 	</string>
 	<string id="st_itm_desc_outfit_required_tool">
-		<text>required tool</text>
+		<text>%c[0,255,255,255]Required Tool</text>
 	</string>
 	
 	<string id="st_itm_desc_workshop_tool">
-		<text>usable on mechanic's workshop for part replacement and upgrades</text>
+		<text>usable on mechanic's workshop [part replacement &amp; upgrades]</text>
 	</string>
 	<string id="st_itm_desc_repair_min_con">
-		<text>not usable below condition level</text>
+		<text>%c[0,255,255,255]Not Usable Below Condition</text>
 	</string>
 	<string id="st_itm_desc_repair_base_con">
-		<text>base condition gain</text>
+		<text>%c[0,255,255,255]Base Condition Gain</text>
 	</string>
 	<string id="st_itm_desc_repair_match">
 		<text>can repair materials by using their counterparts</text>
 	</string>
 	
 	<string id="st_itm_desc_part_usable">
-		<text>usable at workshops for part replacement</text>
+		<text>usable at workshops [part replacement]</text>
 	</string>
 	<string id="st_itm_desc_part_i">
 		<text>base component</text>
@@ -710,7 +859,7 @@
 		<text>outfit upgrade kit</text>
 	</string>
 	<string id="st_itm_desc_upgr_usable">
-		<text>usable at workshops for installing suitable upgrades</text>
+		<text>usable at workshops [installing suitable upgrades]</text>
 	</string>
 
 <!-- Others -->
@@ -721,7 +870,7 @@
 		<text>Buy rifle ammo (W)</text>
 	</string>
 	<string id="ui_inv_bleeding">
-		<text>Bleeding control</text>
+		<text>%c[0,255,255,255]Bleeding Control:</text>
 	</string>
 	<string id="ui_inv_cancel">
 		<text>Cancel</text>
@@ -781,13 +930,13 @@
 		<text>Loadout 3 (F3)</text>
 	</string>
 	<string id="ui_inv_radiation">
-		<text>Radiation</text>
+		<text>%c[0,255,255,255]Radiation:</text>
 	</string>
 	<string id="ui_inv_rank_restr">
 		<text>Rank restriction</text>
 	</string>
 	<string id="ui_inv_rate_of_fire">
-		<text>Fire rate</text>
+		<text>%c[0,255,255,255]Fire Rate:</text>
 	</string>
 	<string id="ui_inv_reset_items(C)">
 		<text>Clear (C)</text>
@@ -879,13 +1028,13 @@
 	
 	<!-- Messages -->
 	<string id="st_news_dis_items">
-		<text>%c[d_red]A proper disassembling tool is required.</text>
+		<text>%c[d_red]Need a proper disassembling tool!</text>
 	</string>
 	<string id="st_ui_need_charger">
-		<text>%s is required to conduct electricity</text>
+		<text>%s required to conduct electricity!</text>
 	</string>
 	<string id="st_new_anomaly_map">
-		<text>New anomaly map is discovered</text>
+		<text>New anomaly map discovered</text>
 	</string>
 	<string id="ui_st_create_stash">
 		<text>create stash</text>
@@ -912,7 +1061,7 @@
 		<text>KILL STRELOK</text>
 	</string>
 	<string id="ui_st_battery_more_power">
-		<text>The device has more power</text>
+		<text>More power remaining</text>
 	</string>
 	<string id="st_lamp_disconnected">
 		<text>Head lamp disconnected</text>
@@ -949,7 +1098,7 @@
 		<text>Grenade Launcher</text>
 	</string>
 	<string id="st_ui_awr_parts_list">
-		<text>Replacement Parts</text>
+		<text>Replacement Parts:</text>
 	</string>
 	<string id="st_ui_repair_kit_list">
 		<text>Compatible Repair Kits</text>
@@ -988,13 +1137,13 @@
 		<text>Useable Materials</text>
 	</string>
 	<string id="st_ui_power">
-		<text>Power</text>
+		<text>%c[0,255,255,255]Power</text>
 	</string>
 	<string id="st_ui_amount">
 		<text>Amount</text>
 	</string>
 	<string id="st_ui_power_consumption">
-		<text>power consumption</text>
+		<text>%c[0,255,255,255]Power Consumption</text>
 	</string>
 	<string id="st_ui_info">
 		<text>Info</text>

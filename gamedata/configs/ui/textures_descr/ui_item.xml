@@ -1,4 +1,5 @@
 <w>
+	
 	<file name="ui\items\ui_battery_low_power">
 		<texture id="ui_battery_low_power" x="0" y="0" width="64" height="64"/>
 		<texture id="ui_battery_low_power_empty" x="0" y="63" width="1" height="1"/>
@@ -6,13 +7,13 @@
 	<file name="ui\items\ui_pda">
 		<texture id="ui_npc_pda_frame" x="0" y="0" width="829" height="570" />
 	</file>
-
+	
 	<!-- Details -->
 	<file name="ui\items\ui_details">
-		<texture id="ui_itm_details" x="0" y="0" width="768" height="512" />
-		<texture id="ui_itm_line" x="0" y="1008" width="768" height="16" />
+		<texture id="ui_itm_details" x="0" y="0" width="1024" height="768" />
+		<texture id="ui_itm_line" x="0" y="1008" width="732" height="16" />
 	</file>
-
+	
 	<!-- Craft -->
 	<file name="ui\items\ui_craft_tools_basic">
 		<texture id="ui_itm_basickit" x="0" y="0" width="737" height="578" />
@@ -93,27 +94,19 @@
 	
 	<!-- Workshop -->
 	<file name="ui\items\ui_workshop">
-		<texture id="ui_inGame2_workshop_background"          x="0"   y="0"   width="1024" height="640" />
-		<texture id="ui_inGame2_workshop_line"                x="1"   y="669" width="2"    height="2" />
-		<texture id="ui_inGame2_workshop_item_window_clean_s" x="8"   y="799" width="91"   height="44" />
-		<texture id="ui_inGame2_workshop_item_window_con"     x="107" y="806" width="74"   height="37" />
-		<texture id="ui_inGame2_workshop_toolkit"             x="0"   y="851" width="218"  height="173" />
-		<texture id="ui_inGame2_workshop_craft_menu"          x="226" y="830" width="164"  height="194" />
-		<texture id="ui_inGame2_workshop_craft_recipes"       x="226" y="830" width="164"  height="194" />
-		
-		<texture id="ui_button_light_d" x="56" y="640" width="56" height="28" />
-		<texture id="ui_button_light_e" x="56" y="640" width="56" height="28" />
-		<texture id="ui_button_light_h" x="0"  y="640" width="56" height="28" />
-		<texture id="ui_button_light_t" x="56" y="640" width="56" height="28" />
+	    <texture id="ui_inGame2_workshop_background" x="0" y="0" width="969" height="669" />
+	</file>
+	<file name="ui\ui_common">
+	    <texture id="ui_inGame2_workshop_info" x="877" y="0" width="77" height="77" />
 	</file>
 
 	<!-- Common -->
 	<file name="ui\items\ui_item_1">
-		<texture id="ui_inGame2_item_1_background"   x="0"   y="0"   width="768" height="640" />
-		<texture id="ui_inGame2_item_1_inv"          x="0"   y="792" width="312" height="232" />
-		<texture id="ui_inGame2_item_1_box"          x="0"   y="664" width="238" height="120" />
-		<texture id="ui_inGame2_item_1_window_clean" x="320" y="868" width="124" height="74" />
-		<texture id="ui_inGame2_item_1_window"       x="320" y="950" width="124" height="74" />
+		<texture id="ui_inGame2_item_1_background" x="0" y="0" width="710" height="674" />
+		<texture id="ui_inGame2_item_2_background" x="0" y="0" width="710" height="547" />
+		<texture id="ui_inGame2_item_1_inv" x="0" y="748" width="304" height="276" />
+		<texture id="ui_inGame2_item_2_inv" x="721" y="669" width="303" height="354" />
+		<texture id="ui_inGame2_campfire" x="793" y="0" width="231" height="319" />
 	</file>
 
 	<file name="ui\items\common_elements">
@@ -162,35 +155,35 @@
 		<texture id="ui_inGame2_btn_workshop_toolkit_2_e" x="186" y="157" width="186" height="157" /> <!-- normal -->
 		<texture id="ui_inGame2_btn_workshop_toolkit_2_h" x="0" y="157" width="186" height="157" /> <!-- hover -->
 		<texture id="ui_inGame2_btn_workshop_toolkit_2_t" x="0" y="157" width="186" height="157" /> <!-- toggle -->
-
+		
 		<texture id="ui_inGame2_btn_workshop_toolkit_3_d" x="186" y="314" width="186" height="157" /> <!-- disabled -->
 		<texture id="ui_inGame2_btn_workshop_toolkit_3_e" x="186" y="314" width="186" height="157" /> <!-- normal -->
 		<texture id="ui_inGame2_btn_workshop_toolkit_3_h" x="0" y="314" width="186" height="157" /> <!-- hover -->
 		<texture id="ui_inGame2_btn_workshop_toolkit_3_t" x="0" y="314" width="186" height="157" /> <!-- toggle -->
-
+		
 		<texture id="ui_inGame2_btn_workshop_toolkit_4_d" x="186" y="471" width="186" height="157" /> <!-- disabled -->
 		<texture id="ui_inGame2_btn_workshop_toolkit_4_e" x="186" y="471" width="186" height="157" /> <!-- normal -->
 		<texture id="ui_inGame2_btn_workshop_toolkit_4_h" x="0" y="471" width="186" height="157" /> <!-- hover -->
 		<texture id="ui_inGame2_btn_workshop_toolkit_4_t" x="0" y="471" width="186" height="157" /> <!-- toggle -->
-
+		
 		<texture id="ui_inGame2_btn_workshop_toolkit_5_d" x="186" y="628" width="186" height="157" /> <!-- disabled -->
 		<texture id="ui_inGame2_btn_workshop_toolkit_5_e" x="186" y="628" width="186" height="157" /> <!-- normal -->
 		<texture id="ui_inGame2_btn_workshop_toolkit_5_h" x="0" y="628" width="186" height="157" /> <!-- hover -->
 		<texture id="ui_inGame2_btn_workshop_toolkit_5_t" x="0" y="628" width="186" height="157" /> <!-- toggle -->
-
+		
 		<texture id="ui_inGame2_btn_workshop_toolkit_6_d" x="186" y="785" width="186" height="157" /> <!-- disabled -->
 		<texture id="ui_inGame2_btn_workshop_toolkit_6_e" x="186" y="785" width="186" height="157" /> <!-- normal -->
 		<texture id="ui_inGame2_btn_workshop_toolkit_6_h" x="0" y="785" width="186" height="157" /> <!-- hover -->
 		<texture id="ui_inGame2_btn_workshop_toolkit_6_t" x="0" y="785" width="186" height="157" /> <!-- toggle -->		
 	</file>
-
+	
 	<file name="ui\ui_grid">
 		<texture id="ui_button_inv_d" x="0" y="0" width="60" height="64" /> <!-- disabled -->
 		<texture id="ui_button_inv_e" x="0" y="0" width="60" height="64" /> <!-- normal -->
 		<texture id="ui_button_inv_h" x="65" y="0" width="60" height="64" /> <!-- hover -->
 		<texture id="ui_button_inv_t" x="129" y="0" width="60" height="64" /> <!-- toggle -->
 	</file>
-
+	
 	<file name="ui\ui_highlight">
 		<texture id="ui_button_hl_h" x="0" y="0" width="60" height="64" /> <!-- hover -->
 		<texture id="ui_button_hl" x="65" y="0" width="60" height="64" /> <!-- toggle -->
@@ -205,4 +198,5 @@
 		<texture id="ui_button_empty" x="0" y="0" width="1" height="1" />
 		<texture id="ui_button_empty_back" x="0" y="0" width="1" height="1" />
 	</file>
+
 </w>

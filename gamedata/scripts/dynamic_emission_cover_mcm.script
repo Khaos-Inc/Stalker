@@ -12,9 +12,17 @@ function on_game_start()
         function tb_coordinate_based_safe_zones.actor_on_update()
             base_tb_update()
             if dynamic_is_safe then
-                SetEvent("underground", true)
+                SetEvent("current_safe_cover", true)
             end
         end
+    end
+
+    local base_actor_in_cover = surge_manager.actor_in_cover  
+    function surge_manager.actor_in_cover()  
+        if dynamic_is_safe then  
+            return true  
+        end  
+        return base_actor_in_cover()  
     end
 
     -- Monkey patch surge_manager to protect companions when in cover
@@ -25,6 +33,17 @@ function on_game_start()
             return result
         end
 
+        if not dynamic_is_safe then  
+            return false  
+        end  
+  
+        -- Actor is in dynamic cover; actor's own position is safe  
+        local actor_pos = db.actor:position()  
+        local dist_to_actor = pos:distance_to(actor_pos)  
+        if dist_to_actor <= 0.5 then  -- small threshold  
+            return true  
+        end  
+  
         if protect_companions_range == 0 or not dynamic_is_safe then
             return false
         end
@@ -220,7 +239,7 @@ function actor_on_update()
         if in_dynamic_cover and not dynamic_is_safe then
             dynamic_is_safe = true
             grace_period_start_time = 0
-            SetEvent("underground", true)
+            SetEvent("current_safe_cover", true)
             RemoveTimeEvent("dynamic_cover", "cover_remove_delay") -- Remove grace period time event
         elseif dynamic_is_safe and not in_dynamic_cover then
             -- Grace period of cover after leaving dynamic cover
@@ -231,18 +250,18 @@ function actor_on_update()
                     --printf("-Grace period end")
                     dynamic_is_safe = false
                     if not tb_coordinate_based_safe_zones then
-                        SetEvent("underground", false)
+                        SetEvent("current_safe_cover", false)
                     end
                 end
             else
                 dynamic_is_safe = false
                 if not tb_coordinate_based_safe_zones then
-                    SetEvent("underground", false)
+                    SetEvent("current_safe_cover", false)
                 end
             end
         end
 
-        if GetEvent("underground") or GetEvent("current_safe_cover") or hud_delay_hide then
+        if dynamic_is_safe or hud_delay_hide then
             hide_hud()
         else
             show_hud()
@@ -255,7 +274,7 @@ function actor_on_update()
         points_table = {}
 		if dynamic_is_safe then
             dynamic_is_safe = false
-            SetEvent("underground", false)
+            SetEvent("current_safe_cover", false)
         end
 	end
 end

@@ -1,0 +1,80 @@
+function on_xml_read()
+	RegisterScriptCallback("on_xml_read", function(xml_file_name, xml_obj)
+		if xml_file_name == [[ui\ui_inventory.xml]]
+		or xml_file_name == [[ui\ui_inventory_16.xml]]
+		or xml_file_name == [[ui\ui_inventory_21.xml]]
+		then
+			local ratio = utils_xml.screen_ratio()
+			-- init values
+			local sorter_size = {
+				w = 318 * ratio,
+				h = 28
+			}
+			-- if gap is used, be sure to multiply by screen ratio
+			local btn_gap = 0-- * ratio
+			
+			-- get actual size from xml
+			local res_sorter = xml_obj:query("equipment > sorter")
+			if res_sorter[1] then
+				local el = res_sorter[1]
+				local sorter_attrs = xml_obj:getElementAttr(el)
+				sorter_size.w = tonumber(sorter_attrs.width)
+				sorter_size.h = tonumber(sorter_attrs.height)
+			end
+			
+			-- init attributes for new tabs sortning
+			local btn_attrs = {
+				[1]		= { hint= "ui_st_tab_all"		, texture= "ui_inGame2_btn_sort_all"		},
+				[2]		= { hint= "ui_st_tab_weapons"	, texture= "ui_inGame2_btn_sort_weapon"		},
+				[3]		= { hint= "ui_st_tab_armor"		, texture= "ui_inGame2_btn_sort_outfit"		},
+				[4]		= { hint= "ui_st_tab_ammo"		, texture= "ui_inGame2_btn_sort_ammo"		},
+				[5]		= { hint= "ui_st_tab_artefact"	, texture= "ui_inGame2_btn_sort_arty"		},
+				[6]		= { hint= "ui_st_tab_tools"		, texture= "ui_inGame2_btn_sort_utility"	},
+				[7]		= { hint= "ui_st_tab_food"		, texture= "ui_inGame2_btn_sort_food"		},
+				[8]		= { hint= "ui_st_tab_meds"		, texture= "ui_inGame2_btn_sort_meds"		},
+				[9]		= { hint= "ui_st_tab_upgrades"	, texture= "ui_inGame2_btn_sort_upgrades"	},
+				[10]	= { hint= "ui_st_tab_misc"		, texture= "ui_inGame2_btn_sort_misc"		},
+			}
+			local btn_size = {
+				w = sorter_size.h * ratio,
+				h = sorter_size.h
+			}
+			local btn_cnt	= #btn_attrs
+			-- initial position of the first button
+			local pos_x		= (sorter_size.w - (btn_size.w * btn_cnt + btn_gap * (btn_cnt - 1))) / 2
+			
+			for i=1,btn_cnt do
+				
+				-- last button does not need a gap
+				btn_gap				= (i == btn_cnt) and 0 or btn_gap
+				pos_x				= (i == 1) and pos_x or (pos_x + btn_size.w + btn_gap)
+				local st_hint		= btn_attrs[i].hint
+				local st_texture	= btn_attrs[i].texture
+				
+				-- change attributes and texture of existing buttons
+				local res = xml_obj:query("equipment > sorter > btn_"..i)
+				if res[1] then
+					local el = res[1]
+					xml_obj:setElementAttr(el, {x=pos_x, hint=st_hint})
+					-- local res = xml_obj:query("equipment > sorter > btn_"..i.." > texture")
+					-- if res[1] then
+						-- local el = res[1]
+						-- xml_obj:setText(el, st_texture)
+					-- end
+					xml_obj:setText(el.kids[1], st_texture)
+					
+				-- add missing xml button nodes
+				elseif res_sorter[1] then
+					local btn_xml_node = 
+					[[
+					<btn_]]..i..[[ x="]]..pos_x..[[" y="0" width="]]..btn_size.w..[[" height="]]..btn_size.h..[[" hint="]]..st_hint..[[" stretch="1">
+						<texture>]]..st_texture..[[</texture>
+					</btn_]]..i..[[>
+					]]
+					local el = res_sorter[1]
+					xml_obj:insertFromXMLString(btn_xml_node, el, i)
+				end
+			end
+		end
+	end)
+end

@@ -232,12 +232,6 @@ local intercepts = {
 	
 }
 
--- Kutez: Callback Priority System (https://github.com/themrdemonized/xray-monolith/pull/339)
-local next_index = {}
-for name,v in pairs(intercepts) do
-	next_index[name] = 1
-end
-
 -----------------------------------------------------------
 -- Global Callback Register
 -- param 1 - name as type<string> (ie. intercepts[name])
@@ -246,7 +240,6 @@ end
 function callback_add(name)
 	if (not intercepts[name]) then
 		intercepts[name] = {}
-		next_index[name] = 1
 	else
 		printf("![axr_main callback_add] callback %s already exists!",name)
 		callstack()
@@ -260,8 +253,7 @@ function callback_set(name,func_or_userdata)
 		return
 	end
 	if (intercepts[name]) then
-		intercepts[name][func_or_userdata] = next_index[name]
-		next_index[name] = next_index[name] + 1
+		intercepts[name][func_or_userdata] = true
 	else
 		printf("![axr_main callback_set] callback %s doesn't exist!",name)
 		callstack()
@@ -279,7 +271,7 @@ end
 
 function make_callback(name,...)
 	if (intercepts[name]) then
-		for func_or_userdata, v in spairs(intercepts[name], sort_func_values_ascend) do 
+		for func_or_userdata,v in pairs(intercepts[name]) do 
 			if (type(func_or_userdata) == "function") then 
 				func_or_userdata(...)
 			elseif (func_or_userdata[name]) then

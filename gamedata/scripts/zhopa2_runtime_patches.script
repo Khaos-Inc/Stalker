@@ -3345,7 +3345,7 @@ function M.zhopa2_note_vanilla_artifact_pickup(npc, artifact_id, section)
 end
 
 local function zhopa2_should_skip_overweight(npc)
-	return not zhopa2_loot_active(npc)
+	return false --not zhopa2_loot_active(npc)
 end
 
 local function zhopa2_should_skip_condlist(npc)
@@ -4481,6 +4481,11 @@ local function zhopa2_gather_item_replacement(original, force_selected)
 			zhopa2_reset_gather_state(st)
 			return
 		end
+		-- Add weight check here  
+		if utils_item.is_overweight(npc) then  
+    		zhopa2_reset_gather_state(st)  
+    	return  
+		end
 		if not force_pickup and not zhopa2_can_take_section(npc, itm, itm:section()) then
 			if original then
 				return original(npc, ...)
@@ -5189,6 +5194,10 @@ local function zhopa2_get_all_from_corpse_replacement(original)
 				SendScriptCallback("npc_on_get_all_from_corpse", npc, corpse, item, allowed)
 			end
 			if allowed then
+				-- Add weight check here  
+        		if utils_item.is_overweight(npc) then  
+            		return  
+        		end 
 				local value = zhopa2_item_value(section)
 				if items_value < 100 then
 					items_value = items_value + value / 30

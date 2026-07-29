@@ -39,9 +39,9 @@ local prot_stats = {
 
 ui_inventory.adj_arty_t = {
 	["radia"]		= 1,
-	["acid"]		= 10,
+	["acid"]		= 1,
 	["shock"]		= 1,
-	["fire"]		= 10,
+	["fire"]		= 1,
 	["psi"]			= 1,
 	["wound"]		= 1,
 	["strike"]		= 1,
@@ -53,9 +53,9 @@ local adj_arty_t = ui_inventory.adj_arty_t
 
 ui_inventory.adj_boost_t = {
 	["radia"]		= 1,
-	["acid"]		= 10,
+	["acid"]		= 1,
 	["shock"]		= 1,
-	["fire"]		= 10,
+	["fire"]		= 1,
 	["psi"]			= 1,
 	["wound"]		= 1,
 	["strike"]		= 1,
@@ -236,7 +236,7 @@ local og_inventory_recolor_stats = ui_inventory.UIInventory.RecolorStats
 function ui_inventory.UIInventory:RecolorStats()
 	og_inventory_recolor_stats(self)
 	
-	local clr_w				= clr_stats_t["w"]
+	local clr_w				= clr_stats_t.w
 	
 	local use_faction_color	= color_settings.stat_colors
 	local use_colored_stats	= color_settings.colored_stats
@@ -479,19 +479,19 @@ function ui_inventory.UIInventory:UpdateStatsBonus()
 		end
 		
 		local clr_stat = use_faction_color and self.faction_color or stat_colors[name]
-		local clr_bns = clr_stats_t["w"]
-		local clr_bar = use_colored_stats and clr_stat or clr_stats_t["w"]
+		local clr_bns = clr_stats_t.w
+		local clr_bar = use_colored_stats and clr_stat or clr_stats_t.w
 		
 		local val_bns = old
 		local val_bar = old
 		
 		if (new ~= old) then
 			if (new > old) then
-				clr_bns = clr_stats_t["g"]
+				clr_bns = clr_stats_t.p
 				val_bns = old
 				val_bar = new
 			else--if (new < old) then
-				clr_bns = clr_stats_t["r"]
+				clr_bns = clr_stats_t.n
 				val_bns = new
 				val_bar = old
 			end

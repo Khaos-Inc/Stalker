@@ -2,7 +2,6 @@ stealth_nvg_ps = {}
 local particles_t = {}
 local allow_upd = false
 local nvg_dbg = false
-local nvg_val = 0.15
 
 local nvg_rank_chance = {
 	["novice"] = 0,
@@ -31,10 +30,10 @@ function actor_on_update()
 		local npc = level.object_by_id(npc_id)
 		local npc_is_stalker = npc and IsStalker(npc)
 		-- play or move if stealth mcm, npc exist and night
-		if nvg_val > 0 and npc_is_stalker and is_night then
+		if stealth_mcm.get_config("nvg_val") > 0 and npc_is_stalker and is_night then
 			play_or_move_particles(npc, particles_t[npc_id])
 		-- stop playing if not stealth mcm or not night
-		elseif (nvg_val <= 0 or (not is_night)) then
+		elseif (stealth_mcm.get_config("nvg_val") <= 0 or (not is_night)) then
 			stop_if_playing(particles_t[npc_id])
 		-- stop playing if not npc and remove key
 		elseif (not npc_is_stalker) then
@@ -73,7 +72,7 @@ function sr_light.check_light(npc)
 	local hrs = level.get_time_hours() + level.get_time_minutes() / 60
 	local is_night = (hrs > 21 or hrs < 5)
 
-	if not (nvg_val > 0 and stealth_nvg_ps[npc:id()] and is_night) then
+	if not (stealth_mcm.get_config("nvg_val") > 0 and stealth_nvg_ps[npc:id()] and is_night) then
 		return scuffed_sr_light_patch(npc)
 	end
 
@@ -109,7 +108,7 @@ end
 
 function actor_on_first_update()		-- scared that keys will be removed from storage coz wont find game objects
 	local correct_game_ver = GAME_VERSION and string.find(GAME_VERSION, "1.5.2")
-	if (not correct_game_ver) or (nvg_val <= 0) then
+	if (not correct_game_ver) or (stealth_mcm.get_config("nvg_val") <= 0) then
 		empty_table(stealth_nvg_ps)
 		return
 	end

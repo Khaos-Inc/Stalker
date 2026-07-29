@@ -428,13 +428,6 @@ end
 
 function get_prop_layers(sec, cell, xml, t, settings)
     local axis = utils_xml.get_item_axis(sec)
-
-    -- demonized: HD Inventory Icons Framework
-    local icon_override = aaa_rax_icon_override_mcm and aaa_rax_icon_override_mcm.icon_override
-    local scale = icon_override and icon_override:section_exist(sec) and (icon_override:r_float_ex(sec, "inv_grid_scale") or 1) or SYS_GetParam(2, sec, "inv_grid_scale", 1)
-    axis.w = math.ceil(axis.w / scale)
-    axis.h = math.ceil(axis.h / scale)
-
     local prop_layers = {}
     local row_width = 0
     local row_index = 0
@@ -474,13 +467,6 @@ layer_functors.custom_layers = function(sec, cell, xml)
     local layer_info = groups[sec]
     if not layer_info then return {} end
     local axis = utils_xml.get_item_axis(sec)
-
-    -- demonized: HD Inventory Icons Framework
-    local icon_override = aaa_rax_icon_override_mcm and aaa_rax_icon_override_mcm.icon_override
-    local scale = icon_override and icon_override:section_exist(sec) and (icon_override:r_float_ex(sec, "inv_grid_scale") or 1) or SYS_GetParam(2, sec, "inv_grid_scale", 1)
-    axis.w = math.ceil(axis.w / scale)
-    axis.h = math.ceil(axis.h / scale)
-    
     local custom_layers = {}
     local scale = get_config(main_settings_path, "scale", 1.1)
     
@@ -535,7 +521,7 @@ layer_functors.prop_layers = function(sec, cell, xml)
     return prop_layers
 end
 
-local function add_texture_layer(self, ele, base, tbl)
+function add_texture_layer(self, ele, base, tbl)
     local ratio = utils_xml.screen_ratio()
     local grid_size = self.grid_size
     local x = tbl.x or 0
@@ -650,9 +636,8 @@ function get_upgrade_val(sec, prop)
     return upgr_props[prop][sec] and 1 or 0
 end
 
-function is_artefact(sec)  
-    return IsItem("artefact", sec) and (SYS_GetParam(0, sec, "kind", "na") ~= "i_attach")  
-        and (SYS_GetParam(0, sec, "1icon_layer") == nil)  -- skip container artifacts  
+function is_artefact(sec)
+    return IsItem("artefact", sec) and (SYS_GetParam(0, sec, "kind", "na") ~= "i_attach") -- attachments have the dumb upgrade icon
 end
 
 function is_consumable(sec)

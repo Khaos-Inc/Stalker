@@ -1,5 +1,4 @@
 local enable_debug = false
-
 local print_tip = function(s, ...)
     local f = print_tip or printf
     if enable_debug then
@@ -384,35 +383,4 @@ function get_surface_normal(pos, dir, ray_props, visualize_props, initial_ray)
         VisualizeRay(pos1, vector():set(pos1):add(cross), nil, time, nil, nil, color)
     end
     return cross
-end
-
-function geo_los(npc, target)
-    if not npc or not target then return false end
-
-    local from = npc:position()
-    local to = target:position()
-    local dir = vector():set(to):sub(from)
-    local dist_to_target = dir:magnitude()
-    dir:normalize()
-
-    local ray = geometry_ray({
-        ray_range = dist_to_target,
-        flags = 2,
-        ignore_object = npc
-    })
-
-    local res = ray:get(from, dir)
-    if not res or not res.success then
-        return true
-    end
-
-    local obj = res.object
-    if not obj then
-        return true
-    end
-
-    if obj:id() == target:id() then
-        return true
-    end
-    return false
 end
