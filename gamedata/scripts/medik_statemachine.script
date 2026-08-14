@@ -1,0 +1,751 @@
+local SECTION = medik_config.SECTION
+local DET_SLOT = 9
+
+local ATT_NAME = "medik"
+local ANM_RAISE = "anm_show"
+local ANM_IDLE = "anm_idle"
+local ANM_SPRINT = "anm_sprint"
+local ANM_LOWER = "anm_hide"
+local ANM_SPEED = 1.0
+local TYPE_HUD = 0
+
+local ATT_BONE = "l_hand"
+local UI_BONE = 3
+
+local DEBOUNCE_MS = 150
+local PENDING_SHOW_MS = 800
+local RETRY_MS = 100
+local SEAM_MS = 120
+local WATCHDOG_GRACE_MS = 3000
+local FALLBACK_ANM_MS = 800
+local ATTACH_FRAC = 0.4
+
+local ST_IDLE, ST_RAISING, ST_HELD, ST_LOWERING = 0, 1, 2, 3
+
+local TEARDOWN_BINDS = {}
+do
+    local names = {
+        "kWPN_1",
+        "kWPN_2",
+        "kWPN_3",
+        "kWPN_4",
+        "kWPN_5",
+        "kWPN_6",
+        "kWPN_NEXT",
+        "kACTIVE_JOBS",
+        "kSAFEMODE",
+        "kWPN_FIRE",
+        "kSHOW_DETECTOR",
+        "kSHOWDETECTOR",
+        "kDETECTOR",
+        "kNIGHT_VISION",
+    }
+    for _, name in ipairs(names) do
+        if key_bindings and key_bindings[name] then
+            TEARDOWN_BINDS[key_bindings[name]] = true
+        end
+    end
+end
+
+local SOFT_TEARDOWN = {}
+do
+    local names = {
+        "kTORCH",
+        "kCAM_ZOOM_IN",
+        "kWPN_RELOAD",
+    }
+    for _, name in ipairs(names) do
+        if key_bindings and key_bindings[name] then
+            SOFT_TEARDOWN[key_bindings[name]] = true
+        end
+    end
+end
+
+local SOFT_REPLAY_TIMEOUT_MS = 3000
+
+local state = ST_IDLE
+local state_deadline = 0
+local retry_at = 0
+local idle_hold_start = 0
+local last_toggle = 0
+local sprint_cancel_at = 0
+local in_vehicle = false
+local aiming = false
+local raise_weapon_id = nil
+local raise_two_handed = false
+local held_anm = nil
+local raise_sec = nil
+local require_release = false
+local recycle_pending = false
+local attach_at = 0
+local attached = false
+local att_model = nil
+local prev_held = false
+local pending_show_until = 0
+local stuck_blocked = false
+local recover_stage = 0
+local recover_slot = nil
+local recover_deadline = 0
+local pending_melee = false
+local pending_soft = nil
+local melee_deadline = 0
+
+local function get_device()
+    return (db.actor and db.actor:object(SECTION)) or nil
+end
+
+local function get_att()
+    if not (db.actor and db.actor.get_attachment) then
+        return nil
+    end
+    return db.actor:get_attachment(ATT_NAME)
+end
+
+local function two_handed_active()
+    local wpn = db.actor:active_item()
+    if not wpn then
+        return false
+    end
+    local sec = wpn:section()
+    local parent = ini_sys:r_string_ex(sec, "parent_section")
+    if (ini_sys:r_float_ex(parent or sec, "single_handed") or 0) ~= 1 then
+        return true
+    end
+    local slot = ini_sys:r_float_ex(parent or sec, "slot") or 1
+    return slot == 2 or slot == 3
+end
+
+local function sprint_key_held()
+    if not (bind_to_dik and key_bindings and key_state and key_bindings.kSPRINT_TOGGLE) then
+        return false
+    end
+    local dik = bind_to_dik(key_bindings.kSPRINT_TOGGLE)
+    return dik ~= nil and key_state(dik) == 1
+end
+
+local function sprinting()
+    if IsMoveState ~= nil and IsMoveState("mcSprint") then
+        return true
+    end
+    return sprint_key_held()
+end
+
+local function toggle_mode()
+    return medik_mcm ~= nil and medik_mcm.activation_mode ~= nil and medik_mcm.activation_mode() == "toggle"
+end
+
+local function stop_motion()
+    if not (game and game.stop_hud_motion) then
+        return
+    end
+    if game.hud_motion_allowed and game.hud_motion_allowed() then
+        return
+    end
+    game.stop_hud_motion()
+end
+
+local function hud_motion_ok()
+    if not (db.actor and db.actor:active_item()) then
+        return false
+    end
+    if not (game and game.hud_motion_allowed and game.hud_motion_allowed()) then
+        return false
+    end
+    return true
+end
+
+local function play_hand(anm, mix)
+    if not hud_motion_ok() then
+        return nil
+    end
+    if mix == nil then
+        mix = true
+    end
+    local sec = medik_config.hand_section()
+    local len = game.play_hud_motion(1, sec, anm, mix, ANM_SPEED) or 0
+    if len <= 0 then
+        len = FALLBACK_ANM_MS
+    end
+    return len
+end
+
+local function no_hand_blend()
+    local wpn = db.actor:active_item()
+    if not wpn then
+        return false
+    end
+    local sec = wpn:section()
+    local set = medik_config.NO_HAND_BLEND
+    if set then
+        if set[sec] then
+            return true
+        end
+        local parent = ini_sys:r_string_ex(sec, "parent_section")
+        if parent and set[parent] then
+            return true
+        end
+    end
+    local pats = medik_config.NO_HAND_BLEND_PATTERN
+    if pats then
+        for _, p in ipairs(pats) do
+            if sec:find(p) then
+                return true
+            end
+        end
+    end
+    return false
+end
+
+local function begin_hand_raise(now)
+    raise_sec = medik_config.hand_section()
+    local len = play_hand(ANM_RAISE, not no_hand_blend())
+    if not len then
+        return false
+    end
+    attach_at = now + math.floor(len * ATTACH_FRAC)
+    state = ST_RAISING
+    state_deadline = now + math.max(len - SEAM_MS, RETRY_MS)
+    return true
+end
+
+local function apply_skin(att)
+    if att.set_model then
+        local model = medik_config.skin_model()
+        if att_model ~= model then
+            att:set_model(model)
+            att_model = model
+        end
+        return true
+    end
+    return false
+end
+  
+local function create_device()  
+    if att then  
+        return att  
+    end  
+    att = db.actor:add_attachment(ATT_NAME, medik_config.MODEL)  
+    if not att then  
+        return nil  
+    end  
+    att:set_type(TYPE_HUD)  
+    att:set_parent_bone(ATT_BONE)  
+    att:set_ui("medik_ui.get_UI")  
+    att:set_ui_bone(UI_BONE)  
+    apply_skin(att)  
+    return att  
+end  
+  
+local function attach()  
+    local a = create_device()  
+    if not a then  
+        return false  
+    end  
+    local t = medik_config.transforms  
+    a:set_position(t.model_pos[1], t.model_pos[2], t.model_pos[3])  
+    a:set_rotation(t.model_rot[1], t.model_rot[2], t.model_rot[3])  
+    a:set_scale(t.model_scale)  
+    a:set_ui_position(t.ui_pos[1], t.ui_pos[2], t.ui_pos[3])  
+    a:set_ui_rotation(t.ui_rot[1], t.ui_rot[2], t.ui_rot[3])  
+    a:set_ui_scale(t.ui_scale, t.ui_scale, t.ui_scale)  
+    attached = true  
+    return true  
+end  
+  
+local function detach()  
+    if att then  
+        att:set_scale(0) 
+    end  
+    attached = false  
+end
+
+function reapply_skin()
+    local att = get_att()
+    if not att then
+        return false
+    end
+    return apply_skin(att)
+end
+
+function reapply_transforms()
+    local att = get_att()
+    if not att then
+        return false
+    end
+    local t = medik_config.transforms
+    att:set_position(t.model_pos[1], t.model_pos[2], t.model_pos[3])
+    att:set_rotation(t.model_rot[1], t.model_rot[2], t.model_rot[3])
+    att:set_scale(t.model_scale)
+    att:set_ui_position(t.ui_pos[1], t.ui_pos[2], t.ui_pos[3])
+    att:set_ui_rotation(t.ui_rot[1], t.ui_rot[2], t.ui_rot[3])
+    att:set_ui_scale(t.ui_scale, t.ui_scale, t.ui_scale)
+    return true
+end
+
+local function can_show()
+    if state ~= ST_IDLE then
+        return false
+    end
+    if medik_detector.stowing() then
+        return false
+    end
+    if not (db.actor and db.actor:alive()) then
+        return false
+    end
+    if in_vehicle then
+        return false
+    end
+    if medik_util.blocking_ui_open() then
+        return false
+    end
+    if sprinting() and two_handed_active() then
+        return false
+    end
+    if aiming and two_handed_active() then
+        return false
+    end
+    if not get_device() then
+        return false
+    end
+    if attached then  
+        return false  
+    end  
+    return true
+end
+
+local function sprint_toggle_mode()
+    return get_console_cmd ~= nil and get_console_cmd(1, "g_sprint_toggle") == true
+end
+
+local function cancel_toggled_sprint(now)
+    local dik = bind_to_dik
+        and key_bindings
+        and key_bindings.kSPRINT_TOGGLE
+        and bind_to_dik(key_bindings.kSPRINT_TOGGLE)
+    if dik and dik >= 0 and now - sprint_cancel_at > DEBOUNCE_MS then
+        level.press_action(dik)
+        sprint_cancel_at = now
+    end
+end
+
+local function show(now)
+    if now - last_toggle < DEBOUNCE_MS then
+        return
+    end
+    if state == ST_IDLE and sprinting() and two_handed_active() and not medik_util.blocking_ui_open() then
+        if sprint_toggle_mode() then
+            cancel_toggled_sprint(now)
+            if pending_show_until == 0 then
+                pending_show_until = now + PENDING_SHOW_MS
+            end
+        end
+        return
+    end
+    if not can_show() then
+        return
+    end
+    last_toggle = now
+    idle_hold_start = 0
+    local wpn = db.actor:active_item()
+    if not wpn then
+        if medik_emptyhands and medik_emptyhands.try_draw and medik_emptyhands.try_draw() then
+            if pending_show_until == 0 then
+                pending_show_until = now + PENDING_SHOW_MS
+            end
+        end
+        return
+    end
+    if game and game.actor_weapon_lowered and game.actor_weapon_lowered() then
+        if not (game.hud_motion_allowed and game.hud_motion_allowed()) then
+            stop_motion()
+        end
+        game.actor_lower_weapon(false)
+        if pending_show_until == 0 then
+            pending_show_until = now + PENDING_SHOW_MS
+        end
+        return
+    end
+    if not hud_motion_ok() then
+        if stuck_blocked then
+            local slot = db.actor:active_slot()
+            if slot and slot > 0 then
+                stuck_blocked = false
+                pending_show_until = 0
+                recover_slot = slot
+                recover_stage = 1
+                recover_deadline = now + 3000
+                db.actor:activate_slot(0)
+                return
+            end
+        end
+        if pending_show_until == 0 then
+            stop_motion()
+            pending_show_until = now + PENDING_SHOW_MS
+        end
+        return
+    end
+    if medik_detector.stow_active() then
+        if pending_show_until == 0 then
+            pending_show_until = now + PENDING_SHOW_MS
+        end
+        return
+    end
+    if not begin_hand_raise(now) then
+        return
+    end
+    pending_show_until = 0
+    raise_weapon_id = wpn:id()
+    raise_two_handed = two_handed_active()
+end
+
+local function hard_teardown(latch)
+    stop_motion()
+    detach()
+    state = ST_IDLE
+    raise_weapon_id = nil
+    raise_two_handed = false
+    held_anm = nil
+    raise_sec = nil
+    idle_hold_start = 0
+    pending_show_until = 0
+    recycle_pending = false
+    attach_at = 0
+    retry_at = 0
+    if medik_emptyhands and medik_emptyhands.put_away then
+        medik_emptyhands.put_away()
+    end
+    if latch then
+        require_release = true
+        pending_soft = nil
+    end
+end
+
+local function start_lower()
+    last_toggle = time_global()
+    attach_at = 0
+    stop_motion()
+    local len = play_hand(ANM_LOWER)
+    if not len then
+        hard_teardown(true)
+        return
+    end
+    state = ST_LOWERING
+    state_deadline = time_global() + len
+end
+
+local function held_anim()
+    if sprinting() and not raise_two_handed then
+        return ANM_SPRINT
+    end
+    return ANM_IDLE
+end
+
+local function held_refire(now)
+    local anm = held_anim()
+    local len = play_hand(anm)
+    if not len then
+        retry_at = now + RETRY_MS
+        return false
+    end
+    held_anm = anm
+    state_deadline = now + math.max(len - SEAM_MS, RETRY_MS)
+    retry_at = 0
+    return true
+end
+
+function actor_on_update()
+    local key = (medik_mcm and medik_mcm.hold_key_dik()) or DIK_keys.MOUSE_4
+    local held = key_state(key) == 1
+    local pressed = held and not prev_held
+    prev_held = held
+
+    if not (db.actor and db.actor:alive()) then
+        if state ~= ST_IDLE then
+            hard_teardown(true)
+        end
+        return
+    end
+
+    medik_detector.tick()
+
+    local now = time_global()
+
+    if pending_melee then
+        if now > melee_deadline then
+            pending_melee = false
+        elseif db.actor:active_slot() == 0 and not db.actor:active_item() then
+            if quickdraw and quickdraw.hit_key then
+                quickdraw.hit_key()
+            end
+            pending_melee = false
+        else
+            return
+        end
+    end
+
+    if state ~= ST_IDLE then
+        if attached and not get_att() then
+            hard_teardown(true)
+            return
+        end
+        local wpn = db.actor:active_item()
+        if not wpn or wpn:id() ~= raise_weapon_id then
+            hard_teardown(true)
+            return
+        end
+        if not get_device() then
+            hard_teardown(true)
+            return
+        end
+        if in_vehicle or medik_util.blocking_ui_open() then
+            hard_teardown(true)
+            return
+        end
+        if now > state_deadline + WATCHDOG_GRACE_MS then
+            hard_teardown(true)
+            return
+        end
+    end
+
+    if state == ST_IDLE then
+        if pending_soft then
+            if now > pending_soft.deadline then
+                pending_soft = nil
+            elseif recover_stage == 0 and hud_motion_ok() then
+                local dik = pending_soft.dik
+                pending_soft = nil
+                if level and level.press_action and level.release_action then
+                    level.press_action(dik)
+                    level.release_action(dik)
+                end
+            end
+        end
+        if recover_stage == 1 then
+            if not db.actor:active_item() then
+                db.actor:activate_slot(recover_slot)
+                recover_stage = 2
+            elseif now > recover_deadline then
+                recover_stage = 0
+            end
+            return
+        elseif recover_stage == 2 then
+            if db.actor:active_item() and hud_motion_ok() then
+                recover_stage = 0
+                pending_show_until = now + PENDING_SHOW_MS
+            elseif now > recover_deadline then
+                recover_stage = 0
+                return
+            else
+                return
+            end
+        end
+        if stuck_blocked and hud_motion_ok() then
+            stuck_blocked = false
+        end
+        if pending_show_until > 0 then
+            if now > pending_show_until then
+                pending_show_until = 0
+                if
+                    db.actor:active_item()
+                    and not hud_motion_ok()
+                    and not (game and game.actor_weapon_lowered and game.actor_weapon_lowered())
+                then
+                    stuck_blocked = true
+                end
+            else
+                show(now)
+                if state ~= ST_IDLE then
+                    pending_show_until = 0
+                    return
+                end
+            end
+        end
+        if toggle_mode() then
+            idle_hold_start = 0
+            if not held then
+                require_release = false
+            end
+            if pressed then
+                show(now)
+            end
+            return
+        end
+        if held then
+            if require_release then
+                return
+            end
+            if idle_hold_start == 0 then
+                idle_hold_start = now
+            end
+            local delay_ms = ((medik_mcm and medik_mcm.hold_delay_sec()) or 0) * 1000
+            if now - idle_hold_start >= delay_ms then
+                show(now)
+            end
+        else
+            idle_hold_start = 0
+            require_release = false
+        end
+        return
+    end
+
+    if state == ST_RAISING or state == ST_HELD then
+        medik_detector.stow_active()
+        local sprint_lower = sprinting() and raise_two_handed
+        local wants_lower
+        if toggle_mode() then
+            wants_lower = pressed or sprint_lower or (aiming and raise_two_handed)
+        else
+            wants_lower = not held or sprint_lower or (aiming and raise_two_handed)
+        end
+        local lower_now = wants_lower
+            and not (medik_reposition_gui and medik_reposition_gui.is_open and medik_reposition_gui.is_open())
+        if lower_now then
+            if sprint_lower then
+                hard_teardown(false)
+            else
+                start_lower()
+            end
+            return
+        end
+    end
+
+    if state == ST_RAISING then
+        if attach_at > 0 and now >= attach_at then
+            attach_at = 0
+            if not attach() then
+                hard_teardown(true)
+                return
+            end
+        end
+        if now >= state_deadline then
+            if recycle_pending then
+                start_lower()
+                return
+            end
+            if now >= retry_at then
+                stop_motion()
+                if held_refire(now) then
+                    state = ST_HELD
+                end
+            end
+        end
+    elseif state == ST_HELD then
+        if held_anm ~= held_anim() or (now >= state_deadline and now >= retry_at) then
+            stop_motion()
+            held_refire(now)
+        end
+    elseif state == ST_LOWERING then
+        if now >= state_deadline then
+            if recycle_pending then
+                recycle_pending = false
+                stop_motion()
+                detach()
+                if not begin_hand_raise(now) then
+                    hard_teardown(true)
+                end
+            else
+                hard_teardown(false)
+            end
+        end
+    end
+end
+
+function recycle_hand()
+    if state == ST_HELD then
+        recycle_pending = true
+        start_lower()
+    elseif state == ST_RAISING and raise_sec ~= medik_config.hand_section() then
+        recycle_pending = true
+    end
+end
+
+function is_raised()
+    return state == ST_RAISING or state == ST_HELD
+end
+
+function on_sleep()
+    if state ~= ST_IDLE then
+        hard_teardown(true)
+    end
+end
+
+function on_attach_vehicle()
+    in_vehicle = true
+end
+
+function on_detach_vehicle()
+    in_vehicle = false
+end
+
+function on_weapon_zoom_in()
+    aiming = true
+end
+
+function on_weapon_zoom_out()
+    aiming = false
+end
+
+function on_mouse_wheel(direction)
+    if state ~= ST_IDLE then
+        hard_teardown(true)
+    end
+end
+
+function on_key_press(key)
+    if state == ST_IDLE then
+        return
+    end
+    if not dik_to_bind then
+        return
+    end
+    local bind = dik_to_bind(key)
+    if bind and key_bindings and bind == key_bindings.kCUSTOM24 then
+        hard_teardown(true)
+        pending_melee = true
+        melee_deadline = time_global() + 1500
+        return
+    end
+    if bind and SOFT_TEARDOWN[bind] then
+        if state == ST_LOWERING then
+            return
+        end
+        start_lower()
+        if state == ST_LOWERING then
+            pending_soft = { dik = key, deadline = time_global() + SOFT_REPLAY_TIMEOUT_MS }
+        end
+        return
+    end
+    if bind and TEARDOWN_BINDS[bind] then
+        hard_teardown(true)
+    end
+end
+
+function on_first_update()
+    state = ST_IDLE
+    in_vehicle = false
+    aiming = false
+    idle_hold_start = 0
+    require_release = false
+    recycle_pending = false
+    pending_show_until = 0
+    stuck_blocked = false
+    recover_stage = 0
+    recover_slot = nil
+    pending_melee = false
+    pending_soft = nil
+    medik_detector.reset()
+    attach_at = 0
+    retry_at = 0
+    raise_sec = nil
+    raise_weapon_id = nil
+    raise_two_handed = false
+    prev_held = false
+    stop_motion()
+    if db.actor then
+        detach()
+        local in_slot = db.actor:item_in_slot(DET_SLOT)
+        if in_slot and in_slot:section() == SECTION then
+            db.actor:move_to_ruck(in_slot)
+        end
+    end
+end

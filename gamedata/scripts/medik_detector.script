@@ -1,0 +1,48 @@
+local SECTION = medik_config.SECTION
+local DET_SLOT = 9
+local STOW_TIMEOUT_MS = 2000
+
+local stow_id = nil
+local stow_deadline = 0
+
+function stowing()
+    return stow_id ~= nil
+end
+
+function reset()
+    stow_id = nil
+end
+
+function stow_active()
+    if stow_id then
+        return true
+    end
+    if not (db.actor and db.actor.active_detector) then
+        return false
+    end
+    local det = db.actor:active_detector()
+    if det and det:section() ~= SECTION then
+        db.actor:move_to_ruck(det)
+        stow_id = det:id()
+        stow_deadline = time_global() + STOW_TIMEOUT_MS
+        return true
+    end
+    return false
+end
+
+function tick()
+    if not stow_id then
+        return
+    end
+    if time_global() > stow_deadline then
+        reset()
+        return
+    end
+    if not db.actor:item_in_slot(DET_SLOT) then
+        local det = level.object_by_id(stow_id)
+        if det and db.actor:object(det:section()) then
+            db.actor:move_to_slot(det, DET_SLOT)
+        end
+        reset()
+    end
+end

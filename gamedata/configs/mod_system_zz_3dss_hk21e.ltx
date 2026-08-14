@@ -1,10 +1,32 @@
 ![wpn_hk21]
 >scopes		= bossxe, bravo4, c-more, c79, devo, e0t2, e0t2_magd, echo1, ekp8_18, gauss_sight, he510, kemper, leupold, marchf, mark8_rmr, mepro, p1x42, pn23, point_aimpro, ps320, razorhd, romeo4, spec_alt, specter, t12, triji
 
-lewd_lens_hide_enabled       = true
-lewd_lens_hide_bone          = lens
-lewd_lens_hide_delays        = 0.1,0
-lewd_lens_hide_aim_mode      = true, false, false
+use_alt_aim_hud		= true
+
+;---------------------------------------------SCRIPTED CANTED SIGHTS-----------------------------------
+canted_sights = canted_deltapoint, canted_docter, canted_t12
+
+canted_sights_bone  = wpn_body
+canted_sights_pos   = 0, 0.072572, 0.121704
+canted_sights_rot   = 0, 0, 0
+canted_sights_scale = 1.13, 1.13, 1.13
+
+open_slots 			 = 1
+
+canted_aim_pos_canted_deltapoint = -0.074011, -0.050296, 0.02
+canted_aim_rot_canted_deltapoint = 0.00676, -0.00343, 0.825
+
+canted_aim_pos_canted_docter     = -0.074141, -0.045276, 0.02
+canted_aim_rot_canted_docter     = 0.00676, -0.00343, 0.825
+
+canted_aim_pos_canted_t12        = -0.074019, -0.050632, 0.02
+canted_aim_rot_canted_t12        = 0.00676, -0.00343, 0.825
+;------------------------------------------------------------------------------------------------------
+
+lens_hide_enabled       = true
+lens_hide_bone          = lens
+lens_hide_delays        = 0.1,0
+lens_hide_aim_mode      = true, false, false
 ![wpn_hk21_hud]
         hands_orientation                = 0.192432, -0.382296, 0
         hands_orientation_16x9           = 0.192432, -0.382296, 0
@@ -16,13 +38,18 @@ lewd_lens_hide_aim_mode      = true, false, false
         aim_hud_offset_rot               = -0.00676, 0.00343, 0
         aim_hud_offset_rot_16x9          = -0.00676, 0.00343, 0
 
+        aim_hud_offset_alt_pos           = -0.082495, -0.075994, 0.04
+        aim_hud_offset_alt_pos_16x9      = -0.082495, -0.075994, 0.04
+        aim_hud_offset_alt_rot           = -0.00676, 0.00343, 0.7
+        aim_hud_offset_alt_rot_16x9      = -0.00676, 0.00343, 0.7
+		
         base_hud_offset_pos              = 0.002547, -0.026445, 0.132316
         base_hud_offset_pos_16x9         = 0.002547, -0.026445, 0.132316
         base_hud_offset_rot              = 0, 0, 0.120613
         base_hud_offset_rot_16x9         = 0, 0, 0.120613
 
-        lowered_hud_offset_pos           = 0.051758, -0.027197, 0.054125
-        lowered_hud_offset_pos_16x9      = 0.051758, -0.027197, 0.054125
+        lowered_hud_offset_pos           = 0.062202, -0.038859, 0.112439
+        lowered_hud_offset_pos_16x9      = 0.062202, -0.038859, 0.112439
         lowered_hud_offset_rot           = 0.126384, -0.56331, 0.104411
         lowered_hud_offset_rot_16x9      = 0.126384, -0.56331, 0.104411
 		

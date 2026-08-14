@@ -36,6 +36,7 @@
         <!--actor_dialog>information_about_stash_barmen1</actor_dialog-->	
 		<!---------- mlr ----------->		
         <actor_dialog>dm_broker_dialog</actor_dialog>
+		<actor_dialog>bar_barmen_minigame_21_point_dialog</actor_dialog>
         <actor_dialog>actor_break_dialog</actor_dialog>
         <!----------g0dl1ke--------->
 		<actor_dialog>devushka_4_help</actor_dialog>
@@ -135,6 +136,7 @@
 		<actor_dialog>story_dolg_lider_mlr</actor_dialog>
 		<actor_dialog>dm_ordered_task_dialog</actor_dialog>
 		<actor_dialog>dm_ordered_task_completed_dialog</actor_dialog>
+		<actor_dialog>minigames_military</actor_dialog>
 		<actor_dialog>actor_break_dialog</actor_dialog>
     </specific_character>
 
@@ -198,7 +200,7 @@
 	
 <!-------------------------- ZONEGUARD ---------------------- -->
     <specific_character id="bar_dolg_general_zoneguard_stalker" team_default = "1">
-		<name>GENERATE_NAME_senior_sergeant</name>
+		<name>GENERATE_NAME_stalker</name>
 		<icon>ui_inGame2_Dolg_3</icon>
 		<map_icon x="4" y="0"></map_icon>
 		<bio>Опытный сталкер. Детальная информация отсутствует.</bio>
@@ -265,7 +267,9 @@
 		<actor_dialog>dm_ordered_task_dialog</actor_dialog>
 		<actor_dialog>drx_sl_change_faction_dialog</actor_dialog>
 		<actor_dialog>buy_route</actor_dialog>
+		<actor_dialog>minigames_military</actor_dialog>
 		<actor_dialog>actor_break_dialog</actor_dialog>
+		<actor_dialog>armor_exchange_insider_duty</actor_dialog>
     </specific_character>
 
 	
@@ -280,7 +284,7 @@
 		<terrain_sect>stalker_terrain</terrain_sect>
 		<!--mechanic_mode>1</mechanic_mode-->
 		<snd_config>characters_voice\human\dolg_1\</snd_config>
-		<rank>8692</rank>
+		<rank>1692</rank>
 		<reputation>376</reputation>
 		<money min="1000000" max="1000000" infinitive="1"/>
 		<visual>actors\stalker_dolg\stalker_dolg_mehanik</visual>
@@ -388,7 +392,7 @@
 		<terrain_sect>stalker_terrain</terrain_sect>
 		<money min="100000" max="100000" infinitive="1"/>
 		
-		<rank>11000</rank>
+		<rank>1000</rank>
 		<reputation>1500</reputation>
  
 		<visual>actors\stalker_dolg\stalker_dolg_2a_face_medicine</visual>
@@ -418,7 +422,7 @@
 <!-- Guide at the Bar -->
 	<specific_character id="guid_bar_stalker_navigator" team_default="1">
 		<name>guid_bar_stalker_navigator_name</name>
-		<icon>ui_d_neutral_stalker_neutral_navigator</icon>
+		<icon>ui_inGame2_neutral_2_mask</icon>
 		<map_icon x="1" y="0"></map_icon>
 		<bio>No information is available.</bio>
 		
@@ -543,7 +547,7 @@
 	<!-- mlr -->
     <specific_character id="bar_arena_stalker_1" team_default = "1">
 		<name>GENERATE_NAME_stalker</name>
-		<icon>ui_d_neutral_stalker_neutral_1</icon>
+		<icon>ui_inGame2_neutral_1</icon>
 		<map_icon x="0" y="0"></map_icon>
 		<bio>bar_arena_stalker</bio>
 		<class>bar_arena_stalker_1</class>
@@ -566,7 +570,7 @@
 <!-----------------STALKER 2---------------------------------->
     <specific_character id="bar_arena_stalker_2" team_default = "1">
 		<name>GENERATE_NAME_stalker</name>
-		<icon>ui_d_neutral_stalker_neutral2g_mask</icon>
+		<icon>ui_inGame2_neutral_2_mask</icon>
 		<map_icon x="1" y="0"></map_icon>
 		<bio>bar_arena_stalker</bio>
 		<class>bar_arena_stalker_2</class>
@@ -588,7 +592,7 @@
 <!--------------------STALKER 3_1 and 3_2---------------------->
     <specific_character id="bar_arena_stalker_3_1" team_default = "1">
 		<name>GENERATE_NAME_stalker</name>
-		<icon>ui_d_neutral_stalker_neutral_2_mas3</icon>
+		<icon>ui_inGame2_neutral_2_mask</icon>
 		<map_icon x="1" y="0"></map_icon>
 		<bio>bar_arena_stalker</bio>
 		<class>bar_arena_stalker_3_1</class>
@@ -609,7 +613,7 @@
     
     <specific_character id="bar_arena_stalker_3_2" team_default = "1">
 		<name>GENERATE_NAME_stalker</name>
-		<icon>ui_d_neutral_stalker_neutral2g_mask</icon>
+		<icon>ui_inGame2_neutral_2_mask</icon>
 		<map_icon x="1" y="0"></map_icon>
 		<bio>bar_arena_stalker</bio>
 		<class>bar_arena_stalker_3_2</class>
@@ -696,7 +700,7 @@
     <!----friends---->
     <specific_character id="bar_arena_stalker_4_4" team_default = "1">
     <name>GENERATE_NAME_stalker</name>
-    <icon>ui_d_neutral_stalker_neutral1a</icon>
+    <icon>ui_inGame2_neutral_1</icon>
     <map_icon x="0" y="0"></map_icon>
     <bio>bar_arena_stalker</bio>
     <class>bar_arena_stalker_4_4</class>
@@ -718,7 +722,7 @@
     
     <specific_character id="bar_arena_stalker_4_5" team_default = "1">
     <name>GENERATE_NAME_stalker</name>
-    <icon>ui_d_neutral_stalker_neutral1b</icon>
+    <icon>ui_inGame2_neutral_1</icon>
     <map_icon x="0" y="0"></map_icon>
     <bio>bar_arena_stalker</bio>
     <class>bar_arena_stalker_4_5</class>
@@ -912,7 +916,7 @@
 <!------ STALKER 7 ------------------->
     <specific_character id="bar_arena_stalker_7" team_default = "1">
     <name>GENERATE_NAME_stalker</name>
-    <icon>ui_d_neutral_stalker_neutral_4</icon>
+    <icon>ui_inGame2_neutral_4</icon>
     <map_icon x="1" y="0"></map_icon>
     <bio>sim_stalker_master_bio</bio>
     <class>bar_arena_stalker_7</class>
@@ -935,7 +939,7 @@
 <!-----------STALKER 8_1,8_2,8_3,8_4-------------------->
     <specific_character id="bar_arena_stalker_8_1" team_default = "1">
     <name>GENERATE_NAME_stalker</name>
-    <icon>ui_d_neutral_stalker_neutral_4</icon>
+    <icon>ui_inGame2_neutral_4</icon>
     <map_icon x="1" y="0"></map_icon>
     <bio>sim_stalker_master_bio</bio>
     <class>bar_arena_stalker_8_1</class>
@@ -956,7 +960,7 @@
     
     <specific_character id="bar_arena_stalker_8_2" team_default = "1">
     <name>GENERATE_NAME_stalker</name>
-    <icon>ui_d_neutral_stalker_neutral_4</icon>
+    <icon>ui_inGame2_neutral_4</icon>
     <map_icon x="1" y="0"></map_icon>
     <bio>sim_stalker_master_bio</bio>
     <class>bar_arena_stalker_8_2</class>
@@ -977,7 +981,7 @@
     
     <specific_character id="bar_arena_stalker_8_3" team_default = "1">
     <name>GENERATE_NAME_stalker</name>
-    <icon>ui_d_neutral_stalker_neutral_4</icon>
+    <icon>ui_inGame2_neutral_4</icon>
     <map_icon x="1" y="0"></map_icon>
     <bio>sim_stalker_master_bio</bio>
     <class>bar_arena_stalker_8_3</class>
@@ -998,7 +1002,7 @@
     
     <specific_character id="bar_arena_stalker_8_4" team_default = "1">
     <name>GENERATE_NAME_stalker</name>
-    <icon>ui_d_neutral_stalker_neutral_4</icon>
+    <icon>ui_inGame2_neutral_4</icon>
     <map_icon x="1" y="0"></map_icon>
     <bio>sim_stalker_master_bio</bio>
     <class>bar_arena_stalker_8_4</class>
@@ -1074,7 +1078,7 @@
 	
 	<specific_character id="total_stalker_left_one" team_default = "1">
 	<name>GENERATE_NAME_stalker</name>
-	<icon>ui_d_neutral_stalker_neutral_2_mask</icon>
+	<icon>ui_inGame2_neutral_2_mask</icon>
 	<map_icon x="1" y="0"></map_icon>
 	<bio>An experienced stalker. No detailed information is available.</bio>
 	<class>total_stalker_left_one</class>
@@ -1099,7 +1103,7 @@
 	
 	<specific_character id="total_stalker_right_one" team_default = "1">
 	<name>GENERATE_NAME_stalker</name>
-	<icon>ui_d_neutral_stalker_neutral_2</icon>
+	<icon>ui_inGame2_neutral_2</icon>
 	<map_icon x="1" y="0"></map_icon>
 	<bio>An experienced stalker. No detailed information is available.</bio>
 	<class>total_stalker_right_one</class>
@@ -1124,7 +1128,7 @@
 	
 	<specific_character id="total_group_stalkers_1" team_default = "1">
 	<name>GENERATE_NAME_stalker</name>
-	<icon>ui_d_neutral_stalker_neutral2c</icon>
+	<icon>ui_inGame2_neutral_2</icon>
 	<map_icon x="1" y="0"></map_icon>
 	<bio>An experienced stalker. No detailed information is available.</bio>
 	<class>total_group_stalkers_1</class>
@@ -1149,7 +1153,7 @@
 	
 	<specific_character id="total_group_stalkers_2" team_default = "1">
 	<name>GENERATE_NAME_stalker</name>
-	<icon>ui_d_neutral_stalker_neutral2d</icon>
+	<icon>ui_inGame2_neutral_2</icon>
 	<map_icon x="1" y="0"></map_icon>
 	<bio>An experienced stalker. No detailed information is available.</bio>
 	<class>total_group_stalkers_2</class>
@@ -1174,7 +1178,7 @@
 
 	<specific_character id="total_group_stalkers_3" team_default = "1">
 	<name>GENERATE_NAME_stalker</name>
-	<icon>ui_d_neutral_stalker_neutral1c_gas</icon>
+	<icon>ui_inGame2_neutral_1_gas</icon>
 	<map_icon x="1" y="0"></map_icon>
 	<bio>An experienced stalker. No detailed information is available.</bio>
 	<class>total_group_stalkers_3</class>
@@ -1199,7 +1203,7 @@
 
 	<specific_character id="total_group_stalkers_4" team_default = "1">
 	<name>GENERATE_NAME_stalker</name>
-	<icon>ui_d_neutral_stalker_neutral1f_mask</icon>
+	<icon>ui_inGame2_neutral_1_mask</icon>
 	<map_icon x="1" y="0"></map_icon>
 	<bio>An experienced stalker. No detailed information is available.</bio>
 	<class>total_group_stalkers_4</class>
@@ -1324,7 +1328,7 @@
 
 	<specific_character id="total_stalker_one_n" team_default = "1">
 	<name>GENERATE_NAME_stalker</name>
-	<icon>ui_d_neutral_stalker_neutral2b_mask</icon>
+	<icon>ui_inGame2_neutral_2_mask</icon>
 	<map_icon x="1" y="0"></map_icon>
 	<bio>An experienced stalker. No detailed information is available.</bio>
 	<class>total_stalker_one_n</class>
@@ -1373,7 +1377,7 @@
 	
 	<specific_character id="total_stalker_one_with_mutant" team_default = "1">
 	<name>GENERATE_NAME_stalker</name>
-	<icon>ui_d_neutral_stalker_neutral2b_mask</icon>
+	<icon>ui_inGame2_neutral_2_mask</icon>
 	<map_icon x="1" y="0"></map_icon>
 	<bio>An experienced stalker. No detailed information is available.</bio>
 	<class>total_stalker_one_with_mutant</class>

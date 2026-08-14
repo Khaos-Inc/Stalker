@@ -63,11 +63,11 @@ function track(args)
 	-- If a valid command is specified...
 	if type(args.cmd) == "string" then
 	-- Get bounds of console variable
-		local bounds = get_console():get_variable_bounds(args.cmd)
-			if bounds.min and bounds.max then
-				args.min = args.min or bounds.min
-				args.max = args.max or bounds.max
-			end
+	local bounds = get_console():get_variable_bounds(args.cmd)
+	if bounds.min and bounds.max then
+		args.min = args.min or bounds.min
+		args.max = args.max or bounds.max
+	end
 	else
 		-- Otherwise, nil it to ensure data sanity
 		args.cmd = nil

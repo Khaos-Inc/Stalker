@@ -1,13 +1,39 @@
-;==============================================================================
 ![wpn_amb17]
 >scopes			= pk6, uh2, romeo8, hco, aim_acro, gee36, gauss_sight, t12, echo1, c79, razorhd, cortex, ado, uh1_magd, e0t2_magd
 <scopes			= point_aimpro, deltapoint, eot, rmr
 
-lewd_lens_hide_enabled       = true
-lewd_lens_hide_bone          = lens
-lewd_lens_hide_delays        = 0.1,0
-lewd_lens_hide_aim_mode      = true, false, false
+lens_hide_enabled       = true
+lens_hide_bone          = lens
+lens_hide_delays        = 0.1,0
+lens_hide_aim_mode      = true, false, false
 
+;---------------------------------------------SCRIPTED CANTED SIGHTS-----------------------------------
+canted_sights = canted_kac, canted_deltapoint, canted_docter, canted_t12
+
+canted_sights_bone         = wpn_body
+canted_sights_pos   = 0.001600, 0.075300, -0.008675
+canted_sights_rot   = 0, 0, 0
+canted_sights_scale = 1.100000, 1.100000, 1.100000
+front_iron_pos      = 0.001600, 0.075300, 0.301325
+front_iron_rot      = 0, 0, 0
+front_iron_scale    = 1.100000, 1.100000, 1.100000
+
+open_slots 			 = 1, 2
+canted_rds_position1             = 0.001600, 0.075300, -0.000175
+canted_rds_position2             = 0.001600, 0.075300, 0.239825
+
+canted_aim_pos_canted_kac        = -0.106106, -0.081617, -0.05
+canted_aim_rot_canted_kac        = -0.000222, -0.000167, 0.825
+
+canted_aim_pos_canted_deltapoint = -0.105693, -0.07227, -0.05
+canted_aim_rot_canted_deltapoint = -0.000222, -0.000167, 0.825
+
+canted_aim_pos_canted_docter     = -0.105915, -0.06747, -0.05
+canted_aim_rot_canted_docter     = -0.000222, -0.000167, 0.825
+
+canted_aim_pos_canted_t12        = -0.10574, -0.072619, -0.05
+canted_aim_rot_canted_t12        = -0.000222, -0.000167, 0.825
+;------------------------------------------------------------------------------------------------------
 ![wpn_amb17_hud]
 fire_point			= 0,0,0
 fire_bone			= muzzle
@@ -21,16 +47,20 @@ fire_bone			= muzzle
         aim_hud_offset_rot               = 5.2e-05, 0.000239, 0
         aim_hud_offset_rot_16x9          = 5.2e-05, 0.000239, 0
 		
-        aim_hud_offset_alt_pos           = -0.001513, 0.016862, -0.012882
-        aim_hud_offset_alt_pos_16x9      = -0.001513, 0.016862, -0.012882
-        aim_hud_offset_alt_rot           = 5.2e-05, 0.000239, -0.45
-        aim_hud_offset_alt_rot_16x9      = 5.2e-05, 0.000239, -0.45		
+        aim_hud_offset_alt_pos           = -0.109087, -0.095565, -0.012882
+        aim_hud_offset_alt_pos_16x9      = -0.109087, -0.095565, -0.012882
+        aim_hud_offset_alt_rot           = 5.2e-05, 0.000239, 0.9
+        aim_hud_offset_alt_rot_16x9      = 5.2e-05, 0.000239, 0.9	
 
         base_hud_offset_pos              = -0.034756, -0.022403, 0.029359
         base_hud_offset_pos_16x9         = -0.034756, -0.022403, 0.029359
         base_hud_offset_rot              = 0, 0, 0.100307
         base_hud_offset_rot_16x9         = 0, 0, 0.100307
-		
+
+        lowered_hud_offset_pos           = 0.081155, -0.037134, -0.0114
+        lowered_hud_offset_pos_16x9      = 0.081155, -0.037134, -0.0114
+        lowered_hud_offset_rot           = -0.063313, -0.647063, 0.4
+        lowered_hud_offset_rot_16x9      = -0.063313, -0.647063, 0.4	
 ;---------------------------------------------------SIGHTS---------------------------------------------------
 ![wpn_amb17_c-more]
 1icon_layer		= c-more_x
@@ -286,6 +316,8 @@ item_visual                              = dynamics\weapons\wpn_amb17\wpn_amb17_
 [wpn_amb17_gee36]:wpn_amb17, gee36_s
 hud                         = wpn_amb17_gee36_hud
 
+open_slots				= 2
+
 1icon_layer                  = gee36_x
 1icon_layer_x                = 65
 1icon_layer_y                = -21
@@ -305,8 +337,8 @@ hud                         = wpn_amb17_gauss_sight_hud
 
 [wpn_amb17_gauss_sight_hud]:wpn_amb17_hud
 item_visual                              = dynamics\weapons\wpn_amb17\wpn_amb17_gauss_hud.ogf
-        aim_hud_offset_pos               = -0.084224, 0.008493, -0.116289
-        aim_hud_offset_pos_16x9          = -0.084224, 0.008493, -0.116289
+        aim_hud_offset_pos               = -0.084224, 0.008493, -0.09148
+        aim_hud_offset_pos_16x9          = -0.084224, 0.008493, -0.09148
 		
 ;---------------------------------------------------------------------------------------
 [wpn_amb17_c79]:wpn_amb17, c79_s

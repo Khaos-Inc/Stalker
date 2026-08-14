@@ -74,7 +74,7 @@ target_functor = general_fetch_task
 task_complete_descr = killer_bridge_trader_mlr_task_2_fetch_finish
 ;precondition = true
 repeat_timeout = 8000
-on_complete = %=complete_task_inc_goodwill(50:killer) =fetch_reward_and_remove(killer_bridge_trader_mlr_task_2_fetch:0.6) =reward_random_item(toolkit_u:sewing_kit_h:af_aac) =reward_stash(true) =inc_task_stage(killer_bridge_trader_mlr_task_2)%
+on_complete = %=complete_task_inc_goodwill(50:killer) =fetch_reward_and_remove(killer_bridge_trader_mlr_task_2_fetch:0.6) =reward_random_item(toolkit_u:sewing_kit_h:af_night_star) =reward_stash(true) =inc_task_stage(killer_bridge_trader_mlr_task_2)%
 on_fail = %=fail_task_dec_goodwill(25:killer)%
 condlist_0 = {!task_giver_alive(killer_bridge_trader_mlr_task_2)} fail
 

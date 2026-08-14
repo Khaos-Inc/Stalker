@@ -288,6 +288,7 @@ end
 -- storage based on ID but verified by object name
 function get_game_object_state(obj,create_if_dont_exist)
 	local id = obj:id()
+	if not id then return end
 	if not (m_data.game_object[id]) then
 		if not (create_if_dont_exist) then
 			return 

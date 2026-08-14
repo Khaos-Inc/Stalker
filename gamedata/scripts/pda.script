@@ -20,14 +20,21 @@ function set_active_subdialog(section)
 	end
 
 	-- For NPCs PDA
-	local obj = db.actor:item_in_slot(8)
-	local sec = obj and obj:section()
-	if item_device.device_npc_pda[sec] then
-		return ui_pda_npc_tab.get_ui( se_load_var(obj:id(), obj:name(), "info") )
-	end
+	if (section == "eptNPC") then
+		local obj = db.actor:active_item() or db.actor:item_in_slot(14)
+		if obj then
+			local sec = obj and obj:section()
+			if item_device.device_npc_pda[sec] then
+				return ui_pda_npc_tab.get_ui( se_load_var(obj:id(), obj:name(), "info") )
+			end
+		end
+		
+		-- Fallback to normal UI
+		ActorMenu.get_pda_menu():SetActiveSubdialog("eptTasks")
+		return 
 	
 	-- For Actor PDA
-	if (section == "eptTasks") then 
+	elseif (section == "eptTasks") then 
 	
 	elseif (section == "eptRanking") then 
 	
@@ -514,7 +521,11 @@ end
 function coc_rankings_set_name(index)
 	local se_obj = coc_ranking_list[index] ~= nil and alife_object(coc_ranking_list[index])
 	if (se_obj) then
-		return strformat("%s. %s",se_obj.id == AC_ID and actor_rank_place or index,se_obj:character_name())
+		if se_obj:character_name() then
+			return strformat("%s. %s",se_obj.id == AC_ID and actor_rank_place or index,se_obj:character_name())
+		else
+			return ""
+		end
 	end
 	return ""
 end

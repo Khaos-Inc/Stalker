@@ -98,17 +98,21 @@ end
 
 -- obj:kill() doesn't work on mutants?
 function kill_if_online_mutant(id, random_push)
-	local o = id and level.object_by_id(id)
-	if o and o:alive() then
-		
-		local h = hit()
-		h.power = 1
-		h.direction = random_push and vector():set(math.random(3)-2,0.2,math.random(3)-2) or vector(0,-1,0)
-		h.bone = "bip01_spine"
-		h.draftsman = o
-		h.impulse = random_push and math.random(8000,12000) or 0
-		h.type = hit.wound
-		o:hit(h)
+	if id then
+		local o = level.object_by_id(id)
+		if o then
+			if not o:has_info("mutant_to_kill") then
+				o:give_info_portion("mutant_to_kill")
+				local h = hit()
+				h.power = 10
+				h.direction = random_push and vector():set(math.random(3)-2,0.2,math.random(3)-2) or vector(0,-1,0)
+				h.bone = "bip01_spine"
+				h.draftsman = o
+				h.impulse = random_push and math.random(1,2) or 0
+				h.type = hit.wound
+				o:hit(h)
+			end
+		end
 	end
 end
 
@@ -198,7 +202,6 @@ status_recover_item_on_corpse[0] = function(tsk, task_id)
 			kill_if_online_mutant(v, true)
 		end
 	end
-	
 	if not id_exists(tdata.item_id) then return "fail" end
 	
 	if has_item(tdata.item_id) then

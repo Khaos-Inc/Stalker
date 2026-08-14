@@ -1,0 +1,453 @@
+-- HUD-style UI panel for scripted canted irons aim placement.
+
+GUI = nil
+
+local groups = { "pos", "rot" }
+local axes = { "x", "y", "z" }
+local group_names = { pos = "Position", rot = "Rotation" }
+local selected_group = 1
+local selected_axis = 1
+local jump_1 = 1
+local jump_2 = 0.01
+local jump_3 = 0.025
+local jump = jump_1
+local drag_sensitivity = 0.1
+local saved_hud_crosshair = nil
+local saved_crosshair_show_always = nil
+
+class "ScriptedCantedIronsAimUI" (CUIScriptWnd)
+
+local function read_console_bool(cmd)
+	local ok, value = pcall(get_console_cmd, 1, cmd)
+	if ok then return value end
+	return nil
+end
+
+local function cmd_bool(value)
+	if value == true or value == 1 or value == "on" or value == "true" then return "on" end
+	return "off"
+end
+
+local function enable_engine_crosshair()
+	if saved_hud_crosshair == nil then saved_hud_crosshair = read_console_bool("hud_crosshair") end
+	if saved_crosshair_show_always == nil then saved_crosshair_show_always = read_console_bool("g_crosshair_show_always") end
+	exec_console_cmd("hud_crosshair on")
+	exec_console_cmd("g_crosshair_show_always on")
+end
+
+local function restore_engine_crosshair()
+	if saved_hud_crosshair ~= nil then exec_console_cmd("hud_crosshair " .. cmd_bool(saved_hud_crosshair)) end
+	if saved_crosshair_show_always ~= nil then exec_console_cmd("g_crosshair_show_always " .. cmd_bool(saved_crosshair_show_always)) end
+	saved_hud_crosshair = nil
+	saved_crosshair_show_always = nil
+end
+
+function ScriptedCantedIronsAimUI:__init() super()
+	self.disable_drag = true
+	self.mouse_hold = nil
+	self.pos = nil
+	self.input_signature = nil
+	self.last_aim_precision_level = scripted_canted_irons.get_aim_precision_level and scripted_canted_irons.get_aim_precision_level() or 0
+	self:InitControls()
+end
+
+function ScriptedCantedIronsAimUI:__finalize() end
+
+function ScriptedCantedIronsAimUI:InitControls()
+	self:SetWndRect(Frect():set(0, 0, 1024, 768))
+	self:SetAutoDelete(true)
+
+	self.xml = CScriptXmlInit()
+	local xml = self.xml
+	xml:ParseFile("scripted_canted_irons_aim_ui.xml")
+
+	self.my_wnd = xml:InitStatic("background", self)
+	self.text_mode = xml:InitTextWnd("background:text2", self.my_wnd)
+	self.text_mode:SetTextAlignment(0)
+	self.text_pos = xml:InitTextWnd("background:text_pos", self.my_wnd)
+	self.text_pos:SetTextAlignment(0)
+	self.text_rot = xml:InitTextWnd("background:text_rot", self.my_wnd)
+	self.text_rot:SetTextAlignment(0)
+
+	self.input_pos_x = xml:InitEditBox("background:input_pos_x", self.my_wnd)
+	self.input_pos_y = xml:InitEditBox("background:input_pos_y", self.my_wnd)
+	self.input_pos_z = xml:InitEditBox("background:input_pos_z", self.my_wnd)
+	self.input_rot_x = xml:InitEditBox("background:input_rot_x", self.my_wnd)
+	self.input_rot_y = xml:InitEditBox("background:input_rot_y", self.my_wnd)
+	self.input_rot_z = xml:InitEditBox("background:input_rot_z", self.my_wnd)
+	self:Register(self.input_pos_x, "input_pos_x")
+	self:Register(self.input_pos_y, "input_pos_y")
+	self:Register(self.input_pos_z, "input_pos_z")
+	self:Register(self.input_rot_x, "input_rot_x")
+	self:Register(self.input_rot_y, "input_rot_y")
+	self:Register(self.input_rot_z, "input_rot_z")
+
+	self.btn_mode_pos = xml:Init3tButton("background:button_mode_pos", self.my_wnd)
+	self.btn_mode_pos:TextControl():SetText("Position")
+	self:Register(self.btn_mode_pos, "button_mode_pos")
+	self:AddCallback("button_mode_pos", ui_events.BUTTON_CLICKED, self.OnModePosition, self)
+
+	self.btn_mode_rot = xml:Init3tButton("background:button_mode_rot", self.my_wnd)
+	self.btn_mode_rot:TextControl():SetText("Rotation")
+	self:Register(self.btn_mode_rot, "button_mode_rot")
+	self:AddCallback("button_mode_rot", ui_events.BUTTON_CLICKED, self.OnModeRotation, self)
+
+	self.btn_reset_pos = xml:Init3tButton("background:button_reset_pos", self.my_wnd)
+	self.btn_reset_pos:TextControl():SetText("Reset Pos")
+	self:Register(self.btn_reset_pos, "button_reset_pos")
+	self:AddCallback("button_reset_pos", ui_events.BUTTON_CLICKED, self.OnResetPosition, self)
+
+	self.btn_reset_rot = xml:Init3tButton("background:button_reset_rot", self.my_wnd)
+	self.btn_reset_rot:TextControl():SetText("Reset Rot")
+	self:Register(self.btn_reset_rot, "button_reset_rot")
+	self:AddCallback("button_reset_rot", ui_events.BUTTON_CLICKED, self.OnResetRotation, self)
+
+	self.btn_copy_transform = xml:Init3tButton("background:button_copy_transform", self.my_wnd)
+	self.btn_copy_transform:TextControl():SetText("Copy")
+	self:Register(self.btn_copy_transform, "button_copy_transform")
+	self:AddCallback("button_copy_transform", ui_events.BUTTON_CLICKED, self.OnCopyTransform, self)
+
+	self.btn_paste_transform = xml:Init3tButton("background:button_paste_transform", self.my_wnd)
+	self.btn_paste_transform:TextControl():SetText("Paste")
+	self:Register(self.btn_paste_transform, "button_paste_transform")
+	self:AddCallback("button_paste_transform", ui_events.BUTTON_CLICKED, self.OnPasteTransform, self)
+
+	self.aim_precision_label = xml:InitStatic("background:aim_precision_label", self.my_wnd)
+	self.aim_precision_label:TextControl():SetText("Precision")
+	self.aim_precision_slider = xml:InitTrackBar("background:aim_precision_slider", self.my_wnd)
+	self.aim_precision_slider:SetOptFBounds(0, 10)
+	self.aim_precision_slider:SetStep(1)
+	self.aim_precision_slider:SetFValue(self.last_aim_precision_level)
+	self.aim_precision_value = xml:InitTextWnd("background:aim_precision_value", self.my_wnd)
+
+	self.btn_save = xml:Init3tButton("background:button_save_params", self.my_wnd)
+	self.btn_save:TextControl():SetText("Save to LTX")
+	self:Register(self.btn_save, "button_save_params")
+	self:AddCallback("button_save_params", ui_events.BUTTON_CLICKED, self.OnSave, self)
+
+	self:UpdateModeLabel(true)
+end
+
+local function current_group()
+	return groups[selected_group] or "pos"
+end
+
+local function current_axis()
+	return axes[selected_axis] or "x"
+end
+
+local function step_for(group, extra_k)
+	return scripted_canted_irons.get_aim_step(group) * jump * (extra_k or 1)
+end
+
+local function adjust(group, axis, state, extra_k)
+	local amount = step_for(group, extra_k)
+	if not state then amount = -amount end
+	scripted_canted_irons.adjust_aim_value(group, axis, amount)
+end
+
+local function adjust_group(group, state)
+	adjust(group, "x", state)
+	adjust(group, "y", state)
+	adjust(group, "z", state)
+end
+
+local function set_box(box, value)
+	if box then box:SetText(string.format("%.6f", value or 0)) end
+end
+
+local function read_box(box, fallback)
+	if not box then return fallback end
+	local text = box:GetText()
+	if text then text = string.gsub(tostring(text), ",", ".") end
+	local value = tonumber(text)
+	if value == nil then return fallback end
+	return value
+end
+
+local function input_signature(self)
+	return table.concat({
+		tostring(self.input_pos_x:GetText()),
+		tostring(self.input_pos_y:GetText()),
+		tostring(self.input_pos_z:GetText()),
+		tostring(self.input_rot_x:GetText()),
+		tostring(self.input_rot_y:GetText()),
+		tostring(self.input_rot_z:GetText())
+	}, "|")
+end
+
+function ScriptedCantedIronsAimUI:RefreshInputs()
+	local aim = scripted_canted_irons.get_active_aim_values and scripted_canted_irons.get_active_aim_values()
+	local pos = aim and aim.pos or { x = 0, y = 0, z = 0 }
+	local rot = aim and aim.rot or { x = 0, y = 0, z = 0 }
+	set_box(self.input_pos_x, pos.x or 0)
+	set_box(self.input_pos_y, pos.y or 0)
+	set_box(self.input_pos_z, pos.z or 0)
+	set_box(self.input_rot_x, rot.x or 0)
+	set_box(self.input_rot_y, rot.y or 0)
+	set_box(self.input_rot_z, rot.z or 0)
+	self.input_signature = input_signature(self)
+end
+
+function ScriptedCantedIronsAimUI:ApplyInputs(refresh, require_all)
+	local aim = scripted_canted_irons.get_active_aim_values and scripted_canted_irons.get_active_aim_values()
+	local pos = aim and aim.pos or { x = 0, y = 0, z = 0 }
+	local rot = aim and aim.rot or { x = 0, y = 0, z = 0 }
+	local px = read_box(self.input_pos_x, nil)
+	local py = read_box(self.input_pos_y, nil)
+	local pz = read_box(self.input_pos_z, nil)
+	local rx = read_box(self.input_rot_x, nil)
+	local ry = read_box(self.input_rot_y, nil)
+	local rz = read_box(self.input_rot_z, nil)
+	if require_all and (px == nil or py == nil or pz == nil or rx == nil or ry == nil or rz == nil) then return false end
+	local ok = scripted_canted_irons.set_active_aim_values(
+		px or pos.x or 0,
+		py or pos.y or 0,
+		pz or pos.z or 0,
+		rx or rot.x or 0,
+		ry or rot.y or 0,
+		rz or rot.z or 0
+	)
+	if ok then self.input_signature = input_signature(self) end
+	if refresh ~= false then self:UpdateModeLabel(true) end
+	return ok
+end
+
+function ScriptedCantedIronsAimUI:PollInputs()
+	local signature = input_signature(self)
+	if signature == self.input_signature then return end
+	self:ApplyInputs(false, true)
+end
+
+function ScriptedCantedIronsAimUI:UpdateModeLabel(refresh_inputs)
+	local group = current_group()
+	self.text_mode:SetText(group_names[group] .. " | " .. scripted_canted_irons.get_active_aim_label())
+	self.text_pos:SetText("Pos")
+	self.text_rot:SetText("Rot")
+	if self.aim_precision_value then
+		local level = scripted_canted_irons.get_aim_precision_level and scripted_canted_irons.get_aim_precision_level() or 0
+		self.aim_precision_value:SetText(level == 0 and "Normal" or tostring(level))
+	end
+	if refresh_inputs then self:RefreshInputs() end
+end
+
+function ScriptedCantedIronsAimUI:OnModePosition()
+	selected_group = 1
+	self:UpdateModeLabel(false)
+end
+
+function ScriptedCantedIronsAimUI:OnModeRotation()
+	selected_group = 2
+	self:UpdateModeLabel(false)
+end
+
+function ScriptedCantedIronsAimUI:SwitchParam(state, vert)
+	if vert then
+		selected_group = selected_group + (state and 1 or -1)
+		if selected_group > #groups then selected_group = 1 end
+		if selected_group < 1 then selected_group = #groups end
+	else
+		selected_axis = selected_axis + (state and 1 or -1)
+		if selected_axis > #axes then selected_axis = 1 end
+		if selected_axis < 1 then selected_axis = #axes end
+	end
+	self:UpdateModeLabel(false)
+end
+
+function ScriptedCantedIronsAimUI:OnResetPosition()
+	scripted_canted_irons.execute_aim_command("reset_pos")
+	self:UpdateModeLabel(true)
+end
+
+function ScriptedCantedIronsAimUI:OnResetRotation()
+	scripted_canted_irons.execute_aim_command("reset_rot")
+	self:UpdateModeLabel(true)
+end
+
+function ScriptedCantedIronsAimUI:OnCopyTransform()
+	self:ApplyInputs(false)
+	scripted_canted_irons.execute_aim_command("copy_transform")
+	self:UpdateModeLabel(true)
+end
+
+function ScriptedCantedIronsAimUI:OnPasteTransform()
+	scripted_canted_irons.execute_aim_command("paste_transform")
+	self:UpdateModeLabel(true)
+end
+
+function ScriptedCantedIronsAimUI:OnSave()
+	self:ApplyInputs(false)
+	scripted_canted_irons.execute_aim_command("save_ltx")
+	self:UpdateModeLabel(true)
+end
+
+function ScriptedCantedIronsAimUI:OnKeyboard(dik, keyboard_action)
+	local res = CUIScriptWnd.OnKeyboard(self, dik, keyboard_action)
+	if res ~= false then return res end
+
+	if dik == DIK_keys.MOUSE_1 or dik == DIK_keys.MOUSE_2 then
+		if keyboard_action == ui_events.WINDOW_KEY_PRESSED then
+			self.mouse_hold = dik
+			self.disable_drag = false
+		elseif keyboard_action == ui_events.WINDOW_KEY_RELEASED then
+			self.disable_drag = true
+			self.pos = nil
+			self.mouse_hold = nil
+		end
+		return true
+	end
+
+	if keyboard_action ~= ui_events.WINDOW_KEY_PRESSED then return res end
+	if dik == DIK_keys.DIK_NUMPAD8 then
+		adjust(current_group(), current_axis(), true)
+		self:UpdateModeLabel(true)
+	elseif dik == DIK_keys.DIK_NUMPAD2 then
+		adjust(current_group(), current_axis(), false)
+		self:UpdateModeLabel(true)
+	elseif dik == DIK_keys.DIK_NUMPAD9 then
+		adjust_group(current_group(), true)
+		self:UpdateModeLabel(true)
+	elseif dik == DIK_keys.DIK_NUMPAD3 then
+		adjust_group(current_group(), false)
+		self:UpdateModeLabel(true)
+	elseif dik == DIK_keys.DIK_UP then
+		self:SwitchParam(false, true)
+	elseif dik == DIK_keys.DIK_DOWN then
+		self:SwitchParam(true, true)
+	elseif dik == DIK_keys.DIK_RIGHT then
+		self:SwitchParam(true, false)
+	elseif dik == DIK_keys.DIK_LEFT then
+		self:SwitchParam(false, false)
+	elseif dik == DIK_keys.DIK_NUMPADENTER then
+		self:OnSave()
+	elseif dik == DIK_keys.DIK_DELETE then
+		if current_group() == "pos" then self:OnResetPosition() else self:OnResetRotation() end
+	elseif dik == DIK_keys.DIK_ESCAPE then
+		close_ui()
+	end
+	return true
+end
+
+function ScriptedCantedIronsAimUI:On_Drag()
+	if self.disable_drag then return end
+	if not self.pos then self.pos = GetCursorPosition() end
+	local pos = GetCursorPosition()
+	local diff_y = pos.y - self.pos.y
+	local diff_x = pos.x - self.pos.x
+	local rounded_diff_y = math.abs(round_idp(diff_y, 4)) * device().width / 1920 * drag_sensitivity
+	local rounded_diff_x = math.abs(round_idp(diff_x, 4)) * device().width / 1920 * drag_sensitivity
+	if rounded_diff_x == 0 and rounded_diff_y == 0 then return end
+
+	local group = current_group()
+	if self.mouse_hold == DIK_keys.MOUSE_1 then
+		if group == "rot" then
+			if diff_y > 0 then adjust("rot", "x", false, rounded_diff_y) elseif diff_y < 0 then adjust("rot", "x", true, rounded_diff_y) end
+			if diff_x > 0 then adjust("rot", "y", false, rounded_diff_x) elseif diff_x < 0 then adjust("rot", "y", true, rounded_diff_x) end
+		else
+			if diff_y < 0 then adjust("pos", "y", true, rounded_diff_y) elseif diff_y > 0 then adjust("pos", "y", false, rounded_diff_y) end
+			if diff_x > 0 then adjust("pos", "x", true, rounded_diff_x) elseif diff_x < 0 then adjust("pos", "x", false, rounded_diff_x) end
+		end
+	elseif self.mouse_hold == DIK_keys.MOUSE_2 then
+		if diff_y < 0 then adjust(group, "z", true, rounded_diff_y) elseif diff_y > 0 then adjust(group, "z", false, rounded_diff_y) end
+	end
+	self.pos = pos
+	self:UpdateModeLabel(true)
+end
+
+function ScriptedCantedIronsAimUI:Update()
+	CUIScriptWnd.Update(self)
+	if key_state(DIK_keys.DIK_LSHIFT) == 1 then
+		jump = jump_2
+	elseif key_state(DIK_keys.DIK_LMENU) == 1 then
+		jump = jump_3
+	else
+		jump = jump_1
+	end
+	if self:IsShown() then
+		enable_engine_crosshair()
+		if self.aim_precision_slider then
+			local level = math.floor(self.aim_precision_slider:GetFValue() + 0.5)
+			if level ~= self.last_aim_precision_level then
+				self.last_aim_precision_level = level
+				if scripted_canted_irons.set_aim_precision_level then scripted_canted_irons.set_aim_precision_level(level) end
+				self:UpdateModeLabel(false)
+			end
+		end
+		self:PollInputs()
+	end
+	self:On_Drag()
+	if not self:IsShown() then return end
+end
+
+local function editors_enabled()
+	return not (z_3d_scopes_mcm and z_3d_scopes_mcm.get_config)
+		or z_3d_scopes_mcm.get_config("canted_sight_editors") ~= false
+end
+
+function show_ui()
+	if not editors_enabled() then return end
+	if GUI == nil then
+		GUI = ScriptedCantedIronsAimUI()
+	end
+	if GUI and not GUI:IsShown() then
+		enable_engine_crosshair()
+		GUI:ShowDialog(false)
+		Register_UI("ScriptedCantedIronsAimUI", "scripted_canted_irons_aim_ui", GUI)
+		GUI:UpdateModeLabel(true)
+	end
+end
+
+function open_ui()
+	show_ui()
+end
+
+function close_ui()
+	if GUI and GUI:IsShown() then
+		GUI:HideDialog()
+		Unregister_UI("ScriptedCantedIronsAimUI")
+		GUI = nil
+		restore_engine_crosshair()
+	end
+end
+
+local function on_key_press(key)
+	local shift_down = (key_state(DIK_keys.DIK_LSHIFT) or 0) ~= 0 or (key_state(DIK_keys.DIK_RSHIFT) or 0) ~= 0
+	if key == DIK_keys.DIK_DIVIDE and shift_down then
+		show_ui()
+	end
+end
+
+
+local cancel_anims = {
+anm_idle = true,
+anm_idle_0 = true,
+anm_idle_1 = true,
+anm_idle_2 = true,
+anm_idle_variant1 = true,
+anm_idle_variant2 = true,
+anm_idle_empty = true,
+anm_idle_aim = true,
+anm_idle_g = true,
+anm_idle_g_aim = true,
+anm_idle_w_gl = true,
+anm_idle_w_gl_aim = true,
+anm_idle_empty_w_gl = true,
+anm_idle_empty_w_gl_aim	= true,
+anm_bore = true,
+anm_idle_g = true,
+anm_bore_aim = true
+}
+
+local function actor_on_hud_animation_play(anm_table)
+	if not (anm_table and anm_table.anm_name) then return end
+	if GUI and GUI:IsShown() and cancel_anims[anm_table.anm_name] then
+		anm_table.anm_speed = 0.000000000000001
+	end
+end
+function on_game_start()
+	RegisterScriptCallback("actor_on_hud_animation_play", actor_on_hud_animation_play)
+	RegisterScriptCallback("on_key_press", on_key_press)
+end
+
+
+

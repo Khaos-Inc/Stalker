@@ -1,5 +1,8 @@
 ![wpn_fal_aus]
+parent_section = wpn_fal_aus
 !hud_fov
+
+use_alt_aim_hud				 = true
 
 ![wpn_fal_aus_hud]
 anm_shots               	= fal_aus_eft_ins_shoot_3dss, shoot
@@ -20,17 +23,31 @@ fire_point		= 0, 0, 0
         aim_hud_offset_pos_16x9          = -0.093282, 0.023424, -0.05
         aim_hud_offset_rot               = 4.5e-05, -9.7e-05, 0.011671
         aim_hud_offset_rot_16x9          = 4.5e-05, -9.7e-05, 0.011671
+
+        aim_hud_offset_alt_pos           = -0.09402, -0.138506, 0
+        aim_hud_offset_alt_pos_16x9      = -0.09402, -0.138506, 0
+        aim_hud_offset_alt_rot           = 4.5e-05, -9.7e-05, 1
+        aim_hud_offset_alt_rot_16x9      = 4.5e-05, -9.7e-05, 1
 		
-        base_hud_offset_pos              = -0.046199, -0.037684, 0.059977
-        base_hud_offset_pos_16x9         = -0.046199, -0.037684, 0.059977
-        base_hud_offset_rot              = 0, 0, 0.12232
-        base_hud_offset_rot_16x9         = 0, 0, 0.12232
+        lowered_hud_offset_pos           = 0.073008, -0.03811, 0.011097
+        lowered_hud_offset_pos_16x9      = 0.073008, -0.03811, 0.011097
+        lowered_hud_offset_rot           = 0.077591, -0.706942, 0.137899
+        lowered_hud_offset_rot_16x9      = 0.077591, -0.706942, 0.137899
+		
+        base_hud_offset_pos              = -0.046449, -0.035753, 0.060559
+        base_hud_offset_pos_16x9         = -0.046449, -0.035753, 0.060559
+        base_hud_offset_rot              = 0, 0, 0.101836
+        base_hud_offset_rot_16x9         = 0, 0, 0.101836
 		
 ![wpn_fal_aus_kit_aus_tri]:acog_s
-lewd_lens_hide_enabled       = true
-lewd_lens_hide_bone          = lens
-lewd_lens_hide_delays        = 0.1,0
-lewd_lens_hide_aim_mode      = true, false, false
+parent_section = wpn_fal_aus_kit_aus_tri
+
+scopes =
+
+lens_hide_enabled       = true
+lens_hide_bone          = lens
+lens_hide_delays        = 0.1,0
+lens_hide_aim_mode      = true, false, false
 ![wpn_fal_aus_kit_aus_tri_hud]
         item_orientation                 = 88.81778, -60.462535, -87.443014
         item_position                    = 0.003536, -0.007162, -0.002224
@@ -50,16 +67,20 @@ lewd_lens_hide_aim_mode      = true, false, false
         aim_hud_offset_alt_rot           = 4.5e-05, -9.7e-05, 0.825
         aim_hud_offset_alt_rot_16x9      = 4.5e-05, -9.7e-05, 0.825
 		
-        base_hud_offset_pos              = -0.046199, -0.037684, 0.059977
-        base_hud_offset_pos_16x9         = -0.046199, -0.037684, 0.059977
-        base_hud_offset_rot              = 0, 0, 0.12232
-        base_hud_offset_rot_16x9         = 0, 0, 0.12232
+        base_hud_offset_pos              = -0.046449, -0.035753, 0.060559
+        base_hud_offset_pos_16x9         = -0.046449, -0.035753, 0.060559
+        base_hud_offset_rot              = 0, 0, 0.101836
+        base_hud_offset_rot_16x9         = 0, 0, 0.101836
 ;-------------------------------------------------------------------------------------------------------------------------------			
 ![wpn_fal_aus_kit_sa5x_spec]:specter_s
-lewd_lens_hide_enabled       = true
-lewd_lens_hide_bone          = lens
-lewd_lens_hide_delays        = 0.1,0
-lewd_lens_hide_aim_mode      = true, false, false	
+parent_section = wpn_fal_aus_kit_sa5x_spec
+
+scopes =
+
+lens_hide_enabled       = true
+lens_hide_bone          = lens
+lens_hide_delays        = 0.1,0
+lens_hide_aim_mode      = true, false, false	
 ![wpn_fal_aus_kit_sa5x_spec_hud]
 anm_shots               	= fal_aus_eft_ins_shoot_3dss, shoot
 anm_shots_aim              	= fal_aus_eft_ins_shoot_aim_3dss, shoot
@@ -82,16 +103,20 @@ anm_shots_aim              	= fal_aus_eft_ins_shoot_aim_3dss, shoot
         aim_hud_offset_alt_rot           = 4.5e-05, -9.7e-05, 0.825
         aim_hud_offset_alt_rot_16x9      = 4.5e-05, -9.7e-05, 0.825
 
-        base_hud_offset_pos              = -0.046199, -0.037684, 0.059977
-        base_hud_offset_pos_16x9         = -0.046199, -0.037684, 0.059977
-        base_hud_offset_rot              = 0, 0, 0.12232
-        base_hud_offset_rot_16x9         = 0, 0, 0.12232
+        base_hud_offset_pos              = -0.046449, -0.035753, 0.060559
+        base_hud_offset_pos_16x9         = -0.046449, -0.035753, 0.060559
+        base_hud_offset_rot              = 0, 0, 0.101836
+        base_hud_offset_rot_16x9         = 0, 0, 0.101836
 ;-------------------------------------------------------------------------------------------------------------------------------		
 ![wpn_fal_aus_kit_fal_leup]:leupold_s
-lewd_lens_hide_enabled       = true
-lewd_lens_hide_bone          = lens
-lewd_lens_hide_delays        = 0.1,0
-lewd_lens_hide_aim_mode      = true, false, false
+parent_section = wpn_fal_aus_kit_fal_leup
+
+scopes =
+
+lens_hide_enabled       = true
+lens_hide_bone          = lens
+lens_hide_delays        = 0.1,0
+lens_hide_aim_mode      = true, false, false
 ![wpn_fal_aus_kit_fal_leup_hud]
 anm_shots               	= fal_aus_eft_ins_shoot_3dss, shoot
 anm_shots_aim              	= fal_aus_eft_ins_shoot_aim_3dss, shoot
@@ -111,7 +136,7 @@ anm_shots_aim              	= fal_aus_eft_ins_shoot_aim_3dss, shoot
         aim_hud_offset_alt_rot           = 4.5e-05, -9.7e-05, 0.825
         aim_hud_offset_alt_rot_16x9      = 4.5e-05, -9.7e-05, 0.825
 
-        base_hud_offset_pos              = -0.046199, -0.037684, 0.059977
-        base_hud_offset_pos_16x9         = -0.046199, -0.037684, 0.059977
-        base_hud_offset_rot              = 0, 0, 0.12232
-        base_hud_offset_rot_16x9         = 0, 0, 0.12232
+        base_hud_offset_pos              = -0.046449, -0.035753, 0.060559
+        base_hud_offset_pos_16x9         = -0.046449, -0.035753, 0.060559
+        base_hud_offset_rot              = 0, 0, 0.101836
+        base_hud_offset_rot_16x9         = 0, 0, 0.101836

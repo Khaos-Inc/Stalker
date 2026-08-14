@@ -3,6 +3,10 @@ suitable = {=target_squad_name(esc_2_12_stalker_fanat_squad)} true
 prior = 140
 active = walker@esc_2_12_stalker_fanat
 level_spot = quest_npc
+on_combat = combat
+
+[combat]
+combat_type = {=cond_scheme_cover()} cover, {=cond_scheme_camper()} camper
 
 [walker@esc_2_12_stalker_fanat]
 path_walk = guardermlr_2_walk

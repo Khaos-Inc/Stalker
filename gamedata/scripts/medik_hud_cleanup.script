@@ -1,0 +1,67 @@
+local PARK_OFF = 4000
+local PARKED_X = -1000
+
+local prev = {}
+local forced_psy = false
+
+function reset()
+    prev = {}
+end
+
+local function hidden(name)
+    return (tonumber(medik_config.transforms[name]) or 0) >= 0.5
+end
+
+local function park(wnd, name)
+    if not (wnd and wnd.GetWndPos and wnd.SetWndPos) then
+        return
+    end
+    local hide = hidden(name)
+    local p = wnd:GetWndPos()
+    local parked = p.x < PARKED_X
+    if hide then
+        if not parked then
+            p.x = p.x - PARK_OFF
+            p.y = p.y - PARK_OFF
+            wnd:SetWndPos(p)
+        end
+        wnd:Show(false)
+    elseif parked then
+        p.x = p.x + PARK_OFF
+        p.y = p.y + PARK_OFF
+        wnd:SetWndPos(p)
+        wnd:Show(true)
+    end
+end
+
+local function apply_module(mod, name)
+    if not mod then
+        return
+    end
+    local hide = hidden(name)
+    if hide then
+        if mod.HUD ~= nil and mod.deactivate_hud then
+            mod.deactivate_hud()
+        end
+    elseif prev[name] and mod.activate_hud then
+        mod.activate_hud()
+    end
+    prev[name] = hide
+end
+
+function actor_on_update()
+    local mgui = ActorMenu and ActorMenu.get_maingame()
+    if mgui and mgui.m_ui_hud_states then
+        local st = mgui.m_ui_hud_states
+        if hidden("hud_psy") then
+            st.m_ui_psy_bar_show = false
+            forced_psy = true
+        elseif forced_psy then
+            st.m_ui_psy_bar_show = true
+        end
+        park(st.m_ui_psy_bar, "hud_psy")
+        park(st.m_fire_mode, "hud_fire")
+    end
+    apply_module(actor_status, "hud_status")
+    apply_module(axr_companions, "hud_companions")
+end

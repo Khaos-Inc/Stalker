@@ -10,7 +10,7 @@
 [af_surge]:af_base
 $spawn				                               = "artefacts\af_surge"
 kind			                               = i_attach
-class				                               = SCRPTART  	; пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+class				                               = SCRPTART  	; будет подпрыгивать
 visual                                             = dynamics\equipments\aa\surge
 description			                               = st_af_surge_descr
 inv_name			                               = st_af_surge_name
@@ -34,7 +34,7 @@ attach_angle_offset		                           = 1.922,1.551,-0.740
 attach_position_offset                             = 0.15,0.002,0.25
 attach_bone_name		                           = bip01_r_hand
 auto_attach			                               = false
-;пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ (пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ)
+;скорости увеличения (уменьшения)
 health_restore_speed		                       = 0
 radiation_restore_speed		                       = 0
 satiety_restore_speed		                       = 0
@@ -49,9 +49,9 @@ repair_part_bonus	 	                           = 0.08
 tier = 2
 
 [af_surge_absorbation]
-burn_immunity 			                           = 0				;пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+burn_immunity 			                           = 0				;коэффициенты иммунитета
 strike_immunity 		                           = 0
-shock_immunity 			                           = 0.3
+shock_immunity 			                           = 0.160
 wound_immunity 			                           = 0
 radiation_immunity 		                           = 0
 telepatic_immunity 		                           = 0
@@ -64,12 +64,12 @@ fire_wound_immunity  		                       = 0
 [af_frames]:af_base
 $spawn				                               = "artefacts\af_frames"
 kind			                               = i_attach
-class				                               = SCRPTART  	; пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+class				                               = SCRPTART  	; будет подпрыгивать
 visual                                             = dynamics\equipments\aa\frames
 description			                               = st_af_frames_descr
 inv_name			                               = st_af_frames_name
 inv_name_short			                           = st_af_frames_name
-inv_weight			                               = 0.53
+inv_weight			                               = 0.73
 inv_grid_x			                               = 1
 inv_grid_y			                               = 19
 inv_grid_width			                           = 1
@@ -88,22 +88,22 @@ attach_angle_offset		                           = 1.922,1.551,-0.740
 attach_position_offset                             = 0.15,0.002,0.25
 attach_bone_name		                           = bip01_r_hand
 auto_attach			                               = false
-;пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ (пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ)
+;скорости увеличения (уменьшения)
 health_restore_speed		                       = 0
 radiation_restore_speed		                       = 0
 satiety_restore_speed		                       = 0
 power_restore_speed		                           = 0
 bleeding_restore_speed		                       = 0
 hit_absorbation_sect		                       = af_frames_absorbation
-additional_inventory_weight	                       = 6	;3.58
-additional_inventory_weight2	                   = 6	;3.58
+additional_inventory_weight	                       = 2.39	;3.58
+additional_inventory_weight2	                   = 2.39	;3.58
 artefact_activation_seq		                       = af_activation_bold
 repair_part_bonus	 	                           = 0.07
 
 tier = 2
 
 [af_frames_absorbation]
-burn_immunity 			                           = 0				;пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+burn_immunity 			                           = 0				;коэффициенты иммунитета
 strike_immunity 		                           = 0
 shock_immunity 			                           = -0.056
 wound_immunity 			                           = 0
@@ -118,7 +118,7 @@ fire_wound_immunity  		                       = 0
 [af_grid]:af_base
 $spawn				                               = "artefacts\af_grid"
 kind			                               = i_attach
-class				                               = SCRPTART  	; пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+class				                               = SCRPTART  	; будет подпрыгивать
 visual                                             = dynamics\equipments\aa\frames
 description			                               = st_af_grid_descr
 inv_name			                               = st_af_grid_name
@@ -142,22 +142,22 @@ attach_angle_offset		                           = 1.922,1.551,-0.740
 attach_position_offset                             = 0.15,0.002,0.25
 attach_bone_name		                           = bip01_r_hand
 auto_attach			                               = false
-;пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ (пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ)
+;скорости увеличения (уменьшения)
 health_restore_speed		                       = 0
 radiation_restore_speed		                       = 0
 satiety_restore_speed		                       = 0
 power_restore_speed		                           = 0
 bleeding_restore_speed		                       = 0
 hit_absorbation_sect		                       = af_grid_absorbation
-additional_inventory_weight		                   = 8	;4.42
-additional_inventory_weight2		               = 8	;4.42
+additional_inventory_weight		                   = 2.71	;4.42
+additional_inventory_weight2		               = 2.71	;4.42
 artefact_activation_seq		                       = af_activation_bold
 repair_part_bonus	 	                           = 0.11
 
 tier = 3
 
 [af_grid_absorbation]
-burn_immunity 			                           = 0				;пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+burn_immunity 			                           = 0				;коэффициенты иммунитета
 strike_immunity 		                           = 0
 shock_immunity 			                           = -0.062
 wound_immunity 			                           = 0
@@ -172,7 +172,7 @@ fire_wound_immunity  		                       = 0
 [af_freon]:af_base
 $spawn				                               = "artefacts\af_freon"
 kind			                               = i_attach
-class				                               = SCRPTART  	; пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+class				                               = SCRPTART  	; будет подпрыгивать
 visual                                             = dynamics\equipments\aa\freon
 description			                               = st_af_freon_descr
 inv_name			                               = st_af_freon_name
@@ -196,7 +196,7 @@ attach_angle_offset		                           = 1.922,1.551,-0.740
 attach_position_offset                             = 0.15,0.002,0.25
 attach_bone_name		                           = bip01_r_hand
 auto_attach			                               = false
-;пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ (пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ)
+;скорости увеличения (уменьшения)
 health_restore_speed		                       = 0
 radiation_restore_speed		                       = 0
 satiety_restore_speed		                       = 0
@@ -210,9 +210,9 @@ artefact_activation_seq		                       = af_activation_bold
 tier = 2
 
 [af_freon_absorbation]
-burn_immunity 			                           = 0.00814				;пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+burn_immunity 			                           = 0.0008				;коэффициенты иммунитета
 strike_immunity 		                           = 0
-shock_immunity 			                           = 0
+shock_immunity 			                           = 0.003
 wound_immunity 			                           = 0
 radiation_immunity 		                           = 0
 telepatic_immunity 		                           = 0
@@ -225,7 +225,7 @@ fire_wound_immunity  		                       = 0
 [af_cooler]:af_base
 $spawn				                               = "artefacts\af_cooler"
 kind			                               = i_attach
-class				                               = SCRPTART  	; пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+class				                               = SCRPTART  	; будет подпрыгивать
 visual                                             = dynamics\equipments\aa\cooler
 description			                               = st_af_cooler_descr
 inv_name			                               = st_af_cooler_name
@@ -249,7 +249,7 @@ attach_angle_offset		                           = 1.922,1.551,-0.740
 attach_position_offset                             = 0.15,0.002,0.25
 attach_bone_name		                           = bip01_r_hand
 auto_attach			                               = false
-;пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ (пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ)
+;скорости увеличения (уменьшения)
 health_restore_speed		                       = 0
 radiation_restore_speed		                       = 0
 satiety_restore_speed		                       = 0
@@ -264,9 +264,9 @@ repair_part_bonus	 	                           = 0.09
 tier = 2
 
 [af_cooler_absorbation]
-burn_immunity 			                           = 0.01 ; 0.0013 = +50%				;пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+burn_immunity 			                           = 0.0009 ; 0.0013 = +50%				;коэффициенты иммунитета
 strike_immunity 		                           = 0
-shock_immunity 			                           = 0
+shock_immunity 			                           = 0.006
 wound_immunity 			                           = 0
 radiation_immunity 		                           = 0
 telepatic_immunity 		                           = 0
@@ -279,17 +279,17 @@ fire_wound_immunity  		                       = 0
 [af_kevlar]:af_base
 $spawn				                               = "artefacts\af_kevlar"
 kind			                               = i_attach
-class				                               = SCRPTART  	; пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+class				                               = SCRPTART  	; будет подпрыгивать
 visual                                             = dynamics\equipments\aa\kevlar
 description			                               = st_af_kevlar_descr
 inv_name			                               = st_af_kevlar_name
 inv_name_short			                           = st_af_kevlar_name
-inv_weight			                               = 0.91	; 0.45 * 2x plates
+inv_weight			                               = 1.283	;1.743
 inv_grid_x			                               = 5
 inv_grid_y			                               = 19
 inv_grid_width			                           = 1
 inv_grid_height			                           = 1
-cost				                               = 3190 ; 6380 ; 6200
+cost				                               = 6380 ; 6200
 jump_height			                               = 0.0
 ;particles		                                   = artefact\af_thermal_idle
 det_show_particles		                           = artefact\af_thermal_show
@@ -303,7 +303,7 @@ attach_angle_offset		                           = 1.922,1.551,-0.740
 attach_position_offset                             = 0.15,0.002,0.25
 attach_bone_name		                           = bip01_r_hand
 auto_attach			                               = false
-;пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ (пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ)
+;скорости увеличения (уменьшения)
 health_restore_speed		                       = 0
 radiation_restore_speed		                       = 0
 satiety_restore_speed		                       = 0
@@ -314,37 +314,36 @@ hit_absorbation_sect		                       = af_kevlar_absorbation
 ;additional_inventory_weight2	                   = 1.26
 artefact_activation_seq		                       = af_activation_bold
 repair_part_bonus	 	                           = 0.12
-material = kevlar
 
 tier = 3
 
 [af_kevlar_absorbation]
-burn_immunity 			                           = 0
-strike_immunity 		                           = 0.05
+burn_immunity 			                           = 0				;коэффициенты иммунитета
+strike_immunity 		                           = 0
 shock_immunity 			                           = 0
-wound_immunity 			                           = 0.05
+wound_immunity 			                           = 0
 radiation_immunity 		                           = 0
 telepatic_immunity 		                           = 0
 chemical_burn_immunity 		                       = 0
-explosion_immunity 			                       = 0.05
-fire_wound_immunity  		                       = 0.05
+explosion_immunity 			                       = 0.044 ; 23 sheets of kevlar eq.
+fire_wound_immunity  		                       = 0.0413 ; 23 sheets of kevlar eq.
 
 ;--=====================================================================
 
 [af_plates]:af_base
 $spawn				                               = "artefacts\af_plates"
 kind			                               = i_attach
-class				                               = SCRPTART  	; пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+class				                               = SCRPTART  	; будет подпрыгивать
 visual                                             = dynamics\equipments\aa\plates
 description			                               = st_af_plates_descr
 inv_name			                               = st_af_plates_name
 inv_name_short			                           = st_af_plates_name
-inv_weight			                               = 7.62
+inv_weight			                               = 1.846	;2.826
 inv_grid_x			                               = 6
 inv_grid_y			                               = 19
 inv_grid_width			                           = 1
 inv_grid_height			                           = 1
-cost				                               = 3930 ; 6200
+cost				                               = 7860 ; 6200
 jump_height			                               = 0.0
 ;particles		                                   = artefact\af_thermal_idle
 det_show_particles		                           = artefact\af_thermal_show
@@ -358,7 +357,7 @@ attach_angle_offset		                           = 1.922,1.551,-0.740
 attach_position_offset                             = 0.15,0.002,0.25
 attach_bone_name		                           = bip01_r_hand
 auto_attach			                               = false
-;пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ (пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ)
+;скорости увеличения (уменьшения)
 health_restore_speed		                       = 0
 radiation_restore_speed		                       = 0
 satiety_restore_speed		                       = 0
@@ -369,39 +368,37 @@ hit_absorbation_sect		                       = af_plates_absorbation
 ;additional_inventory_weight2	                   = 1.58
 artefact_activation_seq		                       = af_activation_bold
 repair_part_bonus	 	                           = 0.14
-material = metal
 
 tier = 3
 
 [af_plates_absorbation]
-burn_immunity 			                           = 0				;пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
-strike_immunity 		                           = 0.1
+burn_immunity 			                           = 0				;коэффициенты иммунитета
+strike_immunity 		                           = 0
 shock_immunity 			                           = -0.087
-wound_immunity 			                           = 0.1
+wound_immunity 			                           = 0.0509
 radiation_immunity 		                           = 0
 telepatic_immunity 		                           = 0
 chemical_burn_immunity 		                       = 0
-explosion_immunity 			                       = 0.1 ; 35 sheets of kevlar eq.
-fire_wound_immunity  		                       = 0.1 ; 35 sheets of kevlar eq.
+explosion_immunity 			                       = 0.0509 ; 35 sheets of kevlar eq.
+fire_wound_immunity  		                       = 0.0518 ; 35 sheets of kevlar eq.
 
 ;--=====================================================================
 
 [af_camelbak]:af_base
 $spawn				                               = "artefacts\af_camelbak"
 kind			                               = i_attach
-class   			                               = SCRPTART  	; пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+class   			                               = SCRPTART  	; будет подпрыгивать
 cform				                               = skeleton
 visual                                             = dynamics\equipments\aa\camelbak
 description			                               = st_af_camelbak_descr
 inv_name			                               = st_af_camelbak_name
 inv_name_short			                           = st_af_camelbak_name
-inv_weight			                               = 1.53	;1.53
+inv_weight			                               = 0.31	;1.53
 inv_grid_x			                               = 7
 inv_grid_y			                               = 19
 inv_grid_width			                           = 1
 inv_grid_height			                           = 1
 cost				                               = 6540 ; 6200
-script_binding                                     = camelbak_binder.bind
 jump_height			                               = 0.0
 ;particles		                                   = artefact\af_thermal_idle
 det_show_particles		                           = artefact\af_thermal_show
@@ -415,24 +412,22 @@ attach_angle_offset		                           = 1.922,1.551,-0.740
 attach_position_offset                             = 0.15,0.002,0.25
 attach_bone_name		                           = bip01_r_hand
 auto_attach			                               = false
-;пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ (пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ)
+;скорости увеличения (уменьшения)
 health_restore_speed		                       = 0
 radiation_restore_speed		                       = 0
 satiety_restore_speed		                       = 0
-power_restore_speed			                       = 0;0.0015
+power_restore_speed			                       = 0.00045
 bleeding_restore_speed		                       = 0
 hit_absorbation_sect		                       = af_camelbak_absorbation
 ;additional_inventory_weight	                      = 1.22
 ;additional_inventory_weight2	                   = 1.22
 artefact_activation_seq		                       = af_activation_bold
 repair_part_bonus	 	                           = 0.07
-use1_functor                = camelbak_binder.try_drink
-use1_action_functor         = camelbak_binder.drink
 
 tier = 2
 
 [af_camelbak_absorbation]
-burn_immunity 			                           = 0				;пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+burn_immunity 			                           = 0				;коэффициенты иммунитета
 strike_immunity 		                           = 0
 shock_immunity 			                           = -0.092
 wound_immunity 			                           = 0
@@ -451,12 +446,12 @@ fire_wound_immunity  		                       = 0
 [af_surge_up]:af_base
 $spawn				                               = "artefacts\af_surge_up"
 kind			                               = i_attach
-class				                               = SCRPTART  	; пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+class				                               = SCRPTART  	; будет подпрыгивать
 visual                                             = dynamics\equipments\aa\surge
 description			                               = st_af_surge_up_descr
 inv_name			                               = st_af_surge_up_name
 inv_name_short			                           = st_af_surge_up_name
-inv_weight			                               = 1.95
+inv_weight			                               = 4.95
 inv_grid_x			                               = 0
 inv_grid_y			                               = 19
 inv_grid_width			                           = 1
@@ -479,7 +474,7 @@ attach_angle_offset		                           = 1.922,1.551,-0.740
 attach_position_offset                             = 0.15,0.002,0.25
 attach_bone_name		                           = bip01_r_hand
 auto_attach			                               = false
-;пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ (пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ)
+;скорости увеличения (уменьшения)
 health_restore_speed		                       = 0
 radiation_restore_speed		                       = 0
 satiety_restore_speed		                       = 0
@@ -494,9 +489,9 @@ repair_part_bonus	 	                           = 0.08
 tier = 4
 
 [af_surge_up_absorbation]
-burn_immunity 			                           = 0				;пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+burn_immunity 			                           = 0				;коэффициенты иммунитета
 strike_immunity 		                           = 0
-shock_immunity 			                           = 0.42
+shock_immunity 			                           = 0.32
 wound_immunity 			                           = 0
 radiation_immunity 		                           = 0
 telepatic_immunity 		                           = 0
@@ -509,12 +504,12 @@ fire_wound_immunity  		                       = 0
 [af_frames_up]:af_base
 $spawn				                               = "artefacts\af_frames_up"
 kind			                               = i_attach
-class				                               = SCRPTART  	; пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+class				                               = SCRPTART  	; будет подпрыгивать
 visual                                             = dynamics\equipments\aa\frames
 description			                               = st_af_frames_up_descr
 inv_name			                               = st_af_frames_up_name
 inv_name_short			                           = st_af_frames_up_name
-inv_weight			                               = 1.03
+inv_weight			                               = 1.23
 inv_grid_x			                               = 1
 inv_grid_y			                               = 19
 inv_grid_width			                           = 1
@@ -537,22 +532,22 @@ attach_angle_offset		                           = 1.922,1.551,-0.740
 attach_position_offset                             = 0.15,0.002,0.25
 attach_bone_name		                           = bip01_r_hand
 auto_attach			                               = false
-;пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ (пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ)
+;скорости увеличения (уменьшения)
 health_restore_speed		                       = 0
 radiation_restore_speed		                       = 0
 satiety_restore_speed		                       = 0
 power_restore_speed		                           = 0
 bleeding_restore_speed		                       = 0
 hit_absorbation_sect		                       = af_frames_up_absorbation
-additional_inventory_weight	                       = 11	;7.16
-additional_inventory_weight2	                   = 11	;7.16
+additional_inventory_weight	                       = 4.86	;7.16
+additional_inventory_weight2	                   = 4.86	;7.16
 artefact_activation_seq		                       = af_activation_bold
 repair_part_bonus	 	                           = 0.07
 
 tier = 4
 
 [af_frames_up_absorbation]
-burn_immunity 			                           = 0				;пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+burn_immunity 			                           = 0				;коэффициенты иммунитета
 strike_immunity 		                           = 0
 shock_immunity 			                           = -0.056
 wound_immunity 			                           = 0
@@ -567,12 +562,12 @@ fire_wound_immunity  		                       = 0
 [af_grid_up]:af_base
 $spawn				                               = "artefacts\af_grid_up"
 kind			                               = i_attach
-class				                               = SCRPTART  	; пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+class				                               = SCRPTART  	; будет подпрыгивать
 visual                                             = dynamics\equipments\aa\frames
 description			                               = st_af_grid_up_descr
 inv_name			                               = st_af_grid_up_name
 inv_name_short			                           = st_af_grid_up_name
-inv_weight			                               = 1.23
+inv_weight			                               = 1.47
 inv_grid_x			                               = 2
 inv_grid_y			                               = 19
 inv_grid_width			                           = 1
@@ -595,22 +590,22 @@ attach_angle_offset		                           = 1.922,1.551,-0.740
 attach_position_offset                             = 0.15,0.002,0.25
 attach_bone_name		                           = bip01_r_hand
 auto_attach			                               = false
-;пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ (пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ)
+;скорости увеличения (уменьшения)
 health_restore_speed		                       = 0
 radiation_restore_speed		                       = 0
 satiety_restore_speed		                       = 0
 power_restore_speed		                           = 0
 bleeding_restore_speed		                       = 0
 hit_absorbation_sect		                       = af_grid_up_absorbation
-additional_inventory_weight		                   = 14	;17.68
-additional_inventory_weight2		               = 14	;17.68
+additional_inventory_weight		                   = 5.6	;17.68
+additional_inventory_weight2		               = 5.6	;17.68
 artefact_activation_seq		                       = af_activation_bold
 repair_part_bonus	 	                           = 0.11
 
 tier = 5
 
 [af_grid_up_absorbation]
-burn_immunity 			                           = 0				;пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+burn_immunity 			                           = 0				;коэффициенты иммунитета
 strike_immunity 		                           = 0
 shock_immunity 			                           = -0.062
 wound_immunity 			                           = 0
@@ -625,7 +620,7 @@ fire_wound_immunity  		                       = 0
 [af_freon_up]:af_base
 $spawn				                               = "artefacts\af_freon_up"
 kind			                               = i_attach
-class				                               = SCRPTART  	; пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+class				                               = SCRPTART  	; будет подпрыгивать
 visual                                             = dynamics\equipments\aa\freon
 description			                               = st_af_freon_up_descr
 inv_name			                               = st_af_freon_up_name
@@ -653,23 +648,23 @@ attach_angle_offset		                           = 1.922,1.551,-0.740
 attach_position_offset                             = 0.15,0.002,0.25
 attach_bone_name		                           = bip01_r_hand
 auto_attach			                               = false
-;пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ (пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ)
+;скорости увеличения (уменьшения)
 health_restore_speed		                       = 0
-radiation_restore_speed		                       = 0	;-0.000033
+radiation_restore_speed		                       = -0.000033	;-0.000033
 satiety_restore_speed		                       = 0
 power_restore_speed		                           = 0.00088	;0.0025
 bleeding_restore_speed		                       = 0
 hit_absorbation_sect		                       = af_freon_up_absorbation
-additional_inventory_weight	                       = 4
-additional_inventory_weight2	                   = 4
+additional_inventory_weight	                       = 4.24
+additional_inventory_weight2	                   = 4.24
 artefact_activation_seq		                       = af_activation_bold
 
 tier = 4
 
 [af_freon_up_absorbation]
-burn_immunity 			                           = 0.01				;пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+burn_immunity 			                           = 0.0027				;коэффициенты иммунитета
 strike_immunity 		                           = 0
-shock_immunity 			                           = 0
+shock_immunity 			                           = 0.06
 wound_immunity 			                           = 0
 radiation_immunity 		                           = 0
 telepatic_immunity 		                           = 0
@@ -682,7 +677,7 @@ fire_wound_immunity  		                       = 0
 [af_cooler_up]:af_base
 $spawn				                               = "artefacts\af_cooler"
 kind			                               = i_attach
-class				                               = SCRPTART  	; пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+class				                               = SCRPTART  	; будет подпрыгивать
 visual                                             = dynamics\equipments\aa\cooler
 description			                               = st_af_cooler_up_descr
 inv_name			                               = st_af_cooler_up_name
@@ -710,24 +705,24 @@ attach_angle_offset		                           = 1.922,1.551,-0.740
 attach_position_offset                             = 0.15,0.002,0.25
 attach_bone_name		                           = bip01_r_hand
 auto_attach			                               = false
-;пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ (пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ)
+;скорости увеличения (уменьшения)
 health_restore_speed		                       = 0
 radiation_restore_speed		                       = -0.000033	;-0.00015
 satiety_restore_speed		                       = 0
-power_restore_speed			                       = 0 ;0.0025
+power_restore_speed			                       = 0.00062 ;0.0025
 bleeding_restore_speed		                       = 0
 hit_absorbation_sect		                       = af_cooler_up_absorbation
-additional_inventory_weight		                   = 0
-additional_inventory_weight2	                   = 0
+additional_inventory_weight		                   = 5.56
+additional_inventory_weight2	                   = 5.56
 artefact_activation_seq		                       = af_activation_bold
 repair_part_bonus	 	                           = 0.09
 
 tier = 5
 
 [af_cooler_up_absorbation]
-burn_immunity 			                           = 0.015 ; 0.0013 = +50%				;пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+burn_immunity 			                           = 0.0009 ; 0.0013 = +50%				;коэффициенты иммунитета
 strike_immunity 		                           = 0
-shock_immunity 			                           = 0
+shock_immunity 			                           = 0.006
 wound_immunity 			                           = 0
 radiation_immunity 		                           = 0
 telepatic_immunity 		                           = 0
@@ -740,17 +735,17 @@ fire_wound_immunity  		                       = 0
 [af_kevlar_up]:af_base
 $spawn				                               = "artefacts\af_kevlar"
 kind			                               = i_attach
-class				                               = SCRPTART  	; пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+class				                               = SCRPTART  	; будет подпрыгивать
 visual                                             = dynamics\equipments\aa\kevlar
 description			                               = st_af_kevlar_up_descr
 inv_name			                               = st_af_kevlar_up_name
 inv_name_short			                           = st_af_kevlar_up_name
-inv_weight			                               = 1.52
+inv_weight			                               = 2.983	;1.743
 inv_grid_x			                               = 5
 inv_grid_y			                               = 19
 inv_grid_width			                           = 1
 inv_grid_height			                           = 1
-cost				                               = 4690 ; 13380 ; 6200
+cost				                               = 13380 ; 6200
 1icon_layer_x       	                           = 0
 1icon_layer_y      		                           = 0
 1icon_layer_scale   	                           = 1
@@ -768,8 +763,7 @@ attach_angle_offset		                           = 1.922,1.551,-0.740
 attach_position_offset                             = 0.15,0.002,0.25
 attach_bone_name		                           = bip01_r_hand
 auto_attach			                               = false
-material = kevlar
-;пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ (пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ)
+;скорости увеличения (уменьшения)
 health_restore_speed		                       = 0
 radiation_restore_speed		                       = 0
 satiety_restore_speed		                       = 0
@@ -784,32 +778,32 @@ repair_part_bonus	 	                           = 0.12
 tier = 4
 
 [af_kevlar_up_absorbation]
-burn_immunity 			                           = 0
-strike_immunity 		                           = 0.07
+burn_immunity 			                           = 0				;коэффициенты иммунитета
+strike_immunity 		                           = 0.0691	;0
 shock_immunity 			                           = 0
-wound_immunity 			                           = 0.07
+wound_immunity 			                           = 0.0691 ; 223 sheets of kevlar eq.
 radiation_immunity 		                           = 0
 telepatic_immunity 		                           = 0
 chemical_burn_immunity 		                       = 0
-explosion_immunity 			                       = 0.07
-fire_wound_immunity  		                       = 0.07
+explosion_immunity 			                       = 0.0771 ; 232 sheets of kevlar eq.
+fire_wound_immunity  		                       = 0.0719 ; 248 sheets of kevlar eq.
 
 ;--=====================================================================
 
 [af_plates_up]:af_base
 $spawn				                               = "artefacts\af_plates_up"
 kind			                               = i_attach
-class				                               = SCRPTART  	; пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+class				                               = SCRPTART  	; будет подпрыгивать
 visual                                             = dynamics\equipments\aa\plates
 description			                               = st_af_plates_up_descr
 inv_name			                               = st_af_plates_up_name
 inv_name_short			                           = st_af_plates_up_name
-inv_weight			                               = 9.15
+inv_weight			                               = 3.526
 inv_grid_x			                               = 6
 inv_grid_y			                               = 19
 inv_grid_width			                           = 1
 inv_grid_height			                           = 1
-cost				                               = 8430 ; 16860 ; 6200
+cost				                               = 16860 ; 6200
 1icon_layer_x       	                           = 0
 1icon_layer_y      		                           = 0
 1icon_layer_scale   	                           = 1
@@ -827,7 +821,7 @@ attach_angle_offset		                           = 1.922,1.551,-0.740
 attach_position_offset                             = 0.15,0.002,0.25
 attach_bone_name		                           = bip01_r_hand
 auto_attach			                               = false
-;пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ (пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ)
+;скорости увеличения (уменьшения)
 health_restore_speed		                       = 0
 radiation_restore_speed		                       = 0
 satiety_restore_speed		                       = 0
@@ -836,27 +830,26 @@ bleeding_restore_speed		                       = 0 ; 0.00118
 hit_absorbation_sect		                       = af_plates_up_absorbation
 artefact_activation_seq		                       = af_activation_bold
 repair_part_bonus	 	                           = 0.15
-material = metal
 
 tier = 5
 
 [af_plates_up_absorbation]
-burn_immunity 			                           = 0				;пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
-strike_immunity 		                           = 0.15
+burn_immunity 			                           = 0				;коэффициенты иммунитета
+strike_immunity 		                           = 0
 shock_immunity 			                           = -0.087
-wound_immunity 			                           = 0.15 ; 398 sheets of kevlar eq.
+wound_immunity 			                           = 0.0831 ; 398 sheets of kevlar eq.
 radiation_immunity 		                           = 0
 telepatic_immunity 		                           = 0
 chemical_burn_immunity 		                       = 0
-explosion_immunity 			                       = 0.15 ; 399 sheets of kevlar eq.
-fire_wound_immunity  		                       = 0.15 ; 367 sheets of kevlar eq.
+explosion_immunity 			                       = 0.0769 ; 399 sheets of kevlar eq.
+fire_wound_immunity  		                       = 0.0833 ; 367 sheets of kevlar eq.
 
 ;--=====================================================================
 
 [af_camelbak_up]:af_base
 $spawn				                               = "artefacts\af_camelbak_up"
 kind			                               = i_attach
-class   			                               = SCRPTART  	; пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+class   			                               = SCRPTART  	; будет подпрыгивать
 cform				                               = skeleton
 visual                                             = dynamics\equipments\aa\camelbak
 description			                               = st_af_camelbak_up_descr
@@ -868,7 +861,6 @@ inv_grid_y			                               = 19
 inv_grid_width			                           = 1
 inv_grid_height			                           = 1
 cost				                               = 17620 ; 6200
-script_binding                                     = camelbak_binder.bind
 1icon_layer_x       	                           = 0
 1icon_layer_y      		                           = 0
 1icon_layer_scale   	                           = 1
@@ -886,24 +878,22 @@ attach_angle_offset		                           = 1.922,1.551,-0.740
 attach_position_offset                             = 0.15,0.002,0.25
 attach_bone_name		                           = bip01_r_hand
 auto_attach			                               = false
-;пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ (пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ)
+;скорости увеличения (уменьшения)
 health_restore_speed		                       = 0
 radiation_restore_speed		                       = 0
 satiety_restore_speed		                       = 0
-power_restore_speed			                       = 0.00254	;0.0033
+power_restore_speed			                       = 0.001	;0.0033
 bleeding_restore_speed		                       = 0
 hit_absorbation_sect		                       = af_camelbak_up_absorbation
-additional_inventory_weight	                       = 0
-additional_inventory_weight2	                   = 0
+additional_inventory_weight	                       = 3.46
+additional_inventory_weight2	                   = 3.46
 artefact_activation_seq		                       = af_activation_bold
 repair_part_bonus	 	                           = 0.07
-use1_functor                = camelbak_binder.try_drink
-use1_action_functor         = camelbak_binder.drink
 
 tier = 5
 
 [af_camelbak_up_absorbation]
-burn_immunity 			                           = 0				;пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+burn_immunity 			                           = 0				;коэффициенты иммунитета
 strike_immunity 		                           = 0
 shock_immunity 			                           = -0.092
 wound_immunity 			                           = 0
@@ -919,7 +909,7 @@ fire_wound_immunity  		                       = 0
 [fieldcraft_plate_attch]:af_base
 $spawn				                               = "artefacts\af_kevlar"
 kind			                               = i_attach
-class				                               = SCRPTART  	; пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+class				                               = SCRPTART  	; будет подпрыгивать
 visual                                             = dynamics\equipments\aa\kevlar
 description			                               = fieldcraft_plate_attch_descr
 inv_name			                               = fieldcraft_plate_attch_name
@@ -943,7 +933,7 @@ attach_angle_offset		                           = 1.922,1.551,-0.740
 attach_position_offset                             = 0.15,0.002,0.25
 attach_bone_name		                           = bip01_r_hand
 auto_attach			                               = false
-;пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ (пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ)
+;скорости увеличения (уменьшения)
 health_restore_speed		                       = 0
 radiation_restore_speed		                       = 0
 satiety_restore_speed		                       = 0
@@ -958,7 +948,7 @@ repair_part_bonus	 	                           = 0.09
 tier = 2
 
 [fieldcraft_plate_attch_absorbation]
-burn_immunity 			                           = 0				;пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+burn_immunity 			                           = 0				;коэффициенты иммунитета
 strike_immunity 		                           = 0
 shock_immunity 			                           = 0
 wound_immunity 			                           = 0

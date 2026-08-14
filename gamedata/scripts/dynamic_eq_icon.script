@@ -27,13 +27,6 @@ function dyneq_armortype(cell, obj, sec)
     local texture_width = texture_table[2]
     local texture_height = texture_table[3]
     local axis = utils_xml.get_item_axis(sec)
-
-    -- demonized: HD Inventory Icons Framework
-	local icon_override = aaa_rax_icon_override_mcm and aaa_rax_icon_override_mcm.icon_override
-    local scale = icon_override and icon_override:section_exist(sec) and (icon_override:r_float_ex(sec, "inv_grid_scale") or 1) or SYS_GetParam(2, sec, "inv_grid_scale", 1)
-	axis.w = math.ceil(axis.w / scale)
-	axis.h = math.ceil(axis.h / scale)
-	
     return {texture = texture_table[1], x = (axis.w - texture_width + x_offset), y = (axis.h - texture_height + y_offset), w = texture_width, h = texture_height}
 end
 
@@ -54,13 +47,6 @@ function dyneq_armorfaction(cell, obj, sec)
     local texture_width = texture_table[2]
     local texture_height = texture_table[3]
     local axis = utils_xml.get_item_axis(sec)
-
-    -- demonized: HD Inventory Icons Framework
-	local icon_override = aaa_rax_icon_override_mcm and aaa_rax_icon_override_mcm.icon_override
-    local scale = icon_override and icon_override:section_exist(sec) and (icon_override:r_float_ex(sec, "inv_grid_scale") or 1) or SYS_GetParam(2, sec, "inv_grid_scale", 1)
-	axis.w = math.ceil(axis.w / scale)
-	axis.h = math.ceil(axis.h / scale)
-
     return {texture = texture_table[1], x = (axis.w - texture_width + x_offset), y = (axis.h - texture_height + y_offset - repair_type_h), w = texture_width, h = texture_height}
 end
 

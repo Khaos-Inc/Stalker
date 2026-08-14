@@ -1,5 +1,5 @@
 [settings]
-enable = true
+enable = false
 
 actor_cause_surrender 			= true			;Player can cause prisoner animation on wounded victims. Can add condlist such as has_info (Maybe if you want actor only doing it if he joined bandits)
 actor_cause_surrender_chance 	= 0.25			; 0.0 to 1.0 float value for percent
@@ -7,10 +7,10 @@ actor_cause_surrender_max_dist 	= 8
 
 state_run_min_distance = 6		;Distance greater then to use running state
 
-min_timer = 1500				;Amount of time (milliseconds) before pulling the trigger after reaching target position.
-max_timer = 4500
-surrender_min_timer = 8000		;Amount of time (milliseconds) before pulling the trigger if victim is playing prisoner animation.
-surrender_max_timer = 10000
+min_timer = 1000	;1500				;Amount of time (milliseconds) before pulling the trigger after reaching target position.
+max_timer = 2000	;4500
+surrender_min_timer = 3000	;8000		;Amount of time (milliseconds) before pulling the trigger if victim is playing prisoner animation.
+surrender_max_timer = 5000	;10000
 
 min_distance = 3				;Distance in which to search for an accessible vertex nearest victim
 max_distance = 5

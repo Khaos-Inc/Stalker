@@ -1,14 +1,13 @@
-;==============================================================================	
 ![wpn_kriss_vector]
 >scopes						 = lco1, romeo4, romeo8, exps3, monstrum, trihawk, vulcan, specter, t12, e0t2_magd, c79, echo1
 
 !shell_point
 !shell_particles
 		
-lewd_lens_hide_enabled       = true
-lewd_lens_hide_bone          = sight
-lewd_lens_hide_delays        = 0.1,0
-lewd_lens_hide_aim_mode      = true, false, false
+lens_hide_enabled       = true
+lens_hide_bone          = sight
+lens_hide_delays        = 0.1,0
+lens_hide_aim_mode      = true, false, false
 
 use_alt_aim_hud				 = true
 laser_status				 = true
@@ -29,7 +28,34 @@ snd_reload_misfire      = $no_sound
         scripted_snd_bore_empty                  = weapons\vector_new\vector_inspect
         scripted_snd_reload_misfire              = weapons\vector_new\vector_misfire
 		scripted_snd_reload_misfire_jammed		 = weapons\vector_new\vector_fte
-		
+;---------------------------------------------SCRIPTED CANTED SIGHTS-----------------------------------
+canted_sights = canted_kac, canted_deltapoint, canted_docter, canted_t12
+
+canted_sights_bone         = wpn_body
+canted_sights_pos   = 0.003625, 0.066500, -0.020000
+canted_sights_rot   = 0, 0, 0
+canted_sights_scale = 1.134688, 1.134688, 1.134688
+front_iron_pos      = 0.003625, 0.066500, 0.220000
+front_iron_rot      = 0, 0, 0
+front_iron_scale    = 1.134688, 1.134688, 1.134688
+
+open_slots 			 = 1, 2
+canted_rds_position1             = 0.003625, 0.066500, -0.015000
+canted_rds_position2             = 0.003625, 0.066500, 0.185000
+
+canted_aim_pos_canted_kac        = -0.108853, -0.072445, -0.06
+canted_aim_rot_canted_kac        = 0, 0, 0.805
+
+canted_aim_pos_canted_deltapoint = -0.108423, -0.062849, -0.06
+canted_aim_rot_canted_deltapoint = 0, 0, 0.805
+
+canted_aim_pos_canted_docter     = -0.108713, -0.058013, -0.06
+canted_aim_rot_canted_docter     = 0, 0, 0.805
+
+canted_aim_pos_canted_t12        = -0.1085, -0.063178, -0.06
+canted_aim_rot_canted_t12        = 0, 0, 0.805
+
+;------------------------------------------------------------------------------------------------------		
 ![wpn_kriss_vector_hud]
         hands_orientation                = 1.279509, -0.502016, 0
         hands_orientation_16x9           = 1.279509, -0.502016, 0
@@ -41,10 +67,10 @@ snd_reload_misfire      = $no_sound
         aim_hud_offset_rot               = 0.00013, 3e-05, -0.0225
         aim_hud_offset_rot_16x9          = 0.00013, 3e-05, -0.0225
 
-        aim_hud_offset_alt_pos           = -0.130886, -0.069627, -0.042312
-        aim_hud_offset_alt_pos_16x9      = -0.130886, -0.069627, -0.042312
-        aim_hud_offset_alt_rot           = 0.00013, 3e-05, 0.6
-        aim_hud_offset_alt_rot_16x9      = 0.00013, 3e-05, 0.6		
+        aim_hud_offset_alt_pos           = -0.104052, -0.088997, -0.042312
+        aim_hud_offset_alt_pos_16x9      = -0.104052, -0.088997, -0.042312
+        aim_hud_offset_alt_rot           = 0.00013, 3e-05, 0.9
+        aim_hud_offset_alt_rot_16x9      = 0.00013, 3e-05, 0.9	
 		
         base_hud_offset_pos              = -0.026464, -0.014757, -0.016641
         base_hud_offset_pos_16x9         = -0.026464, -0.014757, -0.016641
@@ -384,7 +410,7 @@ inv_grid_y      = 0
         1icon_layer_y				= -19
 
 [wpn_kriss_vector_e0t2_magd_off_hud]:wpn_kriss_vector_hud
-item_visual                              = dynamics\weapons\wpn_kriss_vector\wpn_kriss_vector_e0t2_magd_off_hud.ogf	
+;item_visual                              = dynamics\weapons\wpn_kriss_vector\wpn_kriss_vector_e0t2_magd_off_hud.ogf	
         aim_hud_offset_pos               = -0.078185, 0.016329, -0.06
         aim_hud_offset_pos_16x9          = -0.078185, 0.016329, -0.06
 		

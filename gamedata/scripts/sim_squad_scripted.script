@@ -136,7 +136,7 @@ function sim_squad_scripted:get_script_target()
 	
 	local new_id = tonumber(new_target)
 	local se_target = new_id and alife_object(new_id)
-	if se_target and (se_target:clsid() == clsid.online_offline_group_s or se_target:clsid() == clsid.smart_terrain) then
+	if se_target and (obj:clsid() == clsid.online_offline_group_s or obj:clsid() == clsid.smart_terrain) then
 		return new_id
 	end
 end
@@ -285,10 +285,10 @@ function sim_squad_scripted:specific_update(script_target_id) -- This update is 
 		return 
 	end 
 	
-	if (self.smart_id ~= self.assigned_target_id and se_target:clsid() == clsid.smart_terrain) then 
-		self:assign_smart(se_target,self.smart_id)
+	if (self.smart_id ~= self.assigned_target_id and se_target:clsid() == clsid.smart_terrain) then
+		sim_board.get_sim_board():assign_squad_to_smart(self, se_target.id)
 	end
-	
+
 	if (self.current_action) then
 	
 		-- in such case assigned is changed (such as get_help_target_id) but current action is 1 (reached)
@@ -353,7 +353,7 @@ function sim_squad_scripted:generic_update() -- This update is called for all sq
 			-- If current action is not finished, then return
 			
 			if (self.smart_id ~= self.assigned_target_id and se_target:clsid() == clsid.smart_terrain) then 
-				self:assign_smart(se_target,self.smart_id)
+				sim_board.get_sim_board():assign_squad_to_smart(self, se_target.id)
 			end
 	
 			if (self.current_action == 0) then
@@ -630,7 +630,6 @@ function sim_squad_scripted:create_npc(spawn_smart,pos,lvid,gvid)
 	--utils_data.debug_write("sim_squad_scripted:create_npc")
 	local settings_id = self:section_name()
 	local spawn_sections = parse_names(ini_sys:r_string_ex(settings_id, "npc") or "")
-	--smr_debug.get_log().info("simboard", "FOO: create_npc for %s", self:section_name())
 	
 	local base_spawn_position, base_lvi, base_gvi, spawn_vid
 	if (spawn_smart) then
@@ -692,12 +691,7 @@ function sim_squad_scripted:create_npc(spawn_smart,pos,lvid,gvid)
 
 	local npcs_list = {}
 	for ind=1,#spawn_sections do
-		local id = nil
-		if is_squad_monster[ini_sys:r_string_ex(settings_id, "faction")] and not smr_squad.is_mutant_type_enabled(spawn_sections[ind]) then
-			smr_debug.get_log().info("population/monsters", "not spawning disabled mutant %s in squad %s", spawn_sections[ind], self:section_name())
-		else
-			id = self:add_squad_member(smr_squad.replace_mutant_variant(spawn_sections[ind]), base_spawn_position, base_lvi, base_gvi,ind)
-		end
+		local id = self:add_squad_member(spawn_sections[ind], base_spawn_position, base_lvi, base_gvi,ind)
 		if (id) then
 			npcs_list[#npcs_list+1] = id
 		end
@@ -712,7 +706,7 @@ function sim_squad_scripted:create_npc(spawn_smart,pos,lvid,gvid)
 		count[1] = count[1] and tonumber(count[1])
 		count[2] = count[2] and tonumber(count[2]) or count[1]
 
-		--[[if _G.WARFARE then
+		if _G.WARFARE then
 			local faction = ini_sys:r_string_ex(settings_id, "faction")
 			if (warfare_options.options.factions[faction]) then
 				if (warfare_options.options.factions[faction].random_squad_count) then
@@ -721,23 +715,17 @@ function sim_squad_scripted:create_npc(spawn_smart,pos,lvid,gvid)
 					count[2] = tonumber(warfare_options.options.factions[faction].max_random_squad_count)
 				end
 			end
-		end]]
+		end
 		
 		-- check for random squad members for each faction here.
 		
 		local random_count = count[1] and count[2] and math.random(count[1],count[2]) or math.random(1,2)
 		random_count = random_count - self:npc_count()
-		random_count = smr_squad.adjust_random_count(self, random_count)
-
+		
 		local random_id
 		for i = 1,random_count do
-			local id = nil
 			random_id = math.random(1, #random_spawn)
-			if is_squad_monster[ini_sys:r_string_ex(settings_id, "faction")] and not smr_squad.is_mutant_type_enabled(random_spawn[random_id]) then
-				smr_debug.get_log().info("population/monsters", "not spawning disabled mutant %s in squad %s", random_spawn[random_id], self:section_name())
-			else
-				id = self:add_squad_member(smr_squad.replace_mutant_variant(random_spawn[random_id]), base_spawn_position, base_lvi, base_gvi)
-			end
+			local id = self:add_squad_member(random_spawn[random_id], base_spawn_position, base_lvi, base_gvi)
 			if (id) then
 				npcs_list[#npcs_list+1] = id
 			end
@@ -1043,6 +1031,7 @@ function sim_squad_scripted:on_unregister()
 	cse_alife_online_offline_group.on_unregister(self)
 end
 
+																									
 function sim_squad_scripted:check_online_status()
 	local b = nil
 	if (get_object_story_id(self.id)) then 

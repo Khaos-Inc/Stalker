@@ -1,0 +1,13 @@
+[3dss_thermal_battery]
+; Battery item accepted when dragged onto a thermal scope or a weapon carrying one.
+battery_section                  = batteries_dead
+
+; Charge is normalized from 0 to 1. At 0.0005, a full battery supplies roughly
+; 33 minutes of continuous thermal use before difficulty scaling is applied.
+drain_per_second                 = 0.00075
+drain_tick_seconds               = 0.25
+critical_charge                  = 0.01
+use_difficulty_multiplier        = true
+
+; A thermal sight section can override the global rate with:
+; thermal_battery_drain          = 0.0005

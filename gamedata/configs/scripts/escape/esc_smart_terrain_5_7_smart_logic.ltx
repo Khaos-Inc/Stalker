@@ -155,41 +155,92 @@ path_end = loop
 active = animpoint@esc_smart_terrain_5_7_camp_work_1
 suitable = {!surge_started} true
 prior = 45
+on_combat = combat
 
 [logic@esc_smart_terrain_5_7_camp_work_2]
 active = animpoint@esc_smart_terrain_5_7_camp_work_2
 suitable = {!surge_started} true
 prior = 45
+on_combat = combat
 
 [logic@esc_smart_terrain_5_7_camp_work_3]
 active = animpoint@esc_smart_terrain_5_7_camp_work_3
 suitable = {!surge_started} true
 prior = 45
+on_combat = combat
 
 [logic@esc_smart_terrain_5_7_camp_work_4]
 active = animpoint@esc_smart_terrain_5_7_camp_work_4
 suitable = {!surge_started} true
 prior = 45
+on_combat = combat
 
 [logic@esc_smart_terrain_5_7_camp_work_5]
 active = animpoint@esc_smart_terrain_5_7_camp_work_5
 suitable = {!surge_started} true
 prior = 45
+on_combat = combat
 
 [logic@esc_smart_terrain_5_7_camp_work_6]
 active = animpoint@esc_smart_terrain_5_7_camp_work_6
 suitable = {!surge_started} true
 prior = 45
+on_combat = combat
 
 [logic@esc_smart_terrain_5_7_camp_work_7]
 active = animpoint@esc_smart_terrain_5_7_camp_work_7
 suitable = {!surge_started} true
 prior = 45
+on_combat = combat
 
 [logic@esc_smart_terrain_5_7_camp_work_8]
 active = animpoint@esc_smart_terrain_5_7_camp_work_8
 suitable = {!surge_started} true
 prior = 45
+on_combat = combat
+
+[logic@esc_smart_terrain_5_7_guard_1_walk]
+active = walker@esc_smart_terrain_5_7_guard_1_walk
+prior = 45
+on_combat = combat
+
+[logic@esc_smart_terrain_5_7_guard_2_walk]
+active = walker@esc_smart_terrain_5_7_guard_2_walk
+prior = 45
+on_combat = combat
+
+[logic@esc_smart_terrain_5_7_guard_3_walk]
+active = walker@esc_smart_terrain_5_7_guard_3_walk
+prior = 45
+on_combat = combat
+
+[logic@esc_smart_terrain_5_7_guard_4_walk]
+active = walker@esc_smart_terrain_5_7_guard_4_walk
+prior = 45
+on_combat = combat
+
+[logic@esc_smart_terrain_5_7_guard_5_walk]
+active = walker@esc_smart_terrain_5_7_guard_5_walk
+prior = 45
+on_combat = combat
+
+[logic@esc_smart_terrain_5_7_guard_6_walk]
+active = walker@esc_smart_terrain_5_7_guard_4_walk
+prior = 45
+on_combat = combat
+
+[logic@esc_smart_terrain_5_7_guard_7_walk]
+active = walker@esc_smart_terrain_5_7_guard_5_walk
+prior = 45
+on_combat = combat
+
+[logic@esc_smart_terrain_5_7_guard_8_walk]
+active = walker@esc_smart_terrain_5_7_guard_5_walk
+prior = 45
+on_combat = combat
+
+[combat]
+combat_type = {=cond_scheme_cover()} cover, {=cond_scheme_camper()} camper
 
 [animpoint@esc_smart_terrain_5_7_camp_work_1]
 cover_name = esc_smart_terrain_5_7_animpoint_kamp1

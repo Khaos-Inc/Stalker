@@ -2,12 +2,33 @@
 >scopes						 = aim_acro, p1x42, romeo8, uh2, gee36, tac30, vulcan, trihawk, monstrum, t12, e0t2_magd, spec_alt
 <scopes						 = compm4s
 
-lewd_lens_hide_enabled       = true
-lewd_lens_hide_bone          = lens
-lewd_lens_hide_delays        = 0.1,0
-lewd_lens_hide_aim_mode      = true, false, false
+lens_hide_enabled       = true
+lens_hide_bone          = lens
+lens_hide_delays        = 0.1,0
+lens_hide_aim_mode      = true, false, false
 
 use_alt_aim_hud				= true
+
+;---------------------------------------------SCRIPTED CANTED SIGHTS-----------------------------------
+canted_sights = canted_deltapoint, canted_docter, canted_t12
+
+canted_sights_bone         = wpn_body
+canted_sights_pos                = 0.000156, 0.024531, 0.030000
+canted_sights_rot                = 0, 0, 0
+canted_sights_scale              = 1.090000, 1.090000, 1.090000
+
+open_slots 			 = 1
+canted_rds_position1             = 0.000156, 0.024531, 0.030000
+
+canted_aim_pos_canted_deltapoint = -0.093947, -0.06471, 0
+canted_aim_rot_canted_deltapoint = 0, 0, 0.825
+
+canted_aim_pos_canted_docter     = -0.094147, -0.060052, 0
+canted_aim_rot_canted_docter     = 0, 0, 0.825
+
+canted_aim_pos_canted_t12        = -0.093974, -0.065083, 0
+canted_aim_rot_canted_t12        = 0, 0, 0.825
+;------------------------------------------------------------------------------------------------------
 ![wpn_raptr_hud]
         hands_orientation                = -0.000388, -0.696305, -0.7
         hands_orientation_16x9           = -0.000388, -0.696305, -0.7
@@ -190,8 +211,8 @@ hud                     = wpn_raptr_trihawk_hud
 
 [wpn_raptr_trihawk_hud]:wpn_raptr_hud
 item_visual                              = dynamics\weapons\wpn_raptr\wpn_raptr_trihawk_hud.ogf	
-        aim_hud_offset_pos               = -0.071613, -1.9e-05, -0.063642
-        aim_hud_offset_pos_16x9          = -0.071613, -1.9e-05, -0.063642
+        aim_hud_offset_pos               = -0.071613, -1.9e-05, -0.05001
+        aim_hud_offset_pos_16x9          = -0.071613, -1.9e-05, -0.05001
 ;--------------------------------------------------------------------------------------------
 [wpn_raptr_monstrum]:wpn_raptr, monstrum_s
 hud                     = wpn_raptr_monstrum_hud
@@ -202,8 +223,8 @@ hud                     = wpn_raptr_monstrum_hud
 
 [wpn_raptr_monstrum_hud]:wpn_raptr_hud
 item_visual                              = dynamics\weapons\wpn_raptr\wpn_raptr_monstrum_hud.ogf	
-        aim_hud_offset_pos               = -0.071554, 0.011746, -0.097595
-        aim_hud_offset_pos_16x9          = -0.071554, 0.011746, -0.097595
+        aim_hud_offset_pos               = -0.071554, 0.011746, -0.079861
+        aim_hud_offset_pos_16x9          = -0.071554, 0.011746, -0.079861
 ;--------------------------------------------------------------------------------------------
 [wpn_raptr_gee36]:wpn_raptr, gee36_s
 hud                     = wpn_raptr_gee36_hud
@@ -246,8 +267,8 @@ hud                     = wpn_raptr_e0t2_magd_hud
 
 [wpn_raptr_e0t2_magd_hud]:wpn_raptr_hud
 item_visual                              = dynamics\weapons\wpn_raptr\wpn_raptr_e0t2_magd_hud.ogf	
-        aim_hud_offset_pos               = -0.071378, 0.005253, -0.077472
-        aim_hud_offset_pos_16x9          = -0.071378, 0.005253, -0.077472
+        aim_hud_offset_pos               = -0.071378, 0.005253, -0.062511
+        aim_hud_offset_pos_16x9          = -0.071378, 0.005253, -0.062511
 ;--------------------------------------------------------------------------------------------
 [wpn_raptr_e0t2_magd_off]:wpn_raptr
 hud                     = wpn_raptr_e0t2_magd_off_hud

@@ -1,4 +1,3 @@
-;==============================================================================
 ![wpn_pkp_siber]
 snd_reload              = weapons\pkp_young_prince\pkp_reload_scope
 snd_reload_empty        = weapons\pkp_young_prince\pkp_reload_empty_scope
@@ -6,10 +5,12 @@ snd_reload_empty        = weapons\pkp_young_prince\pkp_reload_empty_scope
 !hud_fov
 >scopes						 = 1p63
 
-lewd_lens_hide_enabled       = true
-lewd_lens_hide_bone          = lens
-lewd_lens_hide_delays        = 0.1,0
-lewd_lens_hide_aim_mode      = true, false, false
+lens_hide_enabled       = true
+lens_hide_bone          = lens
+lens_hide_delays        = 0.1,0
+lens_hide_aim_mode      = true, false, false
+
+use_alt_aim_hud			= true
 
 ![wpn_pkp_siber_hud]
 
@@ -23,11 +24,11 @@ lewd_lens_hide_aim_mode      = true, false, false
         aim_hud_offset_rot               = -3.6e-05, 3.5e-05, 0
         aim_hud_offset_rot_16x9          = -3.6e-05, 3.5e-05, 0
 
-        aim_hud_offset_alt_pos           = -0.006099, 0.006323, 0.1
-        aim_hud_offset_alt_pos_16x9      = -0.006099, 0.006323, 0.1
-        aim_hud_offset_alt_rot           = -3.6e-05, 3.5e-05, 0
-        aim_hud_offset_alt_rot_16x9      = -3.6e-05, 3.5e-05, 0
-		
+        aim_hud_offset_alt_pos           = -0.049255, -0.067075, 0
+        aim_hud_offset_alt_pos_16x9      = -0.049255, -0.067075, 0
+        aim_hud_offset_alt_rot           = -3.6e-05, 3.5e-05, 0.9
+        aim_hud_offset_alt_rot_16x9      = -3.6e-05, 3.5e-05, 0.9
+
         lowered_hud_offset_pos           = 0.06098, -0.007499, -0.014791
         lowered_hud_offset_pos_16x9      = 0.06098, -0.007499, -0.014791
         lowered_hud_offset_rot           = -0.094396, -0.73274, 0.4

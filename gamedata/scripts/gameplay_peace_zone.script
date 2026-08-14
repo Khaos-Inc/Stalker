@@ -5,10 +5,6 @@ function level_is_bar()
 	return (level.name() == "l05_bar")
 end
 
-function iandh_is_active()
-	return ui_mcm and ui_mcm.get("black_road_revisited/isolated_and_hated")
-end
-
 function npcs_friendly_to_community(npc_1,npc_2,com)
 	local com_1 = npc_1 and character_community(npc_1)
 	local com_2 = npc_2 and character_community(npc_2)
@@ -42,7 +38,7 @@ end
 
 
 function on_enemy_eval(npc,ene,flags)
-	if not (level_is_bar()) or iandh_is_active() then
+	if not (level_is_bar()) then
 		return
 	end
 	if not (IsStalker(npc) and IsStalker(ene)) then

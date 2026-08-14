@@ -1,0 +1,30 @@
+[medik]:identity_immunities
+GroupControlSection  = spawn_group
+discovery_dependency =
+$spawn          = "devices\medik"
+class           = II_ATTCH
+kind            = i_device
+cform           = skeleton
+visual          = dynamics\devices\dev_detector_09\medik_world.ogf
+inv_name        = st_medik
+inv_name_short  = st_medik
+description     = st_medik_descr
+inv_weight      = 0.211
+icons_texture   = ui\medik_icon
+inv_grid_width  = 1
+inv_grid_height = 1
+inv_grid_x      = 0
+inv_grid_y      = 0
+cost            = 2200
+
+[anim_medik_hud]
+lh_lead_gun             = true
+attach_place_idx        = 1
+hands_position          = 0, 0, 0
+hands_orientation       = 0, 0, 0
+hands_position_16x9     = 0, 0, 0
+hands_orientation_16x9  = 0, 0, 0
+anm_show                = barry_radio_draw_hands_quick
+anm_idle                = barry_radio_idle_hands
+anm_sprint              = barry_radio_sprint_hands
+anm_hide                = barry_radio_holster_hands_quick

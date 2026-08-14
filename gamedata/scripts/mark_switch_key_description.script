@@ -1,0 +1,19 @@
+-- verdatim
+-- replaces the "press Mark Switch key" in descriptions with a dynamic "press '[key]' key" via editing ui_item.build_desc_footer
+original_function = ui_item.build_desc_footer
+
+ui_item.build_desc_footer = function(obj, sec, str)
+	--printf("string is %s", str)
+	local stri = original_function(obj, sec, str)
+	if string.find(str, "press Mark Switch key") then
+		local keybind = ui_mcm.get("3d_scopes/mark_switch/keybind") or 13
+		-- with permission
+		keybind = ui_mcm.display_key(keybind)
+		local new_string = "press the %%c[0,255,125,0]" .. keybind ..  "%%c[ui_gray_2] key"
+		new_string = string.gsub(str, "press Mark Switch key", new_string)
+		stri = original_function(obj, sec, new_string)
+		--printf("replaced string!")
+	end
+	return stri
+end
+	

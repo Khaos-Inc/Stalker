@@ -53,7 +53,9 @@
 		<actor_dialog>dm_ordered_task_dialog</actor_dialog>
 		<actor_dialog>buy_route</actor_dialog>
 		<actor_dialog>drx_sl_change_faction_dialog</actor_dialog>
+		<actor_dialog>saxarov_minigame</actor_dialog>
 		<actor_dialog>actor_break_dialog</actor_dialog>
+		<actor_dialog>armor_exchange_insider_ecolog</actor_dialog>
 		<!-- g0dl1ke -->
     </specific_character>
 
@@ -82,8 +84,7 @@
 		</supplies>
 #include "gameplay\character_criticals.xml"
 		<start_dialog>yan_ecolog_kruglov_start_dialog</start_dialog>
-		<actor_dialog>dm_init_trader</actor_dialog>
-		<actor_dialog>dm_add_repair</actor_dialog>
+		<actor_dialog>saxarov_minigame</actor_dialog>
 		<actor_dialog>actor_break_dialog</actor_dialog>
     </specific_character>
 
@@ -145,6 +146,7 @@
 		</supplies>
 #include "gameplay\character_criticals.xml"
 		<start_dialog>yan_ecolog_vasilyev_start_dialog</start_dialog>
+		<actor_dialog>saxarov_minigame</actor_dialog>
 		<actor_dialog>actor_break_dialog</actor_dialog>
     </specific_character>
 
@@ -267,7 +269,7 @@
 		<bio>No information is available.</bio>
 		
 		<class>mechanic_army_yan_mlr</class>
-		<community>ecolog</community>
+		<community>trader</community>
 		<terrain_sect>stalker_terrain</terrain_sect>
 		<!--mechanic_mode>1</mechanic_mode-->
 		<snd_config>characters_voice\human\military_3\</snd_config>
@@ -312,7 +314,7 @@
 		<bio>No information is available.</bio>
 		
 		<class>yan_povar_army_mlr</class>
-		<community>ecolog</community><terrain_sect>stalker_terrain</terrain_sect>
+		<community>trader</community><terrain_sect>stalker_terrain</terrain_sect>
 		<snd_config>characters_voice\human\military_1\</snd_config>
 		
 		<rank>600</rank>
@@ -336,6 +338,7 @@
 		<actor_dialog>meet_povar_army</actor_dialog>
 		<actor_dialog>barter_povar_army</actor_dialog>
 		<actor_dialog>remember_dyx_barter</actor_dialog>
+		<actor_dialog>minigames_military</actor_dialog>
 		<actor_dialog>actor_break_dialog</actor_dialog>
 	</specific_character>
 

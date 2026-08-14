@@ -907,12 +907,12 @@ function set_companion_to_default_substate(npc)
 end
 
 function set_companion_to_loot_items_and_corpses(npc)
-	npc:give_info_portion("npcx_beh_gather_items")
+	npc:disable_info_portion("npcx_beh_gather_items")
 	npc:give_info_portion("npcx_beh_loot_corpses")
 end
 
 function set_companion_to_loot_items_only(npc)
-	npc:give_info_portion("npcx_beh_gather_items")
+	npc:disable_info_portion("npcx_beh_gather_items")
 	npc:disable_info_portion("npcx_beh_loot_corpses")
 end
 
@@ -957,7 +957,7 @@ function switch_companion_gather_items(npc)
 		npc:disable_info_portion("npcx_beh_gather_items")
 	else
 		actor_menu.set_msg(1, game.translate_string("st_enable_looting"),8)
-		npc:give_info_portion("npcx_beh_gather_items")
+		npc:disable_info_portion("npcx_beh_gather_items")
 	end
 end
 
@@ -1725,8 +1725,33 @@ function UIWheelCompanion:Reset(npc)
 		self.name:SetText( npc:character_name() )
 		self.prog_health:SetProgressPos( npc.health )
 		self.prog_weight:SetProgressPos( w_total / w_max )
+		--self:ShowRank(npc:character_rank(),"npc")
 	end
 end
+
+-- function UIWheelCompanion:ShowRank(v, view)
+-- 	local texture = "ui_rank_0"
+-- 	printdbg("# UIInventory:ShowRank | Rank Number %s", v)
+-- 	if v < 4000 		then 	texture = "ui_rank_0"	-- novice
+-- 	elseif v < 6000		then 	texture = "ui_rank_1"	-- trainee
+-- 	elseif v < 10000 	then 	texture = "ui_rank_2"	-- experienced
+-- 	elseif v < 16000 	then 	texture = "ui_rank_3"	-- professional
+-- 	elseif v < 24000 	then 	texture = "ui_rank_4"	-- veteran
+-- 	elseif v < 35000 	then 	texture = "ui_rank_5"	-- expert
+-- 	elseif v < 50000 	then 	texture = "ui_rank_6"	-- master
+-- 	elseif v >= 50000 	then 	texture = "ui_rank_7"	-- legend
+-- 	end
+	
+-- 	printdbg("# UIInventory:ShowRank | Rank Texture %s", texture)
+
+-- 	if(view == "player") then
+-- 		-- self.player_rank_icon:InitTexture(texture) 
+-- 	elseif (view == "npc") then
+-- 		self.npc_rank_icon:InitTexture(texture) 
+-- 	else
+-- 		self.npc_rank_icon:InitTexture("ui_rank_0") 
+-- 	end
+-- end
 
 function UIWheelCompanion:Update()
 	CUIScriptWnd.Update(self)

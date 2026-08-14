@@ -1,0 +1,1177 @@
+local CONFIG_DIR = [[items\settings\camo\]]
+local EVENT_NAMESPACE = "3dss_gamma_camo"
+local CAMO_ICON_SCALE = 1.05
+local CAMO_ICON_OFFSET_X = -5
+local CAMO_ICON_OFFSET_Y = 7
+local SP34_FDE = "fde"
+local SP34_BLACK = "black"
+local SP34_TEXTURES = {
+    [SP34_FDE] = [[wpn\sp34-fde_d]],
+    [SP34_BLACK] = [[wpn\sp34-blk_d]],
+}
+-- Rarity values are relative weights within each weapon's eligible camo pool.
+local CAMO_RARITY_WEIGHTS = {
+    common = 50,
+    uncommon = 25,
+    rare = 10,
+    very_rare = 4,
+    legendary = 1,
+    none = 0,
+}
+
+local config_files = {}
+local selected_by_weapon = {}
+local unlocked_sections = {}
+local unlocked_ids = {}
+local unlocked_named_ids = {}
+local starting_faction = nil
+local clone_patch_installed = false
+local item_weapon_patch_installed = false
+local addon_hook_installed = false
+local inventory_icon_patch_installed = false
+local details_patch_installed = false
+
+local function play_camo_sound()
+    if not db.actor then return end
+    local sound = sound_object("interface\\items_use\\spray_1")
+    sound:play(db.actor, 0, sound_object.s2d)
+end
+
+local function normalize_texture(texture)
+    local value = string.lower(tostring(texture or ""))
+    value = string.gsub(value, "/", "\\")
+    value = string.gsub(value, "%.dds$", "")
+    return value
+end
+
+local function value_is_true(value)
+    return value == true or value == "true" or value == "1"
+end
+
+local function parse_name_set(value)
+    local result = {}
+    for name in string.gmatch(string.lower(tostring(value or "")), "[^,%s]+") do
+        result[name] = true
+    end
+    return result
+end
+
+local function normalize_name(value)
+    local name = string.match(tostring(value or ""), "^%s*(.-)%s*$")
+    return name ~= "" and string.lower(name) or nil
+end
+
+local function normalize_faction(value)
+    local faction = normalize_name(value)
+    if not faction then return nil end
+    faction = string.gsub(faction, "^actor_", "")
+    return faction
+end
+
+local function parse_rarity(value)
+    local rarity = normalize_name(value)
+    if not rarity then return nil end
+    if CAMO_RARITY_WEIGHTS[rarity] ~= nil then return rarity end
+
+    local weight = tonumber(rarity)
+    if weight and weight >= 0 then return weight end
+end
+
+local function rarity_weight(rarity)
+    if type(rarity) == "number" then return rarity end
+    return CAMO_RARITY_WEIGHTS[rarity] or 0
+end
+
+local function is_metadata_key(key)
+    return key == "camo_name" or string.sub(key, 1, 5) == "camo_"
+end
+
+local function is_weapon(obj)
+    if not obj or not obj.cast_Weapon then return false end
+    local ok, weapon = pcall(obj.cast_Weapon, obj)
+    return ok and weapon ~= nil
+end
+
+local function active_weapon()
+    local obj = db.actor and db.actor:active_item()
+    return is_weapon(obj) and obj or nil
+end
+
+local function base_weapon_section(weapon)
+    if not weapon then return nil end
+
+    local section = weapon:section()
+    local visited = {}
+    for _ = 1, 8 do
+        if not section or section == "" or visited[section] then break end
+        visited[section] = true
+
+        local parent = ini_sys:r_string_ex(section, "parent_section")
+        if not parent or parent == "" or parent == section then break end
+        section = parent
+    end
+    return section
+end
+
+local function collect_texture_map(ini, section)
+    local result = {}
+    local entries = ini:collect_section(section) or {}
+    for key, value in pairs(entries) do
+        if not is_metadata_key(key) then
+            local texture = normalize_texture(value)
+            if texture ~= "" then
+                result[key] = texture
+            end
+        end
+    end
+    return result
+end
+
+local function load_config_file(file_name)
+    local path = CONFIG_DIR .. file_name
+    local ok, ini = pcall(ini_file_ex, path)
+    if not ok or not ini then
+        printf("[3DSS CAMO] Could not load %s", path)
+        return
+    end
+
+    local file_data = {
+        name = file_name,
+        ini = ini,
+        sections = {},
+        section_order = {},
+    }
+
+    local sections = ini:get_sections() or {}
+    for _, section in ipairs(sections) do
+        local entries = ini:collect_section(section) or {}
+        local faction_rarities = {}
+        local named_unlock_ids = {}
+        for key, value in pairs(entries) do
+            local lower_key = string.lower(key)
+            local rarity_faction = string.match(lower_key, "^camo_rarity_(.+)$")
+            local rarity = rarity_faction and parse_rarity(value)
+            if rarity_faction and rarity ~= nil then
+                faction_rarities[rarity_faction] = rarity
+            elseif rarity_faction and normalize_name(value) then
+                printf(
+                    "[3DSS CAMO] Unknown camo rarity [%s] for faction [%s] in section [%s]",
+                    tostring(value),
+                    rarity_faction,
+                    section
+                )
+            end
+
+            local unlock_name = string.match(lower_key, "^camo_unlock_id_(.+)$")
+            local unlock_id = unlock_name and normalize_name(value)
+            if unlock_name and unlock_id then
+                named_unlock_ids[unlock_name] = unlock_id
+            end
+        end
+
+        local rarity = parse_rarity(entries.camo_rarity)
+        if rarity == nil and normalize_name(entries.camo_rarity) then
+            printf(
+                "[3DSS CAMO] Unknown camo_rarity [%s] in section [%s]",
+                tostring(entries.camo_rarity),
+                section
+            )
+        end
+
+        local section_data = {
+            name = section,
+            base = normalize_name(entries.camo_base),
+            label = ini:r_string_ex(section, "camo_name"),
+            icon = ini:r_string_ex(section, "camo_icon"),
+            textures = collect_texture_map(ini, section),
+            drop_factions = parse_name_set(entries.camo_drop_factions),
+            start_factions = parse_name_set(entries.camo_start_factions),
+            rarity = rarity,
+            faction_rarities = faction_rarities,
+            unlock_required = value_is_true(entries.camo_unlock_required),
+            unlock_id = normalize_name(entries.camo_unlock_id),
+            named_unlock_ids = named_unlock_ids,
+        }
+        file_data.sections[section] = section_data
+        file_data.section_order[#file_data.section_order + 1] = section
+    end
+
+    if #file_data.section_order > 0 then
+        config_files[#config_files + 1] = file_data
+    end
+end
+
+local function load_configs()
+    config_files = {}
+
+    local files = getFS():file_list_open(
+        "$game_config$",
+        CONFIG_DIR,
+        bit_or(FS.FS_ListFiles, FS.FS_RootOnly)
+    )
+    local count = files and files:Size() or 0
+
+    for index = 0, count - 1 do
+        local file_name = files:GetAt(index)
+        if string.lower(string.sub(file_name, -4)) == ".ltx" then
+            load_config_file(file_name)
+        end
+    end
+
+    printf("[3DSS CAMO] Loaded %s camo config file(s)", tostring(#config_files))
+end
+
+local function target_belongs_to_weapon(file_data, base_section, target_section)
+    if not file_data.sections[base_section] then return false end
+    if target_section == base_section then return true end
+
+    local section_data = file_data.sections[target_section]
+    if section_data and section_data.base then
+        return section_data.base == base_section
+    end
+
+    return string.sub(target_section, 1, #base_section + 1) == base_section .. "_"
+end
+
+local function find_file(file_name)
+    for _, file_data in ipairs(config_files) do
+        if file_data.name == file_name then
+            return file_data
+        end
+    end
+end
+
+local function find_default_file(base_section)
+    for _, file_data in ipairs(config_files) do
+        if file_data.sections[base_section] then
+            return file_data
+        end
+    end
+end
+
+local function shared_unlocks_enabled()
+    return value_is_true(z_3d_scopes_mcm
+        and z_3d_scopes_mcm.get_config
+        and z_3d_scopes_mcm.get_config("camo_shared_unlocks"))
+end
+
+local function debug_mode_enabled()
+    return value_is_true(z_3d_scopes_mcm
+        and z_3d_scopes_mcm.get_config
+        and z_3d_scopes_mcm.get_config("camo_debug_mode"))
+end
+
+local function section_unlock_key(file_data, section)
+    return file_data.name .. "|" .. section
+end
+
+local function named_unlock_key(name, unlock_id)
+    return name .. "|" .. unlock_id
+end
+
+local function camo_display_name(file_data, section)
+    local section_data = file_data and file_data.sections[section]
+    local label = section_data and section_data.label
+    if label and label ~= "" then
+        local translated = game.translate_string(label)
+        if translated and string.find(translated, "%S") then
+            return translated
+        end
+        return label
+    end
+    return section or ""
+end
+
+local function weapon_display_name(weapon)
+    local section = base_weapon_section(weapon)
+    if not section then return "" end
+
+    local inv_name = ini_sys:r_string_ex(section, "inv_name")
+    local translated = game.translate_string(inv_name or section)
+    if translated and string.find(translated, "%S") then
+        return translated
+    end
+    return inv_name or section
+end
+
+local function send_camo_news(string_id, ...)
+    if not (db.actor and news_manager and news_manager.send_tip) then return end
+
+    local template = game.translate_string(string_id)
+    local ok, message = pcall(string.format, template, ...)
+    news_manager.send_tip(
+        db.actor,
+        ok and message or template,
+        nil,
+        nil,
+        5000
+    )
+end
+
+local function camo_is_unlocked(file_data, section)
+    local section_data = file_data.sections[section]
+    if debug_mode_enabled() then return true end
+    if not section_data or not section_data.unlock_required then return true end
+    if unlocked_sections[section_unlock_key(file_data, section)] then return true end
+
+    for name, unlock_id in pairs(section_data.named_unlock_ids or {}) do
+        if unlocked_named_ids[named_unlock_key(name, unlock_id)] then
+            return true
+        end
+    end
+
+    return shared_unlocks_enabled()
+        and section_data.unlock_id
+        and section_data.unlock_id ~= ""
+        and unlocked_ids[section_data.unlock_id] == true
+end
+
+local function record_unlock(file_data, section, weapon, silent)
+    local section_data = file_data and file_data.sections[section]
+    if not section_data then return false end
+
+    local changed = not unlocked_sections[section_unlock_key(file_data, section)]
+    unlocked_sections[section_unlock_key(file_data, section)] = true
+    if section_data.unlock_id and section_data.unlock_id ~= "" then
+        changed = not unlocked_ids[section_data.unlock_id] or changed
+        unlocked_ids[section_data.unlock_id] = true
+    end
+    for name, unlock_id in pairs(section_data.named_unlock_ids or {}) do
+        local key = named_unlock_key(name, unlock_id)
+        changed = not unlocked_named_ids[key] or changed
+        unlocked_named_ids[key] = true
+    end
+    if changed and section_data.unlock_required and not silent then
+        send_camo_news(
+            "ui_3dss_camo_discovered",
+            weapon_display_name(weapon),
+            camo_display_name(file_data, section)
+        )
+    end
+    return changed
+end
+
+local function apply_starting_faction_unlocks()
+    if not db.actor then return end
+
+    if not starting_faction then
+        local ok, faction = pcall(function() return get_actor_true_community() end)
+        if not ok or not faction then
+            ok, faction = pcall(function() return db.actor:character_community() end)
+        end
+        starting_faction = ok and normalize_faction(faction) or nil
+    end
+    if not starting_faction then return end
+
+    for _, file_data in ipairs(config_files) do
+        for _, section in ipairs(file_data.section_order) do
+            local section_data = file_data.sections[section]
+            if section_data
+                and section_data.unlock_required
+                and section_data.start_factions[starting_faction]
+            then
+                record_unlock(file_data, section, nil, true)
+            end
+        end
+    end
+end
+
+function notify_locked_camo(camo_name)
+    send_camo_news("ui_3dss_camo_locked", camo_name)
+end
+
+local function selected_state(weapon, selection_id)
+    local state = weapon and selected_by_weapon[selection_id or weapon:id()]
+    local base_section = base_weapon_section(weapon)
+    if not base_section then return nil, nil end
+
+    if state then
+        local file_data = find_file(state.file)
+        if file_data
+            and file_data.sections[state.section]
+            and target_belongs_to_weapon(file_data, base_section, state.section)
+        then
+            return file_data, state.section
+        end
+    end
+
+    local file_data = find_default_file(base_section)
+    return file_data, file_data and base_section or nil
+end
+
+local function update_camo_inventory_icon(cell, xml, weapon)
+    if cell and cell.camo_icon then
+        cell.camo_icon:Show(false)
+    end
+    if not (cell and cell.cell and xml and is_weapon(weapon)) then return end
+
+    local file_data, camo_section = selected_state(weapon)
+    local section_data = file_data and file_data.sections[camo_section]
+    if not (section_data and section_data.icon and section_data.icon ~= "") then
+        return
+    end
+
+    if not cell.camo_icon then
+        cell.camo_icon = xml:InitStatic(cell.path .. ":" .. cell.cx .. ":pic", cell.cell)
+    end
+
+    local icon_size = 12 * CAMO_ICON_SCALE
+    local icon_width = icon_size * utils_xml.screen_ratio()
+    local inset = math.max(1, icon_size * 0.1)
+    local cell_width = cell.cell:GetWidth()
+    local cell_height = cell.cell:GetHeight()
+
+    cell.camo_icon:InitTexture(section_data.icon)
+    cell.camo_icon:SetStretchTexture(true)
+    cell.camo_icon:SetWndSize(vector2():set(icon_width, icon_size))
+    cell.camo_icon:SetWndPos(vector2():set(
+        cell_width - icon_width - inset + CAMO_ICON_OFFSET_X,
+        cell_height - icon_size - inset + CAMO_ICON_OFFSET_Y
+    ))
+    cell.camo_icon:Show(true)
+end
+
+local function install_inventory_icon_patch()
+    if inventory_icon_patch_installed
+        or not (utils_ui and utils_ui.UICellItem)
+    then
+        return
+    end
+
+    local base_add_counter = utils_ui.UICellItem.Add_Counter
+    function utils_ui.UICellItem:Add_Counter(xml, obj, section)
+        base_add_counter(self, xml, obj, section)
+        update_camo_inventory_icon(self, xml, obj)
+    end
+
+    local base_reset = utils_ui.UICellItem.Reset
+    function utils_ui.UICellItem:Reset()
+        base_reset(self)
+        if self.camo_icon then
+            self.camo_icon:Show(false)
+        end
+    end
+
+    inventory_icon_patch_installed = true
+end
+
+local function build_texture_targets(file_data, base_section, target_section)
+    local base_data = file_data.sections[base_section]
+    local target_data = file_data.sections[target_section]
+    if not base_data or not target_data then return nil end
+
+    local known_texture_slots = {}
+    for _, section in ipairs(file_data.section_order) do
+        if target_belongs_to_weapon(file_data, base_section, section) then
+            for slot, texture in pairs(file_data.sections[section].textures) do
+                if base_data.textures[slot] then
+                    known_texture_slots[texture] = slot
+                end
+            end
+        end
+    end
+
+    local targets = {}
+    for slot, base_texture in pairs(base_data.textures) do
+        targets[slot] = target_data.textures[slot] or base_texture
+    end
+    return known_texture_slots, targets
+end
+
+local function get_weapon_materials(weapon, hud_mode)
+    if not is_weapon(weapon) or not weapon.get_shaders then return nil end
+    if hud_mode == nil then hud_mode = true end
+
+    local ok, materials = pcall(weapon.get_shaders, weapon, hud_mode)
+    return ok and type(materials) == "table" and materials or nil
+end
+
+local function detect_sp34_variant(weapon, materials)
+    materials = materials or get_weapon_materials(weapon)
+    if not materials then return nil end
+
+    local found_black = false
+    for _, material in pairs(materials) do
+        local texture = material and normalize_texture(material.texture)
+        if texture == SP34_TEXTURES[SP34_FDE] then
+            return SP34_FDE
+        elseif texture == SP34_TEXTURES[SP34_BLACK] then
+            found_black = true
+        end
+    end
+    return found_black and SP34_BLACK or nil
+end
+
+local function apply_sp34_selected(weapon, materials, hud_mode, selection_id)
+    local state = selected_by_weapon[selection_id or weapon:id()]
+    local variant = state and state.sp34_variant
+    local replacement = variant and SP34_TEXTURES[variant]
+    if not replacement then return false end
+
+    if hud_mode == nil then hud_mode = true end
+    materials = materials or get_weapon_materials(weapon, hud_mode)
+    if not materials then return false end
+
+    local changed = false
+    for visual_id, material in pairs(materials) do
+        local current_texture = material and normalize_texture(material.texture)
+        local is_sp34_texture = current_texture == SP34_TEXTURES[SP34_FDE]
+            or current_texture == SP34_TEXTURES[SP34_BLACK]
+
+        if type(visual_id) == "number"
+            and material
+            and is_sp34_texture
+            and replacement ~= current_texture
+        then
+            local applied = pcall(
+                weapon.set_shader,
+                weapon,
+                visual_id,
+                material.shader,
+                replacement,
+                hud_mode
+            )
+            changed = applied or changed
+        end
+    end
+    return changed
+end
+
+local function apply_selected(weapon, selection_id)
+    if not is_weapon(weapon) then return false end
+    if not weapon.get_shaders or not weapon.set_shader then return false end
+
+    local file_data, target_section = selected_state(weapon, selection_id)
+    local base_section = base_weapon_section(weapon)
+    local known_texture_slots
+    local targets
+    if file_data and target_section and base_section then
+        known_texture_slots, targets =
+            build_texture_targets(file_data, base_section, target_section)
+    end
+
+    local changed = false
+    for _, hud_mode in ipairs({true, false}) do
+        local materials = get_weapon_materials(weapon, hud_mode)
+        if materials then
+            for visual_id, material in pairs(materials) do
+                local current_texture = material and normalize_texture(material.texture)
+                local slot = current_texture
+                    and known_texture_slots
+                    and known_texture_slots[current_texture]
+                local replacement = slot and targets[slot]
+
+                if type(visual_id) == "number"
+                    and material
+                    and replacement
+                    and replacement ~= current_texture
+                then
+                    local applied = pcall(
+                        weapon.set_shader,
+                        weapon,
+                        visual_id,
+                        material.shader,
+                        replacement,
+                        hud_mode
+                    )
+                    changed = applied or changed
+                end
+            end
+
+            changed = apply_sp34_selected(
+                weapon,
+                materials,
+                hud_mode,
+                selection_id
+            ) or changed
+        end
+    end
+
+    return changed
+end
+
+local function schedule_apply_id(weapon_id)
+    if not weapon_id then return end
+
+    local event_key = tostring(weapon_id)
+    RemoveTimeEvent(EVENT_NAMESPACE, event_key)
+    CreateTimeEvent(EVENT_NAMESPACE, event_key, 0, function(id)
+        local current = level.object_by_id(id)
+        if current then
+            apply_selected(current)
+        end
+        return true
+    end, weapon_id)
+end
+
+local function schedule_apply(weapon)
+    if weapon then
+        schedule_apply_id(weapon:id())
+    end
+end
+
+function refresh_camo(weapon)
+    if not is_weapon(weapon) then return false end
+    local state = selected_by_weapon[weapon:id()]
+    if not state or not ((state.file and state.section) or state.sp34_variant) then
+        return false
+    end
+    schedule_apply(weapon)
+    return true
+end
+
+local function showcase_source_id(display_id)
+    if not (display_id and weapon_showcase and weapon_showcase.weapon_displays) then
+        return nil
+    end
+
+    for _, displayed_weapons in pairs(weapon_showcase.weapon_displays) do
+        for item_id, world_id in pairs(displayed_weapons) do
+            if world_id == display_id then
+                return item_id
+            end
+        end
+    end
+end
+
+local function apply_showcase_display(display)
+    if not display then return false end
+
+    local source_id = showcase_source_id(display:id())
+    if not source_id then return false end
+
+    return apply_selected(display, source_id)
+end
+
+local function apply_loaded_showcase_displays()
+    if not (weapon_showcase and weapon_showcase.weapon_displays) then return end
+
+    for _, displayed_weapons in pairs(weapon_showcase.weapon_displays) do
+        for item_id, world_id in pairs(displayed_weapons) do
+            local display = level.object_by_id(world_id)
+            if display then
+                apply_selected(display, item_id)
+            end
+        end
+    end
+end
+
+function game_object_on_net_spawn(obj)
+    apply_showcase_display(obj)
+end
+
+function ActorMenu_on_item_after_move(case_id, item, mode)
+    if not (case_id and item and mode == "loot") then return end
+
+    local item_id = item:id()
+    CreateTimeEvent(EVENT_NAMESPACE, "showcase_" .. item_id, 0, function()
+        local displays = weapon_showcase
+            and weapon_showcase.weapon_displays
+            and weapon_showcase.weapon_displays[case_id]
+        local display_id = displays and displays[item_id]
+        local display = display_id and level.object_by_id(display_id)
+        if display then
+            apply_selected(display, item_id)
+        end
+        return true
+    end)
+end
+
+local function label_for(file_data, base_section, target_section)
+    local section_data = file_data.sections[target_section]
+    if section_data and section_data.label and section_data.label ~= "" then
+        local translated = game.translate_string(section_data.label)
+        if translated and string.find(translated, "%S") then
+            return translated
+        end
+        return section_data.label
+    end
+
+    if target_section == base_section then
+        return base_section
+    end
+    local suffix = string.sub(target_section, #base_section + 2)
+    return string.find(suffix, "%S") and suffix or target_section
+end
+
+function get_camo_options(weapon)
+    if not is_weapon(weapon) then return {} end
+
+    local base_section = base_weapon_section(weapon)
+    if not base_section then return {} end
+
+    local selected_file, selected_section = selected_state(weapon)
+    local options = {}
+
+    for _, file_data in ipairs(config_files) do
+        if file_data.sections[base_section] then
+            for _, target_section in ipairs(file_data.section_order) do
+                if target_belongs_to_weapon(file_data, base_section, target_section) then
+                    local unlocked = camo_is_unlocked(file_data, target_section)
+                    options[#options + 1] = {
+                        file = file_data.name,
+                        section = target_section,
+                        label = label_for(file_data, base_section, target_section),
+                        icon = file_data.sections[target_section].icon,
+                        selected = selected_file == file_data and selected_section == target_section,
+                        locked = not unlocked,
+                    }
+                end
+            end
+        end
+    end
+
+    return options
+end
+
+local function add_camo_details(sheet, options)
+    local icons = {}
+    for _, option in ipairs(options or {}) do
+        if option.icon and string.find(option.icon, "%S") then
+            icons[#icons + 1] = option
+        end
+    end
+    if #icons == 0 then return false end
+
+    local xml = sheet.xml
+    sheet:AddText(
+        xml,
+        "text_b_l",
+        0,
+        game.translate_string("ui_3dss_available_camos")
+    )
+
+    local row = xml:InitStatic("itm_details:form", nil)
+    local row_width = row:GetWidth()
+    local ratio = utils_xml.screen_ratio()
+    local icon_height = 36
+    local icon_width = icon_height * ratio
+    local spacing_x = 5 * ratio
+    local spacing_y = 5
+    local x = 0
+    local y = 0
+    sheet.camo_detail_icons = {}
+
+    for _, option in ipairs(icons) do
+        if x > 0 and x + icon_width > row_width then
+            x = 0
+            y = y + icon_height + spacing_y
+        end
+
+        local icon = xml:InitStatic("itm_details:form:pic", row)
+        icon:InitTexture(option.icon)
+        icon:SetStretchTexture(true)
+        icon:SetWndSize(vector2():set(icon_width, icon_height))
+        icon:SetWndPos(vector2():set(x, y))
+        icon:Show(true)
+        sheet.camo_detail_icons[#sheet.camo_detail_icons + 1] = {
+            control = icon,
+            label = tostring(option.label or option.section or ""),
+        }
+
+        x = x + icon_width + spacing_x
+    end
+
+    row:SetWndSize(vector2():set(row_width, y + icon_height))
+    sheet.scroll:AddWindow(row, true)
+    row:SetAutoDelete(true)
+    sheet:AddLine(xml, 0)
+    return true
+end
+
+local function install_details_patch()
+    if details_patch_installed
+        or not (ui_itm_details and ui_itm_details.UIItemSheet)
+        or not ui_itm_details.UIItemSheet.Reset
+        or not ui_itm_details.UIItemSheet.AddText
+        or not ui_itm_details.UIItemSheet.Update
+    then
+        return
+    end
+
+    local original_update = ui_itm_details.UIItemSheet.Update
+    ui_itm_details.UIItemSheet.Update = function(self)
+        local result = original_update(self)
+
+        for _, entry in ipairs(self.camo_detail_icons or {}) do
+            if entry.control:IsShown() and entry.control:IsCursorOverWindow() then
+                self.hint_wnd:Update()
+                break
+            end
+        end
+
+        return result
+    end
+
+    local original_reset = ui_itm_details.UIItemSheet.Reset
+    ui_itm_details.UIItemSheet.Reset = function(self, obj)
+        self.camo_detail_icons = nil
+        local options = is_weapon(obj) and get_camo_options(obj) or {}
+        if #options == 0 then
+            return original_reset(self, obj)
+        end
+
+        local original_add_text = ui_itm_details.UIItemSheet.AddText
+        local upgrade_heading = game.translate_string("st_ui_upgrade_list")
+        local injected = false
+
+        ui_itm_details.UIItemSheet.AddText = function(self_inner, xml, path, offset, text)
+            if not injected and self_inner == self and text == upgrade_heading then
+                injected = add_camo_details(self, options)
+            end
+            return original_add_text(self_inner, xml, path, offset, text)
+        end
+
+        local ok, result = pcall(original_reset, self, obj)
+        ui_itm_details.UIItemSheet.AddText = original_add_text
+
+        if not ok then
+            error(result)
+        end
+        if not injected then
+            add_camo_details(self, options)
+        end
+        return result
+    end
+
+    details_patch_installed = true
+end
+
+local function camo_can_drop_for(section_data, faction)
+    if next(section_data.drop_factions)
+        and not (faction and section_data.drop_factions[faction])
+    then
+        return false
+    end
+
+    local rarity = faction and section_data.faction_rarities[faction]
+    if rarity == nil then rarity = section_data.rarity end
+    if rarity ~= nil then
+        return rarity_weight(rarity) > 0
+    end
+
+    return false
+end
+
+local function camo_rarity_weight(section_data, faction, default_rarity)
+    local rarity = faction and section_data.faction_rarities[faction]
+    if rarity == nil then rarity = section_data.rarity end
+    if rarity ~= nil then
+        return rarity_weight(rarity)
+    end
+
+    return default_rarity and rarity_weight(default_rarity) or 0
+end
+
+function assign_drop_camo(weapon, faction)
+    if not is_weapon(weapon) then return false end
+
+    local existing = selected_by_weapon[weapon:id()]
+    if existing and existing.file and existing.section then return false end
+
+    faction = string.lower(tostring(faction or ""))
+    local base_section = base_weapon_section(weapon)
+    if not base_section then return false end
+
+    local candidates = {}
+    local total_weight = 0
+    for _, file_data in ipairs(config_files) do
+        local base_data = file_data.sections[base_section]
+        if base_data then
+            local variant_candidates = {}
+            for _, target_section in ipairs(file_data.section_order) do
+                local section_data = file_data.sections[target_section]
+                if target_section ~= base_section
+                    and target_belongs_to_weapon(file_data, base_section, target_section)
+                    and camo_can_drop_for(section_data, faction)
+                then
+                    local weight = camo_rarity_weight(section_data, faction)
+                    if weight > 0 then
+                        variant_candidates[#variant_candidates + 1] = {
+                            file = file_data,
+                            section = target_section,
+                            weight = weight,
+                        }
+                    end
+                end
+            end
+
+            if #variant_candidates > 0 or camo_can_drop_for(base_data, faction) then
+                local base_weight = camo_rarity_weight(
+                    base_data,
+                    faction,
+                    "common"
+                )
+                if base_weight > 0 then
+                    total_weight = total_weight + base_weight
+                    candidates[#candidates + 1] = {
+                        file = file_data,
+                        section = base_section,
+                        weight = base_weight,
+                    }
+                end
+            end
+
+            for _, candidate in ipairs(variant_candidates) do
+                total_weight = total_weight + candidate.weight
+                candidates[#candidates + 1] = candidate
+            end
+        end
+    end
+    if total_weight <= 0 then return false end
+
+    local roll = math.random() * total_weight
+    local selected = candidates[#candidates]
+    for _, candidate in ipairs(candidates) do
+        roll = roll - candidate.weight
+        if roll <= 0 then
+            selected = candidate
+            break
+        end
+    end
+
+    local state = existing or {}
+    state.file = selected.file.name
+    state.section = selected.section
+    selected_by_weapon[weapon:id()] = state
+    apply_selected(weapon)
+    return true
+end
+
+function discover_weapon_camo(weapon)
+    if not is_weapon(weapon) then return false end
+
+    local file_data, section = selected_state(weapon)
+    return file_data and section and record_unlock(file_data, section, weapon) or false
+end
+
+function is_camo_selected(weapon, file_name, target_section)
+    if not is_weapon(weapon) then return false end
+    local selected_file, selected_section = selected_state(weapon)
+    return selected_file
+        and selected_file.name == file_name
+        and selected_section == target_section
+end
+
+function select_camo(weapon, file_name, target_section)
+    if not is_weapon(weapon) then return false end
+
+    local file_data = find_file(file_name)
+    local base_section = base_weapon_section(weapon)
+    if not file_data
+        or not base_section
+        or not target_belongs_to_weapon(file_data, base_section, target_section)
+    then
+        return false
+    end
+
+    if is_camo_selected(weapon, file_name, target_section) then
+        return true
+    end
+
+    local state = selected_by_weapon[weapon:id()] or {}
+    state.file = file_data.name
+    state.section = target_section
+    selected_by_weapon[weapon:id()] = state
+    apply_selected(weapon)
+    play_camo_sound()
+    return true
+end
+
+local function menu_sp34_swap(weapon)
+    if not is_weapon(weapon) then return end
+
+    local variant = detect_sp34_variant(weapon)
+    if variant == SP34_FDE then
+        return "st_3dss_switch_sp34_black"
+    elseif variant == SP34_BLACK then
+        return "st_3dss_switch_sp34_fde"
+    end
+end
+
+local function toggle_sp34_texture(weapon)
+    if not is_weapon(weapon) then return end
+
+    local current = detect_sp34_variant(weapon)
+    local target
+    if current == SP34_FDE then
+        target = SP34_BLACK
+    elseif current == SP34_BLACK then
+        target = SP34_FDE
+    else
+        return
+    end
+
+    local state = selected_by_weapon[weapon:id()] or {}
+    state.sp34_variant = target
+    selected_by_weapon[weapon:id()] = state
+    apply_selected(weapon)
+    play_camo_sound()
+end
+
+local function migrate_selection(old_id, new_id)
+    local state = old_id and selected_by_weapon[old_id]
+    if not (state and new_id) then return end
+
+    selected_by_weapon[new_id] = state
+    if new_id ~= old_id then
+        selected_by_weapon[old_id] = nil
+    end
+    schedule_apply_id(new_id)
+end
+
+local function install_clone_patch()
+    if clone_patch_installed then return end
+
+    local original_clone_weapon = _G.alife_clone_weapon
+    if not original_clone_weapon then return end
+
+    _G.alife_clone_weapon = function(se_obj, section, parent_id)
+        local old_id = se_obj and se_obj.id
+        local new_weapon = original_clone_weapon(se_obj, section, parent_id)
+        if old_id and selected_by_weapon[old_id] and new_weapon then
+            migrate_selection(old_id, new_weapon.id)
+        end
+        return new_weapon
+    end
+    clone_patch_installed = true
+end
+
+local function install_item_weapon_patches()
+    if item_weapon_patch_installed or not item_weapon then return end
+
+    local original_attach_scope = item_weapon.attach_scope
+    if original_attach_scope then
+        item_weapon.attach_scope = function(item, weapon)
+            local result = original_attach_scope(item, weapon)
+            schedule_apply(weapon)
+            return result
+        end
+    end
+
+    local original_detach_scope = item_weapon.detach_scope
+    if original_detach_scope then
+        item_weapon.detach_scope = function(weapon)
+            local result = original_detach_scope(weapon)
+            schedule_apply(weapon)
+            return result
+        end
+    end
+
+    item_weapon_patch_installed = true
+end
+
+local function install_addon_hooks()
+    if addon_hook_installed or not utils_item then return end
+
+    local original_attach_addon = utils_item.attach_addon
+    if original_attach_addon then
+        utils_item.attach_addon = function(weapon, addon, typ, ignore)
+            local result = original_attach_addon(weapon, addon, typ, ignore)
+            if typ == "scope" then
+                schedule_apply(weapon)
+            end
+            return result
+        end
+    end
+
+    local original_detach_addon = utils_item.detach_addon
+    if original_detach_addon then
+        utils_item.detach_addon = function(weapon, addon, typ, ignore)
+            local result = original_detach_addon(weapon, addon, typ, ignore)
+            if typ == "scope" then
+                schedule_apply(weapon)
+            end
+            return result
+        end
+    end
+
+    addon_hook_installed = true
+end
+
+function actor_item_to_slot(obj)
+    if is_weapon(obj) then schedule_apply(obj) end
+end
+
+function actor_on_changed_slot()
+    schedule_apply(active_weapon())
+end
+
+function actor_on_item_take(obj)
+    if is_weapon(obj) then
+        discover_weapon_camo(obj)
+        schedule_apply(obj)
+    end
+end
+
+function actor_on_first_update()
+    apply_starting_faction_unlocks()
+    if db.actor then
+        db.actor:iterate_inventory(function(_, obj)
+            if is_weapon(obj) then discover_weapon_camo(obj) end
+        end, nil)
+    end
+    schedule_apply(active_weapon())
+    apply_loaded_showcase_displays()
+end
+
+function ActorMenu_on_item_focus_receive(obj)
+    if is_weapon(obj) then schedule_apply(obj) end
+end
+
+function save_state(mdata)
+    mdata.z_3dss_gamma_camo_system = {
+        selections = selected_by_weapon,
+        unlocked_sections = unlocked_sections,
+        unlocked_ids = unlocked_ids,
+        unlocked_named_ids = unlocked_named_ids,
+        starting_faction = starting_faction,
+    }
+end
+
+function load_state(mdata)
+    local data = mdata.z_3dss_gamma_camo_system or {}
+    if data.selections then
+        selected_by_weapon = data.selections or {}
+        unlocked_sections = data.unlocked_sections or {}
+        unlocked_ids = data.unlocked_ids or {}
+        unlocked_named_ids = data.unlocked_named_ids or {}
+        starting_faction = normalize_faction(data.starting_faction)
+    else
+        selected_by_weapon = data
+        unlocked_sections = {}
+        unlocked_ids = {}
+        unlocked_named_ids = {}
+        starting_faction = nil
+    end
+end
+
+function on_game_start()
+    load_configs()
+    install_clone_patch()
+    install_item_weapon_patches()
+    install_addon_hooks()
+    install_inventory_icon_patch()
+    install_details_patch()
+
+    if custom_functor_autoinject then
+        custom_functor_autoinject.add_functor(
+            "3dss_sp34_texture_swap",
+            menu_sp34_swap,
+            menu_sp34_swap,
+            nil,
+            toggle_sp34_texture,
+            true
+        )
+    end
+
+    RegisterScriptCallback("save_state", save_state)
+    RegisterScriptCallback("load_state", load_state)
+    RegisterScriptCallback("actor_on_item_take", actor_on_item_take)
+    RegisterScriptCallback("actor_item_to_slot", actor_item_to_slot)
+    RegisterScriptCallback("actor_on_changed_slot", actor_on_changed_slot)
+    RegisterScriptCallback("actor_on_first_update", actor_on_first_update)
+    RegisterScriptCallback("ActorMenu_on_item_focus_receive", ActorMenu_on_item_focus_receive)
+    RegisterScriptCallback("game_object_on_net_spawn", game_object_on_net_spawn)
+    RegisterScriptCallback("ActorMenu_on_item_after_move", ActorMenu_on_item_after_move)
+end

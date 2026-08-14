@@ -278,7 +278,7 @@ title = lttz_ll_strelok_objective_task_title
 target = lost_stalker_strelok
 descr = lttz_ll_strelok_objective_task_descr
 
-on_complete = %=reward_money(10000) =reward_random_item(af_aam:af_gravi_af_aam:af_fireball_af_aam:af_electra_moonlight_af_aam) =reward_item(decoder) =reward_stash(true) =complete_task_inc_goodwill(50:stalker) =give_task(lttz_ll_chernobyl_raid)%
+on_complete = %=reward_money(10000) =reward_random_item(af_gravi:af_fireball:af_electra_moonlight) =reward_item(decoder) =reward_stash(true) =complete_task_inc_goodwill(50:stalker) =give_task(lttz_ll_chernobyl_raid)%
 condlist_0 = {+living_legend_strelok_objective} complete
 condlist_1 = {+lost_stalker_strelok_dead} fail, {+stalker_stitch_dead} fail, {+stalker_rogue_dead} fail
 
@@ -325,7 +325,7 @@ title = lttz_ll_answers_task_title
 target = lost_stalker_strelok
 descr = lttz_ll_answers_task_descr
 
-on_complete = %=complete_task_inc_goodwill(50:stalker) =reward_item(af_fuzz_kolobok_af_aam) =lttz_ll_give_strelok_pendrive =lttz_ll_take_monolith_shard =remove_special_task_squad(lost_stalker_strelok) =remove_special_task_squad(stalker_stitch) =remove_special_task_squad(pri_a16_stalker_rogue) =open_route(aes2:aes1) =open_route(aes1:zat)%
+on_complete = %=complete_task_inc_goodwill(50:stalker) =reward_item(af_fuzz_kolobok) =lttz_ll_give_strelok_pendrive =lttz_ll_take_monolith_shard =remove_special_task_squad(lost_stalker_strelok) =remove_special_task_squad(stalker_stitch) =remove_special_task_squad(pri_a16_stalker_rogue) =open_route(aes2:aes1) =open_route(aes1:zat)%
 condlist_0 = {+lost_stalker_strelok_dead} fail, {+stalker_stitch_dead} fail, {+stalker_rogue_dead} fail
 
 ;------------------------------------------------
@@ -375,7 +375,7 @@ title = lttz_ll_finish_task_title
 target = mar_smart_terrain_base_stalker_leader_marsh
 descr = lttz_ll_finish_csky_task_descr
 
-on_complete = %=reward_money(25000) =reward_item(af_aac) =reward_stash() =complete_task_inc_goodwill(100:csky) =lttz_ll_take_strelok_pendrive%
+on_complete = %=reward_money(25000) =reward_item(af_empty) =reward_stash() =complete_task_inc_goodwill(100:csky) =lttz_ll_take_strelok_pendrive%
 condlist_0 = {+cold_living_legend_finish} complete
 
 [lttz_ll_finish_freedom]
@@ -399,5 +399,5 @@ title = lttz_ll_finish_task_title
 target = yan_stalker_sakharov
 descr = lttz_ll_finish_ecolog_task_descr
 
-on_complete = %=reward_money(25000) =reward_item(af_aam) =reward_stash() =complete_task_inc_goodwill(100:ecolog) =lttz_ll_take_strelok_pendrive%
+on_complete = %=reward_money(25000) =reward_item(af_cristall) =reward_stash() =complete_task_inc_goodwill(100:ecolog) =lttz_ll_take_strelok_pendrive%
 condlist_0 = {+sakharov_living_legend_finish} complete

@@ -13,8 +13,20 @@
     delete this file without any ill effects to NERFS.
 -- ===================================================================--]]
 
+function to360(h)
+    if h < 0 then
+        h = h + 360
+    end
+    return h
+end
+
 class "UIRFWidget" (CUIScriptWnd)
 
+color_table = {
+    em      = {r = 200, g = 0,   b = 0,  a = 128},
+    lo      = {r = 50,  g = 50,  b = 50, a = 255},
+    hi      = {r = 50,  g = 250, b = 50, a = 255},
+}
 function UIRFWidget:__init(xmlfile,element,texture,pos) super()
     self:InitControls(xmlfile,element,texture,pos)
     RegisterScriptCallback("actor_on_net_destroy", self)
@@ -26,30 +38,31 @@ end
 
 
 function UIRFWidget:InitControls(xmlfile,element,texture,pos)
-    self.colors = {
-        em          = {r = 200, g = 0,   b = 0,  a = 128},
-        lo          = {r = 50,  g = 50,  b = 50, a = 255},
-        hi          = {r = 50,  g = 250, b = 50, a = 255},
-    }
-    local clr = self.colors
+    local clr = color_table
     self.signal_pulse_fade  = 10
+    self.show_pointer = item_radio and item_radio.enable_wid_pointer
     self.int_alpha_loss_max = 0.5
     self.pos = pos or {x=491,y=670}
     self:SetAutoDelete(true)
     self.xml        = CScriptXmlInit()
-    self.xml:ParseFile(xmlfile or "rax_rf_indicator.xml")
+    self.xml:ParseFile(xmlfile or "nerfs_ui_elements.xml")
     self.indicator  = self.xml:InitStatic(element or "indicator",self)
+    self.pointer  = self.xml:InitStatic("pointer", self.indicator)
     if texture then self.indicator:InitTexture(texture) end
     self.indicator:SetTextureColor(GetARGB(clr.lo.a, clr.lo.r, clr.lo.g, clr.lo.b))
+    self.pointer:SetTextureColor(GetARGB(clr.lo.a, clr.lo.r, clr.lo.g, clr.lo.b))
     self.indicator:SetWndPos(vector2():set(self.pos.x, self.pos.y))
     self.indicator:EnableHeading(true)
+    self.pointer:EnableHeading(true)
+    self.pointer:SetConstHeading(true)
+    self.pointer:Show(false)
     self:ShowIndicator(false)
 end
 
 
 function UIRFWidget:SetSignalColor(sigstr,colors)
-    if colors and self.colors[sigstr] then
-        self.colors[sigstr] = colors
+    if colors and color_table[sigstr] then
+        color_table[sigstr] = colors
     end
 end
 
@@ -68,6 +81,9 @@ function UIRFWidget:ShowIndicator(onoff)
     self.indicator:Show(onoff)
 end
 
+function UIRFWidget:ShowPointer(onoff)
+    self.pointer:Show(onoff)
+end
 
 function UIRFWidget:SetPos(x,y)
     self.pos.x = x or self.pos.x
@@ -79,7 +95,7 @@ end
 function UIRFWidget:SetIndicatorColor(signal, interference,emission, tg)
     local tg_emission_noise = math.random(100,400)
     local emission_str      = 0
-    local colors            = self.colors
+    local colors            = color_table
 
     local red   = colors.lo.r
     local green = colors.lo.g
@@ -107,8 +123,25 @@ function UIRFWidget:SetIndicatorColor(signal, interference,emission, tg)
     end
     
     self.indicator:SetTextureColor(clr)
+    self.pointer:SetTextureColor(clr)
+    self.pointer:Show(self.show_pointer and (signal > 0))
+
 end
 
+function UIRFWidget:SetIndicatorHeading(id)
+    -- Thanks to demonized for help with this
+    if not id then return end
+    if not db.actor then return end
+    local obj = id and get_object_by_id(id)
+    if not obj then return end
+    local pos = obj:position()
+    local dirToPos = pos:sub(device().cam_pos):normalize()
+    local dir = device().cam_dir
+    local dirToPosH = to360(-math.deg(dirToPos:getH()))
+    local dirH = to360(-math.deg(dir:getH()))
+    local degree = to360(dirH - dirToPosH)
+    self.pointer:SetHeading(utils_data.deg2rad(degree))
+end
 
 function UIRFWidget:Update()
     if not db.actor then return end

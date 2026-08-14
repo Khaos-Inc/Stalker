@@ -15,6 +15,7 @@ help_wounded_enabled = false
 corpse_detection_enabled = false
 invulnerable = {+strelok_choice_fight} false, {=actor_enemy} false, true
 meet = meet
+on_combat = combat
 
 [meet]
 close_anim 		= guard
@@ -44,6 +45,7 @@ help_wounded_enabled = false
 corpse_detection_enabled = false
 invulnerable = {+strelok_choice_fight} false, {=actor_enemy} false, true
 meet = meet@army_tarasov
+on_combat = combat
 
 [meet@army_tarasov]:meet
 close_anim 		= nil
@@ -57,6 +59,7 @@ far_distance 	= 0
 active = walker@army_1
 suitable = {=check_npc_name(pri_b35_army_1)} true
 prior = 200
+on_combat = combat
 
 [walker@army_1]
 path_walk = merc_1_walk
@@ -67,11 +70,13 @@ help_wounded_enabled = false
 corpse_detection_enabled = false
 invulnerable = {+strelok_choice_fight} false, {=actor_enemy} false, true
 meet = no_meet
+on_combat = combat
 
 [logic@pri_b35_army_2]
 active = walker@army_2
 suitable = {=check_npc_name(pri_b35_army_2)} true
 prior = 200
+on_combat = combat
 
 [walker@army_2]
 path_walk = merc_2_walk
@@ -82,11 +87,13 @@ help_wounded_enabled = false
 corpse_detection_enabled = false
 invulnerable = {+strelok_choice_fight} false, {=actor_enemy} false, true
 meet = no_meet
+on_combat = combat
 
 [logic@pri_b35_army_3]
 active = walker@army_3
 suitable = {=check_npc_name(pri_b35_army_3)} true
 prior = 200
+on_combat = combat
 
 [walker@army_3]
 path_walk = merc_3_walk
@@ -97,11 +104,13 @@ help_wounded_enabled = false
 corpse_detection_enabled = false
 invulnerable = {+strelok_choice_fight} false, {=actor_enemy} false, true
 meet = no_meet
+on_combat = combat
 
 [logic@pri_b35_army_4]
 active = walker@army_4
 suitable = {=check_npc_name(pri_b35_army_4)} true
 prior = 200
+on_combat = combat
 
 [walker@army_4]
 path_walk = merc_5_walk
@@ -114,3 +123,7 @@ help_wounded_enabled = false
 corpse_detection_enabled = false
 invulnerable = {+strelok_choice_fight} false, {=actor_enemy} false, true
 meet = no_meet
+on_combat = combat
+
+[combat]
+combat_type = {=cond_scheme_cover()} cover, {=cond_scheme_camper()} camper

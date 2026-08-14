@@ -1,3 +1,5 @@
+;[[
+
 ; Tronex
 ; 2019/5/16
 ; Lookup list for fetch items
@@ -16,6 +18,8 @@
 ; When a fetch item has a tier defined in its section, it will be picked during rotation if its tier suits NPC's rank
 ; section with value "true" here will ingore their original tier and get included for all npcs despite their ranks
 ; You can control suitable tiers per NPC's rank inside [fetch_tiers]
+
+;]]
 ;------------------------------------------------------------------------
 
 [fetch_tiers]	;-- suitable items tiers per NPC's rank
@@ -30,17 +34,6 @@
 
 [fetch_list]	;-- Enabled fetch sections
 	weapons
-	weapons_nato
-	weapons_eastern
-	weapons_all
-	weapons_novice
-	weapons_trainee
-	weapons_experienced
-	weapons_professional
-	weapons_veteran
-	weapons_expert
-	weapons_master
-	weapons_legend
 	artefacts
 	supplies
 	medical
@@ -51,6 +44,7 @@
 	o_upgrade_kits
 	w_upgrade_kits
 	pda
+	kits
 	mutant_meat
 	mutant_parts
 	mutant_parts_rare
@@ -63,306 +57,70 @@
 	patch_mlr_stalker
 	patch_mlr_greh
 	patch_mlr_grifon
+	freedom_drugs
+
+	;================ bvcx's ================
+	medical_x
+	food_x
+	utils_x
+	
+	mutant_meat_common_x
+	mutant_meat_rare_x
+	
+	mutant_part_common_x
+	mutant_part_medium_x
+	mutant_part_rare_x
+	
+	mutant_hide_common_x
+	mutant_hide_medium_x
+	mutant_hide_rare_x
+	
+	junk_x
 
 ;------------------------------------------------------------------------
 [weapons] 
-	wpn_9a91
-	wpn_abakan
-	wpn_aek
-	wpn_ace21
-	wpn_ak74
-	wpn_ak74m
-	wpn_ak74m_alt
-	wpn_ak74m_custom
-	wpn_ak101
-	wpn_ak102
-	wpn_ak103
-	wpn_ak104
-	wpn_ak105
-	wpn_akm
-	wpn_akms
+	wpn_vityaz
+	wpn_bizon
 	wpn_akms_alt
-	wpn_aks74_new
-	wpn_aug
-	wpn_aug_modern
-	wpn_beretta
-	wpn_beretta_modern
-	wpn_beretta_alt
-	wpn_bm16_full
-	wpn_colt1911_new
-	wpn_colt1911_alt
-	wpn_colt1911_custom
-	wpn_colt1911
-	wpn_cz75
-	wpn_cz75_auto
-	wpn_desert_eagle
-	wpn_fn2000
-	wpn_fnp45
-	wpn_fnx45
-	wpn_g3sg1
-	wpn_g36k
-	wpn_glock
-	wpn_glock_custom
-	wpn_hpsa
-	wpn_hpsa_alt
-	wpn_mp443
-	wpn_groza
-	wpn_gsh18
-	wpn_gsh18_custom
-	wpn_hk416
-	wpn_kiparis
-	wpn_l85
-	wpn_l85a2
-	wpn_l96a1
-	wpn_lr300
-	wpn_m4
-	wpn_m4a1
-	wpn_m16
-	wpn_m79
-	wpn_sig552
-	wpn_mossberg590
-	wpn_mp5
-	wpn_mp5sd
-	wpn_mp412
-	wpn_oc33
-	wpn_aps
-	wpn_pb
-	wpn_pb_custom
-	wpn_pkp
-	wpn_pmm
-	wpn_protecta
-	wpn_rpk74
-	wpn_saiga12s
-	wpn_scar
-	wpn_scar_new
-	wpn_sig550
-	wpn_sv98
-	wpn_svd
-	wpn_svu
-	wpn_tt33_modern
-	wpn_spas12
-	wpn_toz34
-	wpn_wincheaster1300
-	wpn_ump45
-	wpn_usas12
-	wpn_usp
-	wpn_usp_match
-	wpn_val
-	wpn_val_modern
-	wpn_vepr
-	wpn_vihr
-	wpn_vintorez
-	wpn_vintorez_1pn93
-	wpn_vsk94
-	wpn_vssk
-	wpn_k98
-
-;-- Weapons by preference
-[weapons_nato]
-	wpn_ace21
-	wpn_aug
-	wpn_aug_modern
-	wpn_beretta
-	wpn_beretta_alt
-	wpn_beretta_modern
-	wpn_bm16_full
-	wpn_colt1911
-	wpn_colt1911_alt
-	wpn_colt1911_custom
-	wpn_colt1911_new
-	wpn_cz75
-	wpn_cz75_auto
-	wpn_desert_eagle
-	wpn_fn2000
-	wpn_fnp45
-	wpn_fnx45
-	wpn_g36k
-	wpn_g3sg1
-	wpn_glock
-	wpn_glock_custom
-	wpn_hk416
-	wpn_hpsa
-	wpn_hpsa_alt
-	wpn_k98
-	wpn_l85
-	wpn_l85a2
-	wpn_l96a1
-	wpn_lr300
-	wpn_m16
-	wpn_m4
-	wpn_m4a1
-	wpn_m79
-	wpn_mossberg590
-	wpn_mp5
-	wpn_mp5sd
-	wpn_protecta
-	wpn_scar
-	wpn_scar_new
-	wpn_sig550
-	wpn_sig552
-	wpn_spas12
-	wpn_ump45
-	wpn_usas12
-	wpn_usp
-	wpn_usp_match
-	wpn_wincheaster1300
-
-[weapons_eastern]
-	wpn_9a91
-	wpn_abakan
-	wpn_aek
 	wpn_ak74
-	wpn_ak74m
-	wpn_ak74m_alt
-	wpn_ak74m_custom
-	wpn_ak101
-	wpn_ak102
-	wpn_ak103
-	wpn_ak104
-	wpn_ak105
-	wpn_akm
-	wpn_akms
-	wpn_akms_alt
-	wpn_aks74_new
-	wpn_mp443
+	wpn_ak74u
 	wpn_groza
-	wpn_gsh18
-	wpn_gsh18_custom
-	wpn_kiparis
-	wpn_mp412
-	wpn_oc33
-	wpn_aps
-	wpn_pb
-	wpn_pb_custom
-	wpn_pkp
-	wpn_pmm
-	wpn_rpk74
-	wpn_saiga12s
-	wpn_sv98
-	wpn_svd
-	wpn_svu
-	wpn_tt33_modern
-	wpn_toz34
-	wpn_val
-	wpn_val_modern
-	wpn_vepr
-	wpn_vihr
-	wpn_vintorez
-	wpn_vintorez_1pn93
-	wpn_vsk94
-	wpn_vssk
-
-[weapons_all]:weapons_nato,weapons_eastern
-
-;-- Weapons by rank
-[weapons_novice]
-	wpn_beretta_alt
-	wpn_beretta
-	wpn_cz75
-	wpn_pmm
-	wpn_toz34
-
-[weapons_trainee]
-	wpn_colt1911
-	wpn_colt1911_alt
-	wpn_beretta_modern
-	wpn_ak74
-	wpn_akm
-	wpn_akms
-	wpn_akms_alt
-	wpn_pb
-	wpn_pb_custom
-	wpn_tt33_modern
-	wpn_m16
-	wpn_hpsa
-	wpn_hpsa_alt
-	wpn_kiparis
-	wpn_bm16_full
-
-[weapons_experienced]
-	wpn_ak74m
-	wpn_ak74m_alt
-	wpn_ak74m_custom
-	wpn_aks74_new
-	wpn_gsh18
-	wpn_gsh18_custom
-	wpn_aps
-	wpn_ump45
-	wpn_usp
-	wpn_usp_match
-	wpn_mp5
-	wpn_m4
-	wpn_l85
-	wpn_glock
-	wpn_g3sg1
-	wpn_cz75_auto
-	wpn_colt1911_new
-	wpn_oc33
-	wpn_aps
-	
-[weapons_professional]
-	wpn_m4a1
-	wpn_aug
-	wpn_wincheaster1300
-	wpn_rpk74
-	wpn_glock
-	wpn_l85a2
-	wpn_mp5sd
+	wpn_vintorez_n1
 	wpn_9a91
-	wpn_ak101
-	wpn_ak102
-	wpn_ak103
-	wpn_ak104
+	wpn_ash12
+	wpn_ak74u_tac
 	wpn_ak105
-
-[weapons_veteran]
-	wpn_saiga12s
-	wpn_aug_modern
-	wpn_glock_custom
-	wpn_lr300
-	wpn_mossberg590
-	wpn_abakan
+	wpn_saiga12s_m1
+	wpn_sr1m
+	wpn_sr2_m1
+	; wpn_dvl10
+	wpn_sks_b
+	wpn_ak74m_beard
 	wpn_aek
-	wpn_mp443
-
-[weapons_expert]
-	wpn_vepr
-	wpn_g36k
-	wpn_sig550
-	wpn_spas12
-	wpn_fnx45
-	wpn_fnp45
-	wpn_rpk74
-	wpn_svd
-	wpn_val
-
-[weapons_master]
-	wpn_desert_eagle
-	wpn_hk416
-	wpn_protecta
-	wpn_scar
-	wpn_sig552
-	wpn_groza
-	wpn_mp412
-	wpn_svu
-	wpn_val_modern
-	wpn_vihr
-	wpn_vintorez
-	wpn_vintorez_1pn93
-	wpn_vsk94
-
-[weapons_legend]
-	wpn_m79
-	wpn_fn2000
-	wpn_l96a1
-	wpn_scar_new
-	wpn_usas12
-	wpn_ace21
-	wpn_pkp
 	wpn_sv98
+	wpn_svd_m1
+	wpn_ump45_custom
+	wpn_svu
+	;wpn_pkm
+	wpn_rpd
+	wpn_abakan_n
+	wpn_vihr
+	; wpn_svds
+	wpn_kiparis
+	wpn_vz61
+	wpn_ppsh41
+	wpn_remington870
+	; wpn_mossberg590_rail
+	wpn_mp155
+	wpn_toz34_mark4_23
+	wpn_spas12
+	wpn_mosin
+	wpn_pp2000
+	wpn_m4a1_siber
+	; wpn_sig550
+	wpn_ace52
 	wpn_vssk
-
-
+	;wpn_l85_m2
 
 [artefacts]  
 	;-- Burn
@@ -422,11 +180,8 @@
 	antirad                           = true
 	medkit                            = true
 	medkit_army                       = true
-	medkit_scientic                   = true
 	stimpack                          = true
 
-	drug_booster                      = true
-	drug_coagulant                    = true
 	drug_psy_blockade                 = true
 	drug_antidot                      = true
 	drug_radioprotector               = true
@@ -440,15 +195,50 @@
 
 
 [medical]  ;-- Medical items
-	stimpack                          = true
+	bandage                           = true
+	jgut									= true
+	antirad                           = true
 	medkit                            = true
 	medkit_army                       = true
 	medkit_scientic                   = true
+	stimpack                          = true
+	stimpack_army                    = true
+	stimpack_scientic                  = true
+	glucose                        		    = true
+	glucose_s                     	  = true
+	cocaine                			 = true
+	salicidic_acid					= true
+	morphine                          = true
+	adrenalin							= true
+	
+	;-- Drugs
+	drug_booster                 	     = true
+	drug_coagulant                	    = true
+	drug_psy_blockade                = true
+	drug_antidot                  	   = true
+	drug_radioprotector              = true
+	drug_sleepingpills                = true
+	antirad                 	    		 = true
+	akvatab                	 	  	 = true
+	antirad_kalium              	  = true
+	antirad_cystamine                 = true
+	antibio_sulfad            		  = true
+	antiemetic              			  = true
+	antibio_chlor                 	     = true
+	yadylin                			    = true
+	analgetic           			     = true
 	bandage                           = true
 	drug_radioprotector               = true
 	drug_coagulant                    = true
 	drug_antidot                      = true
+	tetanus							  = true
 
+[freedom_drugs]
+	tetanus							  = true
+	cocaine                			  = true
+	morphine                          = true	
+	marijuana						  = true
+	joint							  = true
 
 [drink]  ;-- Smoke and drink
 	vodka                             = true
@@ -461,19 +251,24 @@
 [utility_1]  ;-- Cheap tools
 	swiss_knife                       = true
 	grooming                          = true
-	compression_bag                   = true
-	walkie                            = true
 	cooking                           = true
-
+	leatherman_tool                   = true
+	ramrod_tool                       = true
+	rasp_tool                         = true
 
 [utility_2]  ;-- Rarer/expensive tools
-	guitar_a                          = true
 	;--harmonica_a                    = true
-	detector_simple                   = true
-	itm_backpack                      = true
-	itm_sleepbag                      = true
-	lead_box                          = true
-
+	;--detector_simple                   = true
+	;--itm_backpack                      = true
+	;--itm_sleepbag                      = true
+	;--lead_box                          = true
+	guitar_a = true
+	itm_ammokit = true
+	itm_drugkit = true
+	itm_basickit = true
+	fieldcooker = true
+	itm_advancedkit = true
+	itm_artefactskit = true
 
 [repair] 
 	sharpening_stones                 = true
@@ -489,7 +284,12 @@
 	cleaning_kit_r7                   = true
 	solvent                           = true
 	sewing_kit_b                      = true
+	sewing_kit_h                      = true
+	sewing_kit_a                      = true
 
+[kits]
+	itm_ammokit						  = true
+	itm_drugkit						  = true
 
 [o_upgrade_kits] 
 	upgr_o_1_health
@@ -594,20 +394,17 @@
 	mutant_part_dog_meat             = true
 	mutant_part_flesh_meat           = true
 	mutant_part_psevdodog_meat       = true
-	mutant_part_tushkano_meat        = true
-
 
 [mutant_parts]  ;-- List of mutant parts possible in fetch quests
+	mutant_part_psevdodog_tail         = true
 	mutant_part_snork_hand             = true
 	mutant_part_krovosos_jaw           = true
 	mutant_part_boar_leg               = true
 	mutant_part_chimera_kogot          = true
 	mutant_part_dog_tail               = true
 	mutant_part_flesh_eye              = true
-	mutant_part_psevdodog_tail         = true
 	mutant_part_snork_leg              = true
 	mutant_part_snork_mask             = true
-	mutant_part_tushkano_head          = true
 	mutant_part_pseudogigant_eye       = true
 	mutant_part_pseudogigant_hand      = true
 	mutant_part_chimera_claw           = true
@@ -622,24 +419,13 @@
 	mutant_part_cat_thyroid            = true
 	mutant_part_cat_claw               = true
 	mutant_part_tusk_boar              = true
-	mutant_part_heart_bloodsucker      = true
 	mutant_part_fang_psevdodog         = true
+	mutant_part_heart_bloodsucker      = true
 	mutant_part_brain_burer            = true
 	mutant_part_heart_chimera          = true
 	mutant_part_psysucker_hand         = true
 	mutant_part_lurker_tail            = true
 	mutant_part_lurker_eye             = true
-	hide_chimera                       = true
-	hide_pseudogiant                   = true
-	hide_psy_dog                       = true
-	hide_pseudodog                     = true
-	hide_burer                         = true
-	hide_controller                    = true
-	hide_bloodsucker                   = true
-	hide_boar                          = true
-	hide_flesh                         = true
-	hide_lurker                        = true
-	hide_psysucker                     = true
 
 
 [mutant_parts_rare] 
@@ -651,22 +437,30 @@
 	mutant_part_chimera_claw           = true
 	mutant_part_chimera_kogot          = true
 
-
 [patch_mlr_army] 
 	freedom_patch                      = true
 	stalker_patch                      = true
 	bandit_patch                       = true
 	monolith_patch                     = true
 	killer_patch                       = true
-
+	renegade_patch                     = true
+	greh_patch                         = true
 
 [patch_mlr_freedom] 
 	dolg_patch                         = true
-
+	monolith_patch                     = true
+	greh_patch                     	   = true
+	army_patch                         = true
+	renegade_patch                     = true
 
 [patch_mlr_duty] 
 	freedom_patch                      = true
-
+	monolith_patch                     = true
+	bandit_patch                       = true
+	killer_patch                       = true
+	renegade_patch                     = true
+	csky_patch                         = true
+	greh_patch                         = true
 
 [patch_mlr_monolith] 
 	csky_patch                         = true
@@ -677,28 +471,32 @@
 	dolg_patch                         = true
 	army_patch                         = true
 	killer_patch                       = true
-
+	isg_patch                          = true
 
 [patch_mlr_killer] 
-	csky_patch                         = true
-	freedom_patch                      = true
 	stalker_patch                      = true
-	ecolog_patch                       = true
-	bandit_patch                       = true
+	renegade_patch                     = true
 	dolg_patch                         = true
 	army_patch                         = true
 	monolith_patch                     = true
-
+	greh_patch                     	   = true	
 
 [patch_mlr_bandit] 
 	stalker_patch                      = true
 	dolg_patch                         = true
 	army_patch                         = true
-
+	ecolog_patch                       = true
+	killer_patch                       = true	
+	csky_patch                         = true
+	greh_patch                     	   = true	
 
 [patch_mlr_stalker] 
 	bandit_patch                       = true
+	renegade_patch                     = true
 	monolith_patch                     = true
+	army_patch                         = true
+	greh_patch                         = true
+	killer_patch                       = true
 
 [patch_mlr_greh] 
 	csky_patch                         = true
@@ -712,4 +510,214 @@
 
 [patch_mlr_grifon] 
 	monolith_patch                     = true
+	
+	
 
+	;============================================
+	;============ xcvb addition for ====================
+	;============= stalker tasks ======================
+	;============================================
+
+	;-- Medical						2, 5 (from 2 to 5)
+	[medical_x]
+	bandage                           = true
+	jgut									= true
+	antirad                           = true
+	medkit                            = true
+	medkit_army                       = true
+	medkit_scientic                   = true
+	stimpack                          = true
+	stimpack_army                    = true
+	stimpack_scientic                  = true
+	glucose                        		    = true
+	glucose_s                     	  = true
+	cocaine                			 = true
+	salicidic_acid					= true
+	morphine                          = true
+	adrenalin							= true
+	
+	;-- Drugs
+	drug_booster                 	     = true
+	drug_coagulant                	    = true
+	drug_psy_blockade                = true
+	drug_antidot                  	   = true
+	drug_radioprotector              = true
+	drug_sleepingpills                = true
+	antirad                 	    		 = true
+	akvatab                	 	  	 = true
+	antirad_kalium              	  = true
+	antirad_cystamine                 = true
+	antibio_sulfad            		  = true
+	antiemetic              			  = true
+	antibio_chlor                 	     = true
+	yadylin                			    = true
+	analgetic           			     = true
+
+
+	;-- Food      						1, 5
+	[food_x]
+	kolbasa                           = true
+	conserva                          = true
+	energy_drink                      = true
+	tushonka                             = true
+	protein								= true
+	tomato                      	     = true
+	sausage                   	       = true
+	corn                    			  = true
+	beans                             = true
+	chili									= true
+	chocolate                      = true
+	caffeine							= true
+	
+	;-- Drink and cigs
+	vodka                             = true
+	vodka2							= true
+	vodka_quality					= true
+	beer									= true
+	energy_drink                      = true
+	bottle_metal                      = true
+	water_drink						= true
+	mineral_water					= true
+	marijuana							= true
+	joint									= true
+	tea									= true
+	cigar									= true
+	tobacco							= true
+	hand_rolling_tobacco		= true
+	cigarettes                       	 = true
+	cigarettes_russian                = true
+	cigarettes_lucky                  = true
+	
+	
+	;-- Utilities						1, 4
+	cooking							= true
+	itm_drugkit					= true
+	itm_ammokit                 = true
+	
+	;-- Utilities_2					1, 1
+	[utils_x]
+	fieldcooker						= true
+	guitar_a							= true
+	harmonica_a						= true
+	swiss_knife                       = true
+	batteries_dead					= true
+	hand_watch						= true
+	itm_sleepbag					= true
+	itm_backpack					= true
+	equ_small_pack				= true
+	equ_small_military_pack	= true
+	equ_military_pack			= true
+	equ_tourist_pack				= true
+	
+	;-- Devices						1, 1
+	device_pda_1					= true
+	device_pda_2					= true
+	detector_simple				= true
+	detector_advanced			= true
+	detector_geiger				= true
+	device_flashlight				= true
+	device_torch_nv_1			= true
+	device_torch_nv_2			= true
+	itm_drugkit					= true
+	itm_ammokit                 = true
+
+	;=======================================
+	;======== Rarity according to loot table ===========
+	;=======================================
+	
+	;-- Monster meat low					1, 3
+	[mutant_meat_common_x]
+	mutant_part_flesh_meat				= true
+	mutant_part_boar_chop				= true
+	mutant_part_dog_meat					= true
+	mutant_part_snork_hand				= true
+
+	;-- Monster meat high					1, 2
+	[mutant_meat_rare_x]					
+	mutant_part_chimera_meat			= true
+	mutant_part_lurker_meat				= true
+	mutant_part_krovosos_meat			= true
+	mutant_part_psysucker_meat		= true
+	
+	
+	;=================================
+	;==== Parts, based on chance and rarity ======
+	;=================================
+
+	;-- Monster parts common			2, 6
+	[mutant_part_common_x]
+	mutant_part_boar_leg					= true
+	mutant_part_tusk_boar					= true
+	mutant_part_flesh_eye					= true
+	mutant_part_snork_leg					= true
+	mutant_part_cat_thyroid				= true
+	mutant_part_cat_claw					= true
+	mutant_part_dog_liver					= true
+	mutant_part_dog_heart					= true
+	mutant_part_dog_tail					= true
+	mutant_part_zombi_hand				= true
+
+	;-- Monster parts medium				1, 3
+	[mutant_part_medium_x]				
+	mutant_part_chimera_kogot			= true
+	mutant_part_chimera_claw			= true
+	mutant_part_snork_mask				= true
+	mutant_part_burer_hand				= true
+	mutant_part_cat_tail						= true
+	mutant_part_fracture_hand			= true	
+	mutant_part_lurker_tail					= true
+	mutant_part_lurker_eye				= true
+	mutant_part_psysucker_hand		= true
+	mutant_part_heart_bloodsucker	= true		
+
+	;-- Monster parts rare					1, 1
+	[mutant_part_rare_x]
+	mutant_part_controller_glass		= true
+	mutant_part_controller_hand		= true
+	mutant_part_pseudogigant_hand	= true
+	mutant_part_pseudogigant_eye		= true
+	mutant_part_heart_chimera			= true
+	mutant_part_krovosos_jaw			= true
+	mutant_part_brain_burer				= true
+
+	
+	;=================================
+	;==== Hides, based on chance and rarity =====
+	;=================================
+	
+	;-- common						1, 3
+	[mutant_hide_common_x]
+	hide_flesh							= true
+	
+	;-- medium						1, 2
+	[mutant_hide_medium_x]
+	hide_boar							= true
+	hide_burer						= true
+	
+	;-- rare								1, 1
+	[mutant_hide_rare_x]
+	hide_bloodsucker				= true
+	hide_psysucker				= true
+	hide_chimera					= true
+	hide_pseudogiant				= true
+	hide_controller					= true
+	hide_lurker						= true
+
+
+	;-- Junk					1, 3
+	[junk_x]
+	jar							= true
+	e_syringe					= true
+	rope							= true
+	beadspread				= true
+	broken_detector		= true
+	cards						= true
+	mirror						= true
+	welding_goggles		= true
+	picture_woman			= true
+	porn							= true
+	porn2						= true
+	grease						= true
+	ball_hammer				= true
+	steel_wool				= true	
+	duct_tape					= true

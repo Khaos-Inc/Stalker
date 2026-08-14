@@ -2,6 +2,8 @@
 -- if that changes then it needs to be changed here also
 local _size = item_cooking._size or 2 -- number of Ingredients (not counting fuel)
 
+local IsItem = IsItem
+
 local InitControlsSuper = item_cooking.UICook.InitControls
 item_cooking.UICook.InitControls = function(self)
 	InitControlsSuper(self)
@@ -18,9 +20,10 @@ item_cooking.UICook.CollectValidItems = function(self, obj, section)
 	-- Collect valid items
 	empty_table(self.multiUseItemsObj)
 	local parts_id = {}
+	local is_multiuse = IsItem("multiuse", section, nil)
 	local function search(temp, item)
 		if (item:section() == section) and (not parts_id[item:id()]) then
-			local cnt = IsItem("multiuse",section,nil) and item:get_remaining_uses() or 1
+			local cnt = is_multiuse and item:get_remaining_uses() or 1
 			local id = item:id()
 			parts_id[id] = cnt
 			self.multiUseItemsObj[#self.multiUseItemsObj + 1] = {
@@ -247,13 +250,15 @@ item_cooking.UICook.OnCook = function(self)
 	-- Discharge multiuse cooking tools
 	if self.cooking_limited then
 		local item = nil
-		for id, amount in pairs(self.multiUseItemsObj[1]) do
-			item = get_object_by_id(id)
-			-- attempt to fix spontaneous crashes
-			if amount == 1 and self.multiUseItemsObj[2] then
-				--printf("last amount, selecting next obj id")
-				for id2, amount2 in pairs(self.multiUseItemsObj[2]) do
-					self.obj = get_object_by_id(id2)
+		if self.multiUseItemsObj and self.multiUseItemsObj[1] then
+			for id, amount in pairs(self.multiUseItemsObj[1]) do
+				item = get_object_by_id(id)
+				-- attempt to fix spontaneous crashes
+				if amount == 1 and self.multiUseItemsObj[2] then
+					--printf("last amount, selecting next obj id")
+					for id2, amount2 in pairs(self.multiUseItemsObj[2]) do
+						self.obj = get_object_by_id(id2)
+					end
 				end
 			end
 		end

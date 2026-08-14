@@ -1,10 +1,10 @@
-local desired_distance = 1
-local min_distance = 1
+local desired_distance = 6
+local min_distance = 3
 
 local keep_state_min_time = 1000 -- переключившись в состояние (бег, ходьба, спринт), не переключаться в другое N ms
 
-local dist_walk = 4 -- < dist_run
-local dist_run = 20
+local dist_walk = 9 -- < dist_run
+local dist_run = 27
 -- otherwise - sprint
 
 local sound_wait = "weather,state"

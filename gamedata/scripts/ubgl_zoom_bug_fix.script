@@ -1,0 +1,14 @@
+-- fixes the weird issue of switching to the 0 or 1 sight mode while in gl mode, maybe
+-- verdatim
+
+function on_game_start()
+	RegisterScriptCallback("on_before_key_press", on_before_key_press)
+end
+
+function on_before_key_press(key, bind, dis, flags)
+	local wpn = db.actor:active_item()
+	if not (wpn and wpn:is_weapon()) then return end
+	if wpn:cast_Weapon():GetZoomType() == 2 and get_console_cmd(1, "use_separate_ubgl_keybind") and bind == 35 then
+		flags.ret_value = false
+	end
+end

@@ -153,16 +153,6 @@
 	ms_colors 			= scope_black, scope_red
 	magnifications 		= 3-10
 	
-![1p69] --1p59, 3x-10x, picatinny, UNUSED
-	s3ds_reticle_size 	= 4.15
-	s3ds_eye_relief 	= 5
-	s3ds_exit_pupil		= 0.7	
-	s3ds_ffp			= 1
-	s3ds_reticle_type 	= 5
-	ms_count 			= 2
-	ms_colors 			= scope_black, scope_red
-	magnifications 		= 3-10
-	
 ![wpn_addon_scope_pu] 	--3.5x
 	s3ds_reticle_size 	= 3.4
 	s3ds_exit_pupil		= 0.5
@@ -226,7 +216,10 @@
 	magnifications 		= 2
 	
 ![acog]		--2.8x
-	s3ds_reticle_size 	= 4.2
+reticle_profiles        = acog_ta11_donut, acog_ta11e_chevron, acog_ta31_300blk, acog_ta31_crosshair, acog_ta31_rco_chevron, acog_ta31h_horseshoe_dot, acog_ta33_horseshoe_dot, acog_ta50_crosshair
+reticle_default_profile = acog_ta11_donut
+
+	s3ds_reticle_size 	= 4.4
 	s3ds_eye_relief 	= 2
 	s3ds_exit_pupil		= 0.56
 	s3ds_chroma_power	= 0.02	
@@ -236,7 +229,10 @@
 	magnifications 		= 2.8	
 	
 ![triji]	--acog, 2.8x
-	s3ds_reticle_size 	= 4.2
+reticle_profiles        = acog_ta11_donut, acog_ta11e_chevron, acog_ta31_300blk, acog_ta31_crosshair, acog_ta31_rco_chevron, acog_ta31h_horseshoe_dot, acog_ta33_horseshoe_dot, acog_ta50_crosshair
+reticle_default_profile = acog_ta11_donut
+
+	s3ds_reticle_size 	= 4.4
 	s3ds_eye_relief 	= 2
 	s3ds_exit_pupil		= 0.56
 	s3ds_chroma_power	= 0.02	
@@ -289,11 +285,15 @@
 	s3ds_exit_pupil		= 0.65	
 	s3ds_chroma_power	= 0.05	
 	s3ds_image_type 	= 1
+	s3ds_nvg_gen    	= 3
 	s3ds_reticle_type	= 0
 	ms_count 			= 2
 	magnifications 		= 3.5
 	
 ![susat]	--4x
+reticle_profiles        = susat_green, susat_red
+reticle_default_profile = susat_green
+
 	s3ds_reticle_size 	= 4.1
 	s3ds_eye_relief 	= 2.47
 	s3ds_exit_pupil		= 0.4		
@@ -338,6 +338,9 @@
 	magnifications 		= 1,4
 	
 ![tac30]	--Dynamic, 1x-4x
+reticle_profiles        = tac30_ballistic_cq_v1, tac30_ballistic_cq_v2
+reticle_default_profile = tac30_ballistic_cq_v1
+
 	s3ds_reticle_size 	= 4.2
 	s3ds_eye_relief 	= 2
 	s3ds_exit_pupil		= 0.42
@@ -351,7 +354,6 @@
 	s3ds_reticle_size 	= 4.2
 	s3ds_eye_relief 	= 2
 	s3ds_exit_pupil		= 0.35	
-
 	
 ![po4x34] --Picatinny, 4x
 	s3ds_reticle_size 	= 4.2
@@ -396,12 +398,16 @@
 	s3ds_exit_pupil		= 0.45	
 	s3ds_chroma_power	= 0.05	
 	s3ds_image_type 	= 1
+	s3ds_nvg_gen    	= 2
 	s3ds_reticle_type	= 7
 	s3ds_lens_color     = lens_russian_blue		
 	ms_count 			= 2
 	magnifications 		= 1-6
 	
 ![razorhd] --Dynamic, 1x-6x
+reticle_profiles        = razor_jm1_bdc, razor_msr_bdc6
+reticle_default_profile = razor_jm1_bdc
+
 	s3ds_reticle_size 	= 4.1
 	s3ds_eye_relief 	= 2.3
 	s3ds_chroma_power	= 0		
@@ -423,6 +429,9 @@
 ;--------------------------------------------------------------
 
 ![leupold] --Dynamic, 1x-8x
+reticle_profiles        = cqbss_7.62_cmr_w, cqbss_acss_griffin_mil, cqbss_acss_griffin_mil_m8, cqbss_eotech_vudu, cqbss_h_27d, cqbss_m_tmr
+reticle_default_profile = cqbss_m_tmr
+
 	s3ds_reticle_size 	= 4.35
 	s3ds_eye_relief 	= 4
 	s3ds_exit_pupil		= 0.4	
@@ -430,6 +439,9 @@
 	magnifications 		= 1-8
 	
 ![mark8_rmr] --Dynamic, leupold, 1x-8x
+reticle_profiles        = cqbss_7.62_cmr_w, cqbss_acss_griffin_mil, cqbss_acss_griffin_mil_m8, cqbss_eotech_vudu, cqbss_h_27d, cqbss_m_tmr
+reticle_default_profile = cqbss_m_tmr
+
 	s3ds_reticle_size 	= 4.35
 	s3ds_eye_relief 	= 4
 	s3ds_exit_pupil		= 0.4	
@@ -444,8 +456,21 @@
 	ms_count 			= 3
 	ms_colors 			= scope_black, scope_red, scope_blue
 	magnifications 		= 3-9	
+
+![1p69] --1p59, 3x-10x, picatinny
+	s3ds_reticle_size 	= 4.15
+	s3ds_eye_relief 	= 5
+	s3ds_exit_pupil		= 0.7	
+	s3ds_ffp			= 1
+	s3ds_reticle_type 	= 5
+	ms_count 			= 2
+	ms_colors 			= scope_black, scope_red
+	magnifications 		= 3-10
 	
 ![march_f_shorty] --Dynamic, 1x-10x
+reticle_profiles        = shorty_acss_raptor_m10s, shorty_dr_1f, shorty_dr_tr_1, shorty_fmc1, shorty_fmc2, shorty_fmc3, shorty_sr4
+reticle_default_profile = shorty_acss_raptor_m10s
+
 	s3ds_eye_relief 	= 2.15
 	s3ds_exit_pupil		= 0.55	
 	s3ds_ffp			= 1
@@ -455,6 +480,9 @@
 	magnifications 		= 1-10
 	
 ![march_f_shorty_alt] --Dynamic, 1x-10x
+reticle_profiles        = shorty_acss_raptor_m10s, shorty_dr_1f, shorty_dr_tr_1, shorty_fmc1, shorty_fmc2, shorty_fmc3, shorty_sr4
+reticle_default_profile = shorty_acss_raptor_m10s
+
 	s3ds_eye_relief 	= 2.15
 	s3ds_exit_pupil		= 0.55	
 	s3ds_ffp			= 1
@@ -471,6 +499,9 @@
 	magnifications 		= 1-10
 	
 ![cortex] --Dynamic, 1x-10x
+reticle_profiles        = cortex_acss_raptor_m10s, cortex_dr_1f, cortex_dr_tr_1_illum, cortex_ebr9, cortex_eotech_vudu, cortex_sr4
+reticle_default_profile = cortex_acss_raptor_m10s
+
 	s3ds_reticle_size 	= 4.2
 	s3ds_eye_relief 	= 5.8
 	s3ds_exit_pupil		= 1.04	
@@ -481,6 +512,9 @@
 	magnifications 		= 1-10
 	
 ![marchf] --Dynamic, 3x-24x
+reticle_profiles        = marchf_fma1, marchf_fml, marchf_fml_mb, marchf_fml_t1, marchf_fml_tr1h
+reticle_default_profile = marchf_fma1
+
 	s3ds_reticle_size 	= 4.6
 	s3ds_eye_relief 	= 3.1
 	s3ds_ffp			= 1	

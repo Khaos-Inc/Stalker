@@ -77,7 +77,16 @@ end
 function physic_object_on_use_callback(box)
     local id = box:id()
     local player_stashes = alife_storage_manager.get_state().player_created_stashes
-    if (id and boxes and boxes[id]) or (player_stashes and player_stashes[id]) or (box:name() == "secret_fanat") then
+    local workshop_stashes = alife_storage_manager.get_state().workshop_stashes
+	local is_workshop_stash = false
+	if workshop_stashes then
+		for k, v in pairs(workshop_stashes) do
+			if v == id then
+				is_workshop_stash = true
+			end
+		end
+	end
+    if (id and boxes and boxes[id]) or (player_stashes and player_stashes[id]) or (box:name() == "secret_fanat") or (workshop_stashes and is_workshop_stash)then
         return
     end
     if (IsInvbox(box)) then

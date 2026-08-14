@@ -57,12 +57,6 @@ function fetch_item_icon(cell, obj, sec)
 
 	if is_task_item then
         local axis = utils_xml.get_item_axis(sec)
-
-        -- demonized: HD Inventory Icons Framework
-        local icon_override = aaa_rax_icon_override_mcm and aaa_rax_icon_override_mcm.icon_override
-        local scale = icon_override and icon_override:section_exist(sec) and (icon_override:r_float_ex(sec, "inv_grid_scale") or 1) or SYS_GetParam(2, sec, "inv_grid_scale", 1)
-        axis.w = math.ceil(axis.w / scale)
-        axis.h = math.ceil(axis.h / scale)
         return {texture = "ui_inGame2_PDA_icon_Secondary_mission", x = (axis.w - 13), y = 1, w = 12, h = 12}
 	end
 end

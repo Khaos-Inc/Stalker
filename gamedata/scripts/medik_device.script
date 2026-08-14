@@ -1,0 +1,63 @@
+local SECTION = medik_config.SECTION
+
+local function medik_trader_inject(npc)
+    if trader_autoinject.get_trader_type(npc) == trader_autoinject.SUPPLIER then
+        trader_autoinject.spawn_items(npc, { [SECTION] = 1 }, true)
+    end
+end
+
+if trader_autoinject then
+    local prev_update = trader_autoinject.update
+    function trader_autoinject.update(npc)
+        if prev_update then
+            prev_update(npc)
+        end
+        medik_trader_inject(npc)
+    end
+end
+
+function show_welcome()
+    if medik_config.is_welcomed() then
+        return
+    end
+    medik_config.mark_welcomed()
+    if news_manager and news_manager.send_tip and db.actor then
+        news_manager.send_tip(db.actor, game.translate_string("st_medik_welcome"), nil, "ui_inGame2_PD_Ohuel", 14000)
+    end
+end
+
+function on_game_start()
+    RegisterScriptCallback("actor_on_first_update", medik_statemachine.on_first_update)
+    RegisterScriptCallback("actor_on_first_update", medik_emptyhands.ensure_item)
+    RegisterScriptCallback("actor_on_first_update", show_welcome)
+    RegisterScriptCallback("actor_on_update", medik_statemachine.actor_on_update)
+    medik_hud_cleanup.reset()
+    RegisterScriptCallback("actor_on_update", medik_hud_cleanup.actor_on_update)
+    RegisterScriptCallback("actor_on_attach_vehicle", medik_statemachine.on_attach_vehicle)
+    RegisterScriptCallback("actor_on_detach_vehicle", medik_statemachine.on_detach_vehicle)
+    RegisterScriptCallback("actor_on_weapon_zoom_in", medik_statemachine.on_weapon_zoom_in)
+    RegisterScriptCallback("actor_on_weapon_zoom_out", medik_statemachine.on_weapon_zoom_out)
+    RegisterScriptCallback("actor_on_sleep", medik_statemachine.on_sleep)
+    RegisterScriptCallback("on_option_change", medik_mcm.on_option_change)
+    RegisterScriptCallback("on_option_change", medik_emptyhands.ensure_item)
+    medik_mcm.on_option_change()
+    medik_theme_loader.scan()
+    medik_config.load_transforms()
+    medik_ui.set_theme(medik_config.theme_prefix())
+    RegisterScriptCallback("on_key_press", medik_reposition_gui.on_key_press)
+    RegisterScriptCallback("on_key_press", medik_statemachine.on_key_press)
+    if not _G.medik_wheel_wrapped then
+        local prev_wheel = _G.COnMouseWheel
+        _G.COnMouseWheel = function(direction)
+            medik_statemachine.on_mouse_wheel(direction)
+            if prev_wheel then
+                return prev_wheel(direction)
+            end
+            return true
+        end
+        _G.medik_wheel_wrapped = true
+    end
+    if zzz_player_injuries then
+        zzz_player_injuries.show_hud_type = 0
+    end
+end

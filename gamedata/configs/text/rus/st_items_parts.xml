@@ -105,6 +105,7 @@ ITEMS
 	<string id="st_prt_i_wood_descr">
 		<text>
 		Части кедровой древесины. Чаще всего используются в столярных работах на открытом воздухе для изготовления мебели и других изделий из древесины. Не очень-то полезны в Зоне, однако применение всё же можно найти.\n \n
+		%c[d_orange] Можно использовать для создания множества предметов. \п \п
 		</text>
 	</string>
 	
@@ -114,6 +115,7 @@ ITEMS
 	<string id="st_prt_i_scrap_descr">
 		<text>
 		Куча болтов, винтов и прочих запчастей от различных устройств и оборудования. Также хватает различных алюминиевых и стальных сплавов. Можно использовать для полевого ремонта снаряжения или создания других предметов.\n \n
+		%c[d_orange] Можно использовать для создания множества предметов. \п \п
 		</text>
 	</string>
 	
@@ -122,6 +124,7 @@ ITEMS
 	</string>
 	<string id="st_prt_i_fasteners_descr">
 		<text>В наличии: винты, шайбы, гайки, гвозди и кусочки металлических пластин - целое разнообразие разных типов и размеров. Могут быть использованы для экстренного ремонта снаряжения или же создания других предметов.\n \n
+		%c[d_orange] Можно использовать для создания множества предметов. \п \п
 		</text>
 	</string>
 	
@@ -160,7 +163,7 @@ ITEMS
 		<text>Резина</text>
 	</string>
 	<string id="st_prt_i_rubber_descr">
-		<text>.</text>
+		<text>Стандартная, технологическая резина.</text>
 	</string>
 	
 	<string id="st_prt_i_triggermechanism">
@@ -168,7 +171,7 @@ ITEMS
 	</string>
 	<string id="st_prt_i_triggermechanism_descr">
 		<text>Ударно-спусковой механизм неизвестного огнестрельного оружия. Большинство УСМ схожи между собой, так что нет причин полагать, что механизм не подойдёт для какого-нибудь оружия.\n \n
-		%c[ui_gray_2]ХАРАКТЕРИСТИКИ:\n
+		%c[0,255,255,255]ОСОБЕННОСТИ:\n
 		%c[d_cyan] • %c[ui_gray_2] основной материал\n
 		</text>
 	</string>
@@ -177,7 +180,8 @@ ITEMS
 		<text>Пружина</text>
 	</string>
 	<string id="st_prt_i_spring_descr">
-		<text>Небольшая пружина то ли спускового механизма, то ли прочих внутренностей оружия.\n \n%c[ui_gray_2]ХАРАКТЕРИСТИКИ:\n
+		<text>Небольшая пружина то ли спускового механизма, то ли прочих внутренностей оружия.\n \n
+		%c[0,255,255,255]ОСОБЕННОСТИ:\n				
 		%c[d_cyan] • %c[ui_gray_2] основной материал\n
 		</text>
 	</string>
@@ -186,7 +190,8 @@ ITEMS
 		<text>Пистолетная рукоять</text>
 	</string>
 	<string id="st_prt_i_pistolgrip_descr">
-		<text>Прорезиненная рукоять вполне может быть подпилена или же отлита в новую форму в качестве запасной детали для какого-либо оружия.\n \n%c[ui_gray_2]ХАРАКТЕРИСТИКИ:\n
+		<text>Прорезиненная рукоять вполне может быть подпилена или же отлита в новую форму в качестве запасной детали для какого-либо оружия.\n \n
+		%c[0,255,255,255]ОСОБЕННОСТИ:\n
 		%c[d_cyan] • %c[ui_gray_2] основной материал\n
 		</text>
 	</string>
@@ -305,7 +310,7 @@ WEAPONS (rifles)
 
 <!-- Trigger mechanisms -->
 	<string id="st_trigger_components_1">
-		<text>Однорежимный УСМ куркового типа</text>
+		<text>Однорежимный УСМ куркового типа (Спусковой крючок)</text>
 	</string>
 	<string id="st_trigger_components_1_descr">
 		<text>Однорежимный ударно-спусковой механизм куркового типа.\n \n
@@ -313,7 +318,7 @@ WEAPONS (rifles)
 	</string>
 
 	<string id="st_trigger_components_2">
-		<text>Двухрежимный УСМ куркового типа</text>
+		<text>Двухрежимный УСМ куркового типа (Спусковой крючок)</text>
 	</string>
 	<string id="st_trigger_components_2_descr">
 		<text>Двухрежимный ударно-спусковой механизм куркового типа. Рассчитан на ведение автоматического и одиночного огня.\n \n
@@ -321,7 +326,7 @@ WEAPONS (rifles)
 	</string>
 
 	<string id="st_trigger_components_3">
-		<text>Трёхрежимный УСМ куркового типа</text>
+		<text>Трёхрежимный УСМ куркового типа (Спусковой крючок)</text>
 	</string>
 	<string id="st_trigger_components_3_descr">
 		<text>Трёхрежимный ударно-спусковой механизм куркового типа. Рассчитан на ведение автоматического и одиночного огня, а также стрельбу по 2 патрона. Сильно завязан на конструкцию самого оружия.\n \n
@@ -329,7 +334,7 @@ WEAPONS (rifles)
 	</string>
 
 	<string id="st_trigger_components_4">
-		<text>Однорежимный УСМ ударникового типа
+		<text>Однорежимный УСМ ударникового типа (Спусковой крючок)
 		</text>
 	</string>
 	<string id="st_trigger_components_4_descr">
@@ -338,7 +343,7 @@ WEAPONS (rifles)
 	</string>
 
 	<string id="st_trigger_components_5">
-		<text>Двухрежимный УСМ ударникового типа</text>
+		<text>Двухрежимный УСМ ударникового типа (Спусковой крючок)</text>
 	</string>
 	<string id="st_trigger_components_5_descr">
 		<text>Двухрежимный ударно-спусковой механизм ударникового типа. Допускает ведение автоматического и одиночного огня.\n \n
@@ -346,7 +351,7 @@ WEAPONS (rifles)
 	</string>
 
 	<string id="st_trigger_components_6">
-		<text>УСМ куркового типа [Р]</text>
+		<text>УСМ куркового типа [Р] (Спусковой крючок)</text>
 	</string>
 	<string id="st_trigger_components_6_descr">
 		<text>УСМ куркового типа от бокфлинта или курковки.\n \n
@@ -356,7 +361,7 @@ WEAPONS (rifles)
 
 <!-- Breech blocks -->
 	<string id="st_bolt_carrier_1">
-		<text>Продольно-скользящий затвор с запиранием поворотом [Россия]</text>
+		<text>Продольно-скользящий затвор с запиранием поворотом (Продольно-скользящий затвор)</text>
 	</string>
 	<string id="st_bolt_carrier_1_descr">
 		<text>Продольно-скользящий затвор с запиранием поворотом, отечественного производства.\n \n
@@ -364,7 +369,7 @@ WEAPONS (rifles)
 	</string>
 
 	<string id="st_bolt_carrier_2">
-		<text>Продольно-скользящий затвор с запиранием поворотом [Россия]</text>
+		<text>Продольно-скользящий затвор с запиранием поворотом (Продольно-скользящий затвор)</text>
 	</string>
 	<string id="st_bolt_carrier_2_descr">
 		<text>Продольно-скользящий затвор с запиранием поворотом, отечественного производства, от специального автоматического оружия.\n \n
@@ -372,7 +377,7 @@ WEAPONS (rifles)
 	</string>
 
 	<string id="st_bolt_carrier_3">
-		<text>Продольно-скользящий затвор с запиранием поворотом [НАТО]</text>
+		<text>Продольно-скользящий затвор с запиранием поворотом (Продольно-скользящий затвор)</text>
 	</string>
 	<string id="st_bolt_carrier_3_descr">
 		<text>Продольно-скользящий затвор с запиранием поворотом, производства стран НАТО, от автоматической винтовки стандартного калибра.\n \n
@@ -380,7 +385,7 @@ WEAPONS (rifles)
 	</string>
 
 	<string id="st_bolt_carrier_4">
-		<text>Продольно-скользящий затвор с запиранием перекосом</text>
+		<text>Продольно-скользящий затвор с запиранием перекосом (Продольно-скользящий затвор)</text>
 	</string>
 	<string id="st_bolt_carrier_4_descr">
 		<text>Продольно-скользящий затвор с запиранием перекосом.\n \n
@@ -388,7 +393,7 @@ WEAPONS (rifles)
 	</string>
 
 	<string id="st_bolt_carrier_5">
-		<text>Продольно-скользящий полусвободный затвор</text>
+		<text>Продольно-скользящий полусвободный затвор (Продольно-скользящий затвор)</text>
 	</string>
 	<string id="st_bolt_carrier_5_descr">
 		<text>Продольно-скользящий полусвободный затвор с роликовым торможением.\n \n
@@ -396,7 +401,7 @@ WEAPONS (rifles)
 	</string>
 
 	<string id="st_bolt_carrier_6">
-		<text>Продольно-скользящий затвор с болтовым запиранием</text>
+		<text>Продольно-скользящий затвор с болтовым запиранием (Продольно-скользящий затвор)</text>
 	</string>
 	<string id="st_bolt_carrier_6_descr">
 		<text>Продольно-скользящий затвор с болтовым запиранием.\n \n
@@ -404,15 +409,15 @@ WEAPONS (rifles)
 	</string>
 
 	<string id="st_bolt_carrier_7">
-		<text>Затвор рычажного типа с запиранием клином</text>
+		<text>Продольно-скользящий затвор рычажного типа с запиранием клином (Продольно-скользящий затвор)</text>
 	</string>
 	<string id="st_bolt_carrier_7_descr">
-		<text>Затвор рычажного типа с запиранием клином.\n \n
+		<text>Продольно-скользящий затвор рычажного типа с запиранием клином.\n \n
 		</text>
 	</string>
 
 	<string id="st_bolt_carrier_8">
-		<text>Колодка от бокфлинта [Р]</text>
+		<text>Колодка от бокфлинта [Р] (Продольно-скользящий затвор)</text>
 	</string>
 	<string id="st_bolt_carrier_8_descr">
 		<text>Колодка от бокфлинта.\n \n
@@ -420,7 +425,7 @@ WEAPONS (rifles)
 	</string>
 
 	<string id="st_bolt_carrier_9">
-		<text>Колодка от курковки [Р]</text>
+		<text>Колодка от курковки [Р] (Продольно-скользящий затвор)</text>
 	</string>
 	<string id="st_bolt_carrier_9_descr">
 		<text>Колодка от курковки.\n \n
@@ -428,7 +433,7 @@ WEAPONS (rifles)
 	</string>
 
 	<string id="st_bolt_carrier_10">
-		<text>Продольно-скользящий затвор с запиранием поворотом [НАТО]</text>
+		<text>Продольно-скользящий затвор с запиранием поворотом (Продольно-скользящий затвор)</text>
 	</string>
 	<string id="st_bolt_carrier_10_descr">
 		<text>Продольно-скользящий затвор с запиранием поворотом, производства стран НАТО от крупнокалиберной автоматической винтовки.\n \n
@@ -436,7 +441,7 @@ WEAPONS (rifles)
 	</string>
 
 	<string id="st_bolt_carrier_11">
-		<text>Продольно-скользящий свободный затвор [ПП]</text>
+		<text>Продольно-скользящий свободный затвор (Продольно-скользящий затвор)</text>
 	</string>
 	<string id="st_bolt_carrier_11_descr">
 		<text>Продольно-скользящий свободный затвор от пистолета-пулемёта.\n \n
@@ -446,7 +451,7 @@ WEAPONS (rifles)
 
 <!-- Breech heads -->
 	<string id="st_bolt_1">
-		<text>Клин затвора [Р]</text>
+		<text>Клин затвора [Р] (Затвор)</text>
 	</string>
 	<string id="st_bolt_1_descr">
 		<text>Клин затвора от гладкоствольного помпового ружья или ружья с рычажным запиранием.\n \n
@@ -454,7 +459,7 @@ WEAPONS (rifles)
 	</string>
 
 	<string id="st_bolt_2">
-		<text>Поворотная личинка [2 упора][П]</text>
+		<text>Поворотная личинка [2 упора][П](Затвор)</text>
 	</string>
 	<string id="st_bolt_2_descr">
 		<text>Боевая личинка с двумя упорами от пулемёта под продольно-скользящий затвор с запиранием поворотом.\n \n
@@ -462,7 +467,7 @@ WEAPONS (rifles)
 	</string>
 
 	<string id="st_bolt_3">
-		<text>Поворотная личинка [2 упора][К]</text>
+		<text>Поворотная личинка [2 упора][К](Затвор)</text>
 	</string>
 	<string id="st_bolt_3_descr">
 		<text>Боевая личинка с двумя упорами от автоматического или полуавтоматического гладкоствольного карабина под продольно-скользящий затвор с запиранием поворотом.\n \n
@@ -470,7 +475,7 @@ WEAPONS (rifles)
 	</string>
 
 	<string id="st_bolt_4">
-		<text>Поворотная личинка [2 упора][В]</text>
+		<text>Поворотная личинка [2 упора][В](Затвор)</text>
 	</string>
 	<string id="st_bolt_4_descr">
 		<text>Боевая личинка с двумя упорами от винтовки под продольно-скользящий затвор с запиранием перекосом и продольно-скользящий затвор с болтовым запиранием.\n \n
@@ -478,7 +483,7 @@ WEAPONS (rifles)
 	</string>
 
 	<string id="st_bolt_5">
-		<text>Поворотная личинка [3 упора][В]</text>
+		<text>Поворотная личинка [3 упора][В](Затвор)</text>
 	</string>
 	<string id="st_bolt_5_descr">
 		<text>Боевая личинка с тремя упорами от винтовки под продольно-скользящий затвор с запиранием поворотом.\n \n
@@ -486,7 +491,7 @@ WEAPONS (rifles)
 	</string>
 
 	<string id="st_bolt_6">
-		<text>Поворотная личинка [2 упора][А]</text>
+		<text>Поворотная личинка [2 упора][А](Затвор)</text>
 	</string>
 	<string id="st_bolt_6_descr">
 		<text>Боевая личинка с двумя упорами от автоматической винтовки под продольно-скользящий затвор с запиранием поворотом.\n \n
@@ -494,7 +499,7 @@ WEAPONS (rifles)
 	</string>
 
 	<string id="st_bolt_7">
-		<text>Поворотная личинка [4 упора][АС]</text>
+		<text>Поворотная личинка [4 упора][АС](Затвор)</text>
 	</string>
 	<string id="st_bolt_7_descr">
 		<text>Боевая личинка с четырьмя упорами от специальной автоматической винтовки под продольно-скользящий затвор с запиранием поворотом.\n \n
@@ -502,7 +507,7 @@ WEAPONS (rifles)
 	</string>
 
 	<string id="st_bolt_8">
-		<text>Вращающаяся личинка [6 упоров][А]</text>
+		<text>Вращающаяся личинка [6 упоров][А](Затвор)</text>
 	</string>
 	<string id="st_bolt_8_descr">
 		<text>Боевая личинка с шестью упорами от автоматической винтовки под продольно-скользящий затвор с запиранием поворотом.\n \n
@@ -510,7 +515,7 @@ WEAPONS (rifles)
 	</string>
 
 	<string id="st_bolt_9">
-		<text>Вращающаяся личинка [7 упоров][А]</text>
+		<text>Вращающаяся личинка [7 упоров][А](Затвор)</text>
 	</string>
 	<string id="st_bolt_9_descr">
 		<text>Боевая личинка с семью упорами от автоматической винтовки под продольно-скользящий затвор с запиранием поворотом.\n \n
@@ -518,7 +523,7 @@ WEAPONS (rifles)
 	</string>
 
 	<string id="st_bolt_10">
-		<text>Вращающаяся личинка [8 упоров][А]</text>
+		<text>Вращающаяся личинка [8 упоров][А](Затвор)</text>
 	</string>
 	<string id="st_bolt_10_descr">
 		<text>Боевая личинка с восемью упорами от автоматической винтовки под продольно-скользящий затвор с запиранием поворотом.\n \n
@@ -526,7 +531,7 @@ WEAPONS (rifles)
 	</string>
 
 	<string id="st_bolt_11">
-		<text>Нагнетатели с ударником от бокфлинта [Р]</text>
+		<text>Нагнетатели с ударником от бокфлинта [Р](Затвор)</text>
 	</string>
 	<string id="st_bolt_11_descr">
 		<text>Правый и левый нагнетатели с ударником от бокфлинта.\n \n
@@ -534,7 +539,7 @@ WEAPONS (rifles)
 	</string>
 
 	<string id="st_bolt_12">
-		<text>Курки от курковки [Р]</text>
+		<text>Курки от курковки [Р](Затвор)</text>
 	</string>
 	<string id="st_bolt_12_descr">
 		<text>Правый и левый курки от двуствольной горизонтальной курковки.\n \n
@@ -542,7 +547,7 @@ WEAPONS (rifles)
 	</string>
 
 	<string id="st_bolt_13">
-		<text>Поворотная личинка [2 упора][А][НАТО]</text>
+		<text>Поворотная личинка [2 упора][А][НАТО](Затвор)</text>
 	</string>
 	<string id="st_bolt_13_descr">
 		<text>Боевая личинка с двумя упорами от крупнокалиберной автоматической винтовки производства стран НАТО под продольно-скользящий затвор с запиранием поворотом.\n \n
@@ -550,7 +555,7 @@ WEAPONS (rifles)
 	</string>
 
 	<string id="st_bolt_14">
-		<text>Роликовая личинка [А|ПП]</text>
+		<text>Роликовая личинка [А|ПП](Затвор)</text>
 	</string>
 	<string id="st_bolt_14_descr">
 		<text>Роликовая личинка от ПП или автоматической винтовки под продольно-скользящий полусвободный затвор.\n \n
@@ -558,7 +563,7 @@ WEAPONS (rifles)
 	</string>
 
 	<string id="st_bolt_15">
-		<text>Ударник с боевой пружиной [ПП]</text>
+		<text>Ударник с боевой пружиной [ПП](Затвор)</text>
 	</string>
 	<string id="st_bolt_15_descr">
 		<text>Ударник с боевой пружиной от какого-то отечественного ПП под продольно-скользящий свободный затвор.\n \n
@@ -566,7 +571,7 @@ WEAPONS (rifles)
 	</string>
 
 	<string id="st_bolt_16">
-		<text>Ударник с боевой пружиной [ПП][НАТО]</text>
+		<text>Ударник с боевой пружиной [ПП][НАТО](Затвор)</text>
 	</string>
 	<string id="st_bolt_16_descr">
 		<text>Ударник с боевой пружиной от какого-то импортного ПП под продольно-скользящий свободный затвор.\n \n
@@ -574,7 +579,7 @@ WEAPONS (rifles)
 	</string>
 
 	<string id="st_bolt_17">
-		<text>Ударник с боевой пружиной [ПП][ППШ]</text>
+		<text>Ударник с боевой пружиной [ПП][ППШ](Затвор)</text>
 	</string>
 	<string id="st_bolt_17_descr">
 		<text>Ударник с боевой пружиной от какого-то советского ПП, вроде ПП системы Шпагина, под продольно-скользящий свободный затвор.\n \n
@@ -584,7 +589,7 @@ WEAPONS (rifles)
 
 <!-- Gas tubes, etc -->
 	<string id="st_gas_tube_1">
-		<text>Газовая трубка [К]</text>
+		<text>Газовая трубка [К] (Газовая трубка)</text>
 	</string>
 	<string id="st_gas_tube_1_descr">
 		<text>Газовая трубка от гладкоствольного карабина.\n \n
@@ -592,7 +597,7 @@ WEAPONS (rifles)
 	</string>
 
 	<string id="st_gas_tube_2">
-		<text>Цевьё продольно-скользящего типа [Р]</text>
+		<text>Цевьё продольно-скользящего типа [Р] (Газовая трубка)</text>
 	</string>
 	<string id="st_gas_tube_2_descr">
 		<text>Подвижное цевье продольно-скользящего типа от помпового ружья.\n \n
@@ -600,7 +605,7 @@ WEAPONS (rifles)
 	</string>
 
 	<string id="st_gas_tube_3">
-		<text>Газовая трубка [В]</text>
+		<text>Газовая трубка [В] (Газовая трубка)</text>
 	</string>
 	<string id="st_gas_tube_3_descr">
 		<text>Газовая трубка от самозарядной винтовки.\n \n
@@ -608,7 +613,7 @@ WEAPONS (rifles)
 	</string>
 
 	<string id="st_gas_tube_4">
-		<text>Газовая трубка [АС|ПП]</text>
+		<text>Газовая трубка [АС|ПП] (Газовая трубка)</text>
 	</string>
 	<string id="st_gas_tube_4_descr">
 		<text>Газовая трубка от специальной автоматической винтовки 9мм.\n \n
@@ -616,7 +621,7 @@ WEAPONS (rifles)
 	</string>
 
 	<string id="st_gas_tube_5">
-		<text>Газовая трубка [А|В][Россия]</text>
+		<text>Газовая трубка [А|В] (Газовая трубка)</text>
 	</string>
 	<string id="st_gas_tube_5_descr">
 		<text>Газовая трубка от полуавтоматической или автоматической винтовки (Россия).\n \n
@@ -624,7 +629,7 @@ WEAPONS (rifles)
 	</string>
 
 	<string id="st_gas_tube_6">
-		<text>Газовая трубка [А|В][НАТО]</text>
+		<text>Газовая трубка [А|В](Газовая трубка)</text>
 	</string>
 	<string id="st_gas_tube_6_descr">
 		<text>Газовая трубка от полуавтоматической или автоматической винтовки (НАТО).\n \n
@@ -632,7 +637,7 @@ WEAPONS (rifles)
 	</string>
 
 	<string id="st_gas_tube_7">
-		<text>Газовая трубка [П]</text>
+		<text>Газовая трубка [П] (Газовая трубка)</text>
 	</string>
 	<string id="st_gas_tube_7_descr">
 		<text>Газовая трубка от пулемёта.\n \n
@@ -640,7 +645,7 @@ WEAPONS (rifles)
 	</string>
 
 	<string id="st_gas_tube_8">
-		<text>Отсечка-отражатель [В]</text>
+		<text>Отсечка-отражатель [В] (Газовая трубка)</text>
 	</string>
 	<string id="st_gas_tube_8_descr">
 		<text>Отсечка-отражатель от винтовки с продольно-скользящим затвором с болтовым запиранием.\n \n
@@ -648,7 +653,7 @@ WEAPONS (rifles)
 	</string>
 
 	<string id="st_gas_tube_9">
-		<text>Эжектор от бокфлинта [Р]</text>
+		<text>Эжектор от бокфлинта [Р] (Газовая трубка)</text>
 	</string>
 	<string id="st_gas_tube_9_descr">
 		<text>Эжектор (выбрасыватель) от бокфлинта.\n \n
@@ -656,7 +661,7 @@ WEAPONS (rifles)
 	</string>
 
 	<string id="st_gas_tube_10">
-		<text>Эжектор от курковки [Р]</text>
+		<text>Эжектор от курковки [Р] (Газовая трубка)</text>
 	</string>
 	<string id="st_gas_tube_10_descr">
 		<text>Эжектор (выбрасыватель) от курковки.\n \n
@@ -664,7 +669,7 @@ WEAPONS (rifles)
 	</string>
 
 	<string id="st_gas_tube_11">
-		<text>Газовая трубка [ПП]</text>
+		<text>Газовая трубка [ПП] (Газовая трубка)</text>
 	</string>
 	<string id="st_gas_tube_11_descr">
 		<text>Газовая трубка от пистолета-пулемёта MP5 с рукояткой.\n \n
@@ -678,49 +683,49 @@ WEAPONS (pistols)
 
 <!-- barrels -->
 	<string id="st_prt_w_p_barrel_1">
-		<text>Ствол 9x18 мм</text>
+		<text>Ствол 9x18 мм (Ствол)</text>
 	</string>
 	<string id="st_prt_w_p_barrel_1_descr">
 		<text>Ствол калибра 9x18 мм.\n \n</text>
 	</string>
 
 	<string id="st_prt_w_p_barrel_2">
-		<text>Ствол 9x19 мм</text>
+		<text>Ствол 9x19 мм (Ствол)</text>
 	</string>
 	<string id="st_prt_w_p_barrel_2_descr">
 		<text>Ствол калибра 9x19 мм.\n \n</text>
 	</string>
 
 	<string id="st_prt_w_p_barrel_3">
-		<text>Ствол .45</text>
+		<text>Ствол .45 (Ствол)</text>
 	</string>
 	<string id="st_prt_w_p_barrel_3_descr">
 		<text>Ствол калибра .45.\n \n</text>
 	</string>
 
 	<string id="st_prt_w_p_barrel_4">
-		<text>Ствол 5.7 мм</text>
+		<text>Ствол 5.7 мм (Ствол)</text>
 	</string>
 	<string id="st_prt_w_p_barrel_4_descr">
 		<text>Ствол калибра 5.7 мм.\n \n</text>
 	</string>
 
 	<string id="st_prt_w_p_barrel_5">
-		<text>Ствол 7.62 мм</text>
+		<text>Ствол 7.62 мм (Ствол)</text>
 	</string>
 	<string id="st_prt_w_p_barrel_5_descr">
 		<text>Ствол калибра 7.62 мм.\n \n</text>
 	</string>
 
 	<string id="st_prt_w_p_barrel_6">
-		<text>Закрытый ствол 9x18 мм</text>
+		<text>Закрытый ствол 9x18 мм (Ствол)</text>
 	</string>
 	<string id="st_prt_w_p_barrel_6_descr">
 		<text>Закрытый ствол калибра 9x18 мм.\n \n</text>
 	</string>
 
 	<string id="st_prt_w_p_barrel_7">
-		<text>Ствол .357</text>
+		<text>Ствол .357 (Ствол)</text>
 	</string>
 	<string id="st_prt_w_p_barrel_7_descr">
 		<text>Ствол калибра .357.\n \n</text>
@@ -728,28 +733,28 @@ WEAPONS (pistols)
 
 <!-- trigger mechanism -->
 	<string id="st_prt_w_p_trigger_1">
-		<text>Однорежимный УСМ</text>
+		<text>Однорежимный УСМ (Спусковой крючок)</text>
 	</string>
 	<string id="st_prt_w_p_trigger_1_descr">
 		<text>Однорежимный ударно-спусковой механизм.\n \n</text>
 	</string>
 	
 	<string id="st_prt_w_p_trigger_2">
-		<text>Двухрежимный УСМ</text>
+		<text>Двухрежимный УСМ (Спусковой крючок)</text>
 	</string>
 	<string id="st_prt_w_p_trigger_2_descr">
 		<text>Двухрежимный ударно-спусковой механизм.\n \n</text>
 	</string>
 	
 	<string id="st_prt_w_p_trigger_3">
-		<text>Двухрежимный [ДР|ОР] УСМ</text>
+		<text>Двухрежимный [ДР|ОР] УСМ (Спусковой крючок)</text>
 	</string>
 	<string id="st_prt_w_p_trigger_3_descr">
 		<text>Двухрежимный ударно-спусковой механизм.\n \n</text>
 	</string>
 	
 	<string id="st_prt_w_p_trigger_4">
-		<text>Двухрежимный УСМ от «MP412»</text>
+		<text>Двухрежимный УСМ от «MP412» (Спусковой крючок)</text>
 	</string>
 	<string id="st_prt_w_p_trigger_4_descr">
 		<text>Двухрежимный ударно-спусковой механизм от «MP412».\n \n</text>
@@ -758,42 +763,42 @@ WEAPONS (pistols)
 	
 <!-- recoil spring assembly -->
 	<string id="st_prt_w_p_spring_1">
-		<text>Возвратная пружина 9 мм [СССР]</text>
+		<text>Возвратная пружина 9 мм (Пружина)</text>
 	</string>
 	<string id="st_prt_w_p_spring_1_descr">
 		<text>Возвратная пружина 9 мм от оружия производства СССР.\n \n</text>
 	</string>
 	
 	<string id="st_prt_w_p_spring_2">
-		<text>Возвратная пружина 9мм [Россия]</text>
+		<text>Возвратная пружина 9мм (Пружина)</text>
 	</string>
 	<string id="st_prt_w_p_spring_2_descr">
 		<text>Возвратная пружина 9 мм от оружия производства РФ.\n \n</text>
 	</string>
 	
 	<string id="st_prt_w_p_spring_3">
-		<text>Возвратная пружина .45</text>
+		<text>Возвратная пружина .45 (Пружина)</text>
 	</string>
 	<string id="st_prt_w_p_spring_3_descr">
 		<text>Возвратная пружина .45.\n \n</text>
 	</string>
 	
 	<string id="st_prt_w_p_spring_4">
-		<text>Возвратная пружина 9мм [НАТО]</text>
+		<text>Возвратная пружина 9мм (Пружина)</text>
 	</string>
 	<string id="st_prt_w_p_spring_4_descr">
 		<text>Возвратная пружина 9 мм от оружия производства стран НАТО.\n \n</text>
 	</string>
 	
 	<string id="st_prt_w_p_spring_5">
-		<text>Возвратная пружина 7.62мм</text>
+		<text>Возвратная пружина 7.62мм (Пружина)</text>
 	</string>
 	<string id="st_prt_w_p_spring_5_descr">
 		<text>Возвратная пружина 7.62мм.\n \n</text>
 	</string>
 	
 	<string id="st_prt_w_p_spring_6">
-		<text>Возвратная пружина «R1 DE 6"»</text>
+		<text>Возвратная пружина «R1 DE 6"» (Пружина)</text>
 	</string>
 	<string id="st_prt_w_p_spring_6_descr">
 		<text>Возвратная пружина «R1 DE 6"».\n \n</text>
@@ -813,7 +818,7 @@ OUTFITS
 	</string>
 	
 	<string id="st_prt_o_fabrics_2">
-		<text>Листы синтетической ткани</text>
+		<text>Листы ткани (Синтетика)</text>
 	</string>
 	<string id="st_prt_o_fabrics_2_descr">
 		<text>Сама основа одежды. Данные ткани смешаны с синтетическими материалами как, например, полиэстер и лайкра для обеспечения комфорта и долговечности. Другие использованные защитные ткани - это резина и баллистический нейлон. Набор фурнитуры, молний и материалов для защиты суставов в наличии.\n \n</text>

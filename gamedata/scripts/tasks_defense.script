@@ -346,22 +346,8 @@ function barrier_defense_monolith_complete(a,b)
 	xr_effects.barrier_defense_clean_flags(nil,nil,{'monolith'})
 	local r = {}
 	r.joint = 1
-	
-	local w1, w2 = db.actor:item_in_slot(2), db.actor:item_in_slot(3)
-	if w1 then
-		local s	= ini_sys:r_string_ex(w1:section(), "ammo_class")
-		if (s) then
-			local ammos = str_explode(s,",") 
-			r[ammos[1]] = math.random(4,6)
-		end
-	end
-	if w2 then
-		local s	= ini_sys:r_string_ex(w2:section(), "ammo_class")
-		if (s) then
-			local ammos = str_explode(s,",") 
-			r[ammos[1]] = math.random(4,6)
-		end
-	end
+	r.stimpack_army = 3
+	r.morphine = 3
 	
 	local sim = alife()
 	for k,v in pairs(r) do
@@ -371,7 +357,7 @@ function barrier_defense_monolith_complete(a,b)
 		end
 	end
 	
-	local amt = 40000
+	local amt = 30000
 	news_manager.relocate_money(db.actor, 'in', amt)
 	db.actor:give_money(amt)
 end
@@ -383,22 +369,6 @@ function barrier_defense_zombie_complete(a,b)
 	local r = {}
 	r.vodka = 1
 	r.drug_psy_blockade = 2
-	
-	local w1, w2 = db.actor:item_in_slot(2), db.actor:item_in_slot(3)
-	if w1 then
-		local s	= ini_sys:r_string_ex(w1:section(), "ammo_class")
-		if (s) then
-			local ammos = str_explode(s,",") 
-			r[ammos[1]] = math.random(2,4)
-		end
-	end
-	if w2 then
-		local s	= ini_sys:r_string_ex(w2:section(), "ammo_class")
-		if (s) then
-			local ammos = str_explode(s,",") 
-			r[ammos[1]] = math.random(2,4)
-		end
-	end
 	
 	local sim = alife()
 	for k,v in pairs(r) do
@@ -556,13 +526,11 @@ function xr_effects.barrier_defense_news(a,b,c)
 		end
 		
 		if x == 'end' then
-			MDATA.allow_surge = true -- Re-enable emissions
 			send_tip(game.translate_string('barrier_defense_'..c[2]..'_end_announce'),game.translate_string("mil_freedom_leader_name"),nil,nil, 'ui_inGame2_lukash', nil, 'npc')
 			return
 		end
 		
 		if x == 'escape' then
-			MDATA.allow_surge = true -- Re-enable emissions
 			send_tip(game.translate_string('barrier_defense_'..c[2]..'_run_announce'),game.translate_string("mil_freedom_leader_name"),nil,nil, 'ui_inGame2_lukash', nil, 'npc')
 			return
 		end

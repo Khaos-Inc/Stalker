@@ -1,7 +1,7 @@
 ;------- Trader
 [logic@jup_depo_isg_leader]
-suitable = {=check_npc_name(jup_depo_isg_leader)} true, {=check_npc_trader} true
-;trade = items\trade\trade_isg.ltx
+suitable = {=check_npc_name(jup_depo_isg_leader)} true ;--, {=check_npc_trader} true
+trade = items\trade\trade_isg.ltx
 prior = 200
 active = animpoint@base2
 can_select_weapon = true
@@ -37,7 +37,7 @@ trade_enable = false	;
 
 ;------- Mechanic
 [logic@jup_depo_isg_tech]
-suitable = {=check_npc_name(jup_depo_isg_tech)} true ;, {=check_npc_mechanic} true
+suitable = {=check_npc_name(jup_depo_isg_tech)} true ;--, {=check_npc_mechanic} true
 prior = 200
 active = animpoint@base1
 can_select_weapon = true

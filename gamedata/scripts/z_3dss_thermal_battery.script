@@ -1,0 +1,1071 @@
+local CONFIG_SECTION = "3dss_thermal_battery"
+local STATE_KEY = "3dss_thermal_battery"
+local STATE_VERSION = 2
+local SLOT_MAIN = "main"
+local SLOT_CANTED = "canted"
+local IMAGE_THERMAL = 2
+local IMAGE_THERMAL_COLOR = 3
+local CANTED_ATTACHMENT_SLOTS = {
+	"scripted_canted_irons_main",
+	"scripted_canted_irons_front",
+}
+local BATTERY_EXCLUDED_WEAPONS = {
+	wpn_gauss = true,
+	wpn_gauss_quest = true,
+	wpn_binoc_inv = true,
+}
+
+local DEFAULT_BATTERY = "batteries_dead"
+local DEFAULT_DRAIN_PER_SECOND = 0.0005
+local DEFAULT_DRAIN_TICK = 0.25
+local DEFAULT_CRITICAL_CHARGE = 0.01
+local MINIMUM_CHARGE = 0.0001
+local TEXTURE_EVENT_NAMESPACE = "3dss_thermal_battery_texture"
+local MAGNIFIER_MAPPINGS_CONFIG = [[items\settings\magnifier_switch_mappings.ltx]]
+
+local battery_section = DEFAULT_BATTERY
+local drain_per_second = DEFAULT_DRAIN_PER_SECOND
+local drain_tick = DEFAULT_DRAIN_TICK
+local critical_charge = DEFAULT_CRITICAL_CHARGE
+local use_difficulty_multiplier = true
+
+local pending_spawn
+local original_alife_create_item
+local original_alife_clone_weapon
+local original_build_desc_header
+local original_add_progress_bar
+local original_add_condition_text
+local item_weapon_hooks_installed = false
+local battery_functor_installed = false
+local canted_install_hooks = {}
+local canted_remove_hook_installed = false
+local last_drain_time
+local last_shader_percent = {}
+local last_texture_tier = {}
+local magnifier_sight_identity = {}
+
+local function clamp(value, minimum, maximum)
+	return math.max(minimum, math.min(maximum, value))
+end
+
+local function object_id(obj)
+	if not obj then return nil end
+	if type(obj.id) == "number" then return obj.id end
+	if type(obj.id) == "function" then
+		local ok, id = pcall(obj.id, obj)
+		if ok then return id end
+	end
+	return nil
+end
+
+local function object_section(obj)
+	if not obj then return nil end
+	if type(obj.section) == "function" then
+		local ok, section = pcall(obj.section, obj)
+		if ok then return section end
+	end
+	if type(obj.section_name) == "function" then
+		local ok, section = pcall(obj.section_name, obj)
+		if ok then return section end
+	end
+	return nil
+end
+
+local function rebuild_magnifier_sight_identities()
+	magnifier_sight_identity = {}
+	local ini = ini_file_ex(MAGNIFIER_MAPPINGS_CONFIG)
+	for _, mapping_section in ipairs({ "magnifier_mappings", "unique_mappings" }) do
+		local mappings = ini and ini:collect_section(mapping_section) or {}
+		for off_section, on_section in pairs(mappings) do
+			off_section = tostring(off_section or "")
+			on_section = tostring(on_section or "")
+			if off_section ~= "" and on_section ~= "" then
+				magnifier_sight_identity[off_section] = on_section
+				magnifier_sight_identity[on_section] = on_section
+			end
+		end
+	end
+end
+
+local function same_powered_sight(first, second)
+	if first == second then return true end
+	local first_identity = magnifier_sight_identity[first]
+	local second_identity = magnifier_sight_identity[second]
+	return first_identity ~= nil and first_identity == second_identity
+end
+
+local function is_battery_excluded_weapon(weapon)
+	local section = object_section(weapon)
+	return section ~= nil and BATTERY_EXCLUDED_WEAPONS[section] == true
+end
+
+local function copy_state(state)
+	local result = {}
+	if type(state) ~= "table" then return result end
+	for key, value in pairs(state) do
+		if type(value) == "table" then
+			result[key] = {}
+			for child_key, child_value in pairs(value) do
+				result[key][child_key] = child_value
+			end
+		else
+			result[key] = value
+		end
+	end
+	return result
+end
+
+local function read_state(obj)
+	local id = object_id(obj)
+	if not id then return {} end
+	local state = se_load_var(id, nil, STATE_KEY)
+	return type(state) == "table" and state.version == STATE_VERSION and state or {}
+end
+
+local function write_state(obj, state)
+	local id = object_id(obj)
+	if not id then return end
+	if type(state) == "table" then
+		state.version = STATE_VERSION
+		se_save_var(id, nil, STATE_KEY, state)
+	else
+		se_save_var(id, nil, STATE_KEY, nil)
+	end
+end
+
+local function image_type_for_section(section)
+	if not (section and ini_sys:section_exist(section)) then return 0 end
+	return math.floor(tonumber(ini_sys:r_float_ex(section, "s3ds_image_type")) or 0)
+end
+
+local function is_thermal_image(image_type)
+	return image_type == IMAGE_THERMAL or image_type == IMAGE_THERMAL_COLOR
+end
+
+local function is_thermal_section(section)
+	return is_thermal_image(image_type_for_section(section))
+end
+
+local function has_fusion_outline(section)
+	return section
+		and ini_sys:section_exist(section)
+		and ini_sys:r_bool_ex(section, "s3ds_fusion_outline", false)
+end
+
+local function is_powered_section(section)
+	return is_thermal_section(section) or has_fusion_outline(section)
+end
+
+local function configured_critical(section)
+	if section and ini_sys:section_exist(section) then
+		local override = ini_sys:r_float_ex(section, "power_critical")
+		if override ~= nil then return clamp(override, MINIMUM_CHARGE, 1) end
+	end
+	return critical_charge
+end
+
+local function sync_loose_condition(item, section, charge)
+	if not item then return end
+	charge = clamp(tonumber(charge) or 0, 0, 1)
+
+	local id = object_id(item)
+	local object = item
+	if type(object.condition) ~= "function" or type(object.set_condition) ~= "function" then
+		object = id and level.object_by_id(id) or nil
+	end
+
+	if object and type(object.condition) == "function" and type(object.set_condition) == "function" then
+		local ok, current = pcall(object.condition, object)
+		if ok and math.abs((tonumber(current) or 0) - charge) > 0.000001 then
+			pcall(object.set_condition, object, charge)
+		end
+		return
+	end
+
+	if id and alife_object(id) and alife_process_item then
+		alife_process_item(section or object_section(item), id, { cond = charge })
+	end
+end
+
+local function loose_charge(item)
+	local state = read_state(item)
+	local entry = state.loose
+	if type(entry) == "table" and entry.section == object_section(item) then
+		local charge = clamp(tonumber(entry.charge) or 0, 0, 1)
+		sync_loose_condition(item, entry.section, charge)
+		return charge
+	end
+	sync_loose_condition(item, object_section(item), 0)
+	return 0
+end
+
+local function set_loose_charge(item, section, charge)
+	if not item then return end
+	section = section or object_section(item)
+	charge = clamp(tonumber(charge) or 0, 0, 1)
+	local state = read_state(item)
+	state.loose = {
+		section = section,
+		charge = charge,
+	}
+	write_state(item, state)
+	sync_loose_condition(item, section, charge)
+end
+
+local function get_slot_entry(weapon, slot)
+	local state = read_state(weapon)
+	local entry = state[slot]
+	return type(entry) == "table" and entry or nil
+end
+
+local function set_slot_entry(weapon, slot, section, charge)
+	if not (weapon and slot) then return end
+	local state = read_state(weapon)
+	if section then
+		state[slot] = {
+			section = section,
+			charge = clamp(tonumber(charge) or 0, 0, 1),
+		}
+	else
+		state[slot] = nil
+	end
+	write_state(weapon, state)
+end
+
+local function restore_state(weapon, state)
+	write_state(weapon, copy_state(state))
+end
+
+local function get_or_create_slot_entry(weapon, slot, section)
+	local entry = get_slot_entry(weapon, slot)
+	if entry and (entry.section == section
+		or (slot == SLOT_MAIN and same_powered_sight(entry.section, section)))
+	then
+		entry.charge = clamp(tonumber(entry.charge) or 0, 0, 1)
+		return entry
+	end
+	set_slot_entry(weapon, slot, section, 0)
+	return get_slot_entry(weapon, slot)
+end
+
+local function get_mark_index(weapon, zoom_type)
+	if not (z_mark_switch and z_mark_switch.parse_parameters) then return 0 end
+	local info = z_mark_switch.parse_parameters(weapon, zoom_type)
+	return math.floor(tonumber(info and info.ms_current) or 0)
+end
+
+local function resolve_active_powered_sight(weapon, zoom_type, info)
+	if not (weapon and z_3d_scopes and z_3d_scopes.parse_parameters) then return nil end
+	if is_battery_excluded_weapon(weapon) then return nil end
+	info = info or z_3d_scopes.parse_parameters(weapon, zoom_type)
+	local image_type = math.floor(tonumber(info and info.s3ds_image_type) or 0)
+	local thermal = is_thermal_image(image_type)
+	local fusion_outline = info and info.s3ds_fusion_outline == true
+	if not (thermal or fusion_outline) then return nil end
+
+	local sight_section
+	local canted = false
+	if z_3d_scopes.get_sight_section then
+		sight_section, canted = z_3d_scopes.get_sight_section(weapon, zoom_type)
+	end
+	sight_section = sight_section or weapon:section()
+
+	local mark_index = get_mark_index(weapon, zoom_type)
+	return {
+		slot = canted and SLOT_CANTED or SLOT_MAIN,
+		section = sight_section,
+		image_type = image_type,
+		effect_active = (thermal and mark_index < 2)
+			or (fusion_outline and image_type == 1 and mark_index == 0),
+		info = info,
+	}
+end
+
+function get_shader_charge(weapon, zoom_type, info)
+	local powered = resolve_active_powered_sight(weapon, zoom_type, info)
+	if not powered then return -1 end
+	local entry = get_or_create_slot_entry(weapon, powered.slot, powered.section)
+	local charge = entry and clamp(tonumber(entry.charge) or 0, 0, 1) or 0
+	return charge > configured_critical(powered.section) and charge or 0
+end
+
+local function configured_drain(section)
+	if section and ini_sys:section_exist(section) then
+		local override = ini_sys:r_float_ex(section, "thermal_battery_drain")
+		if override ~= nil then return math.max(0, override) end
+	end
+	return drain_per_second
+end
+
+local function normalize_texture(texture)
+	local value = string.lower(tostring(texture or ""))
+	value = string.gsub(value, "/", "\\")
+	value = string.gsub(value, "%.dds$", "")
+	return value
+end
+
+local function battery_texture_profile(section)
+	if not (section and ini_sys:section_exist(section)) then return nil end
+	local full = normalize_texture(ini_sys:r_string_ex(section, "battery_texture"))
+	if full == "" then return nil end
+
+	local profile = {
+		full = full,
+		at_75 = normalize_texture(ini_sys:r_string_ex(section, "battery_texture_75")),
+		at_50 = normalize_texture(ini_sys:r_string_ex(section, "battery_texture_50")),
+		at_25 = normalize_texture(ini_sys:r_string_ex(section, "battery_texture_25")),
+		at_10 = normalize_texture(ini_sys:r_string_ex(section, "battery_texture_10")),
+		empty = normalize_texture(ini_sys:r_string_ex(section, "battery_texture_empty")),
+		off = normalize_texture(ini_sys:r_string_ex(section, "battery_texture_off")),
+	}
+	profile.at_75 = profile.at_75 ~= "" and profile.at_75 or profile.full
+	profile.at_50 = profile.at_50 ~= "" and profile.at_50 or profile.at_75
+	profile.at_25 = profile.at_25 ~= "" and profile.at_25 or profile.at_50
+	profile.at_10 = profile.at_10 ~= "" and profile.at_10 or profile.at_25
+	profile.empty = profile.empty ~= "" and profile.empty or profile.at_10
+	return profile
+end
+
+function has_custom_off_texture(weapon, zoom_type, info)
+	local powered = resolve_active_powered_sight(weapon, zoom_type, info)
+	if not powered then return false end
+	local profile = battery_texture_profile(powered.section)
+	return profile ~= nil and profile.off ~= ""
+end
+
+local function texture_for_charge(profile, section, charge)
+	charge = clamp(tonumber(charge) or 0, 0, 1)
+	if charge <= configured_critical(section) then
+		return profile.off ~= "" and profile.off or profile.empty
+	end
+	if charge <= 0.10 then return profile.at_10 end
+	if charge <= 0.25 then return profile.at_25 end
+	if charge <= 0.50 then return profile.at_50 end
+	if charge <= 0.75 then return profile.at_75 end
+	return profile.full
+end
+
+local function apply_texture_to_target(target, profile, replacement, hud_mode)
+	if not (target and target.get_shaders and target.set_shader) then return false end
+	local ok, materials
+	if hud_mode == nil then
+		ok, materials = pcall(target.get_shaders, target)
+	else
+		ok, materials = pcall(target.get_shaders, target, hud_mode)
+	end
+	if not ok or type(materials) ~= "table" then return false end
+
+	local known = {
+		[profile.full] = true,
+		[profile.at_75] = true,
+		[profile.at_50] = true,
+		[profile.at_25] = true,
+		[profile.at_10] = true,
+		[profile.empty] = true,
+	}
+	if profile.off ~= "" then known[profile.off] = true end
+	local found = false
+	for visual_id, material in pairs(materials) do
+		local current = material and normalize_texture(material.texture)
+		if type(visual_id) == "number" and material and known[current] then
+			found = true
+			if current ~= replacement then
+				if hud_mode == nil then
+					pcall(target.set_shader, target, visual_id, material.shader, replacement)
+				else
+					pcall(target.set_shader, target, visual_id, material.shader, replacement, hud_mode)
+				end
+			end
+		end
+	end
+	return found
+end
+
+local function apply_battery_texture(weapon, slot, section, charge, force)
+	if not (weapon and slot and section and weapon.get_shaders and weapon.set_shader) then return end
+	if is_battery_excluded_weapon(weapon) then return end
+	local profile = battery_texture_profile(section)
+	local id = object_id(weapon)
+	if not (profile and id) then return end
+
+	local replacement = texture_for_charge(profile, section, charge)
+	local key = tostring(id) .. "|" .. tostring(slot)
+	local signature = tostring(section) .. "|" .. replacement
+	if not force and last_texture_tier[key] == signature then return end
+
+	local found = false
+	for _, hud_mode in ipairs({ true, false }) do
+		found = apply_texture_to_target(weapon, profile, replacement, hud_mode) or found
+	end
+	if slot == SLOT_CANTED and weapon.get_attachment then
+		for _, attachment_slot in ipairs(CANTED_ATTACHMENT_SLOTS) do
+			local attachment = weapon:get_attachment(attachment_slot)
+			found = apply_texture_to_target(attachment, profile, replacement, nil) or found
+		end
+	end
+	last_texture_tier[key] = found and signature or nil
+end
+
+local function refresh_shader_if_needed(weapon, slot, charge, force)
+	if not weapon then return end
+	local entry = get_slot_entry(weapon, slot)
+	local key = tostring(weapon:id()) .. "|" .. tostring(slot)
+	local percent = math.floor(clamp(charge, 0, 1) * 100 + 0.5)
+	if not force and last_shader_percent[key] == percent then
+		if entry then apply_battery_texture(weapon, slot, entry.section, charge, false) end
+		return
+	end
+	last_shader_percent[key] = percent
+	if z_3d_scopes and z_3d_scopes.update_shader then
+		local c_weapon = weapon:cast_Weapon()
+		if c_weapon then
+			z_3d_scopes.update_shader(weapon, c_weapon:GetZoomType())
+		end
+	end
+	if entry then apply_battery_texture(weapon, slot, entry.section, charge, true) end
+end
+
+local function refresh_weapon_textures(weapon, force)
+	if not weapon then return end
+	for _, slot in ipairs({ SLOT_MAIN, SLOT_CANTED }) do
+		local entry = get_slot_entry(weapon, slot)
+		if entry then
+			apply_battery_texture(weapon, slot, entry.section, entry.charge, force)
+		end
+	end
+end
+
+local function schedule_texture_refresh(weapon)
+	local id = object_id(weapon)
+	if not id then return end
+	local key = tostring(id)
+	RemoveTimeEvent(TEXTURE_EVENT_NAMESPACE, key)
+	CreateTimeEvent(TEXTURE_EVENT_NAMESPACE, key, 0, function()
+		local current = level.object_by_id(id)
+		if current then refresh_weapon_textures(current, true) end
+		return true
+	end)
+end
+
+local function drain_active_scope(elapsed)
+	if not (db.actor and db.actor:alive()) then return end
+	local weapon = db.actor:active_item()
+	if not (weapon and IsWeapon(weapon)) then return end
+	local c_weapon = weapon:cast_Weapon()
+	if not (c_weapon and c_weapon:IsZoomed()) then return end
+
+	local zoom_type = c_weapon:GetZoomType()
+	local powered = resolve_active_powered_sight(weapon, zoom_type)
+	if not (powered and powered.effect_active) then return end
+
+	local entry = get_or_create_slot_entry(weapon, powered.slot, powered.section)
+	if not entry then return end
+	local charge = clamp(tonumber(entry.charge) or 0, 0, 1)
+	local power_critical = configured_critical(powered.section)
+	if charge <= power_critical then return end
+
+	local factor = 1
+	if use_difficulty_multiplier and game_difficulties and game_difficulties.get_eco_factor then
+		factor = tonumber(game_difficulties.get_eco_factor("battery_consumption")) or 1
+	end
+	charge = clamp(charge - configured_drain(powered.section) * elapsed * factor, power_critical, 1)
+	set_slot_entry(weapon, powered.slot, powered.section, charge)
+	refresh_shader_if_needed(weapon, powered.slot, charge, charge <= power_critical)
+end
+
+local function drain_tick_callback()
+	local now = time_global()
+	local elapsed = last_drain_time and ((now - last_drain_time) / 1000) or drain_tick
+	last_drain_time = now
+	elapsed = clamp(elapsed, 0, math.max(1, drain_tick * 4))
+	drain_active_scope(elapsed)
+	return false
+end
+
+local function start_drain_event()
+	RemoveTimeEvent("3dss_thermal_battery", "drain")
+	last_drain_time = time_global()
+	CreateTimeEvent("3dss_thermal_battery", "drain", drain_tick, drain_tick_callback)
+end
+
+local function apply_pending_charge(created, section)
+	if not (pending_spawn and created and section == pending_spawn.section) then return end
+	set_loose_charge(created, section, pending_spawn.charge)
+	pending_spawn.spawned = true
+end
+
+local function install_spawn_hook()
+	if original_alife_create_item or not _G.alife_create_item then return end
+	original_alife_create_item = _G.alife_create_item
+	_G.alife_create_item = function(section, parent, ...)
+		local created = original_alife_create_item(section, parent, ...)
+		apply_pending_charge(created, section)
+		return created
+	end
+end
+
+local function install_clone_hook()
+	if original_alife_clone_weapon or not _G.alife_clone_weapon then return end
+	original_alife_clone_weapon = _G.alife_clone_weapon
+	_G.alife_clone_weapon = function(se_obj, section, parent_id, ...)
+		local state = se_obj and copy_state(read_state(se_obj)) or {}
+		local new_weapon = original_alife_clone_weapon(se_obj, section, parent_id, ...)
+		if new_weapon and next(state) then
+			write_state(new_weapon, state)
+		end
+		return new_weapon
+	end
+end
+
+local function with_pending_spawn(section, charge, callback, ...)
+	local previous = pending_spawn
+	local current = {
+		section = section,
+		charge = clamp(tonumber(charge) or 0, 0, 1),
+		spawned = false,
+	}
+	pending_spawn = current
+	local results = { callback(...) }
+	pending_spawn = previous
+	return current.spawned, unpack(results)
+end
+
+local function inventory_ids_for_section(section)
+	local ids = {}
+	if not (db.actor and section) then return ids end
+	db.actor:iterate_inventory(function(_, item)
+		if item and item:section() == section then ids[item:id()] = true end
+	end, db.actor)
+	return ids
+end
+
+local function transfer_charge_to_new_scope(section, charge, previous_ids)
+	if not (db.actor and section) then return false end
+	local transferred = false
+	db.actor:iterate_inventory(function(_, item)
+		if not transferred and item and item:section() == section and not previous_ids[item:id()] then
+			set_loose_charge(item, section, charge)
+			transferred = true
+		end
+	end, db.actor)
+	return transferred
+end
+
+local function schedule_scope_charge_transfer(section, charge, previous_ids, transfer_id)
+	CreateTimeEvent("3dss_thermal_battery", "scope_transfer_" .. tostring(transfer_id), 0, function()
+		transfer_charge_to_new_scope(section, charge, previous_ids)
+		return true
+	end)
+end
+
+local function install_item_weapon_hooks()
+	if item_weapon_hooks_installed or not item_weapon then return end
+
+	local original_attach_scope = item_weapon.attach_scope
+	if original_attach_scope then
+		item_weapon.attach_scope = function(item, weapon)
+			if not (item and weapon) then return original_attach_scope(item, weapon) end
+			local old_state = copy_state(read_state(weapon))
+			local old_entry = old_state[SLOT_MAIN]
+			local old_scope_ids = old_entry and inventory_ids_for_section(old_entry.section) or nil
+			local section = item:section()
+			local charge = loose_charge(item)
+			local state = copy_state(old_state)
+			state[SLOT_MAIN] = is_powered_section(section) and {
+				section = section,
+				charge = charge,
+			} or nil
+			write_state(weapon, state)
+			local item_id = item:id()
+			local result
+			if old_entry and old_entry.section ~= section then
+				local _, callback_result = with_pending_spawn(
+					old_entry.section,
+					old_entry.charge,
+					original_attach_scope,
+					item,
+					weapon
+				)
+				result = callback_result
+			else
+				result = original_attach_scope(item, weapon)
+			end
+			if alife_object(item_id) then
+				restore_state(weapon, old_state)
+			end
+			if old_entry and old_scope_ids
+				and not transfer_charge_to_new_scope(old_entry.section, old_entry.charge, old_scope_ids)
+			then
+				schedule_scope_charge_transfer(old_entry.section, old_entry.charge, old_scope_ids, item_id)
+			end
+			schedule_texture_refresh(weapon)
+			return result
+		end
+	end
+
+	local original_detach_scope = item_weapon.detach_scope
+	if original_detach_scope then
+		item_weapon.detach_scope = function(weapon)
+			local entry = weapon and get_slot_entry(weapon, SLOT_MAIN)
+			if not entry then return original_detach_scope(weapon) end
+			local old_state = copy_state(read_state(weapon))
+			local old_scope_ids = inventory_ids_for_section(entry.section)
+			set_slot_entry(weapon, SLOT_MAIN, nil)
+			local spawned, result = with_pending_spawn(entry.section, entry.charge, original_detach_scope, weapon)
+			if not transfer_charge_to_new_scope(entry.section, entry.charge, old_scope_ids) then
+				schedule_scope_charge_transfer(entry.section, entry.charge, old_scope_ids, weapon:id())
+			end
+			if not spawned and level.object_by_id(weapon:id()) then
+				restore_state(weapon, old_state)
+			end
+			return result
+		end
+	end
+	item_weapon_hooks_installed = true
+end
+
+function on_canted_installed(item, weapon)
+	if not (item and weapon) then return end
+	local section = object_section(item)
+	if not is_powered_section(section) then return end
+	set_slot_entry(weapon, SLOT_CANTED, section, loose_charge(item))
+	schedule_texture_refresh(weapon)
+end
+
+function on_canted_removed(weapon, created, section)
+	if not (weapon and created and section) then return end
+	local entry = get_slot_entry(weapon, SLOT_CANTED)
+	if not (entry and entry.section == section) then return end
+	set_loose_charge(created, section, entry.charge)
+	set_slot_entry(weapon, SLOT_CANTED, nil)
+end
+
+local function finish_canted_install(section, charge, weapon)
+	if not is_powered_section(section) then return end
+	if not (scripted_canted_irons and scripted_canted_irons.get_installed_section) then return end
+	if scripted_canted_irons.get_installed_section(weapon) ~= section then return end
+	set_slot_entry(weapon, SLOT_CANTED, section, charge)
+	schedule_texture_refresh(weapon)
+end
+
+local function wrap_canted_install(name)
+	if canted_install_hooks[name]
+		or not (scripted_canted_irons and scripted_canted_irons[name])
+	then
+		return
+	end
+	local original = scripted_canted_irons[name]
+	scripted_canted_irons[name] = function(item, weapon, ...)
+		local section = item and item:section()
+		local charge = item and loose_charge(item) or 0
+		local result = original(item, weapon, ...)
+		if section and weapon then
+			finish_canted_install(section, charge, weapon)
+		end
+		return result
+	end
+	canted_install_hooks[name] = true
+end
+
+local function install_canted_hooks()
+	if not scripted_canted_irons then return end
+	wrap_canted_install("install_irons")
+	wrap_canted_install("install_rds_pos1")
+	wrap_canted_install("install_rds_pos2")
+	wrap_canted_install("install_rds_pos3")
+
+	local original_remove = scripted_canted_irons.remove_irons
+	if original_remove and not canted_remove_hook_installed then
+		scripted_canted_irons.remove_irons = function(weapon)
+			local entry = weapon and get_slot_entry(weapon, SLOT_CANTED)
+			if not entry then return original_remove(weapon) end
+			local old_state = copy_state(read_state(weapon))
+			set_slot_entry(weapon, SLOT_CANTED, nil)
+			local spawned, result = with_pending_spawn(entry.section, entry.charge, original_remove, weapon)
+			if not spawned then
+				restore_state(weapon, old_state)
+			end
+			return result
+		end
+		canted_remove_hook_installed = true
+	end
+end
+
+local function select_weapon_slot(weapon)
+	if is_battery_excluded_weapon(weapon) then return nil end
+	local c_weapon = weapon and weapon:cast_Weapon()
+	if c_weapon then
+		local powered = resolve_active_powered_sight(weapon, c_weapon:GetZoomType())
+		if powered then return powered.slot, powered.section end
+	end
+
+	local main = get_slot_entry(weapon, SLOT_MAIN)
+	if main and is_powered_section(main.section) then return SLOT_MAIN, main.section end
+	local canted = get_slot_entry(weapon, SLOT_CANTED)
+	if canted and is_powered_section(canted.section) then return SLOT_CANTED, canted.section end
+
+	local normal = resolve_active_powered_sight(weapon, 0)
+	if normal then return normal.slot, normal.section end
+	return nil
+end
+
+local function selected_charge(obj)
+	if not obj then return nil end
+	local c_weapon = type(obj.cast_Weapon) == "function" and obj:cast_Weapon()
+	if c_weapon then return nil end
+
+	local section = object_section(obj)
+	if not is_powered_section(section) then return nil end
+	return loose_charge(obj), nil, section
+end
+
+local function scope_display_name(section)
+	if not section then return "" end
+	local name_key = ini_sys:r_string_ex(section, "inv_name_short")
+		or ini_sys:r_string_ex(section, "inv_name")
+	if not name_key or name_key == "" then return section end
+	local name = game.translate_string(name_key)
+	return name and name ~= "" and name or section
+end
+
+local function weapon_power_entries(weapon)
+	local entries = {}
+	if is_battery_excluded_weapon(weapon) then return entries end
+	local main_powered = resolve_active_powered_sight(weapon, 0)
+	if main_powered and main_powered.slot == SLOT_MAIN then
+		local entry = get_or_create_slot_entry(weapon, SLOT_MAIN, main_powered.section)
+		entries[#entries + 1] = {
+			section = main_powered.section,
+			charge = entry and clamp(tonumber(entry.charge) or 0, 0, 1) or 0,
+		}
+	end
+
+	local canted_section = scripted_canted_irons
+		and scripted_canted_irons.get_installed_section
+		and scripted_canted_irons.get_installed_section(weapon)
+	if canted_section and is_powered_section(canted_section) then
+		local entry = get_or_create_slot_entry(weapon, SLOT_CANTED, canted_section)
+		entries[#entries + 1] = {
+			section = canted_section,
+			charge = entry and clamp(tonumber(entry.charge) or 0, 0, 1) or 0,
+		}
+	end
+	return entries
+end
+
+local function installed_battery_slot(weapon)
+	if is_battery_excluded_weapon(weapon) then return nil end
+	local checked = {}
+	local c_weapon = type(weapon.cast_Weapon) == "function" and weapon:cast_Weapon()
+	if c_weapon then
+		local powered = resolve_active_powered_sight(weapon, c_weapon:GetZoomType())
+		if powered then
+			checked[powered.slot] = true
+			local entry = get_or_create_slot_entry(weapon, powered.slot, powered.section)
+			local charge = entry and clamp(tonumber(entry.charge) or 0, 0, 1) or 0
+			if charge >= MINIMUM_CHARGE then return powered.slot, powered.section, charge end
+		end
+	end
+
+	for _, slot in ipairs({ SLOT_MAIN, SLOT_CANTED }) do
+		if not checked[slot] then
+			local entry = get_slot_entry(weapon, slot)
+			local charge = entry and clamp(tonumber(entry.charge) or 0, 0, 1) or 0
+			if entry and is_powered_section(entry.section) and charge >= MINIMUM_CHARGE then
+				return slot, entry.section, charge
+			end
+		end
+	end
+	return nil
+end
+
+local function removable_charge(obj)
+	if not obj then return nil end
+	local c_weapon = type(obj.cast_Weapon) == "function" and obj:cast_Weapon()
+	if c_weapon then
+		local slot, section, charge = installed_battery_slot(obj)
+		return charge, slot, section
+	end
+
+	local section = object_section(obj)
+	if not is_powered_section(section) then return nil end
+	local charge = loose_charge(obj)
+	if charge < MINIMUM_CHARGE then return nil end
+	return charge, nil, section
+end
+
+local function battery_remove_name(obj)
+	local charge = removable_charge(obj)
+	if charge then return game.translate_string("st_item_unpack_battery") end
+	return nil
+end
+
+local function remove_battery(obj)
+	if not (obj and db.actor) then return end
+	local charge, slot, section = removable_charge(obj)
+	if not charge then return end
+
+	alife_create_item(battery_section, db.actor, { cond = charge })
+	if slot then
+		set_slot_entry(obj, slot, section, 0)
+		refresh_shader_if_needed(obj, slot, 0, true)
+	else
+		set_loose_charge(obj, section, 0)
+	end
+
+	if actor_effects then actor_effects.play_item_fx(battery_section) end
+	utils_obj.play_sound("interface\\inv_batt")
+end
+
+local function install_battery_functor()
+	if battery_functor_installed or not custom_functor_autoinject then return end
+	custom_functor_autoinject.add_functor(
+		"3dss_remove_thermal_battery",
+		battery_remove_name,
+		battery_remove_name,
+		nil,
+		remove_battery,
+		true
+	)
+	battery_functor_installed = true
+end
+
+local function install_power_display()
+	if original_build_desc_header or not (ui_item and ui_item.build_desc_header) then return end
+	original_build_desc_header = ui_item.build_desc_header
+	local power_color = utils_xml.get_color("pda_blue")
+	local text_color = utils_xml.get_color("ui_gray_1")
+
+	ui_item.build_desc_header = function(obj, sec, str)
+		local result = original_build_desc_header(obj, sec, str)
+		local c_weapon = obj and type(obj.cast_Weapon) == "function" and obj:cast_Weapon()
+		if c_weapon then
+			local entries = weapon_power_entries(obj)
+			if #entries == 0 then return result end
+			local lines = {}
+			for _, entry in ipairs(entries) do
+				local percent = math.ceil(entry.charge * 100)
+				lines[#lines + 1] = power_color .. " " .. string.char(149) .. " "
+					.. text_color .. scope_display_name(entry.section) .. " "
+					.. game.translate_string("st_ui_power") .. ": "
+					.. power_color .. tostring(percent) .. "%"
+			end
+			return table.concat(lines, "\\n") .. "\\n \\n" .. text_color .. result
+		end
+
+		local charge = selected_charge(obj)
+		if charge == nil then return result end
+		local percent = math.ceil(clamp(charge, 0, 1) * 100)
+		local power_line = power_color .. " " .. string.char(149) .. " "
+			.. text_color .. game.translate_string("st_ui_power")
+			.. ": " .. power_color .. tostring(percent) .. "%" .. "\\n \\n" .. text_color
+		return power_line .. result
+	end
+end
+
+local function install_power_icon_bar()
+	if original_add_progress_bar
+		or not (utils_ui and utils_ui.UICellItem and utils_ui.UICellItem.Add_ProgressBar)
+	then
+		return
+	end
+
+	original_add_progress_bar = utils_ui.UICellItem.Add_ProgressBar
+	utils_ui.UICellItem.Add_ProgressBar = function(self, xml, obj, sec, clsid)
+		local result = original_add_progress_bar(self, xml, obj, sec, clsid)
+		local charge = selected_charge(obj)
+		if charge == nil then return result end
+		local icon_settings = z_item_icon_info and z_item_icon_info.settings
+		local text_settings = icon_settings and icon_settings.cond_text
+		if text_settings and text_settings.hide_bar and self.path ~= "equipment:cont_equ" then
+			if self.bar then self.bar:Show(false) end
+			return result
+		end
+
+		if not self.bar then
+			xml = xml or self:GetXML()
+			self.bar = xml:InitProgressBar(self.path .. ":" .. self.cx .. ":bar", self.cell)
+		end
+
+		if not self.manual then
+			local bar_height = self.bar:GetHeight()
+			self.bar:SetWndPos(vector2():set(0, self.H - bar_height))
+		end
+
+		self.bar:SetProgressPos(clamp(charge, 0, 1))
+		self.bar:SetColor(GetARGB(255, 86, 196, 209))
+		self.bar:ShowBackground(true)
+		self.bar:Show(true)
+		return result
+	end
+end
+
+local function install_item_ui_power_text()
+	if original_add_condition_text
+		or not (z_item_icon_info and z_item_icon_info.Add_Condition_Text
+			and z_item_icon_info.set_text_rect and z_item_icon_info.utjan_xml)
+	then
+		return
+	end
+
+	original_add_condition_text = z_item_icon_info.Add_Condition_Text
+	z_item_icon_info.Add_Condition_Text = function(self, xml, obj, sec, clsid)
+		local charge = selected_charge(obj)
+		if charge == nil then
+			return original_add_condition_text(self, xml, obj, sec, clsid)
+		end
+
+		if self.cond_text then self.cond_text:Show(false) end
+		if self.cond_text_bg then self.cond_text_bg:Show(false) end
+
+		local icon_settings = z_item_icon_info.settings
+		local text_settings = icon_settings and icon_settings.cond_text
+		if not (text_settings and text_settings.enable) then return end
+
+		local is_equipped = self.path == "equipment:cont_equ"
+		if is_equipped and not text_settings.enable_equipped then return end
+
+		local show_bg = not text_settings.hide_bg
+		if show_bg and not is_equipped then
+			self.cond_text_bg = self.cond_text_bg
+				or z_item_icon_info.utjan_xml:InitStatic("background", self.cell)
+		end
+
+		self.cond_text = self.cond_text
+			or z_item_icon_info.utjan_xml:InitTextWnd("counter_text", self.cell)
+		self.cond_text:SetTextColor(GetARGB(255, 86, 196, 209))
+
+		local percent = math.ceil(clamp(charge, 0, 1) * 100)
+		local padding_w = is_equipped and 0 or text_settings.padding + 1
+		local padding_h = is_equipped and 0 or text_settings.padding
+		z_item_icon_info.set_text_rect(self.cond_text, padding_w, padding_h, tostring(percent) .. "%")
+
+		local bar_h = self.bar and self.bar:IsShown() and self.bar:GetHeight() or 0
+		local text_w = self.cond_text:GetWidth()
+		local text_h = self.cond_text:GetHeight()
+		local text_pos = vector2():set(self.cell:GetWidth() - text_w, self.cell:GetHeight() - bar_h - text_h)
+		self.cond_text:SetWndPos(text_pos)
+
+		if show_bg and not is_equipped then
+			self.cond_text_bg:SetWndRect(Frect():set(0, 0, text_w, text_h))
+			self.cond_text_bg:SetWndPos(text_pos)
+			self.cond_text_bg:Show(true)
+		elseif self.cond_text_bg then
+			self.cond_text_bg:Show(false)
+		end
+
+		self.cond_text:Show(true)
+	end
+end
+
+local function replace_battery(battery, target)
+	if not (battery and target and db.actor) then return end
+	local new_charge = clamp(battery:condition(), 0, 1)
+	local old_charge
+	local target_slot
+	local target_section
+
+	if IsWeapon(target) then
+		target_slot, target_section = select_weapon_slot(target)
+		if not target_slot then return end
+		local entry = get_or_create_slot_entry(target, target_slot, target_section)
+		old_charge = entry and entry.charge or 0
+	else
+		target_section = target:section()
+		if not is_powered_section(target_section) then return end
+		old_charge = loose_charge(target)
+	end
+
+	old_charge = clamp(tonumber(old_charge) or 0, 0, 1)
+	if new_charge <= old_charge then
+		actor_menu.set_msg(1, game.translate_string("ui_st_battery_more_power"))
+		return
+	end
+
+	if old_charge > configured_critical(target_section) then
+		alife_create_item(battery_section, db.actor, { cond = old_charge })
+	end
+	alife_release(battery)
+
+	if target_slot then
+		set_slot_entry(target, target_slot, target_section, new_charge)
+		refresh_shader_if_needed(target, target_slot, new_charge, true)
+	else
+		set_loose_charge(target, target_section, new_charge)
+	end
+
+	if actor_effects then actor_effects.play_item_fx(battery_section) end
+	utils_obj.play_sound("interface\\inv_batt")
+end
+
+function on_item_drag_dropped(first, second, slot_from, slot_to)
+	if not (first and second) then return end
+	if slot_from ~= EDDListType.iActorBag then return end
+	if not (slot_to == EDDListType.iActorBag or slot_to == EDDListType.iActorSlot) then return end
+
+	if first:section() == battery_section then
+		replace_battery(first, second)
+	elseif second:section() == battery_section then
+		replace_battery(second, first)
+	end
+end
+
+local function read_config()
+	battery_section = ini_sys:r_string_ex(CONFIG_SECTION, "battery_section") or DEFAULT_BATTERY
+	drain_per_second = math.max(0, ini_sys:r_float_ex(CONFIG_SECTION, "drain_per_second") or DEFAULT_DRAIN_PER_SECOND)
+	drain_tick = math.max(0.05, ini_sys:r_float_ex(CONFIG_SECTION, "drain_tick_seconds") or DEFAULT_DRAIN_TICK)
+	critical_charge = clamp(ini_sys:r_float_ex(CONFIG_SECTION, "critical_charge") or DEFAULT_CRITICAL_CHARGE, MINIMUM_CHARGE, 1)
+	use_difficulty_multiplier = ini_sys:r_bool_ex(CONFIG_SECTION, "use_difficulty_multiplier", true)
+end
+
+local function install_patches()
+	install_spawn_hook()
+	install_clone_hook()
+	install_item_weapon_hooks()
+	install_canted_hooks()
+	install_battery_functor()
+	install_power_display()
+	install_power_icon_bar()
+	install_item_ui_power_text()
+end
+
+local function actor_item_to_slot(obj)
+	if obj and type(obj.cast_Weapon) == "function" and obj:cast_Weapon() then
+		schedule_texture_refresh(obj)
+	end
+end
+
+local function actor_on_changed_slot()
+	local active = db.actor and db.actor:active_item()
+	if active and type(active.cast_Weapon) == "function" and active:cast_Weapon() then
+		schedule_texture_refresh(active)
+	end
+end
+
+local function actor_on_first_update()
+	actor_on_changed_slot()
+end
+
+local function actor_on_weapon_zoom_in(weapon)
+	schedule_texture_refresh(weapon)
+end
+
+local function actor_on_weapon_zoom_type_changed(weapon)
+	schedule_texture_refresh(weapon)
+end
+
+function on_game_start()
+	read_config()
+	rebuild_magnifier_sight_identities()
+	install_patches()
+	RegisterScriptCallback("ActorMenu_on_item_drag_drop", on_item_drag_dropped)
+	RegisterScriptCallback("actor_item_to_slot", actor_item_to_slot)
+	RegisterScriptCallback("actor_on_changed_slot", actor_on_changed_slot)
+	RegisterScriptCallback("actor_on_weapon_zoom_in", actor_on_weapon_zoom_in)
+	RegisterScriptCallback("actor_on_weapon_zoom_type_changed", actor_on_weapon_zoom_type_changed)
+	RegisterScriptCallback("actor_on_first_update", function()
+		install_patches()
+		start_drain_event()
+		actor_on_first_update()
+	end)
+end

@@ -28,7 +28,7 @@ local favs_color = GetARGB(50, 176, 238, 26)
 local junk_color = GetARGB(50, 204, 0, 0)
 local ini = ini_file("sortingplus.ltx")
 if yyy_mag_sorting  then
-    --force load order
+	--force load order
 end
 if aaa_rax_icon_override_mcm then end
 
@@ -62,17 +62,17 @@ function check_junk(cell)
 end
 
 function icon_junk(cell, obj, sec)
-    if bags[cell.container.ID] and ICONJUNK and junk_itms[cell.section] then
-        axis = utils_xml.get_item_axis(sec)
-        return {texture = "ui\\sortingplus\\icon-junk",y = axis.h / 2 - 7 or 0, x = axis.w - 15, w = 15, h = 15}
-    end
+	if bags[cell.container.ID] and ICONJUNK and junk_itms[cell.section] then
+		axis = utils_xml.get_item_axis(sec)
+		return {texture = "ui\\sortingplus\\icon-junk",y = axis.h / 2 - 7 or 0, x = axis.w - 15, w = 15, h = 15}
+	end
 end
 --{texture = "ui_am_propery_01", x = 1, y = 1, w = 15, h = 15}
 function icon_favs(cell, obj, sec)
-    if bags[cell.container.ID] and ICONFAVS and favorite_itms[cell.section] then
-        axis = utils_xml.get_item_axis(sec)
-        return {texture = "ui\\sortingplus\\icon-favourite", y = axis.h / 2 - 7 or 0, x = axis.w - 15, w = 15, h = 15}
-    end
+	if bags[cell.container.ID] and ICONFAVS and favorite_itms[cell.section] then
+		axis = utils_xml.get_item_axis(sec)
+		return {texture = "ui\\sortingplus\\icon-favourite", y = axis.h / 2 - 11 or 0, x = 0 , w = 15, h = 15}
+	end
 end
 
 
@@ -82,12 +82,12 @@ end
 function on_game_start()
     rax_persistent_highlight.register("aafavorite_itms", check_favs)
     rax_persistent_highlight.register("aajunk_itms", check_junk)
-    rax_dynamic_custom_functor.add_functor("SP_fav", fav_menu_string, menu_precond, fav_menu_action)
-    rax_dynamic_custom_functor.add_functor("SP_junk", junk_menu_string, menu_precond, junk_menu_action)
-    rax_icon_layers.register("aajunk_itms", icon_junk)
-    rax_icon_layers.register("abfavorite_itms", icon_favs)
-    
-    
+	rax_dynamic_custom_functor.add_functor("SP_fav", fav_menu_string, menu_precond, fav_menu_action)
+	rax_dynamic_custom_functor.add_functor("SP_junk", junk_menu_string, menu_precond, junk_menu_action)
+	rax_icon_layers.register("aajunk_itms", icon_junk)
+	rax_icon_layers.register("abfavorite_itms", icon_favs)
+	
+	
     RegisterScriptCallback("load_state", load_state)
     RegisterScriptCallback("save_state", save_state)
     RegisterScriptCallback("actor_on_first_update", actor_on_first_update)
@@ -161,62 +161,62 @@ function loadsettings()
     else
         set_item_order() --without mcm read from the lxt
     end
-    if HILITEFAVS then rax_persistent_highlight.register("aafavorite_itms", check_favs) end
+	if HILITEFAVS then rax_persistent_highlight.register("aafavorite_itms", check_favs) end
     if HILITEJUNK then rax_persistent_highlight.register("aajunk_itms", check_junk) end
-    if USEFUNCTORS then
-        rax_dynamic_custom_functor.add_functor("SP_fav", fav_menu_string, menu_precond, fav_menu_action)
-        rax_dynamic_custom_functor.add_functor("SP_junk", junk_menu_string, menu_precond, junk_menu_action)
-    end
-    if ICONJUNK then rax_icon_layers.register("aajunk_itms", icon_junk) end
-    if ICONFAVS then rax_icon_layers.register("abfavorite_itms", icon_favs) end
-    
+	if USEFUNCTORS then
+		rax_dynamic_custom_functor.add_functor("SP_fav", fav_menu_string, menu_precond, fav_menu_action)
+		rax_dynamic_custom_functor.add_functor("SP_junk", junk_menu_string, menu_precond, junk_menu_action)
+	end
+	if ICONJUNK then rax_icon_layers.register("aajunk_itms", icon_junk) end
+	if ICONFAVS then rax_icon_layers.register("abfavorite_itms", icon_favs) end
+	
 
 end
 
 
 function on_mcm_load() --builds mcm menu
-        t = {
-                { id= "sorting"              ,type= "slide"   ,link= "ui_options_slider_economy_diff"    ,text= "ui_mcm_title_SortingPlus"      ,size= {512,50}     ,spacing= 20 },
-                {id = "playerinv", type = "check", val = 1, def = true},
-                {id = "playertrade", type = "check", val = 1, def = true},
-                {id = "npcinv", type = "check", val = 1, def = true},
-                {id = "npctrade", type = "check", val = 1, def = true},
-                {id = "line", type = "line"},
-                {id = "hilitejunk", type = "check", val = 1, def = true},
-                {id = "iconjunk", type = "check", val = 1, def = true},
-                {id = "sortjunk", type = "check", val = 1, def = true},
-                {id = "selljunk", type = "check", val = 1, def = true},             
-                {id = "hilitefavs", type = "check", val = 1, def = true},
-                {id = "iconfavs", type = "check", val = 1, def = true},
-                {id = "sortfavs", type = "check", val = 1, def = true},
-                {id = "putallfavs", type = "check", val = 1, def = true},
-                {id = "resort", type = "check", val = 1, def = false},
-                {id = "usefunctors", type = "check", val = 1, def = true},
-                
-                {id = "line", type = "line"},
-                {id = "useltx", type = "check", val = 1, def = false},
-            }
-    
-    local n = ini:line_count("sortingplusmcm") --the catagories portion is dynamic
-    for i=0,n-1 do
-        local result, catgory, kinds = ini:r_line_ex("sortingplusmcm",i,"","") --catagory is a text entry field in the mcm menu, kinds is the list of kinds grouped in that catagory
-        if magazine_binder or not ( catgory == "002mags" or catgory == "001loadout") then
-            if catgory and kinds then
-                ui_catagories[catgory] = str_explode(kinds,",") -- building ui_catagories list
-                if  tonumber(ui_catagories[catgory][1]) then --first element in list of kinds is the defualt value for the catagory 
-                    table.insert(t, {id=catgory,  type = "input", val = 2, def = tonumber(ui_catagories[catgory][1]), min = -100, max = 1000}) -- here we push the entry into the menu table
-                else
-                    ui_catagories[catgory] = nil -- if it doesn't start with a number it is invalid get rid of it.
-                end
-            end
-        end
-    end
+		t = {
+				{ id= "sorting"				 ,type= "slide"	  ,link= "ui_options_slider_economy_diff"	 ,text= "ui_mcm_title_SortingPlus"		,size= {512,50}		,spacing= 20 },
+				{id = "playerinv", type = "check", val = 1, def = true},
+				{id = "playertrade", type = "check", val = 1, def = true},
+				{id = "npcinv", type = "check", val = 1, def = true},
+				{id = "npctrade", type = "check", val = 1, def = true},
+				{id = "line", type = "line"},
+				{id = "hilitejunk", type = "check", val = 1, def = true},
+				{id = "iconjunk", type = "check", val = 1, def = true},
+				{id = "sortjunk", type = "check", val = 1, def = true},
+				{id = "selljunk", type = "check", val = 1, def = true},				
+				{id = "hilitefavs", type = "check", val = 1, def = true},
+				{id = "iconfavs", type = "check", val = 1, def = true},
+				{id = "sortfavs", type = "check", val = 1, def = true},
+				{id = "putallfavs", type = "check", val = 1, def = true},
+				{id = "resort", type = "check", val = 1, def = false},
+				{id = "usefunctors", type = "check", val = 1, def = true},
+				
+				{id = "line", type = "line"},
+				{id = "useltx", type = "check", val = 1, def = false},
+			}
+	
+	local n = ini:line_count("sortingplusmcm") --the catagories portion is dynamic
+	for i=0,n-1 do
+		local result, catgory, kinds = ini:r_line_ex("sortingplusmcm",i,"","") --catagory is a text entry field in the mcm menu, kinds is the list of kinds grouped in that catagory
+		if magazine_binder or not ( catgory == "002mags" or catgory == "001loadout") then
+			if catgory and kinds then
+				ui_catagories[catgory] = str_explode(kinds,",") -- building ui_catagories list
+				if  tonumber(ui_catagories[catgory][1]) then --first element in list of kinds is the defualt value for the catagory 
+					table.insert(t, {id=catgory,  type = "input", val = 2, def = tonumber(ui_catagories[catgory][1]), min = -100, max = 1000}) -- here we push the entry into the menu table
+				else
+					ui_catagories[catgory] = nil -- if it doesn't start with a number it is invalid get rid of it.
+				end
+			end
+		end
+	end
 
-            
-        
-    op = { id= "SortingPlus"            ,sh=true ,gr= t } -- put the list of setting into the table describing the entire MCM menu
-            
-        return op
+			
+		
+	op = { id= "SortingPlus"      	 	,sh=true ,gr= t	} -- put the list of setting into the table describing the entire MCM menu
+			
+		return op
 end
 
 
@@ -253,11 +253,11 @@ end
 
 
 function sort_info(asec, bsec)
-    --- printf("Print table")
+    ---	printf("Print table")
     ---store_table(item_order)
     -- A
     a_sec = asec
-    axis = utils_xml.get_item_axis(a_sec,1)
+	axis = utils_xml.get_item_axis(a_sec,1)
     if (not ab_w[a_sec]) then
         ab_w[a_sec] = axis.w
     end
@@ -279,7 +279,7 @@ function sort_info(asec, bsec)
     a_k = item_order[ab_k[a_sec]]
     -- B
     b_sec = bsec
-    axis = utils_xml.get_item_axis(b_sec,1)
+	axis = utils_xml.get_item_axis(b_sec,1)
     if (not ab_w[b_sec]) then
         ab_w[b_sec] = axis.w
     end
@@ -329,16 +329,16 @@ function sort_by_size(t, a, b)
 end
 
 function sort_by_kind(t, a, b)
-    local a_o,b_o
-    if (type(t[a]) == "string") then
+	local a_o,b_o
+	if (type(t[a]) == "string") then
         sort_info(t[a], t[b])
-        a_o = item_order[SORTFAVS and favorite_itms[t[a]] or SORTJUNK and junk_itms[t[a]]] or false
-        b_o = item_order[SORTFAVS and favorite_itms[t[b]] or SORTJUNK and junk_itms[t[b]]] or false
+		a_o = item_order[SORTFAVS and favorite_itms[t[a]] or SORTJUNK and junk_itms[t[a]]] or false
+		b_o = item_order[SORTFAVS and favorite_itms[t[b]] or SORTJUNK and junk_itms[t[b]]] or false
     else
         sort_info(t[a]:section(), t[b]:section())
-        a_o = item_order[SORTFAVS and favorite_itms[t[a]:section()] or SORTJUNK and junk_itms[t[a]:section()]] or false
-        b_o = item_order[SORTFAVS and favorite_itms[t[b]:section()] or SORTJUNK and junk_itms[t[b]:section()]] or false
-        
+		a_o = item_order[SORTFAVS and favorite_itms[t[a]:section()] or SORTJUNK and junk_itms[t[a]:section()]] or false
+		b_o = item_order[SORTFAVS and favorite_itms[t[b]:section()] or SORTJUNK and junk_itms[t[b]:section()]] or false
+		
         if magazine_binder then
             if magazine_binder.is_carried_mag(t[a]:id()) then
                 a_k = item_order["loadout"]
@@ -349,11 +349,11 @@ function sort_by_kind(t, a, b)
             end
         end
     end
-    if a_o ~= b_o then --if the overrides are equal sort by the actual kind
-        a_k = a_o or a_k --otherwise sort by the overide if it exists or the orginal kind
-        b_k = b_o or b_k
-    end
-    
+	if a_o ~= b_o then --if the overrides are equal sort by the actual kind
+		a_k = a_o or a_k --otherwise sort by the overide if it exists or the orginal kind
+		b_k = b_o or b_k
+	end
+	
     if a_k == b_k then return sort_by_size(t, a, b) end
 
     return a_k < b_k
@@ -364,16 +364,16 @@ function sort_by_index(t, a, b)
 end
 
 function sort_by_sizekind(t, a, b)
-    local a_o,b_o
-    if (type(t[a]) == "string") then
+ 	local a_o,b_o
+	if (type(t[a]) == "string") then
         sort_info(t[a], t[b])
-        a_o = item_order[SORTFAVS and favorite_itms[t[a]] or SORTJUNK and junk_itms[t[a]]] or false
-        b_o = item_order[SORTFAVS and favorite_itms[t[b]] or SORTJUNK and junk_itms[t[b]]] or false
+		a_o = item_order[SORTFAVS and favorite_itms[t[a]] or SORTJUNK and junk_itms[t[a]]] or false
+		b_o = item_order[SORTFAVS and favorite_itms[t[b]] or SORTJUNK and junk_itms[t[b]]] or false
     else
         sort_info(t[a]:section(), t[b]:section())
-        a_o = item_order[SORTFAVS and favorite_itms[t[a]:section()] or SORTJUNK and junk_itms[t[a]:section()]] or false
-        b_o = item_order[SORTFAVS and favorite_itms[t[b]:section()] or SORTJUNK and junk_itms[t[b]:section()]] or false
-        
+		a_o = item_order[SORTFAVS and favorite_itms[t[a]:section()] or SORTJUNK and junk_itms[t[a]:section()]] or false
+		b_o = item_order[SORTFAVS and favorite_itms[t[b]:section()] or SORTJUNK and junk_itms[t[b]:section()]] or false
+		
         if magazine_binder then
             if magazine_binder.is_carried_mag(t[a]:id()) then
                 a_o = item_order["loadout"]
@@ -385,43 +385,43 @@ function sort_by_sizekind(t, a, b)
         end
     end
 
-    if a_o ~= b_o then --if the overrides are equal sort by the actual kind
-        a_k = a_o or a_k --otherwise sort by the overide if it exists or the orginal kind
-        b_k = b_o or b_k
-    end
+	if a_o ~= b_o then --if the overrides are equal sort by the actual kind
+		a_k = a_o or a_k --otherwise sort by the overide if it exists or the orginal kind
+		b_k = b_o or b_k
+	end
  
 
 
  -- Comparison
     --printf("%s - %s", a_sec, b_sec)
-    -- override wins first
-    if not (a_o or b_o) then
-        --\\ bigger width wins
-        if (a_w == b_w) then
-            --\\ bigger height wins
-            if (a_h == b_h) then
-                --\\ important kind wins
-                if a_k == b_k then
-                    --\\ alphaptic order wins
-                    if (a_sec == b_sec) then
-                        --\\ better condition wins
-                        if (type(t[a]) == "string") then return false end --true
+	-- override wins first
+	if not (a_o or b_o) then
+		--\\ bigger width wins
+		if (a_w == b_w) then
+			--\\ bigger height wins
+			if (a_h == b_h) then
+				--\\ important kind wins
+				if a_k == b_k then
+					--\\ alphaptic order wins
+					if (a_sec == b_sec) then
+						--\\ better condition wins
+						if (type(t[a]) == "string") then return false end --true
 
-                        return t[a]:condition() > t[b]:condition()
-                    end
+						return t[a]:condition() > t[b]:condition()
+					end
 
-                    return a_sec < b_sec
-                end
+					return a_sec < b_sec
+				end
 
-                return a_k < b_k
-            end
+				return a_k < b_k
+			end
 
-            return a_h > b_h
-        end
-        
-        return a_w > b_w
-    end
-    return a_k < b_k
+			return a_h > b_h
+		end
+		
+		return a_w > b_w
+	end
+	return a_k < b_k
 end
 
 function sort_by_props(t, a, b)
@@ -455,23 +455,16 @@ function utils_ui.UICellContainer.FindFreeCell(self, obj, sec)
         sec = obj and obj:section()
     end
 
-    axis = utils_xml.get_item_axis(sec,1)
-    local w = axis.w
-    local h = axis.h
-
-    -- demonized: HD Inventory Icons Framework
-    local icon_override = aaa_rax_icon_override_mcm and aaa_rax_icon_override_mcm.icon_override
-    local scale = icon_override and icon_override:section_exist(sec) and (icon_override:r_float_ex(sec, "inv_grid_scale") or 1) or SYS_GetParam(2, sec, "inv_grid_scale", 1)
-    w = math.ceil(w / scale)
-    h = math.ceil(h / scale)
-
+	axis = utils_xml.get_item_axis(sec,1)
+	local w = axis.w
+	local h = axis.h
     -- Avoid icons that don't fit
     if w > self.cols then return false end
 
     -- Sorting by kind: when sorting a new kind, always start from last row taken by previous kind
     if self.sort_method == "kind" then
         local sort_k = magazine_binder and obj and magazine_binder.is_carried_mag(obj:id()) and "loadout" or SORTFAVS and favorite_itms[sec] or SORTJUNK and junk_itms[sec] or  ab_k[sec]
-        self.rKind.current = item_order[sort_k]
+		self.rKind.current = item_order[sort_k]
 
         if (self.rKind.last ~= self.rKind.current) then
             self.rKind.last = self.rKind.current
@@ -511,17 +504,17 @@ function utils_ui.UICellContainer:OnKeyboard(dik, keyboard_action)
         -- make sure the cell at the index exist and that it has the section of the item it refers to set
         if self.cell[indx] and self.cell[indx].section then
             --keep key
-            local sec = self.cell[indx].section
+			local sec = self.cell[indx].section
             if dik == K_K then
                 --if this item is in the list we will clear it
-                set_favorite(sec,not favorite_itms[sec])
+				set_favorite(sec,not favorite_itms[sec])
              elseif dik == K_J then
                 -- same things but for junk list
-                set_junk(sec, not junk_itms[sec])
+				set_junk(sec, not junk_itms[sec])
            end
 
-            rax_icon_layers.refresh(RESORT and 1)
-        end
+			rax_icon_layers.refresh(RESORT and 1)
+		end
     end
 
     self:OnKeyboardBase(dik, keyboard_action) -- pass key on to orginal version
@@ -620,27 +613,27 @@ end
 
 function fav_menu_action(obj)
     sec = obj:section()
-    set_favorite(sec,not favorite_itms[sec])
-    rax_icon_layers.refresh(RESORT and 1)
+	set_favorite(sec,not favorite_itms[sec])
+	rax_icon_layers.refresh(RESORT and 1)
 end
 
 function junk_menu_action(obj)
     sec = obj:section()
 
     -- same things but for junk list
-    set_junk(sec, not junk_itms[sec])
+	set_junk(sec, not junk_itms[sec])
     rax_icon_layers.refresh(RESORT and 1)
 end
 
 function is_favorite(sec)
-    return favorite_itms[sec] and true or false
+	return favorite_itms[sec] and true or false
 end
 function is_junk(sec)
-    return junk_itms[sec] and true or false
+	return junk_itms[sec] and true or false
 end
 
 function set_favorite(sec,state)
-    if state then
+	if state then
         favorite_itms[sec] = "favorites" -- add it to the list if it isn't there.
         junk_itms[sec] = nil --remove it from junk, these lists are mutaly exclusive 
     else
@@ -649,7 +642,7 @@ function set_favorite(sec,state)
 end
 
 function set_junk(sec, state)
-        -- same things but for junk list
+	    -- same things but for junk list
     if state then
         junk_itms[sec] = "junk"
         favorite_itms[sec] = nil
@@ -657,3 +650,25 @@ function set_junk(sec, state)
         junk_itms[sec] = nil
     end
 end
+
+
+local UIIbaseHL = ui_inventory.UIInventory.Highlight
+function ui_inventory.UIInventory:Highlight(sec, bag_id)
+  self.highlight_set = true
+  UIIbaseHL(self, sec, bag_id)
+end
+
+local UIIbaseUHL = ui_inventory.UIInventory.UnHighlight_All
+function ui_inventory.UIInventory:UnHighlight_All()
+  if self.highlight_set then
+    UIIbaseUHL(self)
+    self.highlight_set = false
+  end
+end
+
+local cellupdate = utils_ui.UICellItem.Update
+function utils_ui.UICellItem:Update(obj)
+  self:Highlight()
+  return cellupdate(self, obj)
+end
+

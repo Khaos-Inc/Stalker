@@ -2,9 +2,13 @@
 >scopes		= pm_upgr_kit
 
 [wpn_pm_custom_pm_upgr_kit]:wpn_pm_custom
-hud		= wpn_pm_sk1_pm_upgr_kit_hud
+parent_section		= wpn_pm_custom_pm_upgr_kit
+
+hud					= wpn_pm_sk1_pm_upgr_kit_hud
+
+scopes				= lazup_pl15
 		
-icons_texture      = ui\remademeowie_icon
+icons_texture		= ui\remademeowie_icon
 	inv_grid_width     = 2
 	inv_grid_height    = 1
 	inv_grid_x         = 4
@@ -50,13 +54,31 @@ item_visual		= anomaly_weapons\wpn_pm\wpn_pm_upgr_kit_hud.ogf
         anm_ammo_check_ammo3  = h_pm_magcheck_ext, pm_magcheck_partial_ammo3
         anm_ammo_check_ammo2  = h_pm_magcheck_ext, pm_magcheck_partial_ammo2
         anm_ammo_check_ammo1  = h_pm_magcheck_ext, pm_magcheck_partial_ammo1
+
+;------------------------------------------------------------------------------------------------
+[wpn_pm_custom_pm_upgr_kit_lazup_pl15]:wpn_pm_custom_pm_upgr_kit
+hud			=	wpn_pm_custom_pm_upgr_kit_lazup_pl15_hud
+
+        laser_status                     = true
+		use_alt_aim_hud					 = true
+		
+[wpn_pm_custom_pm_upgr_kit_lazup_pl15_hud]:wpn_pm_sk1_pm_upgr_kit_hud	
+item_visual		= anomaly_weapons\wpn_pm\wpn_pm_upgr_kit_laz_up_hud.ogf
+        aim_hud_offset_alt_pos           = -0.065704, -0.024696, -0.05
+        aim_hud_offset_alt_pos_16x9      = -0.065704, -0.024696, -0.05
+        aim_hud_offset_alt_rot           = 5e-05, 1.7e-05, 0.6
+        aim_hud_offset_alt_rot_16x9      = 5e-05, 1.7e-05, 0.6
 		
 ;------------------------------------------------------------------------------------------------
 ![wpn_pm_actor]
 scopes		= pm_upgr_kit
 [wpn_pm_actor_pm_upgr_kit]:wpn_pm_custom_pm_upgr_kit
-hud			= wpn_pm_actor_pm_upgr_kit_hud
-icons_texture      = ui\remademeowie_icon
+parent_section		= wpn_pm_actor_pm_upgr_kit
+
+scopes		= lazup_pl15
+hud					= wpn_pm_actor_pm_upgr_kit_hud
+
+icons_texture      	= ui\remademeowie_icon
 	inv_grid_width     = 2
 	inv_grid_height    = 1
 	inv_grid_x         = 4
@@ -69,12 +91,21 @@ icons_texture      = ui\remademeowie_icon
         ammo_mag_size                    = 20
 	    ms_count                         = 3
 [wpn_pm_actor_pm_upgr_kit_hud]:wpn_pm_sk1_pm_upgr_kit_hud
+
+[wpn_pm_actor_pm_upgr_kit_lazup_pl15]:wpn_pm_custom_pm_upgr_kit_lazup_pl15
+hud			=	wpn_pm_actor_pm_upgr_kit_lazup_pl15_hud
+[wpn_pm_actor_pm_upgr_kit_lazup_pl15_hud]:wpn_pm_custom_pm_upgr_kit_lazup_pl15_hud
+
 ;------------------------------------------------------------------------------------------------
 ![wpn_pm]
 scopes		= pm_upgr_kit
 [wpn_pm_pm_upgr_kit]:wpn_pm_custom_pm_upgr_kit
-hud			= wpn_pm_pm_upgr_kit_hud
-icons_texture      = ui\remademeowie_icon
+parent_section		= wpn_pm_pm_upgr_kit
+
+scopes		= lazup_pl15
+hud					= wpn_pm_pm_upgr_kit_hud
+
+icons_texture      	= ui\remademeowie_icon
 	inv_grid_width     = 2
 	inv_grid_height    = 1
 	inv_grid_x         = 4
@@ -86,4 +117,8 @@ icons_texture      = ui\remademeowie_icon
         ammo_elapsed                     = 20
         ammo_mag_size                    = 20
 	    ms_count                         = 3
-[wpn_pm_pm_upgr_kit_hud]:wpn_pm_sk1_pm_upgr_kit_hud		
+[wpn_pm_pm_upgr_kit_hud]:wpn_pm_sk1_pm_upgr_kit_hud
+
+[wpn_pm_pm_upgr_kit_lazup_pl15]:wpn_pm_custom_pm_upgr_kit_lazup_pl15
+hud			=	wpn_pm_actor_pm_upgr_kit_lazup_pl15_hud
+[wpn_pm_pm_upgr_kit_lazup_pl15_hud]:wpn_pm_custom_pm_upgr_kit_lazup_pl15_hud

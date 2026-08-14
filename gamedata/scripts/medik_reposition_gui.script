@@ -1,0 +1,429 @@
+local HAND_STEP = medik_config.HAND_STEP
+local HAND_RANGE = medik_config.HAND_RANGE
+local SCALE_MIN = 0.01
+
+local FIELDS_BY_TAB = {
+    model = {
+        { "model_pos", 1, 0.002, "Position x" },
+        { "model_pos", 2, 0.002, "Position y" },
+        { "model_pos", 3, 0.002, "Position z" },
+        { "model_rot", 1, 1, "Rotation x" },
+        { "model_rot", 2, 1, "Rotation y" },
+        { "model_rot", 3, 1, "Rotation z" },
+        { "model_scale", nil, 0.01, "Scale" },
+    },
+    ui = {
+        { "ui_pos", 1, 0.002, "Position x" },
+        { "ui_pos", 2, 0.002, "Position y" },
+        { "ui_pos", 3, 0.002, "Position z" },
+        { "ui_rot", 1, 1, "Rotation x" },
+        { "ui_rot", 2, 1, "Rotation y" },
+        { "ui_rot", 3, 1, "Rotation z" },
+        { "ui_scale", nil, 0.01, "Scale" },
+    },
+    hand = {
+        { "hand_pos", 1, HAND_STEP, "Position x" },
+        { "hand_pos", 2, HAND_STEP, "Position y" },
+        { "hand_pos", 3, HAND_STEP, "Position z" },
+    },
+    skin = {
+        { "skin", nil, 1, "Case color" },
+        { "theme", nil, 1, "UI theme" },
+        { "emblem", nil, 1, "Emblem" },
+        { "hud_rad", nil, 1, "Radiation bar" },
+    },
+    hud = {
+        { "hud_psy", nil, 1, "Psy bar" },
+        { "hud_fire", nil, 1, "Fire mode" },
+        { "hud_status", nil, 1, "Status icons" },
+        { "hud_companions", nil, 1, "Companion status" },
+    },
+}
+
+local BUTTONS_BY_TAB = {
+    skin = { m = "<<", p = ">>" },
+    hud = { m = "ON", p = "OFF" },
+}
+
+local ROW_PARTS = { "cap", "val", "mm", "m", "p", "pp" }
+
+GUI = nil
+
+function field_get(name, comp)
+    local t = medik_config.transforms
+    if comp then
+        return t[name][comp]
+    end
+    return t[name]
+end
+
+local function set_value(name, comp, v)
+    local t = medik_config.transforms
+    if comp then
+        t[name][comp] = v
+    else
+        t[name] = v
+    end
+end
+
+local function reapply()
+    if medik_statemachine and medik_statemachine.reapply_transforms then
+        medik_statemachine.reapply_transforms()
+    end
+end
+
+local function recycle()
+    if medik_statemachine and medik_statemachine.recycle_hand then
+        medik_statemachine.recycle_hand()
+    end
+end
+
+local function reskin()
+    if medik_statemachine and medik_statemachine.reapply_skin then
+        medik_statemachine.reapply_skin()
+    end
+end
+
+local function retheme()
+    if medik_ui and medik_ui.set_theme then
+        medik_ui.set_theme(medik_config.theme_prefix())
+    end
+end
+
+function nudge_field(name, comp, delta)
+    if name == "theme" then
+        local n = #medik_config.THEMES
+        local i = medik_config.theme_index() + (delta > 0 and 1 or -1)
+        if i < 1 then
+            i = n
+        elseif i > n then
+            i = 1
+        end
+        local v = medik_config.THEMES[i].name
+        set_value(name, comp, v)
+        retheme()
+        return v
+    end
+    if name == "emblem" then
+        local n = #medik_config.EMBLEMS
+        local i = medik_config.emblem_index() + (delta > 0 and 1 or -1)
+        if i < 1 then
+            i = n
+        elseif i > n then
+            i = 1
+        end
+        local v = medik_config.EMBLEMS[i].name
+        set_value(name, comp, v)
+        retheme()
+        return v
+    end
+    local v = field_get(name, comp) + delta
+    if name == "model_scale" or name == "ui_scale" then
+        if v < SCALE_MIN then
+            v = SCALE_MIN
+        end
+    elseif name == "hand_pos" then
+        if v < -HAND_RANGE then
+            v = -HAND_RANGE
+        elseif v > HAND_RANGE then
+            v = HAND_RANGE
+        end
+    elseif name == "skin" then
+        v = math.floor(v + 0.5)
+        if v < 1 then
+            v = #medik_config.SKINS
+        elseif v > #medik_config.SKINS then
+            v = 1
+        end
+    elseif name:sub(1, 4) == "hud_" then
+        v = math.floor(v + 0.5)
+        if v < 0 then
+            v = 0
+        elseif v > 1 then
+            v = 1
+        end
+    end
+    set_value(name, comp, v)
+    reapply()
+    if name == "hand_pos" then
+        recycle()
+    elseif name == "skin" then
+        reskin()
+    end
+    return v
+end
+
+function field_text(name, comp)
+    if name == "skin" then
+        return medik_config.SKINS[medik_config.skin_index()].label
+    end
+    if name == "theme" then
+        return medik_config.THEMES[medik_config.theme_index()].label
+    end
+    if name == "emblem" then
+        return medik_config.EMBLEMS[medik_config.emblem_index()].label
+    end
+    if name:sub(1, 4) == "hud_" then
+        return (field_get(name) or 0) >= 0.5 and "OFF" or "ON"
+    end
+    return string.format("%.4f", field_get(name, comp))
+end
+
+function restore_tab(tab, kind)
+    local src = (kind == "default") and medik_config.TRANSFORM_DEFAULTS or medik_config.saved
+    for _, f in ipairs(FIELDS_BY_TAB[tab]) do
+        if f[2] then
+            set_value(f[1], f[2], src[f[1]][f[2]])
+        else
+            set_value(f[1], nil, src[f[1]])
+        end
+    end
+    reapply()
+    if tab == "hand" then
+        recycle()
+    elseif tab == "skin" then
+        reskin()
+        retheme()
+    end
+    if GUI then
+        GUI:RefreshValues()
+    end
+end
+
+class("UIMedikAdjust")(CUIScriptWnd)
+
+function UIMedikAdjust:__init()
+    super()
+    self.tab = "model"
+    self:InitControls()
+    self:InitCallbacks()
+end
+
+function UIMedikAdjust:__finalize()
+    Unregister_UI("UIMedikAdjust")
+    GUI = nil
+end
+
+function UIMedikAdjust:InitControls()
+    self:SetWndRect(Frect():set(0, 0, 1024, 768))
+    self:SetAutoDelete(true)
+
+    local xml = CScriptXmlInit()
+    xml:ParseFile("ui_medik_reposition_gui.xml")
+
+    self.back = xml:InitStatic("background", self)
+    self.title = xml:InitStatic("title", self.back)
+    self.status = xml:InitStatic("status", self.back)
+
+    self.btn_tab_hand = xml:Init3tButton("btn_tab_hand", self.back)
+    self:Register(self.btn_tab_hand, "btn_tab_hand")
+    self.btn_tab_model = xml:Init3tButton("btn_tab_model", self.back)
+    self:Register(self.btn_tab_model, "btn_tab_model")
+    self.btn_tab_ui = xml:Init3tButton("btn_tab_ui", self.back)
+    self:Register(self.btn_tab_ui, "btn_tab_ui")
+    self.btn_tab_skin = xml:Init3tButton("btn_tab_skin", self.back)
+    self:Register(self.btn_tab_skin, "btn_tab_skin")
+    self.btn_tab_hud = xml:Init3tButton("btn_tab_hud", self.back)
+    self:Register(self.btn_tab_hud, "btn_tab_hud")
+
+    self.rows = {}
+    for i = 1, 7 do
+        local row = {}
+        row.cap = xml:InitStatic("cap_r" .. i, self.back)
+        row.val = xml:InitStatic("val_r" .. i, self.back)
+        row.mm = xml:Init3tButton("btn_r" .. i .. "_mm", self.back)
+        row.m = xml:Init3tButton("btn_r" .. i .. "_m", self.back)
+        row.p = xml:Init3tButton("btn_r" .. i .. "_p", self.back)
+        row.pp = xml:Init3tButton("btn_r" .. i .. "_pp", self.back)
+        self:Register(row.mm, "btn_r" .. i .. "_mm")
+        self:Register(row.m, "btn_r" .. i .. "_m")
+        self:Register(row.p, "btn_r" .. i .. "_p")
+        self:Register(row.pp, "btn_r" .. i .. "_pp")
+        self.rows[i] = row
+    end
+
+    self.btn_save = xml:Init3tButton("btn_save", self.back)
+    self:Register(self.btn_save, "btn_save")
+    self.btn_reset = xml:Init3tButton("btn_reset", self.back)
+    self:Register(self.btn_reset, "btn_reset")
+    self.btn_default = xml:Init3tButton("btn_default", self.back)
+    self:Register(self.btn_default, "btn_default")
+    self.btn_close = xml:Init3tButton("btn_close", self.back)
+    self:Register(self.btn_close, "btn_close")
+end
+
+function UIMedikAdjust:InitCallbacks()
+    local tabs = {
+        btn_tab_hand = "hand",
+        btn_tab_model = "model",
+        btn_tab_ui = "ui",
+        btn_tab_skin = "skin",
+        btn_tab_hud = "hud",
+    }
+    for btn, tab in pairs(tabs) do
+        self:AddCallback(btn, ui_events.BUTTON_CLICKED, function()
+            self:SetTab(tab)
+        end, self)
+    end
+    self:AddCallback("btn_save", ui_events.BUTTON_CLICKED, self.OnSave, self)
+    self:AddCallback("btn_reset", ui_events.BUTTON_CLICKED, function()
+        self:RestoreTab("saved")
+    end, self)
+    self:AddCallback("btn_default", ui_events.BUTTON_CLICKED, function()
+        self:RestoreTab("default")
+    end, self)
+    self:AddCallback("btn_close", ui_events.BUTTON_CLICKED, self.OnClose, self)
+    for i = 1, 7 do
+        local steps = { mm = -10, m = -1, p = 1, pp = 10 }
+        for suffix, mult in pairs(steps) do
+            self:AddCallback("btn_r" .. i .. "_" .. suffix, ui_events.BUTTON_CLICKED, function()
+                self:Nudge(i, mult)
+            end, self)
+        end
+    end
+end
+
+function UIMedikAdjust:SetStatus(msg)
+    if self.status and self.status.TextControl then
+        self.status:TextControl():SetText(msg)
+    end
+end
+
+function UIMedikAdjust:DefaultStatus()
+    if medik_statemachine and medik_statemachine.is_raised and medik_statemachine.is_raised() then
+        self:SetStatus("")
+    else
+        self:SetStatus("Use Medik action button to show it")
+    end
+end
+
+function UIMedikAdjust:AfterEdit()
+    if self.tab == "hand" or self.tab == "skin" or self.tab == "hud" then
+        self:SetStatus("applied")
+    else
+        self:DefaultStatus()
+    end
+end
+
+function UIMedikAdjust:SetTab(tab)
+    self.tab = tab
+    if self.btn_tab_hand and self.btn_tab_hand.TextControl then
+        self.btn_tab_hand:TextControl():SetText(tab == "hand" and ">Hand Position<" or "Hand Position")
+    end
+    if self.btn_tab_model and self.btn_tab_model.TextControl then
+        self.btn_tab_model:TextControl():SetText(tab == "model" and ">Medik Position<" or "Medik Position")
+    end
+    if self.btn_tab_ui and self.btn_tab_ui.TextControl then
+        self.btn_tab_ui:TextControl():SetText(tab == "ui" and ">UI Position<" or "UI Position")
+    end
+    if self.btn_tab_skin and self.btn_tab_skin.TextControl then
+        self.btn_tab_skin:TextControl():SetText(tab == "skin" and ">Personalization<" or "Personalization")
+    end
+    if self.btn_tab_hud and self.btn_tab_hud.TextControl then
+        self.btn_tab_hud:TextControl():SetText(tab == "hud" and ">Game HUD<" or "Game HUD")
+    end
+    self:RefreshValues()
+end
+
+function UIMedikAdjust:RefreshValues()
+    local fields = FIELDS_BY_TAB[self.tab]
+    local btns = BUTTONS_BY_TAB[self.tab]
+    for i = 1, 7 do
+        local f = fields[i]
+        local row = self.rows[i]
+        for _, part in ipairs(ROW_PARTS) do
+            row[part]:Show(f ~= nil)
+        end
+        if f then
+            local field_btns = btns
+            if f[1]:sub(1, 4) == "hud_" then
+                field_btns = { m = "ON", p = "OFF" }
+            end
+            if field_btns then
+                row.mm:Show(false)
+                row.pp:Show(false)
+            end
+            if row.m.TextControl then
+                row.m:TextControl():SetText(field_btns and field_btns.m or "-")
+                row.p:TextControl():SetText(field_btns and field_btns.p or "+")
+            end
+            row.cap:TextControl():SetText(f[4])
+            row.val:TextControl():SetText(field_text(f[1], f[2]))
+        end
+    end
+end
+
+function UIMedikAdjust:Nudge(i, mult)
+    local f = FIELDS_BY_TAB[self.tab][i]
+    if not f then
+        return
+    end
+    nudge_field(f[1], f[2], f[3] * mult)
+    self.rows[i].val:TextControl():SetText(field_text(f[1], f[2]))
+    self:AfterEdit()
+end
+
+function UIMedikAdjust:OnSave()
+    if medik_config.save_transforms() then
+        self:SetStatus("saved")
+    else
+        self:SetStatus("save FAILED")
+    end
+end
+
+function UIMedikAdjust:RestoreTab(kind)
+    restore_tab(self.tab, kind)
+    self:AfterEdit()
+end
+
+function UIMedikAdjust:OnClose()
+    if self:IsShown() then
+        self:HideDialog()
+    end
+    GUI = nil
+    Unregister_UI("UIMedikAdjust")
+end
+
+function UIMedikAdjust:OnKeyboard(dik, action)
+    local res = CUIScriptWnd.OnKeyboard(self, dik, action)
+    if action == ui_events.WINDOW_KEY_PRESSED then
+        if dik == DIK_keys.DIK_ESCAPE then
+            self:OnClose()
+            return true
+        end
+    end
+    return res
+end
+
+function is_open()
+    return GUI ~= nil and GUI:IsShown()
+end
+
+function toggle()
+    if is_open() then
+        GUI:OnClose()
+        return
+    end
+    if GUI == nil then
+        GUI = UIMedikAdjust()
+    end
+    GUI:SetTab(GUI.tab or "model")
+    GUI:DefaultStatus()
+    GUI:ShowDialog(false)
+    Unregister_UI("UIMedikAdjust")
+    Register_UI("UIMedikAdjust", "medik_reposition_gui")
+end
+
+function on_key_press(key)
+    local bound = medik_mcm.gui_key_dik()
+    if bound == -1 or key ~= bound then
+        return
+    end
+    if not is_open() and not medik_mcm.gui_mod_held() then
+        return
+    end
+    if not is_open() and medik_util.blocking_ui_open() then
+        return
+    end
+    toggle()
+end

@@ -1,4 +1,3 @@
-;------------------------------------------------------------------------------------------------
 [wpn_m4a1_siber]:identity_immunities,weapon_probability,default_weapon_params,wpn_m4a1_sounds
 GroupControlSection                      = spawn_group
 $npc                                     = on
@@ -174,198 +173,630 @@ kill_msg_y                               = 0
 kill_msg_width                           = 82
 kill_msg_height                          = 28
 
-;-------------------------------------------------------------------SOUNDS-----------------------------------------------------------------------------
-snd_reload								= weapons\m4tac_young_prince\m4_reload
-snd_reload1								= weapons\m4tac_young_prince\m4_reload_2
-snd_reload_empty						= weapons\m4tac_young_prince\m4_reload_empty
-snd_reload_empty1						= weapons\m4tac_young_prince\m4_reload_empty_2
-snd_reload_misfire						= weapons\m4tac_young_prince\m4_unjam
-snd_bore								= weapons\m4tac_young_prince\m4_inpect
-snd_ammo_check					= weapons\m4tac_young_prince\m4_ammo
-snd_ammo_check_w_gl			= weapons\m4tac_young_prince\m4_ammo
-snd_ammo_check_empty			= weapons\m4tac_young_prince\m4_ammo_empty
-snd_ammo_check_empty_w_gl		= weapons\m4tac_young_prince\m4_ammo_empty
-snd_ammo_check_aim				= weapons\m4tac_young_prince\m4_ammo_aim
-snd_ammo_check_empty_aim 		= weapons\m4tac_young_prince\m4_ammo_aim
-snd_ammo_check_w_gl_aim		= weapons\m4tac_young_prince\m4_ammo_aim
-snd_ammo_check_empty_w_gl_aim  = weapons\m4tac_young_prince\m4_ammo_aim
-snd_reload_grenade     					= weapons\m4a1_ras\m4a1_gl_reload
-snd_shoot_grenade						= weapons\m203\m203_grenshoot
-
+script_binding  = hide_grip_gl.bind
+;----------------------------------------SND---------------------------------------------------------------------------------------
+scripted_snd_reload_empty                           = weapon\m4t\reload_empty
+scripted_snd_reload_empty_variant1                  = weapon\m4t\reload_empty_2
+scripted_snd_reload_empty_w_gl                      = weapon\m4t\reload_empty
+scripted_snd_reload_empty_w_gl_variant1             = weapon\m4t\reload_empty_2
+scripted_snd_show                                   = weapon\m4t\draw
+scripted_snd_hide                                   = weapon\m4t\hide
+scripted_snd_show_w_gl                              = weapon\m4t\draw
+scripted_snd_hide_w_gl                              = weapon\m4t\hide
+scripted_snd_show_empty                             = weapon\m4t\draw
+scripted_snd_hide_empty                             = weapon\m4t\hide
+scripted_snd_show_w_gl_empty                        = weapon\m4t\draw
+scripted_snd_hide_w_gl_empty                        = weapon\m4t\hide
+scripted_snd_show_jammed                            = weapon\m4t\draw
+scripted_snd_hide_jammed                            = weapon\m4t\hide
+scripted_snd_show_w_gl_jammed                       = weapon\m4t\draw
+scripted_snd_hide_w_gl_jammed                       = weapon\m4t\hide
+scripted_snd_show_empty_jammed                      = weapon\m4t\draw
+scripted_snd_hide_empty_jammed                      = weapon\m4t\hide
+scripted_snd_show_w_gl_empty_jammed                 = weapon\m4t\draw
+scripted_snd_hide_w_gl_empty_jammed                 = weapon\m4t\hide
+scripted_snd_show_g                                 = weapon\m4t\draw, 1.0, 0.3
+scripted_snd_hide_g                                 = weapon\m4t\hide, 1.0, 0.3
+scripted_snd_switch                                 = weapon\m4t\m203_off, 1.0, 0.3
+scripted_snd_switch_g                               = weapon\m4t\m203_on, 1.0, 0.3
+scripted_snd_ammo_check                             = weapon\m4t\mag_check
+scripted_snd_ammo_check_ammo1                       = weapon\m4t\mag_check
+scripted_snd_ammo_check_ammo2                       = weapon\m4t\mag_check
+scripted_snd_ammo_check_ammo3                       = weapon\m4t\mag_check
+scripted_snd_ammo_check_ammo4                       = weapon\m4t\mag_check
+scripted_snd_ammo_check_ammo5                       = weapon\m4t\mag_check
+scripted_snd_ammo_check_ammo6                       = weapon\m4t\mag_check
+scripted_snd_ammo_check_ammo7                       = weapon\m4t\mag_check
+scripted_snd_ammo_check_ammo8                       = weapon\m4t\mag_check
+scripted_snd_ammo_check_ammo9                       = weapon\m4t\mag_check
+scripted_snd_ammo_check_ammo10                      = weapon\m4t\mag_check
+scripted_snd_ammo_check_ammo11                      = weapon\m4t\mag_check
+scripted_snd_ammo_check_ammo12                      = weapon\m4t\mag_check
+scripted_snd_ammo_check_ammo13                      = weapon\m4t\mag_check
+scripted_snd_ammo_check_ammo14                      = weapon\m4t\mag_check
+scripted_snd_ammo_check_ammo15                      = weapon\m4t\mag_check
+scripted_snd_ammo_check_ammo16                      = weapon\m4t\mag_check
+scripted_snd_ammo_check_ammo17                      = weapon\m4t\mag_check
+scripted_snd_ammo_check_ammo18                      = weapon\m4t\mag_check
+scripted_snd_ammo_check_ammo19                      = weapon\m4t\mag_check
+scripted_snd_ammo_check_ammo20                      = weapon\m4t\mag_check
+scripted_snd_ammo_check_ammo21                      = weapon\m4t\mag_check
+scripted_snd_ammo_check_ammo22                      = weapon\m4t\mag_check
+scripted_snd_ammo_check_ammo23                      = weapon\m4t\mag_check
+scripted_snd_ammo_check_ammo24                      = weapon\m4t\mag_check
+scripted_snd_ammo_check_ammo25                      = weapon\m4t\mag_check
+scripted_snd_ammo_check_ammo26                      = weapon\m4t\mag_check
+scripted_snd_ammo_check_ammo27                      = weapon\m4t\mag_check
+scripted_snd_ammo_check_ammo28                      = weapon\m4t\mag_check
+scripted_snd_ammo_check_ammo29                      = weapon\m4t\mag_check
+scripted_snd_ammo_check_ammo30                      = weapon\m4t\mag_check
+scripted_snd_ammo_check_jammed                      = weapon\m4t\mag_check
+scripted_snd_ammo_check_jammed_ammo1                = weapon\m4t\mag_check
+scripted_snd_ammo_check_jammed_ammo2                = weapon\m4t\mag_check
+scripted_snd_ammo_check_jammed_ammo3                = weapon\m4t\mag_check
+scripted_snd_ammo_check_jammed_ammo4                = weapon\m4t\mag_check
+scripted_snd_ammo_check_jammed_ammo5                = weapon\m4t\mag_check
+scripted_snd_ammo_check_jammed_ammo6                = weapon\m4t\mag_check
+scripted_snd_ammo_check_jammed_ammo7                = weapon\m4t\mag_check
+scripted_snd_ammo_check_jammed_ammo8                = weapon\m4t\mag_check
+scripted_snd_ammo_check_jammed_ammo9                = weapon\m4t\mag_check
+scripted_snd_ammo_check_jammed_ammo10               = weapon\m4t\mag_check
+scripted_snd_ammo_check_jammed_ammo11               = weapon\m4t\mag_check
+scripted_snd_ammo_check_jammed_ammo12               = weapon\m4t\mag_check
+scripted_snd_ammo_check_jammed_ammo13               = weapon\m4t\mag_check
+scripted_snd_ammo_check_jammed_ammo14               = weapon\m4t\mag_check
+scripted_snd_ammo_check_jammed_ammo15               = weapon\m4t\mag_check
+scripted_snd_ammo_check_jammed_ammo16               = weapon\m4t\mag_check
+scripted_snd_ammo_check_jammed_ammo17               = weapon\m4t\mag_check
+scripted_snd_ammo_check_jammed_ammo18               = weapon\m4t\mag_check
+scripted_snd_ammo_check_jammed_ammo19               = weapon\m4t\mag_check
+scripted_snd_ammo_check_jammed_ammo20               = weapon\m4t\mag_check
+scripted_snd_ammo_check_jammed_ammo21               = weapon\m4t\mag_check
+scripted_snd_ammo_check_jammed_ammo22               = weapon\m4t\mag_check
+scripted_snd_ammo_check_jammed_ammo23               = weapon\m4t\mag_check
+scripted_snd_ammo_check_jammed_ammo24               = weapon\m4t\mag_check
+scripted_snd_ammo_check_jammed_ammo25               = weapon\m4t\mag_check
+scripted_snd_ammo_check_jammed_ammo26               = weapon\m4t\mag_check
+scripted_snd_ammo_check_jammed_ammo27               = weapon\m4t\mag_check
+scripted_snd_ammo_check_jammed_ammo28               = weapon\m4t\mag_check
+scripted_snd_ammo_check_jammed_ammo29               = weapon\m4t\mag_check
+scripted_snd_ammo_check_jammed_ammo30               = weapon\m4t\mag_check
+scripted_snd_ammo_check_empty                       = weapon\m4t\mag_check
+scripted_snd_ammo_check_empty_jammed                = weapon\m4t\mag_check
+scripted_snd_ammo_check_w_gl                        = weapon\m4t\mag_check
+scripted_snd_ammo_check_w_gl_ammo1                  = weapon\m4t\mag_check
+scripted_snd_ammo_check_w_gl_ammo2                  = weapon\m4t\mag_check
+scripted_snd_ammo_check_w_gl_ammo3                  = weapon\m4t\mag_check
+scripted_snd_ammo_check_w_gl_ammo4                  = weapon\m4t\mag_check
+scripted_snd_ammo_check_w_gl_ammo5                  = weapon\m4t\mag_check
+scripted_snd_ammo_check_w_gl_ammo6                  = weapon\m4t\mag_check
+scripted_snd_ammo_check_w_gl_ammo7                  = weapon\m4t\mag_check
+scripted_snd_ammo_check_w_gl_ammo8                  = weapon\m4t\mag_check
+scripted_snd_ammo_check_w_gl_ammo9                  = weapon\m4t\mag_check
+scripted_snd_ammo_check_w_gl_ammo10                 = weapon\m4t\mag_check
+scripted_snd_ammo_check_w_gl_ammo11                 = weapon\m4t\mag_check
+scripted_snd_ammo_check_w_gl_ammo12                 = weapon\m4t\mag_check
+scripted_snd_ammo_check_w_gl_ammo13                 = weapon\m4t\mag_check
+scripted_snd_ammo_check_w_gl_ammo14                 = weapon\m4t\mag_check
+scripted_snd_ammo_check_w_gl_ammo15                 = weapon\m4t\mag_check
+scripted_snd_ammo_check_w_gl_ammo16                 = weapon\m4t\mag_check
+scripted_snd_ammo_check_w_gl_ammo17                 = weapon\m4t\mag_check
+scripted_snd_ammo_check_w_gl_ammo18                 = weapon\m4t\mag_check
+scripted_snd_ammo_check_w_gl_ammo19                 = weapon\m4t\mag_check
+scripted_snd_ammo_check_w_gl_ammo20                 = weapon\m4t\mag_check
+scripted_snd_ammo_check_w_gl_ammo21                 = weapon\m4t\mag_check
+scripted_snd_ammo_check_w_gl_ammo22                 = weapon\m4t\mag_check
+scripted_snd_ammo_check_w_gl_ammo23                 = weapon\m4t\mag_check
+scripted_snd_ammo_check_w_gl_ammo24                 = weapon\m4t\mag_check
+scripted_snd_ammo_check_w_gl_ammo25                 = weapon\m4t\mag_check
+scripted_snd_ammo_check_w_gl_ammo26                 = weapon\m4t\mag_check
+scripted_snd_ammo_check_w_gl_ammo27                 = weapon\m4t\mag_check
+scripted_snd_ammo_check_w_gl_ammo28                 = weapon\m4t\mag_check
+scripted_snd_ammo_check_w_gl_ammo29                 = weapon\m4t\mag_check
+scripted_snd_ammo_check_w_gl_ammo30                 = weapon\m4t\mag_check
+scripted_snd_ammo_check_w_gl_jammed                 = weapon\m4t\mag_check
+scripted_snd_ammo_check_w_gl_jammed_ammo1           = weapon\m4t\mag_check
+scripted_snd_ammo_check_w_gl_jammed_ammo2           = weapon\m4t\mag_check
+scripted_snd_ammo_check_w_gl_jammed_ammo3           = weapon\m4t\mag_check
+scripted_snd_ammo_check_w_gl_jammed_ammo4           = weapon\m4t\mag_check
+scripted_snd_ammo_check_w_gl_jammed_ammo5           = weapon\m4t\mag_check
+scripted_snd_ammo_check_w_gl_jammed_ammo6           = weapon\m4t\mag_check
+scripted_snd_ammo_check_w_gl_jammed_ammo7           = weapon\m4t\mag_check
+scripted_snd_ammo_check_w_gl_jammed_ammo8           = weapon\m4t\mag_check
+scripted_snd_ammo_check_w_gl_jammed_ammo9           = weapon\m4t\mag_check
+scripted_snd_ammo_check_w_gl_jammed_ammo10          = weapon\m4t\mag_check
+scripted_snd_ammo_check_w_gl_jammed_ammo11          = weapon\m4t\mag_check
+scripted_snd_ammo_check_w_gl_jammed_ammo12          = weapon\m4t\mag_check
+scripted_snd_ammo_check_w_gl_jammed_ammo13          = weapon\m4t\mag_check
+scripted_snd_ammo_check_w_gl_jammed_ammo14          = weapon\m4t\mag_check
+scripted_snd_ammo_check_w_gl_jammed_ammo15          = weapon\m4t\mag_check
+scripted_snd_ammo_check_w_gl_jammed_ammo16          = weapon\m4t\mag_check
+scripted_snd_ammo_check_w_gl_jammed_ammo17          = weapon\m4t\mag_check
+scripted_snd_ammo_check_w_gl_jammed_ammo18          = weapon\m4t\mag_check
+scripted_snd_ammo_check_w_gl_jammed_ammo19          = weapon\m4t\mag_check
+scripted_snd_ammo_check_w_gl_jammed_ammo20          = weapon\m4t\mag_check
+scripted_snd_ammo_check_w_gl_jammed_ammo21          = weapon\m4t\mag_check
+scripted_snd_ammo_check_w_gl_jammed_ammo22          = weapon\m4t\mag_check
+scripted_snd_ammo_check_w_gl_jammed_ammo23          = weapon\m4t\mag_check
+scripted_snd_ammo_check_w_gl_jammed_ammo24          = weapon\m4t\mag_check
+scripted_snd_ammo_check_w_gl_jammed_ammo25          = weapon\m4t\mag_check
+scripted_snd_ammo_check_w_gl_jammed_ammo26          = weapon\m4t\mag_check
+scripted_snd_ammo_check_w_gl_jammed_ammo27          = weapon\m4t\mag_check
+scripted_snd_ammo_check_w_gl_jammed_ammo28          = weapon\m4t\mag_check
+scripted_snd_ammo_check_w_gl_jammed_ammo29          = weapon\m4t\mag_check
+scripted_snd_ammo_check_w_gl_jammed_ammo30          = weapon\m4t\mag_check
+scripted_snd_ammo_check_empty_w_gl                  = weapon\m4t\mag_check
+scripted_snd_ammo_check_empty_w_gl_jammed           = weapon\m4t\mag_check
+scripted_snd_ammo_check_g                           = weapon\m4t\m203_grenade_check
+scripted_snd_ammo_check_empty_g                     = weapon\m4t\m203_grenade_check
+scripted_snd_ammo_check_aim                         = $no_sound
+scripted_snd_ammo_check_aim_jammed                  = $no_sound
+scripted_snd_ammo_check_empty_aim                   = $no_sound
+scripted_snd_ammo_check_empty_aim_jammed            = $no_sound
+scripted_snd_ammo_check_w_gl_aim                    = $no_sound
+scripted_snd_ammo_check_w_gl_aim_jammed             = $no_sound
+scripted_snd_ammo_check_empty_w_gl_aim              = $no_sound
+scripted_snd_ammo_check_empty_w_gl_aim_jammed       = $no_sound
+scripted_snd_bore                                   = weapon\m4t\inspect
+scripted_snd_bore_empty                             = weapon\m4t\inspect_empty
+scripted_snd_bore_jammed                            = weapon\m4t\inspect_empty
+scripted_snd_bore_w_gl                              = weapon\m4t\inspect
+scripted_snd_bore_w_gl_empty                        = weapon\m4t\inspect_empty
+scripted_snd_bore_w_gl_jammed                       = weapon\m4t\inspect_empty
+snd_reload_empty                                    = $no_sound
+snd_switch                                          = $no_sound
+snd_draw                                            = $no_sound
+snd_holster                                         = $no_sound
+snd_bore                                            = $no_sound
+snd_reload_grenade                                  = weapon\m4t\m203_reloading
+snd_reload                                          = weapon\m4t\reload
+snd_switch_mode                                     = weapon\m4t\fire_mode_switch
+snd_reload_misfire                                  = weapon\m4t\misfire
 ;---------------------------------------------------------------------HUD-------------------------------------------------------------------------------
 [wpn_m4a1_siber_hud]:hud_base
-
 item_visual                              = dynamics\weapons\wpn_m4a1_siber\wpn_m4a1_siber_hud.ogf
 
 attach_place_idx                         = 0
 zoom_hide_crosshair                      = true   
 
-hands_position                          = 0.009, -0.005, 0.036
-hands_position_16x9						= 0.009, -0.005, 0.036
-hands_orientation                       = -0.4, 0, 0
-hands_orientation_16x9					= -0.4, 0, 0
-
 item_position                            = 0, 0, 0
 item_orientation                         = 0, 0, 0
 
-lowered_hud_offset_pos					= 0.06, -0.024, -0.02
-lowered_hud_offset_pos_16x9				= 0.06, -0.024, -0.02
-lowered_hud_offset_rot					= -0.07, -0.7, 0.4
-lowered_hud_offset_rot_16x9				= -0.07, -0.7, 0.4
-			
-        aim_hud_offset_pos               = -0.048406, 0.001545, -0.025
-        aim_hud_offset_pos_16x9          = -0.048406, 0.001545, -0.025
-        aim_hud_offset_rot               = -0.006341, -0.006837, 0
-        aim_hud_offset_rot_16x9          = -0.006341, -0.006837, 0
+aim_hud_offset_pos               = -0.081468, 0.019325, -0.026403
+aim_hud_offset_pos_16x9          = -0.081468, 0.019325, -0.026403
+aim_hud_offset_rot               = 0.011014, 0.011226, 0
+aim_hud_offset_rot_16x9          = 0.011014, 0.011226, 0
 
-        gl_hud_offset_pos                = -0.065691, -0.085831, -0.037125
-        gl_hud_offset_pos_16x9           = -0.065691, -0.085831, -0.037125
-        gl_hud_offset_rot                = -0.187219, 0.028156, 0.120535
-        gl_hud_offset_rot_16x9           = -0.187219, 0.028156, 0.120535
+gl_hud_offset_pos                = -0.012124, -0.04327, -0.090357
+gl_hud_offset_pos_16x9           = -0.012124, -0.04327, -0.090357
+gl_hud_offset_rot                = -0.157065, -0.048541, 0.057692
+gl_hud_offset_rot_16x9           = -0.157065, -0.048541, 0.057692
 
-fire_bone                       	    = muzzle				; fix muzzle location
-fire_bone2                      	    = muzzle_gl	
-fire_point                      	    = 0, 0, 0
-fire_point2                     	    = 0, 0, 0
+hands_orientation                = 0.678431, 0.56, 0
+hands_orientation_16x9           = 0.678431, 0.56, 0
+hands_position                   = -0.0057, 0.0045, 0.003798
+hands_position_16x9              = -0.0057, 0.0045, 0.003798
 
-;-------------------------------------Animation--------------------------------------
-;idle
-	anm_idle_aim						= 1_m4_aim					, idle
-	anm_idle							= 1_m4_idle					, idle				, 1.1			
-	anm_idle_moving						= 1_m4_move					, idle				, 1.1
-	anm_idle_moving_crouch				= 1_m4_move					, idle				, 0.85
-	anm_idle_sprint						= 1_m4_sprint				, idle				, 1.1	              
-	anm_sprint_start					= 1_m4_sprint_start			, idle	               
-	anm_sprint_end						= 1_m4_sprint_end			, idle				 																									  
-	anm_show							= 2_m4_draw					, idle				, 1.1
-	anm_hide							= 2_m4_hide					, idle                	              
-	anm_switch_mode						= 2_m4_switch				, idle                
-	anm_switch_mode_aim					= 2_m4_switch				, idle
-	anm_hide_variant1 					= 2_m4_hide_alt				, idle				, 1.1
-;	anm_show_variant1   				= 2_m4_draw_alt				 					, 1.2	; it has bolt animation
-;empty idle	                                                                              
-	anm_idle_aim_empty					= 1_m4_aim					, idle_empty          
-	anm_idle_empty						= 1_m4_idle					, idle_empty		, 1.1		
-	anm_idle_moving_empty				= 1_m4_move					, idle_empty		, 1.1
-	anm_idle_moving_crouch_empty		= 1_m4_move					, idle_empty		, 0.85
-	anm_idle_sprint_empty				= 1_m4_sprint				, idle_empty        , 1.1	; sprint
-	anm_sprint_start_empty				= 1_m4_sprint_start			, idle_empty          
-	anm_sprint_end_empty				= 1_m4_sprint_end			, idle_empty		 																											  
-	anm_show_empty						= 2_m4_draw					, idle_empty		, 1.1
-	anm_hide_empty						= 2_m4_hide					, idle_empty
-	anm_switch_mode_empty				= 2_m4_switch				, idle_empty
-	anm_switch_mode_empty_aim			= 2_m4_switch				, idle_empty
-;shoot										                          
-	anm_shots							= 3_m4_shoot				, 3_m4_shoot		; higher number means higher recoil
-	anm_shots_variant1              	= 3_m4_shoot2               , 3_m4_shoot	
-	anm_shots_variant2					= 3_m4_shoot3               , 3_m4_shoot 	
-	anm_shots_variant3					= 3_m4_shoot4               , 3_m4_shoot  		
-	anm_shots_aim						= 3_m4_shoot				, 3_m4_shoot		; aim shoot must use small recoil
-	anm_shots_aim_variant1     			= 3_m4_shoot2               , 3_m4_shoot
-	anm_shot_l							= 3_m4_shoot3   			, 3_m4_shoot_last
-	anm_shots_aim_l						= 3_m4_shoot3				, 3_m4_shoot_last
-;inspect										
-	anm_bore							= 4_m4_inspect
-	anm_bore_empty						= 4_m4_inspect_empty
-;reload				
-	anm_reload_aim						= 5_m4_aim_reload
-	anm_reload_empty_aim				= 5_m4_aim_reload_empty
-	anm_reload_misfire_aim        	 	= 5_m4_aim_reload_jam
-	anm_reload							= 5_m4_reload_30
-	anm_reload_variant1					= 5_m4_reload_alt
-	anm_reload_empty					= 5_m4_reload_empty_30
-	anm_reload_empty_variant1			= 5_m4_reload_empty_alt
-	anm_reload_misfire        	 		= 5_m4_reload_jam
-;ammocheck								
-	anm_ammo_check						= 6_m4_ammo
-	anm_ammo_check_empty				= 6_m4_ammo_empty
-	anm_ammo_check_aim              	= 6_m4_ammo_aim
-	anm_ammo_check_empty_aim        	= 6_m4_ammo_aim_empty
+lowered_hud_offset_pos           = -0.014038, -0.008529, 0.005411
+lowered_hud_offset_pos_16x9      = -0.014038, -0.008529, 0.005411
+lowered_hud_offset_rot           = 0.150976, -0.284539, 0.306916
+lowered_hud_offset_rot_16x9      = 0.150976, -0.284539, 0.306916
+				
+;========================BORING=======================================================
+anm_bore                                 = m4_t_sedzhimol_inspect
+anm_bore_empty                           = m4_t_sedzhimol_ins_jam_emp, idle_empty
+anm_bore_jammed                          = m4_t_sedzhimol_ins_jam_emp, idle_jammed
+anm_bore_empty_jammed                    = m4_t_sedzhimol_ins_jam_emp, idle_jammed
+anm_bore_aim                             = m4_t_sedzhimol_aim, idle
+anm_bore_empty_aim                       = m4_t_sedzhimol_aim, idle_empty
+anm_bore_aim_jammed                      = m4_t_sedzhimol_aim, idle_jammed
+anm_bore_empty_aim_jammed                = m4_t_sedzhimol_aim, idle_jammed
+;🔥 WGL
+anm_bore_w_gl                            = m4_t_sedzhimol_inspect_w_gl, idle_w_gl
+anm_bore_w_gl_empty                      = m4_t_sedzhimol_ins_jam_emp_w_gl, idle_empty_w_gl
+anm_bore_w_gl_jammed                     = m4_t_sedzhimol_ins_jam_emp_w_gl, idle_jammed_w_gl
+anm_bore_w_gl_empty_jammed               = m4_t_sedzhimol_ins_jam_emp_w_gl, idle_jammed_w_gl
+anm_bore_w_gl_aim                        = m4_t_sedzhimol_aim_w_gl, idle_w_gl
+anm_bore_w_gl_empty_aim                  = m4_t_sedzhimol_aim_w_gl, idle_empty_w_gl
+anm_bore_w_gl_aim_jammed                 = m4_t_sedzhimol_aim_w_gl, idle_jammed_w_gl
+anm_bore_w_gl_empty_aim_jammed           = m4_t_sedzhimol_aim_w_gl, idle_jammed_w_gl
+;🫵M203
+anm_bore_g                               = m4_t_m203_sedzhimol_aim, idle_g
+anm_bore_g_aim                           = m4_t_m203_sedzhimol_aim, idle_g
+anm_bore_empty_g                         = m4_t_m203_sedzhimol_aim, idle_g
+;========================HIDE==========================================================
+anm_hide                                 = m4_t_sedzhimol_hide, idle
+anm_hide_empty                           = m4_t_sedzhimol_hide, idle_empty
+anm_hide_jammed                          = m4_t_sedzhimol_hide, idle_jammed
+anm_hide_empty_jammed                    = m4_t_sedzhimol_hide, idle_jammed
+;🔥 WGL
+anm_hide_w_gl                            = m4_t_sedzhimol_hide_w_gl, idle_w_gl
+anm_hide_w_gl_empty                      = m4_t_sedzhimol_hide_w_gl, idle_empty_w_gl
+anm_hide_w_gl_jammed                     = m4_t_sedzhimol_hide_w_gl, idle_jammed_w_gl
+anm_hide_w_gl_empty_jammed               = m4_t_sedzhimol_hide_w_gl, idle_jammed_w_gl
+;🫵M203
+anm_hide_g                               = m4_t_m203_sedzhimol_holster, idle_g
+;========================SHOW==========================================================
+anm_show                                 = m4_t_sedzhimol_draw, idle
+anm_show_empty                           = m4_t_sedzhimol_draw, idle_empty
+anm_show_jammed                          = m4_t_sedzhimol_draw, idle_jammed
+anm_show_empty_jammed                    = m4_t_sedzhimol_draw, idle_jammed
+;🔥 WGL
+anm_show_w_gl                            = m4_t_sedzhimol_draw_w_gl, idle_w_gl
+anm_show_w_gl_empty                      = m4_t_sedzhimol_draw_w_gl, idle_empty_w_gl
+anm_show_w_gl_jammed                     = m4_t_sedzhimol_draw_w_gl, idle_jammed_w_gl
+anm_show_w_gl_empty_jammed               = m4_t_sedzhimol_draw_w_gl, idle_jammed_w_gl
+;🫵M203
+anm_show_g                               = m4_t_m203_sedzhimol_draw, idle_g
+;========================IDLE==========================================================
+anm_idle                                 = m4_t_sedzhimol_idle, idle
+anm_idle_moving                          = m4_t_sedzhimol_walk, idle
+anm_idle_moving_crouch                   = m4_t_sedzhimol_walk, idle
+anm_idle_sprint                          = m4_t_sedzhimol_sprint, idle
+anm_idle_aim                             = m4_t_sedzhimol_aim, idle
+anm_idle_aim_moving                      = m4_t_sedzhimol_aim, idle
+anm_idle_aim_moving_crouch               = m4_t_sedzhimol_aim, idle
 
-;---------------------------------------Gl_off---------------------------------------
+anm_idle_empty                           = m4_t_sedzhimol_idle, idle_empty
+anm_idle_moving_empty                    = m4_t_sedzhimol_walk, idle_empty
+anm_idle_moving_crouch_empty             = m4_t_sedzhimol_walk, idle_empty
+anm_idle_sprint_empty                    = m4_t_sedzhimol_sprint, idle_empty
+anm_idle_aim_empty                       = m4_t_sedzhimol_aim, idle_empty
+anm_idle_aim_moving_empty                = m4_t_sedzhimol_aim, idle_empty
+anm_idle_aim_moving_crouch_empty         = m4_t_sedzhimol_aim, idle_empty
 
-;GL idle(end with _w_gl)
+anm_idle_jammed                          = m4_t_sedzhimol_idle, idle_jammed
+anm_idle_moving_jammed                   = m4_t_sedzhimol_walk, idle_jammed
+anm_idle_moving_crouch_jammed            = m4_t_sedzhimol_walk, idle_jammed
+anm_idle_sprint_jammed                   = m4_t_sedzhimol_sprint, idle_jammed
+anm_idle_aim_jammed                      = m4_t_sedzhimol_aim, idle_jammed
+anm_idle_aim_moving_jammed               = m4_t_sedzhimol_aim, idle_jammed
+anm_idle_aim_moving_crouch_jammed        = m4_t_sedzhimol_aim, idle_jammed
 
-	anm_idle_sprint_w_gl				= 1_m4_sprint				, idle	            , 1.1   
-	anm_idle_sprint_empty_w_gl			= 1_m4_sprint				, idle_empty        , 1.1   
+anm_idle_empty_jammed                          = m4_t_sedzhimol_idle, idle_jammed
+anm_idle_moving_empty_jammed                   = m4_t_sedzhimol_walk, idle_jammed
+anm_idle_moving_crouch_empty_jammed            = m4_t_sedzhimol_walk, idle_jammed
+anm_idle_sprint_empty_jammed                   = m4_t_sedzhimol_sprint, idle_jammed
+anm_idle_aim_empty_jammed                      = m4_t_sedzhimol_aim, idle_jammed
+anm_idle_aim_moving_empty_jammed               = m4_t_sedzhimol_aim, idle_jammed
+anm_idle_aim_moving_crouch_empty_jammed        = m4_t_sedzhimol_aim, idle_jammed
+;🔥 WGL
+anm_idle_w_gl                                 = m4_t_sedzhimol_idle_w_gl, idle_w_gl
+anm_idle_moving_w_gl                          = m4_t_sedzhimol_walk_w_gl, idle_w_gl
+anm_idle_moving_crouch_w_gl                   = m4_t_sedzhimol_walk_w_gl, idle_w_gl
+anm_idle_sprint_w_gl                          = m4_t_sedzhimol_sprint_w_gl, idle_w_gl
+anm_idle_w_gl_aim                             = m4_t_sedzhimol_aim_w_gl, idle_w_gl
+anm_idle_w_gl_aim_moving                      = m4_t_sedzhimol_aim_w_gl, idle_w_gl
+anm_idle_w_gl_aim_moving_crouch               = m4_t_sedzhimol_aim_w_gl, idle_w_gl
 
-	anm_idle_w_gl_aim					= 1_m4gl_aim				, idle
-	anm_idle_w_gl						= 1_m4gl_idle				, idle				, 1.1			
-	anm_idle_moving_w_gl				= 1_m4gl_move				, idle				, 1.1
-	anm_idle_moving_crouch_w_gl			= 1_m4gl_move				, idle				, 0.85
-	anm_sprint_start_w_gl				= 1_m4gl_sprint_start		, idle	              
-	anm_sprint_end_w_gl					= 1_m4gl_sprint_end			, idle				 																								 
-	anm_show_w_gl						= 2_m4gl_draw				, idle				
-	anm_hide_w_gl						= 2_m4gl_hide				, idle
-	anm_switch_mode_w_gl				= 2_m4gl_switch				, idle
-	anm_switch_mode_w_gl_aim			= 2_m4gl_switch				, idle
-;GL empty idle                                                      
-	anm_idle_empty_w_gl_aim				= 1_m4gl_aim				, idle_empty          
-	anm_idle_empty_w_gl					= 1_m4gl_idle				, idle_empty		, 1.1					
-	anm_idle_moving_empty_w_gl			= 1_m4gl_move				, idle_empty		, 1.1	
-	anm_idle_moving_crouch_empty_w_gl	= 1_m4gl_move				, idle_empty		, 0.85
-	anm_sprint_start_empty_w_gl			= 1_m4gl_sprint_start		, idle_empty          
-	anm_sprint_end_empty_w_gl			= 1_m4gl_sprint_end			, idle_empty		 																										            		  
-	anm_show_empty_w_gl					= 2_m4gl_draw				, idle_empty		
-	anm_hide_empty_w_gl					= 2_m4gl_hide				, idle_empty
-	anm_switch_mode_empty_w_gl			= 2_m4gl_switch				, idle_empty
-	anm_switch_mode_empty_w_gl_aim		= 2_m4gl_switch				, idle_empty
-;GL shoot									                        
-	anm_shots_w_gl						= 3_m4gl_shoot				, 3_m4_shoot	
-	anm_shots_w_gl_variant1             = 3_m4gl_shoot2             , 3_m4_shoot	
-	anm_shots_w_gl_variant2				= 3_m4gl_shoot3             , 3_m4_shoot 	
-	anm_shots_w_gl_variant3				= 3_m4gl_shoot4             , 3_m4_shoot  	
-	anm_shots_w_gl_aim					= 3_m4gl_shoot              , 3_m4_shoot	
-	anm_shots_w_gl_aim_variant1			= 3_m4gl_shoot2             , 3_m4_shoot
-	anm_shot_w_gl_l						= 3_m4gl_shoot3   	  		, 3_m4_shoot_last
-	anm_shots_w_gl_aim_l				= 3_m4gl_shoot3				, 3_m4_shoot_last			
-;GL inspect									
-	anm_bore_w_gl						= 4_m4gl_inspect			, 4_m4_inspect
-	anm_bore_empty_w_gl					= 4_m4gl_inspect_empty      , 4_m4_inspect_empty
-;GL reload				                                             
-	anm_reload_w_gl_aim					= 5_m4gl_aim_reload         , 5_m4_aim_reload
-	anm_reload_empty_w_gl_aim			= 5_m4gl_aim_reload_empty   , 5_m4_aim_reload_empty
-	anm_reload_misfire_w_gl_aim    	 	= 5_m4gl_aim_reload_jam		, 5_m4_aim_reload_jam				
-	anm_reload_w_gl						= 5_m4gl_reload_30          , 5_m4_reload_30
-	anm_reload_w_gl_variant1			= 5_m4gl_reload_alt         , 5_m4_reload_alt
-	anm_reload_empty_w_gl				= 5_m4gl_reload_empty_30    , 5_m4_reload_empty_30
-	anm_reload_empty_w_gl_variant1		= 5_m4gl_reload_empty_alt   , 5_m4_reload_empty_alt
-	anm_reload_misfire_w_gl        	 	= 5_m4gl_reload_jam         , 5_m4_reload_jam
-;GL ammocheck(script req)								             
-	anm_ammo_check_w_gl					= 6_m4gl_ammo               , 6_m4_ammo
-	anm_ammo_check_empty_w_gl			= 6_m4gl_ammo_empty         , 6_m4_ammo_empty
-	anm_ammo_check_w_gl_aim             = 6_m4gl_ammo_aim           , 6_m4_ammo_aim
-	anm_ammo_check_empty_w_gl_aim       = 6_m4gl_ammo_aim   		, 6_m4_ammo_aim_empty
+anm_idle_w_gl_empty                           = m4_t_sedzhimol_idle_w_gl, idle_empty_w_gl
+anm_idle_moving_w_gl_empty                    = m4_t_sedzhimol_walk_w_gl, idle_empty_w_gl
+anm_idle_moving_crouch_w_gl_empty             = m4_t_sedzhimol_walk_w_gl, idle_empty_w_gl
+anm_idle_sprint_w_gl_empty                    = m4_t_sedzhimol_sprint_w_gl, idle_empty_w_gl
+anm_idle_w_gl_aim_empty                       = m4_t_sedzhimol_aim_w_gl, idle_empty_w_gl
+anm_idle_w_gl_aim_moving_empty                = m4_t_sedzhimol_aim_w_gl, idle_empty_w_gl
+anm_idle_w_gl_aim_moving_crouch_empty         = m4_t_sedzhimol_aim_w_gl, idle_empty_w_gl
 
+anm_idle_w_gl_jammed                          = m4_t_sedzhimol_idle_w_gl, idle_jammed_w_gl
+anm_idle_moving_w_gl_jammed                   = m4_t_sedzhimol_walk_w_gl, idle_jammed_w_gl
+anm_idle_moving_crouch_w_gl_jammed            = m4_t_sedzhimol_walk_w_gl, idle_jammed_w_gl
+anm_idle_sprint_w_gl_jammed                   = m4_t_sedzhimol_sprint_w_gl, idle_jammed_w_gl
+anm_idle_w_gl_aim_jammed                      = m4_t_sedzhimol_aim_w_gl, idle_jammed_w_gl
+anm_idle_w_gl_aim_moving_jammed               = m4_t_sedzhimol_aim_w_gl, idle_jammed_w_gl
+anm_idle_w_gl_aim_moving_crouch_jammed        = m4_t_sedzhimol_aim_w_gl, idle_jammed_w_gl
 
-;---------------------------------------Gl_on---------------------------------------
-
-;GL_handling(end with _g)
-
-	anm_idle_sprint_g					= 1_m4_sprint					, idle_g			, 1.1	 																		 
-	anm_idle_g							= 7_m4g_idle					, idle_g			, 1.1	
-	anm_idle_moving_g					= 7_m4g_move					, idle_g			, 1.1
-	anm_idle_moving_crouch_g			= 7_m4g_move					, idle_g			, 0.85 								
-	anm_sprint_start_g 					= 7_m4g_sprint_start			, idle_g				
-	anm_sprint_end_g   					= 7_m4g_sprint_end				, idle_g				
-	anm_show_g                  	    = 8_m4g_draw					, idle_g			, 1.1
-	anm_hide_g                  	    = 8_m4g_hide					, idle_g			
-	anm_switch_g						= 8_m4g_on						, 8_m4g_on													
-	anm_switch                  	    = 8_m4g_off						, 8_m4g_off									
-	anm_shots_g							= 9_m4g_shoot 					, 9_m4g_shoot 		, 3.5
-	anm_reload_g						= 9_m4g_reload			
-		
-
-shell_bone                               = gilza
-shell_dir                                = 0, 1, 0
-shell_point                              = 0, -0.03, 0
+anm_idle_w_gl_empty_jammed                          = m4_t_sedzhimol_idle_w_gl, idle_jammed_w_gl
+anm_idle_moving_w_gl_empty_jammed                   = m4_t_sedzhimol_walk_w_gl, idle_jammed_w_gl
+anm_idle_moving_crouch_w_gl_empty_jammed            = m4_t_sedzhimol_walk_w_gl, idle_jammed_w_gl
+anm_idle_sprint_w_gl_empty_jammed                   = m4_t_sedzhimol_sprint_w_gl, idle_jammed_w_gl
+anm_idle_w_gl_aim_empty_jammed                      = m4_t_sedzhimol_aim_w_gl, idle_jammed_w_gl
+anm_idle_w_gl_aim_moving_empty_jammed               = m4_t_sedzhimol_aim_w_gl, idle_jammed_w_gl
+anm_idle_w_gl_aim_moving_crouch_empty_jammed        = m4_t_sedzhimol_aim_w_gl, idle_jammed_w_gl
+;🫵M203
+anm_idle_g                               = m4_t_m203_sedzhimol_idle, idle_g
+anm_idle_moving_g                        = m4_t_m203_sedzhimol_walk, idle_g
+anm_idle_moving_crouch_g                 = m4_t_m203_sedzhimol_walk, idle_g
+anm_idle_sprint_g                        = m4_t_m203_sedzhimol_sprint, idle_g
+anm_idle_g_aim                           = m4_t_m203_sedzhimol_aim, idle_g
+anm_idle_g_empty_aim                     = m4_t_m203_sedzhimol_aim, idle_g
+;========================SPRINT PATERN====================================================
+anm_sprint_start                         = m4_t_sedzhimol_sprint_start, idle
+anm_sprint_end                           = m4_t_sedzhimol_sprint_end, idle
+anm_sprint_start_empty                   = m4_t_sedzhimol_sprint_start, idle_empty
+anm_sprint_end_empty                     = m4_t_sedzhimol_sprint_end, idle_empty
+anm_sprint_start_jammed                  = m4_t_sedzhimol_sprint_start, idle_jammed
+anm_sprint_end_jammed                    = m4_t_sedzhimol_sprint_end, idle_jammed
+anm_sprint_start_empty_jammed            = m4_t_sedzhimol_sprint_start, idle_jammed
+anm_sprint_end_empty_jammed              = m4_t_sedzhimol_sprint_end, idle_jammed
+;🔥 WGL
+anm_sprint_start_w_gl                         = m4_t_sedzhimol_sprint_start_w_gl, idle_w_gl
+anm_sprint_end_w_gl                           = m4_t_sedzhimol_sprint_end_w_gl, idle_w_gl
+anm_sprint_start_empty_w_gl                   = m4_t_sedzhimol_sprint_start_w_gl, idle_empty_w_gl
+anm_sprint_end_empty_w_gl                     = m4_t_sedzhimol_sprint_end_w_gl, idle_empty_w_gl
+anm_sprint_start_w_gl_jammed                  = m4_t_sedzhimol_sprint_start_w_gl, idle_jammed_w_gl
+anm_sprint_end_w_gl_jammed                    = m4_t_sedzhimol_sprint_end_w_gl, idle_jammed_w_gl
+anm_sprint_start_empty_w_gl_jammed            = m4_t_sedzhimol_sprint_start_w_gl, idle_jammed_w_gl
+anm_sprint_end_empty_w_gl_jammed              = m4_t_sedzhimol_sprint_end_w_gl, idle_jammed_w_gl
+;🫵M203
+anm_sprint_start_g                       = m4_t_m203_sedzhimol_sprint_start, idle_g
+anm_sprint_end_g                         = m4_t_m203_sedzhimol_sprint_end, idle_g
+anm_sprint_start_empty_g                 = m4_t_m203_sedzhimol_sprint_start, idle_g
+anm_sprint_end_empty_g                   = m4_t_m203_sedzhimol_sprint_end, idle_g
+;----------------------------------------------------------------------------------------
+ts_pattern_sprint_start          = .+, anm_idle_sprint, anm_sprint_start, 1
+ts_pattern_sprint_end            = anm_idle_sprint, ^anm_idle.*, anm_sprint_end
+ts_strict_sprint_end_move        = anm_sprint_start, anm_idle_moving, anm_sprint_end
+;========================RELOAD==========================================================
+anm_reload_ammo29                        = m4_t_sedzhimol_reload_part, m4_t_sedzhimol_reload_part_left
+anm_reload_ammo28                        = m4_t_sedzhimol_reload_part, m4_t_sedzhimol_reload_part_right
+anm_reload_ammo27                        = m4_t_sedzhimol_reload_part, m4_t_sedzhimol_reload_part_left
+anm_reload_ammo26                        = m4_t_sedzhimol_reload_part, m4_t_sedzhimol_reload_part_right
+anm_reload_ammo25                        = m4_t_sedzhimol_reload_part, m4_t_sedzhimol_reload_part_left
+anm_reload_ammo24                        = m4_t_sedzhimol_reload_part, m4_t_sedzhimol_reload_part_right
+anm_reload_ammo23                        = m4_t_sedzhimol_reload_part, m4_t_sedzhimol_reload_part_left
+anm_reload_ammo22                        = m4_t_sedzhimol_reload_part, m4_t_sedzhimol_reload_part_right
+anm_reload_ammo21                        = m4_t_sedzhimol_reload_part, m4_t_sedzhimol_reload_part_left
+anm_reload_ammo20                        = m4_t_sedzhimol_reload_part, m4_t_sedzhimol_reload_part_right
+anm_reload_ammo19                        = m4_t_sedzhimol_reload_part, m4_t_sedzhimol_reload_part_left
+anm_reload_ammo18                        = m4_t_sedzhimol_reload_part, m4_t_sedzhimol_reload_part_right
+anm_reload_ammo17                        = m4_t_sedzhimol_reload_part, m4_t_sedzhimol_reload_part_left
+anm_reload_ammo16                        = m4_t_sedzhimol_reload_part, m4_t_sedzhimol_reload_part_right
+anm_reload_ammo15                        = m4_t_sedzhimol_reload_part, m4_t_sedzhimol_reload_part_left
+anm_reload_ammo14                        = m4_t_sedzhimol_reload_part, m4_t_sedzhimol_reload_part_right
+anm_reload_ammo13                        = m4_t_sedzhimol_reload_part, m4_t_sedzhimol_reload_part_left
+anm_reload_ammo12                        = m4_t_sedzhimol_reload_part, m4_t_sedzhimol_reload_part_right
+anm_reload_ammo11                        = m4_t_sedzhimol_reload_part, m4_t_sedzhimol_reload_part_left
+anm_reload_ammo10                        = m4_t_sedzhimol_reload_part, m4_t_sedzhimol_reload_part_right
+anm_reload_ammo9                         = m4_t_sedzhimol_reload_part, m4_t_sedzhimol_reload_part_left
+anm_reload_ammo8                         = m4_t_sedzhimol_reload_part, m4_t_sedzhimol_reload_part_right
+anm_reload_ammo7                         = m4_t_sedzhimol_reload_part, m4_t_sedzhimol_reload_part_left
+anm_reload_ammo6                         = m4_t_sedzhimol_reload_part, m4_t_sedzhimol_reload_part_6
+anm_reload_ammo5                         = m4_t_sedzhimol_reload_part, m4_t_sedzhimol_reload_part_5
+anm_reload_ammo4                         = m4_t_sedzhimol_reload_part, m4_t_sedzhimol_reload_part_4
+anm_reload_ammo3                         = m4_t_sedzhimol_reload_part, m4_t_sedzhimol_reload_part_3
+anm_reload_ammo2                         = m4_t_sedzhimol_reload_part, m4_t_sedzhimol_reload_part_2
+anm_reload_ammo1                         = m4_t_sedzhimol_reload_part, m4_t_sedzhimol_reload_part_1
+anm_reload                               = m4_t_sedzhimol_reload_part, m4_t_sedzhimol_reload_part_right
+anm_reload_empty                         = m4_t_sedzhimol_reload_full
+anm_reload_empty_variant1                = m4_t_sedzhimol_reload_full_ver2
+anm_reload_misfire                       = m4_t_sedzhimol_unjammed
+anm_reload_misfire_empty                 = m4_t_sedzhimol_unjammed_to_empty, m4_t_sedzhimol_unjammed_to_empty
+anm_reload_misfire_aim                   = m4_t_sedzhimol_unjammed, m4_t_sedzhimol_unjammed
+anm_reload_misfire_empty_aim             = m4_t_sedzhimol_unjammed_to_empty, m4_t_sedzhimol_unjammed_to_empty
+;🔥 WGL
+anm_reload_w_gl_ammo29                        = m4_t_sedzhimol_reload_part_w_gl, m4_t_sedzhimol_reload_part_left_w_gl
+anm_reload_w_gl_ammo28                        = m4_t_sedzhimol_reload_part_w_gl, m4_t_sedzhimol_reload_part_right_w_gl
+anm_reload_w_gl_ammo27                        = m4_t_sedzhimol_reload_part_w_gl, m4_t_sedzhimol_reload_part_left_w_gl
+anm_reload_w_gl_ammo26                        = m4_t_sedzhimol_reload_part_w_gl, m4_t_sedzhimol_reload_part_right_w_gl
+anm_reload_w_gl_ammo25                        = m4_t_sedzhimol_reload_part_w_gl, m4_t_sedzhimol_reload_part_left_w_gl
+anm_reload_w_gl_ammo24                        = m4_t_sedzhimol_reload_part_w_gl, m4_t_sedzhimol_reload_part_right_w_gl
+anm_reload_w_gl_ammo23                        = m4_t_sedzhimol_reload_part_w_gl, m4_t_sedzhimol_reload_part_left_w_gl
+anm_reload_w_gl_ammo22                        = m4_t_sedzhimol_reload_part_w_gl, m4_t_sedzhimol_reload_part_right_w_gl
+anm_reload_w_gl_ammo21                        = m4_t_sedzhimol_reload_part_w_gl, m4_t_sedzhimol_reload_part_left_w_gl
+anm_reload_w_gl_ammo20                        = m4_t_sedzhimol_reload_part_w_gl, m4_t_sedzhimol_reload_part_right_w_gl
+anm_reload_w_gl_ammo19                        = m4_t_sedzhimol_reload_part_w_gl, m4_t_sedzhimol_reload_part_left_w_gl
+anm_reload_w_gl_ammo18                        = m4_t_sedzhimol_reload_part_w_gl, m4_t_sedzhimol_reload_part_right_w_gl
+anm_reload_w_gl_ammo17                        = m4_t_sedzhimol_reload_part_w_gl, m4_t_sedzhimol_reload_part_left_w_gl
+anm_reload_w_gl_ammo16                        = m4_t_sedzhimol_reload_part_w_gl, m4_t_sedzhimol_reload_part_right_w_gl
+anm_reload_w_gl_ammo15                        = m4_t_sedzhimol_reload_part_w_gl, m4_t_sedzhimol_reload_part_left_w_gl
+anm_reload_w_gl_ammo14                        = m4_t_sedzhimol_reload_part_w_gl, m4_t_sedzhimol_reload_part_right_w_gl
+anm_reload_w_gl_ammo13                        = m4_t_sedzhimol_reload_part_w_gl, m4_t_sedzhimol_reload_part_left_w_gl
+anm_reload_w_gl_ammo12                        = m4_t_sedzhimol_reload_part_w_gl, m4_t_sedzhimol_reload_part_right_w_gl
+anm_reload_w_gl_ammo11                        = m4_t_sedzhimol_reload_part_w_gl, m4_t_sedzhimol_reload_part_left_w_gl
+anm_reload_w_gl_ammo10                        = m4_t_sedzhimol_reload_part_w_gl, m4_t_sedzhimol_reload_part_right_w_gl
+anm_reload_w_gl_ammo9                         = m4_t_sedzhimol_reload_part_w_gl, m4_t_sedzhimol_reload_part_left_w_gl
+anm_reload_w_gl_ammo8                         = m4_t_sedzhimol_reload_part_w_gl, m4_t_sedzhimol_reload_part_right_w_gl
+anm_reload_w_gl_ammo7                         = m4_t_sedzhimol_reload_part_w_gl, m4_t_sedzhimol_reload_part_left_w_gl
+anm_reload_w_gl_ammo6                         = m4_t_sedzhimol_reload_part_w_gl, m4_t_sedzhimol_reload_part_6_w_gl
+anm_reload_w_gl_ammo5                         = m4_t_sedzhimol_reload_part_w_gl, m4_t_sedzhimol_reload_part_5_w_gl
+anm_reload_w_gl_ammo4                         = m4_t_sedzhimol_reload_part_w_gl, m4_t_sedzhimol_reload_part_4_w_gl
+anm_reload_w_gl_ammo3                         = m4_t_sedzhimol_reload_part_w_gl, m4_t_sedzhimol_reload_part_3_w_gl
+anm_reload_w_gl_ammo2                         = m4_t_sedzhimol_reload_part_w_gl, m4_t_sedzhimol_reload_part_2_w_gl
+anm_reload_w_gl_ammo1                         = m4_t_sedzhimol_reload_part_w_gl, m4_t_sedzhimol_reload_part_1_w_gl
+anm_reload_w_gl                               = m4_t_sedzhimol_reload_part_w_gl, m4_t_sedzhimol_reload_part_1_w_gl
+anm_reload_empty_w_gl                         = m4_t_sedzhimol_reload_full_w_gl
+anm_reload_empty_w_gl_variant1                = m4_t_sedzhimol_reload_full_ver2_w_gl
+anm_reload_misfire_w_gl                       = m4_t_sedzhimol_unjammed_w_gl
+anm_reload_misfire_w_gl_empty                 = m4_t_sedzhimol_unjammed_to_empty_w_gl, m4_t_sedzhimol_unjammed_to_empty_w_gl
+anm_reload_misfire_w_gl_aim                   = m4_t_sedzhimol_unjammed_w_gl, m4_t_sedzhimol_unjammed_w_gl
+anm_reload_misfire_w_gl_empty_aim             = m4_t_sedzhimol_unjammed_to_empty_w_gl, m4_t_sedzhimol_unjammed_to_empty_w_gl
+;🫵M203
+anm_reload_g                             = m4_t_m203_sedzhimol_reload
+;========================MAG CHECK=========================================================
+anm_ammo_check_jammed_ammo30             = m4_t_sedzhimol_mag_check, m4_t_sedzhimol_mag_check_6_jammed
+anm_ammo_check_jammed_ammo29             = m4_t_sedzhimol_mag_check, m4_t_sedzhimol_mag_check_jammed
+anm_ammo_check_jammed_ammo28             = m4_t_sedzhimol_mag_check, m4_t_sedzhimol_mag_check_6_jammed
+anm_ammo_check_jammed_ammo27             = m4_t_sedzhimol_mag_check, m4_t_sedzhimol_mag_check_jammed
+anm_ammo_check_jammed_ammo26             = m4_t_sedzhimol_mag_check, m4_t_sedzhimol_mag_check_6_jammed
+anm_ammo_check_jammed_ammo25             = m4_t_sedzhimol_mag_check, m4_t_sedzhimol_mag_check_jammed
+anm_ammo_check_jammed_ammo24             = m4_t_sedzhimol_mag_check, m4_t_sedzhimol_mag_check_6_jammed
+anm_ammo_check_jammed_ammo23             = m4_t_sedzhimol_mag_check, m4_t_sedzhimol_mag_check_jammed
+anm_ammo_check_jammed_ammo22             = m4_t_sedzhimol_mag_check, m4_t_sedzhimol_mag_check_6_jammed
+anm_ammo_check_jammed_ammo21             = m4_t_sedzhimol_mag_check, m4_t_sedzhimol_mag_check_jammed
+anm_ammo_check_jammed_ammo20             = m4_t_sedzhimol_mag_check, m4_t_sedzhimol_mag_check_6_jammed
+anm_ammo_check_jammed_ammo19             = m4_t_sedzhimol_mag_check, m4_t_sedzhimol_mag_check_jammed
+anm_ammo_check_jammed_ammo18             = m4_t_sedzhimol_mag_check, m4_t_sedzhimol_mag_check_6_jammed
+anm_ammo_check_jammed_ammo17             = m4_t_sedzhimol_mag_check, m4_t_sedzhimol_mag_check_jammed
+anm_ammo_check_jammed_ammo16             = m4_t_sedzhimol_mag_check, m4_t_sedzhimol_mag_check_6_jammed
+anm_ammo_check_jammed_ammo15             = m4_t_sedzhimol_mag_check, m4_t_sedzhimol_mag_check_jammed
+anm_ammo_check_jammed_ammo14             = m4_t_sedzhimol_mag_check, m4_t_sedzhimol_mag_check_6_jammed
+anm_ammo_check_jammed_ammo13             = m4_t_sedzhimol_mag_check, m4_t_sedzhimol_mag_check_jammed
+anm_ammo_check_jammed_ammo12             = m4_t_sedzhimol_mag_check, m4_t_sedzhimol_mag_check_6_jammed
+anm_ammo_check_jammed_ammo11             = m4_t_sedzhimol_mag_check, m4_t_sedzhimol_mag_check_jammed
+anm_ammo_check_jammed_ammo10             = m4_t_sedzhimol_mag_check, m4_t_sedzhimol_mag_check_6_jammed
+anm_ammo_check_jammed_ammo9              = m4_t_sedzhimol_mag_check, m4_t_sedzhimol_mag_check_jammed
+anm_ammo_check_jammed_ammo8              = m4_t_sedzhimol_mag_check, m4_t_sedzhimol_mag_check_6_jammed
+anm_ammo_check_jammed_ammo7              = m4_t_sedzhimol_mag_check, m4_t_sedzhimol_mag_check_jammed
+anm_ammo_check_jammed_ammo6              = m4_t_sedzhimol_mag_check, m4_t_sedzhimol_mag_check_6_jammed
+anm_ammo_check_jammed_ammo5              = m4_t_sedzhimol_mag_check, m4_t_sedzhimol_mag_check_5_jammed
+anm_ammo_check_jammed_ammo4              = m4_t_sedzhimol_mag_check, m4_t_sedzhimol_mag_check_4_jammed
+anm_ammo_check_jammed_ammo3              = m4_t_sedzhimol_mag_check, m4_t_sedzhimol_mag_check_3_jammed
+anm_ammo_check_jammed_ammo2              = m4_t_sedzhimol_mag_check, m4_t_sedzhimol_mag_check_2_jammed
+anm_ammo_check_jammed_ammo1              = m4_t_sedzhimol_mag_check, m4_t_sedzhimol_mag_check_1_jammed
+anm_ammo_check_ammo30                    = m4_t_sedzhimol_mag_check, m4_t_sedzhimol_mag_check_6
+anm_ammo_check_ammo29                    = m4_t_sedzhimol_mag_check, m4_t_sedzhimol_mag_check
+anm_ammo_check_ammo28                    = m4_t_sedzhimol_mag_check, m4_t_sedzhimol_mag_check_6
+anm_ammo_check_ammo27                    = m4_t_sedzhimol_mag_check, m4_t_sedzhimol_mag_check
+anm_ammo_check_ammo26                    = m4_t_sedzhimol_mag_check, m4_t_sedzhimol_mag_check_6
+anm_ammo_check_ammo25                    = m4_t_sedzhimol_mag_check, m4_t_sedzhimol_mag_check
+anm_ammo_check_ammo24                    = m4_t_sedzhimol_mag_check, m4_t_sedzhimol_mag_check_6
+anm_ammo_check_ammo23                    = m4_t_sedzhimol_mag_check, m4_t_sedzhimol_mag_check
+anm_ammo_check_ammo22                    = m4_t_sedzhimol_mag_check, m4_t_sedzhimol_mag_check_6
+anm_ammo_check_ammo21                    = m4_t_sedzhimol_mag_check, m4_t_sedzhimol_mag_check
+anm_ammo_check_ammo20                    = m4_t_sedzhimol_mag_check, m4_t_sedzhimol_mag_check_6
+anm_ammo_check_ammo19                    = m4_t_sedzhimol_mag_check, m4_t_sedzhimol_mag_check
+anm_ammo_check_ammo18                    = m4_t_sedzhimol_mag_check, m4_t_sedzhimol_mag_check_6
+anm_ammo_check_ammo17                    = m4_t_sedzhimol_mag_check, m4_t_sedzhimol_mag_check
+anm_ammo_check_ammo16                    = m4_t_sedzhimol_mag_check, m4_t_sedzhimol_mag_check_6
+anm_ammo_check_ammo15                    = m4_t_sedzhimol_mag_check, m4_t_sedzhimol_mag_check
+anm_ammo_check_ammo14                    = m4_t_sedzhimol_mag_check, m4_t_sedzhimol_mag_check_6
+anm_ammo_check_ammo13                    = m4_t_sedzhimol_mag_check, m4_t_sedzhimol_mag_check
+anm_ammo_check_ammo12                    = m4_t_sedzhimol_mag_check, m4_t_sedzhimol_mag_check_6
+anm_ammo_check_ammo11                    = m4_t_sedzhimol_mag_check, m4_t_sedzhimol_mag_check
+anm_ammo_check_ammo10                    = m4_t_sedzhimol_mag_check, m4_t_sedzhimol_mag_check_6
+anm_ammo_check_ammo9                     = m4_t_sedzhimol_mag_check, m4_t_sedzhimol_mag_check
+anm_ammo_check_ammo8                     = m4_t_sedzhimol_mag_check, m4_t_sedzhimol_mag_check_6
+anm_ammo_check_ammo7                     = m4_t_sedzhimol_mag_check, m4_t_sedzhimol_mag_check
+anm_ammo_check_ammo6                     = m4_t_sedzhimol_mag_check, m4_t_sedzhimol_mag_check_6
+anm_ammo_check_ammo5                     = m4_t_sedzhimol_mag_check, m4_t_sedzhimol_mag_check_5
+anm_ammo_check_ammo4                     = m4_t_sedzhimol_mag_check, m4_t_sedzhimol_mag_check_4
+anm_ammo_check_ammo3                     = m4_t_sedzhimol_mag_check, m4_t_sedzhimol_mag_check_3
+anm_ammo_check_ammo2                     = m4_t_sedzhimol_mag_check, m4_t_sedzhimol_mag_check_2
+anm_ammo_check_ammo1                     = m4_t_sedzhimol_mag_check, m4_t_sedzhimol_mag_check_1
+anm_ammo_check                           = m4_t_sedzhimol_mag_check, m4_t_sedzhimol_mag_check
+anm_ammo_check_empty                     = m4_t_sedzhimol_mag_check, m4_t_sedzhimol_mag_check_empty
+anm_ammo_check_empty_jammed              = m4_t_sedzhimol_mag_check, m4_t_sedzhimol_mag_check_empty_jammed
+anm_ammo_check_jammed                    = m4_t_sedzhimol_mag_check, m4_t_sedzhimol_mag_check_jammed
+anm_ammo_check_aim                       = m4_t_sedzhimol_aim, idle
+anm_ammo_check_empty_aim                 = m4_t_sedzhimol_aim, idle_empty
+anm_ammo_check_aim_jammed                = m4_t_sedzhimol_aim, idle_jammed
+anm_ammo_check_empty_aim_jammed          = m4_t_sedzhimol_aim, idle_jammed
+;🔥 WGL
+anm_ammo_check_w_gl_jammed_ammo30             = m4_t_sedzhimol_mag_check_w_gl, m4_t_sedzhimol_mag_check_6_jammed_w_gl
+anm_ammo_check_w_gl_jammed_ammo29             = m4_t_sedzhimol_mag_check_w_gl, m4_t_sedzhimol_mag_check_jammed_w_gl
+anm_ammo_check_w_gl_jammed_ammo28             = m4_t_sedzhimol_mag_check_w_gl, m4_t_sedzhimol_mag_check_6_jammed_w_gl
+anm_ammo_check_w_gl_jammed_ammo27             = m4_t_sedzhimol_mag_check_w_gl, m4_t_sedzhimol_mag_check_jammed_w_gl
+anm_ammo_check_w_gl_jammed_ammo26             = m4_t_sedzhimol_mag_check_w_gl, m4_t_sedzhimol_mag_check_6_jammed_w_gl
+anm_ammo_check_w_gl_jammed_ammo25             = m4_t_sedzhimol_mag_check_w_gl, m4_t_sedzhimol_mag_check_jammed_w_gl
+anm_ammo_check_w_gl_jammed_ammo24             = m4_t_sedzhimol_mag_check_w_gl, m4_t_sedzhimol_mag_check_6_jammed_w_gl
+anm_ammo_check_w_gl_jammed_ammo23             = m4_t_sedzhimol_mag_check_w_gl, m4_t_sedzhimol_mag_check_jammed_w_gl
+anm_ammo_check_w_gl_jammed_ammo22             = m4_t_sedzhimol_mag_check_w_gl, m4_t_sedzhimol_mag_check_6_jammed_w_gl
+anm_ammo_check_w_gl_jammed_ammo21             = m4_t_sedzhimol_mag_check_w_gl, m4_t_sedzhimol_mag_check_jammed_w_gl
+anm_ammo_check_w_gl_jammed_ammo20             = m4_t_sedzhimol_mag_check_w_gl, m4_t_sedzhimol_mag_check_6_jammed_w_gl
+anm_ammo_check_w_gl_jammed_ammo19             = m4_t_sedzhimol_mag_check_w_gl, m4_t_sedzhimol_mag_check_jammed_w_gl
+anm_ammo_check_w_gl_jammed_ammo18             = m4_t_sedzhimol_mag_check_w_gl, m4_t_sedzhimol_mag_check_6_jammed_w_gl
+anm_ammo_check_w_gl_jammed_ammo17             = m4_t_sedzhimol_mag_check_w_gl, m4_t_sedzhimol_mag_check_jammed_w_gl
+anm_ammo_check_w_gl_jammed_ammo16             = m4_t_sedzhimol_mag_check_w_gl, m4_t_sedzhimol_mag_check_6_jammed_w_gl
+anm_ammo_check_w_gl_jammed_ammo15             = m4_t_sedzhimol_mag_check_w_gl, m4_t_sedzhimol_mag_check_jammed_w_gl
+anm_ammo_check_w_gl_jammed_ammo14             = m4_t_sedzhimol_mag_check_w_gl, m4_t_sedzhimol_mag_check_6_jammed_w_gl
+anm_ammo_check_w_gl_jammed_ammo13             = m4_t_sedzhimol_mag_check_w_gl, m4_t_sedzhimol_mag_check_jammed_w_gl
+anm_ammo_check_w_gl_jammed_ammo12             = m4_t_sedzhimol_mag_check_w_gl, m4_t_sedzhimol_mag_check_6_jammed_w_gl
+anm_ammo_check_w_gl_jammed_ammo11             = m4_t_sedzhimol_mag_check_w_gl, m4_t_sedzhimol_mag_check_jammed_w_gl
+anm_ammo_check_w_gl_jammed_ammo10             = m4_t_sedzhimol_mag_check_w_gl, m4_t_sedzhimol_mag_check_6_jammed_w_gl
+anm_ammo_check_w_gl_jammed_ammo9              = m4_t_sedzhimol_mag_check_w_gl, m4_t_sedzhimol_mag_check_jammed_w_gl
+anm_ammo_check_w_gl_jammed_ammo8              = m4_t_sedzhimol_mag_check_w_gl, m4_t_sedzhimol_mag_check_6_jammed_w_gl
+anm_ammo_check_w_gl_jammed_ammo7              = m4_t_sedzhimol_mag_check_w_gl, m4_t_sedzhimol_mag_check_jammed_w_gl
+anm_ammo_check_w_gl_jammed_ammo6              = m4_t_sedzhimol_mag_check_w_gl, m4_t_sedzhimol_mag_check_6_jammed_w_gl
+anm_ammo_check_w_gl_jammed_ammo5              = m4_t_sedzhimol_mag_check_w_gl, m4_t_sedzhimol_mag_check_5_jammed_w_gl
+anm_ammo_check_w_gl_jammed_ammo4              = m4_t_sedzhimol_mag_check_w_gl, m4_t_sedzhimol_mag_check_4_jammed_w_gl
+anm_ammo_check_w_gl_jammed_ammo3              = m4_t_sedzhimol_mag_check_w_gl, m4_t_sedzhimol_mag_check_3_jammed_w_gl
+anm_ammo_check_w_gl_jammed_ammo2              = m4_t_sedzhimol_mag_check_w_gl, m4_t_sedzhimol_mag_check_2_jammed_w_gl
+anm_ammo_check_w_gl_jammed_ammo1              = m4_t_sedzhimol_mag_check_w_gl, m4_t_sedzhimol_mag_check_1_jammed_w_gl
+anm_ammo_check_w_gl_ammo30                    = m4_t_sedzhimol_mag_check_w_gl, m4_t_sedzhimol_mag_check_6_w_gl
+anm_ammo_check_w_gl_ammo29                    = m4_t_sedzhimol_mag_check_w_gl, m4_t_sedzhimol_mag_check_w_gl
+anm_ammo_check_w_gl_ammo28                    = m4_t_sedzhimol_mag_check_w_gl, m4_t_sedzhimol_mag_check_6_w_gl
+anm_ammo_check_w_gl_ammo27                    = m4_t_sedzhimol_mag_check_w_gl, m4_t_sedzhimol_mag_check_w_gl
+anm_ammo_check_w_gl_ammo26                    = m4_t_sedzhimol_mag_check_w_gl, m4_t_sedzhimol_mag_check_6_w_gl
+anm_ammo_check_w_gl_ammo25                    = m4_t_sedzhimol_mag_check_w_gl, m4_t_sedzhimol_mag_check_w_gl
+anm_ammo_check_w_gl_ammo24                    = m4_t_sedzhimol_mag_check_w_gl, m4_t_sedzhimol_mag_check_6_w_gl
+anm_ammo_check_w_gl_ammo23                    = m4_t_sedzhimol_mag_check_w_gl, m4_t_sedzhimol_mag_check_w_gl
+anm_ammo_check_w_gl_ammo22                    = m4_t_sedzhimol_mag_check_w_gl, m4_t_sedzhimol_mag_check_6_w_gl
+anm_ammo_check_w_gl_ammo21                    = m4_t_sedzhimol_mag_check_w_gl, m4_t_sedzhimol_mag_check_w_gl
+anm_ammo_check_w_gl_ammo20                    = m4_t_sedzhimol_mag_check_w_gl, m4_t_sedzhimol_mag_check_6_w_gl
+anm_ammo_check_w_gl_ammo19                    = m4_t_sedzhimol_mag_check_w_gl, m4_t_sedzhimol_mag_check_w_gl
+anm_ammo_check_w_gl_ammo18                    = m4_t_sedzhimol_mag_check_w_gl, m4_t_sedzhimol_mag_check_6_w_gl
+anm_ammo_check_w_gl_ammo17                    = m4_t_sedzhimol_mag_check_w_gl, m4_t_sedzhimol_mag_check_w_gl
+anm_ammo_check_w_gl_ammo16                    = m4_t_sedzhimol_mag_check_w_gl, m4_t_sedzhimol_mag_check_6_w_gl
+anm_ammo_check_w_gl_ammo15                    = m4_t_sedzhimol_mag_check_w_gl, m4_t_sedzhimol_mag_check_w_gl
+anm_ammo_check_w_gl_ammo14                    = m4_t_sedzhimol_mag_check_w_gl, m4_t_sedzhimol_mag_check_6_w_gl
+anm_ammo_check_w_gl_ammo13                    = m4_t_sedzhimol_mag_check_w_gl, m4_t_sedzhimol_mag_check_w_gl
+anm_ammo_check_w_gl_ammo12                    = m4_t_sedzhimol_mag_check_w_gl, m4_t_sedzhimol_mag_check_6_w_gl
+anm_ammo_check_w_gl_ammo11                    = m4_t_sedzhimol_mag_check_w_gl, m4_t_sedzhimol_mag_check_w_gl
+anm_ammo_check_w_gl_ammo10                    = m4_t_sedzhimol_mag_check_w_gl, m4_t_sedzhimol_mag_check_6_w_gl
+anm_ammo_check_w_gl_ammo9                     = m4_t_sedzhimol_mag_check_w_gl, m4_t_sedzhimol_mag_check_w_gl
+anm_ammo_check_w_gl_ammo8                     = m4_t_sedzhimol_mag_check_w_gl, m4_t_sedzhimol_mag_check_6_w_gl
+anm_ammo_check_w_gl_ammo7                     = m4_t_sedzhimol_mag_check_w_gl, m4_t_sedzhimol_mag_check_w_gl
+anm_ammo_check_w_gl_ammo6                     = m4_t_sedzhimol_mag_check_w_gl, m4_t_sedzhimol_mag_check_6_w_gl
+anm_ammo_check_w_gl_ammo5                     = m4_t_sedzhimol_mag_check_w_gl, m4_t_sedzhimol_mag_check_5_w_gl
+anm_ammo_check_w_gl_ammo4                     = m4_t_sedzhimol_mag_check_w_gl, m4_t_sedzhimol_mag_check_4_w_gl
+anm_ammo_check_w_gl_ammo3                     = m4_t_sedzhimol_mag_check_w_gl, m4_t_sedzhimol_mag_check_3_w_gl
+anm_ammo_check_w_gl_ammo2                     = m4_t_sedzhimol_mag_check_w_gl, m4_t_sedzhimol_mag_check_2_w_gl
+anm_ammo_check_w_gl_ammo1                     = m4_t_sedzhimol_mag_check_w_gl, m4_t_sedzhimol_mag_check_1_w_gl
+anm_ammo_check_w_gl                           = m4_t_sedzhimol_mag_check_w_gl, m4_t_sedzhimol_mag_check_w_gl
+anm_ammo_check_empty_w_gl                     = m4_t_sedzhimol_mag_check_w_gl, m4_t_sedzhimol_mag_check_empty_w_gl
+anm_ammo_check_empty_w_gl_jammed              = m4_t_sedzhimol_mag_check_w_gl, m4_t_sedzhimol_mag_check_empty_jammed_w_gl
+anm_ammo_check_w_gl_jammed                    = m4_t_sedzhimol_mag_check_w_gl, m4_t_sedzhimol_mag_check_jammed_w_gl
+anm_ammo_check_w_gl_aim                       = m4_t_sedzhimol_aim_w_gl, idle_w_gl
+anm_ammo_check_empty_w_gl_aim                 = m4_t_sedzhimol_aim_w_gl, idle_empty_w_gl
+anm_ammo_check_w_gl_aim_jammed                = m4_t_sedzhimol_aim_w_gl, idle_jammed_w_gl
+anm_ammo_check_empty_w_gl_aim_jammed          = m4_t_sedzhimol_aim_w_gl, idle_jammed_w_gl
+;🫵M203
+anm_ammo_check_g                         = m4_t_m203_sedzhimol_grenade_check
+anm_ammo_check_empty_g                   = m4_t_m203_sedzhimol_grenade_check
+anm_ammo_check_g_aim                     = m4_t_m203_sedzhimol_aim, idle_g
+anm_ammo_check_empty_g_aim               = m4_t_m203_sedzhimol_aim, idle_g
+;========================SWITCH MODE=======================================================
+anm_switch_mode                          = m4_t_sedzhimol_switch_mode, idle
+anm_switch_mode_aim                      = m4_t_sedzhimol_aim_switch_mode, idle
+anm_switch_mode_empty                    = m4_t_sedzhimol_switch_mode, idle_empty
+anm_switch_mode_empty_aim                = m4_t_sedzhimol_aim_switch_mode, idle_empty
+anm_switch_mode_jammed                   = m4_t_sedzhimol_switch_mode, idle_jammed
+anm_switch_mode_aim_jammed               = m4_t_sedzhimol_aim_switch_mode, idle_jammed
+anm_switch_mode_empty_jammed             = m4_t_sedzhimol_switch_mode, idle_jammed
+anm_switch_mode_empty_aim_jammed         = m4_t_sedzhimol_aim_switch_mode, idle_jammed
+;🔥 WGL
+anm_switch_mode_w_gl                          = m4_t_sedzhimol_switch_mode_w_gl, idle_w_gl
+anm_switch_mode_w_gl_aim                      = m4_t_sedzhimol_aim_switch_mode_w_gl, idle_w_gl
+anm_switch_mode_w_gl_empty                    = m4_t_sedzhimol_switch_mode_w_gl, idle_empty_w_gl
+anm_switch_mode_w_gl_empty_aim                = m4_t_sedzhimol_aim_switch_mode_w_gl, idle_empty_w_gl
+anm_switch_mode_w_gl_jammed                   = m4_t_sedzhimol_switch_mode_w_gl, idle_jammed_w_gl
+anm_switch_mode_w_gl_aim_jammed               = m4_t_sedzhimol_aim_switch_mode_w_gl, idle_jammed_w_gl
+anm_switch_mode_w_gl_empty_jammed             = m4_t_sedzhimol_switch_mode_w_gl, idle_jammed_w_gl
+anm_switch_mode_w_gl_empty_aim_jammed         = m4_t_sedzhimol_aim_switch_mode_w_gl, idle_jammed_w_gl
+;🫵M203
+anm_switch_g                             = m4_t_m203_sedzhimol_g_on; m203_h_on
+anm_switch                               = m4_t_m203_sedzhimol_g_off; m203_h_off
+;========================SHOOTS===========================================================
+anm_shots                                = m4_t_sedzhimol_shoot
+anm_shots_aim                            = m4_t_sedzhimol_shoot
+anm_shot_l                               = m4_t_sedzhimol_shoot, m4_t_sedzhimol_shoot_last
+anm_shot_l_aim                           = m4_t_sedzhimol_shoot, m4_t_sedzhimol_shoot_last
+anm_shots_jammed                         = m4_t_sedzhimol_shoot, m4_t_sedzhimol_shoot_to_jamm
+anm_shots_aim_jammed                     = m4_t_sedzhimol_shoot, m4_t_sedzhimol_shoot_to_jamm
+anm_shot_l_jammed                        = m4_t_sedzhimol_shoot, m4_t_sedzhimol_shoot_to_jamm
+anm_shot_l_aim_jammed                    = m4_t_sedzhimol_shoot, m4_t_sedzhimol_shoot_to_jamm
+;🔥 WGL
+anm_shots_w_gl                                = m4_t_sedzhimol_shoot_w_gl
+anm_shots_w_gl_aim                            = m4_t_sedzhimol_shoot_w_gl
+anm_shot_w_gl_l                               = m4_t_sedzhimol_shoot_w_gl, m4_t_sedzhimol_shoot_last_w_gl
+anm_shot_w_gl_l_aim                           = m4_t_sedzhimol_shoot_w_gl, m4_t_sedzhimol_shoot_last_w_gl
+anm_shots_w_gl_jammed                         = m4_t_sedzhimol_shoot_w_gl, m4_t_sedzhimol_shoot_to_jamm_w_gl
+anm_shots_w_gl_aim_jammed                     = m4_t_sedzhimol_shoot_w_gl, m4_t_sedzhimol_shoot_to_jamm_w_gl
+anm_shot_w_gl_l_jammed                        = m4_t_sedzhimol_shoot_w_gl, m4_t_sedzhimol_shoot_to_jamm_w_gl
+anm_shot_w_gl_l_aim_jammed                    = m4_t_sedzhimol_shoot_w_gl, m4_t_sedzhimol_shoot_to_jamm_w_gl
+;🫵M203
+anm_shots_g                              = m4_t_m203_sedzhimol_shot
+;=========================================================================================
+shell_bone                               = wpn_body
+shell_dir                                = 0, 0, 0
+shell_point                              = -100, 0, 0
 
 fire_bone                                = muzzle
 fire_bone2                               = muzzle_gl
-fire_point                               = 0.01, -0.0185, -0.09
+fire_point                               = 0, 0, 0
 fire_point2                              = 0, 0, 0
 
-freelook_z_offset_mul					 = 0.15
+freelook_z_offset_mul					 = 0.4
 ;---------------------------------------------------------------------------Sights----------------------------------------------------------------------
 [wpn_m4a1_siber_ac10632]:wpn_m4a1_siber
 hud				= wpn_m4a1_siber_ac10632_hud
@@ -437,18 +868,7 @@ inv_grid_y         = 40
 
 [wpn_m4a1_siber_point_aimpro_hud]:wpn_m4a1_siber_hud
 item_visual				= dynamics\weapons\wpn_m4a1_siber\wpn_m4a1_siber_aimpoint_pro_hud.ogf
-	anm_idle_sprint_g					= 1_m4_sprint					, idle_g_rmr		, 1.1	 																 
-	anm_idle_g							= 7_m4g_idle					, idle_g_rmr		, 1.1	
-	anm_idle_moving_g					= 7_m4g_move					, idle_g_rmr		, 1.1
-	anm_idle_moving_crouch_g			= 7_m4g_move					, idle_g_rmr		, 0.85 								
-	anm_sprint_start_g 					= 7_m4g_sprint_start			, idle_g_rmr				
-	anm_sprint_end_g   					= 7_m4g_sprint_end				, idle_g_rmr				
-	anm_show_g                  	    = 8_m4g_draw					, idle_g_rmr		, 1.1
-	anm_hide_g                  	    = 8_m4g_hide					, idle_g_rmr			
-	anm_switch_g						= 2_m4gl_switch					, 8_m4g_on_rmr													
-	anm_switch                  	    = 2_m4gl_switch					, 8_m4g_off_rmr		
-	anm_shots_g							= 9_m4g_shoot 					, 9_m4g_shoot_rmr	, 3.5	
-	anm_reload_g						= 9_m4g_reload					, 9_m4g_reload_rmr
+
 ;-------------------------------------------------------------------------------------------------------------------------------
 [wpn_m4a1_siber_ekp8_18]:wpn_m4a1_siber
 hud						= wpn_m4a1_siber_ekp8_18_hud
@@ -511,18 +931,7 @@ inv_grid_y         		= 40
 
 [wpn_m4a1_siber_acog_hud]:wpn_m4a1_siber_hud
 item_visual            	 	= dynamics\weapons\wpn_m4a1_siber\wpn_m4a1_siber_acog_hud.ogf
-	anm_idle_sprint_g					= 1_m4_sprint					, idle_g_rmr		, 1.1	 																 
-	anm_idle_g							= 7_m4g_idle					, idle_g_rmr		, 1.1	
-	anm_idle_moving_g					= 7_m4g_move					, idle_g_rmr		, 1.1
-	anm_idle_moving_crouch_g			= 7_m4g_move					, idle_g_rmr		, 0.85 								
-	anm_sprint_start_g 					= 7_m4g_sprint_start			, idle_g_rmr				
-	anm_sprint_end_g   					= 7_m4g_sprint_end				, idle_g_rmr				
-	anm_show_g                  	    = 8_m4g_draw					, idle_g_rmr		, 1.1
-	anm_hide_g                  	    = 8_m4g_hide					, idle_g_rmr			
-	anm_switch_g						= 2_m4gl_switch					, 8_m4g_on_rmr													
-	anm_switch                  	    = 2_m4gl_switch					, 8_m4g_off_rmr		
-	anm_shots_g							= 9_m4g_shoot 					, 9_m4g_shoot_rmr	, 3.5	
-	anm_reload_g						= 9_m4g_reload					, 9_m4g_reload_rmr	
+
 ;-------------------------------------------------------------------------------
 [wpn_m4a1_siber_triji]:wpn_m4a1_siber
 hud					                               = wpn_m4a1_siber_triji_hud
@@ -532,23 +941,9 @@ inv_grid_height    = 2
 inv_grid_x         = 158
 inv_grid_y         = 34
 
-
-use_alt_aim_hud                   = true
-
 [wpn_m4a1_siber_triji_hud]:wpn_m4a1_siber_hud
 item_visual				= dynamics\weapons\wpn_m4a1_siber\wpn_m4a1_siber_trijicon_rmr_hud.ogf
-	anm_idle_sprint_g					= 1_m4_sprint					, idle_g_rmr		, 1.1	 																 
-	anm_idle_g							= 7_m4g_idle					, idle_g_rmr		, 1.1	
-	anm_idle_moving_g					= 7_m4g_move					, idle_g_rmr		, 1.1
-	anm_idle_moving_crouch_g			= 7_m4g_move					, idle_g_rmr		, 0.85 								
-	anm_sprint_start_g 					= 7_m4g_sprint_start			, idle_g_rmr				
-	anm_sprint_end_g   					= 7_m4g_sprint_end				, idle_g_rmr				
-	anm_show_g                  	    = 8_m4g_draw					, idle_g_rmr		, 1.1
-	anm_hide_g                  	    = 8_m4g_hide					, idle_g_rmr			
-	anm_switch_g						= 2_m4gl_switch					, 8_m4g_on_rmr													
-	anm_switch                  	    = 2_m4gl_switch					, 8_m4g_off_rmr		
-	anm_shots_g							= 9_m4g_shoot 					, 9_m4g_shoot_rmr	, 3.5	
-	anm_reload_g						= 9_m4g_reload					, 9_m4g_reload_rmr
+
 ;----------------------------------------------------------------------------------------------------------------------------
 [wpn_m4a1_siber_specter]:wpn_m4a1_siber
 hud					= wpn_m4a1_siber_specter_hud
@@ -560,18 +955,7 @@ inv_grid_y         = 40
 
 [wpn_m4a1_siber_specter_hud]:wpn_m4a1_siber_hud
 item_visual				= dynamics\weapons\wpn_m4a1_siber\wpn_m4a1_siber_specter_hud.ogf
-	anm_idle_sprint_g					= 1_m4_sprint					, idle_g_rmr		, 1.1	 																 
-	anm_idle_g							= 7_m4g_idle					, idle_g_rmr		, 1.1	
-	anm_idle_moving_g					= 7_m4g_move					, idle_g_rmr		, 1.1
-	anm_idle_moving_crouch_g			= 7_m4g_move					, idle_g_rmr		, 0.85 								
-	anm_sprint_start_g 					= 7_m4g_sprint_start			, idle_g_rmr				
-	anm_sprint_end_g   					= 7_m4g_sprint_end				, idle_g_rmr				
-	anm_show_g                  	    = 8_m4g_draw					, idle_g_rmr		, 1.1
-	anm_hide_g                  	    = 8_m4g_hide					, idle_g_rmr			
-	anm_switch_g						= 2_m4gl_switch					, 8_m4g_on_rmr													
-	anm_switch                  	    = 2_m4gl_switch					, 8_m4g_off_rmr		
-	anm_shots_g							= 9_m4g_shoot 					, 9_m4g_shoot_rmr	, 3.5	
-	anm_reload_g						= 9_m4g_reload					, 9_m4g_reload_rmr
+
 ;--------------------------------------------------------------------------------
 [wpn_m4a1_siber_spec_alt]:wpn_m4a1_siber
 hud					= wpn_m4a1_siber_spec_alt_hud
@@ -583,22 +967,9 @@ inv_grid_y         = 36
 
 
 
-use_alt_aim_hud                   = true
-
 [wpn_m4a1_siber_spec_alt_hud]:wpn_m4a1_siber_hud
 item_visual				= dynamics\weapons\wpn_m4a1_siber\wpn_m4a1_siber_spec_alt_hud.ogf
-	anm_idle_sprint_g					= 1_m4_sprint					, idle_g_rmr		, 1.1	 																 
-	anm_idle_g							= 7_m4g_idle					, idle_g_rmr		, 1.1	
-	anm_idle_moving_g					= 7_m4g_move					, idle_g_rmr		, 1.1
-	anm_idle_moving_crouch_g			= 7_m4g_move					, idle_g_rmr		, 0.85 								
-	anm_sprint_start_g 					= 7_m4g_sprint_start			, idle_g_rmr				
-	anm_sprint_end_g   					= 7_m4g_sprint_end				, idle_g_rmr				
-	anm_show_g                  	    = 8_m4g_draw					, idle_g_rmr		, 1.1
-	anm_hide_g                  	    = 8_m4g_hide					, idle_g_rmr			
-	anm_switch_g						= 2_m4gl_switch					, 8_m4g_on_rmr													
-	anm_switch                  	    = 2_m4gl_switch					, 8_m4g_off_rmr		
-	anm_shots_g							= 9_m4g_shoot 					, 9_m4g_shoot_rmr	, 3.5	
-	anm_reload_g						= 9_m4g_reload					, 9_m4g_reload_rmr
+
 ;--------------------------------------------------------------------------------
 [wpn_m4a1_siber_leupold]:wpn_m4a1_siber
 hud					= wpn_m4a1_siber_leupold_hud
@@ -612,18 +983,7 @@ inv_grid_y         = 40
 
 [wpn_m4a1_siber_leupold_hud]:wpn_m4a1_siber_hud
 item_visual				= dynamics\weapons\wpn_m4a1_siber\wpn_m4a1_siber_leupold_hud.ogf
-	anm_idle_sprint_g					= 1_m4_sprint					, idle_g_rmr		, 1.1	 																 
-	anm_idle_g							= 7_m4g_idle					, idle_g_rmr		, 1.1	
-	anm_idle_moving_g					= 7_m4g_move					, idle_g_rmr		, 1.1
-	anm_idle_moving_crouch_g			= 7_m4g_move					, idle_g_rmr		, 0.85 								
-	anm_sprint_start_g 					= 7_m4g_sprint_start			, idle_g_rmr				
-	anm_sprint_end_g   					= 7_m4g_sprint_end				, idle_g_rmr				
-	anm_show_g                  	    = 8_m4g_draw					, idle_g_rmr		, 1.1
-	anm_hide_g                  	    = 8_m4g_hide					, idle_g_rmr			
-	anm_switch_g						= 2_m4gl_switch					, 8_m4g_on_rmr													
-	anm_switch                  	    = 2_m4gl_switch					, 8_m4g_off_rmr		
-	anm_shots_g							= 9_m4g_shoot 					, 9_m4g_shoot_rmr	, 3.5	
-	anm_reload_g						= 9_m4g_reload					, 9_m4g_reload_rmr
+
 ;-------------------------------------------------------------------------------------------------------------------------------
 [wpn_m4a1_siber_mark8_rmr]:wpn_m4a1_siber
 hud					= wpn_m4a1_siber_mark8_rmr_hud
@@ -633,24 +993,9 @@ inv_grid_height    = 2
 inv_grid_x         = 147
 inv_grid_y         = 36
 
-
-
-use_alt_aim_hud                   = true
-
 [wpn_m4a1_siber_mark8_rmr_hud]:wpn_m4a1_siber_hud
 item_visual				= dynamics\weapons\wpn_m4a1_siber\wpn_m4a1_siber_mark8_rmr_hud.ogf
-	anm_idle_sprint_g					= 1_m4_sprint					, idle_g_rmr		, 1.1	 																 
-	anm_idle_g							= 7_m4g_idle					, idle_g_rmr		, 1.1	
-	anm_idle_moving_g					= 7_m4g_move					, idle_g_rmr		, 1.1
-	anm_idle_moving_crouch_g			= 7_m4g_move					, idle_g_rmr		, 0.85 								
-	anm_sprint_start_g 					= 7_m4g_sprint_start			, idle_g_rmr				
-	anm_sprint_end_g   					= 7_m4g_sprint_end				, idle_g_rmr				
-	anm_show_g                  	    = 8_m4g_draw					, idle_g_rmr		, 1.1
-	anm_hide_g                  	    = 8_m4g_hide					, idle_g_rmr			
-	anm_switch_g						= 2_m4gl_switch					, 8_m4g_on_rmr													
-	anm_switch                  	    = 2_m4gl_switch					, 8_m4g_off_rmr		
-	anm_shots_g							= 9_m4g_shoot 					, 9_m4g_shoot_rmr	, 3.5	
-	anm_reload_g						= 9_m4g_reload					, 9_m4g_reload_rmr
+
 ;-------------------------------------------------------------------------------------------------------------------------------
 [wpn_m4a1_siber_gauss_sight]:wpn_m4a1_siber
 hud					    = wpn_m4a1_siber_gauss_sight_hud
@@ -664,18 +1009,7 @@ inv_grid_y         = 40
 
 [wpn_m4a1_siber_gauss_sight_hud]:wpn_m4a1_siber_hud
 item_visual				= dynamics\weapons\wpn_m4a1_siber\wpn_m4a1_siber_gauss_hud.ogf
-	anm_idle_sprint_g					= 1_m4_sprint					, idle_g_rmr		, 1.1	 																 
-	anm_idle_g							= 7_m4g_idle					, idle_g_rmr		, 1.1	
-	anm_idle_moving_g					= 7_m4g_move					, idle_g_rmr		, 1.1
-	anm_idle_moving_crouch_g			= 7_m4g_move					, idle_g_rmr		, 0.85 								
-	anm_sprint_start_g 					= 7_m4g_sprint_start			, idle_g_rmr				
-	anm_sprint_end_g   					= 7_m4g_sprint_end				, idle_g_rmr				
-	anm_show_g                  	    = 8_m4g_draw					, idle_g_rmr		, 1.1
-	anm_hide_g                  	    = 8_m4g_hide					, idle_g_rmr			
-	anm_switch_g						= 2_m4gl_switch					, 8_m4g_on_rmr													
-	anm_switch                  	    = 2_m4gl_switch					, 8_m4g_off_rmr		
-	anm_shots_g							= 9_m4g_shoot 					, 9_m4g_shoot_rmr	, 3.5	
-	anm_reload_g						= 9_m4g_reload					, 9_m4g_reload_rmr
+
 ;------------------------------------------------------------------------------------------------
 [wpn_m4a1_siber_pn23]:wpn_m4a1_siber
 hud					= wpn_m4a1_siber_pn23_hud
@@ -689,18 +1023,7 @@ inv_grid_y         = 40
 
 [wpn_m4a1_siber_pn23_hud]:wpn_m4a1_siber_hud
 item_visual				= dynamics\weapons\wpn_m4a1_siber\wpn_m4a1_siber_pn23_hud.ogf
-	anm_idle_sprint_g					= 1_m4_sprint					, idle_g_rmr		, 1.1	 																 
-	anm_idle_g							= 7_m4g_idle					, idle_g_rmr		, 1.1	
-	anm_idle_moving_g					= 7_m4g_move					, idle_g_rmr		, 1.1
-	anm_idle_moving_crouch_g			= 7_m4g_move					, idle_g_rmr		, 0.85 								
-	anm_sprint_start_g 					= 7_m4g_sprint_start			, idle_g_rmr				
-	anm_sprint_end_g   					= 7_m4g_sprint_end				, idle_g_rmr				
-	anm_show_g                  	    = 8_m4g_draw					, idle_g_rmr		, 1.1
-	anm_hide_g                  	    = 8_m4g_hide					, idle_g_rmr			
-	anm_switch_g						= 2_m4gl_switch					, 8_m4g_on_rmr													
-	anm_switch                  	    = 2_m4gl_switch					, 8_m4g_off_rmr		
-	anm_shots_g							= 9_m4g_shoot 					, 9_m4g_shoot_rmr	, 3.5	
-	anm_reload_g						= 9_m4g_reload					, 9_m4g_reload_rmr
+
 ;-------------------------------------------------------------------------------------------------------------------------------
 [wpn_m4a1_siber_susat]:wpn_m4a1_siber
 hud                                      = wpn_m4a1_siber_susat_hud
@@ -712,18 +1035,7 @@ inv_grid_y         = 40
 
 [wpn_m4a1_siber_susat_hud]:wpn_m4a1_siber_hud
 item_visual                              = dynamics\weapons\wpn_m4a1_siber\wpn_m4a1_siber_susat_hud.ogf
-	anm_idle_sprint_g					= 1_m4_sprint					, idle_g_rmr		, 1.1	 																 
-	anm_idle_g							= 7_m4g_idle					, idle_g_rmr		, 1.1	
-	anm_idle_moving_g					= 7_m4g_move					, idle_g_rmr		, 1.1
-	anm_idle_moving_crouch_g			= 7_m4g_move					, idle_g_rmr		, 0.85 								
-	anm_sprint_start_g 					= 7_m4g_sprint_start			, idle_g_rmr				
-	anm_sprint_end_g   					= 7_m4g_sprint_end				, idle_g_rmr				
-	anm_show_g                  	    = 8_m4g_draw					, idle_g_rmr		, 1.1
-	anm_hide_g                  	    = 8_m4g_hide					, idle_g_rmr			
-	anm_switch_g						= 2_m4gl_switch					, 8_m4g_on_rmr													
-	anm_switch                  	    = 2_m4gl_switch					, 8_m4g_off_rmr		
-	anm_shots_g							= 9_m4g_shoot 					, 9_m4g_shoot_rmr	, 3.5	
-	anm_reload_g						= 9_m4g_reload					, 9_m4g_reload_rmr
+
 ;-----------------------------------------------------------------------------------------------------
 [wpn_m4a1_siber_gee36]:wpn_m4a1_siber
 hud					= wpn_m4a1_siber_gee36_hud
@@ -733,21 +1045,17 @@ inv_grid_y         = 40
 1icon_layer_x			= 73
 1icon_layer_y			= -8
 
-
-
-use_alt_aim_hud                   = true
-
 [wpn_m4a1_siber_gee36_hud]:wpn_m4a1_siber_hud
 item_visual				= dynamics\weapons\wpn_m4a1_siber\wpn_m4a1_siber_gee36_hud.ogf
-	anm_idle_sprint_g					= 1_m4_sprint					, idle_g_rmr		, 1.1	 																 
-	anm_idle_g							= 7_m4g_idle					, idle_g_rmr		, 1.1	
-	anm_idle_moving_g					= 7_m4g_move					, idle_g_rmr		, 1.1
-	anm_idle_moving_crouch_g			= 7_m4g_move					, idle_g_rmr		, 0.85 								
-	anm_sprint_start_g 					= 7_m4g_sprint_start			, idle_g_rmr				
-	anm_sprint_end_g   					= 7_m4g_sprint_end				, idle_g_rmr				
-	anm_show_g                  	    = 8_m4g_draw					, idle_g_rmr		, 1.1
-	anm_hide_g                  	    = 8_m4g_hide					, idle_g_rmr			
-	anm_switch_g						= 2_m4gl_switch					, 8_m4g_on_rmr													
-	anm_switch                  	    = 2_m4gl_switch					, 8_m4g_off_rmr		
-	anm_shots_g							= 9_m4g_shoot 					, 9_m4g_shoot_rmr	, 3.5	
-	anm_reload_g						= 9_m4g_reload					, 9_m4g_reload_rmr
+
+;-----------------------------------------------------------------------------------------------------
+[wpn_m4a1_siber_marchf]:wpn_m4a1_siber
+hud					= wpn_m4a1_siber_marchf_hud
+
+inv_grid_y         = 40
+1icon_layer			    = marchf
+1icon_layer_x			= 73
+1icon_layer_y			= -8
+
+[wpn_m4a1_siber_marchf_hud]:wpn_m4a1_siber_hud
+item_visual				= dynamics\weapons\wpn_m4a1_siber\wpn_m4a1_siber_marchf_hud.ogf

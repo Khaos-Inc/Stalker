@@ -1,5 +1,5 @@
 --PPE SETTINGS------------------------------------------------------------
-local c_ppe_max_intensity = 0.5 --Max intensity of the sound shock PPE effect
+local c_ppe_max_intensity = 0.01 --Max intensity of the sound shock PPE effect
 
 local c_id_ppe_blur = 5600
 local c_id_ppe_black_infinite = 5606
@@ -16,8 +16,8 @@ local c_stage_3 = 3
 
 --PSY-HEALTH SETTINGS------------------------------------------------------------
 local c_psy_health_regen_per_seconds = 0.0005 --Psy health regeneration per in-game seconds
-local c_psy_health_regen_booster_divider = 25 --Psy health regeneration divider for medicines
-local c_psy_health_regen_artefacts_divider = 100 --Psy health regeneration divider for artefacts and attachments
+local c_psy_health_regen_booster_divider = 35 --Psy health regeneration divider for medicines
+local c_psy_health_regen_artefacts_divider = 50 --Psy health regeneration divider for artefacts and attachments
 local fate_of_player_zombfication = false
 
 --TABLES-----------------------------------------------------------------------------------------
@@ -37,7 +37,7 @@ local c_sound_psy_death_scene_volume = 30
 
 function on_game_start()
     RegisterScriptCallback("actor_on_update", actor_on_update)
-    RegisterScriptCallback("actor_on_before_hit",actor_on_before_hit)
+--    RegisterScriptCallback("actor_on_before_hit",actor_on_before_hit)
     RegisterScriptCallback("save_state", save_state)
     RegisterScriptCallback("load_state", load_state)
     RegisterScriptCallback("on_game_load", on_game_load)
@@ -61,6 +61,7 @@ function actor_on_item_use(obj)
     end
 end
 
+lock_psy_health = false
 function actor_on_update()
 
     local curr_time = game.get_game_time()
@@ -75,10 +76,13 @@ function actor_on_update()
 
         manage_sound_effects()
 
-        manage_zombification()
+--        manage_zombification()
 
         manage_psy_bar()
-
+	
+	if psy_table.actor_psy_health <= 0.001 then
+		db.actor:set_health_ex(0)
+	end
         --Uncomment to see psy prot and psy health
         --show_message("PSY PROT: "..get_telepatic_protection_total().." PSY HEALTH: "..psy_table.actor_psy_health.." REGEN: "..get_psy_health_regeneration())
     end
@@ -97,7 +101,7 @@ function actor_on_before_hit(s_hit)
     trace_this("HIT POWER: "..s_hit.power.." HIT TYPE: "..s_hit.type)
     if (s_hit.type ~= 4) then return end
 
-    if (is_actor_zombied() or s_hit.power < 0.01) then
+    if (is_actor_zombied()) then
         s_hit.power = 0
         return 
     end
@@ -146,14 +150,14 @@ function manage_ppe_effects()
         if (psy_table.current_stage ~= c_stage_1) then
             --show_message_news("ENTER STAGE 1")
             remove_all_psy_ppe_effects()
-            level.add_pp_effector("blur.ppe", c_id_ppe_blur, true)
+ --           level.add_pp_effector("blur.ppe", c_id_ppe_blur, true)
             psy_table.current_stage = c_stage_1
         end
     else
         if (psy_table.current_stage ~= c_stage_2) then
             --show_message_news("ENTER STAGE 2")
             remove_all_psy_ppe_effects()
-            level.add_pp_effector("blur.ppe", c_id_ppe_blur, true)
+--            level.add_pp_effector("blur.ppe", c_id_ppe_blur, true)
             level.add_pp_effector("snd_shock.ppe", c_id_ppe_snd_shock, true)
             psy_table.current_stage = c_stage_2
         end
@@ -164,6 +168,7 @@ end
 function manage_zombification()
     --Original community will be restored on load game always. Temp solution.
     if (psy_table.actor_zombied and db.actor:character_community() ~= "actor_zombied") then
+		db.actor:kill(db.actor)
         db.actor:set_character_community("actor_zombied", 0, 0)
     end
 
@@ -202,7 +207,9 @@ function manage_zombification()
                 
                 show_message(game.translate_string("st_psy_zombification_scene"))
             else  
-				db.actor:kill(db.actor)
+				if (not level_environment.is_actor_immune()) then
+					db.actor:kill(db.actor)
+				end
                 remove_all_psy_ppe_effects()
                 show_message(game.translate_string("st_psy_death_scene"))
             end
@@ -265,6 +272,11 @@ end
 function get_psy_health_regeneration()
     local bonus_psy_heal_booster = get_telepatic_protection_booster() / c_psy_health_regen_booster_divider
     local bonus_psy_heal_artefacts = get_telepatic_protection_artefacts() / c_psy_health_regen_artefacts_divider
+    if bonus_psy_heal_artefacts < 0 then
+        bonus_psy_heal_artefacts = 0
+    end
+	
+--	bonus_psy_heal_artefacts = 0
     return c_psy_health_regen_per_seconds + bonus_psy_heal_booster + bonus_psy_heal_artefacts
 end
 
@@ -307,7 +319,7 @@ function get_telepatic_protection_artefacts()
 		
 		telepatic_protection = telepatic_protection + ( cond * SYS_GetParam(2, immunities_sec, "telepatic_immunity", 0) )
     end)
-    
+
     return telepatic_protection
 end
 
@@ -361,12 +373,20 @@ function get_distance(position_1, position_2)
 end
 
 function set_psy_health(amount)
-    psy_table.actor_psy_health = amount
+    psy_table.actor_psy_health = amount < 1 and amount or 1
 end
 
+-- code by demonized
+-- added getter and changer for psy health
 function get_psy_health()
     return psy_table.actor_psy_health
 end
+
+function change_psy_health(amount)
+    -- printf("psy changed by %s", amount)
+    set_psy_health(psy_table.actor_psy_health + amount)
+end
+-- code by demonized end
 
 function show_message(msg)
     actor_menu.set_msg(1, msg,4)
@@ -380,4 +400,9 @@ function trace_this(to_trace)
 	--local log_file = io.open("log_arszi_psy.txt", "a")
 	--log_file:write(to_trace.."\n")
 	--log_file:close(log_file)
+end
+
+
+function get_psy_health()
+	return psy_table.actor_psy_health 
 end

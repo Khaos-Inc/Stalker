@@ -2,6 +2,8 @@
 -- if that changes then it needs to be changed here also
 local degrade_factor = item_repair.degrade_factor or 0.2
 
+local IsItem = IsItem
+
 local InitControlsSuper = item_repair.UIRepair.InitControls
 item_repair.UIRepair.InitControls = function(self)
 	InitControlsSuper(self)
@@ -22,9 +24,10 @@ item_repair.UIRepair.CollectValidItems = function(self, obj, section)
 	-- Collect valid items
 	empty_table(self.multiUseItemsObj)
 	local parts_id = {}
+	local is_multiuse = IsItem("multiuse", section, nil)
 	local function search(temp, item)
 		if (item:section() == section) and (not parts_id[item:id()]) then
-			local cnt = IsItem("multiuse",section,nil) and item:get_remaining_uses() or 1
+			local cnt = is_multiuse and item:get_remaining_uses() or 1
 			local id = item:id()
 			parts_id[id] = cnt
 			self.multiUseItemsObj[#self.multiUseItemsObj + 1] = {
@@ -44,7 +47,7 @@ item_repair.UIRepair.CollectValidItems = function(self, obj, section)
 	-- check if item is multiuse and write either uses or condition
 	local uses
 	local color = ""
-	if (IsItem("multiuse",section,nil)) then
+	if (is_multiuse) then
 		self.condition = 1
 		self.isMultiUse = true
 		if self.multiUseItemsUses > 3 then
@@ -119,9 +122,10 @@ item_repair.UIRepair.On_CC_Mouse1 = function(self, cont, idx, keep_selection)
 		self.partSection = part_sec
 		local parts_id = {}
 		local part_count = 0
+		local is_part_multiuse = IsItem("multiuse", part_sec, nil)
 		local function search(temp, item)
 			if (item:section() == part_sec) and (not parts_id[item:id()]) then
-				local cnt = IsItem("multiuse",part_sec,nil) and item:get_remaining_uses() or 1
+				local cnt = is_part_multiuse and item:get_remaining_uses() or 1
 				local id = item:id()
 				parts_id[id] = cnt
 				part_count = part_count + cnt
@@ -215,19 +219,21 @@ item_repair.UIRepair.OnRepair = function(self)
 	-- Remove 1 use of the combined repair kits
 	if self.isMultiUse then
 		local item = nil
-		for id, amount in pairs(self.multiUseItemsObj[1]) do
-			item = get_object_by_id(id)
-			-- attempt to fix spontaneous crashes
-			if amount == 1 and self.multiUseItemsObj[2] then
-				--printf("last amount, selecting next obj id")
-				for id2, amount2 in pairs(self.multiUseItemsObj[2]) do
-					self.obj = get_object_by_id(id2)
+		if self.multiUseItemsObj and self.multiUseItemsObj[1] then
+			for id, amount in pairs(self.multiUseItemsObj[1]) do
+				item = get_object_by_id(id)
+				-- attempt to fix spontaneous crashes
+				if amount == 1 and self.multiUseItemsObj[2] then
+					--printf("last amount, selecting next obj id")
+					for id2, amount2 in pairs(self.multiUseItemsObj[2]) do
+						self.obj = get_object_by_id(id2)
+					end
 				end
 			end
 		end
 		if (item) then
 			utils_item.discharge(item)
-		end 
+		end
 	else
 		utils_item.degrade(self.obj, degrade_factor)
 	end

@@ -151,7 +151,7 @@ function postpone_for_next_frame(task_id, squad_id)
 		local news_ico = news_manager.tips_icons[squad.player_id] or task_manager.task_ini:r_string_ex(task_id, "icon") or "ui_iconsTotal_mutant"
 		--local news_ico = task_manager.task_ini:r_string_ex(task_id, "icon") or "ui_iconsTotal_mutant"
 		--local news_text = str_location
-		db.actor:give_talk_message2(news_caption, news_text, news_ico, "iconed_answer_item")
+		db.actor:give_talk_message2(news_caption, news_text, news_ico, "iconed_answer_item", task_id)
 	end
 	return true
 end
@@ -478,6 +478,28 @@ xr_conditions.validate_spy_task = function(actor, npc, p)
 		return false
 	end
 	
+--[[
+	SERIOUS NO NORTH TASKS BEFORE BS
+	AND THE NORTHERN JOB
+--]]
+	local additionalBlacklist = {}
+	local mcm_scanMode = blacklist_helper.GetMcmDropdownValue()
+	local northernMaps = blacklist_helper.GetNorthernMaps()
+
+	if mcm_scanMode > 0  then
+		scan_mode = mcm_scanMode
+	end
+
+	if blacklist_helper.ShouldBlacklistNorth() then
+		additionalBlacklist = northernMaps
+	elseif northernMaps[level.name()] then -- Player is in the Northern region and rightfully so
+		additionalBlacklist = blacklist_helper.GetSouthernMaps()
+	end
+--[[
+	SERIOUS NO NORTH TASKS BEFORE BS
+	AND THE NORTHERN JOB
+--]]
+
 	-- Search for suitable targets
 	local targets = {}
 	local sim = alife()
@@ -486,7 +508,7 @@ xr_conditions.validate_spy_task = function(actor, npc, p)
 		local squad = alife_object(id)
 		if squad then
 			local lvl = sim:level_name(gg:vertex(squad.m_game_vertex_id):level_id())
-			if (not blacklisted_maps[lvl]) then
+			if (not blacklisted_maps[lvl] and not additionalBlacklist[lvl]) then
 				local is_online = squad.online
 				local is_nearby = sfind(simulation_objects.config:r_value(actor_level, "target_maps", 0, ""), lvl)
 				if ((scan_mode == 1) and is_online) -- same level

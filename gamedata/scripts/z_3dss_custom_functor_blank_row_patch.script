@@ -1,0 +1,32 @@
+local patch_installed = false
+local original_properties_update
+
+local function install_patch()
+	if patch_installed then return end
+
+	local properties = utils_ui and utils_ui.UICellProperties
+	if not properties or not properties.Update then
+		return
+	end
+
+	original_properties_update = properties.Update
+	properties.Update = function(self)
+		local list = self.list_box
+		if list and list:GetCurrentScrollPos() ~= 0 then
+			list:SetScrollPos(0)
+		end
+
+		return original_properties_update(self)
+	end
+
+	patch_installed = true
+end
+
+local function actor_on_first_update()
+	install_patch()
+end
+
+function on_game_start()
+	install_patch()
+	RegisterScriptCallback("actor_on_first_update", actor_on_first_update)
+end

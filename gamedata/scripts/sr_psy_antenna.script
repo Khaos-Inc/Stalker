@@ -39,7 +39,7 @@ function PsyAntenna:__init				()
 -- ----------------------------------------------------------------------------------------
 	self.sound_initialized				= false
 
-	self.sound_obj_right, self.sound_obj_left = sound_object("anomaly\\psy_antenna_voices_1_r"), sound_object("anomaly\\psy_antenna_voices_1_l")
+	self.sound_obj_right, self.sound_obj_left = sound_object("anomaly\\brain_scorcher_r"), sound_object("anomaly\\brain_scorcher_l")
 
 	self.sound_obj_left.volume			= self.sound_intensity
 	self.sound_obj_right.volume			= self.sound_intensity

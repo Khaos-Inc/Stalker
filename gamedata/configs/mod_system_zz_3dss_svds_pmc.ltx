@@ -1,11 +1,31 @@
 ![wpn_svds_pmc]
 >scopes						 = gee36, cortex, tac30, echo1, march_f_shorty, ps320, ado, hamr, 1p59
 
-lewd_lens_hide_enabled       = true	
-lewd_lens_hide_bone          = lens
-lewd_lens_hide_delays        = 0.1,0
-lewd_lens_hide_aim_mode      = true, false, false
+lens_hide_enabled       = true	
+lens_hide_bone          = lens
+lens_hide_delays        = 0.1,0
+lens_hide_aim_mode      = true, false, false
 
+;---------------------------------------------SCRIPTED CANTED SIGHTS-----------------------------------
+canted_sights = canted_deltapoint, canted_docter, canted_t12
+
+canted_sights_bone         = wpn_body
+canted_sights_pos   = 0.001016, 0.08375, 0.28
+canted_sights_rot    = 0, 0, 0
+canted_sights_scale  = 1.055, 1.055, 1.055
+
+open_slots 			 = 1
+canted_rds_position1 = 0.001016, 0.08375, 0.28
+
+canted_aim_pos_canted_deltapoint = -0.091807, -0.074686, -0.06
+canted_aim_rot_canted_deltapoint = 0, 0, 0.845
+
+canted_aim_pos_canted_docter     = -0.091987, -0.070064, -0.06
+canted_aim_rot_canted_docter     = 0, 0, 0.845
+
+canted_aim_pos_canted_t12        = -0.091827, -0.074802, -0.06
+canted_aim_rot_canted_t12        = 0, 0, 0.845
+;------------------------------------------------------------------------------------------------------
 ![wpn_svds_pmc_hud]
 anm_shots_aim							= eft_svd_vert_shoot_3dss, shoot
 anm_shots_aim_l                         = eft_svd_vert_shoot_3dss, shoot_last

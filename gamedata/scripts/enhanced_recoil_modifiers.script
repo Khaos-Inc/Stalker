@@ -1,0 +1,830 @@
+local settings          = {}
+local debug             = false
+
+local utils             = enhanced_recoil_utils
+local lerp              = utils.lerp
+local get_silencer      = utils.get_silencer
+
+local abs				= math.abs
+local max               = math.max
+local ceil              = math.ceil
+local clamp             = _g.clamp
+local normalize         = _g.normalize
+local idp               = round_idp
+local lerp              = utils.lerp
+local string_format     = string.format
+local string_find       = string.find
+
+local r2 = function(number) return idp(number, 2) end
+local r3 = function(number) return idp(number, 3) end
+
+local has_poweredexos   = false
+local has_haruskills    = false
+local has_utjanskills   = false
+local has_bhs           = false
+local has_xcvbfatigue   = false
+local has_xcvbclasses   = false
+local has_armstamina    = false
+local has_coldsystem    = false
+local has_weaponsway    = false
+local has_wpo			= false
+local has_3dss			= false
+local h_ini				= nil
+local u_ini				= nil
+local desired_fov       = 80
+
+local function trace(str, ...)
+	if debug == true then
+		printf("~ ER:P Modifiers >> " .. str, ...)
+	end
+end
+
+local modifier_table = 
+{
+	-- Default
+	[1] = function(effect_power, random_power, wpn, wpn_fx, info)
+		if info or not wpn or not wpn_fx then return "default" end
+		return 1.0, 1.0
+	end,
+
+	-----------------------------------------------
+	--[[ Gameplay difficulty related modifiers ]]--
+	-----------------------------------------------
+
+	-- Actor protection factor (gameplay difficulty) // Affects intensity at a 0.25x rate.
+	-- by default: -20%, +0%, +10%, +20% (easy, medium, hard, master)
+	[2] = function(effect_power, random_power, wpn, wpn_fx, info)
+		if info or not wpn or not wpn_fx then return "gameplay_diff" end
+		if settings.diff.gameplay == 0 then return 1, 1 end
+
+		local diff_mul = {
+			[1] = -0.20,
+			[2] = 0.00,
+			[3] = 0.10,
+			[4] = 0.20,
+		}
+
+		local game_num = clamp(game_difficulties.get_game_factor("actor_immunities") or 3, 1, 4)
+		local modifier = max(diff_mul[game_num] * settings.diff.gameplay, -1.0)
+
+		return (1 + (modifier * 0.2)), (1 + modifier)
+	end,
+
+	-- Remaining stamina modifier // Affects only recoil randomness.
+	-- Above 90% stamina: no effect. Caps out at the threshold where you can't sprint anymore (10% stamina by default in actor.ltx).
+	[3] = function(effect_power, random_power, wpn, wpn_fx, info)
+		if info or not wpn or not wpn_fx then return "actor_power" end
+		if settings.diff.actor_power == 0 then return 1, 1 end
+
+		local penalty = clamp(normalize(r3(db.actor.power), 0.9, SYS_GetParam(2, "actor_condition", "cant_sprint_power_end")), 0.0, 1.0)
+
+		return 1, (1 + lerp(0.0, settings.diff.actor_power, penalty))
+	end,
+
+	-- Sleepiness modifier // Affects recoil intensity at a 0.5x rate.
+	-- Starts affecting recoil when the White status icon appears on the HUD, reaches max penalty when the Red status icon appears.
+	[4] = function(effect_power, random_power, wpn, wpn_fx, info)
+		if info or not wpn or not wpn_fx then return "actor_sleep" end
+		if settings.diff.actor_sleep == 0 then return 1, 1 end
+
+		local curr_sleep = actor_status_sleep.last_sleep or 0
+		local threshold1 = actor_status_sleep.start_blur_1 or 5000	-- Get the threshold at which the white indicator appears on the HUD
+		if curr_sleep > threshold1 then
+			local threshold2 = actor_status_sleep.start_blur_4 or 8750	-- Get the threshold at which the red indicator appears on the HUD
+			local penalty = lerp(1.0, 1.0 + settings.diff.actor_sleep, normalize(curr_sleep, threshold2, threshold1))
+
+			return (lerp(1.0, penalty, 0.5)), penalty
+		end
+	end,
+
+	-- Hunger modifier // Affects recoil intensity at a 0.25x rate.
+	-- Starts affecting recoil when the White status icon appears on the HUD, reaches max penalty when the Red status icon appears.
+	[5] = function(effect_power, random_power, wpn, wpn_fx, info)
+		if info or not wpn or not wpn_fx then return "actor_satiety" end
+		if settings.diff.actor_satiety == 0 then return 1, 1 end
+
+		local condition = db.actor:cast_Actor():conditions()
+		local satiety_curr = condition:GetSatiety()
+		local satiety_crit = condition:SatietyCritical()
+		local satiety_koef = (satiety_curr - satiety_crit) / (satiety_curr >= satiety_crit and (1 - satiety_crit) or satiety_crit)	-- Lifted from actor_status.script
+		local penalty = 1.0
+
+		if satiety_koef < 0.5 then
+			penalty = penalty + lerp(0.0, settings.diff.actor_satiety, normalize(satiety_koef, -0.5, 0.5))
+		elseif satiety_koef < -0.5 then
+			penalty = penalty + settings.diff.actor_satiety
+		end
+
+		return (lerp(1.0, penalty, 0.25)), penalty
+	end,
+
+	-- Thirstiness modifier // Affects recoil intensity at a 0.33x rate.
+	-- Starts affecting recoil when the White status icon appears on the HUD, reaches max penalty when the Red status icon appears.
+	[6] = function(effect_power, random_power, wpn, wpn_fx, info)
+		if info or not wpn or not wpn_fx then return "actor_thirst" end
+		if settings.diff.actor_thirst == 0 then return 1, 1 end
+
+		local cur_thirst = actor_status_thirst.last_drink or 0
+		local threshold1 = actor_status_thirst.start_blur_1 or 1440
+		if cur_thirst > threshold1 then
+			local threshold2 = actor_status_thirst.start_blur_4 or 5760
+			local penalty = lerp(1.0, 1.0 + settings.diff.actor_thirst, normalize(cur_thirst, threshold2, threshold1))
+
+			return (lerp(1.0, penalty, 0.33)), penalty
+		end
+	end,
+
+	------------------------------------
+	--[[ Movement related modifiers ]]--
+	------------------------------------
+
+	-- Any kind of movement // Affects recoil intensity at a 0.25x rate.
+	-- Stacks multiplicatively with other movement modifiers.
+	[7] = function(effect_power, random_power, wpn, wpn_fx, info)
+		if info or not wpn or not wpn_fx then return "mcAnyMove_power" end
+		if settings.movement.mcAnyMove_power == 1 then return 1, 1 end
+
+		if IsMoveState('mcAnyMove') then
+			return (lerp(1.0, settings.movement.mcAnyMove_power, 0.25)), (settings.movement.mcAnyMove_power)
+		end
+	end,
+
+	-- Sprinting modifier // Affects recoil intensity at a 0.25x rate.
+	-- Stacks multiplicatively with other movement modifiers.
+	[8] = function(effect_power, random_power, wpn, wpn_fx, info)
+		if info or not wpn or not wpn_fx then return "mcSprint_power" end
+		if settings.movement.mcSprint_power == 1 then return 1, 1 end
+
+		if IsMoveState('mcSprint') then
+			return (lerp(1.0, settings.movement.mcSprint_power, 0.25)), (settings.movement.mcSprint_power)
+		end
+	end,
+
+	-- Crouching modifier
+	-- Stacks multiplicatively with other movement modifiers.
+	[9] = function(effect_power, random_power, wpn, wpn_fx, info)
+		if info or not wpn or not wpn_fx then return "mcCrouch_power" end
+		if settings.movement.mcCrouch_power == 1 then return 1, 1 end
+
+		if IsMoveState('mcCrouch') then
+			return (settings.movement.mcCrouch_power), 1
+		end
+	end,
+
+	-- Prone modifier
+	-- Stacks multiplicatively with other movement modifiers.
+	[10] = function(effect_power, random_power, wpn, wpn_fx, info)
+		if info or not wpn or not wpn_fx then return "mcProne_power" end
+		if settings.movement.mcProne_power == 1 then return 1, 1 end
+
+		if IsMoveState('mcCrouch') and IsMoveState('mcAccel') then
+			return (settings.movement.mcProne_power), 1
+		end
+	end,
+
+	-- Airborne modifier // Affects recoil intensity at a 0.25x rate.
+	-- Stacks multiplicatively with other movement modifiers.
+	[11] = function(effect_power, random_power, wpn, wpn_fx, info)
+		if info or not wpn or not wpn_fx then return "mcJump_power" end
+		if settings.movement.mcJump_power == 1 then return 1, 1 end
+
+		if IsMoveState('mcJump') or IsMoveState('mcFall') then
+			return (lerp(1.0, settings.movement.mcJump_power, 0.25)), (settings.movement.mcJump_power)
+		end
+	end,
+
+	---------------------------------------
+	--[[ Weapon item related modifiers ]]--
+	---------------------------------------
+
+	-- Silencer modifier
+	-- Grabs the cam_dispersion_k (or zoom_cam_dispersion_k) parameter from the silencer's section to modify recoil intensity.
+	[12] = function(effect_power, random_power, wpn, wpn_fx, info)
+		if info or not wpn or not wpn_fx then return "silencer_power" end
+		if settings.item.silencer_power == 0 then return 1, 1 end
+
+		local section = wpn:section()
+        local wpn_silencer = get_silencer() or nil
+        
+        if not wpn_silencer then return end
+
+		local silencer = (((wpn:weapon_silencer_status() >= 1 and wpn:weapon_is_silencer()) or wpn_silencer[section]) and 1) or 0
+		if silencer == 1 then
+			local sil_sec = SYS_GetParam(0, section, "silencer_name") or nil
+			local bonus = 1.0
+			if sil_sec == nil then 
+				bonus = 0.82
+			else 
+				bonus = SYS_GetParam(2, sil_sec, "cam_dispersion_k") or 1.0
+				if axr_main.weapon_is_zoomed then
+					bonus = SYS_GetParam(2, sil_sec, "zoom_cam_dispersion_k") or bonus
+				end
+			end
+
+			return (lerp(1.0, bonus, settings.item.silencer_power)), 1
+		end
+	end,
+
+	-- Ammo modifier
+	-- Grabs the k_cam_dispersion parameter from the shot ammo's section to modify recoil intensity.
+	[13] = function(effect_power, random_power, wpn, wpn_fx, info)
+		if info or not wpn or not wpn_fx then return "ammo_power" end
+		if settings.item.ammo_power == 0 then return 1, 1 end
+
+		local id = wpn and wpn:id()
+		local ammo_type_number 	= wpn:get_ammo_type()
+		local ammo_list = utils_item.get_ammo(sect, id)
+		if ammo_list[ammo_type_number + 1] then
+			local bonus = SYS_GetParam(2, ammo_list[ammo_type_number + 1], "k_cam_dispersion") or 1
+
+			return (lerp(1.0, bonus, settings.item.ammo_power)), 1
+		end
+	end,
+
+	-- Aiming down sights modifier
+	-- Reduces recoil intensity by a fixed percentage if aiming down sights, regardless of having any sight attached.
+	[14] = function(effect_power, random_power, wpn, wpn_fx, info)
+		if info or not wpn or not wpn_fx then return "zoom_power" end
+		if settings.item.zoom_power == 1.0 then return 1, 1 end
+
+		if axr_main.weapon_is_zoomed then
+			return (settings.item.zoom_power), 1
+		end
+	end,
+
+	-- Zoom factor modifier
+	-- Automatically scales recoil intensity so that it feels roughly the same regardless of the current zoom factor.
+	[15] = function (effect_power, random_power, wpn, wpn_fx, info)
+		if info or not wpn or not wpn_fx then return "scope_scale" end
+		if not settings.item.scope_scale then return 1, 1 end
+
+		if axr_main.weapon_is_zoomed and (wpn:weapon_is_scope() or SYS_GetParam(2, wpn:section(), "scope_zoom_factor") ~= 0) then
+			local zoom_power = r3(max(((wpn:cast_Weapon():GetZoomFactor() * 0.75) / desired_fov), 0))
+
+			return (r3((clamp(lerp(zoom_power, 1, 0.5), 0, 1)))), 1
+		end
+	end,
+
+	-- Weapon upgrade processing
+	-- Uses the upgrade section's value parameter to modify recoil intensity. // Affects recoil randomness at a 0.5x rate ONLY if settings.item.use_handling_upg == false.
+	-- Optionally, use handling upgrades as recoil randomness upgrades.
+	[16] = function(effect_power, random_power, wpn, wpn_fx, info)
+		if info or not wpn or not wpn_fx then return "upgrades_power" end
+		if settings.item.upgrades_power == 0 then return 1, 1 end
+
+		local res_1 = 1.0
+		local res_2 = 1.0
+
+		wpn:iterate_installed_upgrades(
+            function(upgr_sec)
+                local section = SYS_GetParam(0, upgr_sec, "section")
+                if not section then return end
+
+                local upgr_property = SYS_GetParam(0, upgr_sec, "property") or nil
+
+                if (ini_sys:line_exist(section, "cam_dispersion") and not ini_sys:line_exist(section, "PDM_disp_base")) or upgr_property == "prop_recoil" then
+                    local bonus = SYS_GetParam(2, section, "value") or 0
+                    if settings.item.abs_upgrades then bonus = abs(bonus) * -1 end
+                    res_1 = res_1 * (1 + (bonus * 0.01 * settings.item.upgrades_power))
+                    -- if handling upgrades are disregarded, use 50% of the listed value for recoil upgrades as -randomness
+                    if not settings.item.use_handling_upg then
+                        res_2 = res_2 * (1 + (bonus * 0.005 * settings.item.upgrades_power))
+                    end
+                end
+
+                -- consider handling upgrades as -randomness
+                if settings.item.use_handling_upg and ((ini_sys:line_exist(section, "PDM_disp_base") and not ini_sys:line_exist(section, "cam_dispersion")) or upgr_property == "prop_inertion") then
+                    local bonus = SYS_GetParam(2, section, "value") or 0
+                    if settings.item.abs_upgrades then bonus = abs(bonus) end
+                    res_2 = res_2 * (1 - (bonus * 0.01 * settings.item.upgrades_power))
+                end
+            end)
+
+		return res_1, res_2
+	end,
+
+	-- Main weapon condition modifier
+	-- Uses the current weapon's condition health to scale recoil, has different thresholds that do different things.
+	[17] = function(effect_power, random_power, wpn, wpn_fx, info)
+		if info or not wpn or not wpn_fx then return "item_condition" end
+		if not settings.item.condition then return 1, 1 end
+
+		local c = r2(wpn:condition() or 1.0)
+		local m = 1 + settings.item.condition_penalty
+
+		if c >= settings.item.condition_pristine then
+			m = 1 + settings.item.condition_bonus * -1
+		elseif c < settings.item.condition_pristine and c >= settings.item.condition_good then
+			m = 1 + lerp(0, settings.item.condition_bonus * -1, normalize(c, settings.item.condition_good, settings.item.condition_pristine))
+		elseif c < settings.item.condition_good and c >= settings.item.condition_bad then
+			m = 1 + lerp(settings.item.condition_penalty, 0, normalize(c, settings.item.condition_bad, settings.item.condition_good))
+		end
+
+		if settings.item.condition_mode == 0 then
+			return m, 1
+		elseif settings.item.condition_mode == 1 then
+			return 1, m
+		end
+
+		return m, m
+	end,
+
+	---------------------------------
+	--[[ Miscellaneous modifiers ]]--
+	---------------------------------
+	
+	-- Exoskeleton armor class modifiers (and Powered Exos integration)
+	-- Modifies recoil if the player is using an exoskeleton class armor suit. // Affects recoil intensity at a 0.33x rate.
+	-- Optionally, if the Powered Exos mod is installed, disable the bonus unless the armor suit is charged. And, add a bonus for the Stronghold PSU's active power.
+	[18] = function(effect_power, random_power, wpn, wpn_fx, info)
+		if info or not wpn or not wpn_fx then return "powered_exos" end
+		if settings.misc.exo_power == 0 and settings.misc.nosorog_power == 0 and settings.misc.protoexo_power == 0 then return 1, 1 end
+
+		if not db.actor:item_in_slot(7) then return end
+		local obj = db.actor:item_in_slot(7)
+		
+		if not obj then return end
+
+		local outfit = IsOutfit(obj)
+		local is_exo = SYS_GetParam(0, obj:section(), "repair_type")
+		if is_exo == "outfit_exo" then is_exo = true
+		else is_exo = false end
+		
+		local kind = 1
+		if string_find(obj:section(), "nosorog", 1, true) then kind = 3 end
+
+		if string_find(obj:section(), "proto_exo", 1, true) then 
+			kind = 2 
+			is_exo = true	-- if you have a mod that drops the proto to a lower kit, force it to be considered a proper exo
+		end
+
+		if not is_exo then return 1, 1 end
+
+		if obj and outfit and is_exo then
+			local exo_power = 1.0
+			local shold_bonus = 1.0
+			
+			local m = 1.0
+
+			if settings.mods.powered_exos.enable and has_poweredexos then
+				local exo_data = item_exo_device.get_data(obj:id()) or nil
+				if (not exo_data) or (not exo_data.supply) or (exo_data.supply and not exo_data.power) or (exo_data.supply and exo_data.power and exo_data.power <= 0) then return 1, 1 end
+				if settings.mods.powered_exos.use_power then exo_power = clamp(r2(normalize(exo_data.power, 0, 100)), 0, 1) end
+				if settings.mods.powered_exos.stronghold and exo_powers.armored then shold_bonus = (1 - settings.mods.powered_exos.shold_bonus) end
+			end
+
+			if settings.misc.exo_power > 0 and kind == 1 then
+				m = 1.0 - lerp(0, settings.misc.exo_power, exo_power)
+			elseif settings.misc.nosorog_power > 0 and kind == 3 then
+				m = 1.0 - lerp(0, settings.misc.nosorog_power, exo_power)
+			elseif settings.misc.protoexo_power > 0 and kind == 2 then
+				m = 1.0 - lerp(0, settings.misc.protoexo_power, exo_power)
+			end
+
+			return (lerp(1.0, m, 0.33) * shold_bonus), m
+		end
+	end,
+
+	-- Attached UBGL modifier
+	-- Scales recoil intensity if the weapon has an UBGL attached to it, includes integrated ones like on the Groza.
+	[19] = function(effect_power, random_power, wpn, wpn_fx, info)
+		if info or not wpn or not wpn_fx then return "ubgl_bonus" end
+		if settings.misc.ubgl_power == 0 then return 1, 1 end
+
+		if wpn:weapon_grenadelauncher_status() >= 1 and wpn:weapon_is_grenadelauncher() then
+			return (1 - (settings.misc.ubgl_power)), 1
+		end
+	end,
+
+	-- Impact resistance modifier
+	-- Scales recoil intensity based on the player's current Impact (strike) resistance, includes negative resistances. // Capped at +-50% modifier.
+	[20] = function(effect_power, random_power, wpn, wpn_fx, info)
+		if info or not wpn or not wpn_fx then return "strike_res" end
+		if settings.misc.strike_res == 0 then return 1, 1 end
+		
+		local m = 0
+
+		-- If playing in GAMMA, use the ADB to calculate the accurate resistance.
+		if settings.misc.strike_res_gamma and grok_actor_damage_balancer and grok_actor_damage_balancer.get_adb_constants and grok_actor_damage_balancer.get_af_value and grok_actor_damage_balancer.get_outfit_value then
+			local h = hit()
+			h.type = hit.strike
+			h.power = 0
+			h.draftsman = db.actor
+			local a, _, __, ___, ____, _____, ______ = grok_actor_damage_balancer.get_protection(h, 0, 0)
+			m = a
+		else
+			local obj = db.actor:item_in_slot(7)
+            local check_helmet = true
+            if obj then
+                local outfit = IsOutfit(obj)
+                local cobj = outfit and obj:cast_CustomOutfit()
+                if cobj then
+                    m = ceil(cobj:GetDefHitTypeProtection(7) * 100) / 100 or 0
+                    
+                    if cobj.bIsHelmetAvailable then 
+                        check_helmet = false 
+                    end
+                end
+            end
+
+            if check_helmet then
+                obj = db.actor:item_in_slot(12)
+                if obj then
+                    local helmet = IsHeadgear(obj)
+                    cobj = helmet and obj:cast_Helmet()
+                    if cobj then
+                        m = m + ((ceil(cobj:GetDefHitTypeProtection(7) * 100) / 100) or 0)
+                    end
+                end
+            end
+
+			db.actor:iterate_belt(function(owner, obj)
+				local sec = obj:section()
+				local immunities_sec = SYS_GetParam(0, sec, "hit_absorbation_sect", sec)
+				local af_prot = SYS_GetParam(2, immunities_sec, "strike_immunity", 0)
+				m = m + ((ceil(af_prot * obj:condition() * 100) / 500) or 0)
+			end)
+
+			db.actor:cast_Actor():conditions():BoosterForEach(function(booster_type, booster_time, booster_value)
+				if booster_type == 14 then
+					m = m + ((ceil(booster_value * 100) / 200) or 0)
+				end
+			end)
+		end
+
+		if r3(m) == 0 then return 1, 1 end
+
+		return (clamp(1 - (lerp(0, m, settings.misc.strike_res)), 0.5, 1.5)), 1
+	end,
+
+	-- Remaining Psy health modifier // Affects only recoil randomness.
+	-- Above 90% Psy health: no effect. Caps out at 10% Psy health.
+	[21] = function(effect_power, random_power, wpn, wpn_fx, info)
+		if info or not wpn or not wpn_fx then return "psy_health" end
+		if settings.misc.psy_health == 0 then return 1, 1 end
+        
+        local psy_table = utils.get_psy()
+        
+        if psy_table then
+            local psy = psy_table.actor_psy_health and psy_table.actor_psy_health or 1.0
+            local penalty = clamp(normalize(psy, 0.95, 0.1), 0.0, 1.0)
+
+            return 1, (1 + lerp(0, settings.misc.psy_health, penalty))
+        end
+	end,
+	
+	-- Player rank modifier // Affects recoil intensity at a 0.33x rate.
+	-- Scales recoil depending on the player's rank in the PDA. Simulates your character becoming a better gunfighter as they spend more time in The Zone.
+	[22] = function(effect_power, random_power, wpn, wpn_fx, info)
+		if info or not wpn or not wpn_fx then return "actor_rank" end
+		if not settings.misc.actor_rank then return 1, 1 end
+
+		local tbl = {
+			[1] = "novice",
+			[2] = "trainee",
+			[3] = "experienced",
+			[4] = "professional",
+			[5] = "veteran",
+			[6] = "expert",
+			[7] = "master",
+			[8] = "legend",
+		}
+
+		local i_low = ranks.get_rank_interval(tbl[settings.misc.actor_rank_bad + 1])
+		local i_high = ranks.get_rank_interval(tbl[settings.misc.actor_rank_good + 5])
+		local interval = { [1] = i_low[1], [2] = i_high[1] }
+		local rank = (db.actor.character_rank and db.actor:character_rank() or db.actor.rank and db.actor:rank()) or 0
+
+		local m = 1 - settings.misc.actor_rank_bonus
+		if rank < interval[1] then
+			m = 1 + lerp(settings.misc.actor_rank_penalty, 0, r3(normalize(rank, 0, interval[1])))
+		elseif rank < interval[2] and rank >= interval[1] then
+			m = 1 - lerp(0, settings.misc.actor_rank_bonus, r3(normalize(rank, interval[1], interval[2])))
+		end
+
+		return (lerp(1.0, m, 0.33)), m
+	end,
+
+	--------------------------
+	--[[ Mod integrations ]]--
+	--------------------------
+	
+	-- Powered exos handled above in misc.
+
+	-- HarukaSai's Anomaly Skills System (+ Utjan's Skills Expansion) integration
+	-- Scales recoil intensity based on how close you are to the max level for the Strength skill.
+	-- Scales recoil randomness the same way but for the Weapon Handling skill. This requires Utjan's Skills Expansion Weapon Handling module.
+	[23] = function(effect_power, random_power, wpn, wpn_fx, info)
+		if info or not wpn or not wpn_fx then return "skills" end
+		if not has_haruskills or not settings.mods.skills.enable then return 1, 1 end
+
+		local cur_level = haru_skills.skills_levels["strength"]["current_level"] or 0
+		local max_level = h_ini:r_float_ex("strength", "max_level") or 30
+		local progression = 1 - normalize(cur_level, max_level, 0)
+
+		local m = 1 - settings.mods.skills.bonus 
+		if progression < settings.mods.skills.midpoint then
+			m = 1 + lerp(settings.mods.skills.penalty, 0, normalize(progression, 0, settings.mods.skills.midpoint))
+		elseif progression >= settings.mods.skills.midpoint and settings.mods.skills.maxpoint then
+			m = 1 - lerp(0, settings.mods.skills.bonus, normalize(progression, settings.mods.skills.midpoint, settings.mods.skills.maxpoint))
+		end
+
+		if has_utjanskills and settings.mods.skills.ex_enable and u_ini and u_ini ~= nil then
+			cur_level = haru_skills.skills_levels["reloading"]["current_level"] or 0
+			max_level = u_ini:r_float_ex("reloading", "max_level") or 30
+			progression = 1 - normalize(cur_level, max_level, 0)
+			
+			local n = 1 - settings.mods.skills.bonus 
+			if progression < settings.mods.skills.midpoint then
+				n = 1 + lerp(settings.mods.skills.penalty, 0, normalize(progression, 0, settings.mods.skills.midpoint))
+			elseif progression >= settings.mods.skills.midpoint and settings.mods.skills.maxpoint then
+				n = 1 - lerp(0, settings.mods.skills.bonus, normalize(progression, settings.mods.skills.midpoint, settings.mods.skills.maxpoint))
+			end
+
+			return m, n
+		end
+
+		return m, 1
+	end,
+
+	-- Body Health System integration
+	-- Scales recoil depending on Left Arm and Right Arm health points, as well as the Torso.
+	[24] = function(effect_power, random_power, wpn, wpn_fx, info)
+		if info or not wpn or not wpn_fx then return "bhs" end
+		if not has_bhs or not settings.mods.bhs.enable then return 1, 1 end
+
+		local leftarm   = normalize(zzz_player_injuries.health.leftarm, zzz_player_injuries.maxhp.leftarm, 1)
+		local rightarm  = normalize(zzz_player_injuries.health.rightarm, zzz_player_injuries.maxhp.rightarm, 1)
+		local torso     = normalize(zzz_player_injuries.health.torso, zzz_player_injuries.maxhp.torso, 1)
+		local res_1		= 1.0
+		local res_2		= 1.0
+
+		if (settings.mods.bhs.only_zeroed and leftarm == 0) or (not settings.mods.bhs.only_zeroed and leftarm < 1) then
+			if settings.mods.bhs.larm_mode == 1 then
+				res_1 = res_1 + lerp(settings.mods.bhs.larm_power, 0, leftarm)
+			elseif settings.mods.bhs.larm_mode == 2 then
+				res_2 = res_2 + lerp(settings.mods.bhs.larm_power, 0, leftarm)
+			elseif settings.mods.bhs.larm_mode == 3 then
+				res_1 = res_1 + lerp(settings.mods.bhs.larm_power, 0, leftarm)
+				res_2 = res_2 + lerp(settings.mods.bhs.larm_power, 0, leftarm)
+			end
+		end
+
+		if (settings.mods.bhs.only_zeroed and rightarm == 0) or (not settings.mods.bhs.only_zeroed and rightarm < 1) then
+			if settings.mods.bhs.rarm_mode == 1 then
+				res_1 = res_1 + lerp(settings.mods.bhs.rarm_power, 0, rightarm)
+			elseif settings.mods.bhs.rarm_mode == 2 then
+				res_2 = res_2 + lerp(settings.mods.bhs.rarm_power, 0, rightarm)
+			elseif settings.mods.bhs.rarm_mode == 3 then
+				res_1 = res_1 + lerp(settings.mods.bhs.rarm_power, 0, rightarm)
+				res_2 = res_2 + lerp(settings.mods.bhs.rarm_power, 0, rightarm)
+			end
+		end
+
+		if (settings.mods.bhs.only_zeroed and torso == 0) or (not settings.mods.bhs.only_zeroed and torso < 1) then
+			if settings.mods.bhs.tors_mode == 1 then
+				res_1 = res_1 + lerp(settings.mods.bhs.tors_power, 0, torso)
+			elseif settings.mods.bhs.tors_mode == 2 then
+				res_2 = res_2 + lerp(settings.mods.bhs.tors_power, 0, torso)
+			elseif settings.mods.bhs.tors_mode == 3 then
+				res_1 = res_1 + lerp(settings.mods.bhs.tors_power, 0, torso)
+				res_2 = res_2 + lerp(settings.mods.bhs.tors_power, 0, torso)
+			end
+		end
+
+		return res_1, res_2
+	end,
+
+	-- Weapon Parts Overhaul integration
+	-- Works the same as the Weapon Condition modifier, but uses the Barrel part's condition health instead.
+	[25] = function(effect_power, random_power, wpn, wpn_fx, info)
+		if info or not wpn or not wpn_fx then return "wpo" end
+		if settings.mods.wpo.condition_mode == 0 or not has_wpo then return 1, 1 end
+
+		local c = 1.0
+		local parts = se_load_var(wpn:id(), wpn:name(), "parts")
+
+		if parts ~= nil then
+			for k, v in pairs(parts) do
+				if string_find(k, "barrel", 1, true) then
+					c = v / 100
+				end
+			end
+		end
+
+		local m = 1 + settings.mods.wpo.condition_penalty
+
+		if c >= settings.mods.wpo.condition_pristine then
+			m = 1 + settings.mods.wpo.condition_bonus * -1
+		elseif c < settings.mods.wpo.condition_pristine and c >= settings.mods.wpo.condition_good then
+			m = 1 + lerp(0, settings.mods.wpo.condition_bonus * -1, normalize(c, settings.mods.wpo.condition_good, settings.mods.wpo.condition_pristine))
+		elseif c < settings.mods.wpo.condition_good and c >= settings.mods.wpo.condition_bad then
+			m = 1 + lerp(settings.mods.wpo.condition_penalty, 0, normalize(c, settings.mods.wpo.condition_bad, settings.mods.wpo.condition_good))
+		end
+
+		if settings.mods.wpo.condition_mode == 1 then
+			return m, 1
+		elseif settings.mods.wpo.condition_mode == 2 then
+			return 1, m
+		end
+
+		return m, m
+	end,
+
+	-- Classes and talents integration // Affects recoil intensity at a 0.25x rate.
+	-- Affects recoil depending on how profficient your chosen class is with any given weapon class.
+	[26] = function(effect_power, random_power, wpn, wpn_fx, info)
+		if info or not wpn or not wpn_fx then return "classes_and_talents" end
+		if not has_xcvbclasses or not settings.mods.talents.enable then return 1, 1 end
+
+		local class_tbl = {
+			["sniper"] = 			{ 3, 1, 1, 2, 1, 3, 1 },
+			["trooper"] = 			{ 1, 2, 3, 3, 1, 1, 2 },
+			["jugger"] = 			{ 1, 3, 2, 2, 3, 3, 1 },
+			["monster_hunter"] = 	{ 2, 2, 2, 2, 2, 2, 1 },
+			["merc"] =				{ 3, 2, 3, 3, 2, 3, 3 },
+			["assassin"] = 			{ 3, 1, 3, 1, 1, 1, 1 },
+			["null"] = 				{ 1, 1, 1, 1, 1, 1, 1 },
+		}
+
+		local kind_tbl = {
+			["w_pistol"] 	= 1,
+			["w_shotgun"] 	= 2,
+			["w_smg"] 		= 3,
+			["w_rifle"] 	= 4,
+			["w_lmg"] 		= 5,
+			["w_sniper"] 	= 6,
+			["w_explosive"] = 7,
+		}
+
+		local class = talents_functions.picked_class
+		local kind = kind_tbl[talents_functions.is_mg_type(wpn:section()) and "w_lmg" or (SYS_GetParam(0, wpn:section(), "kind"))] or 1
+
+		if kind then
+			local m = 1.0
+			if class_tbl[class][kind] == 1 then
+				m = 1.0 + settings.mods.talents.low_mod
+			elseif class_tbl[class][kind] == 2 then
+				m = 1.0 - settings.mods.talents.mid_mod
+			elseif class_tbl[class][kind] == 3 then
+				m = 1.0 - settings.mods.talents.max_mod
+			end
+
+			return (lerp(1.0, m, 0.25)), m
+		end
+	end,
+
+	-- Fatigue integration // Affects recoil intensity at a 0.2x rate.
+	-- Scales recoil depending on how close you are to the max fatigue value.
+	[27] = function(effect_power, random_power, wpn, wpn_fx, info)
+		if info or not wpn or not wpn_fx then return "fatigue" end
+		if not has_xcvbfatigue or not settings.mods.fatigue.enable then return 1, 1 end
+		
+		local prog = normalize(fatigue.fatigue_var * 100 or 0, 0, fatigue_mcm.get_config("max_fatigue") or 75)
+		local m = 0.0
+		if prog >= settings.mods.fatigue.min_fatigue and prog < settings.mods.fatigue.max_fatigue then 
+			m = normalize(prog, settings.mods.fatigue.min_fatigue, settings.mods.fatigue.max_fatigue)
+		elseif prog >= settings.mods.fatigue.max_fatigue then
+			m = 1.0
+		end
+		
+		m = lerp(1, 1 + m, settings.mods.fatigue.power)
+
+		return (lerp(1, m, 0.2)), m
+	end,
+
+	-- Cold System integration
+	-- Scales recoil randomness depending on how cold you are.
+	-- Scales recoil intensity depending on how ill you are.
+	[28] = function(effect_power, random_power, wpn, wpn_fx, info)
+		if info or not wpn or not wpn_fx then return "cold_system" end
+		if not has_coldsystem or not settings.mods.cold_system.enable then return 1, 1 end
+		
+		local max_frio = cold_system.max_cold or 2000
+		local cur_frio = cold_system.cold.val or 0
+		local cur_sick = cold_system.cold.sickness or 0
+
+		local frio_n = clamp(normalize(cur_frio, 0, max_frio), 0, 1)
+		local frio_p = clamp(normalize(frio_n, settings.mods.cold_system.min_cold, settings.mods.cold_system.max_cold), 0, 1)
+
+		local sick_n = clamp(cur_sick * 0.01, 0, 1)
+		local sick_p = clamp(normalize(sick_n, settings.mods.cold_system.min_sick, settings.mods.cold_system.max_sick), 0, 1)
+
+		return (lerp(1, 1 + sick_p, settings.mods.cold_system.sick_power)), (lerp(1, 1 + frio_p, settings.mods.cold_system.power))
+	end,
+
+	-- Aim stamina integration // Affects recoil intensity at a 0.25x rate
+	-- Scales recoil depending on the remaining aim stamina percentage.
+	[29] = function(effect_power, random_power, wpn, wpn_fx, info)
+		if info or not wpn or not wpn_fx then return "arm_stamina" end
+		if not has_armstamina or not settings.mods.arm_stamina.enable then return 1, 1 end
+		
+		local stamina = normalize(aim_stamina.aim_stamina, 0, aim_stamina.stamina_modifier)
+		local m = 1
+		
+		if stamina < settings.mods.arm_stamina.stamina_max and stamina >= settings.mods.arm_stamina.stamina_min then
+			m = 1 + lerp(settings.mods.arm_stamina.power, 0, normalize(stamina, settings.mods.arm_stamina.stamina_min, settings.mods.arm_stamina.stamina_max))
+		elseif stamina < settings.mods.arm_stamina.stamina_min then
+			m = 1 + settings.mods.arm_stamina.power
+		end
+
+		if stamina <= 0 and settings.mods.arm_stamina.double_empty then
+			m = 1 + (settings.mods.arm_stamina.power * 2)
+		end
+
+		return (lerp(1.0, m, 0.25)), m
+	end,
+
+	--[[ maybe come back to this later idk nobody seems to use this mod anyways
+	-- Weapon sway integration
+	-- Scales recoil intensity when holding breath.
+	-- Scales recoil randomness during the "out of breath" recovery period.
+	[30] = function(effect_power, random_power, wpn, wpn_fx)
+		if info or not wpn or not wpn_fx then return "weapon_sway" end
+		return 1, 1
+	end,
+	--]]
+}
+
+function process_modifiers(effect_power, random_power, wpn, wpn_fx)
+	if is_empty(modifier_table) then
+		return effect_power, random_power
+	end
+
+	for i, v in ipairs(modifier_table) do
+		local a, b = v(effect_power, random_power, wpn, wpn_fx, false)
+		local func_name = v(0, 0, nil, nil, true)
+		effect_power = effect_power * (a and a or 1.0)
+		random_power = random_power * (b and b or 1.0)
+
+        trace(string_format("process_modifiers() >> index=%s name=%s || effect_power=%s || random_power=%s", i, func_name and func_name or "nil", a or 1.0, b or 1.0))
+	end
+	
+	return effect_power, random_power
+end
+
+-- Add modifier, modifier_func is function as in modifier_table, pos is position to add (optional)
+function add_modifier(modifier_func, pos)
+	pos = pos and clamp(pos, 1, #modifier_table + 1) or (#modifier_table + 1)
+	table.insert(modifier_table, pos, modifier_func)
+end
+
+-- Remove modifier using its "info" return name (Useful for custom modded modifiers)
+function remove_modifier(modifier_func)
+	for i = #modifier_table, 1, -1 do
+		local v = modifier_table[i](0, 0, nil, nil, true)
+		if modifier_func == v then
+			table.remove(modifier_table, i)
+		end
+	end
+end
+
+-- Remove modifier using its position in the table (Useful for vanilla modifiers)
+function remove_modifier_index(index)
+	if modifier_table[index] then
+		table.remove(modifier_table, index)
+	end
+end
+
+function update_fov(number)
+    desired_fov = number
+end
+
+local function check_mods()
+    has_poweredexos = (item_exo_device and exo_mcm) and true or false
+    has_haruskills  = (haru_skills and haru_skills_mcm and ui_haru_skills and haru_skills.update_strength) and true or false
+    has_utjanskills = (has_haruskills and utjan_skills and utjan_skills_mcm and utjan_whandling_skill) and true or false
+    has_bhs         = (zzz_player_injuries and zzz_player_injuries_mcm and zzz_player_injuries.health) and true or false
+    has_xcvbfatigue = (fatigue and fatigue_hud and fatigue_mcm and fatigue.fatigue_var) and true or false
+    has_xcvbclasses = (talents_functions and talents_gui and talents_hud and talents_leveling and talents_mcm and talents_functions.is_mg_type) and true or false
+    has_armstamina  = (aim_stamina and aim_stamina_mcm and aim_stamina.aim_stamina_round) and true or false
+    has_coldsystem  = (cold_system and cold_system_hud and cold_system_mcm and cold_system_utils and cold_system.cold) and true or false
+    has_weaponsway  = (zzzz_weapon_sway and weapon_sway_mcm and zzzz_weapon_sway.on_key_press) and true or false
+	has_wpo			= (arti_jamming and zzzz_arti_jamming_repairs and arti_jamming.JamType) and true or false
+	has_3dss		= (z_3d_scopes and z_3d_scopes_mcm and z_3d_scopes.pack_binary_settings) and true or false
+        enhanced_recoil_main.has_3dss = has_3dss
+
+	if has_haruskills then
+		h_ini		= ini_file("plugins\\skills\\skill_haruka.ltx")
+	end
+
+	if has_utjanskills then
+		u_ini		= ini_file("plugins\\skills\\skill_utjan_whandling.ltx")
+	end
+end
+
+local function actor_on_first_update()
+    check_mods()
+    desired_fov = axr_main.config:r_value("options", "video/basic/fov", 2) or 80
+    settings = enhanced_recoil_main.settings or enhanced_recoil_main.load_defaults()
+end
+
+local function on_option_change()
+    desired_fov = axr_main.config:r_value("options", "video/basic/fov", 2) or 80
+    settings = enhanced_recoil_main.settings or enhanced_recoil_main.load_defaults()
+end
+
+function on_game_start()
+    RegisterScriptCallback("actor_on_first_update", actor_on_first_update)
+    RegisterScriptCallback("on_option_change", on_option_change)
+end

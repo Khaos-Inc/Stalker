@@ -1,4 +1,3 @@
-;==============================================================================	
 ![wpn_saiga12s_isg]
 >scopes						 = 1p87, he510, p1x42, pk6, romeo8, acog, specter, tac30, vulcan, trihawk, monstrum, t12, spec_alt, triji, echo1, 1pn93n2_1gs, e0t2_magd
 <scopes						 = point_aimpro, compm4s, rakurs, aim_low, susat
@@ -18,10 +17,38 @@ upgr_icon_width                          = 250
 silencer_x             					 = 190
 silencer_y             					 = 0
 
-lewd_lens_hide_enabled       = true
-lewd_lens_hide_bone          = lens
-lewd_lens_hide_delays        = 0.1,0
-lewd_lens_hide_aim_mode      = true, false, false
+lens_hide_enabled       = true
+lens_hide_bone          = lens
+lens_hide_delays        = 0.1,0
+lens_hide_aim_mode      = true, false, false
+
+;---------------------------------------------SCRIPTED CANTED SIGHTS-----------------------------------
+canted_sights = canted_kac, canted_deltapoint, canted_docter, canted_t12
+
+canted_sights_bone         = wpn_body
+canted_sights_pos   = 0.000234, 0.079, 0.0025
+canted_sights_rot   = 0, 0, 0
+canted_sights_scale = 1.065312, 1.065312, 1.065312
+front_iron_pos      = 0.000234, 0.079, 0.3325
+front_iron_rot      = 0, 0, 0
+front_iron_scale    = 1.065312, 1.065312, 1.065312
+
+open_slots 			 = 1, 2
+canted_rds_position1      = 0.000234, 0.079, 0.01
+canted_rds_position2      = 0.000234, 0.079, 0.21
+
+canted_aim_pos_canted_kac        = -0.096806, -0.076072, -0.01
+canted_aim_rot_canted_kac        = 0, 0, 0.83
+
+canted_aim_pos_canted_deltapoint = -0.096486, -0.067112, -0.01
+canted_aim_rot_canted_deltapoint = 0, 0, 0.83
+
+canted_aim_pos_canted_docter     = -0.096733, -0.062481, -0.01
+canted_aim_rot_canted_docter     = 0, 0, 0.83
+
+canted_aim_pos_canted_t12        = -0.096533, -0.067396, -0.01
+canted_aim_rot_canted_t12        = 0, 0, 0.83
+;------------------------------------------------------------------------------------------------------
 ![wpn_saiga12s_isg_hud]
 fire_point					= 0,0,0
 fire_bone                   = muzzle

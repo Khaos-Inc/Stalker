@@ -156,21 +156,23 @@ local saved_dist
 local saved_rotate
 
 -- Get NPC actor talks to
-function on_key_press(key)
-	if db.actor and db.actor:alive() then
-		local bind = dik_to_bind(key)
-		if (bind == key_bindings.kUSE) then
-			local npc = level.get_target_obj() or nil
-			if npc then
-				if IsStalker(npc) or special_characters[npc:section()] then
-					if npc:alive() and npc:is_talk_enabled() then
-						saved_npc = npc
-						saved_dist = math.max(1, device().cam_pos:distance_to(utils_obj.safe_bone_pos(saved_npc, "bip01_head")) - 0.2)
-					end
-				end
-			end
-		end
+function valid_npc(npc)
+	return npc and (special_characters[npc:section()] or IsStalker(npc) and npc:alive() and npc:is_talking() and npc:id() ~= AC_ID)
+end
+
+function GetTalkingNpc()
+	local npc = get_speaker()
+	if valid_npc(npc) then
+		return npc
 	end
+
+	-- for i=1, #db.OnlineStalkers do
+	-- 	local st = db.storage[db.OnlineStalkers[i]]
+	-- 	local npc = st and st.object or level.object_by_id(db.OnlineStalkers[i])
+	-- 	if valid_npc(npc) then
+	-- 		return npc
+	-- 	end
+	-- end
 end
 
 -- Move camera so the npc is in the left
@@ -233,6 +235,8 @@ end
 
 function GUI_on_show(name)
 	if name == "Dialog" then
+		saved_npc = GetTalkingNpc()
+		saved_dist = saved_npc and math.max(1, device().cam_pos:distance_to(utils_obj.safe_bone_pos(saved_npc, "bip01_head")) - 0.2)
 		if settings.zoom_fov_enabled then
 			saved_fov = zoom_fov_active and saved_fov or get_console_cmd(2, "fov")
 			local new_fov = math.min(settings.min_zoom_fov, saved_fov / settings.zoom_fov_modifier)
@@ -296,6 +300,7 @@ function reset_fov()
 	exec_console_cmd("fov " .. saved_fov)
 	exec_console_cmd("hud_fov " .. saved_hud_fov)
 	saved_fov = nil
+	saved_hud_fov = nil
 end
 
 function reset(soft_fov)
@@ -344,7 +349,6 @@ end
 
 function switch_mod(enable)
 	local funcs = {
-		{"on_key_press", on_key_press},
 		{"GUI_on_show", GUI_on_show},
 		{"GUI_on_hide", GUI_on_hide},
 		{"actor_on_net_destroy", hard_reset},

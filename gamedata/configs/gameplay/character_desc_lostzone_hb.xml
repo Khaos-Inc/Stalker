@@ -47,6 +47,8 @@
 		<actor_dialog>hb_hernandez_about_mercs_dialog</actor_dialog>
 		<actor_dialog>hb_hernandez_about_operation_dialog</actor_dialog>
 		<actor_dialog>hb_hernandez_about_operation_more_dialog</actor_dialog>
+		<actor_dialog>dm_init_trader</actor_dialog> ;-- ** ADDED LINE FOR SELLING 4-8-2021 **
+		<actor_dialog>armor_exchange_insider_isg</actor_dialog>
 		<actor_dialog>hb_hernandez_ds_break_dialog</actor_dialog>
 	</specific_character>
   
@@ -79,6 +81,7 @@
 
 		<start_dialog>hb_hernandez_jup_dushman_intel</start_dialog>
 		<!--start_dialog>hb_hernandez_jup_start_dialog</start_dialog-->
+		<actor_dialog>dm_init_trader</actor_dialog> ;-- ** ADDED LINE FOR SELLING 4-8-2021 **
 		<actor_dialog>hb_hernandez_search_jup_factory_dialog</actor_dialog>
 		<actor_dialog>hb_hernandez_found_jupiter_documents_dialog</actor_dialog>
 		<actor_dialog>hb_hernandez_start_jup_u_breakthrough_dialog</actor_dialog>
@@ -92,6 +95,7 @@
 		<actor_dialog>hb_hernandez_about_evidence_dialog</actor_dialog>
 		
 		<actor_dialog>hb_hernandez_guide_dialog</actor_dialog>
+		<actor_dialog>armor_exchange_insider_isg</actor_dialog>
 		<actor_dialog>actor_break_dialog</actor_dialog>
 	</specific_character>
 	
@@ -125,6 +129,7 @@
 		<start_dialog>hb_maus_start</start_dialog>
 		<actor_dialog>dm_init_trader</actor_dialog>
 		<actor_dialog>dm_init_mechanic</actor_dialog>
+		<actor_dialog>dm_broker_dialog</actor_dialog> ;-- **ADDED for turning in PDAs 4-9-2021**
 		<actor_dialog>dm_ordered_task_completed_dialog</actor_dialog>
 		<actor_dialog>hb_maus_leave</actor_dialog>
 		<actor_dialog>hb_maus_guide</actor_dialog>
@@ -132,6 +137,7 @@
 		<actor_dialog>dm_tech_repair</actor_dialog>
 		<actor_dialog>dm_encrypted_pda</actor_dialog>
 		<actor_dialog>actor_break_dialog</actor_dialog>
+		<actor_dialog>armor_exchange_insider_isg</actor_dialog>
 	</specific_character>
 	
 <!--  Strelok (enemy target) - Outskirts  -->
@@ -150,7 +156,7 @@
     <visual>actors\stalker_neutral\stalker_neutral_strelok</visual>
     <supplies>
         [spawn] \n
-		wpn_sig550_sniper = 1 \n
+		wpn_sig550_luckygun_acog = 1 \n
         ammo_5.56x45_ap = 3 \n
 		wpn_colt1911 = 1 \n
         ammo_11.43x23_fmj = 1 \n           

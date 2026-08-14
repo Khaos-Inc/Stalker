@@ -9,10 +9,12 @@ scripted_snd_shoot			= weapons\mp412\mp412_cock
 scripted_snd_shot_l         = wpn_mp412_snd_shoot
 !scripted_snd_shoot_cock
 
-lewd_lens_hide_enabled       = true
-lewd_lens_hide_bone          = lens
-lewd_lens_hide_delays        = 0.1,0
-lewd_lens_hide_aim_mode      = true, false, false	
+use_alt_aim_hud				 = true
+
+lens_hide_enabled       = true
+lens_hide_bone          = lens
+lens_hide_delays        = 0.1,0
+lens_hide_aim_mode      = true, false, false	
 
 ![wpn_mp412_hud]
 !anm_shoot_cock
@@ -24,11 +26,20 @@ anm_shot_l                  = aoldri_mprex_shoot, shoot_last
         aim_hud_offset_rot               = 0.003657, 4.2e-05, 0
         aim_hud_offset_rot_16x9          = 0.003657, 4.2e-05, 0
 
+        aim_hud_offset_alt_pos           = -0.102148, -0.053254, -0.084689
+        aim_hud_offset_alt_pos_16x9      = -0.102148, -0.053254, -0.084689
+        aim_hud_offset_alt_rot           = 0.003657, 4.2e-05, 0.7
+        aim_hud_offset_alt_rot_16x9      = 0.003657, 4.2e-05, 0.7
+		
         hands_orientation                = 0.002138, 0.209094, 0
         hands_orientation_16x9           = 0.002138, 0.209094, 0
         hands_position                   = -0.028224, -0.162242, -0.167113
         hands_position_16x9              = -0.028224, -0.162242, -0.167113
 
+        base_hud_offset_pos              = -0.029334, -0.003124, -0.015715
+        base_hud_offset_pos_16x9         = -0.029334, -0.003124, -0.015715
+        base_hud_offset_rot              = 0, 0, 0.121159
+        base_hud_offset_rot_16x9         = 0, 0, 0.121159
 ;---------------------------------------------------SIGHTS---------------------------------------------------
 [wpn_mp412_c-more]:wpn_mp412
 hud                                      = wpn_mp412_c-more_hud

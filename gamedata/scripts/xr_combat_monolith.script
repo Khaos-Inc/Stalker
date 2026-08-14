@@ -81,7 +81,33 @@ end
 -------------------------------------------------------------------------------------
 class "evaluator_close" (property_evaluator)
 
-function evaluator_close:__init(name, storage) super(nil, name)
+function evaluator_close:__init( name, storage ) super ( nil, name )
+	self.st = storage
+	self.close_dist_sqr = math.random( 20*20, 35*35 )
+end
+
+function evaluator_close:evaluate()
+	if not self.object or not self.object:alive() then
+		return false
+	end
+
+	local be = redone_ai_combat.get_combat_enemy(self.object)
+	if not (be and be:alive()) then
+		return false
+	end
+
+	if IsWounded(self.object) then
+		return false
+	end
+
+	if (self.st.help_wounded and self.st.help_wounded.selected_id ~= nil) then
+		return false
+	end
+
+	return be ~= nil and self.object:position():distance_to_sqr( be:position() ) < self.close_dist_sqr
+end
+
+--[[function evaluator_close:__init(name, storage) super(nil, name)
 	self.st = storage
 	self.fallback_dist_sqr = math_random(10*10, 25*25)
 end
@@ -117,7 +143,7 @@ function evaluator_close:evaluate()
 
 	local dist_sqr = self.object:position():distance_to_sqr(be:position())
 	return dist_sqr < (abort_dist * abort_dist)
-end
+end]]--
 
 -------------------------------------------------------------------------------------
 -- EVALUATOR ON POS

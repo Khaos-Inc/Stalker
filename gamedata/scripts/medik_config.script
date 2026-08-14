@@ -1,0 +1,355 @@
+SECTION = "medik"
+
+NO_HAND_BLEND = {}
+
+NO_HAND_BLEND_PATTERN = {
+    "^wpn_ak74_isg",
+    "^wpn_ak74u_m1_isg",
+    "^wpn_ak74u_isg",
+    "^wpn_ak74u_n1",
+    "^wpn_ak74u_tac",
+    "^wpn_ak105_shakal",
+    "^wpn_ak105_bas_shakal",
+    "^wpn_ak105_sp",
+    "^wpn_ak105_swamp",
+    "^wpn_desert_eagle",
+    "^wpn_eft_rsh_12",
+}
+
+HAND_STEP = 0.02
+HAND_RANGE = 0.16
+
+SKINS = {
+    {
+        label = "Default",
+        model = "dynamics\\devices\\dev_detector_09\\medik",
+    },
+    {
+        label = "Black",
+        model = "dynamics\\devices\\dev_detector_09\\medik_black",
+    },
+    {
+        label = "Ecologists Yellow",
+        model = "dynamics\\devices\\dev_detector_09\\medik_ecoyellow",
+    },
+    {
+        label = "Flat Dark Earth",
+        model = "dynamics\\devices\\dev_detector_09\\medik_fde",
+    },
+    {
+        label = "Grey",
+        model = "dynamics\\devices\\dev_detector_09\\medik_grey",
+    },
+    {
+        label = "Grey UCP",
+        model = "dynamics\\devices\\dev_detector_09\\medik_gucp",
+    },
+    {
+        label = "Jungle UCP",
+        model = "dynamics\\devices\\dev_detector_09\\medik_jucp",
+    },
+    {
+        label = "Olive Grey",
+        model = "dynamics\\devices\\dev_detector_09\\medik_olivegrey",
+    },
+    {
+        label = "Flecktarn",
+        model = "dynamics\\devices\\dev_detector_09\\medik_fleck",
+    },
+    {
+        label = "Grey DISR",
+        model = "dynamics\\devices\\dev_detector_09\\medik_gdisr",
+    },
+    {
+        label = "Jungle DISR",
+        model = "dynamics\\devices\\dev_detector_09\\medik_jdisr",
+    },
+    {
+        label = "Kitty PUNK",
+        model = "dynamics\\devices\\dev_detector_09\\medik_kitty",
+    },
+    {
+        label = "Nyan PUNK",
+        model = "dynamics\\devices\\dev_detector_09\\medik_nyan",
+    },
+}
+
+THEMES = {
+    { name = "default", label = "Loner Yellow", prefix = "", fac = "stalker" },
+    { name = "bandit", label = "Bandit Gray", prefix = "bandit_", fac = "bandit" },
+    { name = "csblue", label = "CS Blue", prefix = "csblue_", fac = "csky" },
+    { name = "dutyred", label = "Duty Red", prefix = "dutyred_", fac = "dolg" },
+    { name = "freedom", label = "Freedom Green", prefix = "freedom_", fac = "freedom" },
+    { name = "merc", label = "Mercenary Blue", prefix = "merc_", fac = "killer" },
+    { name = "army", label = "Military Olive", prefix = "army_", fac = "army" },
+    { name = "ecolog", label = "Ecologist Purple", prefix = "ecolog_", fac = "ecolog" },
+    { name = "monolith", label = "Monolith Teal", prefix = "monolith_", fac = "monolith" },
+    { name = "sin", label = "Sin Orange", prefix = "sin_", fac = "greh" },
+    { name = "pink", label = "Renegade Pink", prefix = "pink_", fac = "renegade" },
+    { name = "colored", label = "Colored", prefix = "colored_", fac = nil },
+}
+
+function register_theme(theme)
+    if type(theme) ~= "table" then
+        return false
+    end
+    local name = theme.name
+    if type(name) ~= "string" or name == "" then
+        return false
+    end
+    for _, existing in ipairs(THEMES) do
+        if existing.name == name then
+            return false
+        end
+    end
+    THEMES[#THEMES + 1] = {
+        name = name,
+        label = theme.label or name,
+        prefix = theme.prefix or (name .. "_"),
+        fac = nil,
+    }
+    return true
+end
+
+function theme_index()
+    local want = transforms.theme
+    for i, t in ipairs(THEMES) do
+        if t.name == want then
+            return i
+        end
+    end
+    return 1
+end
+
+function theme_prefix()
+    return THEMES[theme_index()].prefix
+end
+
+function theme_faction()
+    return THEMES[theme_index()].fac
+end
+
+EMBLEMS = {
+    { name = "none", label = "None" },
+    { name = "stalker", label = "Loners" },
+    { name = "bandit", label = "Bandits" },
+    { name = "csky", label = "Clear Sky" },
+    { name = "dolg", label = "Duty" },
+    { name = "freedom", label = "Freedom" },
+    { name = "killer", label = "Mercenaries" },
+    { name = "army", label = "Military" },
+    { name = "ecolog", label = "Ecologists" },
+    { name = "monolith", label = "Monolith" },
+    { name = "greh", label = "Sin" },
+    { name = "renegade", label = "Renegades" },
+}
+
+function emblem_index()
+    local want = transforms.emblem
+    for i, e in ipairs(EMBLEMS) do
+        if e.name == want then
+            return i
+        end
+    end
+    return 1
+end
+
+function emblem_faction()
+    local e = transforms.emblem
+    if not e or e == "none" then
+        return nil
+    end
+    return e
+end
+
+MODEL = SKINS[1].model
+
+TRANSFORM_DEFAULTS = {
+    model_pos = { -0.049, 0.031, 0.019 },
+    model_rot = { -49, 175, 188 },
+    model_scale = 0.84,
+    ui_pos = { -0.042, 0.011, 0.065 },
+    ui_rot = { -110, 91, 109 },
+    ui_scale = 1.04,
+    hand_pos = { -0.02, 0.04, 0.06 },
+    skin = 1,
+    theme = "default",
+    emblem = "none",
+    hud_psy = 0,
+    hud_fire = 0,
+    hud_status = 0,
+    hud_companions = 0,
+    hud_rad = 0,
+}
+
+local FIELDS = {
+    { "model_pos", true },
+    { "model_rot", true },
+    { "model_scale", false },
+    { "ui_pos", true },
+    { "ui_rot", true },
+    { "ui_scale", false },
+    { "hand_pos", true },
+    { "skin", false },
+    { "theme", false },
+    { "emblem", false },
+    { "hud_psy", false },
+    { "hud_fire", false },
+    { "hud_status", false },
+    { "hud_companions", false },
+    { "hud_rad", false },
+}
+
+transforms = {}
+saved = {}
+
+local function copy_fields(src)
+    local out = {}
+    for _, f in ipairs(FIELDS) do
+        local name, is_vec3 = f[1], f[2]
+        local v = src[name]
+        out[name] = is_vec3 and { v[1], v[2], v[3] } or v
+    end
+    return out
+end
+
+function reset_transforms()
+    transforms = copy_fields(TRANSFORM_DEFAULTS)
+end
+
+function snapshot_saved()
+    saved = copy_fields(transforms)
+end
+
+reset_transforms()
+snapshot_saved()
+
+local function ltx_path()
+    if not getFS then
+        return nil
+    end
+    return getFS():update_path("$game_config$", "") .. "medik_reposition_gui.ltx"
+end
+
+local function welcome_path()
+    if not getFS then
+        return nil
+    end
+    return getFS():update_path("$game_config$", "") .. "medik_welcomed.flag"
+end
+
+function is_welcomed()
+    local p = welcome_path()
+    if not p then
+        return true
+    end
+    local f = io.open(p, "r")
+    if f then
+        f:close()
+        return true
+    end
+    return false
+end
+
+function mark_welcomed()
+    local p = welcome_path()
+    if not p then
+        return
+    end
+    local f = io.open(p, "w")
+    if f then
+        f:write("1")
+        f:close()
+    end
+end
+
+function load_transforms()
+    local path = ltx_path()
+    if not path then
+        return
+    end
+    local f = io.open(path, "r")
+    if not f then
+        return
+    end
+    local vals = {}
+    for line in f:lines() do
+        if not line:match("^%s*%[") then
+            local k, v = line:match("^%s*([%w_]+)%s*=%s*(.-)%s*$")
+            if k and v then
+                vals[k] = v
+            end
+        end
+    end
+    f:close()
+    for _, fd in ipairs(FIELDS) do
+        local name, is_vec3 = fd[1], fd[2]
+        local s = vals[name]
+        if s and is_vec3 then
+            local a, b, c = s:match("^%s*([^,]+),%s*([^,]+),%s*([^,]+)%s*$")
+            local x, y, z = tonumber(a), tonumber(b), tonumber(c)
+            if x and y and z then
+                transforms[name] = { x, y, z }
+            end
+        elseif s then
+            transforms[name] = tonumber(s) or s
+        end
+    end
+    snapshot_saved()
+end
+
+function save_transforms()
+    local path = ltx_path()
+    if not path then
+        return false
+    end
+    local f = io.open(path, "w")
+    if not f then
+        return false
+    end
+    f:write("[medik_reposition_gui]\n")
+    for _, fd in ipairs(FIELDS) do
+        local name, is_vec3 = fd[1], fd[2]
+        local v = transforms[name]
+        if is_vec3 then
+            f:write(string.format("%s = %s,%s,%s\n", name, v[1], v[2], v[3]))
+        else
+            f:write(string.format("%s = %s\n", name, v))
+        end
+    end
+    f:close()
+    snapshot_saved()
+    return true
+end
+
+function skin_index()
+    local n = math.floor((tonumber(transforms.skin) or 1) + 0.5)
+    if n < 1 then
+        n = 1
+    elseif n > #SKINS then
+        n = #SKINS
+    end
+    return n
+end
+
+function skin_model()
+    return SKINS[skin_index()].model
+end
+
+function hand_section()
+    local t = transforms.hand_pos
+    local function idx(v)
+        local n = math.floor(v / HAND_STEP + 0.5) + 8
+        if n < 0 then
+            n = 0
+        elseif n > 16 then
+            n = 16
+        end
+        return n
+    end
+    local ix, iy, iz = idx(t[1]), idx(t[2]), idx(t[3])
+    if ix == 8 and iy == 8 and iz == 8 then
+        return "anim_medik_hud"
+    end
+    return string.format("anim_medik_hud_%d_%d_%d", ix, iy, iz)
+end

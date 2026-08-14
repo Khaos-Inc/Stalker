@@ -63,6 +63,8 @@ visual                                             = dynamics\equipments\quest\b
 description                                        = st_itm_basickit_descr
 inv_name                                           = st_itm_basickit_name
 inv_name_short                                     = st_itm_basickit_name
+use1_functor                             = workshop_tool.tool_workshop
+use1_action_functor                      = workshop_tool.start_workshop_basic
 attach_angle_offset                                = 0.000000, -1.204452, -1.262921 
 attach_position_offset                             = 0.081856, -0.035081, 0.011694 
 attach_bone_name                                   = bip01_l_hand 
@@ -82,6 +84,8 @@ visual                                             = dynamics\equipments\quest\b
 description                                        = st_itm_advancedkit_descr
 inv_name                                           = st_itm_advancedkit_name
 inv_name_short                                     = st_itm_advancedkit_name
+use1_functor                             = workshop_tool.tool_workshop
+use1_action_functor                      = workshop_tool.start_workshop_advanced
 tier = 4
 
 ;;--==========================< Expert Tools >=============================
@@ -97,6 +101,8 @@ visual                                             = dynamics\equipments\quest\b
 description                                        = st_itm_expertkit_descr
 inv_name                                           = st_itm_expertkit_name
 inv_name_short                                     = st_itm_expertkit_name
+use1_functor                             = workshop_tool.tool_workshop
+use1_action_functor                      = workshop_tool.start_workshop_expert
 tier = 5
 
 ;;--==========================< Drug kit >=============================
@@ -112,6 +118,8 @@ visual                                             = dynamics\equipments\quest\b
 description                                        = st_itm_drugkit_descr
 inv_name                                           = st_itm_drugkit
 inv_name_short                                     = st_itm_drugkit
+use1_functor                             = workshop_tool.tool_workshop
+use1_action_functor                      = workshop_tool.start_workshop_medic
 tier = 3
 
 ;;--==========================< Ammunition Tools >=============================
@@ -127,6 +135,8 @@ visual                                             = dynamics\equipments\quest\b
 description                                        = st_itm_ammokit_descr
 inv_name                                           = st_itm_ammokit
 inv_name_short                                     = st_itm_ammokit
+use1_functor                             = workshop_tool.tool_workshop
+use1_action_functor                      = workshop_tool.start_workshop_ammo
 tier = 3
 
 ;;--==========================< Anomaly Maps >=============================
@@ -371,7 +381,7 @@ GroupControlSection                                = spawn_group
 discovery_dependency                               =
 $spawn                                             = "food and drugs\antirad"
 $prefetch                                          = 32
-;class                                              = II_ANTIR
+class                                              = II_ANTIR
 kind								           = i_kit
 cform                                              = skeleton
 visual                                             = dynamics\equipments\item_sleepbag.ogf
@@ -394,8 +404,8 @@ animation_slot                                     = 4
 hud                                                = wpn_vodka_hud
 placeable_section                                  = ph_sleepbag	                                       ;Section of placeable physics object
 tier = 3
-; use1_functor                = item_tent.str_use
-; use1_action_functor         = item_tent.func_use_bag
+use1_functor                = item_tent.str_use
+use1_action_functor         = item_tent.func_use_bag
 
 [compression_bag]:booster
 GroupControlSection                                = spawn_group
@@ -425,7 +435,7 @@ GroupControlSection                                = spawn_group
 discovery_dependency                               =
 $spawn                                             = "food and drugs\antirad"
 $prefetch                                          = 32
-;class                                              = II_ANTIR
+class                                              = II_ANTIR
 kind								           = i_kit
 cform                                              = skeleton
 visual                                             = dynamics\equipments\sumka2.ogf	;dynamics\equipments\item_tent.ogf

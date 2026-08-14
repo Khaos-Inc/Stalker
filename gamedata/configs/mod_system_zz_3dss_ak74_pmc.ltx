@@ -1,14 +1,36 @@
-;==============================================================================	
 ![wpn_ak74_pmc]
 <scopes						 = eot, aim_low, point_aimpro, e0t2, compm4s, ekp8_18, 0kp2, rakurs, ac10632, marchf
 >scopes 				     = p1x42, pk6, 1p87, exps3, hco, pso1m21, tac30, c79, ps320, 1p59
 
 !hud_fov
 
-lewd_lens_hide_enabled       = true
-lewd_lens_hide_bone          = lens
-lewd_lens_hide_delays        = 0.1,0
-lewd_lens_hide_aim_mode      = true, false, false
+use_alt_aim_hud				= true
+
+lens_hide_enabled       = true
+lens_hide_bone          = lens
+lens_hide_delays        = 0.1,0
+lens_hide_aim_mode      = true, false, false
+
+;---------------------------------------------SCRIPTED CANTED SIGHTS-----------------------------------
+canted_sights 		 = canted_deltapoint, canted_docter, canted_t12
+
+canted_sights_bone	  = wpn_body
+canted_sights_pos     = 0.000100, 0.083850, 0.269800
+canted_sights_scale   = 1.172500, 1.172500, 1.172500
+
+open_slots	= 1
+
+canted_aim_pos_canted_deltapoint = -0.105041, -0.078391, -0.02
+canted_aim_rot_canted_deltapoint = 0, 0, 0.825
+ms_dot_offset_canted_deltapoint = 0.001, 0.001
+
+canted_aim_pos_canted_docter     = -0.105138, -0.073113, -0.02
+canted_aim_rot_canted_docter     = 0, 0, 0.825
+ms_dot_offset_canted_docter = 0.001, 0.001
+
+canted_aim_pos_canted_t12        = -0.104998, -0.078975, -0.02
+canted_aim_rot_canted_t12        = 0, 0, 0.825
+;------------------------------------------------------------------------------------------------------
 ![wpn_ak74_pmc_hud]
 anm_shots			 = ak12_mono_shoot_scope_w_grip, shoot
 
@@ -25,11 +47,16 @@ fire_point                               = 0, 0, 0
         aim_hud_offset_rot               = -6e-06, 0.000278, 0
         aim_hud_offset_rot_16x9          = -6e-06, 0.000278, 0
 
-        aim_hud_offset_alt_pos           = -0.147928, -0.060316, -0.02
-        aim_hud_offset_alt_pos_16x9      = -0.147928, -0.060316, -0.02
-        aim_hud_offset_alt_rot           = -6e-06, 0.000278, 0.6
-        aim_hud_offset_alt_rot_16x9      = -6e-06, 0.000278, 0.6
+        aim_hud_offset_alt_pos           = -0.120624, -0.101203, -0.02
+        aim_hud_offset_alt_pos_16x9      = -0.120624, -0.101203, -0.02
+        aim_hud_offset_alt_rot           = -6e-06, 0.000278, 0.9
+        aim_hud_offset_alt_rot_16x9      = -6e-06, 0.000278, 0.9
 
+        lowered_hud_offset_pos           = 0.107907, -0.020828, 0.014656
+        lowered_hud_offset_pos_16x9      = 0.107907, -0.020828, 0.014656
+        lowered_hud_offset_rot           = 0.091242, -0.755521, 0.1
+        lowered_hud_offset_rot_16x9      = 0.091242, -0.755521, 0.1
+		
         base_hud_offset_pos              = -0.01877, -0.014956, 0.021021
         base_hud_offset_pos_16x9         = -0.01877, -0.014956, 0.021021
         base_hud_offset_rot              = 0, 0, 0.096141

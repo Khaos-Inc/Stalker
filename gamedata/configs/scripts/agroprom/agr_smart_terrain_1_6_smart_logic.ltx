@@ -49,26 +49,31 @@ on_info = {=pure_enemy_dist_le(20)} beh@idle
 active = animpoint@agr_smart_terrain_1_6_camp_work_1
 suitable = {!surge_started} true
 prior = 45
+on_combat = combat
 
 [logic@agr_smart_terrain_1_6_camp_work_2]
 active = animpoint@agr_smart_terrain_1_6_camp_work_2
 suitable = {!surge_started} true
 prior = 45
+on_combat = combat
 
 [logic@agr_smart_terrain_1_6_camp_work_3]
 active = animpoint@agr_smart_terrain_1_6_camp_work_3
 suitable = {!surge_started} true
 prior = 45
+on_combat = combat
 
 [logic@agr_smart_terrain_1_6_camp_work_4]
 active = animpoint@agr_smart_terrain_1_6_camp_work_4
 suitable = {!surge_started} true
 prior = 45
+on_combat = combat
 
 [logic@agr_smart_terrain_1_6_camp_work_5]
 active = animpoint@agr_smart_terrain_1_6_camp_work_5
 suitable = {!surge_started} true
 prior = 45
+on_combat = combat
 
 [animpoint@agr_smart_terrain_1_6_camp_work_1]
 cover_name = agr_smart_terrain_1_6_animpoint_kamp1
@@ -164,6 +169,7 @@ invulnerable = {=is_warfare} false, {!actor_true_enemy} true, false
 combat_ignore_cond = {=is_warfare} false, {=actor_true_enemy =check_enemy_name(actor)} false, true
 combat_ignore_keep_when_attacked = {=is_warfare} false, true
 meet = no_meet
+on_combat = combat
 
 [remark@drink]:walker@base
 anim = animpoint_sit_normal_drink_vodka
@@ -272,86 +278,102 @@ panic = 0
 active = animpoint@agr_smart_terrain_1_6_camp_work_6
 suitable = {!surge_started} true
 prior = 45
+on_combat = combat
 
 [logic@agr_smart_terrain_1_6_camp_work_7]
 active = animpoint@agr_smart_terrain_1_6_camp_work_7
 suitable = {!surge_started} true
 prior = 45
+on_combat = combat
 
 [logic@agr_smart_terrain_1_6_camp_work_8]
 active = animpoint@agr_smart_terrain_1_6_camp_work_8
 suitable = {!surge_started} true
 prior = 45
 on_game_timer = 7200 | {!is_rain} animpoint@agr_smart_cover_otzhiman_5
+on_combat = combat
 
 [logic@agr_smart_terrain_1_6_camp_work_9]
 active = animpoint@agr_smart_terrain_1_6_camp_work_9
 suitable = {!surge_started} true
 prior = 45
+on_combat = combat
 
 [logic@agr_smart_terrain_1_6_camp_work_10]
 active = animpoint@agr_smart_terrain_1_6_camp_work_10
 suitable = {!surge_started} true
 prior = 45
 on_game_timer = 7200 | {!is_rain} animpoint@agr_smart_cover_otzhiman_4
+on_combat = combat
 
 [logic@agr_smart_terrain_1_6_camp_work_11]
 active = animpoint@agr_smart_terrain_1_6_camp_work_11
 suitable = {!surge_started} true
 prior = 45
 on_game_timer = 7200 | {!is_rain} animpoint@agr_smart_cover_otzhiman_3
+on_combat = combat
 
 [logic@agr_smart_terrain_1_6_camp_work_12]
 active = animpoint@agr_smart_terrain_1_6_camp_work_12
 suitable = {!surge_started} true
 prior = 45
+on_combat = combat
 
 [logic@agr_smart_terrain_1_6_camp_work_13]
 active = animpoint@agr_smart_terrain_1_6_camp_work_13
 suitable = {!surge_started} true
 prior = 45
+on_combat = combat
 
 [logic@agr_smart_terrain_1_6_camp_work_14]
 active = animpoint@agr_smart_terrain_1_6_camp_work_14
 suitable = {!surge_started} true
 prior = 45
+on_combat = combat
 
 [logic@agr_smart_terrain_1_6_camp_work_15]
 active = animpoint@agr_smart_terrain_1_6_camp_work_15
 suitable = {!surge_started} true
 prior = 45
 on_game_timer = 7200 | {!is_rain} animpoint@agr_smart_cover_otzhiman_2
+on_combat = combat
 
 [logic@agr_smart_terrain_1_6_camp_work_16]
 active = animpoint@agr_smart_terrain_1_6_camp_work_16
 suitable = {!surge_started} true
 prior = 45
+on_combat = combat
 
 [logic@agr_smart_terrain_1_6_camp_work_17]
 active = animpoint@agr_smart_terrain_1_6_camp_work_17
 suitable = {!surge_started} true
 prior = 45
+on_combat = combat
 
 [logic@agr_smart_terrain_1_6_camp_work_18]
 active = animpoint@agr_smart_terrain_1_6_camp_work_18
 suitable = {!surge_started} true
 prior = 45
 on_game_timer = 7200 | {!is_rain} animpoint@agr_smart_cover_otzhiman_1
+on_combat = combat
 
 [logic@agr_smart_terrain_1_6_camp_work_19]
 active = animpoint@agr_smart_terrain_1_6_camp_work_19
 suitable = {!surge_started} true
 prior = 45
+on_combat = combat
 
 [logic@agr_smart_terrain_1_6_camp_work_20]
 active = animpoint@agr_smart_terrain_1_6_camp_work_20
 suitable = {!surge_started} true
 prior = 45
+on_combat = combat
 
 [logic@agr_smart_terrain_1_6_camp_work_21]
 active = animpoint@agr_smart_terrain_1_6_camp_work_21
 suitable = {!surge_started} true
 prior = 45
+on_combat = combat
 
 [logic@agr_smart_terrain_1_6_camp_work_22]
 active = animpoint@agr_smart_terrain_1_6_camp_work_22
@@ -362,11 +384,16 @@ prior = 45
 active = animpoint@agr_smart_terrain_1_6_camp_work_23
 suitable = {!surge_started} true
 prior = 45
+on_combat = combat
 
 [logic@agr_smart_terrain_1_6_camp_work_24]
 active = animpoint@agr_smart_terrain_1_6_camp_work_24
 suitable = {!surge_started} true
 prior = 45
+on_combat = combat
+
+[combat]
+combat_type = {=cond_scheme_cover()} cover, {=cond_scheme_camper()} camper
 
 [meet_random]
 close_anim 		= nil

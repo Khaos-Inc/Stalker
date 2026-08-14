@@ -25,9 +25,6 @@ function npc_on_use(npc)
     if (character_community(npc) == "zombied") then return end
     if _used_corpses[npc:id()] then return end
     _used_corpses[npc:id()] = true
-    if (ui_mcm and ui_mcm.get("black_road_revisited/isolated_and_hated") == true) then
-        SETTINGS.chance = ui_mcm.get("black_road_revisited/stash_chance") / 100
-    end
     if math.random() > SETTINGS.chance then return end
     treasure_manager.create_random_stash(nil, nil, nil, math.random() > 0.75)
 end

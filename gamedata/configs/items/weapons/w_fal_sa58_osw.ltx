@@ -170,6 +170,7 @@ hud_fov                             = 0.78
 ;---------------------------------------------------------------------SOUNDS----------------------------------------------------------------------------
 snd_reload                               = weapons\sa58\sa58_reload_new
 snd_reload_empty                         = weapons\sa58\sa58_reload_empty_new
+snd_reload_empty_variant1				 = weapons\ak12custom\ak12_m1_reload_empty
 
 snd_draw                                 = weapons\scar_yang_prince\scar_inspect
 snd_holster                              = weapons\ak12custom\hide
@@ -234,11 +235,13 @@ anm_idle_moving_crouch     	= sa_ins_idle_crouch_grip
 anm_shots               	= sa_ins_shoot_grip, shoot
 anm_shots_aim              	= sa_ins_shoot_aim_grip, shoot
 anm_reload              	= sa_ins_reload_speed_grip, reload_speed
+;anm_reload_variant1        	= sa_ins_reload_grip, reload
 anm_reload_empty        	= sa_ins_reload_empty_speed_grip, reload_empty_speed
+anm_reload_empty _variant1 	= sa_ins_reload_empty_grip, reload_empty
 anm_idle_moving_crouch  	= sa_ins_idle_crouch_grip
 anm_idle_aim            	= sa_ins_idle_aim_grip
 anm_bore                	= sa_ins_bore_grip
-anm_reload_misfire          = sa_ins_reload_empty_speed_grip, reload_empty_speed
+anm_reload_misfire          = sa_ins_unjam, unjam
 
 ;shell_point		= 0, 0, 0
 shell_dir       = 0, 1, 0

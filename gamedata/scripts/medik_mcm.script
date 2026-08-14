@@ -1,0 +1,141 @@
+local ROOT = "medik"
+local ID_HOLD_KEY = "hold_key"
+local ID_HOLD_DELAY = "hold_delay"
+local ID_GUI_KEY = "gui_key"
+local ID_GUI_MOD = "gui_mod"
+local ID_ACTIVATION = "activation"
+local ID_EMPTY_HANDS = "empty_hands"
+
+hold_key = DIK_keys.MOUSE_4
+hold_delay = 0
+gui_key = DIK_keys.DIK_M
+gui_mod = "alt"
+activation = "hold"
+empty_hands = true
+
+function on_mcm_load()
+    return {
+        id = ROOT,
+        sh = true,
+        gr = {
+            {
+                id = "title",
+                type = "slide",
+                link = "ui_options_slider_player",
+                text = "ui_mcm_medik_title",
+                size = { 512, 50 },
+                spacing = 20,
+            },
+            {
+                id = ID_HOLD_KEY,
+                type = "key_bind",
+                val = 2,
+                def = DIK_keys.MOUSE_4,
+                text = "ui_mcm_medik_hold_key",
+            },
+            {
+                id = ID_ACTIVATION,
+                type = "list",
+                val = 0,
+                def = "toggle",
+                text = "ui_mcm_medik_activation",
+                content = { { "hold", "hold" }, { "toggle", "toggle" } },
+            },
+            {
+                id = ID_HOLD_DELAY,
+                type = "track",
+                val = 2,
+                def = 0,
+                min = 0,
+                max = 10,
+                step = 0.1,
+                prec = 1,
+                text = "ui_mcm_medik_hold_delay",
+            },
+            {
+                id = ID_GUI_KEY,
+                type = "key_bind",
+                val = 2,
+                def = DIK_keys.DIK_M,
+                text = "ui_mcm_medik_gui_key",
+            },
+            {
+                id = ID_GUI_MOD,
+                type = "list",
+                val = 0,
+                def = "alt",
+                text = "ui_mcm_medik_gui_mod",
+                content = { { "none", "none" }, { "alt", "alt" }, { "ctrl", "ctrl" }, { "shift", "shift" } },
+            },
+            {
+                id = ID_EMPTY_HANDS,
+                type = "check",
+                val = 1,
+                def = true,
+                text = "ui_mcm_medik_empty_hands",
+            },
+        },
+    }
+end
+
+function on_option_change()
+    if not ui_mcm then
+        return
+    end
+    local v = ui_mcm.get("medik/" .. ID_HOLD_KEY)
+    if v and v ~= -1 then
+        hold_key = v
+    end
+    local ak = ui_mcm.get("medik/" .. ID_GUI_KEY)
+    if ak then
+        gui_key = ak
+    end
+    local gm = ui_mcm.get("medik/" .. ID_GUI_MOD)
+    if gm then
+        gui_mod = gm
+    end
+    local d = ui_mcm.get("medik/" .. ID_HOLD_DELAY)
+    if d and d >= 0 then
+        hold_delay = d
+    end
+    local m = ui_mcm.get("medik/" .. ID_ACTIVATION)
+    activation = (m == "toggle") and "toggle" or "hold"
+    local eh = ui_mcm.get("medik/" .. ID_EMPTY_HANDS)
+    if eh ~= nil then
+        empty_hands = eh
+    end
+end
+
+function hold_key_dik()
+    return hold_key
+end
+
+function hold_delay_sec()
+    return hold_delay or 0
+end
+
+function gui_key_dik()
+    return gui_key
+end
+
+function gui_mod_held()
+    local m = gui_mod or "alt"
+    if m == "none" then
+        return true
+    elseif m == "alt" then
+        return key_state(DIK_keys.DIK_LMENU) ~= 0 or key_state(DIK_keys.DIK_RMENU) ~= 0
+    elseif m == "ctrl" then
+        return key_state(DIK_keys.DIK_LCONTROL) ~= 0 or key_state(DIK_keys.DIK_RCONTROL) ~= 0
+    elseif m == "shift" then
+        return key_state(DIK_keys.DIK_LSHIFT) ~= 0 or key_state(DIK_keys.DIK_RSHIFT) ~= 0
+    end
+    return true
+end
+
+function activation_mode()
+    return (activation == "toggle") and "toggle" or "hold"
+end
+
+function empty_hands_enabled()
+    return empty_hands
+end

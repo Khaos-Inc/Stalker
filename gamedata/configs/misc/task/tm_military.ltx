@@ -75,7 +75,7 @@ icon = ui_inGame2_PD_Lider
 storyline = true
 prior = 165
 repeat_timeout = 0
-precondition = {=validate_assault_task(drx_sl_mil_smart_terrain_7_7_freedom_leader_stalker_task_2:2:1:nil:false:true:nil)} true, false
+precondition = {=validate_assault_task(drx_sl_mil_smart_terrain_7_7_freedom_leader_stalker_task_2:2:2:nil:false:true:nil)} true, false
 
 title = drx_sl_mil_smart_terrain_7_7_freedom_leader_stalker_task_2_name
 descr = drx_sl_mil_smart_terrain_7_7_freedom_leader_stalker_task_2_text
@@ -177,7 +177,7 @@ icon = ui_inGame2_Issledovanie_anomaliy
 storyline = false
 prior = 85
 repeat_timeout = 16200
-precondition = {=validate_assault_task(mil_smart_terrain_7_7_freedom_leader_stalker_task_1:3:1:nil:false:false:nil)} true, false
+precondition = {=validate_assault_task(mil_smart_terrain_7_7_freedom_leader_stalker_task_1:2:2:nil:false:false:nil)} true, false
 
 title = mil_smart_terrain_7_7_freedom_leader_stalker_task_1_name
 descr = mil_smart_terrain_7_7_freedom_leader_stalker_task_1_text
@@ -203,7 +203,7 @@ icon = ui_inGame2_Karti_mestnosti
 storyline = false
 prior = 65
 repeat_timeout = 16200
-precondition = {=validate_assault_task(mil_smart_terrain_7_7_freedom_leader_stalker_task_2:1:1:nil:false:true:nil)} true, false
+precondition = {=validate_assault_task(mil_smart_terrain_7_7_freedom_leader_stalker_task_2:1:2:nil:false:true:nil)} true, false
 
 title = mil_smart_terrain_7_7_freedom_leader_stalker_task_2_name
 descr = mil_smart_terrain_7_7_freedom_leader_stalker_task_2_text
@@ -366,8 +366,8 @@ target_functor = spy_task_target_functor
 status_functor_params = dolg,army
 stage_complete = 3
 
-task_loadout_spy = wpn_svd
-task_loadout_other = wpn_ak74
+task_loadout_spy = wpn_svd_m1
+task_loadout_other = wpn_ak74_n
 task_msg_on_join = mil_smart_terrain_7_7_freedom_leader_stalker_task_8_msg_join
 task_msg_on_leave = mil_smart_terrain_7_7_freedom_leader_stalker_task_8_msg_leave
 
@@ -511,20 +511,25 @@ job_descr = mil_smart_terrain_7_10_freedom_trader_stalker_task_5_about
 
 ;precondition = true
 
-repeat_timeout = 259200
+repeat_timeout = 162000
+prior = 110
+precondition = {=is_faction_friend_to_actor(freedom)} true, false
 
 stage_complete = 1
 descr_functor  = multifetch_task_descr_functor
 status_functor = multifetch_status_functor
 target_functor = multifetch_target_functor
 
-optional_item_1 	 = batteries_dead
-optional_item_1_num  = 10
-optional_item_1_cond = 0.75
+optional_item_1 	 = cocaine
+optional_item_1_num  = 2
+optional_item_2 	 = porn
+optional_item_2_num  = 1
+optional_item_3 	 = porn2
+optional_item_3_num  = 1
 
-required_item_1 	 = detector_advanced
+required_item_1 	 = medkit_army
 required_item_1_num  = 5
-required_item_2 	 = lead_box
+required_item_2 	 = ammo_5.45x39_ep
 required_item_2_num  = 10
 
 on_extra_items_delivered_1 = %=reward_stash(true)%

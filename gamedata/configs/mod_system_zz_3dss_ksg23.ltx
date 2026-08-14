@@ -11,10 +11,42 @@ silencer_y								 = 4
         strap_orientation                = -3.749658, -10.345712, 110		
         strap_position                   = -0.26, -0.1, 0.05
 		
-lewd_lens_hide_enabled       = true
-lewd_lens_hide_bone          = lens
-lewd_lens_hide_delays        = 0.1,0
-lewd_lens_hide_aim_mode      = true, false, false
+use_alt_aim_hud		= true
+
+lens_hide_enabled       = true
+lens_hide_bone          = lens
+lens_hide_delays        = 0.1,0
+lens_hide_aim_mode      = true, false, false
+
+;---------------------------------------------SCRIPTED CANTED SIGHTS-----------------------------------
+canted_sights = canted_kac, canted_deltapoint, canted_docter, canted_t12
+
+canted_sights_bone         = wpn_body
+canted_sights_pos   = 0.000000, 0.090820, 0.050000
+canted_sights_rot   = 0, 0, 0
+canted_sights_scale = 0.962500, 0.962500, 0.962500
+front_iron_pos      = 0.000000, 0.090820, 0.270000
+front_iron_rot      = 0, 0, 0
+front_iron_scale    = 0.962500, 0.962500, 0.962500
+
+open_slots 			 = 1, 2
+canted_rds_position1      = 0.000000, 0.090820, 0.060000
+canted_rds_position2      = 0.000000, 0.090820, 0.227500
+
+canted_aim_pos_canted_kac        = -0.080703, -0.064871, -0.05
+canted_aim_rot_canted_kac        = 0, 0, 0.825
+
+canted_aim_pos_canted_deltapoint = -0.080396, -0.056822, -0.05
+canted_aim_rot_canted_deltapoint = 0, 0, 0.825
+ms_dot_offset_canted_deltapoint = -0.002, 0
+
+canted_aim_pos_canted_docter     = -0.080603, -0.052586, -0.05
+canted_aim_rot_canted_docter     = 0, 0, 0.825
+ms_dot_offset_canted_docter = -0.002, 0
+
+canted_aim_pos_canted_t12        = -0.08039, -0.057075, -0.05
+canted_aim_rot_canted_t12        = 0, 0, 0.825
+;------------------------------------------------------------------------------------------------------
 ![wpn_ksg23_hud]
 item_visual		= anomaly_weapons\wpn_ksg23\wpn_ksg23_hud.ogf
         aim_hud_offset_pos               = -0.061155, 0.003762, -0.05
@@ -331,8 +363,8 @@ visual 					= anomaly_weapons\wpn_ksg23\wpn_ksg23_scope.ogf
 
 [wpn_ksg23_specter_hud]:wpn_ksg23_hud
 item_visual 			= anomaly_weapons\wpn_ksg23\wpn_ksg23_specter_hud.ogf
-        aim_hud_offset_pos               = -0.060762, 0.001055, -0.121697
-        aim_hud_offset_pos_16x9          = -0.060762, 0.001055, -0.121697
+        aim_hud_offset_pos               = -0.060867, 0.001174, -0.111939
+        aim_hud_offset_pos_16x9          = -0.060867, 0.001174, -0.111939
 		
 ;------------------------------------------------------------------------------------------------------
 [wpn_ksg23_spec_alt]:wpn_ksg23, specter_s
@@ -350,8 +382,8 @@ visual 					= anomaly_weapons\wpn_ksg23\wpn_ksg23_scope.ogf
 
 [wpn_ksg23_spec_alt_hud]:wpn_ksg23_hud
 item_visual 			= anomaly_weapons\wpn_ksg23\wpn_ksg23_spec_alt_hud.ogf
-        aim_hud_offset_pos               = -0.060762, 0.001055, -0.121697
-        aim_hud_offset_pos_16x9          = -0.060762, 0.001055, -0.121697
+        aim_hud_offset_pos               = -0.060867, 0.001174, -0.111939
+        aim_hud_offset_pos_16x9          = -0.060867, 0.001174, -0.111939
 
         aim_hud_offset_alt_pos           = -0.073254, -0.05228, -0.05
         aim_hud_offset_alt_pos_16x9      = -0.073254, -0.05228, -0.05
@@ -403,11 +435,11 @@ visual 					= anomaly_weapons\wpn_ksg23\wpn_ksg23_scope.ogf
 
 [wpn_ksg23_hamr_hud]:wpn_ksg23_hud
 item_visual 			= anomaly_weapons\wpn_ksg23\wpn_ksg23_hamr_hud.ogf
-        aim_hud_offset_pos               = -0.061197, 0.001067, -0.157911
-        aim_hud_offset_pos_16x9          = -0.061197, 0.001067, -0.157911
+        aim_hud_offset_pos               = -0.061197, 0.001067, -0.12853
+        aim_hud_offset_pos_16x9          = -0.061197, 0.001067, -0.12853
 		
-        aim_hud_offset_alt_pos           = -0.061162, -0.025581, -0.163845
-        aim_hud_offset_alt_pos_16x9      = -0.061162, -0.025581, -0.163845
+        aim_hud_offset_alt_pos           = -0.061162, -0.025581, -0.05
+        aim_hud_offset_alt_pos_16x9      = -0.061162, -0.025581, -0.05
         aim_hud_offset_alt_rot           = 0.000123, 0.000118, 0
         aim_hud_offset_alt_rot_16x9      = 0.000123, 0.000118, 0
 		
@@ -424,8 +456,8 @@ visual 					= anomaly_weapons\wpn_ksg23\wpn_ksg23_scope.ogf
 
 [wpn_ksg23_c79_hud]:wpn_ksg23_hud
 item_visual 			= anomaly_weapons\wpn_ksg23\wpn_ksg23_c79_hud.ogf
-        aim_hud_offset_pos               = -0.060958, 0.00341, -0.154402
-        aim_hud_offset_pos_16x9          = -0.060958, 0.00341, -0.154402
+        aim_hud_offset_pos               = -0.060958, 0.00341, -0.11882
+        aim_hud_offset_pos_16x9          = -0.060958, 0.00341, -0.11882
 		
 ;------------------------------------------------------------------------------------------------------
 [wpn_ksg23_monstrum]:wpn_ksg23, monstrum_s
@@ -440,8 +472,8 @@ visual 					= anomaly_weapons\wpn_ksg23\wpn_ksg23_scope.ogf
 
 [wpn_ksg23_monstrum_hud]:wpn_ksg23_hud
 item_visual 			= anomaly_weapons\wpn_ksg23\wpn_ksg23_monstrum_hud.ogf
-        aim_hud_offset_pos               = -0.061093, 0.008471, -0.155094
-        aim_hud_offset_pos_16x9          = -0.061093, 0.008471, -0.155094
+        aim_hud_offset_pos               = -0.061093, 0.008471, -0.137986
+        aim_hud_offset_pos_16x9          = -0.061093, 0.008471, -0.137986
 		
 ;------------------------------------------------------------------------------------------------------
 [wpn_ksg23_trihawk]:wpn_ksg23, trihawk_s
@@ -456,8 +488,8 @@ visual 					= anomaly_weapons\wpn_ksg23\wpn_ksg23_scope.ogf
 
 [wpn_ksg23_trihawk_hud]:wpn_ksg23_hud
 item_visual 			= anomaly_weapons\wpn_ksg23\wpn_ksg23_trihawk_hud.ogf
-        aim_hud_offset_pos               = -0.060986, -0.002536, -0.126582
-        aim_hud_offset_pos_16x9          = -0.060986, -0.002536, -0.126582
+        aim_hud_offset_pos               = -0.060986, -0.002536, -0.097639
+        aim_hud_offset_pos_16x9          = -0.060986, -0.002536, -0.097639
 		
 ;------------------------------------------------------------------------------------------------------
 [wpn_ksg23_vulcan]:wpn_ksg23, vulcan_s
@@ -472,12 +504,14 @@ visual 					= anomaly_weapons\wpn_ksg23\wpn_ksg23_scope.ogf
 
 [wpn_ksg23_vulcan_hud]:wpn_ksg23_hud
 item_visual 			= anomaly_weapons\wpn_ksg23\wpn_ksg23_vulcan_hud.ogf
-        aim_hud_offset_pos               = -0.060937, 0.000233, -0.132562
-        aim_hud_offset_pos_16x9          = -0.060937, 0.000233, -0.132562
+        aim_hud_offset_pos               = -0.060937, 0.000233, -0.108728
+        aim_hud_offset_pos_16x9          = -0.060937, 0.000233, -0.108728
 		
 ;------------------------------------------------------------------------------------------------------
 [wpn_ksg23_gee36]:wpn_ksg23, gee36_s
 hud = wpn_ksg23_gee36_hud
+
+open_slots				= 2
 
 inv_grid_x         = 5
 1icon_layer			    = gee36_x

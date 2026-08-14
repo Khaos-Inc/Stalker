@@ -19,13 +19,48 @@ upgr_icon_height	= 150
 silencer_x		= 227
 silencer_y		= 10
 
-lewd_lens_hide_enabled       = true
-lewd_lens_hide_bone          = lens
-lewd_lens_hide_delays        = 0.1,0
-lewd_lens_hide_aim_mode      = true, false, false	
+use_alt_aim_hud				= true
 
+lens_hide_enabled       = true
+lens_hide_bone          = lens
+lens_hide_delays        = 0.1,0
+lens_hide_aim_mode      = true, false, false	
+
+;---------------------------------------------SCRIPTED CANTED SIGHTS--------------------------------------
+canted_sights = canted_kac, canted_deltapoint, canted_docter, canted_t12
+
+canted_sights_bone         = wpn_body
+canted_sights_pos   = 0.002160, 0.103260, -0.008950
+canted_sights_rot   = 0, 0, 0
+canted_sights_scale = 0.866500, 0.866500, 0.866500
+
+front_iron_pos     = 0.002160, 0.103260, 0.161050
+front_iron_rot     = 0, 0, 0
+front_iron_scale   = 0.866500, 0.866500, 0.866500
+
+open_slots 			 = 1, 2
+
+canted_rds_position1 = 0.002160, 0.103260, -0.008950
+canted_rds_position2 = 0.002160, 0.103260, 0.151050
+
+canted_aim_pos_canted_kac = -0.091386, -0.076643, -0.04
+canted_aim_rot_canted_kac = -0.000021, 0.000055, 0.82
+
+canted_aim_pos_canted_deltapoint = -0.091059, -0.069363, -0.04
+canted_aim_rot_canted_deltapoint = -0.000021, 0.000055, 0.82
+ms_dot_offset_canted_deltapoint  = -0.0035, -0.003
+
+canted_aim_pos_canted_docter     = -0.091146, -0.06555, -0.04
+canted_aim_rot_canted_docter     = -0.000021, 0.000055, 0.82
+ms_dot_offset_canted_docter		 = -0.0035, -0.003
+
+canted_aim_pos_canted_t12        = -0.091057, -0.06959, -0.04
+canted_aim_rot_canted_t12        = 0, 0, 0.82
+;------------------------------------------------------------------------------------------------------
 ![wpn_ak5c_bas_hud]
 fire_point                               = 0, 0, 0
+anm_shots                                = ak5c_hand_shot, ras_m4a1_shot
+anm_shot_l                               = ak5c_hand_shot, ras_m4a1_shot_last
 
         hands_orientation                = -0.003896, 0.002667, 0.238931
         hands_orientation_16x9           = -0.003896, 0.002667, 0.238931
@@ -36,7 +71,17 @@ fire_point                               = 0, 0, 0
         aim_hud_offset_pos_16x9          = -0.081006, 0.027736, -0.05
         aim_hud_offset_rot               = -2.1e-05, 5.5e-05, 0
         aim_hud_offset_rot_16x9          = -2.1e-05, 5.5e-05, 0
+
+        aim_hud_offset_alt_pos           = -0.105017, -0.083836, -0.07
+        aim_hud_offset_alt_pos_16x9      = -0.105017, -0.083836, -0.07
+        aim_hud_offset_alt_rot           = -2.1e-05, 5.5e-05, 0.9
+        aim_hud_offset_alt_rot_16x9      = -2.1e-05, 5.5e-05, 0.9
 		
+        lowered_hud_offset_pos           = 0.104804, -0.002089, -0.046644
+        lowered_hud_offset_pos_16x9      = 0.104804, -0.002089, -0.046644
+        lowered_hud_offset_rot           = 0.123544, -0.78064, 0.132277
+        lowered_hud_offset_rot_16x9      = 0.123544, -0.78064, 0.132277
+ 		
         base_hud_offset_pos              = -0.039819, -0.025603, -0.01604
         base_hud_offset_pos_16x9         = -0.039819, -0.025603, -0.01604
         base_hud_offset_rot              = 0, 0, 0.124581
@@ -487,6 +532,6 @@ hud					= wpn_ak5c_bas_e0t2_magd_off_hud
 1icon_layer_y		= -15
 
 [wpn_ak5c_bas_e0t2_magd_off_hud]:wpn_ak5c_bas_hud
-item_visual				= dynamics\weapons\wpn_ak5c_bas\wpn_ak5c_e0t2_magd_off_hud.ogf
+;item_visual				= dynamics\weapons\wpn_ak5c_bas\wpn_ak5c_e0t2_magd_off_hud.ogf
         aim_hud_offset_pos               = -0.08137, 0.003553, -0.05
         aim_hud_offset_pos_16x9          = -0.08137, 0.003553, -0.05

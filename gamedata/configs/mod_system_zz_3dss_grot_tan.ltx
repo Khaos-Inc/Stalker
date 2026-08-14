@@ -1,12 +1,42 @@
 ![wpn_grot_tan]
 >scopes	= echo1, triji, spec_alt, mark8_rmr, c79, cortex, razorhd, e0t2_magd, uh1_magd, uh2, gee36
 
-lewd_lens_hide_enabled       = true
-lewd_lens_hide_bone          = lens
-lewd_lens_hide_delays        = 0.1,0
-lewd_lens_hide_aim_mode      = true, false, false	
+lens_hide_enabled       = true
+lens_hide_bone          = lens
+lens_hide_delays        = 0.1,0
+lens_hide_aim_mode      = true, false, false	
 
 use_alt_aim_hud		= true
+
+;---------------------------------------------SCRIPTED CANTED SIGHTS-----------------------------------
+canted_sights = canted_kac, canted_deltapoint, canted_docter, canted_t12
+
+canted_sights_bone  = wpn_body
+canted_sights_pos   = 0.0025, 0.077407, -0.011004
+canted_sights_rot   = 0, 0, 0
+canted_sights_scale = 0.90875, 0.90875, 0.90875
+front_iron_pos      = 0.0025, 0.077407, 0.327373
+front_iron_rot      = 0, 0, 0
+front_iron_scale    = 0.90875, 0.90875, 0.90875
+
+open_slots 			 = 1, 2
+canted_rds_position1      = 0.0025, 0.077407, 0
+canted_rds_position2 	  = 0.0025, 0.077407, 0.18707
+
+canted_aim_pos_canted_kac = -0.072506, -0.046364, -0.03
+canted_aim_rot_canted_kac = 0, 0, 0.8
+
+canted_aim_pos_canted_deltapoint = -0.072226, -0.038702, -0.03
+canted_aim_rot_canted_deltapoint = 0, 0, 0.8
+ms_dot_offset_canted_deltapoint	= -0.002, -0.002
+
+canted_aim_pos_canted_docter     = -0.072399, -0.034737, -0.02
+canted_aim_rot_canted_docter     = 0, 0, 0.8
+ms_dot_offset_canted_docter	= -0.002, -0.002
+
+canted_aim_pos_canted_t12        = -0.072253, -0.038933, -0.03
+canted_aim_rot_canted_t12        = 0, 0, 0.8
+;------------------------------------------------------------------------------------------------------
 ![wpn_grot_tan_hud]
         hands_orientation                = -0.388163, -0.431029, 0.051772
         hands_orientation_16x9           = -0.388163, -0.431029, 0.051772
@@ -182,16 +212,16 @@ item_visual		= dynamics\weapons\wpn_grot\wpn_grot_tan_uh2_hud.ogf
 ![wpn_grot_tan_acog]:acog_s
 1icon_layer = acog_x
 ![wpn_grot_tan_acog_hud]
-        aim_hud_offset_pos               = -0.043911, 0.009401, -0.107213
-        aim_hud_offset_pos_16x9          = -0.043911, 0.009401, -0.107213
+        aim_hud_offset_pos               = -0.043911, 0.009401, -0.098408
+        aim_hud_offset_pos_16x9          = -0.043911, 0.009401, -0.098408
         aim_hud_offset_rot               = -0.000184, -3.9e-05, -0.031278
         aim_hud_offset_rot_16x9          = -0.000184, -3.9e-05, -0.031278
 		
 ![wpn_grot_tan_specter]:specter_s
 1icon_layer = specter_x
 ![wpn_grot_tan_specter_hud]
-        aim_hud_offset_pos               = -0.043591, 0.00775, -0.077732
-        aim_hud_offset_pos_16x9          = -0.043591, 0.00775, -0.077732
+        aim_hud_offset_pos               = -0.043561, 0.008282, -0.08057
+        aim_hud_offset_pos_16x9          = -0.043561, 0.008282, -0.08057
         aim_hud_offset_rot               = -0.000184, -3.9e-05, -0.031278
         aim_hud_offset_rot_16x9          = -0.000184, -3.9e-05, -0.031278
 		
@@ -252,8 +282,8 @@ inv_grid_x		= 5
 		
 [wpn_grot_tan_triji_hud]:wpn_grot_tan_hud
 item_visual		= dynamics\weapons\wpn_grot\wpn_grot_tan_triji_hud.ogf
-        aim_hud_offset_pos               = -0.043911, 0.009401, -0.107213
-        aim_hud_offset_pos_16x9          = -0.043911, 0.009401, -0.107213
+        aim_hud_offset_pos               = -0.043911, 0.009401, -0.098408
+        aim_hud_offset_pos_16x9          = -0.043911, 0.009401, -0.098408
         aim_hud_offset_rot               = -0.000184, -3.9e-05, -0.031278
         aim_hud_offset_rot_16x9          = -0.000184, -3.9e-05, -0.031278
 
@@ -273,8 +303,8 @@ inv_grid_x		= 5
 
 [wpn_grot_tan_spec_alt_hud]:wpn_grot_tan_hud
 item_visual		= dynamics\weapons\wpn_grot\wpn_grot_tan_spec_alt_hud.ogf
-        aim_hud_offset_pos               = -0.043591, 0.00775, -0.077732
-        aim_hud_offset_pos_16x9          = -0.043591, 0.00775, -0.077732
+        aim_hud_offset_pos               = -0.043561, 0.008282, -0.08057
+        aim_hud_offset_pos_16x9          = -0.043561, 0.008282, -0.08057
         aim_hud_offset_rot               = -0.000184, -3.9e-05, -0.031278
         aim_hud_offset_rot_16x9          = -0.000184, -3.9e-05, -0.031278
 
@@ -329,8 +359,8 @@ inv_grid_x		= 5
 		
 [wpn_grot_tan_cortex_hud]:wpn_grot_tan_hud
 item_visual		= dynamics\weapons\wpn_grot\wpn_grot_tan_cortex_hud.ogf
-        aim_hud_offset_pos               = -0.043983, 0.008931, -0.05
-        aim_hud_offset_pos_16x9          = -0.043983, 0.008931, -0.05
+        aim_hud_offset_pos               = -0.043739, 0.008987, -0.05024
+        aim_hud_offset_pos_16x9          = -0.043739, 0.008987, -0.05024
 ;-------------------------------------------------------------------------------------
 [wpn_grot_tan_razorhd]:wpn_grot_tan, razorhd_s
 hud             = wpn_grot_tan_razorhd_hud

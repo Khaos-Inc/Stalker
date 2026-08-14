@@ -1,0 +1,28 @@
+local SECTION_NAME = "medik_user_themes"
+
+function scan()
+    if not ini_file then
+        return 0
+    end
+    local ini = ini_file("medik_user_themes.ltx")
+    if not ini or not ini:section_exist(SECTION_NAME) then
+        return 0
+    end
+    local total = ini:line_count(SECTION_NAME)
+    local count = 0
+    for index = 0, total - 1 do
+        local ok, id, value = ini:r_line_ex(SECTION_NAME, index, "", "")
+        if ok and id and id ~= "" then
+            local label
+            if value ~= nil and value ~= "" then
+                label = value:gsub('^"(.*)"$', "%1")
+            else
+                label = id
+            end
+            if medik_config.register_theme({ name = id, label = label }) then
+                count = count + 1
+            end
+        end
+    end
+    return count
+end

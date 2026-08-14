@@ -6,61 +6,71 @@ local mode 		= 1
 local modifier 	= 1
 
 --default values
-local zoom_in_iron 		= 0.6
-local zoom_in_scope 	= 0.6
-local gl_fov 			= 0.6
-local default_hud_fov 	= ui_options.get("video/basic/hud_fov") or 0.6
+local zoom_in_iron 		= ui_options.get("video/basic/hud_fov")
+local zoom_in_scope 	= ui_options.get("video/basic/hud_fov")
+local gl_fov 			= ui_options.get("video/basic/hud_fov")
+local default_hud_fov 	= ui_options.get("video/basic/hud_fov")
 local zoomed 			= false
+local use_player_hud_fov = false
+local use_universal_hud_fov = false
+local universal_hud_fov = 0.6
 
---specific scope values
---WP Scopes
-local zoom_1p78 		= 0.6
-local zoom_1p29			= 0.6
-local zoom_ps01 		= 0.6
-local zoom_pso2 		= 0.6
-local zoom_1pn93		= 0.6
-local zoom_1pn93hv		= 0.6
-local zoom_pgo7gs		= 0.6
-local zoom_1p59			= 0.6
-local zoom_pu	 		= 0.6
-local zoom_zf4	 		= 0.6
-local zoom_g43	 		= 0.6
-local zoom_po4			= 0.6
-
---Picatinny Scopes
-local zoom_monstrum		= 0.6
-local zoom_acog 		= 0.6
-local zoom_susat 		= 0.6
-local zoom_trihawk 		= 0.6
-local zoom_g36			= 0.6
-local zoom_side 		= 0.6
-local zoom_vulcan 		= 0.6
-local zoom_bravo 		= 0.6
-local zoom_hamr 		= 0.6
-local zoom_specter 		= 0.6
-local zoom_tac30		= 0.6
-local zoom_uh1			= 0.6
-local zoom_e0t2			= 0.6
-local zoom_devo 		= 0.6
-local zoom_pn23 		= 0.6
-local zoom_razorhd		= 0.6
-local zoom_ps320 		= 0.6
-local zoom_leupold		= 0.6
-local zoom_march		= 0.6
-local zoom_ado			= 0.6
-local zoom_gauss		= 0.6
-local zoom_cortex		= 0.6
-local zoom_marchf		= 0.6
-local zoom_skeet		= 0.6
+local DEFAULT_SCOPE_FOV = 0.6
+local SCOPE_GROUPS = {
+	{ id = "1p78", option = "1p78_fov" },
+	{ id = "1pn93hv", option = "1pn93hv_fov" },
+	{ id = "1p29", option = "1p29_fov" },
+	{ id = "ps01", option = "ps01_fov" },
+	{ id = "pso2", option = "pso2_fov" },
+	{ id = "1pn93", option = "1pn93_fov" },
+	{ id = "pgo7gs", option = "pgo7gs_fov" },
+	{ id = "1p59", option = "1p59_fov" },
+	{ id = "pu", option = "pu_fov" },
+	{ id = "zf4", option = "zf4_fov" },
+	{ id = "g43", option = "g43_fov" },
+	{ id = "po4", option = "po4_fov" },
+	{ id = "monstrum", option = "monstrum_fov" },
+	{ id = "acog", option = "acog_fov" },
+	{ id = "trihawk", option = "trihawk_fov" },
+	{ id = "g36", option = "g36_fov" },
+	{ id = "side", option = "side_fov" },
+	{ id = "vulcan", option = "vulcan_fov" },
+	{ id = "susat", option = "susat_fov" },
+	{ id = "bravo", option = "bravo_fov" },
+	{ id = "hamr", option = "hamr_fov" },
+	{ id = "specter", option = "specter_fov" },
+	{ id = "tac30", option = "tac30_fov" },
+	{ id = "uh1", option = "uh1_fov" },
+	{ id = "e0t2", option = "e0t2_fov" },
+	{ id = "devo", option = "devo_fov" },
+	{ id = "pn23", option = "pn23_fov" },
+	{ id = "razorhd", option = "razorhd_fov" },
+	{ id = "ps320", option = "ps320_fov" },
+	{ id = "leupold", option = "leupold_fov" },
+	{ id = "march", option = "march_fov" },
+	{ id = "ado", option = "ado_fov" },
+	{ id = "gauss", option = "gauss_fov" },
+	{ id = "cortex", option = "cortex_fov" },
+	{ id = "marchf", option = "marchf_fov" },
+	{ id = "skeet", option = "skeet_fov" },
+}
+local scope_fov_values = {}
+for _, group in ipairs(SCOPE_GROUPS) do
+	scope_fov_values[group.id] = DEFAULT_SCOPE_FOV
+end
 
 ini_fov = ini_file_ex("items\\weapon_fov_values.ltx")
 local mcm_keybinds = ui_mcm and ui_mcm.key_hold
 
-local temp_fov
+local temp_fov = default_hud_fov
 local saved_custom = {}
 local saved_gls = {}
+local hold_count = 0
 
 function fetch_values()
+	use_player_hud_fov = ui_mcm.get("scop/use_player_hud_fov") == true
+	use_universal_hud_fov = ui_mcm.get("scop/use_universal_hud_fov") == true
+	universal_hud_fov = tonumber(ui_mcm.get("scop/universal_hud_fov")) or universal_hud_fov
 	zoom_in_iron 	= ui_mcm.get("scop/iron_fov") or zoom_in_iron
 	zoom_in_scope 	= ui_mcm.get("scop/scope_fov") or zoom_in_scope
 	gl_fov 			= ui_mcm.get("scop/grenade_fov") or gl_fov
@@ -70,49 +80,20 @@ function fetch_values()
 	mode 			= ui_mcm.get("scop/mode") or mode
 	modifier 		= ui_mcm.get("scop/modifier") or modifier
 	
-	--Specific scope values
-	zoom_1p78 		= ui_mcm.get("scop/1p78_fov") or zoom_1p78
-	zoom_1pn93hv 	= ui_mcm.get("scop/1pn93hv_fov") or zoom_1pn93hv
-	zoom_1p29 		= ui_mcm.get("scop/1p29_fov") or zoom_1p29
-	zoom_ps01 		= ui_mcm.get("scop/ps01_fov") or zoom_ps01
-	zoom_pso2 		= ui_mcm.get("scop/pso2_fov") or zoom_pso2
-	zoom_1pn93 		= ui_mcm.get("scop/1pn93_fov") or zoom_1pn93
-	zoom_pgo7gs 	= ui_mcm.get("scop/pgo7gs_fov") or zoom_pgo7gs
-	zoom_1p59 		= ui_mcm.get("scop/1p59_fov") or zoom_1p59
-	zoom_pu 		= ui_mcm.get("scop/pu_fov") or zoom_pu
-	zoom_zf4 		= ui_mcm.get("scop/zf4_fov") or zoom_zf4
-	zoom_g43 		= ui_mcm.get("scop/g43_fov") or zoom_g43
-	zoom_po4 		= ui_mcm.get("scop/po4_fov") or zoom_po4
-	
-	zoom_monstrum 	= ui_mcm.get("scop/monstrum_fov") or zoom_monstrum
-	zoom_acog 		= ui_mcm.get("scop/acog_fov") or zoom_acog
-	zoom_susat 		= ui_mcm.get("scop/susat_fov") or zoom_susat
-	zoom_trihawk  	= ui_mcm.get("scop/trihawk_fov") or zoom_trihawk 
-	zoom_g36 		= ui_mcm.get("scop/g36_fov") or zoom_g36
-	zoom_side 		= ui_mcm.get("scop/side_fov") or zoom_side
-	zoom_vulcan 	= ui_mcm.get("scop/vulcan_fov") or zoom_vulcan
-	zoom_bravo 		= ui_mcm.get("scop/bravo_fov") or zoom_bravo
-	zoom_hamr 		= ui_mcm.get("scop/hamr_fov") or zoom_hamr
-	zoom_specter 	= ui_mcm.get("scop/specter_fov") or zoom_specter
-	zoom_tac30 		= ui_mcm.get("scop/tac30_fov") or zoom_tac30
-	zoom_uh1 		= ui_mcm.get("scop/uh1_fov") or zoom_uh1
-	zoom_e0t2 		= ui_mcm.get("scop/e0t2_fov") or zoom_e0t2
-	zoom_devo 		= ui_mcm.get("scop/devo_fov") or zoom_devo
-	zoom_pn23 		= ui_mcm.get("scop/pn23_fov") or zoom_pn23
-	zoom_razorhd 	= ui_mcm.get("scop/razorhd_fov") or zoom_razorhd
-	zoom_ps320 		= ui_mcm.get("scop/ps320_fov") or zoom_ps320
-	zoom_leupold 	= ui_mcm.get("scop/leupold_fov") or zoom_leupold
-	zoom_march 		= ui_mcm.get("scop/march_fov") or zoom_march
-	zoom_ado 		= ui_mcm.get("scop/ado_fov") or zoom_ado
-	zoom_gauss 		= ui_mcm.get("scop/gauss_fov") or zoom_gauss
-	zoom_cortex 	= ui_mcm.get("scop/cortex_fov") or zoom_cortex
-	zoom_marchf 	= ui_mcm.get("scop/marchf_fov") or zoom_marchf
-	zoom_skeet 		= ui_mcm.get("scop/skeet_fov") or zoom_skeet
-	
+	for _, group in ipairs(SCOPE_GROUPS) do
+		scope_fov_values[group.id] = ui_mcm.get("scop/" .. group.option) or scope_fov_values[group.id]
+	end
+end
+
+local function get_player_hud_fov()
+	default_hud_fov = tonumber(ui_options.get("video/basic/hud_fov")) or tonumber(default_hud_fov) or DEFAULT_SCOPE_FOV
+	return default_hud_fov
 end
 
 local function actor_on_first_update()
 	default_hud_fov = ui_options.get("video/basic/hud_fov") or 0.6
+	temp_fov = default_hud_fov
+	mcm_keybinds = ui_mcm and ui_mcm.key_hold
 	if mcm_keybinds then
 		fetch_values()
 	end
@@ -129,26 +110,97 @@ local function on_option_change(mcm)
 end
 
 function execute_hud_fov(fov_value)
+	fov_value = tonumber(fov_value) or tonumber(default_hud_fov) or DEFAULT_SCOPE_FOV
+	fov_value = math.max(0.1, math.min(1, fov_value))
 	exec_console_cmd("hud_fov " .. fov_value)
 	temp_fov = fov_value
 end
 
-function zoom_in()
-zoomed = true
-local weapon = db.actor:active_item()
-if not weapon then return end
-local scope = utils_item.get_attached_scope(weapon)
-local parent = ini_sys:r_string_ex(weapon:section(),"parent_section") or weapon:section()
-local is_pistol = ini_sys:r_string_ex(weapon:section(),"kind") == "w_pistol"
+local function resolve_zoom_type(weapon, zoom_type)
+	local resolved = tonumber(zoom_type)
+	if resolved ~= nil then return resolved end
+	local c_weapon = weapon and weapon:cast_Weapon()
+	if not c_weapon then return 0 end
+	local ok, current = pcall(function() return c_weapon:GetZoomType() end)
+	return ok and (tonumber(current) or 0) or 0
+end
 
-local two_dim = weapon and ini_sys:r_float_ex(weapon:section(),"scope_status") == 1
-local sec_exist = ini_fov:section_exist(parent)
+local function get_aim_context(weapon, scope, two_dim, zoom_type)
+	if weapon:weapon_in_grenade_mode() then return "gl" end
+	if resolve_zoom_type(weapon, zoom_type) == 1 then return "alt" end
+	if scope or two_dim then return "scope" end
+	return "iron"
+end
 
-	if (db.actor:active_detector()) then 
+local function non_default_fov(value)
+	value = tonumber(value)
+	if value and math.abs(value - DEFAULT_SCOPE_FOV) > 0.0001 then
+		return value
+	end
+end
+
+local function resolve_universal_override(weapon, scope, two_dim, parent, context)
+	if context == "gl" then
+		return non_default_fov(saved_gls[parent]) or non_default_fov(gl_fov)
+	end
+
+	local iron_fov = ini_fov:r_float_ex(parent, "iron")
+	if context == "alt" then
+		return non_default_fov(iron_fov) or non_default_fov(zoom_in_iron)
+	end
+
+	local custom_fov = non_default_fov(saved_custom[weapon:section()])
+	if custom_fov then return custom_fov end
+
+	if ini_fov:section_exist(parent) and scope then
+		custom_fov = non_default_fov(ini_fov:r_float_ex(parent, scope))
+		if custom_fov then return custom_fov end
+	end
+
+	if two_dim and not scope then
+		return non_default_fov(zoom_in_scope)
+	end
+
+	if scope then
+		for _, group in ipairs(SCOPE_GROUPS) do
+			if ini_fov:r_bool_ex(group.id, scope) then
+				return non_default_fov(scope_fov_values[group.id])
+			end
+		end
+	end
+
+	return non_default_fov(iron_fov) or non_default_fov(zoom_in_iron)
+end
+
+function zoom_in(callback_weapon, zoom_type)
+	local weapon = callback_weapon or db.actor:active_item()
+	if not weapon then
+		zoomed = false
+		return
+	end
+	if db.actor:active_detector() then
+		zoomed = false
+		return
+	end
+	zoomed = true
+	local scope = utils_item.get_attached_scope(weapon)
+	local parent = ini_sys:r_string_ex(weapon:section(),"parent_section") or weapon:section()
+	local two_dim = ini_sys:r_float_ex(weapon:section(),"scope_status") == 1
+	local context = get_aim_context(weapon, scope, two_dim, zoom_type)
+
+	if use_universal_hud_fov then
+		execute_hud_fov(resolve_universal_override(weapon, scope, two_dim, parent, context) or universal_hud_fov)
+		return
+	end
+	if use_player_hud_fov then
+		execute_hud_fov(get_player_hud_fov())
 		return
 	end
 
-	if weapon and weapon:weapon_in_grenade_mode() then
+	local sec_exist = ini_fov:section_exist(parent)
+	local iron_fov = ini_fov:r_float_ex(parent, "iron")
+
+	if context == "gl" then
 		if saved_gls[parent] then
 			execute_hud_fov(saved_gls[parent])
 		else
@@ -156,12 +208,15 @@ local sec_exist = ini_fov:section_exist(parent)
 		end
 		return
 	end
+	if context == "alt" then
+		execute_hud_fov(iron_fov or zoom_in_iron)
+		return
+	end
 	if saved_custom[weapon:section()] then
 		execute_hud_fov(saved_custom[weapon:section()])
 		return
 	end
 	
-	local iron_fov = ini_fov:r_float_ex(parent, "iron")
 	if sec_exist and scope then
 		local custom_fov = ini_fov:r_float_ex(parent, scope)
 		if scope and custom_fov then
@@ -174,180 +229,36 @@ local sec_exist = ini_fov:section_exist(parent)
 		execute_hud_fov(zoom_in_scope)
 		return
 	end
-	--For HUD FOV specific scopes
+	-- Match the first configured scope group, preserving the original priority.
 	if scope then
-		local scope_1p78 	= ini_fov:r_bool_ex("1p78", scope)
-		local scope_1pn93hv = ini_fov:r_bool_ex("1pn93hv", scope)
-		local scope_1p29 	= ini_fov:r_bool_ex("1p29", scope)
-		local scope_ps01 	= ini_fov:r_bool_ex("ps01", scope)
-		local scope_pso2 	= ini_fov:r_bool_ex("pso2", scope)
-		local scope_1pn93 	= ini_fov:r_bool_ex("1pn93", scope)
-		local scope_pgo7gs 	= ini_fov:r_bool_ex("pgo7gs", scope)
-		local scope_1p59 	= ini_fov:r_bool_ex("1p59", scope)
-		local scope_pu 		= ini_fov:r_bool_ex("pu", scope)
-		local scope_zf4 	= ini_fov:r_bool_ex("zf4", scope)
-		local scope_g43 	= ini_fov:r_bool_ex("g43", scope)
-		local scope_po4 	= ini_fov:r_bool_ex("po4", scope)
-
-		local scope_monstrum 	= ini_fov:r_bool_ex("monstrum", scope)
-		local scope_acog 		= ini_fov:r_bool_ex("acog", scope)
-		local scope_trihawk 	= ini_fov:r_bool_ex("trihawk", scope)
-		local scope_g36 		= ini_fov:r_bool_ex("g36", scope)
-		local scope_side 		= ini_fov:r_bool_ex("side", scope)
-		local scope_vulcan 		= ini_fov:r_bool_ex("vulcan", scope)
-		local scope_susat 		= ini_fov:r_bool_ex("susat", scope)
-		local scope_bravo 		= ini_fov:r_bool_ex("bravo", scope)
-		local scope_hamr 		= ini_fov:r_bool_ex("hamr", scope)
-		local scope_specter 	= ini_fov:r_bool_ex("specter", scope)
-		local scope_tac30 		= ini_fov:r_bool_ex("tac30", scope)
-		local scope_uh1 		= ini_fov:r_bool_ex("uh1", scope)
-		local scope_e0t2 		= ini_fov:r_bool_ex("e0t2", scope)
-		local scope_devo 		= ini_fov:r_bool_ex("devo", scope)
-		local scope_pn23 		= ini_fov:r_bool_ex("pn23", scope)
-		local scope_razorhd 	= ini_fov:r_bool_ex("razorhd", scope)
-		local scope_ps320 		= ini_fov:r_bool_ex("ps320", scope)
-		local scope_leupold 	= ini_fov:r_bool_ex("leupold", scope)
-		local scope_march 		= ini_fov:r_bool_ex("march", scope)
-		local scope_ado			= ini_fov:r_bool_ex("ado", scope)
-		local scope_gauss 		= ini_fov:r_bool_ex("gauss", scope)		
-		local scope_cortex 		= ini_fov:r_bool_ex("cortex", scope)
-		local scope_marchf 		= ini_fov:r_bool_ex("marchf", scope)
-		local scope_skeet 		= ini_fov:r_bool_ex("skeet", scope)
-		
-		if scope_1p78 then
-			execute_hud_fov(zoom_1p78)
-			return	
-		elseif scope_1pn93hv then
-			execute_hud_fov(zoom_1pn93hv)
-			return
-		elseif scope_1p29 then
-			execute_hud_fov(zoom_1p29)
-			return		
-		elseif scope_ps01 then
-			execute_hud_fov(zoom_ps01)
-			return	
-		elseif scope_pso2 then
-			execute_hud_fov(zoom_pso2)
-			return		
-		elseif scope_1pn93 then
-			execute_hud_fov(zoom_1pn93)
-			return		
-		elseif scope_pgo7gs then
-			execute_hud_fov(zoom_pgo7gs)
-			return		
-		elseif scope_1p59 then
-			execute_hud_fov(zoom_1p59)
-			return		
-		elseif scope_pu then
-			execute_hud_fov(zoom_pu)
-			return		
-		elseif scope_zf4 then
-			execute_hud_fov(zoom_zf4)
-			return
-		elseif scope_g43 then
-			execute_hud_fov(zoom_g43)
-			return
-		elseif scope_po4 then
-			execute_hud_fov(zoom_po4)
-			return	
-		elseif scope_monstrum then
-			execute_hud_fov(zoom_monstrum)
-			return
-		elseif scope_acog then
-			execute_hud_fov(zoom_acog)
-			return
-		elseif scope_trihawk then
-			execute_hud_fov(zoom_trihawk)
-			return
-		elseif scope_g36 then
-			execute_hud_fov(zoom_g36)
-			return
-		elseif scope_side then
-			execute_hud_fov(zoom_side)
-			return
-		elseif scope_vulcan then
-			execute_hud_fov(zoom_vulcan)
-			return
-		elseif scope_susat then
-			execute_hud_fov(zoom_susat)
-			return
-		elseif scope_bravo then
-			execute_hud_fov(zoom_bravo)
-			return
-		elseif scope_hamr then
-			execute_hud_fov(zoom_hamr)
-			return
-		elseif scope_specter then
-			execute_hud_fov(zoom_specter)
-			return
-		elseif scope_tac30 then
-			execute_hud_fov(zoom_tac30)
-			return
-		elseif scope_uh1 then
-			execute_hud_fov(zoom_uh1)
-			return
-		elseif scope_e0t2 then
-			execute_hud_fov(zoom_e0t2)
-			return
-		elseif scope_devo then
-			execute_hud_fov(zoom_devo)
-			return
-		elseif scope_pn23 then
-			execute_hud_fov(zoom_pn23)
-			return
-		elseif scope_razorhd then
-			execute_hud_fov(zoom_razorhd)
-			return
-		elseif scope_ps320 then
-			execute_hud_fov(zoom_ps320)
-			return
-		elseif scope_leupold then
-			execute_hud_fov(zoom_leupold)
-			return
-		elseif scope_march then
-			execute_hud_fov(zoom_march)
-			return
-		elseif scope_ado then
-			execute_hud_fov(zoom_ado)
-			return
-		elseif scope_gauss then
-			execute_hud_fov(zoom_gauss)
-			return
-		elseif scope_cortex then
-			execute_hud_fov(zoom_cortex)
-			return
-		elseif scope_marchf then
-			execute_hud_fov(zoom_marchf)
-			return
-		elseif scope_skeet then
-			execute_hud_fov(zoom_skeet)
-			return
-		-- FALLBACK FOR UNLISTED SCOPES / HOLOS / 1X
-		else
-			execute_hud_fov(zoom_in_iron)
-			return			
+		for _, group in ipairs(SCOPE_GROUPS) do
+			if ini_fov:r_bool_ex(group.id, scope) then
+				execute_hud_fov(scope_fov_values[group.id])
+				return
+			end
 		end
-		--For HUD FOV iron sights
-	elseif (not scope) then
 		execute_hud_fov(zoom_in_iron)
 		return
 	end
+
+	execute_hud_fov(zoom_in_iron)
 end
 
 function zoom_out()
-	execute_hud_fov(default_hud_fov)
+	execute_hud_fov(use_player_hud_fov and get_player_hud_fov() or default_hud_fov)
 	zoomed = false
 end
 
 function actor_on_weapon_zoom_type_changed(obj, previous, current)
-	if current == 1 then
-		zoom_out()
-	else
-		zoom_in()
-	end
+	local c_weapon = obj and obj:cast_Weapon()
+	if not (c_weapon and c_weapon:IsZoomed()) then return end
+	zoom_in(obj, current)
 end
 
 local function on_key_release(key)
+	if key == KEY_INCR or key == KEY_DECR or key == KEY_RESET then
+		hold_count = 0
+	end
 	local weapon = db.actor:active_item()
 	if not weapon then return end
 	local parent = ini_sys:r_string_ex(weapon:section(),"parent_section") or weapon:section()
@@ -366,36 +277,45 @@ local function on_key_release(key)
 end
 
 function increase_hud_fov()
+	if use_universal_hud_fov or use_player_hud_fov then return end
 	local weapon = db.actor:active_item()
-	if (not weapon) or (temp_fov >= 1)  then return end
+	local current_fov = tonumber(temp_fov) or tonumber(default_hud_fov) or DEFAULT_SCOPE_FOV
+	if (not weapon) or current_fov >= 1 then return end
 	local parent = ini_sys:r_string_ex(weapon:section(),"parent_section") or weapon:section()
-	local saved_fov = saved_custom[weapon:section()] or temp_fov
-	local saved_gl_fov = saved_gls[parent] or temp_fov
+	local saved_fov = tonumber(saved_custom[weapon:section()]) or current_fov
+	local saved_gl_fov = tonumber(saved_gls[parent]) or current_fov
 	if weapon:weapon_in_grenade_mode() then
-		execute_hud_fov((saved_gl_fov + 0.01))
-		saved_gls[parent] = saved_gl_fov + 0.01
+		local next_fov = math.min(1, saved_gl_fov + 0.01)
+		execute_hud_fov(next_fov)
+		saved_gls[parent] = next_fov
 	else
-		execute_hud_fov((saved_fov + 0.01))
-		saved_custom[weapon:section()] = saved_fov + 0.01
+		local next_fov = math.min(1, saved_fov + 0.01)
+		execute_hud_fov(next_fov)
+		saved_custom[weapon:section()] = next_fov
 	end
 end
 
 function decrease_hud_fov()
+	if use_universal_hud_fov or use_player_hud_fov then return end
 	local weapon = db.actor:active_item()
-	if (not weapon) or (temp_fov <= 0.1) then return end
+	local current_fov = tonumber(temp_fov) or tonumber(default_hud_fov) or DEFAULT_SCOPE_FOV
+	if (not weapon) or current_fov <= 0.1 then return end
 	local parent = ini_sys:r_string_ex(weapon:section(),"parent_section") or weapon:section()
-	local saved_fov = saved_custom[weapon:section()] or temp_fov
-	local saved_gl_fov = saved_gls[parent] or temp_fov
+	local saved_fov = tonumber(saved_custom[weapon:section()]) or current_fov
+	local saved_gl_fov = tonumber(saved_gls[parent]) or current_fov
 	if weapon:weapon_in_grenade_mode() then
-		execute_hud_fov((saved_fov - 0.01))
-		saved_gls[parent] = saved_gl_fov - 0.01
+		local next_fov = math.max(0.1, saved_gl_fov - 0.01)
+		execute_hud_fov(next_fov)
+		saved_gls[parent] = next_fov
 	else
-		execute_hud_fov((saved_fov - 0.01))
-		saved_custom[weapon:section()] = saved_fov - 0.01
+		local next_fov = math.max(0.1, saved_fov - 0.01)
+		execute_hud_fov(next_fov)
+		saved_custom[weapon:section()] = next_fov
 	end
 end
 
 function reset_current_weapon()
+	if use_universal_hud_fov or use_player_hud_fov then return end
 	local weapon = db.actor:active_item()
 	if not weapon then return end
 	local parent = ini_sys:r_string_ex(weapon:section(),"parent_section") or weapon:section()
@@ -423,24 +343,24 @@ local function on_key_press(key)
 	end
 end
 
-local count = 0
 local function on_key_hold(key)
+	if key ~= KEY_INCR and key ~= KEY_DECR and key ~= KEY_RESET then return end
 	if zoomed and mcm_keybinds and (mode == 1) and ui_mcm.get_mod_key(modifier) then
-		if (count >= 4) then
+		if hold_count >= 4 then
 			if (key == KEY_INCR) then
 				increase_hud_fov()
-				count = 0
+				hold_count = 0
 			end
 			if (key == KEY_DECR) then
 				decrease_hud_fov()
-				count = 0
+				hold_count = 0
 			end
 			if (key == KEY_RESET) then
 				reset_current_weapon()
-				count = 0
+				hold_count = 0
 			end
 		end
-		count = count + 1
+		hold_count = hold_count + 1
 	end
 end
 
@@ -457,6 +377,9 @@ end
 function on_mcm_load()
 	op = { id = "scop",sh = true ,gr = {
 			{ id = "title", type = "slide", link = "ui_options_slider_player", text = "ui_mcm_scop_title", size = { 512,50 }, spacing = 20 },
+			{ id = "use_player_hud_fov", type = "check", val = 1, def = false },
+			{ id = "use_universal_hud_fov", type = "check", val = 1, def = false },
+			{ id = "universal_hud_fov", type = "track", val = 2, min = 0.1, max = 1, step = 0.01, def = 0.6 },
 			{ id = "keybind_add", type = "key_bind", val = 2, def = DIK_keys.DIK_ADD},
 			{ id = "keybind_subtract", type = "key_bind", val = 2, def = DIK_keys.DIK_SUBTRACT},
 			{ id = "keybind_reset", type = "key_bind", val = 2, def = DIK_keys.DIK_BACK},

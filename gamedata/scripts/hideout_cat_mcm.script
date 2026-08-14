@@ -1,0 +1,26 @@
+function get_config(key)
+  if ui_mcm then return ui_mcm.get("hideout_cat_settings/"..key) else return defaults[key] end
+end
+
+function on_mcm_load()
+    op = { 
+      id = "hideout_cat_settings",
+      sh = true,
+      gr =
+        {  -- options tree goes here
+          { id = "sld", type = "slide", text = "ui_mcm_hideout_cat_sld_text", link = "ui_options_slider_weather_clear", size = {512, 50}, spacing = 20},
+          { id = "hideout_cat_color_help", type = "desc", clr = {200, 255, 200, 200}, text="ui_mcm_hideout_cat_color_help"},
+          { id = "hideout_cat_color", type="list", val=0, def="0", content={
+            {"0", "color_orange"},
+            {"1", "color_black"},
+            {"2", "color_white"},
+            {"3", "color_black_spots"},
+            {"4", "color_white_spots"},
+            {"5", "color_brown"},
+            }
+          },
+		  {id = "hideout_cat_fur_hidden", type = "check", val = 1, def = false},
+        }
+      }
+    return op
+  end

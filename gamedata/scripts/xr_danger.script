@@ -100,7 +100,7 @@ end
 function get_danger_time(danger,npc)
 	if (danger:type() == danger_object.entity_corpse) then
 		local corpse_object = danger:object()
-		return corpse_object and IsStalker(corpse_object) and corpse_object:death_time() or 0
+		return (corpse_object and IsStalker(corpse_object) and corpse_object:death_time()) or 0
 	end
 
 	return danger:time()
@@ -401,11 +401,11 @@ local function npc_on_hear_callback(npc, who_id, s_type, dist, sound_power, soun
 			return
 		end
 
-		--utils_data.debug_write("xr_danger:hear_callback",true)
-
 		if (IsWounded(npc) or character_community(npc) == "zombied" or xr_combat_ignore.npc_in_safe_zone(npc)) then
 			return
 		end
+
+		--utils_data.debug_write("xr_danger:hear_callback",true)
 
 		local rank_mult = redone_ai_detection.get_npc_sound_values(npc) or 1.0
 		local type_mult = redone_ai_detection.get_type_multiplier(s_type) or 1.0
@@ -414,11 +414,8 @@ local function npc_on_hear_callback(npc, who_id, s_type, dist, sound_power, soun
 		-- DANGER
 		-------------------------------------------------
 		if (s_type == "WPN_shoot" or s_type == "WPN_hit" or s_type == "MST_attack" or s_type == "MST_damage") then
-			-- MT fix (A1): the actor is not in db.storage and is not an IsStalker,
-			-- so resolve it explicitly; otherwise the actor case bails before set_script_danger.
 			local is_actor = (who_id == AC_ID)
-			local who = is_actor and db.actor
-				or (who_id and db.storage[who_id] and db.storage[who_id].object)
+			local who = is_actor and db.actor or (who_id and db.storage[who_id] and db.storage[who_id].object)
 			if not (who) then
 				return
 			end
@@ -619,7 +616,7 @@ local function npc_on_hear_callback(npc, who_id, s_type, dist, sound_power, soun
 					local look_pos = vector():set(who:position())
 					look_pos.y = look_pos.y + 1.4
 					npc:set_sight(look.fire_point, look_pos)
-					--state_mgr.set_state(npc, "hide_na", nil, nil, {look_position = look_pos}, {fast_set = true})
+					state_mgr.set_state(npc, "hide_na", nil, nil, {look_position = look_pos}, {fast_set = true})
 					if who_id == AC_ID then
 						s("[SOUND] COMBAT SOUND ACTOR detected (" .. tostring(s_type) .. ") dist=" .. tostring(dist))
 					else
@@ -878,7 +875,7 @@ local function is_danger(npc,best_danger,script)
 	end]]--
 
 	if danger_alert then
-		if (npc:has_info("npcx_is_companion")) then
+		if (npc:has_info("npcx_is_companion")) or character_community(npc) == "zombied" then
 			if not (best_danger_object and (IsMonster(best_danger_object) or IsStalker(best_danger_object)) and npc:relation(best_danger_object) >= 2) then
 				return false
 			end
@@ -1518,7 +1515,7 @@ function script_action_danger_alert(npc, st, bd, best_danger_object, dependent_o
 	local dist = npc_pos:distance_to_sqr(bdo_pos)
 	local who_dist = dist
 
-	local be = redone_ai_combat.get_combat_enemy(npc) or best_danger_object
+	local be = npc:best_enemy() or best_danger_object
 	local see = npc:see(be)
 
 	local actor_rel = npc:relation(db.actor)
@@ -1553,7 +1550,7 @@ function script_action_danger_alert(npc, st, bd, best_danger_object, dependent_o
         	end
     	end
 
-    	if dist and dist <= 120 then
+    	if dist and dist <= 240 then
         	if be and see then
             		state_mgr.set_state(npc, "hide_na", nil, nil, {look_object = be})
             		if not utils_obj.squad_in_los(npc, be) then

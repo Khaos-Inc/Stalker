@@ -4,9 +4,14 @@ local run_modifiers = {}
 local not_first_update = true
 
 local function actor_on_first_update() 
-    speeds[0] = db.actor:get_actor_run_coef()
-    speeds[1] = db.actor:get_actor_runback_coef()
-    speeds[2] = db.actor:get_actor_sprint_koef()
+    -- FIX: prevent double SET -> GET -> SET in the engine and instead hardcode initial naked values.
+    -- speeds[0] = db.actor:get_actor_run_coef()
+    -- speeds[1] = db.actor:get_actor_runback_coef()
+    -- speeds[2] = db.actor:get_actor_sprint_koef()
+
+    speeds[0] = 2.410000
+    speeds[1] = 1.330000
+    speeds[2] = 2.08000
     not_first_update = false
 end
 
@@ -20,15 +25,12 @@ local function update_speeds()
     end
     local run_coef = 1
     for k,v in pairs(run_modifiers) do
-        --printf("run " .. k .. " " .. v)
         run_coef = run_coef * v
     end
     local sprint_coef = 1
     for k,v in pairs(sprint_modifiers) do
-        --printf("sprint " .. k .. " " .. v)
         sprint_coef = sprint_coef * v
     end
-    -- printf("base speed: "..speeds[0])
     db.actor:set_actor_run_coef(clamp(speeds[0] * run_coef, 1, 10))
     db.actor:set_actor_runback_coef(clamp(speeds[1] * run_coef, 1, 10))
     db.actor:set_actor_sprint_koef(clamp(speeds[2] * sprint_coef, 1, 10))
@@ -46,7 +48,7 @@ end
 function add_speed(speed_key, speed_mult, is_sprint, force)
     if (is_sprint) then
         if force or not sprint_modifiers[speed_key] then
-            --printf("sprint: " .. speed_key .. " " .. speed_mult)
+            -- printf("sprint: " .. speed_key .. " " .. speed_mult)
             sprint_modifiers[speed_key] = speed_mult
             update_speeds()
             return true
@@ -55,7 +57,6 @@ function add_speed(speed_key, speed_mult, is_sprint, force)
         end
     else
         if force or not run_modifiers[speed_key] then
-            --printf("run: " .. speed_key .. " " .. speed_mult)
             run_modifiers[speed_key] = speed_mult
             update_speeds()
             return true

@@ -675,3 +675,9 @@ exit_pos								 = 0,0,0
 lock_enter								 = false 
 lock_exit								 = false
 use_action_hint							 = st_use_action_sit
+
+;************************************* xcvb cringefires ****************************
+[ph_campfiremod]:physic_destroyable_object
+visual 					= dynamics\equipments\campfiremod.ogf
+script_binding			= bind_physic_object.init
+custom_data 			= scripts\ph_campfiremod.ltx

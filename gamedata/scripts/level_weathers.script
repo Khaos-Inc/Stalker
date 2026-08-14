@@ -426,24 +426,13 @@ function WeatherManager:build_valid_levels()
 	end
 end
 
-function WeatherManager:update_level_weather_type()  
-	local ini = ini_file("game.ltx")  
-	self.weatherType = ini:r_string_ex(level.name(), "weathers") or "[default]"  
-	bLevelUnderground = valid_levels[level.name()] == nil  
-	  
-	-- Don't override underground state if dynamic cover has set it  
-	--if not GetEvent("underground") then  
-		SetEvent("underground", bLevelUnderground)  
-	--end  
-end
---[[
 function WeatherManager:update_level_weather_type()
 	local ini = ini_file("game.ltx")
 	self.weatherType = ini:r_string_ex(level.name(), "weathers") or "[default]"
 	bLevelUnderground = valid_levels[level.name()] == nil
 	SetEvent("underground", bLevelUnderground)
 end
-]]
+
 function WeatherManager:is_outdoor_weather()
 	return self.weatherType == "atmosfear" and not bLevelUnderground
 end
@@ -883,10 +872,10 @@ function WeatherManager:event_state()
 	local psi_ready = psi_storm_manager and psi_storm_manager.PsiStormManager and psi_storm_manager.PsiStormManager.last_psi_storm_time and psi_storm_manager.PsiStormManager._delta
 
 	if surge_ready then
-		--surge_due = math.floor(surge_manager.SurgeManager._delta - current_date:diffSec(surge_manager.SurgeManager.last_surge_time))
+		surge_due = math.floor(surge_manager.SurgeManager._delta - current_date:diffSec(surge_manager.SurgeManager.last_surge_time))
 	end
 	if psi_ready then
-		--psi_due = math.floor(psi_storm_manager.PsiStormManager._delta - current_date:diffSec(psi_storm_manager.PsiStormManager.last_psi_storm_time))
+		psi_due = math.floor(psi_storm_manager.PsiStormManager._delta - current_date:diffSec(psi_storm_manager.PsiStormManager.last_psi_storm_time))
 	end
 
 	local emission_enabled = ui_options.get("alife/event/emission_state")

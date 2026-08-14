@@ -156,15 +156,12 @@ function setup_factions_relation()
         smr_debug.get_log().info("civilwar/relations", "monolith are enemies")
         relation_registry.set_community_relation("monolith", "monolith", -5000)
     end
-    if smr_stalkers_mcm.get_config("civil_war")  == "civilwar_factions" then
-        apply_faction_civil_war()
-    end
 end
 
 -- smart_terrain.se_smart_terrain:try_respawn()
 function setup_civil_war_squad(squad, smart)
     if (not smr_amain_mcm.get_config("smr_enabled")) or smr_stalkers_mcm.get_config("civil_war")  == "civilwar_disabled" then
-        -- smr_debug.get_log().info("civilwar", "ZCP or civil war disabled, skipping setup")
+        smr_debug.get_log().info("civilwar", "ZCP or civil war disabled, skipping setup")
         return
     end
     if (not smr_stalkers_mcm.get_config("civil_war_base_population")) and smart_is_base(smart) then

@@ -1,37 +1,43 @@
-;==============================================================================
 ![wpn_mossberg590_rail]
 >scopes	=	hco, p1x42, tac30, monstrum, trihawk, hamr, vulcan, bossxe, pk6, ekp8_18
 
-lewd_lens_hide_enabled       = true
-lewd_lens_hide_bone          = lens
-lewd_lens_hide_delays        = 0.1,0
-lewd_lens_hide_aim_mode      = true, false, false
+use_alt_aim_hud				 = true
+
+lens_hide_enabled       = true
+lens_hide_bone          = lens
+lens_hide_delays        = 0.1,0
+lens_hide_aim_mode      = true, false, false
 
 ![wpn_mossberg590_rail_hud]
 anm_idle_aim = h_m590_aim_swayless, m590_idle
         hands_orientation                = -1.139012, -0.988327, 0
         hands_orientation_16x9           = -1.139012, -0.988327, 0
 
-        aim_hud_offset_pos               = -0.000133, -0.000514, 0
-        aim_hud_offset_pos_16x9          = -0.000133, -0.000514, 0
+        aim_hud_offset_pos               = -0.000133, -0.000514, 0.06
+        aim_hud_offset_pos_16x9          = -0.000133, -0.000514, 0.06
         aim_hud_offset_rot               = -0.019811, -0.019693, -0.016
         aim_hud_offset_rot_16x9          = -0.019811, -0.019693, -0.016
 
-        lowered_hud_offset_pos           = 0.05092, -0.03183, -0.009975
-        lowered_hud_offset_pos_16x9      = 0.05092, -0.03183, -0.009975
-        lowered_hud_offset_rot           = -0.036505, -0.633738, 0.4
-        lowered_hud_offset_rot_16x9      = -0.036505, -0.633738, 0.4	
+        aim_hud_offset_alt_pos           = -0.019779, -0.050413, 0
+        aim_hud_offset_alt_pos_16x9      = -0.019779, -0.050413, 0
+        aim_hud_offset_alt_rot           = -0.019811, -0.019693, 0.9
+        aim_hud_offset_alt_rot_16x9      = -0.019811, -0.019693, 0.9
 		
-        base_hud_offset_pos              = -0.008514, -0.036822, 0.057249
-        base_hud_offset_pos_16x9         = -0.008514, -0.036822, 0.057249
-        base_hud_offset_rot              = 0, 0, 0.101155
-        base_hud_offset_rot_16x9         = 0, 0, 0.101155
+        lowered_hud_offset_pos           = 0.060902, -0.066904, 0.049758
+        lowered_hud_offset_pos_16x9      = 0.060902, -0.066904, 0.049758
+        lowered_hud_offset_rot           = -0.177829, -0.571343, 0.456816
+        lowered_hud_offset_rot_16x9      = -0.177829, -0.571343, 0.456816
+		
+        base_hud_offset_pos              = -0.007214, -0.037101, 0.080356
+        base_hud_offset_pos_16x9         = -0.007214, -0.037101, 0.080356
+        base_hud_offset_rot              = 0, 0, 0.100013
+        base_hud_offset_rot_16x9         = 0, 0, 0.100013
 ;---------------------------------------------------SIGHTS---------------------------------------------------
 ![wpn_mossberg590_rail_eot]
 1icon_layer		= eot_x
 ![wpn_mossberg590_rail_eot_hud]
-        aim_hud_offset_pos               = 0.000208, -0.036567, 0
-        aim_hud_offset_pos_16x9          = 0.000208, -0.036567, 0
+        aim_hud_offset_pos               = 0.000208, -0.036567, 0.06
+        aim_hud_offset_pos_16x9          = 0.000208, -0.036567, 0.06
         aim_hud_offset_rot               = -0.019811, -0.019693, -0.016
         aim_hud_offset_rot_16x9          = -0.019811, -0.019693, -0.016
 
@@ -39,16 +45,16 @@ anm_idle_aim = h_m590_aim_swayless, m590_idle
 1icon_layer		= ac10632_x
 1icon_layer_y			= -2		
 ![wpn_mossberg590_rail_ac10632_hud]
-        aim_hud_offset_pos               = 7.6e-05, -0.027893, 0
-        aim_hud_offset_pos_16x9          = 7.6e-05, -0.027893, 0
+        aim_hud_offset_pos               = 7.6e-05, -0.027893, 0.06
+        aim_hud_offset_pos_16x9          = 7.6e-05, -0.027893, 0.06
         aim_hud_offset_rot               = -0.019811, -0.019693, -0.016
         aim_hud_offset_rot_16x9          = -0.019811, -0.019693, -0.016
 
 ![wpn_mossberg590_rail_e0t2]
 1icon_layer		= e0t2_x
 ![wpn_mossberg590_rail_e0t2_hud]
-        aim_hud_offset_pos               = -0.000116, -0.028505, 0
-        aim_hud_offset_pos_16x9          = -0.000116, -0.028505, 0
+        aim_hud_offset_pos               = -0.000116, -0.028505, 0.06
+        aim_hud_offset_pos_16x9          = -0.000116, -0.028505, 0.06
         aim_hud_offset_rot               = -0.019811, -0.019693, -0.016
         aim_hud_offset_rot_16x9          = -0.019811, -0.019693, -0.016
 
@@ -56,32 +62,32 @@ anm_idle_aim = h_m590_aim_swayless, m590_idle
 1icon_layer		= aim_low_x
 1icon_layer_y			= 1
 ![wpn_mossberg590_rail_aim_low_hud]
-        aim_hud_offset_pos               = -2.6e-05, -0.014868, 0
-        aim_hud_offset_pos_16x9          = -2.6e-05, -0.014868, 0
+        aim_hud_offset_pos               = -2.6e-05, -0.014868, 0.06
+        aim_hud_offset_pos_16x9          = -2.6e-05, -0.014868, 0.06
         aim_hud_offset_rot               = -0.019811, -0.019693, -0.016
         aim_hud_offset_rot_16x9          = -0.019811, -0.019693, -0.016
 
 ![wpn_mossberg590_rail_rmr]
 1icon_layer		= rmr_x
 ![wpn_mossberg590_rail_rmr_hud]
-        aim_hud_offset_pos               = -9.7e-05, -0.014785, 0
-        aim_hud_offset_pos_16x9          = -9.7e-05, -0.014785, 0
+        aim_hud_offset_pos               = -9.7e-05, -0.014785, 0.06
+        aim_hud_offset_pos_16x9          = -9.7e-05, -0.014785, 0.06
         aim_hud_offset_rot               = -0.019811, -0.019693, -0.016
         aim_hud_offset_rot_16x9          = -0.019811, -0.019693, -0.016
 
 ![wpn_mossberg590_rail_d0cter]
 1icon_layer		= d0cter_x
 ![wpn_mossberg590_rail_d0cter_hud]
-        aim_hud_offset_pos               = -0.000135, -0.013368, 0
-        aim_hud_offset_pos_16x9          = -0.000135, -0.013368, 0
+        aim_hud_offset_pos               = -0.000135, -0.013368, 0.06
+        aim_hud_offset_pos_16x9          = -0.000135, -0.013368, 0.06
         aim_hud_offset_rot               = -0.019811, -0.019693, -0.016
         aim_hud_offset_rot_16x9          = -0.019811, -0.019693, -0.016
 
 ![wpn_mossberg590_rail_c-more]
 1icon_layer		= c-more_x
 ![wpn_mossberg590_rail_c-more_hud]
-        aim_hud_offset_pos               = -5.3e-05, -0.026579, 0
-        aim_hud_offset_pos_16x9          = -5.3e-05, -0.026579, 0
+        aim_hud_offset_pos               = -5.3e-05, -0.026579, 0.06
+        aim_hud_offset_pos_16x9          = -5.3e-05, -0.026579, 0.06
         aim_hud_offset_rot               = -0.019811, -0.019693, -0.016
         aim_hud_offset_rot_16x9          = -0.019811, -0.019693, -0.016
 
@@ -95,8 +101,8 @@ anm_idle_aim = h_m590_aim_swayless, m590_idle
 
 [wpn_mossberg590_rail_hco_hud]:wpn_mossberg590_rail_hud
 item_visual                              = anomaly_weapons\wpn_mossberg590a1\wpn_mossberg590a1_hco_hud.ogf
-        aim_hud_offset_pos               = -0.000137, -0.035981, 0
-        aim_hud_offset_pos_16x9          = -0.000137, -0.035981, 0
+        aim_hud_offset_pos               = -0.000137, -0.035981, 0.06
+        aim_hud_offset_pos_16x9          = -0.000137, -0.035981, 0.06
 ;--------------------------------------------------------------------------------
 [wpn_mossberg590_rail_p1x42]:wpn_mossberg590_rail
         hud                         = wpn_mossberg590_rail_p1x42_hud
@@ -107,8 +113,8 @@ item_visual                              = anomaly_weapons\wpn_mossberg590a1\wpn
 
 [wpn_mossberg590_rail_p1x42_hud]:wpn_mossberg590_rail_hud
 item_visual                              = anomaly_weapons\wpn_mossberg590a1\wpn_mossberg590a1_p1x42_hud.ogf
-        aim_hud_offset_pos               = 9.8e-05, -0.027446, 0
-        aim_hud_offset_pos_16x9          = 9.8e-05, -0.027446, 0
+        aim_hud_offset_pos               = 9.8e-05, -0.027446, 0.06
+        aim_hud_offset_pos_16x9          = 9.8e-05, -0.027446, 0.06
 ;--------------------------------------------------------------------------------
 [wpn_mossberg590_rail_pk6]:wpn_mossberg590_rail
         hud                         = wpn_mossberg590_rail_pk6_hud
@@ -119,8 +125,8 @@ item_visual                              = anomaly_weapons\wpn_mossberg590a1\wpn
 
 [wpn_mossberg590_rail_pk6_hud]:wpn_mossberg590_rail_hud
 item_visual                              = anomaly_weapons\wpn_mossberg590a1\wpn_mossberg590a1_pk6_hud.ogf
-        aim_hud_offset_pos               = -2.7e-05, -0.017324, 0
-        aim_hud_offset_pos_16x9          = -2.7e-05, -0.017324, 0
+        aim_hud_offset_pos               = -2.7e-05, -0.017324, 0.06
+        aim_hud_offset_pos_16x9          = -2.7e-05, -0.017324, 0.06
 ;--------------------------------------------------------------------------------
 [wpn_mossberg590_rail_ekp8_18]:wpn_mossberg590_rail
         hud                         = wpn_mossberg590_rail_ekp8_18_hud
@@ -131,8 +137,8 @@ item_visual                              = anomaly_weapons\wpn_mossberg590a1\wpn
 
 [wpn_mossberg590_rail_ekp8_18_hud]:wpn_mossberg590_rail_hud
 item_visual                              = anomaly_weapons\wpn_mossberg590a1\wpn_mossberg590a1_ekp8_18_hud.ogf
-        aim_hud_offset_pos               = -9e-05, -0.033148, 0
-        aim_hud_offset_pos_16x9          = -9e-05, -0.033148, 0		
+        aim_hud_offset_pos               = -9e-05, -0.033148, 0.06
+        aim_hud_offset_pos_16x9          = -9e-05, -0.033148, 0.06
 ;--------------------------------------------------------------------------------
 [wpn_mossberg590_rail_bossxe]:wpn_mossberg590_rail
         hud                         = wpn_mossberg590_rail_bossxe_hud
@@ -146,8 +152,8 @@ laser_status		= true
 
 [wpn_mossberg590_rail_bossxe_hud]:wpn_mossberg590_rail_hud
 item_visual                              = anomaly_weapons\wpn_mossberg590a1\wpn_mossberg590a1_bossxe_hud.ogf
-        aim_hud_offset_pos               = -0.000133, -0.038264, 0
-        aim_hud_offset_pos_16x9          = -0.000133, -0.038264, 0
+        aim_hud_offset_pos               = -0.000133, -0.038264, 0.06
+        aim_hud_offset_pos_16x9          = -0.000133, -0.038264, 0.06
 ;---------------------------------------------------SCOPES---------------------------------------------------		
 ![wpn_mossberg590_rail_acog]:acog_s
 1icon_layer		= acog_x
@@ -166,8 +172,8 @@ item_visual                              = anomaly_weapons\wpn_mossberg590a1\wpn
         aim_hud_offset_rot               = -0.019811, -0.019693, -0.016
         aim_hud_offset_rot_16x9          = -0.019811, -0.019693, -0.016
 
-        aim_hud_offset_alt_pos           = 6.6e-05, -0.059543, 0
-        aim_hud_offset_alt_pos_16x9      = 6.6e-05, -0.059543, 0
+        aim_hud_offset_alt_pos           = 6.6e-05, -0.059543, 0.06
+        aim_hud_offset_alt_pos_16x9      = 6.6e-05, -0.059543, 0.06
         aim_hud_offset_alt_rot           = -0.019811, -0.019693, -0.016
         aim_hud_offset_alt_rot_16x9      = -0.019811, -0.019693, -0.016	
 ;--------------------------------------------------------------------------------
@@ -221,8 +227,8 @@ item_visual                              = anomaly_weapons\wpn_mossberg590a1\wpn
         aim_hud_offset_pos               = -0.00015, -0.032546, -0.036119
         aim_hud_offset_pos_16x9          = -0.00015, -0.032546, -0.036119
 
-        aim_hud_offset_alt_pos           = 6.6e-05, -0.059543, 0
-        aim_hud_offset_alt_pos_16x9      = 6.6e-05, -0.059543, 0
+        aim_hud_offset_alt_pos           = 6.6e-05, -0.059543, 0.06
+        aim_hud_offset_alt_pos_16x9      = 6.6e-05, -0.059543, 0.06
         aim_hud_offset_alt_rot           = -0.019811, -0.019693, -0.016
         aim_hud_offset_alt_rot_16x9      = -0.019811, -0.019693, -0.016
 ;--------------------------------------------------------------------------------

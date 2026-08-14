@@ -6,10 +6,43 @@
 parent_section 	= wpn_m98b
 scopes			= pn23, skeet
 
-lewd_lens_hide_enabled       = true	
-lewd_lens_hide_bone          = lens
-lewd_lens_hide_delays        = 0.1,0
-lewd_lens_hide_aim_mode      = true, false, false
+use_alt_aim_hud			= true
+
+;---------------------------------------------SCRIPTED CANTED SIGHTS-----------------------------------
+canted_sights = canted_kac, canted_deltapoint, canted_docter, canted_t12
+
+canted_sights_bone  = wpn_body
+canted_sights_pos   = -0.000662, 0.051204, -0.030339
+canted_sights_rot   = 0, 0, 0
+canted_sights_scale = 1.18, 1.18, 1.18
+front_iron_pos      = -0.000662, 0.051204, 0.19
+front_iron_rot      = 0, 0, 0
+front_iron_scale    = 1.18, 1.18, 1.18
+
+open_slots 			 = 1
+canted_rds_position1      = -0.000662, 0.051204, -0.01339
+
+canted_aim_pos_canted_kac = -0.093333, -0.080306, -0.02
+canted_aim_rot_canted_kac = 0, 0, 0.825
+
+canted_aim_pos_canted_deltapoint = -0.092886, -0.070466, -0.02
+canted_aim_rot_canted_deltapoint = 0, 0, 0.825
+
+canted_aim_pos_canted_deltapoint = -0.0928, -0.070501, -0.02
+canted_aim_rot_canted_deltapoint = 0, 0, 0.825
+
+canted_aim_pos_canted_docter     = -0.09316, -0.065301, -0.02
+canted_aim_rot_canted_docter     = 0, 0, 0.825
+
+canted_aim_pos_canted_t12        = -0.092827, -0.070608, -0.02
+canted_aim_rot_canted_t12        = 0, 0, 0.825
+
+;------------------------------------------------------------------------------------------------------
+
+lens_hide_enabled       = true	
+lens_hide_bone          = lens
+lens_hide_delays        = 0.1,0
+lens_hide_aim_mode      = true, false, false
 
 ![wpn_m98b_hud]	
         hands_orientation                = 0.082181, 7.076483, -0.008003
@@ -21,6 +54,11 @@ lewd_lens_hide_aim_mode      = true, false, false
         aim_hud_offset_pos_16x9          = -0.070889, -0.002682, -0.068176
         aim_hud_offset_rot               = -0.000271, -0.000286, 0
         aim_hud_offset_rot_16x9          = -0.000271, -0.000286, 0
+
+        aim_hud_offset_alt_pos           = -0.091837, -0.136028, 0
+        aim_hud_offset_alt_pos_16x9      = -0.091837, -0.136028, 0
+        aim_hud_offset_alt_rot           = -0.000271, -0.000286, 0.8
+        aim_hud_offset_alt_rot_16x9      = -0.000271, -0.000286, 0.8
 		
         base_hud_offset_pos              = -0.023434, -0.032019, 0.024043
         base_hud_offset_pos_16x9         = -0.023434, -0.032019, 0.024043

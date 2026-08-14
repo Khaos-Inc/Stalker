@@ -24,19 +24,14 @@ function utils_ui.UICellItem:Set(obj, area)
 		if sil_sec then
 			local sil_x = SYS_GetParam(2, wpn_sec, "silencer_x", 0) * (self.grid_size/50)
 			local sil_offset = ini_scaling:r_float_ex("silencer_cutoffs", sil_sec, 0) * (self.grid_size/50)
-
-			-- demonized: HD Inventory Icons Framework
-			local scale = SYS_GetParam(2, sil_sec, "inv_grid_scale", 1)
-			local sil_width = math.ceil(SYS_GetParam(2, sil_sec, "inv_grid_width") * self.grid_size / scale) - sil_offset
+			local sil_width = (SYS_GetParam(2, sil_sec, "inv_grid_width") * self.grid_size) - sil_offset
 			sil_end = (sil_x + sil_width) * (rot and 1 or ratio)
 		end
 	end
 
 	local width_diff = 0 -- delta between original icon width and icon+silencer width
-	-- demonized: HD Inventory Icons Framework
-	local wpn_scale = SYS_GetParam(2, wpn_sec, "inv_grid_scale", 1)
-	local icon_width = math.ceil(SYS_GetParam(2, wpn_sec, "inv_grid_width") * self.grid_size / wpn_scale) * (rot and 1 or ratio)
-	local icon_height = math.ceil(SYS_GetParam(2, wpn_sec, "inv_grid_height") * self.grid_size / wpn_scale) * (rot and ratio or 1)
+	local icon_width = SYS_GetParam(2, wpn_sec, "inv_grid_width") * self.grid_size * (rot and 1 or ratio)
+	local icon_height = SYS_GetParam(2, wpn_sec, "inv_grid_height") * self.grid_size * (rot and ratio or 1)
 	local total_width = icon_width
 	if sil_end > total_width then
 		width_diff = sil_end - total_width

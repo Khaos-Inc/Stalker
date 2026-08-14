@@ -1,44 +1,13 @@
-;==============================================================================
 ![wpn_adar2_15]
 >scopes 	= he510, p1x42, c79, razorhd, cortex, tac30, ps320, e0t2_magd
 <scopes		= aim_low, rakurs,  triji, mark8_rmr, spec_alt, c-more
 
-lewd_lens_hide_enabled       = true
-lewd_lens_hide_bone          = lens
-lewd_lens_hide_delays        = 0.1,0
-lewd_lens_hide_aim_mode      = true, false, false
+use_alt_aim_hud			= true
 
-;------------- SOUNDS ----------------------------------------------------------	
-
-scripted_snd_reload_empty                           = weapons\m4t\reload_empty
-scripted_snd_reload_empty_variant1                  = weapons\m4t\reload_empty_2
-scripted_snd_show                                   = weapons\m4t\draw
-scripted_snd_hide                                   = weapons\m4t\hide
-scripted_snd_show_empty                             = weapons\m4t\draw
-scripted_snd_hide_empty                             = weapons\m4t\hide
-scripted_snd_show_jammed                            = weapons\m4t\draw
-scripted_snd_hide_jammed                            = weapons\m4t\hide
-scripted_snd_show_empty_jammed                      = weapons\m4t\draw
-scripted_snd_hide_empty_jammed                      = weapons\m4t\hide
-scripted_snd_ammo_check                             = weapons\m4t\mag_check
-scripted_snd_ammo_check_jammed                      = weapons\m4t\mag_check
-scripted_snd_ammo_check_empty                       = weapons\m4t\mag_check
-scripted_snd_ammo_check_empty_jammed                = weapons\m4t\mag_check
-scripted_snd_ammo_check_aim                         = $no_sound
-scripted_snd_ammo_check_aim_jammed                  = $no_sound
-scripted_snd_ammo_check_empty_aim                   = $no_sound
-scripted_snd_ammo_check_empty_aim_jammed            = $no_sound
-snd_reload_empty                                    = $no_sound
-snd_switch                                          = $no_sound
-snd_draw                                            = $no_sound
-snd_holster                                         = $no_sound
-snd_bore                                            = $no_sound
-scripted_snd_bore                                   = weapons\m4t\inspect
-scripted_snd_bore_empty                             = weapons\m4t\inspect_empty
-scripted_snd_bore_jammed                            = weapons\m4t\inspect_empty
-snd_reload                                          = weapons\m4t\reload
-snd_switch_mode                                     = weapons\m4t\fire_mode_switch
-snd_reload_misfire                                  = weapons\m4t\misfire
+lens_hide_enabled       = true
+lens_hide_bone          = lens
+lens_hide_delays        = 0.1,0
+lens_hide_aim_mode      = true, false, false
 
 ![wpn_adar2_15_hud]
 fire_bone								 = muzzle
@@ -61,8 +30,13 @@ item_orientation                         = 0, 0, 0
         aim_hud_offset_rot               = -7.3e-05, -2.3e-05, 0
         aim_hud_offset_rot_16x9          = -7.3e-05, -2.3e-05, 0
 		
-        base_hud_offset_pos              = -0.015271, -0.011982, 0.08659
-        base_hud_offset_pos_16x9         = -0.015271, -0.011982, 0.08659
+        aim_hud_offset_alt_pos           = -0.106359, -0.085483, 0
+        aim_hud_offset_alt_pos_16x9      = -0.106359, -0.085483, 0
+        aim_hud_offset_alt_rot           = -7.3e-05, -2.3e-05, 0.8
+        aim_hud_offset_alt_rot_16x9      = -7.3e-05, -2.3e-05, 0.8
+		
+        base_hud_offset_pos              = -0.009204, -0.014751, 0.076635
+        base_hud_offset_pos_16x9         = -0.009204, -0.014751, 0.076635
         base_hud_offset_rot              = 0, 0, 0.104941
         base_hud_offset_rot_16x9         = 0, 0, 0.104941
 		
@@ -71,116 +45,12 @@ item_orientation                         = 0, 0, 0
         lowered_hud_offset_rot           = 0.025324, -0.718086, 0.309615
         lowered_hud_offset_rot_16x9      = 0.025324, -0.718086, 0.309615
 
-lean_hud_offset_pos                      = 0, 0, 0
-lean_hud_offset_rot                      = 0, 0, 0
-
-;-------------------------------------------------------------------ANIMATIONS----------------------------------------------------------------------------
-        
-;========================BORING=======================================================
-anm_bore                                 = adar16_t_sedzhimol_inspect
-anm_bore_empty                           = adar16_t_sedzhimol_ins_jam_emp, idle_empty
-anm_bore_jammed                          = adar16_t_sedzhimol_ins_jam_emp, idle_jammed
-anm_bore_empty_jammed                    = adar16_t_sedzhimol_ins_jam_emp, idle_jammed
-anm_bore_aim                             = adar16_t_sedzhimol_aim, idle
-anm_bore_empty_aim                       = adar16_t_sedzhimol_aim, idle_empty
-anm_bore_aim_jammed                      = adar16_t_sedzhimol_aim, idle_jammed
-anm_bore_empty_aim_jammed                = adar16_t_sedzhimol_aim, idle_jammed
-;========================HIDE==========================================================
-anm_hide                                 = adar16_t_sedzhimol_hide, idle
-anm_hide_empty                           = adar16_t_sedzhimol_hide, idle_empty
-anm_hide_jammed                          = adar16_t_sedzhimol_hide, idle_jammed
-anm_hide_empty_jammed                    = adar16_t_sedzhimol_hide, idle_jammed
-;========================SHOW==========================================================
-anm_show                                 = adar16_t_sedzhimol_draw, idle
-anm_show_empty                           = adar16_t_sedzhimol_draw, idle_empty
-anm_show_jammed                          = adar16_t_sedzhimol_draw, idle_jammed
-anm_show_empty_jammed                    = adar16_t_sedzhimol_draw, idle_jammed
-;========================IDLE==========================================================
-anm_idle                                 = adar16_t_sedzhimol_idle, idle
-anm_idle_moving                          = adar16_t_sedzhimol_walk, idle
-anm_idle_moving_crouch                   = adar16_t_sedzhimol_walk, idle
-anm_idle_sprint                          = adar16_t_sedzhimol_sprint, idle
-anm_idle_aim                             = adar16_t_sedzhimol_aim, idle
-anm_idle_aim_moving                      = adar16_t_sedzhimol_aim, idle
-anm_idle_aim_moving_crouch               = adar16_t_sedzhimol_aim, idle
-
-anm_idle_empty                           = adar16_t_sedzhimol_idle, idle_empty
-anm_idle_moving_empty                    = adar16_t_sedzhimol_walk, idle_empty
-anm_idle_moving_crouch_empty             = adar16_t_sedzhimol_walk, idle_empty
-anm_idle_sprint_empty                    = adar16_t_sedzhimol_sprint, idle_empty
-anm_idle_aim_empty                       = adar16_t_sedzhimol_aim, idle_empty
-anm_idle_aim_moving_empty                = adar16_t_sedzhimol_aim, idle_empty
-anm_idle_aim_moving_crouch_empty         = adar16_t_sedzhimol_aim, idle_empty
-
-anm_idle_jammed                          = adar16_t_sedzhimol_idle, idle_jammed
-anm_idle_moving_jammed                   = adar16_t_sedzhimol_walk, idle_jammed
-anm_idle_moving_crouch_jammed            = adar16_t_sedzhimol_walk, idle_jammed
-anm_idle_sprint_jammed                   = adar16_t_sedzhimol_sprint, idle_jammed
-anm_idle_aim_jammed                      = adar16_t_sedzhimol_aim, idle_jammed
-anm_idle_aim_moving_jammed               = adar16_t_sedzhimol_aim, idle_jammed
-anm_idle_aim_moving_crouch_jammed        = adar16_t_sedzhimol_aim, idle_jammed
-
-anm_idle_empty_jammed                          = adar16_t_sedzhimol_idle, idle_jammed
-anm_idle_moving_empty_jammed                   = adar16_t_sedzhimol_walk, idle_jammed
-anm_idle_moving_crouch_empty_jammed            = adar16_t_sedzhimol_walk, idle_jammed
-anm_idle_sprint_empty_jammed                   = adar16_t_sedzhimol_sprint, idle_jammed
-anm_idle_aim_empty_jammed                      = adar16_t_sedzhimol_aim, idle_jammed
-anm_idle_aim_moving_empty_jammed               = adar16_t_sedzhimol_aim, idle_jammed
-anm_idle_aim_moving_crouch_empty_jammed        = adar16_t_sedzhimol_aim, idle_jammed
-;========================SPRINT PATERN====================================================
-anm_sprint_start                         = adar16_t_sedzhimol_sprint_start, idle
-anm_sprint_end                           = adar16_t_sedzhimol_sprint_end, idle
-anm_sprint_start_empty                   = adar16_t_sedzhimol_sprint_start, idle_empty
-anm_sprint_end_empty                     = adar16_t_sedzhimol_sprint_end, idle_empty
-anm_sprint_start_jammed                  = adar16_t_sedzhimol_sprint_start, idle_jammed
-anm_sprint_end_jammed                    = adar16_t_sedzhimol_sprint_end, idle_jammed
-anm_sprint_start_empty_jammed            = adar16_t_sedzhimol_sprint_start, idle_jammed
-anm_sprint_end_empty_jammed              = adar16_t_sedzhimol_sprint_end, idle_jammed
-;----------------------------------------------------------------------------------------
-ts_pattern_sprint_start          = .+, anm_idle_sprint, anm_sprint_start, 1
-ts_pattern_sprint_end            = anm_idle_sprint, ^anm_idle.*, anm_sprint_end
-ts_strict_sprint_end_move        = anm_sprint_start, anm_idle_moving, anm_sprint_end
-;========================RELOAD==========================================================
-anm_reload                               = adar16_t_sedzhimol_reload_part, m4_t_sedzhimol_reload_part_right
-anm_reload_empty                         = adar16_t_sedzhimol_reload_full, m4_t_sedzhimol_reload_full
-anm_reload_empty_variant1                = adar16_t_sedzhimol_reload_full_ver2, m4_t_sedzhimol_reload_full_ver2
-anm_reload_misfire                       = adar16_t_sedzhimol_unjammed, m4_t_sedzhimol_unjammed
-anm_reload_misfire_empty                 = adar16_t_sedzhimol_unjammed_to_empty, m4_t_sedzhimol_unjammed_to_empty
-anm_reload_misfire_aim                   = adar16_t_sedzhimol_unjammed, m4_t_sedzhimol_unjammed
-anm_reload_misfire_empty_aim             = adar16_t_sedzhimol_unjammed_to_empty, m4_t_sedzhimol_unjammed_to_empty
-;========================MAG CHECK=========================================================
-anm_ammo_check                           = adar16_t_sedzhimol_mag_check, m4_t_sedzhimol_mag_check
-anm_ammo_check_empty                     = adar16_t_sedzhimol_mag_check, m4_t_sedzhimol_mag_check_empty
-anm_ammo_check_empty_jammed              = adar16_t_sedzhimol_mag_check, m4_t_sedzhimol_mag_check_empty_jammed
-anm_ammo_check_jammed                    = adar16_t_sedzhimol_mag_check, m4_t_sedzhimol_mag_check_jammed
-anm_ammo_check_aim                       = adar16_t_sedzhimol_aim, idle
-anm_ammo_check_empty_aim                 = adar16_t_sedzhimol_aim, idle_empty
-anm_ammo_check_aim_jammed                = adar16_t_sedzhimol_aim, idle_jammed
-anm_ammo_check_empty_aim_jammed          = adar16_t_sedzhimol_aim, idle_jammed
-;========================SWITCH MODE=======================================================
-anm_switch_mode                          = adar16_t_sedzhimol_switch_mode, idle
-anm_switch_mode_aim                      = adar16_t_sedzhimol_aim_switch_mode, idle
-anm_switch_mode_empty                    = adar16_t_sedzhimol_switch_mode, idle_empty
-anm_switch_mode_empty_aim                = adar16_t_sedzhimol_aim_switch_mode, idle_empty
-anm_switch_mode_jammed                   = adar16_t_sedzhimol_switch_mode, idle_jammed
-anm_switch_mode_aim_jammed               = adar16_t_sedzhimol_aim_switch_mode, idle_jammed
-anm_switch_mode_empty_jammed             = adar16_t_sedzhimol_switch_mode, idle_jammed
-anm_switch_mode_empty_aim_jammed         = adar16_t_sedzhimol_aim_switch_mode, idle_jammed
-;========================SHOOTS===========================================================
-anm_shots                                = adar16_t_sedzhimol_shoot
-anm_shots_aim                            = adar16_t_sedzhimol_shoot
-anm_shot_l                               = adar16_t_sedzhimol_shoot, m4_t_sedzhimol_shoot_last
-anm_shot_l_aim                           = adar16_t_sedzhimol_shoot, m4_t_sedzhimol_shoot_last
-anm_shots_jammed                         = adar16_t_sedzhimol_shoot, m4_t_sedzhimol_shoot_to_jamm
-anm_shots_aim_jammed                     = adar16_t_sedzhimol_shoot, m4_t_sedzhimol_shoot_to_jamm
-anm_shot_l_jammed                        = adar16_t_sedzhimol_shoot, m4_t_sedzhimol_shoot_to_jamm
-anm_shot_l_aim_jammed                    = adar16_t_sedzhimol_shoot, m4_t_sedzhimol_shoot_to_jamm	
 ;---------------------------------------------------SIGHTS---------------------------------------------------
 ![wpn_adar2_15_ac10632]
 1icon_layer		= ac10632_x
 ![wpn_adar2_15_ac10632_hud]
-        aim_hud_offset_pos               = -0.063761, 0.017452, -0.02
-        aim_hud_offset_pos_16x9          = -0.063761, 0.017452, -0.02
+        aim_hud_offset_pos               = -0.063706, 0.017543, -0.02
+        aim_hud_offset_pos_16x9          = -0.063706, 0.017543, -0.02
         aim_hud_offset_rot               = -7.3e-05, -2.3e-05, 0
         aim_hud_offset_rot_16x9          = -7.3e-05, -2.3e-05, 0
 
@@ -272,8 +142,6 @@ hud                                      = wpn_adar2_15_he510_hud
 1icon_layer_x                            = 88
 1icon_layer_y                            = -13
 
-inv_weight                               = 3.76
-
 [wpn_adar2_15_he510_hud]:wpn_adar2_15_hud
 item_visual                              = dynamics\weapons\wpn_adar2_15\wpn_adar2_15_he510_hud.ogf
         aim_hud_offset_pos               = -0.063721, 0.016325, -0.02
@@ -285,8 +153,6 @@ hud                                      = wpn_adar2_15_p1x42_hud
 1icon_layer                              = p1x42_x
 1icon_layer_x                            = 87
 1icon_layer_y                            = -16
-
-inv_weight                               = 3.76
 
 [wpn_adar2_15_p1x42_hud]:wpn_adar2_15_hud
 item_visual                              = dynamics\weapons\wpn_adar2_15\wpn_adar2_15_p1x42_hud.ogf
@@ -317,8 +183,8 @@ item_visual                              = dynamics\weapons\wpn_adar2_15\wpn_ada
 1icon_layer_x   = 66
 1icon_layer_y   = -14
 ![wpn_adar2_15_leupold_hud]
-        aim_hud_offset_pos               = -0.06375, 0.01373, 0.001888
-        aim_hud_offset_pos_16x9          = -0.06375, 0.01373, 0.001888
+        aim_hud_offset_pos               = -0.06375, 0.01373, -0.029027
+        aim_hud_offset_pos_16x9          = -0.06375, 0.01373, -0.029027
         aim_hud_offset_rot               = -7.3e-05, -2.3e-05, 0
         aim_hud_offset_rot_16x9          = -7.3e-05, -2.3e-05, 0
 		
@@ -361,8 +227,8 @@ hud                    = wpn_adar2_15_razorhd_hud
 
 [wpn_adar2_15_razorhd_hud]:wpn_adar2_15_hud
 item_visual                              = dynamics\weapons\wpn_adar2_15\wpn_adar2_15_razorhd_hud.ogf	
-        aim_hud_offset_pos               = -0.063726, 0.014075, -0.000875
-        aim_hud_offset_pos_16x9          = -0.063726, 0.014075, -0.000875
+        aim_hud_offset_pos               = -0.063726, 0.014075, -0.0226
+        aim_hud_offset_pos_16x9          = -0.063726, 0.014075, -0.0226
 ;-------------------------------------------------------------------------------------------------------------------------------		
 [wpn_adar2_15_cortex]:wpn_adar2_15, cortex_s
 hud                    = wpn_adar2_15_cortex_hud
@@ -373,8 +239,8 @@ hud                    = wpn_adar2_15_cortex_hud
 
 [wpn_adar2_15_cortex_hud]:wpn_adar2_15_hud
 item_visual                              = dynamics\weapons\wpn_adar2_15\wpn_adar2_15_cortex_hud.ogf	
-        aim_hud_offset_pos               = -0.06387, 0.013514, -0.006443
-        aim_hud_offset_pos_16x9          = -0.06387, 0.013514, -0.006443
+        aim_hud_offset_pos               = -0.06387, 0.013514, -0.02668
+        aim_hud_offset_pos_16x9          = -0.06387, 0.013514, -0.02668
 ;-------------------------------------------------------------------------------------------------------------------------------		
 [wpn_adar2_15_tac30]:wpn_adar2_15, tac30_s
 hud                    = wpn_adar2_15_tac30_hud
@@ -423,3 +289,4 @@ hud                    = wpn_adar2_15_e0t2_magd_off_hud
 item_visual                              = dynamics\weapons\wpn_adar2_15\wpn_adar2_15_e0t2_magd_off_hud.ogf			
         aim_hud_offset_pos               = -0.063897, 0.015941, -0.02
         aim_hud_offset_pos_16x9          = -0.063897, 0.015941, -0.02
+		

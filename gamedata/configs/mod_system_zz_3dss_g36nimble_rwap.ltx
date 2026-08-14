@@ -1,5 +1,5 @@
 ![wpn_g36nimble_rwap]	
->scopes 			         = hco, uh2, romeo8, triji, mark8_rmr, spec_alt, pn23, gauss_sight, t12, e0t2_magd, uh1_magd, march_f_shorty, march_f_shorty_alt, echo1, tac30, ps320, c79
+>scopes 			         = hco, uh2, romeo8, triji, mark8_rmr, spec_alt, pn23, gauss_sight, t12, e0t2_magd, uh1_magd, march_f_shorty, march_f_shorty_alt, echo1, tac30, ps320, c79, gee36
 
 visual                                   = dynamics\weapons\wpn_g36\wpn_g36_nimble.ogf
 
@@ -25,6 +25,28 @@ grenade_launcher_status                  = 2
 
 script_binding                           = hide_grip_gl.bind
 
+;---------------------------------------------SCRIPTED CANTED SIGHTS-----------------------------------
+canted_sights = canted_deltapoint, canted_docter, canted_t12
+
+canted_sights_bone  = wpn_body
+canted_sights_pos   = 0.00231, 0.052445, 0.15447
+canted_sights_rot   = 0, 0, 0
+canted_sights_scale = 1.22, 1.22, 1.22
+
+open_slots 			 = 1
+
+canted_aim_pos_canted_deltapoint = -0.077704, -0.027612, -0.02
+canted_aim_rot_canted_deltapoint = 0, 0, 0.825
+
+canted_aim_pos_canted_docter     = -0.077917, -0.022688, -0.02
+canted_aim_rot_canted_docter     = 0, 0, 0.825
+
+canted_aim_pos_canted_t12        = -0.077664, -0.028536, 0
+canted_aim_rot_canted_t12        = 0, 0, 0.825
+
+;------------------------------------------------------------------------------------------------------
+
+;-----------------------------------------SOUNDS---------------------------------------
 snd_bore                                     = $no_sound
 snd_bore1                                    = $no_sound
 snd_switch                                   = $no_sound
@@ -48,11 +70,12 @@ scripted_snd_ammo_check_aim                        = $no_sound
 scripted_snd_ammo_check_empty_aim                  = $no_sound
 scripted_snd_ammo_check_w_gl_aim                   = $no_sound
 scripted_snd_ammo_check_empty_w_gl_aim             = $no_sound
+;-----------------------------------------SOUNDS---------------------------------------
 
-lewd_lens_hide_enabled       = true
-lewd_lens_hide_bone          = lens
-lewd_lens_hide_delays        = 0.1,0
-lewd_lens_hide_aim_mode      = true, false, false	
+lens_hide_enabled       = true
+lens_hide_bone          = lens
+lens_hide_delays        = 0.1,0
+lens_hide_aim_mode      = true, false, false	
 
 ![wpn_g36nimble_rwap_hud]
         hands_orientation                = -0.151771, -0.011786, 0
@@ -479,3 +502,17 @@ hud						= wpn_g36nimble_rwap_c79_hud
 item_visual		= anomaly_weapons\wpn_g36\wpn_g36_nimble_c79_hud.ogf
         aim_hud_offset_pos               = -0.028565, -0.008457, -0.049532
         aim_hud_offset_pos_16x9          = -0.028565, -0.008457, -0.049532
+
+;-------------------------------------------------------------------------------------------------------------------------------		
+[wpn_g36nimble_rwap_gee36]:wpn_g36nimble_rwap, gee36_s
+hud						= wpn_g36nimble_rwap_gee36_hud
+
+1icon_layer             = gee36_x
+1icon_layer_x			= 69
+1icon_layer_y			= -21
+
+
+[wpn_g36nimble_rwap_gee36_hud]:wpn_g36nimble_rwap_hud
+item_visual		= anomaly_weapons\wpn_g36\wpn_g36_nimble_gee36_hud.ogf
+        aim_hud_offset_pos               = -0.028585, 0.01755, -0.08589
+        aim_hud_offset_pos_16x9          = -0.028585, 0.01755, -0.08589q

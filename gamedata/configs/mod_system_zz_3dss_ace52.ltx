@@ -1,12 +1,45 @@
-;==============================================================================		
 ![wpn_ace52]
 >scopes						 = he510, p1x42, exps3, romeo4, gee36, triji, spec_alt, t12, bossxe, hamr, ps320, march_f_shorty, march_f_shorty_alt, e0t2_magd
 <scopes						 = aim_low, rakurs, point_aimpro
 
-lewd_lens_hide_enabled       = true
-lewd_lens_hide_bone          = lens
-lewd_lens_hide_delays        = 0.1,0
-lewd_lens_hide_aim_mode      = true, false, false	
+use_alt_aim_hud				= true
+
+lens_hide_enabled       = true
+lens_hide_bone          = lens
+lens_hide_delays        = 0.1,0
+lens_hide_aim_mode      = true, false, false	
+
+;---------------------------------------------SCRIPTED CANTED SIGHTS--------------------------------------
+canted_sights = canted_kac, canted_deltapoint, canted_docter, canted_t12
+
+canted_sights_bone         = wpn_body
+canted_sights_pos          = 0.000600, 0.049600, -0.020000
+canted_sights_rot          = 0, 0, 0
+canted_sights_scale        = 1.000000, 1.000000, 1.000000
+
+front_iron_pos            = 0.000600, 0.049600, 0.250100
+front_iron_rot            = 0, 0, 0
+front_iron_scale          = 1.000000, 1.000000, 1.000000
+
+open_slots 			 = 1, 2
+
+canted_rds_position1 = 0.000600, 0.049600, -0.020000
+canted_rds_position2 = 0.000600, 0.049600, 0.160100
+canted_rds_position3 = 
+
+canted_aim_pos_canted_kac = -0.08455, -0.070636, -0.03
+canted_aim_rot_canted_kac = -0.000026, 0.000069, 0.825
+
+canted_aim_pos_canted_deltapoint = -0.084323, -0.062127, -0.03
+canted_aim_rot_canted_deltapoint = -0.000026, 0.000069, 0.825
+
+canted_aim_pos_canted_docter     = -0.084322, -0.057794, -0.03
+canted_aim_rot_canted_docter     = -0.000026, 0.000069, 0.825
+
+canted_aim_pos_canted_t12       = -0.084221, -0.062455, -0.03
+canted_aim_rot_canted_t12       = -0.000026, 0.000069, 0.825
+
+;------------------------------------------------------------------------------------------------------
 ![wpn_ace52_hud]
     anm_shots                            = ace52_new_shoot_z, ace52_new_shoot 
 	
@@ -18,11 +51,16 @@ lewd_lens_hide_aim_mode      = true, false, false
         aim_hud_offset_rot               = -2.6e-05, 6.9e-05, 0
         aim_hud_offset_rot_16x9          = -2.6e-05, 6.9e-05, 0
 
+        aim_hud_offset_alt_pos           = -0.092055, -0.073319, -0.02
+        aim_hud_offset_alt_pos_16x9      = -0.092055, -0.073319, -0.02
+        aim_hud_offset_alt_rot           = -2.6e-05, 6.9e-05, 0.9
+        aim_hud_offset_alt_rot_16x9      = -2.6e-05, 6.9e-05, 0.9
+		
         base_hud_offset_pos              = -0.017794, -0.027573, 0.041966
         base_hud_offset_pos_16x9         = -0.017794, -0.027573, 0.041966
         base_hud_offset_rot              = 0, 0, 0.106945
         base_hud_offset_rot_16x9         = 0, 0, 0.106945
-		
+
 ;---------------------------------------------------SIGHTS---------------------------------------------------
 ![wpn_ace52_ac10632_hud]
         aim_hud_offset_pos               = -0.065903, 0.002282, -0.03
@@ -200,7 +238,7 @@ item_visual                              = anomaly_weapons\wpn_ace52\wpn_ace52_t
         aim_hud_offset_rot               = -2.6e-05, 6.9e-05, 0
         aim_hud_offset_rot_16x9          = -2.6e-05, 6.9e-05, 0
 		
-![wpn_ace52_gauss_sight]:guass_s
+![wpn_ace52_gauss_sight]:gauss_s
 ![wpn_ace52_gauss_sight_hud]
         aim_hud_offset_pos               = -0.066021, 0.00075, -0.062947
         aim_hud_offset_pos_16x9          = -0.066021, 0.00075, -0.062947
@@ -235,15 +273,15 @@ item_visual                              = anomaly_weapons\wpn_ace52\wpn_ace52_t
 		
 ![wpn_ace52_pn23]:pn23_s
 ![wpn_ace52_pn23_hud]
-        aim_hud_offset_pos               = -0.06618, -0.001423, -0.034196
-        aim_hud_offset_pos_16x9          = -0.06618, -0.001423, -0.034196
+        aim_hud_offset_pos               = -0.06618, -0.001423, -0.045074
+        aim_hud_offset_pos_16x9          = -0.06618, -0.001423, -0.045074
         aim_hud_offset_rot               = -2.6e-05, 6.9e-05, 0
         aim_hud_offset_rot_16x9          = -2.6e-05, 6.9e-05, 0
 		
 ![wpn_ace52_specter]:specter_s
 ![wpn_ace52_specter_hud]
-        aim_hud_offset_pos               = -0.06593, -0.002054, -0.060188
-        aim_hud_offset_pos_16x9          = -0.06593, -0.002054, -0.060188
+        aim_hud_offset_pos               = -0.06577, -0.002026, -0.060188
+        aim_hud_offset_pos_16x9          = -0.06577, -0.002026, -0.060188
         aim_hud_offset_rot               = -2.6e-05, 6.9e-05, 0
         aim_hud_offset_rot_16x9          = -2.6e-05, 6.9e-05, 0
 
@@ -259,7 +297,7 @@ item_visual                              = anomaly_weapons\wpn_ace52\wpn_ace52_t
         aim_hud_offset_alt_rot           = -2.6e-05, 6.9e-05, 0
         aim_hud_offset_alt_rot_16x9      = -2.6e-05, 6.9e-05, 0		
 ;----------------------------------------------------------------------------------------------------------------------------
-[wpn_ace52_triji]:wpn_ace52, acog_s
+[wpn_ace52_triji]:wpn_ace52, triji_s
 hud					             = wpn_ace52_triji_hud
 
 1icon_layer                              = acog_x
@@ -281,7 +319,7 @@ item_visual                              = anomaly_weapons\wpn_ace52\wpn_ace52_t
         aim_hud_offset_alt_rot           = -2.6e-05, 6.9e-05, 0.825
         aim_hud_offset_alt_rot_16x9      = -2.6e-05, 6.9e-05, 0.825
 ;----------------------------------------------------------------------------------------------------------------------------
-[wpn_ace52_spec_alt]:wpn_ace52, specter_s
+[wpn_ace52_spec_alt]:wpn_ace52, spec_alt_s
 hud					= wpn_ace52_spec_alt_hud
 
 1icon_layer                              = specter_x
@@ -295,8 +333,8 @@ use_alt_aim_hud                  = true
 
 [wpn_ace52_spec_alt_hud]:wpn_ace52_hud
 item_visual                              = anomaly_weapons\wpn_ace52\wpn_ace52_specalt_hud.ogf
-        aim_hud_offset_pos               = -0.06593, -0.002054, -0.060188
-        aim_hud_offset_pos_16x9          = -0.06593, -0.002054, -0.060188
+        aim_hud_offset_pos               = -0.06577, -0.002026, -0.060188
+        aim_hud_offset_pos_16x9          = -0.06577, -0.002026, -0.060188
 		
         aim_hud_offset_alt_pos           = -0.084102, -0.062056, -0.03
         aim_hud_offset_alt_pos_16x9      = -0.084102, -0.062056, -0.03
@@ -306,6 +344,8 @@ item_visual                              = anomaly_weapons\wpn_ace52\wpn_ace52_s
 [wpn_ace52_gee36]:wpn_ace52, gee36_s
 hud                     = wpn_ace52_gee36_hud
 
+open_slots				= 2
+
 1icon_layer				= gee36_x
 1icon_layer_x			= 74
 1icon_layer_y			= 0
@@ -314,8 +354,8 @@ use_alt_aim_hud       	= true
 
 [wpn_ace52_gee36_hud]:wpn_ace52_longscope_hud
 item_visual                              = anomaly_weapons\wpn_ace52\wpn_ace52_gee36_hud.ogf	
-        aim_hud_offset_pos               = -0.06603, -0.002922, -0.100332
-        aim_hud_offset_pos_16x9          = -0.06603, -0.002922, -0.100332
+        aim_hud_offset_pos               = -0.06603, -0.002922, -0.081624
+        aim_hud_offset_pos_16x9          = -0.06603, -0.002922, -0.081624
 		
         aim_hud_offset_alt_pos           = -0.065923, -0.019318, -0.03
         aim_hud_offset_alt_pos_16x9      = -0.065923, -0.019318, -0.03
@@ -333,8 +373,8 @@ use_alt_aim_hud       	= true
 
 [wpn_ace52_hamr_hud]:wpn_ace52_longscope_hud
 item_visual                              = anomaly_weapons\wpn_ace52\wpn_ace52_hamr_hud.ogf	
-        aim_hud_offset_pos               = -0.06575, -0.002, -0.095508
-        aim_hud_offset_pos_16x9          = -0.06575, -0.002, -0.095508
+        aim_hud_offset_pos               = -0.065885, -0.001759, -0.084953
+        aim_hud_offset_pos_16x9          = -0.065885, -0.001759, -0.084953
 		
         aim_hud_offset_alt_pos           = -0.065996, -0.030593, -0.03
         aim_hud_offset_alt_pos_16x9      = -0.065996, -0.030593, -0.03
@@ -413,6 +453,6 @@ hud					= wpn_ace52_e0t2_magd_off_hud
 1icon_layer_y                            = -4
 
 [wpn_ace52_e0t2_magd_off_hud]:wpn_ace52_hud
-item_visual                              = anomaly_weapons\wpn_ace52\wpn_ace52_e0t2_magd_off_hud.ogf
+;item_visual                              = anomaly_weapons\wpn_ace52\wpn_ace52_e0t2_magd_off_hud.ogf
         aim_hud_offset_pos               = -0.066203, 0.001252, -0.03
         aim_hud_offset_pos_16x9          = -0.066203, 0.001252, -0.03

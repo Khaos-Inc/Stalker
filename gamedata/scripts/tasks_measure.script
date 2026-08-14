@@ -399,7 +399,8 @@ task_status_functor.measure_task = function(tsk,task_id)
 	local flag_1 = has_alife_info(task_id .. "_measurment_finished")
 	local flag_2 = has_alife_info(task_id .. "_measurment_enemy")
 	local se_target = var.target_id and alife_object(var.target_id)
-	
+
+
 	
 	-- stage: 0
 	-- status: player accepted the quest
@@ -418,7 +419,8 @@ task_status_functor.measure_task = function(tsk,task_id)
 		
 		-- if item 1 vanished, fail the quest
 		else 
-			if (not item_1_obj) or (item_1_obj and (item_1_obj:section() ~= var.item_1_sec)) then
+			if (not item_1_obj) or (item_1_obj and (item_1_obj:section() ~= var.item_1_sec))
+			or (not se_target) then -- oleh5230: if target anomaly vanished, fail
 				return "fail"
 			end
 		end
@@ -429,9 +431,18 @@ task_status_functor.measure_task = function(tsk,task_id)
 	-- objective: go to the target anomaly
 	-- marker: target anomaly
 	if stage == 1 then
+		-- oleh5230: if target anomaly vanished, fail
+		if (not se_target) then
+			return "fail"
+		end
+
 		-- if actor is close to target
 		if (se_target.position:distance_to(db.actor:position()) <= anomaly_measure_dist) then
-			tsk.stage = 2
+			--oleh5230: verify if target and actor are on same level
+			local se_target_level = alife():level_name(game_graph():vertex(se_target.m_game_vertex_id):level_id())
+			if se_target_level and se_target_level == level.name() then
+				tsk.stage = 2
+			end
 		end
 		
 		-- if actor took enough measurement
@@ -450,6 +461,11 @@ task_status_functor.measure_task = function(tsk,task_id)
 	-- objective: take measurement
 	-- marker: target anomaly
 	if stage == 2 then
+		-- oleh5230: if target anomaly vanished, fail
+		if (not se_target) then
+			return "fail"
+		end
+		
 		-- if distance is far, return to stage 1
 		if (se_target.position:distance_to(db.actor:position()) > anomaly_measure_dist) then
 			measurment_started[task_id] = false

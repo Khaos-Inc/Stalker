@@ -26,7 +26,8 @@ condlist_0 = {+cit_killers_merc_trader_stalker_squad_dead} fail
 condlist_1 = {=actor_has_item(hb_isg_dushman_intel)} complete
 
 on_init = %+lttz_hb_task_1_1_dushman_intel_started +isg_entered_the_zone%
-on_complete = %+lttz_hb_isg_leader_in_jup =clear_smart_terrain(jup_b208:true) =create_squad(jup_depo_isg_leader_squad:jup_b208) =create_squad(jup_depo_isg_tech_squad:jup_b208) =create_squad(jup_depo_isg_recon_squad:jup_b208) =create_squad(jup_depo_isg_guard_squad:jup_b208) =create_squad(jup_depo_isg_guard_squad_2:jup_b208) =give_task(lttz_hb_task_1_2_recruit) =send_msg_hb_isg_dushman_intel%
+;-- on_complete = %+lttz_hb_isg_leader_in_jup =clear_smart_terrain(jup_b208:true) =create_squad(jup_depo_isg_leader_squad:jup_b208) =create_squad(jup_depo_isg_tech_squad:jup_b208) =create_squad(jup_depo_isg_recon_squad:jup_b208) =create_squad(jup_depo_isg_guard_squad:jup_b208) =create_squad(jup_depo_isg_guard_squad_2:jup_b208) =give_task(lttz_hb_task_1_2_recruit) =send_msg_hb_isg_dushman_intel%  ***ORIGINAL LINE, NEW LINE BELOW TO ADD REWARD AND GOODWILL, UPDATED 4-17-2021***
+on_complete = %+lttz_hb_isg_leader_in_jup =reward_random_money(8000:9000) =reward_stash(true) =complete_task_inc_goodwill(100:isg) =clear_smart_terrain(jup_b208:true) =create_squad(jup_depo_isg_leader_squad:jup_b208) =create_squad(jup_depo_isg_tech_squad:jup_b208) =create_squad(jup_depo_isg_recon_squad:jup_b208) =create_squad(jup_depo_isg_guard_squad:jup_b208) =create_squad(jup_depo_isg_guard_squad_2:jup_b208) =give_task(lttz_hb_task_1_2_recruit) =send_msg_hb_isg_dushman_intel%
 
 ; Recruit with Calros squad in Jupiter
 ;-- task done by dialog with Charlos
@@ -39,7 +40,8 @@ title = lttz_hb_task_1_2_recruit_name
 descr = lttz_hb_task_1_2_recruit_desc
 target = jup_depo_isg_leader
 condlist_0 = {+jup_depo_isg_leader_squad_dead} fail
-on_complete = %=remove_item(hb_isg_dushman_intel)%
+;-- on_complete = %=remove_item(hb_isg_dushman_intel)%  ***ORIGINAL LINE, NEW LINE BELOW TO ADD REWARD AND GOODWILL, UPDATED 4-17-2021***
+on_complete = %=remove_item(hb_isg_dushman_intel) =reward_random_money(11000:12000) =complete_task_inc_goodwill(100:isg)%
 
 
 ;==========< Arc 2 >==========
@@ -59,8 +61,8 @@ stage_complete = 2
 condlist_0 = {+jup_depo_isg_leader_squad_dead} fail
 
 on_init = %=spawn_jupiter_documents() =add_task_companion(jup_depo_isg_recon_squad) =clear_smart_terrain(jup_b219:true) =create_squad(jup_b8_army_recon_1_squad:jup_b219) =clear_smart_terrain(jup_b8_smart_terrain:true) =create_squad(jup_b8_army_recon_2_squad:jup_b8_smart_terrain)%
-on_complete = %=remove_item(jupiter_documents) =remove_task_companion(jup_depo_isg_recon_squad) =remove_squad(jup_b8_army_recon_1_squad) =remove_squad(jup_b8_army_recon_2_squad) +lttz_hb_jupiter_documents_given%
-
+;-- on_complete = %=remove_item(jupiter_documents) =remove_task_companion(jup_depo_isg_recon_squad) =remove_squad(jup_b8_army_recon_1_squad) =remove_squad(jup_b8_army_recon_2_squad) +lttz_hb_jupiter_documents_given%   ***ORIGINAL LINE, NEW LINE BELOW TO ADD REWARD AND GOODWILL, UPDATED 4-17-2021***
+on_complete = %=remove_item(jupiter_documents) =remove_task_companion(jup_depo_isg_recon_squad) =remove_squad(jup_b8_army_recon_1_squad) =remove_squad(jup_b8_army_recon_2_squad) +lttz_hb_jupiter_documents_given =reward_random_money(4000:5000) =reward_stash(true) =complete_task_inc_goodwill(50:isg)%
 
 ; Clear your way till you reach the hall inside Underpass
 ;-- start/end by dialog end
@@ -80,7 +82,8 @@ target = {=actor_has_item(main_story_6_jup_ug_documents)} jup_depo_isg_leader_sq
 condlist_0 = {+jup_depo_isg_leader_squad_dead} fail
 
 on_init = %=add_task_companion(jup_depo_isg_leader_squad) =add_task_companion(jup_depo_isg_guard_squad) =send_msg_hb_isg_tech_goodluck +lttz_hb_task_2_2_breakthrough_started%
-on_complete = %=remove_item(main_story_6_jup_ug_documents) =remove_task_companion(jup_depo_isg_leader_squad) =remove_task_companion(jup_depo_isg_guard_squad) =send_msg_hb_isg_breakthrough +lttz_hb_isg_breakthrough%
+;-- on_complete = %=remove_item(main_story_6_jup_ug_documents) =remove_task_companion(jup_depo_isg_leader_squad) =remove_task_companion(jup_depo_isg_guard_squad) =send_msg_hb_isg_breakthrough +lttz_hb_isg_breakthrough%  ***ORIGINAL LINE, NEW LINE BELOW TO ADD REWARD AND GOODWILL, UPDATED 4-17-2021***
+on_complete = %=remove_item(main_story_6_jup_ug_documents) =reward_random_money(6000:7000) =reward_stash(true) =complete_task_inc_goodwill(50:isg) =remove_task_companion(jup_depo_isg_leader_squad) =remove_task_companion(jup_depo_isg_guard_squad) =send_msg_hb_isg_breakthrough +lttz_hb_isg_breakthrough%
 
 
 ;==========< Arc 3 >==========
@@ -146,7 +149,8 @@ title = lttz_hb_task_3_8_handle_docs_name
 descr = lttz_hb_task_3_8_handle_docs_text
 target = {=actor_on_level(jupiter_underground)} jup_depo_isg_leader_squad, jupiter_space_restrictor_to_jupiter_ug
 condlist_0 = {+jup_depo_isg_leader_squad_dead} fail
-on_complete = %=remove_item(main_story_1_quest_case) =remove_item(main_story_2_lab_x18_documents) =remove_item(main_story_3_lab_x16_documents) =remove_item(main_story_4_lab_x10_documents) =remove_item(main_story_5_lab_x8_documents)%
+;-- on_complete = %=remove_item(main_story_1_quest_case) =remove_item(main_story_2_lab_x18_documents) =remove_item(main_story_3_lab_x16_documents) =remove_item(main_story_4_lab_x10_documents) =remove_item(main_story_5_lab_x8_documents)%  ***ORIGINAL LINE, NEW LINE BELOW TO ADD REWARD AND GOODWILL, UPDATED 4-17-2021***
+on_complete = %=reward_random_money(25000:26000) =reward_stash(true) =complete_task_inc_goodwill(250:isg) =remove_item(main_story_1_quest_case) =remove_item(main_story_2_lab_x18_documents) =remove_item(main_story_3_lab_x16_documents) =remove_item(main_story_4_lab_x10_documents) =remove_item(main_story_5_lab_x8_documents)%
 
 
 ;==========< Arc 4 >==========
@@ -167,8 +171,10 @@ condlist_0 = {+hb_escort_strelok -lost_stalker_strelok_dead -hb_betray_strelok =
 condlist_1 = {+hb_escorted_strelok -hb_strelok_leaving} nil %+hb_strelok_leaving =remove_special_companion_squad(lost_stalker_strelok)%
 
 on_init = %=clear_smart_terrain(pri_b35_mercs) =create_squad(stalker_strelok_hb_squad:pri_b35_mercs) =create_squad(degtyarev_pri_b35_squad:pri_b35_mercs) =create_squad(tarasov_pri_b35_squad:pri_b35_mercs) =pripyat_degtyarev_message_isg%
-on_complete = %=remove_item(strelok_pendrive) =remove_task_companion(pass_hall_isg_companion_squad) +lttz_hb_task_4_1_crossfire_done -lttz_hb_isg_leader_in_jup -lttz_hb_isg_breakthrough -faction_limited_playthrough_cf%
+;-- on_complete = %=remove_item(strelok_pendrive) =remove_task_companion(pass_hall_isg_companion_squad) +lttz_hb_task_4_1_crossfire_done -lttz_hb_isg_leader_in_jup -lttz_hb_isg_breakthrough -faction_limited_playthrough_cf%  ***ORIGINAL LINE, NEW LINE BELOW TO PREVENT REMOVAL OF ISG LEADER I MODIFIED dialogs_lostzone.scrpt, UPDATED NEW LINE 4-20-2021***
+on_complete = %=remove_item(strelok_pendrive) =reward_random_money(10000:11000) =reward_stash(true) =complete_task_inc_goodwill(150:isg) +lttz_hb_task_4_1_crossfire_done -lttz_hb_isg_leader_in_jup -faction_limited_playthrough_cf%
 on_fail = %=drx_sl_change_factions(stalker) =remove_special_companion_squad(lost_stalker_strelok) =fail_task_dec_goodwill(500:isg) +lttz_hb_task_4_1_crossfire_done -lttz_hb_isg_leader_in_jup -lttz_hb_isg_breakthrough -faction_limited_playthrough_cf%
+
 
 ;------------------------------------------------------------------------------------------
 ; Maus (UNISG Mechanic)

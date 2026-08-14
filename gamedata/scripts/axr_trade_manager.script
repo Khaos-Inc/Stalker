@@ -15,6 +15,24 @@ local enable_debug = false
 local enable_npc_trade = true
 local enable_npc_upgrade = true
 local max_upgrades_per_visit = 5
+local DEBUG_PREFIX = "[Z.H.O.P.A.][AXR_TRADE] "
+local ZHOPA_AXR_PATCH_REV = "2026-07-12-r11-tech-exit"
+local ITEM_TAKE_SUPPRESS_GRACE_MS = 10000
+local ZHOPA_AXR_BIND_DIAG = {
+	next_tg = 0,
+}
+local ZHOPA_AXR_RUNTIME = {
+	started = false,
+}
+local zhopa_npc_has_items_to_sell
+local zhopa_axr_trade_job_sell_items
+local zhopa_axr_trade_job_give_id
+local zhopa_npc_trade_buy_sell_impl
+local axr_online_object_by_id
+local axr_object_alive
+local log_always
+local print_debug
+local print_trade_event
 
 local no_trade_comm = {
 	["zombied"] = true,
@@ -24,23 +42,848 @@ local no_trade_comm = {
 	["isg"] = true,
 }
 
-function print_debug(...)
-	if enable_debug then
-		printf(...)
+local ZHOPA_AXR_BUY_ALL_CACHE = {
+	next_tg = 0,
+	value = true,
+	ltx = nil,
+	last_logged_value = nil,
+	last_logged_source = nil,
+}
+
+local function zhopa2_economy_mod()
+	local economy = rawget(_G, "zhopa2_economy")
+	if not economy and require then
+		pcall(require, "zhopa2_economy")
+		economy = rawget(_G, "zhopa2_economy")
+	end
+	return economy
+end
+
+local function zhopa_surge_active()
+	local tasks = rawget(_G, "zhopa2_tasks")
+	return tasks and type(tasks.surge_active) == "function" and tasks.surge_active() == true
+end
+
+local function zhopa2_service_doctor_mod()
+	local doctor = rawget(_G, "zhopa2_smart_service_slot_doctor")
+	if not doctor and require then
+		pcall(require, "zhopa2_smart_service_slot_doctor")
+		doctor = rawget(_G, "zhopa2_smart_service_slot_doctor")
+	end
+	return doctor
+end
+
+local function zhopa2_cfg_mod()
+	local cfg = rawget(_G, "zhopa2_cfg")
+	if not cfg and require then
+		pcall(require, "zhopa2_cfg")
+		cfg = rawget(_G, "zhopa2_cfg")
+	end
+	return cfg
+end
+
+function axr_object_alive(obj)
+	if not obj then
+		return false
+	end
+	if type(obj.alive) ~= "function" then
+		return true
+	end
+	local ok, alive = pcall(obj.alive, obj)
+	return ok and alive == true
+end
+
+local function begin_item_take_suppress(npc, reason)
+	if not (npc and type(npc.id) == "function") then
+		return nil
+	end
+	local id = npc:id()
+	local st = id and db.storage[id]
+	if not st then
+		return nil
+	end
+	local now = (time_global and time_global()) or 0
+	st.zhopa_axr_item_take_suppress = (tonumber(st.zhopa_axr_item_take_suppress) or 0) + 1
+	st.zhopa_axr_item_take_suppress_reason = reason
+	st.zhopa_axr_item_take_suppress_tg = now
+	st.zhopa_axr_item_take_suppress_until = now + ITEM_TAKE_SUPPRESS_GRACE_MS
+	return st
+end
+
+local function end_item_take_suppress(st)
+	if not st then
+		return
+	end
+	local count = (tonumber(st.zhopa_axr_item_take_suppress) or 1) - 1
+	if count > 0 then
+		st.zhopa_axr_item_take_suppress = count
+		return
+	end
+	st.zhopa_axr_item_take_suppress_until = ((time_global and time_global()) or 0) + ITEM_TAKE_SUPPRESS_GRACE_MS
+	st.zhopa_axr_item_take_suppress = nil
+	st.zhopa_axr_item_take_suppress_reason = nil
+	st.zhopa_axr_item_take_suppress_tg = nil
+end
+
+local function is_trade_intent_suppressed_storage(st)
+	if not st then
+		return false
+	end
+	local now = (time_global and time_global()) or 0
+	return (tonumber(st.zhopa_axr_item_take_suppress) or 0) > 0
+		or (tonumber(st.zhopa_axr_item_take_suppress_until) or 0) > now
+		or (tonumber(st.zhopa2_trade_suppress_until) or 0) > now
+		or (tonumber(st.zhopa2_trade_completed_until) or 0) > now
+end
+
+local function is_item_take_suppressed_storage(st)
+	if not st then
+		return false
+	end
+	local now = (time_global and time_global()) or 0
+	return (tonumber(st.zhopa_axr_item_take_suppress) or 0) > 0
+		or (tonumber(st.zhopa_axr_item_take_suppress_until) or 0) > now
+end
+
+local function is_item_take_suppressed(npc)
+	if not (npc and type(npc.id) == "function") then
+		return false
+	end
+	local id = npc:id()
+	return is_item_take_suppressed_storage(id and db.storage[id] or nil)
+end
+
+local function create_item_self_suppressed(section, npc, reason)
+	local st = begin_item_take_suppress(npc, reason)
+	local ok, res = pcall(alife_create_item, section, npc)
+	end_item_take_suppress(st)
+	if not ok then
+		print_debug("create_item_self_suppressed_failed npc=%s sec=%s reason=%s",
+			npc and npc:name() or "nil", tostring(section), tostring(reason))
+		return nil
+	end
+	return res
+end
+
+local function begin_members_item_take_suppress(members, reason)
+	local states = {}
+	for i = 1, members and #members or 0 do
+		local st = begin_item_take_suppress(members[i], reason)
+		if st then
+			states[#states + 1] = st
+		end
+	end
+	return states
+end
+
+local function end_members_item_take_suppress(states)
+	for i = 1, states and #states or 0 do
+		end_item_take_suppress(states[i])
 	end
 end
+
+local function parse_bool(v)
+	if type(v) == "boolean" then
+		return v
+	end
+	if type(v) == "number" then
+		if v == 0 then return false end
+		if v == 1 then return true end
+		return nil
+	end
+	if type(v) == "string" then
+		local s = string.lower(v)
+		if s == "true" or s == "1" or s == "yes" or s == "on" then return true end
+		if s == "false" or s == "0" or s == "no" or s == "off" then return false end
+	end
+	return nil
+end
+
+local function zhopa_master_enabled()
+	local economy = zhopa2_economy_mod()
+	if economy and type(economy.enabled) == "function" then
+		local ok_economy, enabled = pcall(economy.enabled)
+		if ok_economy then
+			return enabled == true
+		end
+	end
+	if zhopa and zhopa.core and zhopa.core.is_enabled then
+		local ok_core, enabled = pcall(zhopa.core.is_enabled)
+		if ok_core then
+			return enabled == true
+		end
+	end
+	local cfg = zhopa2_cfg_mod()
+	if cfg and type(cfg.get_bool) == "function" then
+		local ok_cfg, enabled = pcall(cfg.get_bool, "enabled", true)
+		if ok_cfg then
+			return enabled == true
+		end
+	end
+	return true
+end
+
+local function read_zhopa_buy_all_from_ltx()
+	if not ZHOPA_AXR_BUY_ALL_CACHE.ltx and ini_file then
+		local ok_ini, ltx = pcall(function() return ini_file("zhopa2_settings.ltx") end)
+		if ok_ini then
+			ZHOPA_AXR_BUY_ALL_CACHE.ltx = ltx
+		end
+	end
+	local ltx = ZHOPA_AXR_BUY_ALL_CACHE.ltx
+	if not ltx then
+		return nil
+	end
+	local ok_has, has = pcall(function() return ltx:line_exist("zhopa2", "trade_service_buy_all_enabled") end)
+	if not (ok_has and has) then
+		return nil
+	end
+	local ok_val, raw = pcall(function() return ltx:r_string("zhopa2", "trade_service_buy_all_enabled") end)
+	if not ok_val then
+		return nil
+	end
+	return parse_bool(raw)
+end
+
+local function get_zhopa_buy_all_enabled()
+	local now = (time_global and time_global()) or 0
+	if now < (tonumber(ZHOPA_AXR_BUY_ALL_CACHE.next_tg) or 0) then
+		return ZHOPA_AXR_BUY_ALL_CACHE.value == true
+	end
+
+	local value = nil
+	local source = "default"
+	local cfg = zhopa2_cfg_mod()
+	if cfg and type(cfg.get_bool) == "function" then
+		local ok_cfg, raw = pcall(cfg.get_bool, "trade_service_buy_all_enabled", nil)
+		if ok_cfg then
+			value = parse_bool(raw)
+			if value ~= nil then
+				source = "config"
+			end
+		end
+	end
+	if value == nil then
+		value = read_zhopa_buy_all_from_ltx()
+		if value ~= nil then
+			source = "ltx"
+		end
+	end
+	if value == nil then
+		value = true
+		source = "default_true"
+	end
+
+	ZHOPA_AXR_BUY_ALL_CACHE.value = value == true
+	ZHOPA_AXR_BUY_ALL_CACHE.next_tg = now + 750
+	if ZHOPA_AXR_BUY_ALL_CACHE.last_logged_value ~= ZHOPA_AXR_BUY_ALL_CACHE.value
+		or ZHOPA_AXR_BUY_ALL_CACHE.last_logged_source ~= source then
+		log_always("buy_all_toggle source=%s value=%s", tostring(source), tostring(ZHOPA_AXR_BUY_ALL_CACHE.value))
+		print_debug("buy_all_toggle source=%s value=%s", tostring(source), tostring(ZHOPA_AXR_BUY_ALL_CACHE.value))
+		ZHOPA_AXR_BUY_ALL_CACHE.last_logged_value = ZHOPA_AXR_BUY_ALL_CACHE.value
+		ZHOPA_AXR_BUY_ALL_CACHE.last_logged_source = source
+	end
+	return ZHOPA_AXR_BUY_ALL_CACHE.value
+end
+
+local function pick_random_buy_candidate(valid_items, item_list, money, bw_ammos, buy_all_enabled, last_buy_sec, stats)
+	local preferred = {}
+	local ammo_fallback = {}
+	local diag = {
+		preferred_count = 0,
+		ammo_count = 0,
+		preferred_example = nil,
+		ammo_example = nil,
+	}
+
+	for sec in pairs(valid_items) do
+		local buy_sell = ini:r_string_ex("buy_sell", sec)
+		if buy_sell and buy_sell ~= "" then
+			buy_sell = str_explode(buy_sell, ",")
+
+			local target = tonumber(buy_sell[3]) or 0
+			local have = item_list[sec] or 0
+			local need = target - have
+			local is_ammo = IsItem("ammo", sec) or (bw_ammos and bw_ammos[sec])
+			local allow_buy = buy_all_enabled or is_ammo
+
+			if not allow_buy then
+				stats.buy_blocked_policy = stats.buy_blocked_policy + 1
+			elseif need <= 0 then
+				if have > target then
+					stats.buy_blocked_stock = stats.buy_blocked_stock + 1
+				end
+			else
+				local itm_base_cost = ini_sys:r_float_ex(sec, "cost") or 30
+				local total_cost = math.floor(itm_base_cost * ((tonumber(buy_sell[5]) or 1)))
+
+				if money >= total_cost then
+					local candidate = {
+						sec = sec,
+						cost = total_cost,
+						have = have,
+						target = target,
+						is_ammo = is_ammo and true or false,
+					}
+
+					if buy_all_enabled and candidate.is_ammo then
+						ammo_fallback[#ammo_fallback + 1] = candidate
+						diag.ammo_count = diag.ammo_count + 1
+						if not diag.ammo_example then
+							diag.ammo_example = candidate.sec
+						end
+					else
+						preferred[#preferred + 1] = candidate
+						diag.preferred_count = diag.preferred_count + 1
+						if not diag.preferred_example then
+							diag.preferred_example = candidate.sec
+						end
+					end
+				else
+					stats.buy_blocked_money = stats.buy_blocked_money + 1
+				end
+			end
+		end
+	end
+
+	local pool = preferred
+	local phase = buy_all_enabled and "non_ammo" or "ammo_only"
+	if buy_all_enabled and #pool == 0 then
+		pool = ammo_fallback
+		phase = "ammo_fallback"
+	end
+	if #pool == 0 then
+		diag.phase = phase
+		diag.pool_count = 0
+		return nil, phase, diag
+	end
+
+	if last_buy_sec and #pool > 1 then
+		local alt = {}
+		for i = 1, #pool do
+			if pool[i].sec ~= last_buy_sec then
+				alt[#alt + 1] = pool[i]
+			end
+		end
+		if #alt > 0 then
+			pool = alt
+		end
+	end
+
+	diag.phase = phase
+	diag.pool_count = #pool
+	return pool[math.random(#pool)], phase, diag
+end
+
+local function get_smart_name_safe(smart)
+	if not smart then
+		return nil
+	end
+	local ok_name, smart_name = pcall(function() return smart:name() end)
+	if ok_name and type(smart_name) == "string" and smart_name ~= "" then
+		return smart_name
+	end
+	return nil
+end
+
+local function resolve_squad_id_from_npc(npc)
+	if not (npc and type(npc.id) == "function") then
+		return nil
+	end
+	if zhopa and zhopa.facades and type(zhopa.facades.resolve_squad_id_from_npc_id) == "function" then
+		local ok_sid, sid = pcall(zhopa.facades.resolve_squad_id_from_npc_id, npc:id())
+		sid = ok_sid and tonumber(sid) or nil
+		if sid and sid > 0 then
+			return sid
+		end
+	end
+	return nil
+end
+
+local function publish_trade_service_event(npc, smart, source, phase, status, reason)
+	if not (zhopa and zhopa.facades and type(zhopa.facades.notify_trade_service_event) == "function") then
+		return false
+	end
+	if not (npc and type(npc.id) == "function") then
+		return false
+	end
+
+	local squad_id = resolve_squad_id_from_npc(npc)
+	if not squad_id then
+		return false
+	end
+
+	local ok_notify, res = pcall(zhopa.facades.notify_trade_service_event, {
+		squad_id = squad_id,
+		npc_id = npc:id(),
+		smart = get_smart_name_safe(smart),
+		source = source or "axr_trade_manager",
+		phase = phase,
+		status = status,
+		reason = reason,
+	})
+	return ok_notify and res == true
+end
+
+local function notify_zhopa_facade_trade_started(npc, smart, source)
+	if not (npc and type(npc.id) == "function") then
+		return false
+	end
+	local src = source or "axr_trade_manager"
+	local phase = string.find(tostring(src), "tech", 1, true) and "tech" or "trade"
+	if publish_trade_service_event(npc, smart, src, phase, "entered", src) == true then
+		return true
+	end
+	if not (zhopa and zhopa.facades and type(zhopa.facades.notify_trade_started) == "function") then
+		return false
+	end
+	local ok_notify, res = pcall(zhopa.facades.notify_trade_started, npc:id(), get_smart_name_safe(smart), src)
+	return ok_notify and res == true
+end
+
+local function notify_zhopa_fast_trade_candidate(npc, smart, item_section, source)
+	if not (zhopa and zhopa.facades and type(zhopa.facades.notify_fast_trade_candidate) == "function") then
+		return false
+	end
+	if not (npc and type(npc.id) == "function") then
+		return false
+	end
+	local ok_notify, res = pcall(zhopa.facades.notify_fast_trade_candidate, {
+		npc_id = npc:id(),
+		smart = get_smart_name_safe(smart),
+		item_section = item_section,
+		source = source or "axr_trade_manager",
+		reason = "npc_item_take",
+	})
+	return ok_notify and res == true
+end
+
+local AXR_JOB_ROLE_NONE = {}
+local AXR_JOB_ROLE_CACHE = {}
+local AXR_INI_SYS = type(system_ini) == "function" and system_ini() or nil
+
+local function contains_token_plain(haystack, needle)
+	return type(haystack) == "string"
+		and type(needle) == "string"
+		and string.find(haystack, needle, 1, true) ~= nil
+end
+
+local function read_job_ini_string_from(ini_obj, section, key)
+	if not (ini_obj and type(section) == "string" and section ~= "" and type(key) == "string" and key ~= "") then
+		return nil
+	end
+	local ok_exist, has_line = pcall(function()
+		return ini_obj:section_exist(section) and ini_obj:line_exist(section, key)
+	end)
+	if not (ok_exist and has_line) then
+		return nil
+	end
+	local ok_value, value = pcall(function()
+		return ini_obj:r_string(section, key)
+	end)
+	if ok_value and type(value) == "string" and value ~= "" then
+		return value
+	end
+	return nil
+end
+
+local function read_job_ini_string(job_or_section, key, smart)
+	local section = type(job_or_section) == "table" and job_or_section.section or job_or_section
+	local ini_obj = type(job_or_section) == "table" and job_or_section.ltx or nil
+	local value = read_job_ini_string_from(ini_obj, section, key)
+	if value ~= nil then
+		return value
+	end
+	if smart then
+		value = read_job_ini_string_from(smart.ltx, section, key)
+		if value ~= nil then
+			return value
+		end
+		value = read_job_ini_string_from(smart.ini, section, key)
+		if value ~= nil then
+			return value
+		end
+	end
+	return read_job_ini_string_from(AXR_INI_SYS, section, key)
+end
+
+local function classify_provider_job_role(job_or_section, smart)
+	local section = type(job_or_section) == "table" and job_or_section.section or job_or_section
+	if type(section) ~= "string" or section == "" then
+		return nil
+	end
+
+	local cached = AXR_JOB_ROLE_CACHE[section]
+	if cached ~= nil then
+		return cached ~= AXR_JOB_ROLE_NONE and cached or nil
+	end
+
+	local s = string.lower(section)
+	local suitable = read_job_ini_string(job_or_section, "suitable", smart)
+	local suitable_l = type(suitable) == "string" and string.lower(suitable) or nil
+	local level_spot = read_job_ini_string(job_or_section, "level_spot", smart)
+	local level_spot_l = type(level_spot) == "string" and string.lower(level_spot) or nil
+	local trade_ltx = read_job_ini_string(job_or_section, "trade", smart)
+	local role = nil
+
+	if contains_token_plain(s, "beh_trade_job")
+		or contains_token_plain(s, "beh_tech_job")
+		or contains_token_plain(s, "beh_medic_job")
+	then
+		AXR_JOB_ROLE_CACHE[section] = AXR_JOB_ROLE_NONE
+		return nil
+	end
+
+	if contains_token_plain(s, "trade_slot") or contains_token_plain(s, "tech_slot") then
+		AXR_JOB_ROLE_CACHE[section] = AXR_JOB_ROLE_NONE
+		return nil
+	end
+
+	if contains_token_plain(suitable_l, "npc_has_items_to_sell")
+		or contains_token_plain(suitable_l, "npc_has_tech_items")
+	then
+		AXR_JOB_ROLE_CACHE[section] = AXR_JOB_ROLE_NONE
+		return nil
+	end
+
+	if contains_token_plain(suitable_l, "check_npc_trader")
+		or contains_token_plain(suitable_l, "check_npc_barman")
+	then
+		role = "trader"
+	elseif contains_token_plain(suitable_l, "check_npc_mechanic") then
+		role = "tech"
+	end
+
+	if not role then
+		if level_spot_l == "trader" or level_spot_l == "barman" then
+			role = "trader"
+		elseif level_spot_l == "mechanic" then
+			role = "tech"
+		end
+	end
+
+	if not role and type(trade_ltx) == "string" and trade_ltx ~= "" then
+		if contains_token_plain(s, "mechanic") or contains_token_plain(s, "_tech") then
+			role = "tech"
+		elseif contains_token_plain(s, "trader") or contains_token_plain(s, "barman") then
+			role = "trader"
+		end
+	end
+
+	if not role then
+		if contains_token_plain(s, "mechanic") or contains_token_plain(s, "_tech") then
+			role = "tech"
+		elseif contains_token_plain(s, "trader") or contains_token_plain(s, "barman") then
+			role = "trader"
+		end
+	end
+
+	AXR_JOB_ROLE_CACHE[section] = role or AXR_JOB_ROLE_NONE
+	return role
+end
+
+local function resolve_npc_provider_role(npc, smart, npc_id)
+	local id = tonumber(npc_id) or (npc and type(npc.id) == "function" and npc:id()) or nil
+	if not id then
+		return nil
+	end
+
+	local obj = npc
+	if not obj then
+		obj = axr_online_object_by_id(id)
+	end
+
+	smart = smart or (obj and xr_gulag.get_npc_smart(obj)) or nil
+	if not smart then
+		return nil
+	end
+
+	local npc_info = smart.npc_info and smart.npc_info[id] or nil
+	local role = classify_provider_job_role(npc_info and npc_info.job or nil, smart)
+	if role then
+		return role
+	end
+
+	local by_job = smart.npc_by_job_section
+	if type(by_job) ~= "table" then
+		return nil
+	end
+
+	for job_sec, owner_id in pairs(by_job) do
+		if tonumber(owner_id) == id then
+			role = classify_provider_job_role(job_sec, smart)
+			if role then
+				return role
+			end
+		end
+	end
+
+	return nil
+end
+
+local function npc_is_blocked_service_customer(npc, smart, npc_id)
+	local role = resolve_npc_provider_role(npc, smart, npc_id)
+	return role == "trader" or role == "tech"
+end
+
+local function clear_trade_item_intent(st)
+	if not st then
+		return
+	end
+	st.has_items_to_sell = false
+	if st.trade_items then
+		empty_table(st.trade_items)
+	end
+end
+
+local function clear_tech_item_intent(st)
+	if not st then
+		return
+	end
+	st.has_tech_items = false
+	if st.tech_items then
+		empty_table(st.tech_items)
+	end
+end
+
+local function has_service_items(tbl)
+	return type(tbl) == "table" and next(tbl) ~= nil
+end
+
+local function mark_tech_item_intent(st, sec)
+	if not (st and sec) then
+		return false
+	end
+	if (ini == nil or not ini:line_exist("buy_sell_mechanic", sec)) then
+		return false
+	end
+
+	local buy_sell = ini:r_string_ex("buy_sell_mechanic", sec)
+	if (buy_sell == nil or buy_sell == "") then
+		return false
+	end
+
+	if not st.tech_items then
+		st.tech_items = {}
+	end
+	st.tech_items[sec] = (st.tech_items[sec] or 0) + 1
+
+	buy_sell = str_explode(buy_sell, ",")
+	local keep_threshold = tonumber(buy_sell[2]) or 1
+	if st.tech_items[sec] >= keep_threshold then
+		st.has_tech_items = true
+	end
+
+	return st.has_tech_items == true
+end
+
+local function emit_prefixed_log(fmt, ...)
+	local argc = select("#", ...)
+	local text = ""
+	if argc > 0 then
+		local base = tostring(select(1, ...))
+		if argc > 1 then
+			local ok_fmt, formatted = pcall(string.format, ...)
+			text = ok_fmt and tostring(formatted) or base
+		else
+			text = base
+		end
+	end
+	text = DEBUG_PREFIX .. text
+	if type(printf) == "function" then
+		pcall(printf, "%s", text)
+	elseif type(log1) == "function" then
+		pcall(log1, text)
+	elseif type(Msg) == "function" then
+		pcall(Msg, text)
+	end
+end
+
+local function emit_zhopa_axr_trade_log(level_name, fmt, ...)
+	if not (zhopa and zhopa.journal and zhopa.journal.record) then
+		return
+	end
+	local ok_fmt, formatted = pcall(string.format, tostring(fmt or ""), ...)
+	zhopa.journal.record("axr_trade_log", {
+		type = "axr_trade",
+		source = "axr_trade_manager",
+		level = tostring(level_name or "info"),
+		message = ok_fmt and formatted or tostring(fmt or ""),
+		status = "observed",
+	}, "axr_trade")
+end
+
+local function log_trade_info(fmt, ...)
+	emit_zhopa_axr_trade_log("info", fmt, ...)
+end
+
+local function log_trade_warn(fmt, ...)
+	emit_zhopa_axr_trade_log("warn", fmt, ...)
+end
+
+print_debug = function(...)
+	if enable_debug then
+		emit_prefixed_log(...)
+	end
+end
+
+log_always = function(...)
+	if enable_debug then
+		emit_prefixed_log(...)
+	end
+end
+
+print_trade_event = function(...)
+	if type(printf) == "function" then
+		local ok = pcall(printf, ...)
+		if ok then
+			return
+		end
+	end
+
+	local argc = select("#", ...)
+	local text = ""
+	if argc > 0 then
+		local fmt = tostring(select(1, ...))
+		if argc > 1 then
+			local ok_fmt, formatted = pcall(string.format, ...)
+			text = ok_fmt and tostring(formatted) or fmt
+		else
+			text = fmt
+		end
+	end
+
+	if type(log1) == "function" then
+		pcall(log1, text)
+	elseif type(Msg) == "function" then
+		pcall(Msg, text)
+	end
+end
+
+local function log_handler_binding_state(tag, force)
+	local now = (time_global and time_global()) or 0
+	if not force and now < (tonumber(ZHOPA_AXR_BIND_DIAG.next_tg) or 0) then
+		return
+	end
+	ZHOPA_AXR_BIND_DIAG.next_tg = now + 2000
+	log_always(
+		"binding tag=%s rev=%s sell_items_self=%s give_id_self=%s has_items_self=%s",
+		tostring(tag),
+		tostring(ZHOPA_AXR_PATCH_REV),
+		tostring(xr_effects and xr_effects.trade_job_sell_items == zhopa_axr_trade_job_sell_items),
+		tostring(xr_effects and xr_effects.trade_job_give_id == zhopa_axr_trade_job_give_id),
+		tostring(xr_conditions and xr_conditions.npc_has_items_to_sell == zhopa_npc_has_items_to_sell)
+	)
+end
+
+local function clear_service_intents(st, npc_info, kind, reason)
+	if not st then
+		return
+	end
+	st.has_items_to_sell = false
+	if st.trade_items then
+		empty_table(st.trade_items)
+	end
+	if kind == "tech" then
+		st.has_tech_items = false
+		if st.tech_items then
+			empty_table(st.tech_items)
+		end
+	end
+	st.zhopa_axr_service_reset_reason = nil
+	st.zhopa_axr_service_reset_guard_tg = nil
+	if npc_info and npc_info.job then
+		npc_info.job.idle = nil
+		npc_info.job.seller_id = nil
+		if kind == "tech" then
+			npc_info.job.mechanic_id = nil
+		end
+	end
+end
+
+local function finalize_service_session(npc, kind, reason)
+	if not (npc and type(npc.id) == "function") then
+		return
+	end
+	local id = npc:id()
+	local st = id and db.storage[id]
+	if not st then
+		return
+	end
+	local smart = xr_gulag and xr_gulag.get_npc_smart and xr_gulag.get_npc_smart(npc) or nil
+	local npc_info = smart and smart.npc_info and smart.npc_info[id] or nil
+	local status = type(reason) == "string" and string.find(reason, "done", 1, true) == 1 and "completed" or "failed"
+	if kind == "trade" then
+		local economy = zhopa2_economy_mod()
+		if economy and type(economy.complete_axr_online_trade) == "function" then
+			local trade_result = status == "completed" and reason ~= "done_empty" and "traded" or "nothing_to_trade"
+			pcall(economy.complete_axr_online_trade, npc, smart, trade_result, reason or "axr_trade_done")
+		end
+	end
+	clear_service_intents(st, npc_info, kind, "service_" .. tostring(kind) .. "_" .. tostring(reason))
+	if status == "completed" then
+		log_trade_info(
+			"axr_service_result npc=%s id=%s sid=%s smart=%s kind=%s status=%s reason=%s job=%s section=%s scheme=%s seller_id=%s mechanic_id=%s",
+			npc and npc:name() or "nil",
+			tostring(id),
+			tostring(resolve_squad_id_from_npc(npc) or "-"),
+			tostring(get_smart_name_safe(smart) or "-"),
+			tostring(kind),
+			tostring(status),
+			tostring(reason),
+			tostring(npc_info and npc_info.job and npc_info.job.section or nil),
+			tostring(st.active_section),
+			tostring(st.active_scheme),
+			tostring(npc_info and npc_info.job and npc_info.job.seller_id or nil),
+			tostring(npc_info and npc_info.job and npc_info.job.mechanic_id or nil)
+		)
+	else
+		log_trade_warn(
+			"axr_service_result npc=%s id=%s sid=%s smart=%s kind=%s status=%s reason=%s job=%s section=%s scheme=%s seller_id=%s mechanic_id=%s",
+			npc and npc:name() or "nil",
+			tostring(id),
+			tostring(resolve_squad_id_from_npc(npc) or "-"),
+			tostring(get_smart_name_safe(smart) or "-"),
+			tostring(kind),
+			tostring(status),
+			tostring(reason),
+			tostring(npc_info and npc_info.job and npc_info.job.section or nil),
+			tostring(st.active_section),
+			tostring(st.active_scheme),
+			tostring(npc_info and npc_info.job and npc_info.job.seller_id or nil),
+			tostring(npc_info and npc_info.job and npc_info.job.mechanic_id or nil)
+		)
+	end
+	local source = status == "completed" and "service_complete" or "service_fail"
+	local doctor = zhopa2_service_doctor_mod() or smart_service_slot_doctor
+	if doctor and type(doctor.on_axr_service_result) == "function" then
+		pcall(doctor.on_axr_service_result, npc, smart, kind, status, reason)
+	end
+	publish_trade_service_event(npc, smart, source, tostring(kind), status, tostring(reason))
+end
+
+log_always("module_loaded rev=%s", tostring(ZHOPA_AXR_PATCH_REV))
 
 function init_settings()
 	ini = ini_file("items\\trade\\gulag_job_trade_buy_sell.ltx")
 	enable_npc_trade = ini:r_bool_ex("settings","enable_npc_trade",true)
 	enable_npc_upgrade = ini:r_bool_ex("settings","enable_npc_upgrade",true)
 	max_upgrades_per_visit = ini:r_float_ex("settings","max_upgrades_per_visit") or 5
+	log_always("boot rev=%s ini=items\\trade\\gulag_job_trade_buy_sell.ltx", tostring(ZHOPA_AXR_PATCH_REV))
+	print_debug("override_loaded R3A debug=%s npc_trade=%s npc_upgrade=%s max_upgrades_per_visit=%s",
+		tostring(enable_debug), tostring(enable_npc_trade), tostring(enable_npc_upgrade), tostring(max_upgrades_per_visit))
 end
 
 --------------------------------
 -- Callbacks
 --------------------------------
 local function npc_on_item_take(npc,item)
+	if zhopa_master_enabled() ~= true then
+		return
+	end
+	if is_item_take_suppressed(npc) then
+		return
+	end
 
 	if enable_npc_trade then
 		check_trade_item(npc,item)
@@ -52,8 +895,15 @@ local function npc_on_item_take(npc,item)
 end
 
 function on_game_start()
+	if ZHOPA_AXR_RUNTIME.started then
+		log_always("on_game_start duplicate_ignored rev=%s", tostring(ZHOPA_AXR_PATCH_REV))
+		return
+	end
+	ZHOPA_AXR_RUNTIME.started = true
 	RegisterScriptCallback("npc_on_item_take",npc_on_item_take)
 	init_settings()
+	print_debug("on_game_start R3A rev=%s", tostring(ZHOPA_AXR_PATCH_REV))
+	log_handler_binding_state("on_game_start", true)
 end
 
 
@@ -61,7 +911,7 @@ end
 -- Trade job
 --------------------------------
 function check_trade_item(npc,item)
-	if not (npc:alive()) then
+	if not axr_object_alive(npc) then
 		return
 	end
 
@@ -70,9 +920,19 @@ function check_trade_item(npc,item)
 	if not (st) then
 		return
 	end
+	if is_trade_intent_suppressed_storage(st) then
+		clear_trade_item_intent(st)
+		return false
+	end
 
 	local com = npc:character_community()
 	if no_trade_comm[com] then
+		return false
+	end
+
+	local smart = xr_gulag.get_npc_smart(npc)
+	if npc_is_blocked_service_customer(npc, smart, id) then
+		clear_trade_item_intent(st)
 		return false
 	end
 
@@ -106,16 +966,21 @@ function check_trade_item(npc,item)
 	st.trade_items[sec] = st.trade_items[sec] and st.trade_items[sec] + 1 or 1
 
 	buy_sell = str_explode(buy_sell,",")
+	local keep_threshold = tonumber(buy_sell[2]) or 1
 
 	--print_debug("buy_sell[2]=%s",buy_sell[2])
-	if (st.trade_items[sec] >= tonumber(buy_sell[2])) then
+	if (st.trade_items[sec] >= keep_threshold) then
 		st.has_items_to_sell = true
+		notify_zhopa_fast_trade_candidate(npc, smart, sec, "axr_trade_manager")
 		--print_debug("%s: wants to trade surplus items",npc:name())
 	end
 end
 
-xr_conditions.npc_has_items_to_sell = function(actor,npc,p)
+zhopa_npc_has_items_to_sell = function(actor,npc,p)
 	if not (npc) then
+		return false
+	end
+	if zhopa_surge_active() then
 		return false
 	end
 
@@ -125,12 +990,21 @@ xr_conditions.npc_has_items_to_sell = function(actor,npc,p)
 	if not (st) then
 		return false
 	end
+	if is_trade_intent_suppressed_storage(st) then
+		clear_trade_item_intent(st)
+		return false
+	end
+
+	local smart = p and p[1] and SIMBOARD.smarts_by_names[p[1]]
+	if npc_is_blocked_service_customer(npc, smart, id) then
+		clear_trade_item_intent(st)
+		return false
+	end
 
 	if not (st.has_items_to_sell) then
 		return false
 	end
 
-	local smart = p and p[1] and SIMBOARD.smarts_by_names[p[1]]
 	if (smart and smart.npc_info[id]) then
 		local job = smart.npc_info[id].job
 		if (job and job.idle and time_global() < job.idle) then
@@ -138,16 +1012,29 @@ xr_conditions.npc_has_items_to_sell = function(actor,npc,p)
 		end
 	end
 	
+	log_handler_binding_state("npc_has_items_to_sell", false)
 	print_debug("npc_has_items_to_sell | npc (%s) has item to sell", id)
 
 	return true
 end
+xr_conditions.npc_has_items_to_sell = zhopa_npc_has_items_to_sell
 
-xr_effects.trade_job_sell_items = function(actor,npc,p)
-	npc_trade_buy_sell(npc)
+zhopa_axr_trade_job_sell_items = function(actor,npc,p)
+	if zhopa_surge_active() then
+		return
+	end
+	log_always("trade_job_sell_items_enter rev=%s npc=%s id=%s", tostring(ZHOPA_AXR_PATCH_REV), npc and npc:name() or "nil", npc and npc:id() or "nil")
+	print_debug("trade_job_sell_items R3A rev=%s npc=%s id=%s", tostring(ZHOPA_AXR_PATCH_REV), npc and npc:name() or "nil", npc and npc:id() or "nil")
+	log_handler_binding_state("trade_job_sell_items", true)
+	zhopa_npc_trade_buy_sell_impl(npc)
 end
+xr_effects.trade_job_sell_items = zhopa_axr_trade_job_sell_items
 
-xr_effects.trade_job_give_id = function(actor,npc,p)
+zhopa_axr_trade_job_give_id = function(actor,npc,p)
+	if zhopa_surge_active() then
+		return
+	end
+	log_handler_binding_state("trade_job_give_id", false)
 	local board = SIMBOARD
 	local smart = p[1] and board and board.smarts_by_names[p[1]]
 	local id = smart and smart.npc_by_job_section["logic@"..p[2]]
@@ -160,21 +1047,264 @@ xr_effects.trade_job_give_id = function(actor,npc,p)
 	print_debug("- trade_job_give_id | seller_id = %s - name: %s", npc:id(), npc:name())
 	npc_info.job.seller_id = npc:id()
 end
+xr_effects.trade_job_give_id = zhopa_axr_trade_job_give_id
 
-function npc_trade_buy_sell(npc)
+local function axr_object_id(obj)
+	if not obj then
+		return nil
+	end
+	if type(obj) == "number" then
+		return obj
+	end
+	if type(obj.id) == "function" then
+		local ok, id = pcall(obj.id, obj)
+		return ok and tonumber(id) or nil
+	end
+	return tonumber(obj.id)
+end
+
+function axr_online_object_by_id(id)
+	id = tonumber(id)
+	if not id then
+		return nil
+	end
+	local st = db and db.storage and db.storage[id] or nil
+	local obj = st and st.object or nil
+	if not obj and level and type(level.object_by_id) == "function" then
+		local ok, found = pcall(level.object_by_id, id)
+		obj = ok and found or nil
+	end
+	if obj and type(obj.alive) == "function" then
+		local ok, alive = pcall(obj.alive, obj)
+		if not (ok and alive == true) then
+			return nil
+		end
+	end
+	return obj
+end
+
+local function axr_npc_money(npc)
+	if npc and type(npc.money) == "function" then
+		local ok, money = pcall(npc.money, npc)
+		if ok and money then
+			return math.max(0, math.floor(tonumber(money) or 0))
+		end
+	end
+	return 0
+end
+
+local function zhopa2_economy_active(economy)
+	if not economy then
+		return false
+	end
+	if type(economy.enabled) == "function" then
+		local ok, enabled = pcall(economy.enabled)
+		return ok and enabled == true
+	end
+	return true
+end
+
+local function zhopa2_managed_trade_storage(st)
+	return st
+		and st.has_items_to_sell == true
+		and st.zhopa2_trade_squad_id ~= nil
+		and st.zhopa2_trade_smart_id ~= nil
+end
+
+local function zhopa2_axr_trade_context(economy, npc, smart, st)
+	if not zhopa2_managed_trade_storage(st) then
+		return nil
+	end
+	if economy and type(economy.axr_online_trade_context) == "function" then
+		local ok, ctx = pcall(economy.axr_online_trade_context, npc, smart)
+		if ok and type(ctx) == "table" and ctx.squad then
+			return ctx
+		end
+	end
+
+	local squad_id = tonumber(st.zhopa2_trade_squad_id)
+	local squad = squad_id and alife_object and alife_object(squad_id) or nil
+	if not squad then
+		return nil
+	end
+	local members = {}
+	local ids = st.zhopa2_trade_member_ids
+	if type(ids) == "table" then
+		for i = 1, #ids do
+			local obj = axr_online_object_by_id(ids[i])
+			if obj then
+				members[#members + 1] = obj
+			end
+		end
+	end
+	local npc_id = axr_object_id(npc)
+	local found_leader = false
+	for i = 1, #members do
+		if axr_object_id(members[i]) == npc_id then
+			found_leader = true
+			if i > 1 then
+				local leader = members[i]
+				table.remove(members, i)
+				table.insert(members, 1, leader)
+			end
+			break
+		end
+	end
+	if not found_leader and npc then
+		table.insert(members, 1, npc)
+	end
+	return {
+		squad = squad,
+		squad_id = squad_id,
+		smart = smart,
+		smart_id = tonumber(st.zhopa2_trade_smart_id),
+		reason = st.zhopa2_trade_reason or "axr_trade",
+		members = members,
+	}
+end
+
+local function zhopa2_transfer_all_money_to(economy, from_npc, to_npc)
+	if not (from_npc and to_npc) or axr_object_id(from_npc) == axr_object_id(to_npc) then
+		return 0
+	end
+	if economy and type(economy.transfer_all_money_to) == "function" then
+		local ok, amount = pcall(economy.transfer_all_money_to, from_npc, to_npc)
+		if ok then
+			return tonumber(amount) or 0
+		end
+	end
+	local amount = axr_npc_money(from_npc)
+	if amount <= 0 or type(from_npc.transfer_money) ~= "function" then
+		return 0
+	end
+	local ok = pcall(from_npc.transfer_money, from_npc, amount, to_npc)
+	return ok and amount or 0
+end
+
+local function zhopa2_sell_member_plan(economy, member, seller, collect_to)
+	if not (economy and type(economy.build_online_sell_plan) == "function") then
+		return false
+	end
+	local ok_plan, plan = pcall(economy.build_online_sell_plan, member, nil)
+	if not (ok_plan and type(plan) == "table" and #plan > 0) then
+		return false
+	end
+	local sold_any = false
+	for i = 1, #plan do
+		local entry = plan[i]
+		local item = entry and entry.item
+		local item_id = axr_object_id(item)
+		if item and item_id then
+			local price = 0
+			if type(economy.online_trade_sell_item_price) == "function" then
+				local ok_price, value = pcall(economy.online_trade_sell_item_price, member, seller, item)
+				price = ok_price and math.floor(tonumber(value) or 0) or 0
+			end
+			if price > 0 then
+				local transferred = false
+				if seller and type(member.transfer_item) == "function" then
+					transferred = pcall(member.transfer_item, member, item, seller)
+				elseif type(alife_release_id) == "function" then
+					transferred = pcall(alife_release_id, item_id)
+				end
+				if transferred and type(member.give_money) == "function" then
+					local paid = pcall(member.give_money, member, price)
+					if paid then
+						sold_any = true
+						if collect_to and axr_object_id(collect_to) ~= axr_object_id(member) then
+							zhopa2_transfer_all_money_to(economy, member, collect_to)
+						end
+						if game_statistics and game_statistics.increment_npc_statistic then
+							pcall(game_statistics.increment_npc_statistic, member, "items_sold")
+						end
+						print_trade_event("- NPC Trade | %s sold [%s] to %s for %s RU", member:name(), entry.section or (item.section and item:section()) or "?", seller and seller:name() or "-", price)
+					end
+				end
+			end
+		end
+	end
+	return sold_any
+end
+
+local function zhopa2_execute_squad_trade(npc, seller, smart, st)
+	local economy = zhopa2_economy_mod()
+	if not zhopa2_economy_active(economy) then
+		return false, nil
+	end
+	local ctx = zhopa2_axr_trade_context(economy, npc, smart, st)
+	if not ctx then
+		return false, nil
+	end
+
+	local result = "nothing_to_trade"
+	local traded_any = false
+	local leader = npc
+	local members = type(ctx.members) == "table" and ctx.members or { npc }
+	local suppress_states = begin_members_item_take_suppress(members, "zhopa2_squad_trade")
+
+	if not seller then
+		result = "trade_no_seller"
+	elseif not leader then
+		result = "trade_no_leader"
+	else
+		if type(economy.materialize_online_virtual_money) == "function" then
+			pcall(economy.materialize_online_virtual_money, leader, ctx.squad, "online_trade")
+		end
+		for i = 1, #members do
+			local member = members[i]
+			if member and axr_object_id(member) ~= axr_object_id(leader) then
+				zhopa2_transfer_all_money_to(economy, member, leader)
+			end
+		end
+		if type(economy.execute_online_virtual_squad_sale) == "function" then
+			local ok_virtual, count, value = pcall(economy.execute_online_virtual_squad_sale, ctx.squad, leader, seller, "online_virtual_trade")
+			traded_any = (ok_virtual and (tonumber(count) or 0) > 0 and (tonumber(value) or 0) > 0) or traded_any
+		end
+		for i = 1, #members do
+			local member = members[i]
+			if member then
+				traded_any = zhopa2_sell_member_plan(economy, member, seller, leader) or traded_any
+			end
+		end
+		if type(economy.execute_online_buy) == "function" then
+			for i = 1, #members do
+				local member = members[i]
+				if member then
+					local ok_buy, bought = pcall(economy.execute_online_buy, member, seller, { payer_npc = leader })
+					traded_any = (ok_buy and bought == true) or traded_any
+				end
+			end
+		end
+		result = traded_any and "traded" or "nothing_to_trade"
+	end
+	end_members_item_take_suppress(suppress_states)
+
+	if type(economy.complete_axr_online_trade) == "function" then
+		pcall(economy.complete_axr_online_trade, npc, smart, result, ctx.reason or "axr_trade")
+	end
+	return true, traded_any
+end
+
+zhopa_npc_trade_buy_sell_impl = function(npc)
+	if zhopa_surge_active() then
+		return
+	end
+	local g_tonumber = tonumber
 	local id = npc and npc:id()
 	local st = id and db.storage[id]
+	log_always("npc_trade_buy_sell_enter rev=%s npc=%s id=%s", tostring(ZHOPA_AXR_PATCH_REV), npc and npc:name() or "nil", tostring(id))
 	if not (st) then
+		print_debug("trade_skip reason=no_storage npc_id=%s", tostring(id))
 		return
 	end
 
 	if not (st.has_items_to_sell) then
-		--print_debug("st.has_items_to_sell = nil!")
+		print_debug("trade_skip reason=has_items_to_sell_false npc_id=%s", tostring(id))
 		return
 	end
 
 	if not (st.trade_items) then
-		--print_debug("no items to sell")
+		print_debug("trade_skip reason=no_trade_items npc_id=%s", tostring(id))
 		return
 	end
 
@@ -183,8 +1313,6 @@ function npc_trade_buy_sell(npc)
 	if (npc_info) then
 		npc_info.job.idle = time_global() + 20000
 	end
-
-	print_debug("- NPC Trade | Selling")
 
 	local se_obj = alife_object(id)
 	if not (se_obj) then 
@@ -195,8 +1323,24 @@ function npc_trade_buy_sell(npc)
 	local smart = xr_gulag.get_npc_smart(npc)
 	local npc_info = smart and smart.npc_info[id]
 	local seller_id = npc_info and npc_info.job and npc_info.job.seller_id
-	local seller = seller_id and (db.storage[seller_id] and db.storage[seller_id].object or level.object_by_id(seller_id))
-	print_debug("- NPC Trade | Trader = %s", seller and seller:name())
+	local seller = seller_id and axr_online_object_by_id(seller_id) or nil
+	if not seller then
+		clear_trade_item_intent(st)
+		finalize_service_session(npc, "trade", "done_no_seller")
+		return
+	end
+	print_trade_event("- NPC Trade | Selling")
+	print_trade_event("- NPC Trade | Trader = %s", seller and seller:name())
+
+	local zhopa2_handled, zhopa2_traded = zhopa2_execute_squad_trade(npc, seller, smart, st)
+	if zhopa2_handled then
+		if st.trade_items then
+			empty_table(st.trade_items)
+		end
+		st.has_items_to_sell = false
+		finalize_service_session(npc, "trade", zhopa2_traded and "done" or "done_empty")
+		return
+	end
 	
 	-- SELL ITEMS
 	local itm,itm_base_cost,buy_sell, slot, bw,can_sell
@@ -234,16 +1378,16 @@ function npc_trade_buy_sell(npc)
 
 					-- Give money
 					itm_base_cost = ini_sys:r_float_ex(sec,"cost") or 30
-					local money = math.floor(itm_base_cost * (tonumber(buy_sell[4]) or 1))
+					local money = math.floor(itm_base_cost * (g_tonumber(buy_sell[4]) or 1))
 					npc:give_money(money)
 					
 					-- Increase NPC rank because he is a good boy
 					game_statistics.increment_npc_statistic(npc,"items_sold")
 					
-					print_debug("- NPC Trade | %s sold [%s] for %s RU", npc:name(), sec, money)
+						print_trade_event("- NPC Trade | %s sold [%s] for %s RU", npc:name(), sec, money)
 
 					-- Only sell enough till reach keep-in-stock count (param 1)
-					if (i <= tonumber(buy_sell[1])) then
+					if (i <= g_tonumber(buy_sell[1])) then
 						break
 					end
 				end
@@ -257,25 +1401,53 @@ function npc_trade_buy_sell(npc)
 	-- BUY ITEMS
 	local money = npc:money()
 	if (money == nil or money <= 0) then
+		print_debug("buy_skip reason=no_money npc=%s id=%s money=%s", npc and npc:name() or "nil", tostring(id), tostring(money))
+		finalize_service_session(npc, "trade", "done_no_money")
 		return
 	end
 
 	if not (smart) then
+		print_debug("buy_skip reason=no_smart npc=%s id=%s", npc and npc:name() or "nil", tostring(id))
+		finalize_service_session(npc, "trade", "done_no_smart")
 		return
 	end
 
 	if (npc_info == nil or npc_info.job == nil) then
+		print_debug("buy_skip reason=no_job_info npc=%s id=%s", npc and npc:name() or "nil", tostring(id))
+		finalize_service_session(npc, "trade", "done_no_job")
 		return
 	end
 
 	if not (seller) then
+		print_debug("buy_skip reason=no_seller npc=%s id=%s", npc and npc:name() or "nil", tostring(id))
+		finalize_service_session(npc, "trade", "done_no_seller")
 		return
 	end
 
-	print_debug("- NPC Trade | Buying")
+	print_trade_event("- NPC Trade | Buying")
 
 	local valid_items = utils_data.collect_section(ini,"buy_sell",true)
 	local item_list = {}
+	local buy_all_enabled = get_zhopa_buy_all_enabled()
+	local buy_success = 0
+	local buy_blocked_policy = 0
+	local buy_blocked_money = 0
+	local buy_blocked_stock = 0
+	log_always("buy_start npc=%s id=%s smart=%s seller=%s money=%s buy_all=%s valid_items=%s",
+		npc and npc:name() or "nil",
+		tostring(id),
+		smart and smart:name() or "nil",
+		seller and seller:name() or "nil",
+		tostring(money),
+		tostring(buy_all_enabled),
+		tostring(valid_items and size_table and size_table(valid_items) or "nil"))
+	print_debug("buy_start npc=%s id=%s smart=%s seller=%s money=%s buy_all=%s",
+		npc and npc:name() or "nil",
+		tostring(id),
+		smart and smart:name() or "nil",
+		seller and seller:name() or "nil",
+		tostring(money),
+		tostring(buy_all_enabled))
 
 	local count = 0
 	local function itr(npc,itm)
@@ -294,57 +1466,94 @@ function npc_trade_buy_sell(npc)
 	local bw_ammos = bw and parse_list(ini_sys,bw,"ammo_class",true)
 	local buy_sell_items = {}
 	local size_t = 0
-	local buy_sell,total_cost
-	for sec,v in pairs(valid_items) do
-		buy_sell = ini:r_string_ex("buy_sell",sec)
-		if (buy_sell and buy_sell ~= "") then
-			buy_sell = str_explode(buy_sell,",")
-
-			itm_base_cost = ini_sys:r_float_ex(sec,"cost") or 30
-			total_cost = math.floor(itm_base_cost * (tonumber(buy_sell[5]) or 1))
-
-			-- If section is ammo, only buy ammo for best weapon
-			if IsItem("ammo",sec) or (bw_ammos and bw_ammos[sec]) then
-				if (item_list[sec]) then
-					-- only buy enough to reach restock goals (param 3)
-					for i=item_list[sec],tonumber(buy_sell[3]) do
-						if (money >= total_cost) then
-							size_t = size_t + 1
-							buy_sell_items[size_t] = sec
-							alife_create_item(sec, npc)
-							npc:transfer_money(total_cost,seller)
-							print_debug("- NPC Trade | %s bought [%s] for %s RU", npc:name(), sec, total_cost)
-							money = money - total_cost
-						end
-					end
-				else
-					-- only buy enough to reach restock goals (param 3)
-					for i=1,tonumber(buy_sell[3]) do
-						if (money >= total_cost) then
-							size_t = size_t + 1
-							buy_sell_items[size_t] = sec
-							alife_create_item(sec, npc)
-							npc:transfer_money(total_cost,seller)
-							print_debug("- NPC Trade | %s bought [%s] for %s RU", npc:name(), sec, total_cost)
-							money = money - total_cost
-						end
-					end
-				end
-			end
-		end
-
-		-- NPC ran out of money, end loop
-		if (money <= 0) then
+	local last_buy_sec = nil
+	local max_buy_items = math.max(1, math.floor((tonumber(money) or 0) / 1) + 1)
+	local buy_iterations = 0
+	while money > 0 do
+		buy_iterations = buy_iterations + 1
+		if buy_iterations >= max_buy_items then
+			log_always("buy_loop_guard npc=%s id=%s money=%s iterations=%s", npc and npc:name() or "nil", tostring(id), tostring(money), tostring(buy_iterations))
 			break
 		end
+		local stats = {
+			buy_blocked_policy = 0,
+			buy_blocked_money = 0,
+			buy_blocked_stock = 0,
+		}
+		local pick, phase, diag = pick_random_buy_candidate(valid_items, item_list, money, bw_ammos, buy_all_enabled, last_buy_sec, stats)
+
+		buy_blocked_policy = buy_blocked_policy + stats.buy_blocked_policy
+		buy_blocked_money = buy_blocked_money + stats.buy_blocked_money
+		buy_blocked_stock = buy_blocked_stock + stats.buy_blocked_stock
+		log_always("buy_pool npc=%s id=%s money=%s buy_all=%s phase=%s pool=%s non_ammo=%s ammo=%s blocked_policy=%s blocked_stock=%s blocked_money=%s preferred_example=%s ammo_example=%s last_buy=%s",
+			npc and npc:name() or "nil",
+			tostring(id),
+			tostring(money),
+			tostring(buy_all_enabled),
+			tostring(diag and diag.phase or phase),
+			tostring(diag and diag.pool_count or 0),
+			tostring(diag and diag.preferred_count or 0),
+			tostring(diag and diag.ammo_count or 0),
+			tostring(stats.buy_blocked_policy),
+			tostring(stats.buy_blocked_stock),
+			tostring(stats.buy_blocked_money),
+			tostring(diag and diag.preferred_example or "nil"),
+			tostring(diag and diag.ammo_example or "nil"),
+			tostring(last_buy_sec or "nil"))
+
+		if not pick then
+			break
+		end
+		if not (pick.cost and pick.cost > 0) then
+			log_always("buy_bad_cost npc=%s id=%s sec=%s cost=%s", npc and npc:name() or "nil", tostring(id), tostring(pick.sec or "-"), tostring(pick.cost))
+			break
+		end
+
+		size_t = size_t + 1
+		buy_sell_items[size_t] = pick.sec
+		create_item_self_suppressed(pick.sec, npc, "npc_trade_buy_sell")
+		npc:transfer_money(pick.cost, seller)
+			print_trade_event("- NPC Trade | %s bought [%s] for %s RU", npc:name(), pick.sec, pick.cost)
+		if buy_all_enabled and not pick.is_ammo then
+			log_always("buy_allow_non_ammo npc=%s sec=%s have=%s target=%s cost=%s phase=%s",
+				npc:name(), pick.sec, tostring(pick.have), tostring(pick.target), tostring(pick.cost), tostring(phase))
+		end
+		money = money - pick.cost
+		item_list[pick.sec] = (item_list[pick.sec] or 0) + 1
+		buy_success = buy_success + 1
+		last_buy_sec = pick.sec
 	end
-	
+
 	if (#buy_sell_items > 0) then 
 		if (dynamic_news_manager and ui_options.get("alife/dynamic_news/nearby_activity_news")) then 
 			dynamic_news_manager.get_dynamic_news():BoughtItems(npc,seller,buy_sell_items)
 		end
 	end
+	log_always("buy_done npc=%s id=%s bought=%s policy_blocked=%s stock_blocked=%s money_blocked=%s money_left=%s",
+		npc and npc:name() or "nil",
+		tostring(id),
+		tostring(buy_success),
+		tostring(buy_blocked_policy),
+		tostring(buy_blocked_stock),
+		tostring(buy_blocked_money),
+		tostring(money))
+	print_debug("buy_done npc=%s id=%s bought=%s policy_blocked=%s stock_blocked=%s money_blocked=%s money_left=%s",
+		npc and npc:name() or "nil",
+		tostring(id),
+		tostring(buy_success),
+		tostring(buy_blocked_policy),
+		tostring(buy_blocked_stock),
+		tostring(buy_blocked_money),
+		tostring(money))
+
+	if smart and npc_info and npc_info.job then
+		notify_zhopa_facade_trade_started(npc, smart, "trade_done")
+	end
+
+	finalize_service_session(npc, "trade", buy_success > 0 and "done" or "done_empty")
 end
+
+npc_trade_buy_sell = zhopa_npc_trade_buy_sell_impl
 
 
 --------------------------------
@@ -359,7 +1568,7 @@ local function picked_set(t,gr,ind)
 end
 	
 function check_tech_item(npc,item)
-	if not (npc:alive()) then
+	if not axr_object_alive(npc) then
 		return
 	end
 
@@ -374,7 +1583,16 @@ function check_tech_item(npc,item)
 		return false
 	end
 
+	local smart = xr_gulag.get_npc_smart(npc)
+	if npc_is_blocked_service_customer(npc, smart, id) then
+		clear_tech_item_intent(st)
+		return false
+	end
+
 	local sec = item:section()
+	if not (type(IsItem) == "function" and IsItem("upgrade", sec)) then
+		return
+	end
 
 	local bw = npc:best_weapon() or npc:active_item()
 	if (bw and bw:id() == item:id()) then
@@ -405,19 +1623,14 @@ function check_tech_item(npc,item)
 	if not (st.tech_items) then
 		st.tech_items = {}
 	end
-	st.tech_items[sec] = st.tech_items[sec] and st.tech_items[sec] + 1 or 1
-
-	buy_sell = str_explode(buy_sell,",")
-
-	--print_debug("buy_sell[2]=%s",buy_sell[2])
-	if (st.tech_items[sec] >= tonumber(buy_sell[2])) then
-		st.has_tech_items = true
-		--print_debug("%s: wants to trade surplus items",npc:name())
-	end
+	mark_tech_item_intent(st, sec)
 end
 
 xr_conditions.npc_has_tech_items = function(actor,npc,p)
 	if not (npc) then
+		return false
+	end
+	if zhopa_surge_active() then
 		return false
 	end
 
@@ -428,11 +1641,17 @@ xr_conditions.npc_has_tech_items = function(actor,npc,p)
 		return false
 	end
 
+	local smart = p and p[1] and SIMBOARD.smarts_by_names[p[1]]
+	if npc_is_blocked_service_customer(npc, smart, id) then
+		clear_tech_item_intent(st)
+		return false
+	end
+
 	if not (st.has_tech_items) then
 		return false
 	end
 	
-	local obj = st and st.object or level.object_by_id(id)
+	local obj = st and st.object or axr_online_object_by_id(id)
 	if (not obj) then
 		print_debug("! npc_has_tech_items - no obj found for id (%s)", id)
 		return
@@ -444,7 +1663,6 @@ xr_conditions.npc_has_tech_items = function(actor,npc,p)
 		return
 	end
 
-	local smart = p and p[1] and SIMBOARD.smarts_by_names[p[1]]
 	if (smart and smart.npc_info[id]) then
 		local job = smart.npc_info[id].job
 		if (job and job.idle and time_global() < job.idle) then
@@ -458,10 +1676,16 @@ xr_conditions.npc_has_tech_items = function(actor,npc,p)
 end
 
 xr_effects.tech_job_upgrade_items = function(actor,npc,p)
+	if zhopa_surge_active() then
+		return
+	end
 	npc_tech_upgrade_sell(npc)
 end
 
 xr_effects.tech_job_give_id = function(actor,npc,p)
+	if zhopa_surge_active() then
+		return
+	end
 	local board = SIMBOARD
 	local smart = p[1] and board and board.smarts_by_names[p[1]]
 	local id = smart and smart.npc_by_job_section["logic@"..p[2]]
@@ -476,6 +1700,9 @@ xr_effects.tech_job_give_id = function(actor,npc,p)
 end
 
 function npc_tech_upgrade_sell(npc)
+	if zhopa_surge_active() then
+		return
+	end
 	local id = npc and npc:id()
 	local st = id and db.storage[id]
 	if not (st) then
@@ -497,6 +1724,9 @@ function npc_tech_upgrade_sell(npc)
 	if (npc_info) then
 		npc_info.job.idle = time_global() + 20000
 	end
+	if smart and npc_info and npc_info.job then
+		notify_zhopa_facade_trade_started(npc, smart, "tech_job_enter")
+	end
 
 	print_debug("- NPC Tech | Selling")
 
@@ -509,7 +1739,7 @@ function npc_tech_upgrade_sell(npc)
 	local smart = xr_gulag.get_npc_smart(npc)
 	local npc_info = smart and smart.npc_info[id]
 	local mechanic_id = npc_info and npc_info.job and npc_info.job.mechanic_id
-	local mechanic = mechanic_id and (db.storage[mechanic_id] and db.storage[mechanic_id].object or level.object_by_id(mechanic_id))
+	local mechanic = mechanic_id and axr_online_object_by_id(mechanic_id) or nil
 	print_debug("- NPC Tech | Mechanic = %s", mechanic and mechanic:name())
 	
 	-- SELL ITEMS
@@ -573,23 +1803,28 @@ function npc_tech_upgrade_sell(npc)
 	-- Upgrade
 	local money = npc:money()
 	if (money == nil or money <= 0) then
+		finalize_service_session(npc, "tech", "done_no_money")
 		return
 	end
 
 	if not (smart) then
+		finalize_service_session(npc, "tech", "done_no_smart")
 		return
 	end
 
 	if (npc_info == nil or npc_info.job == nil) then
+		finalize_service_session(npc, "tech", "done_no_job")
 		return
 	end
 
 	if not (mechanic) then
+		finalize_service_session(npc, "tech", "done_no_mechanic")
 		return
 	end
 	
 	local wpn = npc:best_weapon()
 	if not (wpn and IsWeapon(wpn) and not IsMelee(wpn)) then
+		finalize_service_session(npc, "tech", "done_no_weapon")
 		return
 	end
 	
@@ -601,6 +1836,7 @@ function npc_tech_upgrade_sell(npc)
 	local upgrades = utils_item.get_upgrades_tree(sec_wpn)
 	if not (upgrades and size_table(upgrades) > 0) then
 		printf("warning: axr_trade_manager.npc_tech_upgrade_sell(): no upgrades found for [%s]", sec_wpn)
+		finalize_service_session(npc, "tech", "done_no_upgrades_tree")
 		return
 	end
 	local installed = utils_item.get_upgrades_installed(wpn, nil, true)
@@ -667,6 +1903,7 @@ function npc_tech_upgrade_sell(npc)
 	
 	if (#to_install <= #installed) then
 		print_debug("! NPC Tech | no new upgrades are picked")
+		finalize_service_session(npc, "tech", "done_no_new_upgrades")
 		return
 	end
 	
@@ -688,4 +1925,6 @@ function npc_tech_upgrade_sell(npc)
 			dynamic_news_manager.get_dynamic_news():UpgradedItems(npc, mechanic, sec_wpn, new_install)
 		end
 	end
+
+	finalize_service_session(npc, "tech", #new_install > 0 and "done" or "done_empty")
 end

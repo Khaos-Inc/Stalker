@@ -562,7 +562,7 @@ function set_table_memory(npc, enemy, table_npc, time_key)
                 end
 
                 npc._since_seen = delta_last < 100
-                if npc._memory_enabled and delta_last >= 25000 then
+                if npc._memory_enabled and delta_last >= 10000 then
                         npc._memory_enabled = nil
                         table_npc[npc_id] = nil
                         --printf("[DEBUG] NPC Memory table_npc nil")
@@ -804,7 +804,21 @@ function scheme_cover_coward(enemy, npc, actor)
                 	set_table_memory(npc, enemy, table_npc, "coward")
                 end
 
-                if (not npc_see_actor and actor_see_npc) or (not npc_see_enemy and enemy_see_npc) then return false end
+                local is_actor_target = enemy and actor
+                if not is_actor_target then
+                        if (not npc_see_enemy and enemy_see_npc) then
+                                return false
+                        end
+                end
+
+                local actor_is_valid_flank = redone_ai_detection.actor_is_flanking(npc, actor)
+                if is_actor_target then
+                        if (not npc_see_actor and actor_see_npc) then
+                                if not actor_is_valid_flank then
+                                        return false
+                                end
+                        end
+                end
 
                 if sniper_combat_enabled and is_actor_sniper then
                         if dist >= 500 and t1 ~= nil then
@@ -1009,7 +1023,21 @@ function scheme_camper_coward(enemy, npc, actor)
                 	set_table_memory(npc, enemy, table_npc, "coward")
                 end
 
-                if (not npc_see_actor and actor_see_npc) or (not npc_see_enemy and enemy_see_npc) then return false end
+                local is_actor_target = enemy and actor
+                if not is_actor_target then
+                        if (not npc_see_enemy and enemy_see_npc) then
+                                return false
+                        end
+                end
+
+                local actor_is_valid_flank = redone_ai_detection.actor_is_flanking(npc, actor)
+                if is_actor_target then
+                        if (not npc_see_actor and actor_see_npc) then
+                                if not actor_is_valid_flank then
+                                        return false
+                                end
+                        end
+                end
 
                 if sniper_combat_enabled and is_actor_sniper then
                         if dist >= 500 and t2 ~= nil then
@@ -1220,7 +1248,21 @@ function scheme_cover_dumb(enemy, npc, actor)
                 	set_table_memory(npc, enemy, table_npc, "coward")
                 end
 
-                if (not npc_see_actor and actor_see_npc) or (not npc_see_enemy and enemy_see_npc) then return false end
+                local is_actor_target = enemy and actor
+                if not is_actor_target then
+                        if (not npc_see_enemy and enemy_see_npc) then
+                                return false
+                        end
+                end
+
+                local actor_is_valid_flank = redone_ai_detection.actor_is_flanking(npc, actor)
+                if is_actor_target then
+                        if (not npc_see_actor and actor_see_npc) then
+                                if not actor_is_valid_flank then
+                                        return false
+                                end
+                        end
+                end
 
                 if sniper_combat_enabled and is_actor_sniper then
                         if dist >= 500 and t3 ~= nil then
@@ -1425,7 +1467,21 @@ function scheme_camper_dumb(enemy, npc, actor)
                 	set_table_memory(npc, enemy, table_npc, "coward")
                 end
 
-                if (not npc_see_actor and actor_see_npc) or (not npc_see_enemy and enemy_see_npc) then return false end
+                local is_actor_target = enemy and actor
+                if not is_actor_target then
+                        if (not npc_see_enemy and enemy_see_npc) then
+                                return false
+                        end
+                end
+
+                local actor_is_valid_flank = redone_ai_detection.actor_is_flanking(npc, actor)
+                if is_actor_target then
+                        if (not npc_see_actor and actor_see_npc) then
+                                if not actor_is_valid_flank then
+                                        return false
+                                end
+                        end
+                end
 
                 if sniper_combat_enabled and is_actor_sniper then
                         if dist >= 500 and t4 ~= nil then
@@ -1636,7 +1692,21 @@ function scheme_stupid(enemy, npc, actor)
                 	set_table_memory(npc, enemy, table_npc, "coward")
                 end
 
-                if (not npc_see_actor and actor_see_npc) or (not npc_see_enemy and enemy_see_npc) then return false end
+                local is_actor_target = enemy and actor
+                if not is_actor_target then
+                        if (not npc_see_enemy and enemy_see_npc) then
+                                return false
+                        end
+                end
+
+                local actor_is_valid_flank = redone_ai_detection.actor_is_flanking(npc, actor)
+                if is_actor_target then
+                        if (not npc_see_actor and actor_see_npc) then
+                                if not actor_is_valid_flank then
+                                        return false
+                                end
+                        end
+                end
 
                 if sniper_combat_enabled and is_actor_sniper then
                         if dist >= 500 and t5 ~= nil then

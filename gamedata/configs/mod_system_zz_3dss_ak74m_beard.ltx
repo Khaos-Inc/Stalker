@@ -2,11 +2,40 @@
 silencer_x                               = 216
 silencer_y                               = 14
 
-lewd_lens_hide_enabled       = true
-lewd_lens_hide_bone          = lens
-lewd_lens_hide_delays        = 0.1,0
-lewd_lens_hide_aim_mode      = true, false, false
+use_alt_aim_hud				= true
 
+lens_hide_enabled       = true
+lens_hide_bone          = lens
+lens_hide_delays        = 0.1,0
+lens_hide_aim_mode      = true, false, false
+
+;---------------------------------------------SCRIPTED CANTED SIGHTS-----------------------------------
+canted_sights 		 = canted_deltapoint, canted_docter, canted_t12
+
+canted_sights_bone	  = wpn_body
+canted_sights_pos   = 0.000925, 0.068400, 0.242750
+canted_sights_rot   = 0, 0, 0
+canted_sights_scale = 1.040500, 1.040500, 1.040500
+
+open_slots	= 1, 2
+
+canted_rds_position2                  = 0.000925, 0.064796, 0.137032
+
+canted_aim_pos_canted_deltapoint = -0.103967, -0.086649, -0.05
+canted_aim_rot_canted_deltapoint = 0.006674, -0.003416, 0.825
+canted_aim_pos_canted_deltapoint_pos2 = -0.106617, -0.084311, -0.05
+canted_aim_rot_canted_deltapoint_pos2 = 0.006674, -0.003416, 0.825
+
+canted_aim_pos_canted_docter     = -0.10414, -0.081978, -0.05
+canted_aim_rot_canted_docter     = 0.006674, -0.003416, 0.825
+canted_aim_pos_canted_docter_pos2     = -0.106744, -0.079609, -0.05
+canted_aim_rot_canted_docter_pos2     = 0.006674, -0.003416, 0.825
+
+canted_aim_pos_canted_t12        = -0.103894, -0.087018, -0.05
+canted_aim_rot_canted_t12        = 0.006674, -0.003416, 0.825
+canted_aim_pos_canted_t12_pos2        = -0.10656, -0.084502, -0.05
+canted_aim_rot_canted_t12_pos2        = 0.006674, -0.003416, 0.825
+;------------------------------------------------------------------------------------------------------
 ![wpn_ak74m_beard_hud]
         hands_orientation                = 0.193598, -0.378313, 0
         hands_orientation_16x9           = 0.193598, -0.378313, 0
@@ -18,10 +47,10 @@ lewd_lens_hide_aim_mode      = true, false, false
         aim_hud_offset_rot               = -0.006573, 0.003356, 0
         aim_hud_offset_rot_16x9          = -0.006573, 0.003356, 0
 
-        aim_hud_offset_alt_pos           = -0.127929, -0.095927, -0.045222
-        aim_hud_offset_alt_pos_16x9      = -0.127929, -0.095927, -0.045222
-        aim_hud_offset_alt_rot           = -0.006573, 0.00356, 0.8
-        aim_hud_offset_alt_rot_16x9      = -0.006573, 0.00356, 0.8
+        aim_hud_offset_alt_pos           = -0.114811, -0.103179, -0.05
+        aim_hud_offset_alt_pos_16x9      = -0.114811, -0.103179, -0.05
+        aim_hud_offset_alt_rot           = -0.006573, 0.00356, 0.9
+        aim_hud_offset_alt_rot_16x9      = -0.006573, 0.00356, 0.9
 		
         gl_hud_offset_pos                = -0.054354, -0.050316, -0.112264
         gl_hud_offset_pos_16x9           = -0.054354, -0.050316, -0.112264
@@ -38,6 +67,7 @@ lewd_lens_hide_aim_mode      = true, false, false
 1icon_layer_x                            = 67
 1icon_layer_y                            = 0
 
+open_slots	= 2
 ![wpn_ak74m_beard_ekp8_02_hud]
         aim_hud_offset_pos               = -0.094843, -0.00691, -0.025
         aim_hud_offset_pos_16x9          = -0.094843, -0.00691, -0.025
@@ -83,6 +113,7 @@ lewd_lens_hide_aim_mode      = true, false, false
 1icon_layer_x                            = 128
 1icon_layer_y                            = 0
 
+open_slots	= 2
 ![wpn_ak74m_beard_0kp2_hud]
         aim_hud_offset_pos               = -0.092823, 0.004701, -0.025
         aim_hud_offset_pos_16x9          = -0.092823, 0.004701, -0.025
@@ -92,6 +123,7 @@ lewd_lens_hide_aim_mode      = true, false, false
 1icon_layer_x			= 128
 1icon_layer_y			= -7
 
+open_slots	= 2
 ![wpn_ak74m_beard_ac10632_hud]
         aim_hud_offset_pos               = -0.095522, -0.001002, -0.025
         aim_hud_offset_pos_16x9          = -0.095522, -0.001002, -0.025
@@ -101,6 +133,7 @@ lewd_lens_hide_aim_mode      = true, false, false
 1icon_layer_x			= 130
 1icon_layer_y			= -5
 
+open_slots	= 2
 ![wpn_ak74m_beard_eot_hud]
         aim_hud_offset_pos               = -0.095647, -0.006967, -0.025
         aim_hud_offset_pos_16x9          = -0.095647, -0.006967, -0.025
@@ -110,6 +143,7 @@ lewd_lens_hide_aim_mode      = true, false, false
 1icon_layer_x			= 140
 1icon_layer_y			= -4
 
+open_slots	= 2
 ![wpn_ak74m_beard_c-more_hud]
         aim_hud_offset_pos               = -0.095873, -0.000184, -0.025
         aim_hud_offset_pos_16x9          = -0.095873, -0.000184, -0.025
@@ -119,6 +153,7 @@ lewd_lens_hide_aim_mode      = true, false, false
 1icon_layer_x			= 95
 1icon_layer_y			= -6
 
+open_slots	= 1
 ![wpn_ak74m_beard_d0cter_hud]
         aim_hud_offset_pos               = -0.096167, 0.017068, -0.025
         aim_hud_offset_pos_16x9          = -0.096167, 0.017068, -0.025
@@ -128,6 +163,7 @@ lewd_lens_hide_aim_mode      = true, false, false
 1icon_layer_x			= 135
 1icon_layer_y			= -2
 
+open_slots	= 2
 ![wpn_ak74m_beard_mepro_hud]
         aim_hud_offset_pos               = -0.095787, -0.005761, -0.025
         aim_hud_offset_pos_16x9          = -0.095787, -0.005761, -0.025
@@ -137,6 +173,7 @@ lewd_lens_hide_aim_mode      = true, false, false
 1icon_layer_x			= 97
 1icon_layer_y			= -3
 
+open_slots	= 1
 ![wpn_ak74m_beard_aim_low_hud]
         aim_hud_offset_pos               = -0.096007, 0.01548, -0.025
         aim_hud_offset_pos_16x9          = -0.096007, 0.01548, -0.025
@@ -146,6 +183,7 @@ lewd_lens_hide_aim_mode      = true, false, false
 1icon_layer_x			= 125
 1icon_layer_y			= 2
 
+open_slots	= 2
 ![wpn_ak74m_beard_ekp8_18_hud]
         aim_hud_offset_pos               = -0.095934, -0.005883, -0.025
         aim_hud_offset_pos_16x9          = -0.095934, -0.005883, -0.025
@@ -155,6 +193,7 @@ lewd_lens_hide_aim_mode      = true, false, false
 1icon_layer_x			= 100
 1icon_layer_y			= -8
 
+open_slots	= 1
 ![wpn_ak74m_beard_e0t2_hud]
         aim_hud_offset_pos               = -0.096251, -0.000106, -0.025
         aim_hud_offset_pos_16x9          = -0.096251, -0.000106, -0.025
@@ -164,6 +203,7 @@ lewd_lens_hide_aim_mode      = true, false, false
 1icon_layer_x			= 92
 1icon_layer_y			= -2
 
+open_slots	= 1
 ![wpn_ak74m_beard_deltapoint_hud]
         aim_hud_offset_pos               = -0.096173, 0.010841, -0.025
         aim_hud_offset_pos_16x9          = -0.096173, 0.010841, -0.025
@@ -173,6 +213,7 @@ lewd_lens_hide_aim_mode      = true, false, false
 1icon_layer_x			= 95
 1icon_layer_y			= -12
 
+open_slots	= 1
 ![wpn_ak74m_beard_aim_acro_hud]
         aim_hud_offset_pos               = -0.096299, 0.007655, -0.025
         aim_hud_offset_pos_16x9          = -0.096299, 0.007655, -0.025
@@ -182,6 +223,7 @@ lewd_lens_hide_aim_mode      = true, false, false
 1icon_layer_x			= 100
 1icon_layer_y			= -9
 
+open_slots	= 1
 ![wpn_ak74m_beard_pk6_hud]
         aim_hud_offset_pos               = -0.096091, 0.012445, -0.025
         aim_hud_offset_pos_16x9          = -0.096091, 0.012445, -0.025
@@ -191,6 +233,7 @@ lewd_lens_hide_aim_mode      = true, false, false
 1icon_layer_x			= 95
 1icon_layer_y			= -2
 
+open_slots	= 1
 ![wpn_ak74m_beard_rmr_hud]
         aim_hud_offset_pos               = -0.096188, 0.015423, -0.025
         aim_hud_offset_pos_16x9          = -0.096188, 0.015423, -0.025
@@ -200,6 +243,7 @@ lewd_lens_hide_aim_mode      = true, false, false
 1icon_layer_x                            = 95
 1icon_layer_y                            = -13
 
+open_slots	= 1
 ![wpn_ak74m_beard_compm4s_hud]
         aim_hud_offset_pos               = -0.095894, 0.001954, -0.025
         aim_hud_offset_pos_16x9          = -0.095894, 0.001954, -0.025
@@ -209,6 +253,7 @@ lewd_lens_hide_aim_mode      = true, false, false
 1icon_layer_x			= 125
 1icon_layer_y			= -11
 
+open_slots	= 2
 ![wpn_ak74m_beard_kemper_hud]
         aim_hud_offset_pos               = -0.095702, -0.003702, -0.025
         aim_hud_offset_pos_16x9          = -0.095702, -0.003702, -0.025
@@ -218,6 +263,7 @@ lewd_lens_hide_aim_mode      = true, false, false
 1icon_layer_x			= 101
 1icon_layer_y			= -12
 
+open_slots	= 1
 ![wpn_ak74m_beard_p1x42_hud]
         aim_hud_offset_pos               = -0.096167, 0.002062, -0.025
         aim_hud_offset_pos_16x9          = -0.096167, 0.002062, -0.025	
@@ -227,6 +273,7 @@ lewd_lens_hide_aim_mode      = true, false, false
 1icon_layer_x			= 90
 1icon_layer_y			= -8
 
+open_slots	= 1
 ![wpn_ak74m_beard_t12_hud]
         aim_hud_offset_pos               = -0.096212, 0.011766, -0.025
         aim_hud_offset_pos_16x9          = -0.096212, 0.011766, -0.025
@@ -236,6 +283,7 @@ lewd_lens_hide_aim_mode      = true, false, false
 1icon_layer_x			= 90
 1icon_layer_y			= -8
 
+open_slots	= 1
 ![wpn_ak74m_beard_he510_hud]
         aim_hud_offset_pos               = -0.096068, -9.4e-05, -0.025
         aim_hud_offset_pos_16x9          = -0.096068, -9.4e-05, -0.025

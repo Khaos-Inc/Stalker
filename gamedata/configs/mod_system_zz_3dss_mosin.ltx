@@ -12,10 +12,12 @@ snd_shoot_actor				                = wpn_obrez_snd_shoot_actor
 snd_silncer_shot				                    = wpn_mosin_snd_silencer_shot
 snd_silncer_shot_actor				                = wpn_mosin_snd_silencer_shot_actor
 
-lewd_lens_hide_enabled       = true		
-lewd_lens_hide_bone          = lens
-lewd_lens_hide_delays        = 0.1,0
-lewd_lens_hide_aim_mode      = true, false, false	
+use_alt_aim_hud				 = true
+
+lens_hide_enabled       = true		
+lens_hide_bone          = lens
+lens_hide_delays        = 0.1,0
+lens_hide_aim_mode      = true, false, false	
 ![wpn_mosin_hud]
 item_visual                 = anomaly_weapons\wpn_mosin\wpn_mosin_hud.ogf
         hands_orientation                = -0.002033, 0.0038, 0
@@ -28,6 +30,11 @@ item_visual                 = anomaly_weapons\wpn_mosin\wpn_mosin_hud.ogf
         aim_hud_offset_rot           	 = 3.5e-05, -9e-06, 0
         aim_hud_offset_rot_16x9      	 = 3.5e-05, -9e-06, 0
 
+        aim_hud_offset_alt_pos           = -0.096483, -0.087112, -0.03
+        aim_hud_offset_alt_pos_16x9      = -0.096483, -0.087112, -0.03
+        aim_hud_offset_alt_rot           = 3.5e-05, -9e-06, 0.9
+        aim_hud_offset_alt_rot_16x9      = 3.5e-05, -9e-06, 0.9
+		
         base_hud_offset_pos              = -0.042345, -0.005409, -0.055769
         base_hud_offset_pos_16x9         = -0.042345, -0.005409, -0.055769
         base_hud_offset_rot              = 0, 0, 0.12174

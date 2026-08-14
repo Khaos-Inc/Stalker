@@ -1793,7 +1793,7 @@ end
 -----------------------------------------------------------------------------------
 -- TRADE
 -----------------------------------------------------------------------------------
---' Инициализация торговли
+--' пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 function trade_init(seller, buyer)
 	db.storage[seller:id()].meet.begin_wait_to_see.begin = time_global()/1000
 	xr_position.setPosition(db.storage[seller:id()].meet.Seller,
@@ -2468,13 +2468,6 @@ end
 -- Trade important documents
 -----------------------------------------------------------------------------------
 local important_docs = {
-	["main_story_1_quest_case"] = 10000,
-	["main_story_2_lab_x18_documents"] = 13000,
-	["main_story_3_lab_x16_documents"] = 16000,
-	["main_story_4_lab_x10_documents"] = 20000,
-	["main_story_5_lab_x8_documents"] = 13000,
-	["main_story_6_jup_ug_documents"] = 14000,
-	["main_story_7_mon_con_documents"] = 25000,
 }
 
 local important_docs_warfare_names = {
@@ -2513,6 +2506,12 @@ function st_trade_important_documents(a,b,typ,txt)
 		local se_obj = alife_object(npc:id())
 		local comm = se_obj:community()
 		npc_name = important_docs_warfare_names[comm]
+		if not npc_name then
+			npc_name = npc:section()
+			if npc_name == "m_trader" then
+				npc_name = npc:name()
+			end
+		end
 	else
 		npc_name = npc:section()
 		if npc_name == "m_trader" then
@@ -2548,8 +2547,6 @@ end
 
 function trade_important_documents_reward(a,b)
 	local sweets_1 = {
-		"af_aac",
-		"af_iam",
 		"af_plates",
 		"af_camelbak",
 		"af_surge_up",

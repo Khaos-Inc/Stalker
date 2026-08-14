@@ -1,0 +1,60 @@
+local original_npc_on_before_hit
+local installed = false
+
+local function get_weapon(hit)
+	local id = hit and tonumber(hit.weapon_id)
+	return id and level.object_by_id(id) or nil
+end
+
+local function get_ammo_section(weapon)
+	if not (weapon and utils_item and utils_item.get_ammo) then return nil end
+	local ammo = utils_item.get_ammo(weapon:section(), weapon:id())
+	return ammo and ammo[weapon:get_ammo_type() + 1] or nil
+end
+
+local function condition_aware_npc_on_before_hit(npc, hit, bone_id, flags, ...)
+	local api = z_3dss_silencer_condition
+	local weapon = get_weapon(hit)
+	local condition = api and api.get_attached_silencer_condition
+		and api.get_attached_silencer_condition(weapon)
+	if condition == nil then return original_npc_on_before_hit(npc, hit, bone_id, flags, ...) end
+
+	local multiplier = api.get_ballistics_multiplier(weapon)
+	local ratio = multiplier / 1.07
+	if ratio == 1 then return original_npc_on_before_hit(npc, hit, bone_id, flags, ...) end
+
+	local ammo_section = get_ammo_section(weapon)
+	local original_read_float = ini_sys.r_float_ex
+	ini_sys.r_float_ex = function(self, section, key, ...)
+		local value = original_read_float(self, section, key, ...)
+		if section == ammo_section and key == "k_ap" and value ~= nil then
+			return value * ratio
+		end
+		return value
+	end
+
+	local results = { pcall(original_npc_on_before_hit, npc, hit, bone_id, flags, ...) }
+	ini_sys.r_float_ex = original_read_float
+	if not results[1] then error(results[2]) end
+	if hit and type(hit.power) == "number" then hit.power = hit.power * ratio end
+	return unpack(results, 2)
+end
+
+local function install_patch()
+	if installed then return true end
+	local grok = rawget(_G, "grok_bo")
+	local callback = grok and grok.npc_on_before_hit
+	if type(callback) ~= "function" then return false end
+
+	original_npc_on_before_hit = callback
+	grok.npc_on_before_hit = condition_aware_npc_on_before_hit
+	UnregisterScriptCallback("npc_on_before_hit", original_npc_on_before_hit)
+	RegisterScriptCallback("npc_on_before_hit", condition_aware_npc_on_before_hit)
+	installed = true
+	return true
+end
+
+function on_game_start()
+	install_patch()
+	RegisterScriptCallback("actor_on_first_update", install_patch)
+end

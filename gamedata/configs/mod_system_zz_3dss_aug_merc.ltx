@@ -1,23 +1,45 @@
-;==============================================================================		
 ![wpn_aug_merc]
-parent_section				 = wpn_aug_merc
 >scopes						 = aim_acro, he510, p1x42, romeo4, triji, spec_alt, mark8_rmr, gee36, gauss_sight, t12, e0t2_magd, uh1_magd, cortex, ado, echo1, tac30, hamr, ps320, pn23, c79
 <scopes						 = point_aimpro
 
-lewd_lens_hide_enabled       = true
-lewd_lens_hide_bone          = lens
-lewd_lens_hide_delays        = 0.1,0
-lewd_lens_hide_aim_mode      = true, false, false
-
-	s3ds_reticle_size 	= 
-	s3ds_eye_relief 	= 
-	s3ds_exit_pupil		= 
-	s3ds_chroma_power	= 
-	magnifications 		= 
+lens_hide_enabled       = true
+lens_hide_bone          = lens
+lens_hide_delays        = 0.1,0
+lens_hide_aim_mode      = true, false, false
 
 use_alt_aim_hud			= true
 laser_status			= true
-	
+
+;---------------------------------------------SCRIPTED CANTED SIGHTS-----------------------------------
+canted_sights = canted_kac, canted_deltapoint, canted_docter, canted_t12
+
+canted_sights_bone         = wpn_body
+canted_sights_pos   = 0.000400, 0.042600, -0.047000
+canted_sights_rot   = 0, 0, 0
+canted_sights_scale = 1.290000, 1.290000, 1.290000
+front_iron_pos      = 0.000400, 0.042600, 0.223000
+front_iron_rot      = 0, 0, 0
+front_iron_scale    = 1.290000, 1.290000, 1.290000
+
+open_slots 			 = 1, 2
+canted_rds_position1 = 0.000400, 0.042600, -0.032750
+canted_rds_position2 = 0.000400, 0.042600, 0.189750
+
+canted_aim_pos_canted_kac        = -0.10864, -0.096611, 0.02
+canted_aim_rot_canted_kac        = 0, 0, 0.825
+
+canted_aim_pos_canted_deltapoint = -0.107917, -0.08556, 0.02
+canted_aim_rot_canted_deltapoint = 0, 0, 0.825
+ms_dot_offset_canted_deltapoint = 0.004, 0.003
+
+canted_aim_pos_canted_docter     = -0.108119, -0.079951, 0.02
+canted_aim_rot_canted_docter     = 0, 0, 0.825
+ms_dot_offset_canted_docter		 = 0.004, 0.003
+
+canted_aim_pos_canted_t12        = -0.107974, -0.085756, 0.02
+canted_aim_rot_canted_t12        = 0, 0, 0.825
+
+;------------------------------------------------------------------------------------------------------	
 ![wpn_aug_merc_hud]
 anm_shots                                = aug_thales_shoot_3dss, shoot
 
@@ -34,10 +56,10 @@ fire_point                               = 0, 0, 0
         aim_hud_offset_rot               = 3.6e-05, 5e-05, 0.000345
         aim_hud_offset_rot_16x9          = 3.6e-05, 5e-05, 0.000345
 
-        aim_hud_offset_alt_pos           = -0.159614, -0.091665, 0.025249
-        aim_hud_offset_alt_pos_16x9      = -0.159614, -0.091665, 0.025249
-        aim_hud_offset_alt_rot           = 3.6e-05, 5e-05, 0.6
-        aim_hud_offset_alt_rot_16x9      = 3.6e-05, 5e-05, 0.6
+        aim_hud_offset_alt_pos           = -0.154178, -0.102556, 0.025249
+        aim_hud_offset_alt_pos_16x9      = -0.154178, -0.102556, 0.025249
+        aim_hud_offset_alt_rot           = 3.6e-05, 5e-05, 0.8
+        aim_hud_offset_alt_rot_16x9      = 3.6e-05, 5e-05, 0.8
 
         base_hud_offset_pos              = -0.031406, -0.034237, 0.063689
         base_hud_offset_pos_16x9         = -0.031406, -0.034237, 0.063689
@@ -347,6 +369,8 @@ item_visual                              = anomaly_weapons\wpn_aug_thales\wpn_au
 [wpn_aug_merc_gee36]:wpn_aug_merc, gee36_s
 hud                        = wpn_aug_merc_gee36_hud
 
+open_slots				= 2
+
 1icon_layer				= gee36_x
 1icon_layer_x			= 62
 1icon_layer_y			= -14
@@ -492,7 +516,7 @@ hud                        = wpn_aug_merc_e0t2_magd_off_hud
 1icon_layer_y			= -14
 
 [wpn_aug_merc_e0t2_magd_off_hud]:wpn_aug_merc_hud
-item_visual                              = anomaly_weapons\wpn_aug_thales\wpn_aug_thales_e0t2_magd_off_hud.ogf	
+;item_visual                              = anomaly_weapons\wpn_aug_thales\wpn_aug_thales_e0t2_magd_off_hud.ogf	
         aim_hud_offset_pos               = -0.089085, -0.003221, -0.03
         aim_hud_offset_pos_16x9          = -0.089085, -0.003221, -0.03
 		
@@ -518,6 +542,6 @@ hud                        = wpn_aug_merc_uh1_magd_off_hud
 1icon_layer_y			= -15
 
 [wpn_aug_merc_uh1_magd_off_hud]:wpn_aug_merc_hud
-item_visual                              = anomaly_weapons\wpn_aug_thales\wpn_aug_thales_uh1_magd_off_hud.ogf	
+;item_visual                              = anomaly_weapons\wpn_aug_thales\wpn_aug_thales_uh1_magd_off_hud.ogf	
         aim_hud_offset_pos               = -0.089048, -0.006674, -0.03
         aim_hud_offset_pos_16x9          = -0.089048, -0.006674, -0.03

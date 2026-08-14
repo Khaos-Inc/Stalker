@@ -2,6 +2,10 @@
 [logic@gar_smart_terrain_6_3_camp_work_1]
 active = animpoint@gar_smart_terrain_6_3_animpoint_kamp1
 prior = 45
+on_combat = combat
+
+[combat]
+combat_type = {=cond_scheme_cover()} cover, {=cond_scheme_camper()} camper
 
 [animpoint@gar_smart_terrain_6_3_animpoint_kamp1]
 cover_name = gar_smart_terrain_6_3_animpoint_kamp1

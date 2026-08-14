@@ -1,16 +1,249 @@
 -- If you don't use MCM, change your defaults from here
 local defaults = {
-	["zoom_factor"] = 1.5,
+	["zoom_factor"] = 1.3,
 	["nvg_blur"] = false,
 	["parallax_shadow"] = true,
 	["see_through"] = true,
 	["thermal_pixelation"] = true,
-	["chromatism"] = true
+	["chromatism"] = true,
+	["nvg_force_alt"] = true,
+	["canted_sight_editors"] = false,
+["shader_switcher"] = true,
+["shader_switcher_scopes"] = true,
+["shader_switcher_sights"] = true,
+["shader_switcher_rear_irons"] = true,
+	["shader_switcher_opacity"] = 5,
+	["camo_keybind"] = -1,
+	["camo_modifier"] = 0,
+	["camo_press_type"] = 0,
+	["camo_shared_unlocks"] = false,
+	["camo_debug_mode"] = false,
+	["silencer_wear_enabled"] = true
 }
+
+local magnifier_switch_defaults = {
+	use_mousewheel = true,
+	mwheel_switch_ads_only = true,
+	switch_bind = bind_to_dik(key_bindings.kWPN_FUNC),
+	modifier = 0,
+	press_type = 1,
+	keep_aim_toggle = true,
+	switch_sound = true,
+	debug = false,
+}
+
+local mark_switch_defaults = {
+	keybind = DIK_keys.DIK_EQUALS,
+	keybind_reverse = DIK_keys.DIK_MINUS,
+	modifier = 0,
+	modifier_reverse = 0,
+	press_type = 0,
+	press_type_reverse = 0,
+}
+
+local reticle_profile_scopes = {}
+
+local function trim(value)
+	return tostring(value or ""):match("^%s*(.-)%s*$")
+end
+
+local function split_list(value)
+	local result = {}
+	for entry in tostring(value or ""):gmatch("[^,]+") do
+		entry = trim(entry)
+		if entry ~= "" then
+			result[#result + 1] = entry
+		end
+	end
+	return result
+end
+
+local function valid_profile_texture(profile)
+	if not (profile and ini_sys:section_exist(profile)) then return nil end
+	local texture = trim(ini_sys:r_string_ex(profile, "reticle_texture"))
+	return texture ~= "" and texture or nil
+end
+
+local function canonical_profile(profile)
+	local normal_profile = tostring(profile or ""):match("^(.-)_[nh]v$")
+	if normal_profile and valid_profile_texture(normal_profile) then
+		return normal_profile, true
+	end
+	return profile, false
+end
+
+local function profile_set_id(profiles)
+	local signature = table.concat(profiles, "\31")
+	local hash = 5381
+	for i = 1, #signature do
+		hash = (hash * 33 + string.byte(signature, i)) % 2147483647
+	end
+	local first = tostring(profiles[1] or "profiles"):gsub("[^%w_]", "_")
+	return "profile_set_" .. first .. "_" .. tostring(#profiles) .. "_" .. tostring(hash)
+end
+
+local function collect_reticle_profile_scopes()
+	local groups_by_signature = {}
+	reticle_profile_scopes = {}
+
+	ini_sys:section_for_each(function(section)
+		local inv_name = ini_sys:r_string_ex(section, "inv_name")
+		local inv_name_short = ini_sys:r_string_ex(section, "inv_name_short")
+		if inv_name == "st_addon_scope_dummy" or inv_name_short == "st_addon_scope_dummy" then
+			return
+		end
+
+		local configured = split_list(ini_sys:r_string_ex(section, "reticle_profiles"))
+		local canonical_profiles = {}
+		local actual_by_canonical = {}
+		local profile_labels = {}
+		local variant_profiles = 0
+		for _, profile in ipairs(configured) do
+			if valid_profile_texture(profile) then
+				local canonical, is_variant = canonical_profile(profile)
+				if not actual_by_canonical[canonical] then
+					canonical_profiles[#canonical_profiles + 1] = canonical
+					actual_by_canonical[canonical] = profile
+					profile_labels[canonical] = ini_sys:r_string_ex(canonical, "reticle_name")
+						or ini_sys:r_string_ex(profile, "reticle_name")
+						or canonical
+					if is_variant then variant_profiles = variant_profiles + 1 end
+				end
+			end
+		end
+
+		if #canonical_profiles > 1 then
+			table.sort(canonical_profiles)
+			local signature = table.concat(canonical_profiles, "\31")
+			local group = groups_by_signature[signature]
+			if not group then
+				local canonical_content = {}
+				for _, profile in ipairs(canonical_profiles) do
+					canonical_content[#canonical_content + 1] = {profile, profile_labels[profile]}
+				end
+				group = {
+					id = profile_set_id(canonical_profiles),
+					content = canonical_content,
+					scopes = {},
+				}
+				groups_by_signature[signature] = group
+			end
+
+			local configured_default = ini_sys:r_string_ex(section, "reticle_default_profile")
+			local canonical_default = canonical_profile(configured_default)
+			local default_profile = canonical_default
+				and actual_by_canonical[canonical_default]
+				and canonical_default
+				or canonical_profiles[1]
+			local display_name = ini_sys:r_string_ex(section, "inv_name_short")
+				or ini_sys:r_string_ex(section, "inv_name")
+				or section
+			local group_name = trim(ini_sys:r_string_ex(section, "reticle_mcm_group_name"))
+			if group_name == "" then group_name = nil end
+
+			group.scopes[#group.scopes + 1] = {
+				section = section,
+				display_name = display_name,
+				group_name = group_name,
+				default_profile = default_profile,
+				actual_by_canonical = actual_by_canonical,
+				is_variant = variant_profiles == #canonical_profiles,
+			}
+		end
+	end)
+
+	local groups = {}
+	for _, group in pairs(groups_by_signature) do
+		table.sort(group.scopes, function(a, b)
+			return tostring(a.section):lower() < tostring(b.section):lower()
+		end)
+		local default_scope = group.scopes[1]
+		for _, scope in ipairs(group.scopes) do
+			if not scope.is_variant then
+				default_scope = scope
+				break
+			end
+		end
+		group.default_profile = default_scope.default_profile
+
+		local configured_name
+		local display_names = {}
+		local seen_names = {}
+		for _, scope in ipairs(group.scopes) do
+			configured_name = configured_name or scope.group_name
+			local translated_name = game.translate_string(scope.display_name)
+			if not seen_names[translated_name] then
+				display_names[#display_names + 1] = translated_name
+				seen_names[translated_name] = true
+			end
+			reticle_profile_scopes[scope.section] = {
+				group_id = group.id,
+				actual_by_canonical = scope.actual_by_canonical,
+			}
+		end
+		table.sort(display_names, function(a, b)
+			return tostring(a):lower() < tostring(b):lower()
+		end)
+		group.display_name = configured_name or table.concat(display_names, " / ")
+		groups[#groups + 1] = group
+	end
+
+	table.sort(groups, function(a, b)
+		local a_name = game.translate_string(a.display_name)
+		local b_name = game.translate_string(b.display_name)
+		return tostring(a_name):lower() < tostring(b_name):lower()
+	end)
+	return groups
+end
+
+local function build_reticle_profile_options()
+	local options = {
+		{id = "title", type = "slide", link = "ui_options_slider_player", text = "ui_mcm_3d_scopes_reticle_profiles", size = {512, 50}, spacing = 20},
+	}
+
+	for _, group in ipairs(collect_reticle_profile_scopes()) do
+		options[#options + 1] = {
+			id = "title_" .. group.id,
+			type = "slide",
+			text = group.display_name,
+			borderless = true,
+			spacing = 5,
+		}
+		options[#options + 1] = {
+			id = group.id,
+			type = "list",
+			val = 0,
+			def = group.default_profile,
+			hint = "3d_scopes_reticle_profiles_default_profile",
+			content = group.content,
+			no_str = true,
+		}
+	end
+	return options
+end
+
+function get_reticle_profile_default(scope_section)
+	local mapping = reticle_profile_scopes[scope_section]
+	if not (ui_mcm and mapping) then return nil end
+	local canonical = ui_mcm.get("3d_scopes/reticle_profiles/" .. mapping.group_id)
+	return canonical and mapping.actual_by_canonical[canonical] or nil
+end
 
 function get_config(key)
 	if ui_mcm then
-		return ui_mcm.get("3d_scopes/" .. key)
+		local is_camo_setting = key == "camo_keybind"
+			or key == "camo_modifier"
+			or key == "camo_press_type"
+			or key == "camo_shared_unlocks"
+			or key == "camo_debug_mode"
+		local tab = is_camo_setting and "camo_system"
+			or key == "silencer_wear_enabled" and "silencer_wear"
+			or "scope_settings"
+		local value = ui_mcm.get("3d_scopes/" .. tab .. "/" .. key)
+		if value == nil then
+			value = ui_mcm.get("3d_scopes/" .. key)
+		end
+		return value
 	else
 		return defaults[key]
 	end
@@ -19,15 +252,110 @@ end
 function on_mcm_load()
 	op = {
 		id = "3d_scopes",
-		sh = true,
 		gr = {
-			{id = "title", type = "slide", link = "ui_options_slider_player", text = "ui_mcm_3d_scopes_title", size = {512, 50}, spacing = 20},
-			{id = "zoom_factor", type = "track", val = 2, min = 1.0, max = 2.0, step = 0.1, def = 1.5},
-			{id = "nvg_blur", type = "check", val = 1, def = false},
-			{id = "parallax_shadow", type = "check", val = 1, def = true},
-			{id = "see_through", type = "check", val = 1, def = true},
-			{id = "thermal_pixelation", type = "check", val = 1, def = true},
-			{id = "chromatism", type = "check", val = 1, def = true}
+			{
+				id = "scope_settings",
+				text = "ui_mcm_menu_3d_scopes_scope_settings",
+				sh = true,
+				gr = {
+					{id = "title", type = "slide", link = "ui_options_slider_player", text = "ui_mcm_3d_scopes_title", size = {512, 50}, spacing = 20},
+					{id = "zoom_factor", type = "track", val = 2, min = 1.0, max = 2.0, step = 0.1, def = 1.5},
+					{id = "nvg_blur", type = "check", val = 1, def = false},
+					{id = "parallax_shadow", type = "check", val = 1, def = true},
+					{id = "see_through", type = "check", val = 1, def = true},
+					{id = "thermal_pixelation", type = "check", val = 1, def = true},
+					{id = "chromatism", type = "check", val = 1, def = true},
+					{id = "nvg_force_alt", type = "check", val = 1, def = true},
+					{id = "divider_behavior", type = "line"},
+					{id = "shader_switcher", type = "check", val = 1, def = true},
+					{id = "shader_switcher_scopes", type = "check", val = 1, def = true},
+					{id = "shader_switcher_sights", type = "check", val = 1, def = true},
+					{id = "shader_switcher_rear_irons", type = "check", val = 1, def = true},
+					{id = "shader_switcher_opacity", type = "track", val = 2, min = 1, max = 10, step = 1, def = 5},
+					{id = "divider_behavior", type = "line"},
+					{id = "canted_sight_editors", type = "check", val = 1, def = defaults.canted_sight_editors}
+				}
+			},
+			{
+				id = "magnifier_switch",
+				text = "ui_mcm_3d_scopes_magnifier_switch_tab",
+				sh = true,
+				gr = {
+					{id = "title", type = "slide", link = "ui_options_slider_player", text = "ui_mcm_3d_scopes_magnifier_switch_tab", size = {512, 50}, spacing = 20},
+					{id = "use_mousewheel", type = "check", val = 1, def = magnifier_switch_defaults.use_mousewheel},
+					{id = "mwheel_switch_ads_only", type = "check", val = 1, def = magnifier_switch_defaults.mwheel_switch_ads_only},
+					{id = "mwheel_weapon_swap", type = "check", val = 1, cmd = "mouse_wheel_change_weapon", def = false, bool_to_num = true},
+					{id = "divider_input", type = "line"},
+					{id = "switch_bind", type = "key_bind", val = 2, def = magnifier_switch_defaults.switch_bind},
+					{id = "modifier", type = ui_mcm.kb_mod_radio, val = 2, def = magnifier_switch_defaults.modifier, hint = "mcm_kb_modifier", content = {
+						{0, "mcm_kb_mod_none"}, {1, "mcm_kb_mod_shift"}, {2, "mcm_kb_mod_ctrl"}, {3, "mcm_kb_mod_alt"}
+					}},
+					{id = "press_type", type = ui_mcm.kb_mod_radio, val = 2, def = magnifier_switch_defaults.press_type, hint = "mcm_kb_mode", content = {
+						{0, "mcm_kb_mode_press"}, {1, "mcm_kb_mode_dtap"}, {2, "mcm_kb_mode_hold"}
+					}},
+					{id = "divider_behavior", type = "line"},
+					{id = "keep_aim_toggle", type = "check", val = 1, def = magnifier_switch_defaults.keep_aim_toggle},
+					{id = "switch_sound", type = "check", val = 1, def = magnifier_switch_defaults.switch_sound},
+					{id = "divider_debug", type = "line"},
+					{id = "debug", type = "check", val = 1, def = magnifier_switch_defaults.debug}
+				}
+			},
+			{
+				id = "mark_switch",
+				text = "ui_mcm_3d_scopes_mark_switch_tab",
+				sh = true,
+				gr = {
+					{id = "title", type = "slide", link = "ui_options_slider_player", text = "ui_mcm_3d_scopes_mark_switch_tab", size = {512, 50}, spacing = 20},
+					{id = "keybind", type = "key_bind", val = 2, def = mark_switch_defaults.keybind},
+					{id = "modifier", type = ui_mcm.kb_mod_radio, val = 2, def = mark_switch_defaults.modifier, hint = "mcm_kb_modifier", content = {
+						{0, "mcm_kb_mod_none"}, {1, "mcm_kb_mod_shift"}, {2, "mcm_kb_mod_ctrl"}, {3, "mcm_kb_mod_alt"}
+					}},
+					{id = "press_type", type = ui_mcm.kb_mod_radio, val = 2, def = mark_switch_defaults.press_type, hint = "mcm_kb_mode", content = {
+						{0, "mcm_kb_mode_press"}, {1, "mcm_kb_mode_dtap"}, {2, "mcm_kb_mode_hold"}
+					}},
+					{id = "divider_reverse", type = "line"},
+					{id = "keybind_reverse", type = "key_bind", val = 2, def = mark_switch_defaults.keybind_reverse},
+					{id = "modifier_reverse", type = ui_mcm.kb_mod_radio, val = 2, def = mark_switch_defaults.modifier_reverse, hint = "mcm_kb_modifier", content = {
+						{0, "mcm_kb_mod_none"}, {1, "mcm_kb_mod_shift"}, {2, "mcm_kb_mod_ctrl"}, {3, "mcm_kb_mod_alt"}
+					}},
+					{id = "press_type_reverse", type = ui_mcm.kb_mod_radio, val = 2, def = mark_switch_defaults.press_type_reverse, hint = "mcm_kb_mode", content = {
+						{0, "mcm_kb_mode_press"}, {1, "mcm_kb_mode_dtap"}, {2, "mcm_kb_mode_hold"}
+					}}
+				}
+			},
+			{
+				id = "camo_system",
+				text = "ui_mcm_3d_scopes_camo_system",
+				sh = true,
+				gr = {
+					{id = "title", type = "slide", link = "ui_options_slider_player", text = "ui_mcm_3d_scopes_camo_system", size = {512, 50}, spacing = 20},
+					{id = "camo_keybind", type = "key_bind", val = 2, def = -1},
+					{id = "camo_modifier", type = ui_mcm.kb_mod_radio, val = 2, def = defaults.camo_modifier, hint = "mcm_kb_modifier", content = {
+						{0, "mcm_kb_mod_none"}, {1, "mcm_kb_mod_shift"}, {2, "mcm_kb_mod_ctrl"}, {3, "mcm_kb_mod_alt"}
+					}},
+					{id = "camo_press_type", type = ui_mcm.kb_mod_radio, val = 2, def = defaults.camo_press_type, hint = "mcm_kb_mode", content = {
+						{0, "mcm_kb_mode_press"}, {1, "mcm_kb_mode_dtap"}, {2, "mcm_kb_mode_hold"}
+					}},
+					{id = "divider_camo_wheel", type = "line"},					
+					{id = "camo_shared_unlocks", type = "check", val = 1, def = defaults.camo_shared_unlocks},				
+					{id = "camo_debug_mode", type = "check", val = 1, def = defaults.camo_debug_mode}
+				}
+			},
+			{
+				id = "silencer_wear",
+				text = "ui_mcm_3d_scopes_silencer_wear",
+				sh = true,
+				gr = {
+					{id = "title", type = "slide", link = "ui_options_slider_player", text = "ui_mcm_3d_scopes_silencer_wear", size = {512, 50}, spacing = 20},
+					{id = "silencer_wear_enabled", type = "check", val = 1, def = defaults.silencer_wear_enabled}
+				}
+			},
+			{
+				id = "reticle_profiles",
+				text = "ui_mcm_3d_scopes_reticle_profiles",
+				sh = true,
+				gr = build_reticle_profile_options()
+			}
 		}
 	}
 	return op

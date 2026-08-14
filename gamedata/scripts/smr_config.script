@@ -16,6 +16,7 @@ local modules = {
     "smr_stalkers",
 }
 
+
 local function load_state(data)
     if smr_amain_mcm.get_config("smr_persist_override") then
         return

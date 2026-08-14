@@ -1,0 +1,1494 @@
+;   See below for example implementations.
+;
+;   - [cam_anim] is the animation to be played.
+;       + It can be any integer number from 1 to 5.
+;           - Anim #1 is a 1 frame flick. (2000RPM ~ infinity)
+;           - Anim #2 is a blazing fast flick. (1800RPM ~ 2000RPM)
+;           - Anim #3 is a really fast flick. (1400RPM ~ 1800RPM)
+;           - Anim #4 is the "fast" flick. (800RPM ~ 1400RPM)
+;           - Anim #5 is the "normal" flick. (1RPM ~ 800RPM)
+;       + Anims 1, 2, and 3 should be avoided if possible because they can be super disorienting.
+;       + Automatically adjusted in the script depending on current RPM, can be forced by setting [force_cam] to true in the profile.
+;
+;   - [cam_shake] are the screen shake and roll effects.
+;       + [cam_shake] needs to have 3 values registered separated by a comma.
+;       + These values can be any float number from 0 into maybe positive infinite.
+;       + First value controls horizontal screen shake.
+;       + Second value controls vertical screen shake.
+;       + Third value controls screen roll.
+;       + These effects always use a random direction (i.e.: left or right at random).
+;       + These effects always use an animation that's 2 grades faster (i.e.: If anim #5 is chosen, then shakes will be anim #3)
+;
+;   - [cam_recoil] are the, you know, recoil values.
+;       + [cam_recoil] needs to have 2 values registered separated by a comma.
+;       + These values can be any float number from 0 into maybe positive infinite.
+;       + Every value in [cam_recoil] can have an additional property appended to them with a : (i.e.: 1.0:1)
+;           - Not specifying this bit means that the direction of the animation will be random.
+;       + First value controls horizontal recoil, :0 turns the camera to the right, :1 to the left.
+;       + Second value controls vertical recoil, :0 turns the camera upwards, :1 downwards.
+;       + 1.455815984859513757461056922405 is EXACTLY 1 degree.
+;
+;   - You can define spray patterns (think: CS:GO, old Rust, etc.) by using [e_(shot index)], see below for a pattern example implementation.
+;
+;   - [cam_fov] is an FOV pull effect.
+;       + This effect can be any value from 0.0 into maybe positive infinite.
+;       + This effect always use an animation that's 2 grades faster (i.e.: If anim #5 is chosen, then shakes will be anim #3)
+;       + Due to X-Ray weirdness, you should NEVER go overboard on this unless the weapon shoots slowly, because you WILL glitch your camera into geometry, making your shots hit the wall behind you.
+;
+;   - [gun_shake_k] is the modifier for how much the viewmodel moves from the recoil shake and roll effects.
+;       + A negative value means that the weapon will shake in the opposite direction to the camera (I think this looks better).
+;
+;   - [max_recoil] (+1) is the max divisor for recoil intensity. [-0.999(...) .. inf+]
+;       + For positives || i.e.: max_recoil = 2.00 >> (recoil / (1.0 + 2.00)) = recoil / 3.0
+;       +               ||       max_recoil = 8.00 >> (recoil / (1.0 + 8.00)) = recoil / 9.0
+;       + For negatives || i.e.: max_recoil = -0.5 >> (recoil / (1.0 + -0.5)) = recoil / 0.5 = recoil * 2.0
+;       +               ||       max_recoil = -0.9 >> (recoil / (1.0 + -0.9)) = recoil / 0.1 = recoil * 10.0
+;       +               ||       max_recoil = -0.995 >> (recoil / (1.0 + -0.995)) = recoil / 0.005 = recoil * 200.0
+;   - [max_shots] is the amount of consecutive shots needed to reach [max_recoil], a sine curve is used for the divisor before reaching [max_shots].
+;       + Check [https://www.desmos.com/calculator/7ipcqgso65] to see how the sine curve for your settings look. Replace [a] with max_recoil, and [b] with max_shots.
+;
+;   - Other modifiers
+;       + [hburst_k]        --> Scales the hyperburst recoil reduction intensity. [0..1] Default: 1.0 
+;       + [variance_k]      --> Scales the 17.5% (see random_offset in the script) random recoil offset. [0..1] Default: 1.0
+;       + [h_max_r_k]       --> Scales the max recoil divisor for horizontal specifically. [0..1] Default: 1.0
+;       + [h_var_k]         --> Scales the 17.5% (see random_offset in the script) random recoil offset for horizontal specifically. [0..1] Default: 1.0
+;       + [cam_return]      --> Makes recoil return to the origin spot like in Recoil: GOLD, make sure to adjust max_recoil accordingly. bool Default: false
+;       + [reset_k]         --> Scales the time (2.5x cycle time) to reset the consecutive shot counter. [0.1 .. 10] Default: 1.0
+;       + [force_norm]      --> Forces regular recoil progression for a profile if the "Reverse recoil scaling" MCM option is enabled. bool Default: false
+;       + [force_cam]       --> Forces the profile's defined cam_anim instead of adjusting based on RPM. bool Default: false
+;
+;   - [postprocess] are additional fluff Post Process Effects.
+;       + These can be black, blur, duality_h, duality_v, grey
+;           - NOTE: Blur seems to be broken (blame Anomaly), but you can "create" a blur by using both duality_h and duality_v together.
+;       + These are listed as: effect=strength, effect2=strength
+;       + Strengths are always static and go from 0.0 to 1.0.
+;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;
+;   - Design tips for your own profiles:
+;       + Cam anim #4 should be used mostly by SMGs or really fast shooting weapons.
+;       + Shake, roll, and the FOV pull are designed by default to be tied to the default caliber the gun uses.
+;           - Roll is designed by default to be 0.5x the shake as to prevent motion sickness.
+;       + Try to avoid not specifying a direction for horizontal recoil to allow the player to be fully in control, otherwise, try to keep the horizontal recoil really low, like 0.5 and lower.
+;       + For weapons that have a foregrip, try setting [variance_k] to a lower value, this results in less random recoil.
+;       + For weapons that have a muzzle brake, try settings [max_recoil] to a higher value and (hear me out) [h_max_r_k] to a LOWER value, this would result in a higher max divisor for vertical recoil, and a lower max divisor for horizontal. 
+;       + Anims 1, 2, and 3 are extremely fast, disorienting, and look bad for recoil. Try to not use them.
+;           - If you REALLY need to use them, try using anim #3 for weapons that cycle faster than 1600RPM. Yes, this means that the other 2 have no actual use cases.
+;       + For the looped shot in patterns, try setting both horizontal and vertical recoil to a high number without specifying a direction.
+;       + For the duality_ Post Process Effects, try using values below 0.015 unless it's a slow firing weapon, as the effect ramps up really violently.
+;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;  [example_implementation]:base_recoil, 5.56x45   ;; Make sure to ALWAYS inherit from [base_recoil], otherwise make sure to provide all fields in your section. This profile will use some defaults from the 5.56x45 effects.
+;;      cam_anim    = 5                             ;; Animation #5 will be used as a base.
+;;      cam_shake   = 1.0, 1.0, 0.5                 ;; Mild screen shake and roll.
+;;      cam_recoil  = 1.0, 5.0:0                    ;; Mild random direction horizontal recoil, strong upwards vertical recoil.
+;;      cam_fov     = 10.0                          ;; Mild FOV pull.
+;;      gun_shake_k = -0.15                         ;; Viewmodel will move for 15% of the cam_shake values.
+;;      max_recoil  = 2.0                           ;; Recoil intensity will climb down to 33% (divided by (1.0 + 2.0)) of its initial value.
+;;      max_shots   = 5                             ;; And will do so over the course of the first 5 consecutive shots.
+;;      h_max_r_k   = 0.5                           ;; Horizontal recoil max divisor will climb up to 2.0 (1.0 + (max_recoil * h_max_r_k)) instead of 3.0.
+;;      postprocess = duality_h=0.1, duality_v=0.1  ;; Extremely strong blur effect.
+
+;;  [example_pattern_implementation]
+;;      e_1     = 0.25:0, 1.5:0                     ;;  Shot index #1
+;;      e_2     = 0.75:0, 2.5:0                     ;;  Shot index #2
+;;      e_3     = 1.5:0, 3.0:0                      ;;  Shot index #3
+;;      e_4     = 1.0:0, 3.25:0                     ;;  Shot index #4
+;;      [...]
+;;      e_31    = 2.0, 2.0                          ;; If no more indexes are defined, the pattern will loop on the last one, in this case it's index #31.
+;;
+;;  ![example_implementation]:example_pattern_implementation        ;; Now the pattern is hooked to a profile.
+
+
+[cam_anim_1]
+    frames_peak     = 1.56                          ;; Looks terrible (1.6 is somehow super precise 100fps)
+
+[cam_anim_2]
+    frames_peak     = 1.56                          ;; This one also looks terrible
+
+[cam_anim_3]
+    frames_peak     = 1.69
+
+[cam_anim_4]
+    frames_peak     = 2.5
+
+[cam_anim_5]
+    frames_peak     = 3
+
+[base_recoil]
+    cam_anim    = 5                                 ;; Pick one of the 5 cam_anim_ sections
+    cam_shake   = 0.5, 0.5, 0.25                    ;; Horizontal shake, vertical shake, camera roll
+    cam_recoil  = 0.5, 1.0:0                        ;; Horizontal recoil, vertical recoil
+    cam_fov     = 1.0                               ;; How far back to pull the camera 
+    gun_shake_k = -0.1                              ;; Gun movement coefficient -- (cam_shake * gun_shake_k)
+    max_recoil  = 1.0                               ;; Max recoil divisor -- (1 + max_recoil)
+    max_shots   = 1                                 ;; Consecutive shots needed to reach max_recoil
+    hburst_k    = 1.0                               ;; Neutral misc. modifiers
+    variance_k  = 1.0
+    h_max_r_k   = 1.0
+    h_var_k     = 1.0
+    cam_return  = false                             ;; Disable GOLD's recoil auto reset "feature" by default
+    reset_k     = 1.0
+    force_norm  = false
+    force_cam   = false
+    postprocess =                                   ;; No default post process effects
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;                                           _       __            _ _        ;;
+;;     /\                                   | |     / _|          | | |       ;;
+;;    /  \   _ __ ___  _ __ ___   ___     __| | ___| |_ __ _ _   _| | |_ ___  ;;
+;;   / /\ \ | '_ ` _ \| '_ ` _ \ / _ \   / _` |/ _ \  _/ _` | | | | | __/ __| ;;
+;;  / ____ \| | | | | | | | | | | (_) | | (_| |  __/ || (_| | |_| | | |_\__ \ ;;
+;; /_/    \_\_| |_| |_|_| |_| |_|\___/   \__,_|\___|_| \__,_|\__,_|_|\__|___/ ;;
+;;                                                                            ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; Inherit from these to get easy default shake, roll, FOV pull, and post process effects.
+
+[9x18]
+    cam_shake   = 0.5, 0.5, 0.25
+    cam_fov     = 5.0
+
+[9x19]
+    cam_shake   = 0.5, 0.5, 0.25
+    cam_fov     = 7.5
+
+[7.62x25]
+    cam_shake   = 0.75, 0.75, 0.375
+    cam_fov     = 6.25
+
+[5.7x28]
+    cam_shake   = 0.67, 0.67, 0.333
+    cam_fov     = 6.665
+
+[45acp]
+    cam_shake   = 1.0, 1.0, 0.5
+    cam_fov     = 8.75
+
+[357mag]
+    cam_shake   = 2.0, 2.0, 1.0
+    cam_fov     = 10.0
+    postprocess = duality_h=0.0125, duality_v=0.0125
+
+[12ga]
+    cam_shake   = 2.5, 2.5, 1.25
+    cam_fov     = 12.5
+    postprocess = duality_h=0.015, duality_v=0.015
+
+[5.45x39]
+    cam_shake   = 2.0, 2.0, 1.0
+    cam_fov     = 10.0
+
+[5.56x45]
+    cam_shake   = 2.0, 2.0, 1.0
+    cam_fov     = 10.0
+
+[7.62x39]
+    cam_shake   = 2.5, 2.5, 1.125
+    cam_fov     = 11.25
+    postprocess = duality_h=0.0025, duality_v=0.0025
+
+[9x39]
+    cam_shake   = 2.25, 2.25, 1.125
+    cam_fov     = 11.25
+    postprocess = duality_h=0.002, duality_v=0.002
+
+[7.62x51]
+    cam_shake   = 2.5, 2.5, 1.25
+    cam_fov     = 12.5
+    postprocess = duality_h=0.005, duality_v=0.005
+
+[7.62x54]
+    cam_shake   = 2.5, 2.5, 1.25
+    cam_fov     = 12.5
+    postprocess = duality_h=0.005, duality_v=0.005
+
+[7.92x33]
+    cam_shake   = 3.0, 3.0, 1.5
+    cam_fov     = 13.25
+    postprocess = duality_h=0.0067, duality_v=0.0067
+
+[12.7x55]
+    cam_shake   = 3.0, 3.0, 1.5
+    cam_fov     = 13.25
+    postprocess = duality_h=0.0075, duality_v=0.0075
+
+;; Use the _slow variants for bolt actions or slow shooting weapons (i.e.: below 90RPM.)
+
+[12ga_slow]
+    cam_shake   = 5.0, 5.0, 2.5
+    cam_fov     = 12.5
+    postprocess = duality_h=0.0225, duality_v=0.0225
+
+[7.62x51_slow]
+    cam_shake   = 5.0, 5.0, 2.5
+    cam_fov     = 12.5
+    postprocess = duality_h=0.015, duality_v=0.015
+
+[7.62x54_slow]
+    cam_shake   = 5.0, 5.0, 2.5
+    cam_fov     = 12.5
+    postprocess = duality_h=0.015, duality_v=0.015
+
+[7.92x33_slow]
+    cam_shake   = 6.0, 6.0, 3.0
+    cam_fov     = 13.25
+    postprocess = duality_h=0.0167, duality_v=0.0167
+
+[12.7x55_slow]
+    cam_shake   = 7.5, 7.5, 3.75
+    cam_fov     = 13.25
+    postprocess = duality_h=0.0175, duality_v=0.0175
+
+[gauss]
+    cam_shake   = 10.0, 10.0, 10.0
+    cam_fov     = 50.0
+    postprocess = duality_h=0.15, duality_v=0.15
+
+[lapua]
+    cam_shake   = 7.5, 7.5, 3.75
+    cam_fov     = 16.65
+    postprocess = duality_h=0.1, duality_v=0.1
+
+[ubgl]
+    cam_recoil  = 2.5:0, 25.0:0
+    cam_shake   = 5.0, 5.0, 2.5
+    cam_fov     = 20.0
+    max_recoil  = 0.0
+    max_shots   = 1
+    postprocess = duality_h=0.05, duality_v=0.05
+
+;; Unused base game ammo types
+
+[4.6x30]
+    cam_shake   = 0.6, 0.6, 0.3
+    cam_fov     = 6.25
+
+[50bmg]
+    cam_shake   = 10.0, 10.0, 5.0
+    cam_fov     = 20.0
+    postprocess = duality_h=0.15, duality_v=0.15
+
+;; BAS ammo types
+
+[9x21]
+    cam_shake   = 0.75, 0.75, 0.375
+    cam_fov     = 7.5
+
+[4ga]
+    cam_shake   = 3.0, 3.0, 1.5
+    cam_fov     = 15.0
+    postprocess = duality_h=0.033, duality_v=0.033
+
+[20ga]
+    cam_shake   = 2.25, 2.25, 1.125
+    cam_fov     = 11.125
+    postprocess = duality_h=0.0125, duality_v=0.0125
+
+[338fed]
+    cam_shake   = 4.0, 4.0, 2.0
+    cam_fov     = 13.25
+    postprocess = duality_h=0.05, duality_v=0.05
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;                                              ;;
+;;      ____  ___________________  __   _____   ;;
+;;     / __ \/  _/ ___/_  __/ __ \/ /  / ___/   ;;
+;;    / /_/ // / \__ \ / / / / / / /   \__ \    ;;
+;;   / ____// / ___/ // / / /_/ / /______/ /    ;;
+;;  /_/   /___//____//_/  \____/_____/____/     ;;
+;;                                              ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+[wpn_aps]:base_recoil, 9x18
+    cam_recoil  = 0.5:1, 4.0:0
+    gun_shake_k = -0.33
+    max_recoil  = 1.75
+    max_shots   = 10
+
+[wpn_beretta]:base_recoil, 9x19
+    cam_recoil  = 0.275, 4.0:0
+    gun_shake_k = -0.2
+    max_recoil  = 1.0
+    max_shots   = 5
+
+[wpn_beretta_alt]:wpn_beretta
+[wpn_beretta_camo]:wpn_beretta
+[wpn_beretta_modern]:wpn_beretta
+
+[wpn_colt1911]:base_recoil, 45acp
+    cam_recoil  = 0.25, 4.0:0
+    gun_shake_k = -0.45
+    max_recoil  = 0.5
+    max_shots   = 3
+
+[wpn_colt1911_alt]:wpn_colt1911
+[wpn_colt1911_camo]:wpn_colt1911
+[wpn_colt1911_custom]:wpn_colt1911
+[wpn_colt1911_duty]:wpn_colt1911
+[wpn_colt1911_merc]:wpn_colt1911
+[wpn_colt1911_modern]:wpn_colt1911
+[wpn_colt1911_new]:wpn_colt1911
+[wpn_colt_kimber]:wpn_colt1911
+
+[wpn_cz52]:base_recoil, 7.62x25
+    cam_recoil  = 0.25, 4.0:0
+    gun_shake_k = -0.33
+    max_recoil  = 0.67
+    max_shots   = 3
+
+[wpn_cz75]:base_recoil, 9x19
+    cam_recoil  = 0.1, 4.0:0
+    gun_shake_k = -0.33
+    max_recoil  = 1.25
+    max_shots   = 3
+
+[wpn_cz75_auto]:wpn_cz75
+    cam_anim    = 4
+    cam_recoil  = 0.75:0, 4.0:0
+    gun_shake_k = -0.45
+    max_recoil  = 2.0
+    max_shots   = 5
+
+[wpn_desert_eagle]:base_recoil, 357mag
+    cam_recoil  = 1.0:0, 8.0:0
+    gun_shake_k = -0.67
+    max_recoil  = 0.33
+    max_shots   = 4
+
+[wpn_desert_eagle_custom]:wpn_desert_eagle
+[wpn_desert_eagle_modern]:wpn_desert_eagle
+
+[wpn_desert_eagle_nimble]:wpn_desert_eagle
+    cam_recoil  = 0.5:0, 7.0:0
+    gun_shake_k = -0.33
+    max_recoil  = 1.5
+    max_shots   = 4
+
+[wpn_fn57]:base_recoil, 5.7x28
+    cam_recoil  = 0.1:0, 3.0:0
+    gun_shake_k = -0.4
+    max_recoil  = 1.25
+    max_shots   = 5
+
+[wpn_fnp45]:base_recoil, 45acp
+    cam_recoil  = 0.1, 4.0:0
+    gun_shake_k = -0.5
+    max_recoil  = 1.0
+    max_shots   = 5
+
+[wpn_fnp45_custom]:wpn_fnp45
+
+[wpn_fnx45]:wpn_fnp45
+    gun_shake_k = -0.33
+    max_recoil  = 1.67
+
+[wpn_fnx45_alt]:wpn_fnx45
+[wpn_fnx45_custom]:wpn_fnx45
+
+[wpn_fort]:base_recoil, 9x18
+    cam_recoil  = 0.1, 4.0:0
+    gun_shake_k = -0.5
+    max_recoil  = 1.125
+    max_shots   = 7
+
+[wpn_fort_snag]:wpn_fort
+
+[wpn_glock]:base_recoil, 9x19
+    cam_recoil  = 0.5:0, 4.0:0
+    gun_shake_k = -0.45
+    max_recoil  = 1.25
+    max_shots   = 5
+
+[wpn_glock_custom]:wpn_glock
+[wpn_glock_modern]:wpn_glock
+
+[wpn_gsh18]:base_recoil, 9x19
+    cam_recoil  = 0.5:1, 4.0:0
+    gun_shake_k = -0.5
+    max_recoil  = 1.25
+    max_shots   = 5
+
+[wpn_gsh18_custom]:wpn_gsh18
+
+[wpn_hpsa]:base_recoil, 9x19
+    cam_recoil  = 0.75:0, 4.0:0
+    max_recoil  = 1.0
+    max_shots   = 7
+
+[wpn_hpsa_alt]:wpn_hpsa
+
+[wpn_mp412]:base_recoil, 357mag
+    cam_recoil  = 2.0:1, 9.5:0
+    gun_shake_k = -0.55
+    max_recoil  = 1.33
+    max_shots   = 6
+
+[wpn_mp443]:base_recoil, 9x19
+    cam_recoil  = 0.15, 4.0:0
+    gun_shake_k = -0.33
+    max_recoil  = 1.0
+    max_shots   = 10
+
+[wpn_oc33]:base_recoil, 9x18
+    cam_recoil  = 0.5:1, 4.0:0
+    gun_shake_k = -0.33
+    max_recoil  = 2.0
+    max_shots   = 10
+
+[wpn_pb]:base_recoil, 9x18
+    cam_recoil  = 0.5:1, 4.0:0
+    gun_shake_k = -0.75
+    max_recoil  = 0.75
+    max_shots   = 4
+
+[wpn_pb_custom]:base_recoil
+
+[wpn_pm]:base_recoil, 9x18
+    cam_recoil  = 0.5:1, 4.0:0
+    gun_shake_k = -0.75
+    max_recoil  = 0.5
+    max_shots   = 4
+
+[wpn_pm_actor]:wpn_pm
+[wpn_pm_custom]:wpn_pm
+[wpn_pmm]:wpn_pm
+
+[wpn_sig220]:base_recoil, 45acp
+    cam_recoil  = 0.5:0, 4.0:0
+    gun_shake_k = -0.5
+    max_recoil  = 1.125
+    max_shots   = 4
+
+[wpn_sig220_custom]:wpn_sig220
+
+[wpn_sig220_nimble]:wpn_sig220
+    cam_recoil  = 0.25:0, 4.0:0
+    max_recoil  = 1.5
+
+[wpn_tt33]:base_recoil, 7.62x25
+    cam_recoil  = 0.25:1, 4.0:0
+    gun_shake_k = -0.4
+    max_recoil  = 1.25
+    max_shots   = 5
+
+[wpn_tt33_modern]:wpn_tt33
+
+[wpn_usp]:base_recoil, 45acp
+    cam_recoil  = 0.33:0, 4.0:0
+    gun_shake_k = -0.45
+    max_recoil  = 1.25
+    max_shots   = 6
+
+[wpn_usp_custom]:wpn_usp
+
+[wpn_usp_match]:wpn_usp
+    max_recoil  = 1.33
+    max_shots   = 4
+
+[wpn_usp_nimble]:wpn_usp, !45acp, 9x19
+    cam_recoil  = 0.25:0, 4.0:0
+    max_recoil  = 1.5
+    max_shots   = 4
+
+[wpn_walther]:base_recoil, 9x19
+    cam_recoil  = 0.25, 4.0:0
+    gun_shake_k = -0.25
+    max_recoil  = 1.125
+    max_shots   = 6
+
+[wpn_walther_custom]:wpn_walther
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;   ___ __  __  ___        ;;
+;;  / __|  \/  |/ __|___    ;;
+;;  \__ \ |\/| | (_ (_-<    ;;
+;;  |___/_|  |_|\___/__/    ;;
+;;                          ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+[wpn_bizon]:base_recoil, 9x18
+    cam_recoil  = 0.67:1, 3.33:0
+    gun_shake_k = -0.25
+    max_recoil  = 1.275
+    max_shots   = 15
+
+[wpn_mp5]:base_recoil, 9x19
+    cam_recoil  = 0.725:0, 3.5:0
+    gun_shake_k = -0.275
+    max_recoil  = 1.33
+    max_shots   = 10
+
+[wpn_mp5_alt]:wpn_mp5
+[wpn_mp5_custom]:wpn_mp5
+
+[wpn_mp5_nimble]:wpn_mp5_custom, !9x19, 45acp
+    cam_recoil  = 0.85:0, 3.67:0
+    gun_shake_k = -0.33
+    max_recoil  = 1.5
+
+[wpn_mp5sd]:wpn_mp5
+    max_shots   = 8
+
+[wpn_mp5sd_custom]:wpn_mp5sd
+[wpn_mp5sd_new]:wpn_mp5sd
+
+[wpn_ump45]:base_recoil, 45acp
+    cam_recoil  = 0.5:0, 3.75:0
+    gun_shake_k = -0.33
+    max_recoil  = 1.25
+    max_shots   = 10
+
+[wpn_ump45_custom]:wpn_ump45
+
+[wpn_vityaz]:base_recoil, 9x19
+    cam_recoil  = 0.75:1, 3.5:0
+    gun_shake_k = -0.33
+    max_recoil  = 1.55
+    max_shots   = 10
+
+[wpn_vz61]:base_recoil, 9x19
+    cam_recoil  = 0.8:1, 3.55:0
+    gun_shake_k = -0.275
+    max_recoil  = 1.33
+    max_shots   = 10
+
+[wpn_vz61_alt]:wpn_vz61, !9x19, 9x18
+
+[wpn_vz61_camo]:wpn_vz61
+[wpn_vz61_freedom]:wpn_vz61
+
+[wpn_kiparis]:base_recoil, 9x18
+    cam_recoil  = 0.775:1, 3.5:0
+    gun_shake_k = -0.25
+    max_recoil  = 1.33
+    max_shots   = 10
+
+[wpn_mp7]:base_recoil, 9x19
+    cam_anim    = 4
+    cam_recoil  = 0.85:0, 3.5:0
+    gun_shake_k = -0.33
+    max_recoil  = 1.45
+    max_shots   = 15
+
+[wpn_pp2000]:base_recoil, 9x19
+    cam_recoil  = 0.8:1, 3.5:0
+    gun_shake_k = -0.33
+    max_recoil  = 1.33
+    max_shots   = 10
+
+[wpn_p90]:base_recoil, 5.7x28
+    cam_anim    = 4
+    cam_recoil  = 0.85:0, 3.5:0
+    gun_shake_k = -0.5
+    max_recoil  = 1.5
+    max_shots   = 15
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;   _____  _   _  _____  _____  _____  _   _  _   _  _____     ;;
+;;  /  ___|| | | ||  _  ||_   _||  __ \| | | || \ | |/  ___|    ;;
+;;  \ `--. | |_| || | | |  | |  | |  \/| | | ||  \| |\ `--.     ;;
+;;   `--. \|  _  || | | |  | |  | | __ | | | || . ` | `--. \    ;;
+;;  /\__/ /| | | |\ \_/ /  | |  | |_\ \| |_| || |\  |/\__/ /    ;;
+;;  \____/ \_| |_/ \___/   \_/   \____/ \___/ \_| \_/\____/     ;;
+;;                                                              ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+[wpn_mp153]:base_recoil, 12ga
+    cam_recoil  = 1.5, 10.0:0
+    gun_shake_k = -0.85
+    max_recoil  = 0.5
+    max_shots   = 3
+
+[wpn_protecta]:base_recoil, 12ga
+    cam_recoil  = 1.5, 11.25:0
+    gun_shake_k = -0.9
+    max_recoil  = 0.75
+    max_shots   = 4
+
+[wpn_protecta_aim]:wpn_protecta
+[wpn_protecta_camo]:wpn_protecta
+[wpn_protecta_custom]:wpn_protecta
+
+[wpn_protecta_nimble]:wpn_protecta
+    cam_recoil  = 1.0, 11.25:0
+    max_recoil  = 2.0
+    max_shots   = 6
+
+[wpn_remington870]:base_recoil, 12ga_slow
+    cam_recoil  = 2.0, 12.5:0
+    gun_shake_k = -0.67
+    max_recoil  = 1.0
+    max_shots   = 8
+
+[wpn_usas12]:base_recoil, 12ga
+    cam_recoil  = 1.0, 11.25:0
+    gun_shake_k = -0.25
+    max_recoil  = 1.0
+    max_shots   = 20
+
+[wpn_vepr]:base_recoil, 12ga
+    cam_recoil  = 0.75, 10.0:0
+    gun_shake_k = -0.5
+    max_recoil  = 1.0
+    max_shots   = 5
+
+[wpn_saiga12s]:wpn_vepr
+    cam_recoil  = 1.0, 10.0:0
+    max_recoil  = 0.75
+
+[wpn_wincheaster1300]:base_recoil, 12ga_slow
+    cam_recoil  = 2.0, 14.0:0
+    gun_shake_k = -0.67
+    max_recoil  = 1.0
+    max_shots   = 8
+
+[wpn_wincheaster1300_trapper]:wpn_wincheaster1300
+
+[wpn_mossberg590]:base_recoil, 12ga
+    cam_recoil  = 2.0, 14.0:0
+    gun_shake_k = -0.45
+    max_recoil  = 1.125
+    max_shots   = 8
+
+[wpn_fort500]:base_recoil, 12ga_slow
+    cam_recoil  = 2.0, 12.5:0
+    gun_shake_k = -0.55
+    max_recoil  = 1.0
+    max_shots   = 6
+
+[wpn_mp133]:base_recoil, 12ga_slow
+    cam_recoil  = 1.0, 9.5:0
+    gun_shake_k = -0.5
+    max_recoil  = 0.5
+    max_shots   = 8
+
+[wpn_bm16_full]:base_recoil, 12ga
+    cam_recoil  = 0.5, 10.0:0
+    gun_shake_k = -0.33
+    max_recoil  = 0.5
+    max_shots   = 2
+
+[wpn_toz34]:wpn_bm16_full
+    cam_recoil  = 1.5, 8.0:0
+
+[wpn_bm16_full_alt]:wpn_bm16_full
+[wpn_toz34_bull]:wpn_toz34
+[wpn_toz34_custom]:wpn_toz34
+[wpn_toz34_decor]:wpn_toz34
+[wpn_toz34_mark4]:wpn_toz34
+
+[wpn_bm16]:wpn_bm16_full, !12ga, 12ga_slow
+    cam_recoil  = 2.0, 17.5:0
+    max_recoil  = 0.0
+    max_shots   = 1
+
+[wpn_toz34_obrez]:wpn_toz34, !12ga, 12ga_slow
+    cam_recoil  = 4.0, 15.0:0
+    max_recoil  = 0.0
+    max_shots   = 1
+
+[wpn_bm16_alt]:wpn_bm16
+[wpn_toz34_obrez_custom]:wpn_toz34_obrez
+[wpn_toz34_obrez_decor]:wpn_toz34_obrez
+
+[wpn_spas12]:base_recoil, 12ga
+    cam_recoil  = 1.0, 10.0:0
+    gun_shake_k = -0.67
+    max_recoil  = 1.0
+    max_shots   = 5
+
+[wpn_spas12_custom]:wpn_spas12
+
+[wpn_spas12_nimble]:wpn_spas12
+    cam_recoil  = 0.75, 9.5:0
+    max_recoil  = 1.125
+    max_shots   = 4
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;  ______    ___   _______  ___      _______  _______  ;;
+;; |    _ |  |   | |       ||   |    |       ||       | ;;
+;; |   | ||  |   | |    ___||   |    |    ___||  _____| ;;
+;; |   |_||_ |   | |   |___ |   |    |   |___ | |_____  ;;
+;; |    __  ||   | |    ___||   |___ |    ___||_____  | ;;
+;; |   |  | ||   | |   |    |       ||   |___  _____| | ;;
+;; |___|  |_||___| |___|    |_______||_______||_______| ;;
+;;                                                      ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+[wpn_mk14]:base_recoil, 7.62x51
+    cam_recoil  = 2.0:0, 6.0:0
+    gun_shake_k = -0.33
+    max_recoil  = 2.0
+    max_shots   = 4
+
+[wpn_pkm]:base_recoil, 7.62x54
+    cam_recoil  = 2.0:1, 6.0:0
+    gun_shake_k = -0.33
+    max_recoil  = 5.0
+    max_shots   = 20
+
+[wpn_pkm_zulus]:wpn_pkm
+
+[wpn_pkp]:wpn_pkm
+    cam_recoil  = 2.0:0, 6.0:0
+
+[wpn_rpd]:base_recoil, 7.62x39
+    cam_recoil  = 1.5:0, 4.25:0
+    gun_shake_k = -0.45
+    max_recoil  = 5.0
+    max_shots   = 20
+
+[wpn_abakan]:base_recoil, 5.45x39
+    cam_recoil  = 1.0:1, 3.85:0
+    gun_shake_k = -0.25
+    max_recoil  = 1.5
+    max_shots   = 7
+
+[wpn_abakan_camo]:wpn_abakan
+
+[wpn_9a91]:base_recoil, 9x39
+    cam_recoil  = 0.67:1, 3.5:0
+    gun_shake_k = -0.33
+    max_recoil  = 1.5
+    max_shots   = 10
+
+[wpn_aek]:base_recoil, 5.45x39
+    cam_anim    = 4
+    cam_recoil  = 0.75:1, 3.75:0
+    gun_shake_k = -0.25
+    max_recoil  = 1.5
+    max_shots   = 10
+
+[wpn_aek_camo]:wpn_aek
+
+[wpn_aek_duty]:wpn_aek, !5.45x39, 7.62x39
+    cam_recoil  = 0.85:1, 3.95:0
+    gun_shake_k = -0.275
+    max_recoil  = 1.75
+
+[wpn_ak]:base_recoil, 7.62x39
+    cam_recoil  = 1.25:1, 4.25:0
+    gun_shake_k = -0.275
+    max_recoil  = 1.5
+    max_shots   = 10
+
+[wpn_ak101]:base_recoil, 5.56x45
+    cam_recoil  = 0.85:0, 3.8:0
+    gun_shake_k = -0.25
+    max_recoil  = 1.5
+    max_shots   = 10
+
+[wpn_ak101_camo]:wpn_ak101
+
+[wpn_ak102]:wpn_ak101
+    cam_recoil  = 0.75:0, 3.8:0
+    max_recoil  = 1.6
+
+[wpn_ak103]:base_recoil, 7.62x39
+    cam_recoil  = 1.0:1, 4.0:0
+    gun_shake_k = -0.25
+    max_recoil  = 1.5
+    max_shots   = 10
+
+[wpn_ak103_camo]:wpn_ak103
+
+[wpn_ak104]:wpn_ak103
+    cam_recoil  = 0.85:1, 4.0:0
+    max_recoil  = 1.6
+
+[wpn_ak105]:wpn_ak102, !5.56x45, 5.45x39
+    cam_recoil  = 0.75:1, 3.8:0
+
+[wpn_ak12]:base_recoil, 5.45x39
+    cam_recoil  = 0.33, 3.75:0
+    gun_shake_k = -0.175
+    max_recoil  = 1.85
+    max_shots   = 10
+
+[wpn_ak74]:base_recoil, 5.45x39
+    cam_recoil  = 1.0:1, 3.85:0
+    gun_shake_k = -0.25
+    max_recoil  = 1.5
+    max_shots   = 10
+
+[wpn_ak74_alt]:wpn_ak74
+[wpn_ak74_custom]:wpn_ak74
+[wpn_ak74_modern]:wpn_ak74
+[wpn_ak74_old]:wpn_ak74
+[wpn_ak74_rpk]:wpn_ak74
+
+[wpn_ak74m]:wpn_ak74
+    cam_recoil  = 0.85:1, 3.8:0
+    max_recoil  = 1.5
+
+[wpn_ak74m_alt]:wpn_ak74m
+[wpn_ak74m_camo]:wpn_ak74m_alt
+[wpn_ak74m_custom]:wpn_ak74m_camo
+[wpn_ak74m_duty]:wpn_ak74m_custom
+[wpn_ak74m_pka]:wpn_ak74m_duty
+
+[wpn_akm]:base_recoil, 7.62x39
+    cam_recoil  = 1.2:1, 4.0:0
+    gun_shake_k = -0.2
+    max_recoil  = 1.5
+    max_shots   = 10
+
+[wpn_akms]:wpn_akm
+    gun_shake_k = -0.15
+    max_recoil  = 1.67
+
+[wpn_akms_alt]:wpn_akms
+
+[wpn_aks]:wpn_ak
+    gun_shake_k = -0.2
+    max_recoil  = 1.6
+
+[wpn_aks74]:wpn_ak74
+    gun_shake_k = -0.2
+    max_recoil  = 1.55
+
+[wpn_aks74_new]:wpn_aks74
+
+[wpn_aug]:base_recoil, 5.56x45
+    cam_recoil  = 0.85:0, 3.25:0
+    gun_shake_k = -0.25
+    max_recoil  = 1.5
+    max_shots   = 10
+
+[wpn_aug_custom]:wpn_aug
+[wpn_aug_freedom]:wpn_aug
+[wpn_aug_merc]:wpn_aug
+[wpn_aug_modern]:wpn_aug
+[wpn_aug_a3]:wpn_aug
+
+[wpn_fal]:base_recoil, 7.62x51
+    cam_recoil  = 2.0:0, 6.25:0
+    gun_shake_k = -0.33
+    max_recoil  = 2.0
+    max_shots   = 5
+
+[wpn_fnc]:base_recoil, 5.56x45
+    cam_recoil  = 0.9:0, 3.85:0
+    gun_shake_k = -0.15
+    max_recoil  = 1.85
+    max_shots   = 15
+
+[wpn_g3]:base_recoil, 7.62x51
+    cam_recoil  = 2.0:0, 6.25:0
+    gun_shake_k = -0.25
+    max_recoil  = 2.25
+    max_shots   = 5
+
+[wpn_g3sg1]:wpn_g3
+
+[wpn_g36]:base_recoil, 5.56x45
+    cam_recoil  = 0.33, 3.75:0
+    gun_shake_k = -0.2
+    max_recoil  = 1.67
+    max_shots   = 10
+
+[wpn_g36_camo]:wpn_g36
+[wpn_g36_nimble]:wpn_g36
+
+[wpn_g36k]:wpn_g36
+    max_recoil  = 1.9
+
+[wpn_galil]:base_recoil, 7.62x51
+    cam_recoil  = 2.0:1, 6.0:0
+    gun_shake_k = -0.33
+    max_recoil  = 2.0
+    max_shots   = 5
+
+[wpn_galil_custom]:wpn_galil
+[wpn_galil_modern]:wpn_galil
+
+[wpn_hk416]:base_recoil, 5.56x45
+    cam_anim    = 4
+    cam_recoil  = 0.8:0, 3.67:0
+    gun_shake_k = -0.33
+    max_recoil  = 2.0
+    max_shots   = 15
+
+[wpn_l85]:base_recoil, 5.56x45
+    cam_recoil  = 0.9:0, 3.33:0
+    gun_shake_k = -0.275
+    max_recoil  = 1.55
+    max_shots   = 10
+
+[wpn_l85_alt]:wpn_l85
+[wpn_l85_custom]:wpn_l85
+[wpn_l85_modern]:wpn_l85
+
+[wpn_l85a2]:wpn_l85
+    max_recoil  = 1.6
+
+[wpn_l85a2_alt]:wpn_l85a2
+[wpn_l85a2_custom]:wpn_l85a2
+[wpn_l85a2_modern]:wpn_l85a2
+
+[wpn_lr300]:base_recoil, 5.56x45
+    cam_anim    = 4
+    cam_recoil  = 0.85:0, 3.8:0
+    gun_shake_k = -0.2
+    max_recoil  = 1.5
+    max_shots   = 10
+
+[wpn_lr300_camo]:wpn_lr300
+[wpn_lr300_custom]:wpn_lr300
+
+[wpn_m16]:base_recoil, 5.56x45
+    cam_recoil  = 1.0:0, 3.9:0
+    gun_shake_k = -0.25
+    max_recoil  = 1.67
+    max_shots   = 10
+
+[wpn_m16a2]:wpn_m16
+
+[wpn_m249]:base_recoil, 5.56x45
+    ;cam_anim    = 4
+    ;cam_recoil  = 0.5:0, 3.8:0
+    ;gun_shake_k = -0.275
+    ;max_recoil  = 5.0
+    ;max_shots   = 20
+    cam_anim    = 5
+    cam_recoil  = 0.0, 14.5582:0
+    cam_shake   = 0.0, 0.0, 0.0
+    cam_fov     = 0.0
+    gun_shake_k = 0.0
+    max_recoil  = 0.0
+    max_shots   = 1.0
+    variance_k  = 0.0
+
+[wpn_m4]:base_recoil, 5.56x45
+    cam_anim    = 4
+    cam_recoil  = 0.8:0, 3.75:0
+    gun_shake_k = -0.25
+    max_recoil  = 1.5
+    max_shots   = 10
+
+[wpn_m4a1]:wpn_m4
+    max_recoil  = 1.6
+
+[wpn_m4a1_camo]:wpn_m4a1
+[wpn_m4a1_custom]:wpn_m4a1
+[wpn_m4a1_freedom]:wpn_m4a1
+
+[wpn_ppsh41]:base_recoil, 7.62x25
+    cam_anim    = 4
+    cam_recoil  = 1.0:1, 3.5:0
+    gun_shake_k = -0.33
+    max_recoil  = 1.75
+    max_shots   = 15
+
+[wpn_ppsh41_rednew]:wpn_ppsh41
+[wpn_ppsh41_woodnew]:wpn_ppsh41
+
+[wpn_rpk]:base_recoil, 7.62x39
+    cam_recoil  = 1.5:1, 4.0:0
+    gun_shake_k = -0.33
+    max_recoil  = 2.0
+    max_shots   = 15
+
+[wpn_rpk74]:wpn_rpk, !7.62x39, 5.45x39
+    cam_recoil  = 0.85:1, 4.0:0
+    gun_shake_k = -0.25
+    max_recoil  = 2.0
+    max_shots   = 15
+
+[wpn_scar]:base_recoil, 7.62x51
+    cam_recoil  = 1.75:0, 5.5:0
+    gun_shake_k = -0.25
+    max_recoil  = 2.125
+    max_shots   = 5
+
+[wpn_scar_custom]:wpn_scar
+[wpn_scar_new]:wpn_scar
+
+[wpn_hk417]:wpn_scar
+    cam_recoil  = 1.85:0, 5.75:0
+    gun_shake_k = -0.275
+    max_recoil  = 2.25
+    max_shots   = 5
+
+[wpn_sig550]:base_recoil, 5.56x45
+    cam_recoil  = 0.8:0, 3.75:0
+    gun_shake_k = -0.2
+    max_recoil  = 1.55
+    max_shots   = 10
+
+[wpn_sig550_camo]:wpn_sig550
+[wpn_sig550_custom]:wpn_sig550
+[wpn_sig550_luckygun]:wpn_sig550
+
+[wpn_vintorez]:base_recoil, 9x39
+    cam_anim    = 4
+    cam_recoil  = 0.6:1, 3.5:0
+    gun_shake_k = -0.4
+    max_recoil  = 1.55
+    max_shots   = 5
+
+[wpn_vintorez_1pn93]:wpn_vintorez
+[wpn_vintorez_alt]:wpn_vintorez
+
+[wpn_vintorez_nimble]:wpn_vintorez
+    gun_shake_k = -0.2
+    max_recoil  = 1.75
+    max_shots   = 4
+
+[wpn_val]:wpn_vintorez
+    max_recoil  = 1.67
+    max_shots   = 10
+
+[wpn_val_modern]:wpn_val
+
+[wpn_vsk94]:wpn_9a91
+    cam_recoil  = 0.6:1, 3.5:0
+    gun_shake_k = -0.25
+    max_recoil  = 1.55
+
+[wpn_xm8]:wpn_m4
+
+[wpn_type63]:base_recoil, 7.62x39
+    cam_recoil  = 1.5:1, 4.25:0
+    gun_shake_k = -0.25
+    max_recoil  = 1.67
+    max_shots   = 7
+
+[wpn_ace21]:base_recoil, 7.62x51
+    cam_recoil  = 1.85:0, 6.5:0
+    max_recoil  = 2.33
+    max_shots   = 5
+
+[wpn_ak74u]:wpn_ak74
+    cam_recoil  = 1.0:1, 3.9:0
+    gun_shake_k = -0.25
+
+[wpn_ak74u_camo]:wpn_ak74u
+[wpn_ak74u_custom]:wpn_ak74u
+[wpn_ak74u_old]:wpn_ak74u
+[wpn_ak74u_snag]:wpn_ak74u
+
+[wpn_famas3]:wpn_aug
+    cam_anim    = 4
+    cam_recoil  = 0.95:0, 3.0:0
+    gun_shake_k = -0.275
+    max_recoil  = 1.5
+    max_shots   = 10
+
+[wpn_ash12]:base_recoil, 12.7x55
+    cam_recoil  = 0.67, 6.5:0
+    gun_shake_k = -0.33
+    max_recoil  = 2.0
+    max_shots   = 10
+
+[wpn_fn2000]:base_recoil, 5.56x45
+    cam_anim    = 4
+    cam_recoil  = 0.75:0, 3.5:0
+    gun_shake_k = -0.2
+    max_recoil  = 1.55
+    max_shots   = 10
+
+[wpn_fn2000_camo]:wpn_fn2000
+[wpn_fn2000_custom]:wpn_fn2000
+[wpn_fn2000_nimble]:wpn_fn2000
+
+[wpn_groza]:base_recoil, 9x39
+    cam_recoil  = 0.75:1, 3.33:0
+    gun_shake_k = -0.33
+    max_recoil  = 1.5
+    max_shots   = 10
+
+[wpn_groza_nimble]:wpn_groza, !9x39, 7.62x39
+    cam_recoil  = 0.8:1, 3.5:0
+    max_recoil  = 2.0
+    max_shots   = 10
+
+[wpn_vihr]:base_recoil, 9x39
+    cam_anim    = 4
+    cam_recoil  = 0.75:1, 3.55:0
+    gun_shake_k = -0.33
+    max_recoil  = 1.67
+    max_shots   = 10
+
+[wpn_sig552]:wpn_sig550
+    cam_recoil  = 0.85:0, 3.9:0
+    gun_shake_k = -0.25
+    max_recoil  = 1.75
+    max_shots   = 10
+
+[wpn_m60]:base_recoil, 7.62x51
+    cam_recoil  = 2.0:0, 6.0:0
+    gun_shake_k = -0.33
+    max_recoil  = 5.0
+    max_shots   = 20
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;      _______..__   __.  __  .______    _______ .______           _______. ;;
+;;     /       ||  \ |  | |  | |   _  \  |   ____||   _  \         /       | ;;
+;;    |   (----`|   \|  | |  | |  |_)  | |  |__   |  |_)  |       |   (----` ;;
+;;     \   \    |  . `  | |  | |   ___/  |   __|  |      /         \   \     ;;
+;; .----)   |   |  |\   | |  | |  |      |  |____ |  |\  \----..----)   |    ;;
+;; |_______/    |__| \__| |__| | _|      |_______|| _| `._____||_______/     ;;
+;;                                                                           ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+[wpn_l96a1]:base_recoil, 7.62x51_slow
+    cam_recoil  = 2.0, 12.5:0
+    gun_shake_k = -0.125
+    max_recoil  = 0.0
+    max_shots   = 1
+
+[wpn_l96a1m]:wpn_l96a1, !7.62x51_slow, lapua
+    cam_recoil  = 2.5, 15.0:0
+
+[wpn_m24]:wpn_l96a1m
+
+[wpn_m82]:base_recoil, 12.7x55
+    cam_recoil  = 1.5, 10.0:0
+    gun_shake_k = -0.15
+    max_recoil  = 0.25
+    max_shots   = 2
+
+[wpn_m98b]:wpn_l96a1m
+[wpn_remington700]:wpn_l96a1
+[wpn_sig550_sniper]:wpn_sig550
+
+[wpn_sv98]:wpn_l96a1, !7.62x51_slow, 7.62x54_slow
+[wpn_sv98_custom]:wpn_sv98
+
+[wpn_svd]:base_recoil, 7.62x54
+    cam_recoil  = 2.0:1, 6.5:0
+    gun_shake_k = -0.25
+    max_recoil  = 0.25
+    max_shots   = 5
+
+[wpn_svd_custom]:wpn_svd
+
+[wpn_svd_nimble]:wpn_svd
+    cam_recoil  = 2.0:1, 6.0:0
+    max_recoil  = 0.33
+
+[wpn_vssk]:base_recoil, 12.7x55_slow
+    cam_recoil  = 1.25, 12.5:0
+    gun_shake_k = -0.25
+    max_recoil  = 0.0
+    max_shots   = 1
+
+[wpn_wa2000]:wpn_l96a1, !7.62x51_slow, 7.62x51
+[wpn_trg]:wpn_l96a1m
+
+[wpn_svu]:wpn_svd
+    cam_recoil  = 2.5:1, 5.0:0
+
+[wpn_svu_alt]:wpn_svu
+
+[wpn_svu_nimble]:wpn_svu
+    cam_recoil  = 2.0:1, 5.0:0
+    max_recoil  = 0.33
+
+[wpn_sr25]:base_recoil, 7.62x51
+    cam_recoil  = 2.0:0, 5.75:0
+    gun_shake_k = -0.275
+    max_recoil  = 2.25
+    max_shots   = 5
+
+[wpn_k98]:base_recoil, 7.92x33_slow
+    cam_recoil  = 1.5, 12.5:0
+    gun_shake_k = -0.15
+    max_recoil  = 0.0
+    max_shots   = 1
+
+[wpn_g43]:wpn_k98, !7.92x33_slow, 7.92x33
+    cam_recoil  = 1.5:1, 6.25:0
+    gun_shake_k = -0.33
+    max_recoil  = 1.5
+    max_shots   = 5
+
+[wpn_gauss]:base_recoil, gauss
+    cam_recoil  = 0.0, 5.0:0
+    gun_shake_k = -0.75
+    max_recoil  = 0.0
+    max_shots   = 1
+
+[wpn_gauss_quest]:wpn_gauss
+[pri_a17_gauss_rifle]:wpn_gauss
+
+[wpn_mosin]:wpn_sv98
+    cam_recoil  = 2.5, 15.0:0
+
+[wpn_sks]:wpn_type63
+[wpn_sks_modern]:wpn_sks
+
+[wpn_svt40]:base_recoil, 7.62x54
+    cam_recoil  = 2.0:1, 6.0:0
+    gun_shake_k = -0.33
+    max_recoil  = 0.25
+    max_shots   = 5
+
+[wpn_svt40_modern]:wpn_svt40
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;  ________ ____  ____ _______ _____      ___    ______  _____ ____   ____ ________  ______    ;;
+;; |_   __  |_  _||_  _|_   __ |_   _|   .'   `..' ____ \|_   _|_  _| |_  _|_   __  .' ____ \   ;;
+;;   | |_ \_| \ \  / /   | |__) || |    /  .-.  | (___ \_| | |   \ \   / /   | |_ \_| (___ \_|  ;;
+;;   |  _| _   > `' <    |  ___/ | |   _| |   | |_.____`.  | |    \ \ / /    |  _| _ _.____`.   ;;
+;;  _| |__/ |_/ /'`\ \_ _| |_   _| |__/ \  `-'  | \____) |_| |_    \ ' /    _| |__/ | \____) |  ;;
+;; |________|____||____|_____| |________|`.___.' \______.|_____|    \_/    |________|\______.'  ;;
+;;                                                                                              ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+[wpn_rpg7]:base_recoil
+    cam_recoil  = 0.25, 15.0:0
+    max_recoil  = 0.0
+    max_shots   = 1
+    postprocess = duality_h=0.125, duality_v=0.125
+
+[wpn_rg-6]:wpn_rpg7
+    cam_recoil  = 1.5:1, 12.5:0
+    max_recoil  = 1.0
+    max_shots   = 6
+
+[wpn_m79]:wpn_rg-6
+    cam_recoil  = 0.125, 7.5:0
+    max_recoil  = 0.0
+    max_shots   = 1
+
+[wpn_addon_grenade_launcher]:base_recoil, ubgl
+[wpn_addon_grenade_launcher_m203]:base_recoil, ubgl
+
+;; Copypaste from the end of file of all other enhanced recoil mods
+
+;---
+;---	BAS
+;---
+[wpn_vintorez_isg]:wpn_vintorez  
+[wpn_vintorez_m2]:wpn_vintorez  
+[wpn_vintorez_m1]:wpn_vintorez   
+[wpn_vintorez_n1]:wpn_vintorez
+[wpn_val_tac]:wpn_val   
+[wpn_toz106]:wpn_toz34
+[wpn_toz106_m1]:wpn_toz34
+[wpn_dvl10_m1]:wpn_l96a1
+[wpn_dvl10]:wpn_l96a1  
+[wpn_remington700_archangel]:wpn_remington700
+[wpn_remington700_mod_x_gen3]:wpn_remington700
+[wpn_remington700_magpul_pro]:wpn_remington700
+[wpn_remington700_lapua700]:wpn_l96a1m
+[wpn_svds]:wpn_svd
+[wpn_svds_pmc]:wpn_svd
+[wpn_svd_m1]:wpn_svd
+[wpn_sks_b]:wpn_sks
+[wpn_sks_tac]:wpn_sks
+[wpn_sks_molot]:wpn_sks
+[wpn_k98_mod]:wpn_k98   
+[wpn_k98_mod_silen98]:wpn_k98
+[wpn_m4_butcher]:wpn_m4 
+[wpn_m4_tac]:wpn_m4   
+[wpn_m4_ru556]:wpn_m4
+[wpn_m4a1_siber]:wpn_m4a1 
+[wpn_mp153_m1]:wpn_mp153      
+[wpn_ks23_kaban]:wpn_bm16  
+[wpn_ks23_ecolog]:wpn_desert_eagle
+[wpn_ks23_kaban_kab_up]:wpn_bm16
+[wpn_ks23]:wpn_bm16_full
+[wpn_ks23_23_up]:wpn_bm16_full
+[wpn_saiga12s_isg]:wpn_vepr
+[wpn_saiga12s_m2]:wpn_saiga12s
+[wpn_saiga12s_m1]:wpn_saiga12s
+[wpn_ak74u_m1_isg]:wpn_ak74u  
+[wpn_ak74u_isg]:wpn_ak74u 
+[wpn_ak74u_tac]:wpn_ak74u 
+[wpn_ak74u_n1]:wpn_ak74u  
+[wpn_ak74_isg]:wpn_ak74
+[wpn_ak74_pmc]:wpn_ak74
+[wpn_ak74_n]:wpn_ak74 
+[wpn_ak74m_n]:wpn_ak74m  
+[wpn_ak74m_beard]:wpn_ak74m                           
+[wpn_ak12_custom]:wpn_ak12
+[wpn_ak12_m1]:wpn_ak12 
+[wpn_ak12_custom_mono_kit]:wpn_ak12 
+[wpn_ak105_sp]:wpn_ak105 
+[wpn_ak104_alfa]:wpn_ak104        
+[wpn_akm_alfa]:wpn_akm
+[wpn_akm_isg]:wpn_akm
+[wpn_akm_bas]:wpn_akm
+[wpn_akms_bas]:wpn_akms
+[wpn_aug_a1_bas]:wpn_aug
+[wpn_aug_a1_custom_bas]:wpn_aug
+[wpn_aug_a3_bas]:wpn_aug
+[wpn_aug_a3_custom_bas]:wpn_aug
+[wpn_fal_aus]:wpn_fal    
+[wpn_fal_sa58_osw]:wpn_fal  
+[wpn_rpk74_16]:wpn_ak12  
+[wpn_abakan_n]:wpn_abakan   
+[wpn_usp_tac]:wpn_usp            
+[wpn_glock17]:wpn_glock       
+[wpn_glock17_m1]:wpn_glock
+[wpn_colt1911_n]:wpn_colt1911  
+[wpn_walther_p99]:wpn_walther   
+[wpn_sig220_n]:wpn_sig220     
+[wpn_sig226]:wpn_sig220
+[wpn_pl15]:wpn_tt33
+[wpn_pl15_tan]:wpn_tt33
+[wpn_sr1m]:wpn_cz75
+[wpn_sr2_veresk]:wpn_pp2000
+[wpn_sr2_m1]:wpn_pp2000
+[wpn_ak5c_bas]:wpn_ak101 
+[wpn_ak5c_isg]:wpn_ak101 
+[wpn_ak5c_bas_5c_tik]:wpn_ak101 
+[wpn_howa20]:wpn_fnc
+[wpn_korth]:wpn_desert_eagle
+[wpn_korth_custom]:wpn_desert_eagle
+[wpn_l85_m1]:wpn_l85
+[wpn_l85_m2]:wpn_l85
+[wpn_l85_m3]:wpn_l85
+[wpn_pb_bas]:wpn_pb
+[wpn_pm_bas]:wpn_pm
+[wpn_scar_siber]:wpn_scar
+[wpn_scar_siber_black]:wpn_scar
+[wpn_scar_siber_m1]:wpn_scar
+[wpn_scar_siber_m1_black]:wpn_scar
+[wpn_scar_siber_m2]:wpn_scar
+[wpn_scar_siber_m2_custom]:wpn_scar
+[wpn_addon_grenade_launcher_l85]:ubgl
+[wpn_addon_grenade_launcher_monolit]:ubgl
+[wpn_addon_grenade_launcher_scar]:ubgl
+
+
+;---
+;-- CW Pack
+;---
+[wpn_p90_cw]:wpn_aug
+[wpn_rg6_cw]:wpn_m79
+[wpn_sr2m_cw]:wpn_cz75
+[wpn_thor_cw]:wpn_m79
+[wpn_p90dev_cw]:wpn_aug
+[wpn_fn57_cw]:wpn_cz75	
+[wpn_spas12_cw]:wpn_saiga12s
+[wpn_saiga_cw]:wpn_saiga12s
+[wpn_fabarm_cw]:wpn_saiga12s
+[wpn_ksg_cw]:wpn_mossberg590
+[wpn_m1014_cw]:wpn_mossberg590
+[wpn_mp133_cw]:wpn_mossberg590	
+[wpn_izh43_cw]:wpn_bm16_full
+[wpn_tkpd_cw]:wpn_l96a1
+[wpn_tkpds_cw]:wpn_l96a1
+[wpn_tac50_cw]:wpn_m79
+[wpn_mosin_cw]:wpn_mosin
+[wpn_isr_cw]:wpn_l96a1
+[wpn_m40_cw]:wpn_l96a1
+[wpn_vssk_cw]:wpn_l96a1
+[wpn_awp_cw]:wpn_l96a1
+[wpn_qbu_cw]:wpn_ak
+[wpn_rfb_cw]:wpn_ak
+[wpn_x95_cw]:wpn_aug
+[wpn_pdrc_cw]:wpn_aug	
+[wpn_mdrc_cw]:wpn_aug
+[wpn_akmsgold_cw]:wpn_ak
+[wpn_ebrmarksman_cw]:wpn_aug
+[wpn_sks_cw]:wpn_mosin	
+[wpn_svd_cw]:wpn_mosin	
+[wpn_sv98_cw]:wpn_l96a1	
+[wpn_scarl_cw]:wpn_aug
+[wpn_sa58_cw]:wpn_ak	
+[wpn_rpkt_cw]:wpn_ak
+[wpn_rpk_cw]:wpn_groza	
+[wpn_rpd_cw]:wpn_rpk	
+[wpn_m60_cw]:wpn_ak	
+[wpn_m4_cw]:wpn_aug
+[wpn_hk416c_cw]:wpn_groza
+[wpn_hk417_cw]:wpn_groza
+[wpn_hk243_cw]:wpn_groza
+[wpn_kac_cw]:wpn_groza	
+[wpn_g36c_cw]:wpn_groza	
+[wpn_hcar_cw]:wpn_ak
+[wpn_ebr_cw]:wpn_ak
+[wpn_aug_cw]:wpn_aug
+[wpn_aksu_cw]:wpn_groza	
+[wpn_akms_cw]:wpn_ak
+[wpn_ace31_cw]:wpn_groza	
+[wpn_ak74_cw]:wpn_groza	
+[wpn_ak12_cw]:wpn_abakan
+[wpn_abakan_cw]:wpn_abakan
+[wpn_9a91_cw]:wpn_9a91
+[wpn_asvalmod_cw]:wpn_9a91
+[wpn_val_cw]:wpn_9a91
+[wpn_vihr_cw]:wpn_9a91
+[wpn_vss_cw]:wpn_vintorez
+[wpn_coltpython_cw]:wpn_desert_eagle_custom
+[wpn_deagle_cw]:wpn_desert_eagle_custom
+[wpn_sw_cw]:wpn_desert_eagle_custom
+[wpn_p226_cw]:wpn_beretta
+[wpn_ppsh41_cw]:wpn_ak103
+[wpn_coltgold_cw]:wpn_beretta	
+[wpn_kriss_cw]:wpn_mp5
+[wpn_usp_cw]:wpn_beretta
+[wpn_uspm_cw]:wpn_beretta
+[wpn_ump45_cw]:wpn_mp5	
+[wpn_fnp45_cw]:wpn_beretta	
+[wpn_colt_cw]:wpn_beretta
+[wpn_trp_cw]:wpn_beretta
+[wpn_vityaz_cw]:wpn_aug
+[wpn_glock18_cw]:wpn_aps
+[wpn_mp5sdx5_cw]:wpn_aug
+[wpn_evo_cw]:wpn_aug
+[wpn_mp5sd_cw]:wpn_aug
+[wpn_mp5sd_sk1_cw]:wpn_aug
+[wpn_mp7_cw]:wpn_aug
+[wpn_mpx_cw]:wpn_aug
+[wpn_uzi_pro]:wpn_aug
+[wpn_beretta_cw]:wpn_beretta
+[wpn_enforcer_cw]:wpn_beretta
+[wpn_bizon_cw]:wpn_mp5
+[wpn_kedr_cw]:wpn_aps
+[wpn_pm_cw]:wpn_aps
+[wpn_oc33_cw]:wpn_aps
+[wpn_aps_cw]:wpn_aps
+
+; Bas 29 Sempteber Update
+[wpn_adar2_15]:wpn_m16
+[wpn_ak105_bas]:wpn_ak105
+[wpn_ak12_bas]:wpn_ak12
+[wpn_ak12_mono_com]:wpn_ak12
+[wpn_fn57_bas]:wpn_fn57
+[wpn_g28]:wpn_sr25
+[wpn_kar98_retrotac]:wpn_k98
+[wpn_karabiner98k]:wpn_k98
+[wpn_karabiner98k_silen98]:wpn_k98
+[wpn_kiparis_m1]:wpn_kiparis
+[wpn_kiparis_m1_okep77]:wpn_kiparis
+[wpn_kiparis_m2]:wpn_kiparis
+[wpn_kiparis_m2_okep77]:wpn_kiparis
+[wpn_kiparis_m3]:wpn_kiparis
+[wpn_kiparis_m3_okep77]:wpn_kiparis
+[wpn_kiparis_s]:wpn_kiparis
+[wpn_m4_skryaga]:wpn_m4a1
+[wpn_mp133_bas]:wpn_mp133
+[wpn_mp153_bas]:wpn_mp153
+[wpn_pkm_siber]:wpn_pkm
+[wpn_pkm_zenit_shorty]:wpn_pkm
+[wpn_pkm_zenit_siber]:wpn_pkm
+[wpn_pkp_siber]:wpn_pkp
+[wpn_pkp_tac_siber]:wpn_pkp
+[wpn_pk_siber]:wpn_pkp
+[wpn_ppsh_bas]:wpn_ppsh41
+[wpn_ppsh_bas_uptacppsh]:wpn_ppsh41
+[wpn_rem700_aics]:wpn_remington700_lapua700
+[wpn_rem700_mcmillan]:wpn_remington700_lapua700
+[wpn_remington700_bas]:wpn_remington700
+[wpn_remington700_bas_archangel]:wpn_remington700_archangel
+[wpn_remington700_bas_magpul_pro]:wpn_remington700_magpul_pro
+[wpn_remington700_bas_mod_x_gen3]:wpn_remington700_mod_x_gen3
+[wpn_remington700_bas_lapua700]:wpn_remington700_lapua700
+[wpn_scar_l_tac]:wpn_lr300
+[wpn_sig550_siber]:wpn_sig550
+[wpn_sig550_tac_siber]:wpn_sig550_sniper
+[wpn_sig552_isg_siber]:wpn_m4a1
+[wpn_sig552_siber]:wpn_sig552
+[wpn_sig552_tac_siber]:wpn_sig550_sniper
+[wpn_sr2_m2]:wpn_sr2_m1
+[wpn_vz61_scorpion]:wpn_vz61
+[wpn_vz61_scorpion_m1]:wpn_vz61
+[wpn_vz61_scorpion_m2]:wpn_vz61

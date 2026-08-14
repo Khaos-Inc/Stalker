@@ -1,0 +1,479 @@
+local STATE_KEY = "3dss_silencer_condition"
+local STATE_VERSION = 1
+local DEFAULT_CONDITION_PER_SHOT = 0.00005
+local EVENT_NAMESPACE = "3dss_silencer_condition"
+local SILENCER_FAILURE_SOUND = "interface\\inv_detach_sil"
+local MAX_SILENCER_BALLISTICS_BONUS = 0.07
+local MAX_PARTS_WEAR_BONUS = 0.07
+local PARTS_WEAR_MAX_CONDITION = 0.15
+
+local api = _G.z_3dss_silencer_condition or {}
+_G.z_3dss_silencer_condition = api
+
+local original_attach_addon
+local original_detach_addon
+local original_can_attach_silencer
+local original_alife_clone_weapon
+local original_toggle_silencer
+local original_build_desc_header
+local hooks_installed = false
+
+local function silencer_wear_enabled()
+	if z_3d_scopes_mcm and z_3d_scopes_mcm.get_config then
+		local enabled = z_3d_scopes_mcm.get_config("silencer_wear_enabled")
+		if enabled ~= nil then return enabled == true or enabled == 1 end
+	end
+	return true
+end
+
+local function clamp(value, minimum, maximum)
+	return math.max(minimum, math.min(maximum, value))
+end
+
+local function condition_percent(condition)
+	return math.floor(clamp(tonumber(condition) or 0, 0, 1) * 100 + 0.5)
+end
+
+local function object_id(object)
+	if not object then return nil end
+	if type(object.id) == "number" then return object.id end
+	if type(object.id) == "function" then
+		local ok, id = pcall(object.id, object)
+		if ok then return id end
+	end
+	return nil
+end
+
+local function object_section(object)
+	if not object then return nil end
+	if type(object.section) == "function" then
+		local ok, section = pcall(object.section, object)
+		if ok then return section end
+	end
+	return nil
+end
+
+local function copy_state(state)
+	if type(state) ~= "table" then return nil end
+	return {
+		section = state.section,
+		condition = state.condition,
+	}
+end
+
+local function read_state(weapon)
+	local id = object_id(weapon)
+	if not id then return nil end
+	local state = se_load_var(id, nil, STATE_KEY)
+	if type(state) ~= "table" or state.version ~= STATE_VERSION then return nil end
+	if type(state.section) ~= "string" then return nil end
+	state.condition = clamp(tonumber(state.condition) or 1, 0, 1)
+	return state
+end
+
+local function write_state(weapon, state)
+	local id = object_id(weapon)
+	if not id then return end
+	if state then
+		state.version = STATE_VERSION
+		state.condition = clamp(tonumber(state.condition) or 1, 0, 1)
+		se_save_var(id, nil, STATE_KEY, state)
+	else
+		se_save_var(id, nil, STATE_KEY, nil)
+	end
+end
+
+local function item_condition(item)
+	if not item or type(item.condition) ~= "function" then return 1 end
+	local ok, condition = pcall(item.condition, item)
+	return clamp(ok and tonumber(condition) or 1, 0, 1)
+end
+
+local function is_depleted(item)
+	if not silencer_wear_enabled() then return false end
+	return item_condition(item) <= 0
+end
+
+local function set_item_condition(item, section, condition)
+	if not item then return false end
+	condition = clamp(tonumber(condition) or 1, 0, 1)
+	local object = item
+	if type(object.set_condition) ~= "function" then
+		object = level.object_by_id(object_id(item))
+	end
+
+	if object and type(object.set_condition) == "function" then
+		pcall(object.set_condition, object, condition)
+		return true
+	end
+
+	local id = object_id(item)
+	if id and alife_object(id) and alife_process_item then
+		alife_process_item(section or object_section(item), id, { cond = condition })
+		return true
+	end
+	return false
+end
+
+local function attached_silencer_section(weapon)
+	if not (weapon and utils_item and utils_item.get_attached_silencer) then return nil end
+	local ok, section = pcall(utils_item.get_attached_silencer, weapon)
+	return ok and section or nil
+end
+
+local function attached_silencer_condition(weapon)
+	local section = attached_silencer_section(weapon)
+	if not section then return nil end
+	local state = read_state(weapon)
+	if not state or state.section ~= section then return 1 end
+	return clamp(state.condition, 0, 1)
+end
+
+function api.get_attached_silencer_condition(weapon)
+	if not silencer_wear_enabled() then
+		return attached_silencer_section(weapon) and 1 or nil
+	end
+	return attached_silencer_condition(weapon)
+end
+
+function api.get_ballistics_multiplier(weapon)
+	if not silencer_wear_enabled() then
+		return attached_silencer_section(weapon) and 1 + MAX_SILENCER_BALLISTICS_BONUS or 1
+	end
+	local condition = attached_silencer_condition(weapon)
+	if condition == nil then return 1 end
+
+	-- Keep most of the benefit while the suppressor is healthy, then fall faster below 50%.
+	return 1 + MAX_SILENCER_BALLISTICS_BONUS * math.sqrt(condition)
+end
+
+function api.get_parts_wear_multiplier(weapon)
+	if not silencer_wear_enabled() then return 1 end
+	local condition = attached_silencer_condition(weapon)
+	if condition == nil then return 1 end
+
+	-- Wear rises slowly while the suppressor is healthy and accelerates near failure.
+	local progress = clamp((1 - condition) / (1 - PARTS_WEAR_MAX_CONDITION), 0, 1)
+	progress = progress * progress
+	return 1 + MAX_PARTS_WEAR_BONUS * progress
+end
+
+local function inventory_owner_ids(weapon)
+	local owner_ids = {}
+	local seen = {}
+	local se_weapon = weapon and alife_object(object_id(weapon)) or nil
+	local parent_id = se_weapon and se_weapon.parent_id or nil
+	local actor_id = object_id(db.actor)
+
+	if parent_id and parent_id ~= 65535 then
+		owner_ids[#owner_ids + 1] = parent_id
+		seen[parent_id] = true
+	end
+	if actor_id and not seen[actor_id] then
+		owner_ids[#owner_ids + 1] = actor_id
+	end
+	return owner_ids
+end
+
+local function inventory_ids(section, owner_ids)
+	local ids = {}
+	if not section then return ids end
+	for _, owner_id in ipairs(owner_ids or {}) do
+		local owner = level.object_by_id(owner_id)
+		if owner and type(owner.iterate_inventory) == "function" then
+			owner:iterate_inventory(function(_, item)
+				if item and object_section(item) == section then
+					ids[object_id(item)] = true
+				end
+			end, owner)
+		end
+	end
+	return ids
+end
+
+local function restore_spawned_silencer(section, condition, previous_ids, owner_ids, event_key)
+	local attempts = 0
+	CreateTimeEvent(EVENT_NAMESPACE, event_key, 0, function()
+		attempts = attempts + 1
+		local restored = false
+		for _, owner_id in ipairs(owner_ids or {}) do
+			local owner = level.object_by_id(owner_id)
+			if owner and type(owner.iterate_inventory) == "function" then
+				owner:iterate_inventory(function(_, item)
+					local id = object_id(item)
+					if not restored and item and object_section(item) == section and not previous_ids[id] then
+						restored = set_item_condition(item, section, condition)
+					end
+				end, owner)
+			end
+		end
+		return restored or attempts >= 20
+	end)
+end
+
+local function condition_per_shot(section)
+	if section and ini_sys:section_exist(section) then
+		local configured = ini_sys:r_float_ex(section, "silencer_condition_per_shot")
+		if configured ~= nil then return math.max(0, configured) end
+	end
+	return DEFAULT_CONDITION_PER_SHOT
+end
+
+local function capture_attachment(weapon, item)
+	if not (weapon and item) then return nil end
+	local section = object_section(item)
+	if not (section and IsItem("sil", section)) then return nil end
+	local old_state = copy_state(read_state(weapon))
+	local owner_ids = inventory_owner_ids(weapon)
+	return {
+		new_section = section,
+		new_condition = item_condition(item),
+		old_state = old_state,
+		owner_ids = owner_ids,
+		old_ids = old_state and inventory_ids(old_state.section, owner_ids) or nil,
+	}
+end
+
+local function finish_attachment(weapon, item_id, captured)
+	if not (weapon and captured) then return end
+	if item_id and alife_object(item_id) then
+		write_state(weapon, captured.old_state)
+		return
+	end
+
+	local old = captured.old_state
+	write_state(weapon, {
+		section = captured.new_section,
+		condition = captured.new_condition,
+	})
+
+	if old and old.section and old.section ~= captured.new_section then
+		restore_spawned_silencer(old.section, old.condition, captured.old_ids, captured.owner_ids,
+			"replace_" .. tostring(object_id(weapon)))
+	end
+end
+
+local function detach_with_condition(weapon, callback, ...)
+	local state = weapon and read_state(weapon)
+	if not state then return callback(weapon, ...) end
+
+	local owner_ids = inventory_owner_ids(weapon)
+	local before_ids = inventory_ids(state.section, owner_ids)
+	local result = callback(weapon, ...)
+	if attached_silencer_section(weapon) then return result end
+
+	restore_spawned_silencer(state.section, state.condition, before_ids, owner_ids,
+		"detach_" .. tostring(object_id(weapon)))
+	write_state(weapon, nil)
+	return result
+end
+
+local function install_utils_hooks()
+	if hooks_installed or not utils_item then return end
+
+	original_can_attach_silencer = utils_item.can_attach_silencer
+	if original_can_attach_silencer then
+		utils_item.can_attach_silencer = function(weapon, item, ...)
+			if is_depleted(item) then return false end
+			return original_can_attach_silencer(weapon, item, ...)
+		end
+	end
+
+	original_attach_addon = utils_item.attach_addon
+	if original_attach_addon then
+		utils_item.attach_addon = function(weapon, item, addon_type, ...)
+			if addon_type ~= "sil" then
+				return original_attach_addon(weapon, item, addon_type, ...)
+			end
+			if is_depleted(item) then return false end
+			local captured = capture_attachment(weapon, item)
+			local item_id = object_id(item)
+			local result = original_attach_addon(weapon, item, addon_type, ...)
+			finish_attachment(weapon, item_id, captured)
+			return result
+		end
+	end
+
+	original_detach_addon = utils_item.detach_addon
+	if original_detach_addon then
+		utils_item.detach_addon = function(weapon, addon, addon_type, ...)
+			if addon_type ~= "sil" then
+				return original_detach_addon(weapon, addon, addon_type, ...)
+			end
+			local args = { ... }
+			return detach_with_condition(weapon, function(wpn)
+				return original_detach_addon(wpn, addon, addon_type, unpack(args))
+			end)
+		end
+	end
+
+	hooks_installed = true
+end
+
+local function install_clone_hook()
+	if original_alife_clone_weapon or not _G.alife_clone_weapon then return end
+	original_alife_clone_weapon = _G.alife_clone_weapon
+	_G.alife_clone_weapon = function(se_weapon, section, parent_id, ...)
+		local state = se_weapon and copy_state(read_state(se_weapon)) or nil
+		local cloned = original_alife_clone_weapon(se_weapon, section, parent_id, ...)
+		if cloned and state then write_state(cloned, state) end
+		return cloned
+	end
+end
+
+local function install_toggle_hook()
+	if original_toggle_silencer or type(_G.toggle_silencer) ~= "function" then return end
+	original_toggle_silencer = _G.toggle_silencer
+	_G.toggle_silencer = function(...)
+		local args = { ... }
+		local weapon = db.actor and db.actor:active_item()
+		if not (weapon and IsWeapon(weapon)) then return original_toggle_silencer(unpack(args)) end
+
+		if attached_silencer_section(weapon) then
+			return detach_with_condition(weapon, function()
+				return original_toggle_silencer(unpack(args))
+			end)
+		end
+
+		local section = utils_item and utils_item.get_param
+			and utils_item.get_param(weapon:section(), weapon:id(), "silencer_name", "string")
+		local item = section and db.actor:object(section)
+		if is_depleted(item) then return end
+		local captured = capture_attachment(weapon, item)
+		local item_id = object_id(item)
+		local result = original_toggle_silencer(unpack(args))
+		finish_attachment(weapon, item_id, captured)
+		return result
+	end
+end
+
+local function detach_depleted_silencer(weapon_id, section)
+	if not silencer_wear_enabled() then return true end
+	local weapon = weapon_id and level.object_by_id(weapon_id) or nil
+	if not (weapon and IsWeapon(weapon)) then return true end
+	if attached_silencer_section(weapon) ~= section then return true end
+
+	local state = read_state(weapon)
+	if not state or state.section ~= section or state.condition > 0 then return true end
+	if not (utils_item and utils_item.detach_addon) then return true end
+
+	utils_item.detach_addon(weapon, nil, "sil", true)
+	if utils_obj and utils_obj.play_sound then
+		pcall(utils_obj.play_sound, SILENCER_FAILURE_SOUND)
+	end
+	return true
+end
+
+local function initialize_npc_silencer_condition(npc, item)
+	if not silencer_wear_enabled() then return end
+	if not (npc and item) then return end
+
+	local npc_id = object_id(npc)
+	local item_id = object_id(item)
+	local expected_section = object_section(item)
+	local item_is_weapon = IsWeapon(item)
+	local item_is_silencer = expected_section and IsItem("sil", expected_section)
+	if not (npc_id and (item_is_weapon or item_is_silencer)) then return end
+
+	local attempts = 0
+	CreateTimeEvent(EVENT_NAMESPACE, "npc_init_" .. tostring(npc_id) .. "_" .. tostring(item_id), 0, function()
+		attempts = attempts + 1
+		local npc_object = level.object_by_id(npc_id)
+		if not npc_object then return true end
+
+		local initialized = false
+		local function initialize_weapon(weapon)
+			if initialized or not (weapon and IsWeapon(weapon)) then return end
+			local section = attached_silencer_section(weapon)
+			if not section or (item_is_silencer and section ~= expected_section) then return end
+			if read_state(weapon) then
+				initialized = true
+				return
+			end
+			write_state(weapon, {
+				section = section,
+				condition = math.random(50, 100) / 100,
+			})
+			initialized = true
+		end
+
+		if item_is_weapon then
+			initialize_weapon(level.object_by_id(item_id))
+		else
+			npc_object:iterate_inventory(function(_, inventory_item)
+				initialize_weapon(inventory_item)
+			end, npc_object)
+		end
+		return initialized or attempts >= 5
+	end)
+end
+
+local function install_condition_display()
+	if original_build_desc_header or not (ui_item and ui_item.build_desc_header) then return end
+
+	original_build_desc_header = ui_item.build_desc_header
+	local condition_color = utils_xml.get_color("pda_blue")
+	local text_color = utils_xml.get_color("ui_gray_1")
+
+	ui_item.build_desc_header = function(obj, sec, str)
+		local result = original_build_desc_header(obj, sec, str)
+		if not silencer_wear_enabled() then return result end
+		local c_weapon = obj and type(obj.cast_Weapon) == "function" and obj:cast_Weapon()
+		local condition
+		if c_weapon then
+			local section = attached_silencer_section(obj)
+			if not section then return result end
+			local state = read_state(obj)
+			condition = state and state.section == section and state.condition or 1
+		else
+			local section = sec or object_section(obj)
+			if not section or not IsItem("sil", section) then return result end
+			condition = item_condition(obj)
+		end
+
+		local percent = condition_percent(condition)
+		local line = condition_color .. " " .. string.char(149) .. " "
+			.. text_color .. game.translate_string("st_3dss_silencer_condition") .. " "
+			.. condition_color .. tostring(percent) .. "%"
+		return line .. "\\n \\n" .. text_color .. result
+	end
+end
+
+local function actor_on_weapon_fired(_, weapon)
+	if not silencer_wear_enabled() then return end
+	if not (weapon and IsWeapon(weapon)) then return end
+	if weapon:weapon_in_grenade_mode() then return end
+
+	local section = attached_silencer_section(weapon)
+	if not section then return end
+
+	local state = read_state(weapon)
+	if not state or state.section ~= section then
+		state = { section = section, condition = 1 }
+	end
+	state.condition = clamp(state.condition - condition_per_shot(section), 0, 1)
+	write_state(weapon, state)
+
+	if state.condition <= 0 then
+		local weapon_id = object_id(weapon)
+		if weapon_id then
+			CreateTimeEvent(EVENT_NAMESPACE, "failure_detach_" .. tostring(weapon_id), 0,
+				detach_depleted_silencer, weapon_id, section)
+		end
+	end
+end
+
+function on_game_start()
+	install_utils_hooks()
+	install_clone_hook()
+	install_toggle_hook()
+	install_condition_display()
+	RegisterScriptCallback("actor_on_weapon_fired", actor_on_weapon_fired)
+	RegisterScriptCallback("npc_on_item_take", initialize_npc_silencer_condition)
+	RegisterScriptCallback("actor_on_first_update", function()
+		install_utils_hooks()
+		install_clone_hook()
+		install_toggle_hook()
+		install_condition_display()
+	end)
+end

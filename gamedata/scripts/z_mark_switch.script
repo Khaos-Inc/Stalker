@@ -10,14 +10,27 @@
 
 
 local KEYBIND
+local KEYBIND_REVERSE
+local MODIFIER = 0
+local MODIFIER_REVERSE = 0
+local PRESS_TYPE = 0
+local PRESS_TYPE_REVERSE = 0
 local SOUND
+local ZOOM_ALT = 1
+local MS_DOT_OFFSETS_ENABLED = true
+local MS_DOT_OFFSET_LIMIT = 0.01
+local MS_DOT_OFFSET_LEVELS = 2048
+local MS_DOT_OFFSET_BASE = MS_DOT_OFFSET_LEVELS + 1
+local MS_DOT_OFFSET_PACK_MAX = MS_DOT_OFFSET_BASE * MS_DOT_OFFSET_BASE
 local ALL_PARAMETERS = {
 	ms_count = "float",
-	ms_colors = "ms_color"
+	ms_colors = "ms_color",
+	ms_dot_offset = "vec2"
 }
 
 local current_marks = {}
 local last_weapon_id
+local last_shader_key
 
 
 local inventory_upgrade_base = ui_inventory.UIInventory.RMode_UpgradeYes
@@ -40,6 +53,11 @@ end
 
 function on_option_change()
 	KEYBIND = z_mark_switch_mcm.get_config("keybind")
+	KEYBIND_REVERSE = z_mark_switch_mcm.get_config("keybind_reverse")
+	MODIFIER = z_mark_switch_mcm.get_config("modifier") or 0
+	MODIFIER_REVERSE = z_mark_switch_mcm.get_config("modifier_reverse") or 0
+	PRESS_TYPE = z_mark_switch_mcm.get_config("press_type") or 0
+	PRESS_TYPE_REVERSE = z_mark_switch_mcm.get_config("press_type_reverse") or 0
 end
 
 function get_mark_count(section)
@@ -64,8 +82,29 @@ function get_mark_color(section, i)
 	return color
 end
 
-function get_sight_section(wpn_section)
-	local parent = ini_sys:r_string_ex(wpn_section, "parent_section") or wpn_section
+local function effective_weapon_section(wpn)
+	if magnifier_switch and magnifier_switch.get_effective_section then
+		return magnifier_switch.get_effective_section(wpn) or wpn:section()
+	end
+	return wpn:section()
+end
+
+function get_sight_section(wpn, zoom_type)
+	local wpn_section = effective_weapon_section(wpn)
+
+	if scripted_canted_irons then
+		local canted_section
+		if zoom_type == ZOOM_ALT and scripted_canted_irons.get_installed_section then
+			canted_section = scripted_canted_irons.get_installed_section(wpn)
+		elseif zoom_type == nil and scripted_canted_irons.get_active_s3ds_section then
+			canted_section = scripted_canted_irons.get_active_s3ds_section(wpn)
+		end
+		if canted_section then
+			return canted_section, true
+		end
+	end
+
+	local parent = inherited_string(wpn_section, "parent_section") or wpn_section
 	if #parent == #wpn_section then
 		return wpn_section
 	end
@@ -73,38 +112,126 @@ function get_sight_section(wpn_section)
 	return wpn_section:sub(#parent + 2)
 end
 
+function inherited_string(section, key)
+	if not (section and key) then return nil end
+	if SYS_GetParam then
+		local ok, value = pcall(SYS_GetParam, 0, section, key, nil)
+		if ok and value ~= nil then
+			return tostring(value)
+		end
+	end
+	return ini_sys:r_string_ex(section, key)
+end
+
+local function get_base_weapon_section(wpn_section)
+	return inherited_string(wpn_section, "parent_section") or wpn_section
+end
+
 function parse_key(section, key, type, current_mark)
 	if key == "ms_count" then
 		return get_mark_count(section)
 	elseif key == "ms_colors" then
 		return get_mark_color(section, current_mark)
+	elseif key == "ms_dot_offset" then
+		return inherited_string(section, key)
 	end
 end
 
-function parse_parameters(wpn)
+local function store_param(values, key, value)
+	if value == nil then
+		return
+	end
+	values[key] = value
+	if key == "ms_dot_offset" then
+		values["ms_dot_offset_enabled"] = true
+	end
+end
+
+local function apply_reticle_profile_parameters(values, wpn, current_mark)
+	if not (z_3dss_reticle_profiles
+		and z_3dss_reticle_profiles.get_profile_section
+		and z_3dss_reticle_profiles.get_selected_profile)
+	then
+		return
+	end
+
+	local profile_section = z_3dss_reticle_profiles.get_profile_section(wpn)
+	local profile = z_3dss_reticle_profiles.get_selected_profile(profile_section)
+	if not profile then return end
+
+	local count = parse_key(profile, "ms_count", ALL_PARAMETERS.ms_count, current_mark)
+	if count ~= nil then
+		count = math.max(1, count)
+		store_param(values, "ms_count", count)
+		if current_mark >= count then
+			current_mark = count - 1
+			current_marks[wpn:id()] = current_mark
+			values["ms_current"] = current_mark
+		end
+	end
+
+	store_param(
+		values,
+		"ms_colors",
+		parse_key(profile, "ms_colors", ALL_PARAMETERS.ms_colors, current_mark)
+	)
+end
+
+function parse_parameters(wpn, zoom_type)
 	local values = {}
 	
 	local current_mark = current_marks[wpn:id()] or 0
 	values["ms_current"] = current_mark
 
+	local sight_section, canted_sight = get_sight_section(wpn, zoom_type)
+	if canted_sight then
+		local wpn_section = effective_weapon_section(wpn)
+		local base_wpn_section = get_base_weapon_section(wpn_section)
+		local dot_offset = inherited_string(wpn_section, "ms_dot_offset_" .. sight_section)
+		if not dot_offset and base_wpn_section ~= wpn_section then
+			dot_offset = inherited_string(base_wpn_section, "ms_dot_offset_" .. sight_section)
+		end
+		local canted_values = {
+			ms_current = 0,
+			ms_count = 1,
+		}
+		store_param(canted_values, "ms_dot_offset", dot_offset)
+		return canted_values
+	end
+
 	wpn:iterate_installed_upgrades(
 		function(upgr_sec)
 			for key, type in pairs(ALL_PARAMETERS) do
-				values[key] = parse_key(upgr_sec, key, type, current_mark)
+				store_param(values, key, parse_key(upgr_sec, key, type, current_mark))
 			end
 		end
 	)
 	
-	local wpn_section = wpn:section()
-	local sight_section = get_sight_section(wpn_section)
+	local wpn_section = effective_weapon_section(wpn)
+	local base_wpn_section = get_base_weapon_section(wpn_section)
 	for key, type in pairs(ALL_PARAMETERS) do
-		if not values[key] then
-			values[key] = parse_key(wpn_section, key, type, current_mark)
-		end
-		if not values[key] then
-			values[key] = parse_key(sight_section, key, type, current_mark)
+		if key == "ms_dot_offset" then
+			if sight_section then
+				local dot_offset = inherited_string(wpn_section, key .. "_" .. sight_section)
+				if not dot_offset and base_wpn_section ~= wpn_section then
+					dot_offset = inherited_string(base_wpn_section, key .. "_" .. sight_section)
+				end
+				store_param(values, key, dot_offset)
+			end
+		else
+			if not values[key] then
+				store_param(values, key, parse_key(wpn_section, key, type, current_mark))
+			end
+			if not values[key] and base_wpn_section ~= wpn_section then
+				store_param(values, key, parse_key(base_wpn_section, key, type, current_mark))
+			end
+			if not values[key] then
+				store_param(values, key, parse_key(sight_section, key, type, current_mark))
+			end
 		end
 	end
+
+	apply_reticle_profile_parameters(values, wpn, current_mark)
 	
 	return values
 end
@@ -116,10 +243,91 @@ function get(info, key, default)
 	return default
 end
 
+local function parse_vector(value)
+	local result = {}
+	for component in tostring(value or ""):gsub("[()]", ""):gmatch("[^,%s]+") do
+		result[#result + 1] = tonumber(component) or 0
+	end
+	return result
+end
+
+local function quantize_dot_offset(value)
+	local normalized = (value + MS_DOT_OFFSET_LIMIT) / (MS_DOT_OFFSET_LIMIT * 2)
+	normalized = math.max(0, math.min(1, normalized))
+	return math.floor(normalized * MS_DOT_OFFSET_LEVELS + 0.5)
+end
+
+local function pack_dot_offset(info)
+	if not (MS_DOT_OFFSETS_ENABLED and info["ms_dot_offset_enabled"]) then
+		return 0
+	end
+
+	local offset = parse_vector(get(info, "ms_dot_offset", "0, 0"))
+	local x = quantize_dot_offset(offset[1] or 0)
+	local y = quantize_dot_offset(offset[2] or 0)
+	local packed = x * MS_DOT_OFFSET_BASE + y + 1
+	return packed / MS_DOT_OFFSET_PACK_MAX
+end
+
+local function pack_markswitch_color(info)
+	local color = parse_vector(get(info, "ms_colors", "0, 0, 0, 0"))
+	return string.format("%.9g, %.9g, %.9g, %.9f",
+		color[1] or 0,
+		color[2] or 0,
+		color[3] or 0,
+		pack_dot_offset(info)
+	)
+end
+
 function update_shader(wpn, info)
 	get_console():execute("markswitch_current " .. get(info, "ms_current", 0))
 	get_console():execute("markswitch_count " .. get(info, "ms_count", 1))
-	get_console():execute("markswitch_color " .. get(info, "ms_colors", "0, 0, 0, 0"))
+	get_console():execute("markswitch_color " .. pack_markswitch_color(info))
+end
+
+function print_dot_offset_debug()
+	local wpn = db.actor and db.actor:active_item()
+	if not wpn then
+		printf("[MARK SWITCH] no active weapon")
+		return
+	end
+	local info = parse_parameters(wpn)
+	local sight_section = get_sight_section(wpn) or ""
+	local base_wpn_section = get_base_weapon_section(effective_weapon_section(wpn))
+	printf("[MARK SWITCH] weapon=%s base=%s sight=%s ms_dot_offset=%s combo_key=%s",
+		tostring(wpn:section()),
+		tostring(base_wpn_section),
+		tostring(sight_section),
+		tostring(get(info, "ms_dot_offset", "0, 0")),
+		tostring("ms_dot_offset_" .. sight_section)
+	)
+end
+
+local function shader_update_key(wpn, info, zoom_type)
+	local sight_section, canted_sight = get_sight_section(wpn, zoom_type)
+	return tostring(wpn:id())
+		.. "|" .. tostring(effective_weapon_section(wpn))
+		.. "|" .. tostring(sight_section or "")
+		.. "|" .. tostring(canted_sight == true)
+		.. "|" .. tostring(get(info, "ms_count", 1))
+		.. "|" .. tostring(get(info, "ms_colors", "0, 0, 0, 0"))
+		.. "|" .. tostring(get(info, "ms_dot_offset", "0, 0"))
+end
+
+function refresh_weapon(wpn)
+	if not wpn then return end
+	local info = parse_parameters(wpn)
+	last_weapon_id = wpn:id()
+	last_shader_key = shader_update_key(wpn, info)
+	update_shader(wpn, info)
+end
+
+local function mark_switch_on_zoom_type_changed(wpn, previous, current)
+	if not wpn then return end
+	local info = parse_parameters(wpn, current)
+	last_weapon_id = wpn:id()
+	last_shader_key = shader_update_key(wpn, info, current)
+	update_shader(wpn, info)
 end
 
 function apply_next_mark(wpn, info)
@@ -134,23 +342,104 @@ function apply_next_mark(wpn, info)
 	update_shader(wpn, info)
 end
 
-function on_key_release(key)
-	if key == KEYBIND then
-		if not (db.actor and db.actor:alive()) then
-			return
+function apply_previous_mark(wpn, info)
+	SOUND:play(db.actor, 0, sound_object.s2d)
+	game.play_hud_anm("script\\mark_adjust.anm", 2, 2, 1, false, false)
+
+	local count = get(info, "ms_count", 1)
+	local mark = get(info, "ms_current", 0)
+	mark = (mark - 1 + count) % count
+	current_marks[wpn:id()] = mark
+
+	info = parse_parameters(wpn)
+	update_shader(wpn, info)
+end
+
+local function mark_switch_allowed(key, reverse)
+	if reverse then
+		if key ~= KEYBIND_REVERSE then
+			return false
 		end
-	
-		local wpn = db.actor:active_item()
-		if not wpn then
-			return
-		end
-		
-		local info = parse_parameters(wpn)
-		if get(info, "ms_count", 1) < 2 then
-			return
-		end
-		
+	elseif key ~= KEYBIND then
+		return false
+	end
+	if not (db.actor and db.actor:alive()) then
+		return false
+	end
+	if actor_menu and not actor_menu.is_hud_free() then
+		return false
+	end
+	local modifier = reverse and MODIFIER_REVERSE or MODIFIER
+	if ui_mcm and ui_mcm.get_mod_key and not ui_mcm.get_mod_key(modifier) then
+		return false
+	end
+	return true
+end
+
+local function resolve_key_direction(key)
+	local forward = mark_switch_allowed(key, false)
+	local reverse = mark_switch_allowed(key, true)
+	if reverse and not forward then
+		return true
+	end
+	if forward then
+		return false
+	end
+	return nil
+end
+
+local function apply_active_mark(reverse)
+	local wpn = db.actor and db.actor:active_item()
+	if not wpn then
+		return
+	end
+
+	local info = parse_parameters(wpn)
+	if get(info, "ms_count", 1) < 2 then
+		return
+	end
+
+	if reverse then
+		apply_previous_mark(wpn, info)
+	else
 		apply_next_mark(wpn, info)
+	end
+end
+
+function on_key_release(key)
+	local reverse = resolve_key_direction(key)
+	if reverse == nil then
+		return
+	end
+
+	local press_type = reverse and PRESS_TYPE_REVERSE or PRESS_TYPE
+	if press_type == 2 and ui_mcm and ui_mcm.key_hold then
+		return
+	end
+
+	if press_type == 1 and ui_mcm and ui_mcm.double_tap then
+		if ui_mcm.double_tap(reverse and "mark_switch_bind_reverse" or "mark_switch_bind", key) then
+			apply_active_mark(reverse)
+		end
+	else
+		apply_active_mark(reverse)
+	end
+end
+
+function on_key_hold(key)
+	if not (ui_mcm and ui_mcm.key_hold) then
+		return
+	end
+	local reverse = resolve_key_direction(key)
+	if reverse == nil then
+		return
+	end
+	local press_type = reverse and PRESS_TYPE_REVERSE or PRESS_TYPE
+	if press_type ~= 2 then
+		return
+	end
+	if ui_mcm.key_hold(reverse and "mark_switch_bind_reverse" or "mark_switch_bind", key) then
+		apply_active_mark(reverse)
 	end
 end
 
@@ -162,12 +451,15 @@ function actor_on_update()
 	local wpn = db.actor:active_item()
 	if not wpn then
 		last_weapon_id = nil
+		last_shader_key = nil
 		return
 	end
 	
-	if not last_weapon_id or last_weapon_id ~= wpn:id() then
+	local info = parse_parameters(wpn)
+	local shader_key = shader_update_key(wpn, info)
+	if not last_weapon_id or last_weapon_id ~= wpn:id() or last_shader_key ~= shader_key then
 		last_weapon_id = wpn:id()
-		local info = parse_parameters(wpn)
+		last_shader_key = shader_key
 		update_shader(wpn, info)
 	end
 end
@@ -191,7 +483,9 @@ function on_game_start()
 	on_option_change()
 	RegisterScriptCallback("on_option_change", on_option_change)
 	RegisterScriptCallback("on_key_release", on_key_release)
+	RegisterScriptCallback("on_key_hold", on_key_hold)
 	RegisterScriptCallback("actor_on_update", actor_on_update)
+	RegisterScriptCallback("actor_on_weapon_zoom_type_changed", mark_switch_on_zoom_type_changed)
 	RegisterScriptCallback("server_entity_on_unregister", server_entity_on_unregister)
 	RegisterScriptCallback("save_state", save_state)
 	RegisterScriptCallback("load_state", load_state)
@@ -208,30 +502,25 @@ function try_replacement()
 	if magnifier_switch then
 	
 		local original_function = magnifier_switch.switch_magnifier
-		magnifier_switch.switch_magnifier = function(wpn, sec, new_sec)
-			if not wpn or not sec then
-				return
-			end
+		magnifier_switch.switch_magnifier = function(wpn, sec, new_sec, requested_state, ...)
+			wpn = wpn or (db.actor and db.actor:active_item())
+			sec = sec or (wpn and wpn:section())
+			if not (wpn and sec) then return original_function(wpn, sec, new_sec, requested_state, ...) end
 			local info = parse_parameters(wpn)
-			print_r(info)
-			original_function(wpn, sec, new_sec)
 			local ms_current = get(info, "ms_current", 1)
-			CreateTimeEvent("z_mark_switch_ev", "update_shader", 0.1, function()
-				update_shader(wpn, info)
-				local new_wpn = db.actor:active_item()
-				if not new_wpn then
-					return true
-				end
-				current_marks[new_wpn:id()] = ms_current
-				return true
-			end, wpn, info, ms_current)
-			--update_shader(wpn, info)
-			print_r(info)
-			printf("updated shader!")
+			local replacement = original_function(wpn, sec, new_sec, requested_state, ...)
+			local replacement_id = replacement and replacement.id
+			if type(replacement_id) == "function" then
+				local ok, id = pcall(replacement_id, replacement)
+				replacement_id = ok and id or nil
+			end
+			if replacement_id then
+				current_marks[replacement_id] = ms_current
+			end
+			return replacement
 		end
 		
 		replaced = true
-		printf("script replaced!")
 	end
 end
 

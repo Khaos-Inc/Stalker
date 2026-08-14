@@ -387,7 +387,7 @@ function yan_ecolog_semenov_task_target_1( task_id, field, p, tsk )
 		return squad.id
 	end
 
-	if ( tsk.stage >= 1 ) then
+	if ( tsk.stage >= 1 and squad ) then
 		return squad.id
 	end
 

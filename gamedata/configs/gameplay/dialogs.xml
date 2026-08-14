@@ -767,6 +767,7 @@
 		<precondition>dialogs_axr_companion.is_actor_friend</precondition>
 		<precondition>dialogs_axr_companion.is_room_in_actor_squad</precondition>
 		<precondition>dialogs_axr_companion.is_not_hostage_task_giver</precondition>
+        <precondition>grok_get_companions.is_actor_stronger</precondition>
 		<precondition>tasks_guide.not_prec_1</precondition>
         <phrase_list>
             <phrase id="0">
@@ -788,6 +789,7 @@
 		<precondition>dialogs_axr_companion2.is_actor_friend</precondition>
 		<precondition>dialogs_axr_companion2.is_room_in_actor_squad</precondition>
 		<precondition>dialogs_axr_companion2.is_not_hostage_task_giver</precondition>
+        <precondition>grok_get_companions.is_actor_stronger</precondition>
 		<precondition>tasks_guide.not_prec_1</precondition>
         <phrase_list>
             <phrase id="0">
@@ -2822,7 +2824,7 @@
         <precondition>tasks_guide.prec_1</precondition>
         <phrase_list>
 			 <phrase id="0">
-                <script_text>tasks_guide.get_phrase_start_1</script_text>  <!-- About the job… -->
+                <script_text>tasks_guide.get_phrase_start_1</script_text>  <!-- About the jobï¿½ -->
                 <next>01</next>
             </phrase>
             <phrase id="01">
@@ -2839,12 +2841,12 @@
                 <next>111</next>
             </phrase>
             <phrase id="111">
-                <script_text>tasks_guide.get_phrase_1</script_text> <!-- Glad someone heard it. Here’s the deal: within %s hours, I need to be %s -->
+                <script_text>tasks_guide.get_phrase_1</script_text> <!-- Glad someone heard it. Hereï¿½s the deal: within %s hours, I need to be %s -->
                 <next>1111</next>
                 <next>15</next>
             </phrase>
 			<phrase id="1111">
-                <text>st_jg_4</text>                              <!-- Alright, let’s go. -->
+                <text>st_jg_4</text>                              <!-- Alright, letï¿½s go. -->
                 <next>11111</next>
                 <!--next>11112</next-->
             </phrase>
@@ -2856,7 +2858,7 @@
                 <give_info>guider_start</give_info>
             </phrase>
             <phrase id="11112">
-                <text>st_jg_6</text>                              <!-- Sorry, but you don’t have the money to pay me in case the plan doesn’t go through. -->
+                <text>st_jg_6</text>                              <!-- Sorry, but you donï¿½t have the money to pay me in case the plan doesnï¿½t go through. -->
                 <precondition>tasks_guide.prec_3</precondition>
             </phrase>
 			
@@ -2877,12 +2879,12 @@
                 <next>131</next>
             </phrase>
             <phrase id="131">
-                <text>st_jg_9</text>                              <!-- Finally! Thanks, stalker, nice work. Here’s your money. -->
+                <text>st_jg_9</text>                              <!-- Finally! Thanks, stalker, nice work. Hereï¿½s your money. -->
                 <action>tasks_guide.complete</action>
             </phrase>
 			
             <phrase id="14"> 
-                <text>st_jg_10</text>                             <!-- I’ve changed my mind. I’d prefer to cancel the job. -->
+                <text>st_jg_10</text>                             <!-- Iï¿½ve changed my mind. Iï¿½d prefer to cancel the job. -->
                 <precondition>tasks_guide.is_guider_companion</precondition>
                 <next>141</next>
             </phrase>
@@ -2892,11 +2894,11 @@
                 <next>15</next>
             </phrase>
             <phrase id="1411">
-                <text>st_jg_12</text>                             <!-- Yes, I’m sure. -->
+                <text>st_jg_12</text>                             <!-- Yes, Iï¿½m sure. -->
                 <next>14111</next>
             </phrase>
             <phrase id="14111">
-                <script_text>tasks_guide.get_phrase3</script_text>  <!-- Then I’ll continue on my own, and I’ll be taking that money. What a shame. -->
+                <script_text>tasks_guide.get_phrase3</script_text>  <!-- Then Iï¿½ll continue on my own, and Iï¿½ll be taking that money. What a shame. -->
                 <action>tasks_guide.fail</action>
             </phrase>
 			
@@ -4167,16 +4169,9 @@
 			<phrase id="0"> <!-- actor -->
 				<text>st_mechanic_dialog_init</text>
 				<next>1</next>
-				<next>2</next>
 			</phrase>
 			<phrase id="1"> <!-- npc -->
-				<precondition>dialogs_mlr.check_no_debt</precondition>
-				<script_text>dialogs.st_mechanic_dialog_reply</script_text>
-				<action>dialogs.npc_is_tech</action>
-			</phrase>
-			<phrase id="2"> <!-- npc -->
-				<precondition>dialogs_mlr.check_debt</precondition>
-				<script_text>dialogs_mlr.st_debt_no_trade</script_text>
+				<text>mechanic_explanation</text>
 			</phrase>
 		</phrase_list>
     </dialog>

@@ -10,15 +10,40 @@ inv_grid_y         = 2
 snd_switch_g                                                      = $no_sound
 snd_switch                                                        = $no_sound
 
-lewd_lens_hide_enabled       = true
-lewd_lens_hide_bone          = bayonet
-lewd_lens_hide_delays        = 0.1,0
-lewd_lens_hide_aim_mode      = true, false, false
+lens_hide_enabled       = true
+lens_hide_bone          = bayonet
+lens_hide_delays        = 0.1,0
+lens_hide_aim_mode      = true, false, false
 
 laser_status		= false
 use_alt_aim_hud		= true
 script_binding 		= hidebone_sig550_foregrip.bind
 
+;---------------------------------------------SCRIPTED CANTED SIGHTS-----------------------------------
+canted_sights = canted_deltapoint, canted_docter, canted_t12
+
+canted_sights_bone         = wpn_body
+canted_sights_pos   = 0.000156, 0.0725, -0.082344
+canted_sights_rot   = 0, 0, 0
+canted_sights_scale = 1.045, 1.045, 1.045
+front_iron_pos      = 0.000156, 0.0725, 0.327656
+front_iron_rot      = 0, 0, 0
+front_iron_scale    = 1.055, 1.055, 1.055
+
+open_slots 			 = 1, 2
+
+canted_rds_position1      = 0.000156, 0.0725, 0.107656
+canted_rds_position2      = 0.000156, 0.0725, 0.217656
+
+canted_aim_pos_canted_deltapoint = -0.019488, -0.031891, -0.02
+canted_aim_rot_canted_deltapoint = 0, 0, 0.825
+
+canted_aim_pos_canted_docter     = -0.01964, -0.027334, -0.02
+canted_aim_rot_canted_docter     = 0, 0, 0.825
+
+canted_aim_pos_canted_t12        = -0.019607, -0.032027, -0.02
+canted_aim_rot_canted_t12        = 0, 0, 0.825
+;------------------------------------------------------------------------------------------------------
 ![wpn_sig550_custom_hud]
 item_visual                              = anomaly_weapons\wpn_sig550_custom\wpn_sig550_sk1_hud.ogf
 anm_shots_w_gl_aim                         = sick_gloff_aim_shoot_3dss, sg550_gloff_aim_shoot

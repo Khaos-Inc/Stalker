@@ -1,0 +1,475 @@
+local DEBUG = false
+local MENU_EVENT = "3dss_reticle_profiles"
+local MENU_ACTION = "Action_3DSS_Reticle_Profile"
+local ZOOM_NORMAL = 0
+
+local RETICLE_SHADERS = {
+	scope_reticle = true,
+	scope_reticle_precise = true,
+}
+
+local selected_profiles = {}
+local selected_profile_families = {}
+local applied_weapons = {}
+
+local function dbg(fmt, ...)
+	if not DEBUG then return end
+	printf("[3DSS RETICLE PROFILES] " .. fmt, ...)
+end
+
+local function trim(value)
+	return tostring(value or ""):match("^%s*(.-)%s*$")
+end
+
+local function split_list(value)
+	local result = {}
+	for entry in tostring(value or ""):gmatch("[^,]+") do
+		entry = trim(entry)
+		if entry ~= "" then
+			result[#result + 1] = entry
+		end
+	end
+	return result
+end
+
+local function is_weapon(obj)
+	return obj and IsWeapon and IsWeapon(obj)
+end
+
+local function object_by_id(id)
+	id = tonumber(id)
+	if not id then return nil end
+	if get_object_by_id then
+		local obj = get_object_by_id(id)
+		if obj then return obj end
+	end
+	if level and level.object_by_id then
+		return level.object_by_id(id)
+	end
+end
+
+local function scope_is_attached(weapon)
+	if not is_weapon(weapon) then return false end
+	local c_weapon = weapon:cast_Weapon()
+	if not c_weapon then return false end
+	local ok, attached = pcall(function()
+		return c_weapon["IsScopeAttached"](c_weapon)
+	end)
+	return ok and attached and true or false
+end
+
+function get_scope_section(weapon)
+	if not scope_is_attached(weapon) then return nil end
+	if z_3d_scopes and z_3d_scopes.get_sight_section then
+		local scope = z_3d_scopes.get_sight_section(weapon, ZOOM_NORMAL)
+		if scope and ini_sys:section_exist(scope) then return scope end
+	end
+end
+
+local function section_has_profiles(section)
+	if not (section and ini_sys:section_exist(section)) then return false end
+	return #split_list(ini_sys:r_string_ex(section, "reticle_profiles")) > 0
+end
+
+function get_profile_section(weapon)
+	local weapon_section = weapon:section()
+	if section_has_profiles(weapon_section) then
+		return weapon_section
+	end
+
+	local scope_section = get_scope_section(weapon)
+	if section_has_profiles(scope_section) then
+		return scope_section
+	end
+end
+
+local function profile_is_valid(section)
+	if not (section and ini_sys:section_exist(section)) then return false end
+	local texture = ini_sys:r_string_ex(section, "reticle_texture")
+	return texture and trim(texture) ~= ""
+end
+
+function get_profiles(scope_section)
+	if not (scope_section and ini_sys:section_exist(scope_section)) then return {} end
+	local configured = split_list(ini_sys:r_string_ex(scope_section, "reticle_profiles"))
+	local profiles = {}
+	for _, profile in ipairs(configured) do
+		if profile_is_valid(profile) then
+			profiles[#profiles + 1] = profile
+		else
+			printf(
+				"[3DSS RETICLE PROFILES] Invalid profile [%s] listed by scope [%s]",
+				tostring(profile),
+				tostring(scope_section)
+			)
+		end
+	end
+	return profiles
+end
+
+local function canonical_profile(profile)
+	local normal_profile = tostring(profile or ""):match("^(.-)_[nh]v$")
+	if normal_profile and profile_is_valid(normal_profile) then
+		return normal_profile
+	end
+	return profile
+end
+
+local function profile_family(scope_section)
+	local canonical_profiles = {}
+	local seen = {}
+	for _, profile in ipairs(get_profiles(scope_section)) do
+		local canonical = canonical_profile(profile)
+		if not seen[canonical] then
+			canonical_profiles[#canonical_profiles + 1] = canonical
+			seen[canonical] = true
+		end
+	end
+	if #canonical_profiles == 0 then return nil end
+	table.sort(canonical_profiles)
+	return table.concat(canonical_profiles, "\31")
+end
+
+local function profile_for_canonical(profiles, canonical)
+	for _, profile in ipairs(profiles) do
+		if canonical_profile(profile) == canonical then return profile end
+	end
+end
+
+local function profile_in_list(profile, profiles)
+	for _, candidate in ipairs(profiles) do
+		if candidate == profile then return true end
+	end
+	return false
+end
+
+local function migrate_saved_profile_families()
+	local existing_families = {}
+	local variant_selections = {}
+	local normal_selections = {}
+	for family in pairs(selected_profile_families) do
+		existing_families[family] = true
+	end
+
+	for profile_section, profile in pairs(selected_profiles) do
+		local profiles = get_profiles(profile_section)
+		if profile_in_list(profile, profiles) then
+			local family = profile_family(profile_section)
+			local canonical = canonical_profile(profile)
+			if family then
+				if profile == canonical then
+					normal_selections[family] = canonical
+				elseif not variant_selections[family] then
+					variant_selections[family] = canonical
+				end
+			end
+		end
+	end
+
+	for family, canonical in pairs(variant_selections) do
+		if not existing_families[family] then
+			selected_profile_families[family] = canonical
+		end
+	end
+	for family, canonical in pairs(normal_selections) do
+		if not existing_families[family] then
+			selected_profile_families[family] = canonical
+		end
+	end
+end
+
+function get_selected_profile(scope_section)
+	local profiles = get_profiles(scope_section)
+	if #profiles == 0 then return nil end
+
+	local family = profile_family(scope_section)
+	local family_selected = family and selected_profile_families[family]
+	local family_profile = profile_for_canonical(profiles, family_selected)
+	if family_profile then return family_profile end
+
+	local selected = selected_profiles[scope_section]
+	if profile_in_list(selected, profiles) then return selected end
+
+	if z_3d_scopes_mcm and z_3d_scopes_mcm.get_reticle_profile_default then
+		local mcm_default = z_3d_scopes_mcm.get_reticle_profile_default(scope_section)
+		if profile_in_list(mcm_default, profiles) then
+			return mcm_default
+		end
+	end
+
+	local configured_default = ini_sys:r_string_ex(scope_section, "reticle_default_profile")
+	if profile_in_list(configured_default, profiles) then
+		return configured_default
+	end
+	return profiles[1]
+end
+
+local function normalized_shader_name(shader)
+	local name = tostring(shader or ""):lower():gsub("\\", "/")
+	return name:match("([^/]+)$") or name
+end
+
+local function is_scope_reticle_shader(shader)
+	return RETICLE_SHADERS[normalized_shader_name(shader)] == true
+end
+
+local function profile_texture(profile)
+	return profile and ini_sys:r_string_ex(profile, "reticle_texture")
+end
+
+local function scan_reticle_materials(weapon)
+	local ok, shaders = pcall(function()
+		return weapon:get_shaders(true)
+	end)
+	if not (ok and type(shaders) == "table") then return {} end
+
+	local materials = {}
+	for visual_id, material in pairs(shaders) do
+		local numeric_id = tonumber(visual_id)
+		if numeric_id
+			and numeric_id > 0
+			and material
+			and material.texture
+			and is_scope_reticle_shader(material.shader)
+		then
+			materials[#materials + 1] = {
+				id = numeric_id,
+				original_texture = tostring(material.texture),
+			}
+		end
+	end
+	return materials
+end
+
+function apply_to_weapon(weapon, force)
+	if not is_weapon(weapon) then return false end
+
+	local scope_section = get_scope_section(weapon)
+	local profile_section = get_profile_section(weapon)
+	local profile = get_selected_profile(profile_section)
+	local texture = profile_texture(profile)
+	local weapon_id = weapon:id()
+	if not (profile_section and profile and texture) then
+		applied_weapons[weapon_id] = nil
+		return false
+	end
+
+	local state = applied_weapons[weapon_id]
+	if not state
+		or state.weapon_section ~= weapon:section()
+		or state.scope_section ~= scope_section
+		or state.profile_section ~= profile_section
+	then
+		state = {
+			weapon_section = weapon:section(),
+			scope_section = scope_section,
+			profile_section = profile_section,
+			materials = scan_reticle_materials(weapon),
+		}
+		applied_weapons[weapon_id] = state
+	end
+
+	if #state.materials == 0 then
+		state.materials = scan_reticle_materials(weapon)
+	end
+
+	if not force and state.profile == profile and state.texture == texture then
+		return #state.materials > 0
+	end
+
+	local changed = false
+	for _, material in ipairs(state.materials) do
+		local ok = pcall(function()
+			weapon:set_shader(material.id, nil, texture, true)
+		end)
+		changed = ok or changed
+	end
+
+	state.profile = profile
+	state.texture = texture
+	dbg(
+		"apply weapon=%s scope=%s source=%s profile=%s texture=%s materials=%s",
+		tostring(weapon:section()),
+		tostring(scope_section),
+		tostring(profile_section),
+		tostring(profile),
+		tostring(texture),
+		tostring(#state.materials)
+	)
+	return changed
+end
+
+local function active_weapon()
+	if not (db and db.actor) then return nil end
+	local weapon = db.actor:active_item()
+	return is_weapon(weapon) and weapon or nil
+end
+
+local function apply_active_scope_settings(weapon)
+	if not (weapon and db and db.actor) then return end
+	local active = db.actor:active_item()
+	if not (active and active:id() == weapon:id()) then return end
+	apply_to_weapon(weapon, true)
+	if z_3d_scopes and z_3d_scopes.update_shader then
+		z_3d_scopes.update_shader(weapon, ZOOM_NORMAL)
+	end
+	if z_mark_switch and z_mark_switch.refresh_weapon then
+		z_mark_switch.refresh_weapon(weapon)
+	end
+end
+
+function select_profile(weapon, profile_section, profile)
+	local profiles = get_profiles(profile_section)
+	if not profile_in_list(profile, profiles) then return false end
+	if get_profile_section(weapon) ~= profile_section then return false end
+
+	selected_profiles[profile_section] = profile
+	local family = profile_family(profile_section)
+	if family then
+		selected_profile_families[family] = canonical_profile(profile)
+	end
+	for weapon_id, state in pairs(applied_weapons) do
+		if state.profile_section == profile_section
+			or (family and profile_family(state.profile_section) == family)
+		then
+			applied_weapons[weapon_id] = nil
+		end
+	end
+	apply_active_scope_settings(weapon)
+	return true
+end
+
+local function profile_label(profile)
+	return ini_sys:r_string_ex(profile, "reticle_name") or profile
+end
+
+local function install_inventory_action()
+	if not (ui_inventory and ui_inventory.UIInventory) then return end
+	ui_inventory.UIInventory[MENU_ACTION] = function(self, weapon_id, profile_section, profile)
+		local weapon = object_by_id(weapon_id)
+		if weapon then
+			select_profile(weapon, profile_section, profile)
+		end
+		if self.On_Item_Update then
+			self:On_Item_Update()
+		end
+	end
+end
+
+local function show_profile_submenu(weapon_id, profile_section)
+	local weapon = object_by_id(weapon_id)
+	if not weapon or get_profile_section(weapon) ~= profile_section then return end
+
+	local profiles = get_profiles(profile_section)
+	if #profiles < 2 then return end
+	local gui = ui_inventory and ui_inventory.GUI
+	if not (gui and gui.item_props) then return end
+
+	local actions = {}
+	local names = {}
+	local params = {}
+	local selected = get_selected_profile(profile_section)
+	for _, profile in ipairs(profiles) do
+		if profile ~= selected then
+			local index = #actions + 1
+			actions[index] = MENU_ACTION
+			names[index] = profile_label(profile)
+			params[index] = { weapon_id, profile_section, profile }
+		end
+	end
+	if #actions == 0 then return end
+	gui.item_props:Reset(GetCursorPosition(), actions, names, params)
+end
+
+local function schedule_profile_submenu(weapon, profile_section)
+	local weapon_id = weapon:id()
+	local event_id = "open_" .. tostring(weapon_id)
+	CreateTimeEvent(MENU_EVENT, event_id, 0, function()
+		show_profile_submenu(weapon_id, profile_section)
+		return true
+	end)
+end
+
+local function menu_change_reticle(obj)
+	if not is_weapon(obj) then return end
+	local profile_section = get_profile_section(obj)
+	if profile_section and #get_profiles(profile_section) > 1 then
+		return "st_3dss_change_reticle"
+	end
+end
+
+local function open_reticle_profiles(obj)
+	if not is_weapon(obj) then return end
+	local profile_section = get_profile_section(obj)
+	if profile_section and #get_profiles(profile_section) > 1 then
+		schedule_profile_submenu(obj, profile_section)
+	end
+end
+
+function actor_item_to_slot(obj)
+	apply_to_weapon(obj)
+end
+
+function actor_on_item_take(obj)
+	apply_to_weapon(obj)
+end
+
+function actor_on_changed_slot()
+	apply_to_weapon(active_weapon())
+end
+
+function actor_on_first_update()
+	install_inventory_action()
+	apply_to_weapon(active_weapon())
+end
+
+function save_state(mdata)
+	mdata.z_3dss_reticle_profiles = {
+		selected_profiles = selected_profiles,
+		selected_profile_families = selected_profile_families,
+	}
+end
+
+function load_state(mdata)
+	local data = mdata.z_3dss_reticle_profiles or {}
+	selected_profiles = type(data.selected_profiles) == "table" and data.selected_profiles or {}
+	selected_profile_families = type(data.selected_profile_families) == "table"
+		and data.selected_profile_families
+		or {}
+	migrate_saved_profile_families()
+	applied_weapons = {}
+end
+
+function print_debug()
+	local weapon = active_weapon()
+	local scope_section = weapon and get_scope_section(weapon)
+	local profile_section = weapon and get_profile_section(weapon)
+	printf(
+		"[3DSS RETICLE PROFILES] weapon=%s scope=%s source=%s selected=%s profiles=%s",
+		tostring(weapon and weapon:section()),
+		tostring(scope_section),
+		tostring(profile_section),
+		tostring(profile_section and get_selected_profile(profile_section)),
+		tostring(profile_section and #get_profiles(profile_section) or 0)
+	)
+end
+
+function on_game_start()
+	install_inventory_action()
+	if custom_functor_autoinject then
+		custom_functor_autoinject.add_functor(
+			"3dss_change_reticle",
+			menu_change_reticle,
+			menu_change_reticle,
+			nil,
+			open_reticle_profiles,
+			true
+		)
+	end
+	RegisterScriptCallback("actor_item_to_slot", actor_item_to_slot)
+	RegisterScriptCallback("actor_on_item_take", actor_on_item_take)
+	RegisterScriptCallback("actor_on_changed_slot", actor_on_changed_slot)
+	RegisterScriptCallback("actor_on_first_update", actor_on_first_update)
+	RegisterScriptCallback("save_state", save_state)
+	RegisterScriptCallback("load_state", load_state)
+end

@@ -34,7 +34,7 @@ local defaults = {
 	["panic_tab/cover_time"] = 12,
 	["panic_tab/smoke_enabled"] = false,
 	-- COMBAT
-	["combat_tab/combat_tab_settings/redone_ai_wpn"] = true,
+	--["combat_tab/combat_tab_settings/redone_ai_wpn"] = true,
 	["combat_tab/combat_tab_settings/redone_ai_danger"] = true,
 	["combat_tab/combat_tab_settings/redone_ai_target"] = true,
 	["combat_tab/combat_tab_settings/redone_ai_aim"] = true,
@@ -171,7 +171,7 @@ function on_mcm_load()
 			{id= "combat_tab_settings", sh = true, text = "ui_mcm_menu_combat_tab_settings", gr = {
 				{id = "title", 				type = "slide", link = "ui_options_slider_gameplay_diff", text = "ui_mcm_combat_title", size = {512,50}, spacing = 20},
                                 {id = "title", 				type = "title", text = "ui_mcm_combat_header_main", size = {512,50}, spacing = 20},
-                                {id = "redone_ai_wpn", 			type = "check", val = 1, def = true},
+                                --{id = "redone_ai_wpn", 		type = "check", val = 1, def = true},
                                 {id = "redone_ai_target", 		type = "check", val = 1, def = true},
                                 {id = "redone_ai_danger", 		type = "check", val = 1, def = true},
                                 {id = "redone_ai_aim", 			type = "check", val = 1, def = true},

@@ -40,6 +40,8 @@ function special_steps_for_lostzone_tasks(tsk,task_id)
 	elseif (task_id == "zat_b7_bandit_boss_sultan_task_5") then 
 		if has_alife_info("boss_sultan_task_5_stalkers_death") then 
 			tsk.stage = 1
+		elseif not actor_on_level("l04_darkvalley") then
+			return "fail"
 		else
 			tsk.stage = 0
 		end
@@ -566,6 +568,11 @@ function task_type_ecolog_gathered_tissue_samples(tsk,task_id)
 		end
 	end
 	return
+end
+
+function actor_on_level(expected_level)
+	local cur = level.name()
+	return cur ~= nil and cur == expected_level
 end
 --------------------------------------------------------------
 function kill_strelok(tsk,task_id)

@@ -45,7 +45,7 @@ active = ph_idle@default
 
 ;BAR from build2571 
 [ph_idle@default]
-on_info = %=play_sound(bar_dolg_speech)%
+on_info = {=is_day} %=play_sound(bar_dolg_speech)%
 on_info2 = {+bar_arena_start} ph_idle@idle %=stop_sound%, {+bar_territory_nodolg_1_hit -bar_dolg_territory_1_hit_notify} ph_idle@1_hit %=stop_sound%, {+bar_territory_nodolg_2_hit -bar_dolg_territory_2_hit_notify} ph_idle@2_hit %=stop_sound%, {+bar_territory_nodolg_kill -bar_dolg_territory_kill_notify} ph_idle@kill %=stop_sound%, {=check_smart_alarm_status(bar_dolg_general)} ph_idle@alarm %=stop_sound%, {=check_smart_alarm_status(bar_dolg_bunker)} ph_idle@alarm %=stop_sound%
 
 [ph_idle@1_hit]

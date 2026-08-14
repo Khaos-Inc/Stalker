@@ -104,26 +104,60 @@ path_end = loop
 active = animpoint@gar_smart_terrain_3_5_camp_work_1
 suitable = {!surge_started} true
 prior = 45
+on_combat = combat
 
 [logic@gar_smart_terrain_3_5_camp_work_2]
 active = animpoint@gar_smart_terrain_3_5_camp_work_2
 suitable = {!surge_started} true
 prior = 45
+on_combat = combat
 
 [logic@gar_smart_terrain_3_5_camp_work_3]
 active = animpoint@gar_smart_terrain_3_5_camp_work_3
 suitable = {!surge_started} true
 prior = 45
+on_combat = combat
 
 [logic@gar_smart_terrain_3_5_camp_work_4]
 active = animpoint@gar_smart_terrain_3_5_camp_work_4
 suitable = {!surge_started} true
 prior = 45
+on_combat = combat
 
 [logic@gar_smart_terrain_3_5_camp_work_5]
 active = animpoint@gar_smart_terrain_3_5_camp_work_5
 suitable = {=is_night !surge_started} true
 prior = 45
+on_combat = combat
+
+;walkers mora mod
+
+[logic@gar_smart_terrain_3_5_guard_1_walk]
+active = walker@gar_smart_terrain_3_5_guard_1_walk
+prior = 45
+on_combat = combat
+
+[logic@gar_smart_terrain_3_5_guard_2_walk]
+active = walker@gar_smart_terrain_3_5_guard_2_walk
+prior = 45
+on_combat = combat
+
+[logic@gar_smart_terrain_3_5_guard_3_walk]
+active = walker@gar_smart_terrain_3_5_guard_3_walk
+prior = 45
+on_combat = combat
+
+[logic@gar_smart_terrain_3_5_guard_4_walk]
+active = walker@gar_smart_terrain_3_5_guard_4_walk
+prior = 45
+on_combat = combat
+
+[logic@gar_smart_terrain_3_5_guard_5_walk]
+active = walker@gar_smart_terrain_3_5_guard_5_walk
+prior = 45
+on_combat = combat
+
+;end mora mod
 
 [animpoint@gar_smart_terrain_3_5_camp_work_1]
 cover_name = gar_smart_terrain_3_5_animpoint_kamp1
@@ -155,14 +189,44 @@ turn_on_campfire = true
 [logic@gar_smart_terrain_3_5_camp_work_6]
 active = animpoint@gar_smart_terrain_3_5_animpoint_mlr_1
 prior = 45
+on_combat = combat
 
 [logic@gar_smart_terrain_3_5_camp_work_9]
 active = animpoint@gar_smart_terrain_3_5_animpoint_mlr_4
 prior = 200
+on_combat = combat
 
 [logic@gar_smart_terrain_3_5_camp_work_10]
 active = animpoint@gar_smart_terrain_3_5_animpoint_mlr_5
 prior = 45
+on_combat = combat
+
+;walkers mora mod
+[logic@gar_smart_terrain_3_5_guard_6_walk]
+active = walker@gar_smart_terrain_3_5_guard_6_walk
+prior = 45
+on_combat = combat
+
+[logic@gar_smart_terrain_3_5_guard_7_walk]
+active = walker@gar_smart_terrain_3_5_guard_7_walk
+prior = 45
+on_combat = combat
+
+[logic@gar_smart_terrain_3_5_guard_8_walk]
+active = walker@gar_smart_terrain_3_5_guard_8_walk
+prior = 45
+on_combat = combat
+
+[logic@gar_smart_terrain_3_5_guard_9_walk]
+active = walker@gar_smart_terrain_3_5_guard_9_walk
+prior = 45
+on_combat = combat
+
+[logic@gar_smart_terrain_3_5_guard_10_walk]
+active = walker@gar_smart_terrain_3_5_guard_10_walk
+prior = 45
+on_combat = combat
+
 
 [meet_random]
 close_anim 		= nil
@@ -180,10 +244,15 @@ meet_on_talking = false
 [logic@gar_smart_terrain_3_5_camp_work_11]
 active = animpoint@gar_smart_terrain_3_5_animpoint_mlr_6
 prior = 45
+on_combat = combat
 
 [logic@gar_smart_terrain_3_5_camp_work_12]
 active = animpoint@gar_smart_terrain_3_5_animpoint_mlr_8
 prior = 45
+on_combat = combat
+
+[combat]
+combat_type = {=cond_scheme_cover()} cover, {=cond_scheme_camper()} camper
 
 [animpoint@gar_smart_terrain_3_5_animpoint_mlr_1]
 cover_name = gar_smart_terrain_3_5_animpoint_mlr_1

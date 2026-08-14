@@ -455,21 +455,23 @@ function Cmeet_manager:update()
 	end
 
 	-- доступность торговли
+	self.trade_enable = false
+	self.npc:disable_trade()
 
-	if xr_wounded.is_wounded(self.npc) then
-		self.trade_enable = false
-	else
-		local trade_enable = xr_logic.pick_section_from_condlist(db.actor, self.npc, self.a.trade_enable)
-		--printf("npc [%s] self %s *** %s", self.npc:name(), tostring(self.trade_enable), tostring(trade_enable))
-		if self.trade_enable ~= trade_enable then
-			if trade_enable == "true" then
-				self.npc:enable_trade()
-			else
-				self.npc:disable_trade()
-			end
-			self.trade_enable = trade_enable
-		end
-	end
+--	if xr_wounded.is_wounded(self.npc) then
+--		self.trade_enable = false
+--	else
+--		local trade_enable = xr_logic.pick_section_from_condlist(db.actor, self.npc, self.a.trade_enable)
+--		--printf("npc [%s] self %s *** %s", self.npc:name(), tostring(self.trade_enable), tostring(trade_enable))
+--		if self.trade_enable ~= trade_enable then
+--			if trade_enable == "true" then
+--				self.npc:enable_trade()
+--			else
+--				self.npc:disable_trade()
+--			end
+--			self.trade_enable = trade_enable
+--		end
+--	end
 end
 
 function notify_on_use(victim, who)
@@ -746,46 +748,49 @@ function process_npc_usability(npc)
 		return
 	end
 
-	local meet = db.storage[npc:id()].meet
-	if not (meet) then
-		return
-	end
+--	local meet = db.storage[npc:id()].meet
+--	if not (meet) then
+--		return
+--	end
 
-	local use = meet.meet_manager.use
+--	local use = meet.meet_manager.use
 	
-	if (use == "true") then
-		if xr_corpse_detection.is_under_corpse_detection(npc) or xr_help_wounded.is_under_help_wounded(npc) then
-			npc:disable_talk()
-		else
-			npc:enable_talk()
-		end
-		return
-	end
+--	if (use == "true") then
+--		if xr_corpse_detection.is_under_corpse_detection(npc) or xr_help_wounded.is_under_help_wounded(npc) then
+--			npc:disable_talk()
+--		else
+--			npc:enable_talk()
+--		end
+--		return
+--	end
 
-	-- check if a task giver then force allow talk
-	local id = npc:id()
-	local task_info = task_manager.get_task_manager().task_info
-	for k,v in pairs(task_info) do
-		if (v.task_giver_id and v.task_giver_id == id) then
-			npc:enable_talk()
-			return
-			
-		-- check if it's the delivery dude
-		elseif tasks_delivery.is_delivery_task(k) then
-			local var = load_var(db.actor, k)
-			if var and var.target_id and (var.target_id == id) then
-				npc:enable_talk()
-				return
-			end
-		end 
-	end
+--	-- check if a task giver then force allow talk
+--	local id = npc:id()
+--	local task_info = task_manager.get_task_manager().task_info
+--	for k,v in pairs(task_info) do
+--		if (v.task_giver_id and v.task_giver_id == id) then
+--			npc:enable_talk()
+--			return
+--			
+--		-- check if it's the delivery dude
+--		elseif tasks_delivery.is_delivery_task(k) then
+--			local var = load_var(db.actor, k)
+--			if var and var.target_id and (var.target_id == id) then
+--				npc:enable_talk()
+--				return
+--			end
+--		end 
+--	end
 	
-	if (use == "false") then	
-		npc:disable_talk()
-		if npc:is_talking() then
-			npc:stop_talk()
-		end
-	end
+--	if (use == "false") then	
+--		npc:disable_talk()
+--		if npc:is_talking() then
+--			npc:stop_talk()
+--		end
+--	end
+
+	-- Override
+	npc:enable_talk()
 
 end
 

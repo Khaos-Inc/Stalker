@@ -1,0 +1,262 @@
+local settings      = {}
+local debug         = false
+
+local max           = math.max
+local abs           = math.abs
+local num           = tonumber
+local clamp         = _g.clamp
+local string_find   = string.find
+local string_sub    = string.sub
+local normalize     = _g.normalize
+local idp           = round_idp
+
+local utils         = enhanced_recoil_utils
+local lerp          = utils.lerp
+local get_silencer  = utils.get_silencer
+
+local r0 = function(number) return idp(number, 0) end
+local r1 = function(number) return idp(number, 1) end
+local r2 = function(number) return idp(number, 2) end
+
+local function trace(str, ...)
+	if debug == true then
+		printf("= ER:P Item card >> " .. str, ...)
+	end
+end
+
+-- patch the stats thing from gamma
+local og_recoil_1   = momopate_accurate_stats and momopate_accurate_stats.get_weapon_recoil or nil
+local og_recoil_2   = momopate_weaponstats and momopate_weaponstats.get_weapon_recoil or nil
+
+-- it's still arbitrary as all hell but at least it now uses only the relevant variables for the new recoil model
+function get_weapon_recoil_platinum(obj, sec)
+	if not obj and not sec then return 0 end
+
+	local sec_p = SYS_GetParam(0, obj and obj:section() or sec, "parent_section") or sec
+
+    local ini_eff = enhanced_recoil_main.get_ini_eff()
+    if not ini_eff then return 0 end
+	
+	if (wpn_fx and (wpn_fx[sec_p] == true or not wpn_fx[sec_p])) or not ini_eff:section_exist(sec_p) then
+		trace("[%s] doesn't have a proper ER:P implementation.", sec_p)
+		if momopate_accurate_stats and og_recoil_1 then
+			return og_recoil_1(obj, sec)
+		elseif momopate_weaponstats and og_recoil_2 then
+			return og_recoil_2(obj, sec)
+		end
+		return 0
+	end
+
+	local tbl 			= {}
+	local effect_power 	= 1
+	local random_power 	= 1
+	local max_add     	= max(abs(num(ini_eff:r_string_ex(sec_p, "max_shots") or 1)), 1)
+	local max_mult    	= max(1.0 + num(ini_eff:r_string_ex(sec_p, "max_recoil") or 1.0), 0.01)
+	local max_v       	= abs(num(ini_eff:r_string_ex(sec_p, "variance_k") or 0.0))
+	local horz_random	= abs(num(ini_eff:r_string_ex(sec_p, "h_var_k") or 1.0))
+	local horz_max_mult = abs(num(ini_eff:r_string_ex(sec_p, "h_max_r_k") or 1.0))
+	local rpm			= obj and (obj:cast_Weapon():RPM() * max_add) or ((60 / SYS_GetParam(2, sec_p, "rpm")) * max_add)
+	local reset_k		= clamp(abs(num(ini_eff:r_string_ex(sec_p, "reset_k") or 1.0)), 0.1, 10.0)
+
+    if settings.item.upgrades_power > 0 then
+        local wpn = obj and level.object_by_id(obj:id())
+
+        if (wpn ~= nil) then
+            wpn:iterate_installed_upgrades(
+                function(upgr_sec)
+                    local section = SYS_GetParam(0, upgr_sec, "section")
+                    if not section then return end
+
+                    if ini_sys:line_exist(section, "cam_dispersion") and not ini_sys:line_exist(section, "PDM_disp_base") then
+                        local bonus = SYS_GetParam(2, section, "value") or 0
+                        if settings.item.abs_upgrades then bonus = abs(bonus) * -1 end
+                        effect_power = effect_power * (1 + (bonus * 0.01 * settings.item.upgrades_power))
+                        -- if handling upgrades are disregarded, use 50% of the listed value for recoil upgrades as -randomness
+                        if not settings.item.use_handling_upg then
+                            random_power = random_power * (1 + (bonus * 0.005 * settings.item.upgrades_power))
+                        end
+                    end
+
+                    -- consider handling upgrades as -randomness
+                    if settings.item.use_handling_upg and ini_sys:line_exist(section, "PDM_disp_base") and not ini_sys:line_exist(section, "cam_dispersion") then
+                        local bonus = SYS_GetParam(2, section, "value") or 0
+                        if settings.item.abs_upgrades then bonus = abs(bonus) end
+                        random_power = random_power * (1 - (bonus * 0.01 * settings.item.upgrades_power))
+                    end
+                end)
+        end
+    end
+
+	-- only modify the stat for integrally suppressed weapons
+	if settings.item.silencer_power > 0 then
+        local wpn_silencer = get_silencer()
+	    local silencer = ((SYS_GetParam(2, sec_p, "silencer_status") == 1) or wpn_silencer[sec_p]) and true or false
+
+		if silencer then
+			local sil_sec = SYS_GetParam(0, sec_p, "silencer_name") or nil
+
+			if sil_sec ~= nil then
+				local bonus = SYS_GetParam(2, sil_sec, "cam_dispersion_k") or 1.0
+				effect_power = effect_power * lerp(1.0, bonus, settings.item.silencer_power)
+			end
+		end
+	end
+
+	-- use ubgl bonus only for guns with an integrated launcher
+	local launcher = ((SYS_GetParam(2, sec_p, "grenade_launcher_status") == 1)) and true or false
+	if settings.misc.ubgl_power > 0 and launcher then
+		effect_power = effect_power * (1 - (settings.misc.ubgl_power))
+	end
+
+	-- Compare time to reach max divisor against 5 shots @ 600RPM (the "baseline" values)
+	local rpm_bonus = 1.0
+	if max_add > 1 then
+		local base_rpm = (60 / 600) * 5
+		if rpm < base_rpm then
+			rpm_bonus = 1 / (1 + normalize(rpm, base_rpm, 0))
+		elseif rpm > base_rpm then
+			rpm_bonus = 1 / (1 - normalize(base_rpm, rpm, 0))
+		end
+	end
+
+	max_mult = lerp(max_mult / lerp(rpm_bonus / reset_k, 1, 0.5), 1, 0.5)
+
+	-- check for patterns
+	if (ini_eff:line_exist(sec_p, "e_1")) and settings.main.allow_patterns == true then
+		effect_power = effect_power * 2
+		max_mult = 1.0
+	end
+
+	tbl.shake = {}
+	local e = ini_eff:r_string_ex(sec_p, "cam_shake")
+	local _e = str_explode(e, ",")
+	for i = 1, 3 do
+		local __e = str_explode(_e[i] or "0", ":")
+		__e[1] = abs(num(__e[1])) or 0.0
+		tbl.shake[#tbl.shake+1] = __e[1]
+	end
+
+	tbl.recoil = {}
+	local r = ini_eff:r_string_ex(sec_p, "cam_recoil")
+	local _r = str_explode(r, ",")
+	for i = 1, 2 do
+		local __r = str_explode(_r[i] or "0", ":")
+		__r[1] = (__r[1] and abs(num(__r[1])) or 0.0) * ((effect_power * max(lerp((1.0 + (enhanced_recoil_main.get_random_offset() * 2)) * random_power * max_v * ((i == 1) and horz_random or 1.0), 1, 0.85), 0.85)) / max_mult * ((i == 1) and horz_max_mult or 1.0)) * 100
+		
+		if __r[2] and num(__r[2]) then
+			__r[2] = abs(num(__r[2])) or 0.0
+		else
+			__r[2] = nil
+		end
+
+		tbl.recoil[#tbl.recoil + 1] = __r
+	end
+
+	if tbl.recoil[1][2] == nil then
+		tbl.recoil[1][1] = tbl.recoil[1][1] * 2.0
+	end
+	if tbl.recoil[2][2] == nil then
+		tbl.recoil[2][1] = tbl.recoil[2][1] * 2.0
+	end
+
+	local recoil_sum = lerp((num(tbl.recoil[1][1]) + num(tbl.recoil[2][1])) / 2, 1, 0.5)
+	local shake_sum = lerp(((num(tbl.shake[1]) * 40) + (num(tbl.shake[2]) * 40) + (num(tbl.shake[3]) * 20)) / 100, 1, 0.85)
+
+	local final_recoil = recoil_sum * shake_sum
+	local res = 12500 / final_recoil
+
+	if res < 0.01 then
+		return 0.000000000001 -- This way it shows up in the stat card as 0 instead of not showing up at all
+	end
+	
+	if res < 10 then
+		return r2(res)
+	elseif res < 100 then
+		return r1(res)
+	end
+
+	return r0(res)
+end
+
+if momopate_accurate_stats then
+	function momopate_accurate_stats.get_weapon_recoil(obj, sec)
+		return get_weapon_recoil_platinum(obj, sec)
+	end
+end
+
+if momopate_weaponstats then
+	function momopate_weaponstats.get_weapon_recoil(obj, sec)
+		return get_weapon_recoil_platinum(obj, sec)
+	end
+end
+
+-- Lifted from Detailed Descriptions by xcvb
+local gc 		= game.translate_string
+local red_clr 	= strformat("%c[%s,%s,%s,%s]", 255, 250, 50, 50)
+local teal_clr 	= strformat("%c[%s,%s,%s,%s]", 255, 150, 250, 240)		-- for non-stat properties
+local green_clr = utils_xml.get_color("d_green")
+local def_clr  	= utils_xml.get_color("ui_gray_2")
+
+obj_desc_def = ui_item.get_obj_desc
+function ui_item.get_obj_desc(obj)
+	if not obj then
+		return ""
+	end
+
+	local sec = obj:section()
+	local kind = SYS_GetParam(0, sec, "kind") or "w_misc"
+	local get_is_component = ini_sys:line_exist(sec, "is_component") and SYS_GetParam(1, sec, "is_component") and true or false
+	local get_is_ammo = ((IsItem("ammo", sec) and (not IsItem("fake_ammo", sec)) and (get_is_component == 0)) or kind == "w_ammo") and true or false
+	local get_is_grenade = (ini_sys:line_exist(sec, "explode_particles") and ini_sys:line_exist(sec, "explode_duration")) and true or false
+
+	if string_find(kind, "w_", 1, true) and kind ~= "w_misc" and kind ~= "w_melee" and not get_is_ammo and not get_is_grenade then
+		local str = gc(SYS_GetParam(0, sec, "description"))
+		-- leave only footer's real description
+		local _, n_idx = string_find(str, "\\n", 1, true)
+		local res = string_sub(str, 1, n_idx)
+		--res = res .. " \\n"
+		res = ui_item.item_description(obj, res)
+
+		return res
+	end
+
+	return obj_desc_def(obj)
+end
+
+BuildFooter = ui_item.build_desc_footer
+function ui_item.build_desc_footer(obj, sec, str)
+	str = str or gc(SYS_GetParam(0, sec, "description"))
+	if (not str) then return "" end
+
+	if not db.actor or not wpn_fx or not settings.main.notify_no_profile then
+		return BuildFooter(obj, sec, str)
+	end
+
+	local sec_p = SYS_GetParam(0, sec, "parent_section") or sec
+	local kind = SYS_GetParam(0, sec, "kind") or "w_misc"
+
+	local get_is_component = ini_sys:line_exist(sec_p, "is_component") and SYS_GetParam(1, sec_p, "is_component") and true or false
+	local get_is_ammo = ((IsItem("ammo", sec_p) and (not IsItem("fake_ammo", sec_p)) and (get_is_component == 0)) or kind == "w_ammo") and true or false
+	local get_is_grenade = (ini_sys:line_exist(sec_p, "explode_particles") and ini_sys:line_exist(sec_p, "explode_duration")) and true or false
+
+	if not (string_find(kind, "w_", 1, true)) or (wpn_fx[sec_p] and wpn_fx[sec_p] ~= true) or (kind == "w_misc" or kind == "w_melee") or get_is_ammo or get_is_grenade then
+		return BuildFooter(obj, sec, str)
+	end
+
+	str = str .. " \\n" .. red_clr .. gc("ui_inv_recoilplat_warning_1") .. teal_clr .. " \\n • " .. def_clr .. gc("ui_inv_recoilplat_warning_2") .. green_clr .. sec_p .. def_clr .. gc("ui_inv_recoilplat_warning_3") .. " \\n \\n"
+
+	return str
+end
+
+local function actor_on_first_update()
+    settings = enhanced_recoil_main.settings or enhanced_recoil_main.load_defaults()
+end
+
+local function on_option_change()
+    settings = enhanced_recoil_main.settings or enhanced_recoil_main.load_defaults()
+end
+
+function on_game_start()
+    RegisterScriptCallback("actor_on_first_update", actor_on_first_update)
+    RegisterScriptCallback("on_option_change", on_option_change)
+end

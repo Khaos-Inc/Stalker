@@ -1,0 +1,2563 @@
+-- Scripted canted irons for 3DSS.
+-- Tracks a real inventory item on a weapon and renders two scripted HUD meshes.
+
+local CACHE_FILE = "scripted_canted_irons_cache.ltx"
+local MAIN_ATTACHMENT = "scripted_canted_irons_main"
+local FRONT_ATTACHMENT = "scripted_canted_irons_front"
+local IRON_BONES = { "irons_on", "irons_off" }
+local CANTED_SIGHT_BONE = "canted_sight"
+local CANTED_LENS_BONE = "lens"
+local BLANK_RETICLE_TEXTURE = [[wpn\scope_reticles\blank]]
+local INSTALL_FUNCTOR = "scripted_canted_irons.precond_install"
+local RDS_FUNCTOR_PREFIX = "scripted_canted_irons.precond_install_rds_pos"
+local ATTACHMENT_IRONS = "irons"
+local ATTACHMENT_RDS = "rds"
+
+key_mode = "pos"
+
+local irons_by_weapon = {}
+local known_irons = {}
+local highlight_cache = {}
+local rds_scope_sections = {}
+local hides_irons_scope_sections = {}
+local blocks_irons_scope_sections = {}
+local red_dot_scope_sections = {}
+local transforms = {}
+local canted_aim_edits = {}
+local canted_irons_aim_state = {}
+local copied_transform
+local copied_aim_transform
+local precision_level = 0
+local aim_precision_level = 0
+local editor_target = "main"
+local editor_model_index = 1
+local move_both_irons = false
+local mouse_drag_active = false
+local editor_open = false
+local editor_demo_active = false
+local editor_weapon_movement_enabled = true
+local forced_aim_weapon_id
+local editor_aim_was_active = false
+local aim_retry_count = 0
+local next_aim_retry = 0
+local next_camera_update = 0
+local hud_adjust_weapon_id
+local last_camera_bone
+local last_camera_bone_position
+local camera_follow_active = false
+local camera_follow_started = 0
+local camera_bone_stable_since
+local clone_patch_installed = false
+local applied_visual_models = {}
+local item_weapon_patch_installed = false
+local addon_hook_installed = false
+local cover_tilt_callback_installed = false
+local original_attach_addon
+local original_detach_addon
+local weapon_has_rds_scope
+local weapon_has_hides_irons_scope
+local weapon_has_red_dot_scope
+local migrate_entry
+
+local AIM_RETRY_INTERVAL = 100
+local AIM_RETRY_LIMIT = 20
+local CAMERA_UPDATE_INTERVAL = 33
+local CAMERA_SETTLE_TIME = 100
+local CAMERA_FOLLOW_TIMEOUT = 750
+local CAMERA_MOVEMENT_EPSILON = 0.0001
+local CAMERA_X_OFFSET = 0.4
+local ITEM_Y_OFFSET = 2
+local POSITION_STEP = 0.01
+local ROTATION_STEP = 1
+local SCALE_STEP = 0.01
+local FINE_DRAG_MULT = 0.1
+local POSITION_AXIS_SCALE_EPSILON = 0.000001
+
+local function trim(value)
+	return value and value:match("^%s*(.-)%s*$") or ""
+end
+
+local function notify(text)
+	printf("[SCRIPTED CANTED IRONS] %s", text)
+	if db.actor then
+		news_manager.send_tip(db.actor, text, nil, nil, 5000)
+	end
+end
+
+local function get_inherited_string(sec, key)
+	local current = sec
+	local seen = {}
+	while current and current ~= "" and not seen[current] do
+		seen[current] = true
+		local value = ini_sys:r_string_ex(current, key)
+		if value then return value end
+		current = ini_sys:r_string_ex(current, "parent_section")
+	end
+end
+
+local function get_inherited_list(sec, key)
+	local value = get_inherited_string(sec, key)
+	if not value or value == "" then return {} end
+	local result = {}
+	local parts = str_explode(value, ",")
+	for _, part in ipairs(parts) do
+		local item = trim(part)
+		if item ~= "" then
+			result[#result + 1] = item
+		end
+	end
+	return result
+end
+
+local function get_visual_list(sec, key)
+	return get_inherited_list(sec, key)
+end
+
+local function canted_visual_count(entry)
+	if not (entry and entry.section) then return 0 end
+	local rear = get_visual_list(entry.section, "rear_iron_visual")
+	local front = get_visual_list(entry.section, "front_iron_visual")
+	return math.max(#rear, #front)
+end
+
+local function normalize_model_index(index, count)
+	if count <= 0 then return 1 end
+	index = math.floor(tonumber(index) or 1)
+	return ((index - 1) % count) + 1
+end
+
+local function get_canted_visual(entry, key, index)
+	local visuals = get_visual_list(entry.section, key)
+	if #visuals == 0 then return nil end
+	return visuals[index] or visuals[1]
+end
+local function base_section(section)
+	return section and (ini_sys:r_string_ex(section, "parent_section") or section)
+end
+
+local function get_wpn_base(weapon)
+	return weapon and base_section(weapon:section())
+end
+
+local function get_weapon_ltx_string(weapon, key)
+	local sec = weapon and weapon:section()
+	local base = get_wpn_base(weapon)
+	return ini_sys:r_string_ex(sec or "", key) or ini_sys:r_string_ex(base or "", key)
+end
+
+
+local function get_canted_irons_bone(weapon)
+	return get_weapon_ltx_string(weapon, "canted_sights_bone")
+		or get_weapon_ltx_string(weapon, "canted_irons_bone")
+		or "wpn_body"
+end
+
+local function active_weapon()
+	local weapon = db.actor and db.actor:active_item()
+	if not (weapon and weapon:cast_Weapon()) then return nil end
+	return weapon
+end
+
+local function resolve_weapon(weapon)
+	if weapon and IsWeapon(weapon) then return weapon end
+	local slot_weapon = item_weapon and item_weapon.get_weapon_slot and item_weapon.get_weapon_slot()
+	if slot_weapon and IsWeapon(slot_weapon) then return slot_weapon end
+	return active_weapon()
+end
+
+local function vector_string_to_transform(value, fallback)
+	local parts = str_explode(value or fallback, ",")
+	return tonumber(trim(parts[1])) or 0, tonumber(trim(parts[2])) or 0, tonumber(trim(parts[3])) or 0
+end
+
+local function vector_from_string(value, fallback)
+	local x, y, z = vector_string_to_transform(value, "0,0,0")
+	if not value and fallback then
+		return { x = fallback.x, y = fallback.y, z = fallback.z }
+	end
+	return { x = x, y = y, z = z }
+end
+
+local function read_vector(section, key, fallback)
+	return vector_from_string(ini_sys:r_string_ex(section, key), fallback)
+end
+
+local function read_hud_vector(section, key, fallback)
+	local widescreen = ini_sys:r_string_ex(section, key .. "_16x9")
+	return vector_from_string(widescreen or ini_sys:r_string_ex(section, key), fallback)
+end
+
+local function set_adjust_vector(offset_type, index, value)
+	hud_adjust.set_vector(offset_type, index, value.x, value.y, value.z)
+end
+
+local function read_canted_aim_vector(section, key)
+	local value = ini_sys:r_string_ex(section, key .. "_16x9") or ini_sys:r_string_ex(section, key)
+	if not value then return nil end
+	return vector_from_string(value)
+end
+local function hud_section_for_weapon(weapon)
+	local weapon_section = weapon and weapon:section()
+	local hud_section = weapon_section and ini_sys:r_string_ex(weapon_section, "hud")
+	if hud_section and ini_sys:section_exist(hud_section) then return hud_section end
+end
+
+local function hand_aim_offsets(weapon)
+	local zero = { x = 0, y = 0, z = 0 }
+	local hud_section = hud_section_for_weapon(weapon)
+	if not hud_section then return zero, zero, zero, zero, zero, zero, 1 end
+	return read_hud_vector(hud_section, "hands_position", zero),
+		read_hud_vector(hud_section, "hands_orientation", zero),
+		read_hud_vector(hud_section, "attach_base_hud_offset_pos", zero),
+		read_hud_vector(hud_section, "attach_base_hud_offset_rot", zero),
+		read_hud_vector(hud_section, "attach_mount_hud_offset_pos", zero),
+		read_hud_vector(hud_section, "attach_mount_hud_offset_rot", zero),
+		ini_sys:r_float_ex(hud_section, "attach_scale") or 1
+end
+
+local function read_saved_canted_aim(section, item_section)
+	local pos_key = "canted_aim_pos_" .. item_section
+	local rot_key = "canted_aim_rot_" .. item_section
+	local position = read_canted_aim_vector(section, pos_key)
+	local rotation = read_canted_aim_vector(section, rot_key)
+	if not (position and rotation) then return nil end
+	return { pos = position, rot = rotation }
+end
+
+local runtime_hud_adjust_weapon_id
+local canted_alt_aim_owner_id
+local blanked_reflex_reticles = {}
+
+local function is_regular_reflex_shader(shader)
+	local name = string.lower(tostring(shader or ""))
+	name = string.gsub(name, "\\", "/")
+	name = string.match(name, "([^/]+)$") or name
+	return name == "reflex_reticle"
+		or name == "reflex_reticle_3db"
+		or name == "models_reflex_reticle"
+		or name == "models_reflex_reticle_3db"
+end
+
+local function blank_regular_reflex_reticles(weapon)
+	if not (weapon and IsWeapon(weapon)) then return false end
+	local id = weapon:id()
+	if blanked_reflex_reticles[id] then return true end
+
+	local ok, shaders = pcall(function() return weapon:get_shaders(true) end)
+	if not (ok and shaders) then return false end
+
+	local materials = {}
+	for visual_id, material in pairs(shaders) do
+		local numeric_id = tonumber(visual_id)
+		local shader = material and material.shader
+		local texture = material and material.texture
+		if numeric_id and numeric_id > 0 and texture and is_regular_reflex_shader(shader) then
+			local changed = pcall(function()
+				weapon:set_shader(numeric_id, nil, BLANK_RETICLE_TEXTURE, true)
+			end)
+			if changed then
+				materials[#materials + 1] = {
+					id = numeric_id,
+					texture = tostring(texture),
+				}
+			end
+		end
+	end
+
+	if #materials == 0 then return false end
+	blanked_reflex_reticles[id] = {
+		section = weapon:section(),
+		materials = materials,
+	}
+	return true
+end
+
+local function restore_regular_reflex_reticles(weapon)
+	local id = weapon and weapon:id()
+	local state = id and blanked_reflex_reticles[id]
+	if not state then return false end
+
+	if weapon and IsWeapon(weapon) and weapon:section() == state.section then
+		for _, material in ipairs(state.materials) do
+			pcall(function()
+				weapon:set_shader(material.id, nil, material.texture, true)
+			end)
+		end
+	end
+	blanked_reflex_reticles[id] = nil
+	return true
+end
+
+local function standard_hud_editor_open()
+	return ui_debug_wpn_hud
+		and ui_debug_wpn_hud.GUI
+		and ui_debug_wpn_hud.GUI:IsShown()
+end
+
+local function prime_runtime_hud_adjust(weapon, alt_position, alt_rotation)
+	if standard_hud_editor_open() then return false end
+	if not (weapon and IsWeapon(weapon) and hud_adjust) then return false end
+	local weapon_section = weapon:section()
+	local hud_section = weapon_section and ini_sys:r_string_ex(weapon_section, "hud")
+	if not (hud_section and ini_sys:section_exist(hud_section)) then return false end
+
+	local zero = { x = 0, y = 0, z = 0 }
+	local offset_keys = {
+		[0] = { "hands_position", "hands_orientation" },
+		[1] = { "aim_hud_offset_pos", "aim_hud_offset_rot" },
+		[2] = { "gl_hud_offset_pos", "gl_hud_offset_rot" },
+		[3] = { "aim_hud_offset_alt_pos", "aim_hud_offset_alt_rot" },
+		[4] = { "lowered_hud_offset_pos", "lowered_hud_offset_rot" },
+		[5] = { "base_hud_offset_pos", "base_hud_offset_rot" },
+		[6] = { "attach_base_hud_offset_pos", "attach_base_hud_offset_rot" },
+		[7] = { "attach_mount_hud_offset_pos", "attach_mount_hud_offset_rot" },
+	}
+
+	for index, keys in pairs(offset_keys) do
+		set_adjust_vector(0, index, read_hud_vector(hud_section, keys[1], zero))
+		set_adjust_vector(1, index, read_hud_vector(hud_section, keys[2], zero))
+	end
+
+	local aim_position = read_hud_vector(hud_section, "aim_hud_offset_pos", zero)
+	local aim_rotation = read_hud_vector(hud_section, "aim_hud_offset_rot", zero)
+	local default_alt_position = read_hud_vector(hud_section, "aim_hud_offset_alt_pos", aim_position)
+	local default_alt_rotation = read_hud_vector(hud_section, "aim_hud_offset_alt_rot", aim_rotation)
+	set_adjust_vector(0, 3, alt_position or default_alt_position)
+	set_adjust_vector(1, 3, alt_rotation or default_alt_rotation)
+	set_adjust_vector(0, 8, aim_position)
+	set_adjust_vector(1, 8, aim_rotation)
+	set_adjust_vector(0, 9, alt_position or default_alt_position)
+	set_adjust_vector(1, 9, alt_rotation or default_alt_rotation)
+
+	hud_adjust.set_value("attach_scale", ini_sys:r_float_ex(hud_section, "attach_scale") or 1)
+	hud_adjust.set_value("scope_zoom_factor", ini_sys:r_float_ex(weapon_section, "scope_zoom_factor") or 0)
+	hud_adjust.set_value("gl_zoom_factor", ini_sys:r_float_ex(weapon_section, "gl_zoom_factor") or 0)
+	hud_adjust.set_value("scope_zoom_factor_alt", ini_sys:r_float_ex(weapon_section, "scope_zoom_factor_alt") or 0)
+	hud_adjust.enabled(true)
+	runtime_hud_adjust_weapon_id = weapon:id()
+	return true
+end
+
+local function release_runtime_hud_adjust(weapon)
+	if not runtime_hud_adjust_weapon_id then return false end
+	if weapon and runtime_hud_adjust_weapon_id ~= weapon:id() then return false end
+
+	if not standard_hud_editor_open() and not editor_open and not hud_adjust_weapon_id then
+		hud_adjust.enabled(false)
+	end
+	runtime_hud_adjust_weapon_id = nil
+	return true
+end
+
+local function clear_canted_alt_aim_by_id(weapon_id, weapon)
+	if not weapon_id then return false end
+	local owns_alt_aim = canted_alt_aim_owner_id == weapon_id
+		or runtime_hud_adjust_weapon_id == weapon_id
+	local has_blanked_reticle = blanked_reflex_reticles[weapon_id] ~= nil
+	if not owns_alt_aim and not has_blanked_reticle then return false end
+
+	if weapon and weapon:id() == weapon_id then
+		restore_regular_reflex_reticles(weapon)
+	else
+		blanked_reflex_reticles[weapon_id] = nil
+	end
+	if owns_alt_aim then
+		if runtime_hud_adjust_weapon_id == weapon_id then
+			release_runtime_hud_adjust(weapon and weapon:id() == weapon_id and weapon or nil)
+		end
+		if canted_alt_aim_owner_id == weapon_id then
+			canted_alt_aim_owner_id = nil
+		end
+	end
+	return true
+end
+
+local function clear_canted_alt_aim(weapon)
+	if not weapon then return false end
+	return clear_canted_alt_aim_by_id(weapon:id(), weapon)
+end
+
+local function clear_canted_alt_aim_owner()
+	local owner_id = canted_alt_aim_owner_id
+	local runtime_owner_id = runtime_hud_adjust_weapon_id
+	local changed = false
+	if owner_id then
+		changed = clear_canted_alt_aim_by_id(owner_id, level.object_by_id(owner_id)) or changed
+	end
+	if runtime_owner_id and runtime_owner_id ~= owner_id then
+		changed = clear_canted_alt_aim_by_id(runtime_owner_id, level.object_by_id(runtime_owner_id)) or changed
+	end
+	return changed
+end
+
+local function install_standard_hud_editor_compat()
+	if not (ui_debug_wpn_hud and type(ui_debug_wpn_hud.start) == "function") then return false end
+	if ui_debug_wpn_hud._scripted_canted_irons_start_patch then return true end
+
+	local original_start = ui_debug_wpn_hud.start
+	ui_debug_wpn_hud.start = function(owner)
+		release_runtime_hud_adjust()
+		return original_start(owner)
+	end
+	ui_debug_wpn_hud._scripted_canted_irons_start_patch = true
+	return true
+end
+
+local function canted_aim_key(section, item_section)
+	return tostring(section or "") .. "|" .. tostring(item_section or "")
+end
+
+local function canted_aim_item_key(entry, slot_override)
+	if entry and entry.kind == ATTACHMENT_RDS and (slot_override or entry.rds_slot) then
+		local slot = tonumber(slot_override or entry.rds_slot) or 1
+		if slot == 1 then return entry.section end
+		return tostring(entry.section) .. "_pos" .. tostring(slot)
+	end
+	return entry and entry.section
+end
+
+local function legacy_canted_aim_item_key(entry, slot_override)
+	if not (entry and entry.kind == ATTACHMENT_RDS) then return nil end
+	local slot = tonumber(slot_override or entry.rds_slot)
+	if slot ~= 1 then return nil end
+	return tostring(entry.section) .. "_pos1"
+end
+
+local function weapon_has_ltx_key(weapon, key)
+	return get_weapon_ltx_string(weapon, key) ~= nil
+end
+
+local function configured_canted_model_index(weapon, entry, count, slot_override)
+	if count <= 1 then return 1 end
+	local item_key = canted_aim_item_key(entry, slot_override)
+	if not item_key then return 1 end
+	local prefix = "canted_aim_pos_" .. item_key .. "_"
+	local legacy_item_key = legacy_canted_aim_item_key(entry, slot_override)
+	local legacy_prefix = legacy_item_key and ("canted_aim_pos_" .. legacy_item_key .. "_") or nil
+	for index = 2, count do
+		local key = prefix .. tostring(index)
+		local legacy_key = legacy_prefix and (legacy_prefix .. tostring(index)) or nil
+		if weapon_has_ltx_key(weapon, key)
+			or weapon_has_ltx_key(weapon, key .. "_16x9")
+			or (legacy_key and (weapon_has_ltx_key(weapon, legacy_key) or weapon_has_ltx_key(weapon, legacy_key .. "_16x9")))
+		then
+			return index
+		end
+	end
+	return 1
+end
+
+local function canted_model_index_for_weapon(weapon, entry, count, slot_override)
+	if editor_open then
+		return normalize_model_index(editor_model_index, count)
+	end
+	if entry and entry.model_index then
+		return normalize_model_index(entry.model_index, count)
+	end
+	return configured_canted_model_index(weapon, entry, count, slot_override)
+end
+
+local function canted_aim_item_key_for_weapon(weapon, entry, count, slot_override)
+	local item_key = canted_aim_item_key(entry, slot_override)
+	local model_index = canted_model_index_for_weapon(weapon, entry, count, slot_override)
+	if model_index > 1 then
+		return tostring(item_key) .. "_" .. tostring(model_index)
+	end
+	return item_key
+end
+
+local function legacy_canted_aim_item_key_for_weapon(weapon, entry, count, slot_override)
+	local item_key = legacy_canted_aim_item_key(entry, slot_override)
+	if not item_key then return nil end
+	local model_index = canted_model_index_for_weapon(weapon, entry, count, slot_override)
+	if model_index > 1 then
+		return tostring(item_key) .. "_" .. tostring(model_index)
+	end
+	return item_key
+end
+
+local function clone_aim(aim)
+	if not aim then return nil end
+	return {
+		pos = { x = aim.pos.x, y = aim.pos.y, z = aim.pos.z },
+		rot = { x = aim.rot.x, y = aim.rot.y, z = aim.rot.z },
+	}
+end
+
+local function zero_aim()
+	return {
+		pos = { x = 0, y = 0, z = 0 },
+		rot = { x = 0, y = 0, z = 0 },
+	}
+end
+
+local function get_canted_aim_value(weapon, entry, create)
+	if not (weapon and entry) then return nil end
+	local active_section = weapon:section()
+	local base_weapon_section = entry.wpn_base or get_wpn_base(weapon)
+	local target_section = active_section or base_weapon_section
+	if not target_section then return nil end
+	local primary_item_key = canted_aim_item_key_for_weapon(weapon, entry, canted_visual_count(entry))
+	local legacy_item_key = legacy_canted_aim_item_key_for_weapon(weapon, entry, canted_visual_count(entry))
+	local base_item_key = canted_aim_item_key(entry)
+	local function read_from_section(section)
+		if not section then return nil end
+		local primary_key = canted_aim_key(section, primary_item_key)
+		local aim = canted_aim_edits[primary_key] or read_saved_canted_aim(section, primary_item_key)
+		if aim then return aim end
+
+		aim = legacy_item_key and read_saved_canted_aim(section, legacy_item_key) or nil
+		if aim then return aim end
+
+		if primary_item_key ~= base_item_key then
+			local slot_fallback_key = canted_aim_key(section, base_item_key)
+			aim = canted_aim_edits[slot_fallback_key] or read_saved_canted_aim(section, base_item_key)
+			if aim then return aim end
+		end
+
+		if primary_item_key ~= entry.section then
+			local fallback_key = canted_aim_key(section, entry.section)
+			aim = canted_aim_edits[fallback_key] or read_saved_canted_aim(section, entry.section)
+			if aim then return aim end
+		end
+	end
+
+	local aim = read_from_section(active_section)
+	local source_section = aim and active_section or nil
+	if not aim and base_weapon_section ~= active_section then
+		aim = read_from_section(base_weapon_section)
+		source_section = aim and base_weapon_section or nil
+	end
+
+	if aim then
+		if create then
+			local target_key = canted_aim_key(target_section, primary_item_key)
+			if source_section ~= target_section or not canted_aim_edits[target_key] then
+				canted_aim_edits[target_key] = clone_aim(aim)
+			end
+			return canted_aim_edits[target_key], target_section
+		end
+		return aim, source_section
+	end
+
+	if create then
+		local target_key = canted_aim_key(target_section, primary_item_key)
+		canted_aim_edits[target_key] = zero_aim()
+		return canted_aim_edits[target_key], target_section
+	end
+	return nil, target_section
+end
+
+local function apply_canted_alt_aim(weapon)
+	local entry = weapon and irons_by_weapon[weapon:id()]
+	if not entry then
+		clear_canted_alt_aim(weapon)
+		return false
+	end
+
+	local aim, section = get_canted_aim_value(weapon, entry, false)
+	if not (section and ini_sys:section_exist(section)) then
+		clear_canted_alt_aim(weapon)
+		return false
+	end
+
+	if not aim then
+		clear_canted_alt_aim(weapon)
+		return false
+	end
+
+	local _, _, attach_base_pos, attach_base_rot, attach_mount_pos, attach_mount_rot, attach_scale = hand_aim_offsets(weapon)
+	local alt_position = {
+		x = (aim.pos.x - attach_base_pos.x + attach_mount_pos.x) / attach_scale,
+		y = (aim.pos.y - attach_base_pos.y + attach_mount_pos.y) / attach_scale,
+		z = (aim.pos.z - attach_base_pos.z + attach_mount_pos.z) / attach_scale,
+	}
+	local alt_rotation = {
+		x = -(aim.rot.x - attach_base_rot.x + attach_mount_rot.x),
+		y = -(aim.rot.y - attach_base_rot.y + attach_mount_rot.y),
+		z = aim.rot.z - attach_base_rot.z + attach_mount_rot.z,
+	}
+	local applied = prime_runtime_hud_adjust(weapon, alt_position, alt_rotation)
+	if applied then
+		canted_alt_aim_owner_id = weapon:id()
+	end
+	return applied
+end
+
+local function disable_item_position_offset()
+	if not hud_adjust_weapon_id then return end
+	local weapon = level.object_by_id(hud_adjust_weapon_id) or active_weapon()
+	if weapon then
+		local weapon_section = weapon:section()
+		local hud_section = ini_sys:r_string_ex(weapon_section, "hud")
+		if hud_section and ini_sys:section_exist(hud_section) then
+			local zero = { x = 0, y = 0, z = 0 }
+			local offset_keys = {
+				[0] = { "hands_position", "hands_orientation" },
+				[1] = { "aim_hud_offset_pos", "aim_hud_offset_rot" },
+				[2] = { "gl_hud_offset_pos", "gl_hud_offset_rot" },
+				[3] = { "aim_hud_offset_alt_pos", "aim_hud_offset_alt_rot" },
+				[4] = { "lowered_hud_offset_pos", "lowered_hud_offset_rot" },
+				[5] = { "base_hud_offset_pos", "base_hud_offset_rot" },
+				[6] = { "attach_base_hud_offset_pos", "attach_base_hud_offset_rot" },
+				[7] = { "attach_mount_hud_offset_pos", "attach_mount_hud_offset_rot" },
+			}
+			for index, keys in pairs(offset_keys) do
+				set_adjust_vector(0, index, read_hud_vector(hud_section, keys[1], zero))
+				set_adjust_vector(1, index, read_hud_vector(hud_section, keys[2], zero))
+			end
+
+			local item_position = read_vector(hud_section, "item_position", zero)
+			local item_orientation = read_vector(hud_section, "item_orientation", zero)
+			local aim_position = read_hud_vector(hud_section, "aim_hud_offset_pos", zero)
+			local aim_rotation = read_hud_vector(hud_section, "aim_hud_offset_rot", zero)
+			local alt_position = read_hud_vector(hud_section, "aim_hud_offset_alt_pos", aim_position)
+			local alt_rotation = read_hud_vector(hud_section, "aim_hud_offset_alt_rot", aim_rotation)
+			set_adjust_vector(0, 8, aim_position)
+			set_adjust_vector(1, 8, aim_rotation)
+			set_adjust_vector(0, 9, alt_position)
+			set_adjust_vector(1, 9, alt_rotation)
+			set_adjust_vector(0, 12, item_position)
+			set_adjust_vector(1, 12, item_orientation)
+		end
+	end
+	hud_adjust.enabled(false)
+	hud_adjust_weapon_id = nil
+end
+
+local function enable_item_position_offset(weapon)
+	if not (weapon and hud_adjust) then return false end
+
+	if hud_adjust_weapon_id and hud_adjust_weapon_id ~= weapon:id() then
+		disable_item_position_offset()
+	end
+
+	local weapon_section = weapon:section()
+	local hud_section = ini_sys:r_string_ex(weapon_section, "hud")
+	if not (hud_section and ini_sys:section_exist(hud_section)) then return false end
+
+	local zero = { x = 0, y = 0, z = 0 }
+	local item_position = read_vector(hud_section, "item_position", zero)
+	local item_orientation = read_vector(hud_section, "item_orientation", zero)
+	item_position.y = item_position.y + ITEM_Y_OFFSET
+
+	local offset_keys = {
+		[0] = { "hands_position", "hands_orientation" },
+		[1] = { "aim_hud_offset_pos", "aim_hud_offset_rot" },
+		[2] = { "gl_hud_offset_pos", "gl_hud_offset_rot" },
+		[3] = { "aim_hud_offset_alt_pos", "aim_hud_offset_alt_rot" },
+		[4] = { "lowered_hud_offset_pos", "lowered_hud_offset_rot" },
+		[5] = { "base_hud_offset_pos", "base_hud_offset_rot" },
+		[6] = { "attach_base_hud_offset_pos", "attach_base_hud_offset_rot" },
+		[7] = { "attach_mount_hud_offset_pos", "attach_mount_hud_offset_rot" },
+	}
+
+	for index, keys in pairs(offset_keys) do
+		set_adjust_vector(0, index, read_hud_vector(hud_section, keys[1], zero))
+		set_adjust_vector(1, index, read_hud_vector(hud_section, keys[2], zero))
+	end
+
+	local aim_position = read_hud_vector(hud_section, "aim_hud_offset_pos", zero)
+	local aim_rotation = read_hud_vector(hud_section, "aim_hud_offset_rot", zero)
+	local alt_position = read_hud_vector(hud_section, "aim_hud_offset_alt_pos", aim_position)
+	local alt_rotation = read_hud_vector(hud_section, "aim_hud_offset_alt_rot", aim_rotation)
+	set_adjust_vector(0, 8, aim_position)
+	set_adjust_vector(1, 8, aim_rotation)
+	set_adjust_vector(0, 9, alt_position)
+	set_adjust_vector(1, 9, alt_rotation)
+	apply_canted_alt_aim(weapon)
+
+	set_adjust_vector(0, 12, item_position)
+	set_adjust_vector(1, 12, item_orientation)
+	hud_adjust.set_value("attach_scale", ini_sys:r_float_ex(hud_section, "attach_scale") or 1)
+	hud_adjust.set_value("scope_zoom_factor", ini_sys:r_float_ex(weapon_section, "scope_zoom_factor") or 0)
+	hud_adjust.set_value("gl_zoom_factor", ini_sys:r_float_ex(weapon_section, "gl_zoom_factor") or 0)
+	hud_adjust.set_value("scope_zoom_factor_alt", ini_sys:r_float_ex(weapon_section, "scope_zoom_factor_alt") or 0)
+	hud_adjust.enabled(true)
+	hud_adjust_weapon_id = weapon:id()
+	return true
+end
+
+local function scale_value_to_transform(value)
+	local uniform = tonumber(value) or 1
+	if value and string.find(value, ",") then
+		local parts = str_explode(value, ",")
+		return tonumber(trim(parts[1])) or uniform,
+			tonumber(trim(parts[2])) or uniform,
+			tonumber(trim(parts[3])) or uniform
+	end
+	return uniform, uniform, uniform
+end
+
+local function scale_string_to_transform(section, key)
+	local value = ini_sys:r_string_ex(section, key)
+	return scale_value_to_transform(value)
+end
+
+local function read_weapon_transform(weapon)
+	local sec = weapon:section()
+	local base = get_wpn_base(weapon) or sec
+	local entry = irons_by_weapon[weapon:id()]
+	local pos_key = "canted_sights_pos"
+	local rot_key = "canted_sights_rot"
+	local scale_key = "canted_sights_scale"
+	local is_rds = entry and entry.kind == ATTACHMENT_RDS and entry.rds_slot
+	if entry and entry.kind == ATTACHMENT_RDS and entry.rds_slot then
+		pos_key = "canted_rds_position" .. tostring(entry.rds_slot)
+		rot_key = "canted_rds_orientation" .. tostring(entry.rds_slot)
+		scale_key = "canted_rds_scale" .. tostring(entry.rds_slot)
+	end
+	local shared_pos = ini_sys:r_string_ex(sec, "canted_sights_pos") or ini_sys:r_string_ex(base, "canted_sights_pos")
+		or ini_sys:r_string_ex(sec, "canted_irons_pos") or ini_sys:r_string_ex(base, "canted_irons_pos")
+	local shared_rot = ini_sys:r_string_ex(sec, "canted_sights_rot") or ini_sys:r_string_ex(base, "canted_sights_rot")
+		or ini_sys:r_string_ex(sec, "canted_irons_rot") or ini_sys:r_string_ex(base, "canted_irons_rot")
+	local shared_scale = ini_sys:r_string_ex(sec, "canted_sights_scale") or ini_sys:r_string_ex(base, "canted_sights_scale")
+		or ini_sys:r_string_ex(sec, "canted_irons_scale") or ini_sys:r_string_ex(base, "canted_irons_scale")
+	local pos_value = ini_sys:r_string_ex(sec, pos_key) or ini_sys:r_string_ex(base, pos_key)
+	local rot_value = ini_sys:r_string_ex(sec, rot_key) or ini_sys:r_string_ex(base, rot_key)
+	local scale_value = ini_sys:r_string_ex(sec, scale_key) or ini_sys:r_string_ex(base, scale_key)
+	if is_rds then
+		pos_value = pos_value or shared_pos
+		rot_value = rot_value or shared_rot
+		scale_value = scale_value or shared_scale
+	else
+		pos_value = pos_value or shared_pos
+		rot_value = rot_value or shared_rot
+		scale_value = scale_value or shared_scale
+	end
+	local x, y, z = vector_string_to_transform(pos_value, "0,0,0")
+	local rx, ry, rz = vector_string_to_transform(rot_value, "0,0,0")
+	local sx, sy, sz = scale_value_to_transform(scale_value)
+	return { x = x, y = y, z = z, rx = rx, ry = ry, rz = rz, sx = sx, sy = sy, sz = sz, parent_bone = get_canted_irons_bone(weapon) }
+end
+
+local function read_front_transform(weapon)
+	local sec = weapon:section()
+	local base = get_wpn_base(weapon) or sec
+	local pos_sec = ini_sys:r_string_ex(sec, "front_iron_pos") and sec or base
+	local rot_sec = ini_sys:r_string_ex(sec, "front_iron_rot") and sec or base
+	local scale_sec = ini_sys:r_string_ex(sec, "front_iron_scale") and sec or base
+	local x, y, z = vector_string_to_transform(ini_sys:r_string_ex(pos_sec, "front_iron_pos"), "0,0,0")
+	local rx, ry, rz = vector_string_to_transform(ini_sys:r_string_ex(rot_sec, "front_iron_rot"), "0,0,0")
+	local sx, sy, sz = scale_string_to_transform(scale_sec, "front_iron_scale")
+	return { x = x, y = y, z = z, rx = rx, ry = ry, rz = rz, sx = sx, sy = sy, sz = sz, parent_bone = get_canted_irons_bone(weapon) }
+end
+
+local function clone_transform(value)
+	if not value then return nil end
+	return {
+		x = value.x, y = value.y, z = value.z,
+		rx = value.rx, ry = value.ry, rz = value.rz,
+		sx = value.sx, sy = value.sy, sz = value.sz,
+		parent_bone = value.parent_bone,
+	}
+end
+
+local function apply_transform(attachment, value)
+	if not (attachment and value) then return end
+	attachment:set_position(value.x, value.y, value.z)
+	attachment:set_rotation(value.rx, value.ry, value.rz)
+	attachment:set_scale(value.sx, value.sy, value.sz)
+	attachment:set_parent_bone(value.parent_bone)
+end
+
+local function state_key(weapon, item_section)
+	local entry = weapon and irons_by_weapon[weapon:id()]
+	local suffix = "|" .. tostring((entry and entry.kind) or ATTACHMENT_IRONS) .. "|" .. tostring((entry and entry.rds_slot) or 0)
+	if editor_target == "front" then
+		return "front:" .. tostring(get_wpn_base(weapon) or weapon:section()) .. suffix
+	end
+	return "main:" .. tostring(get_wpn_base(weapon) or weapon:section()) .. suffix
+end
+
+local function default_transform(weapon, item_section)
+	if editor_target == "front" then
+		return read_front_transform(weapon)
+	end
+	return read_weapon_transform(weapon)
+end
+
+local function transform_state(weapon, item_section)
+	local key = state_key(weapon, item_section)
+	if not transforms[key] then
+		transforms[key] = default_transform(weapon, item_section)
+	end
+	return transforms[key]
+end
+
+local function set_bone_visible(wpn, bone, visible)
+	wpn:set_bone_visible(bone, visible, true, true)
+	wpn:set_bone_visible(bone, visible, true, false)
+end
+
+local function force_hide_irons(weapon)
+	for _, bone in ipairs(IRON_BONES) do
+		set_bone_visible(weapon, bone, false)
+	end
+	set_bone_visible(weapon, CANTED_SIGHT_BONE, false)
+end
+
+local function is_canted_alt_aim_active(weapon, zoom_type_override)
+	local c_weapon = weapon and weapon:cast_Weapon()
+	if not c_weapon then return false end
+	local ok_zoomed, zoomed = pcall(function() return c_weapon:IsZoomed() end)
+	local ok_zoomtype, zoomtype = true, zoom_type_override
+	if zoomtype == nil then
+		ok_zoomtype, zoomtype = pcall(function() return c_weapon:GetZoomType() end)
+	end
+	return ok_zoomed and zoomed and ok_zoomtype and zoomtype == 1
+end
+
+local function sync_canted_alt_aim(weapon, force_apply, zoom_type_override)
+	local weapon_id = weapon and weapon:id()
+	local entry = weapon_id and irons_by_weapon[weapon_id]
+	local should_apply = entry and is_canted_alt_aim_active(weapon, zoom_type_override)
+	if should_apply then
+		local already_applied = canted_alt_aim_owner_id == weapon_id
+			and runtime_hud_adjust_weapon_id == weapon_id
+		if force_apply or not already_applied then
+			if canted_alt_aim_owner_id and canted_alt_aim_owner_id ~= weapon_id then
+				clear_canted_alt_aim_by_id(canted_alt_aim_owner_id, level.object_by_id(canted_alt_aim_owner_id))
+			end
+			apply_canted_alt_aim(weapon)
+		end
+		blank_regular_reflex_reticles(weapon)
+		return true
+	end
+
+	clear_canted_alt_aim(weapon)
+	return false
+end
+
+local function set_attachment_bone_visible(attachment, bone, visible)
+	if not attachment then return end
+	pcall(function() attachment:set_bone_visible(bone, visible, true) end)
+end
+
+local function set_canted_rds_lens_visible(weapon, visible)
+	if not weapon then return end
+	set_attachment_bone_visible(weapon:get_attachment(MAIN_ATTACHMENT), CANTED_LENS_BONE, visible)
+end
+
+local function update_scripted_irons_aim_bones(weapon)
+	if not (weapon and IsWeapon(weapon)) then return end
+	local entry = irons_by_weapon[weapon:id()]
+	if not entry then return end
+	local alt_aim = is_canted_alt_aim_active(weapon)
+	local main = weapon:get_attachment(MAIN_ATTACHMENT)
+	local front = weapon:get_attachment(FRONT_ATTACHMENT)
+	if entry.kind ~= ATTACHMENT_RDS then
+		local bones_applied = false
+		for _, attachment in ipairs({ main, front }) do
+			if attachment then
+				set_attachment_bone_visible(attachment, "on", alt_aim)
+				set_attachment_bone_visible(attachment, "off", not alt_aim)
+				bones_applied = true
+			end
+		end
+		local previous = canted_irons_aim_state[weapon:id()]
+		canted_irons_aim_state[weapon:id()] = alt_aim
+		if bones_applied and previous ~= nil and previous ~= alt_aim then
+			local snd = sound_object("interface\\irons_flip")
+			snd:play(db.actor)
+		end
+	else
+		canted_irons_aim_state[weapon:id()] = nil
+		set_canted_rds_lens_visible(weapon, not alt_aim)
+	end
+end
+
+local function has_scope(weapon, c_weapon)
+	if c_weapon:IsScopeAttached() then return true end
+
+	local section = weapon:section()
+	local parent_section = ini_sys:r_string_ex(section, "parent_section")
+	return parent_section and parent_section ~= "" and section ~= parent_section
+end
+
+local function update_builtin_irons(weapon)
+	if not (weapon and IsWeapon(weapon)) then return end
+	if irons_by_weapon[weapon:id()] then
+		force_hide_irons(weapon)
+		return
+	end
+
+	local c_weapon = weapon:cast_Weapon()
+	if not c_weapon then return end
+
+	local scope_attached = has_scope(weapon, c_weapon)
+	local scope_hides_irons = weapon_has_hides_irons_scope(weapon)
+	local manual_hide_irons_off = z_3dss_hide_bones
+		and z_3dss_hide_bones.should_hide_irons_off
+		and z_3dss_hide_bones.should_hide_irons_off(weapon)
+	set_bone_visible(weapon, "irons_on", not scope_attached)
+	set_bone_visible(weapon, "irons_off", scope_attached and not scope_hides_irons and not manual_hide_irons_off)
+	set_bone_visible(weapon, CANTED_SIGHT_BONE, not (weapon_has_red_dot_scope(weapon) or weapon_has_rds_scope(weapon)))
+end
+
+function update_builtin_irons_public(weapon)
+	update_builtin_irons(weapon)
+end
+
+local function is_supported_weapon(weapon)
+	if not (weapon and IsWeapon(weapon)) then return false end
+	local sec = weapon:section()
+	local base = get_wpn_base(weapon)
+	return ini_sys:r_string_ex(sec, "canted_sights_bone")
+		or ini_sys:r_string_ex(base or "", "canted_sights_bone")
+		or ini_sys:r_string_ex(sec, "canted_irons_bone")
+		or ini_sys:r_string_ex(base or "", "canted_irons_bone")
+end
+
+local function canted_sight_allowed(weapon, item_section)
+	local allowed = get_weapon_ltx_string(weapon, "canted_sights") or get_weapon_ltx_string(weapon, "canted_sight")
+	if not allowed then return false end
+	item_section = string.lower(tostring(item_section or ""))
+	for _, value in ipairs(str_explode(allowed, ",")) do
+		value = string.lower(trim(value))
+		if value == item_section then
+			return true
+		end
+	end
+	return false
+end
+
+local function get_allowed_canted_sight_sections(weapon)
+	local allowed = get_weapon_ltx_string(weapon, "canted_sights") or get_weapon_ltx_string(weapon, "canted_sight")
+	if not allowed then return {} end
+	local result = {}
+	local seen = {}
+	for _, value in ipairs(str_explode(allowed, ",")) do
+		value = trim(value)
+		if value ~= "" and not seen[value] then
+			seen[value] = true
+			result[#result + 1] = value
+		end
+	end
+	return result
+end
+
+local function ltx_bool(value)
+	if not value then return false end
+	value = string.lower(tostring(value))
+	return value == "true" or value == "1" or value == "yes" or value == "on"
+end
+
+local function section_has_rds(section)
+	return ltx_bool(get_inherited_string(section, "has_rds"))
+end
+
+local function section_hides_irons(section)
+	return ltx_bool(get_inherited_string(section, "hides_irons"))
+end
+
+local function section_blocks_irons(section)
+	return ltx_bool(get_inherited_string(section, "blocks_irons"))
+end
+
+local function section_red_dot(section)
+	return ltx_bool(get_inherited_string(section, "red_dot"))
+end
+
+local function rebuild_rds_scope_sections()
+	rds_scope_sections = {}
+	hides_irons_scope_sections = {}
+	blocks_irons_scope_sections = {}
+	red_dot_scope_sections = {}
+	if not (utils_data and utils_data.collect_sections) then return end
+	for sec in pairs(utils_data.collect_sections(ini_sys, { "addons_table" })) do
+		if section_has_rds(sec) then
+			rds_scope_sections[sec] = true
+		end
+		if section_hides_irons(sec) then
+			hides_irons_scope_sections[sec] = true
+		end
+		if section_blocks_irons(sec) then
+			blocks_irons_scope_sections[sec] = true
+		end
+		if section_red_dot(sec) then
+			red_dot_scope_sections[sec] = true
+		end
+	end
+end
+
+local function weapon_has_scope_from_table(weapon, scope_sections)
+	if not weapon then return false end
+	local section = weapon:section()
+	if not section then return false end
+	for scope_section in pairs(scope_sections) do
+		if scope_section and scope_section ~= "" and string.find(section, "_" .. scope_section, 1, true) then
+			return true
+		end
+	end
+	return false
+end
+
+weapon_has_rds_scope = function(weapon)
+	return weapon_has_scope_from_table(weapon, rds_scope_sections)
+end
+
+weapon_has_hides_irons_scope = function(weapon)
+	return weapon_has_scope_from_table(weapon, hides_irons_scope_sections)
+end
+
+local function weapon_has_blocks_irons_scope(weapon)
+	return weapon_has_scope_from_table(weapon, blocks_irons_scope_sections)
+end
+
+weapon_has_red_dot_scope = function(weapon)
+	return weapon_has_scope_from_table(weapon, red_dot_scope_sections)
+end
+
+local function is_canted_rds(item)
+	if not item then return false end
+	local sec = item:section()
+	local explicit = get_inherited_string(sec, "canted_attachment_type")
+	if explicit == ATTACHMENT_RDS then return true end
+	for i = 1, 3 do
+		if get_inherited_string(sec, "use" .. tostring(i) .. "_functor") == RDS_FUNCTOR_PREFIX .. tostring(i) then
+			return true
+		end
+	end
+	return false
+end
+
+local function is_canted_irons(item)
+	if not item then return false end
+	if is_canted_rds(item) then return false end
+	local sec = item:section()
+	return get_inherited_string(sec, "use1_functor") == INSTALL_FUNCTOR
+        or get_inherited_string(sec, "rear_iron_visual") ~= nil
+end
+
+local function get_canted_rds_open_slots(weapon)
+	local open_slots = get_weapon_ltx_string(weapon, "open_slots") or get_weapon_ltx_string(weapon, "open_slot")
+	if not open_slots then return {} end
+	local parts = str_explode(open_slots, ",")
+	local slots = {}
+	for _, value in ipairs(parts) do
+		local parsed = tonumber(trim(value))
+		if parsed and parsed >= 1 and parsed <= 3 then
+			slots[#slots + 1] = parsed
+		end
+	end
+	return slots
+end
+
+local function is_canted_rds_slot_open(weapon, slot)
+	local open_slots = get_canted_rds_open_slots(weapon)
+	if open_slots == true then return true end
+	for _, value in ipairs(open_slots) do
+		if value == slot then return true end
+	end
+	return false
+end
+
+local function has_canted_rds_position(weapon, slot)
+	return is_canted_rds_slot_open(weapon, slot)
+end
+
+local function update_canted_rds_slot_for_scope(weapon, entry)
+	if not (entry and entry.kind == ATTACHMENT_RDS) then return end
+	if is_canted_rds_slot_open(weapon, entry.rds_slot) then return end
+	local open_slots = get_canted_rds_open_slots(weapon)
+	if open_slots == true then return end
+	for _, slot in ipairs(open_slots) do
+		entry.rds_slot = slot
+		return
+	end
+end
+
+local function adjust_weight(weapon)
+	if not (weapon and IsWeapon(weapon)) then return end
+	local base_weight = SYS_GetParam(2, weapon:section(), "inv_weight") or 0
+	local entry = irons_by_weapon[weapon:id()]
+	if entry then
+		base_weight = base_weight + (SYS_GetParam(2, entry.section, "inv_weight") or 0)
+	end
+	weapon:set_weight(base_weight)
+end
+
+local function remove_visuals(weapon)
+	if not weapon then return end
+	applied_visual_models[weapon:id()] = nil
+	local front = weapon:get_attachment(FRONT_ATTACHMENT)
+	if front then
+		weapon:remove_attachment(FRONT_ATTACHMENT)
+	end
+	local main = weapon:get_attachment(MAIN_ATTACHMENT)
+	if main then
+		weapon:remove_attachment(MAIN_ATTACHMENT)
+	end
+end
+
+function update_visuals(weapon)
+	if not (weapon and IsWeapon(weapon)) then return end
+	local entry = irons_by_weapon[weapon:id()]
+	if not entry then
+		clear_canted_alt_aim(weapon)
+		remove_visuals(weapon)
+		update_builtin_irons(weapon)
+		return
+	end
+	if not canted_sight_allowed(weapon, entry.section) then
+		remove_irons(weapon)
+		return
+	end
+	if entry.kind == ATTACHMENT_IRONS and weapon_has_blocks_irons_scope(weapon) then
+		remove_irons(weapon)
+		return
+	end
+	update_canted_rds_slot_for_scope(weapon, entry)
+	adjust_weight(weapon)
+	force_hide_irons(weapon)
+
+	local visual_count = canted_visual_count(entry)
+	local model_index = canted_model_index_for_weapon(weapon, entry, visual_count)
+	local main_model = get_canted_visual(entry, "rear_iron_visual", model_index)
+	if not main_model then return end
+	local main = weapon:get_attachment(MAIN_ATTACHMENT)
+	local applied_models = applied_visual_models[weapon:id()]
+	if not applied_models then
+		applied_models = {}
+		applied_visual_models[weapon:id()] = applied_models
+	end
+	if not main then
+		main = weapon:add_attachment(MAIN_ATTACHMENT, main_model)
+		applied_models.main = main and main_model or nil
+	end
+	if not main then return end
+
+	main:set_type(script_attachment_type.Hud)
+	if applied_models.main ~= main_model then
+		main:set_model(main_model, false)
+		applied_models.main = main_model
+	end
+	local previous_target = editor_target
+	editor_target = "main"
+	apply_transform(main, transform_state(weapon, entry.section))
+	editor_target = previous_target
+
+	local front_model = get_canted_visual(entry, "front_iron_visual", model_index)
+	if front_model then
+		local front = weapon:get_attachment(FRONT_ATTACHMENT)
+		if not front then
+			front = weapon:add_attachment(FRONT_ATTACHMENT, front_model)
+			applied_models.front = front and front_model or nil
+		end
+		if front then
+			front:set_type(script_attachment_type.Hud)
+			if applied_models.front ~= front_model then
+				front:set_model(front_model, false)
+				applied_models.front = front_model
+			end
+			previous_target = editor_target
+			editor_target = "front"
+			apply_transform(front, transform_state(weapon, entry.section))
+			editor_target = previous_target
+		end
+	elseif weapon:get_attachment(FRONT_ATTACHMENT) then
+		weapon:remove_attachment(FRONT_ATTACHMENT)
+		applied_models.front = nil
+	end
+
+	update_scripted_irons_aim_bones(weapon)
+end
+
+function precond_install(item, weapon)
+	weapon = resolve_weapon(weapon)
+	if not (item and weapon) then return end
+	if not is_canted_irons(item) then return end
+	if not is_supported_weapon(weapon) then return end
+	if not canted_sight_allowed(weapon, item:section()) then return end
+	return game.translate_string("st_install_canted_irons")
+end
+
+local function precond_install_rds(item, weapon, slot)
+	weapon = resolve_weapon(weapon)
+	if not (item and weapon) then return end
+	if not is_canted_rds(item) then return end
+	if not is_supported_weapon(weapon) then return end
+	if not canted_sight_allowed(weapon, item:section()) then return end
+	if not has_canted_rds_position(weapon, slot) then return end
+	if slot == 1 then return game.translate_string("st_install_canted_rds_pos1") end
+	if slot == 2 then return game.translate_string("st_install_canted_rds_pos2") end
+	if slot == 3 then return game.translate_string("st_install_canted_rds_pos3") end
+end
+
+function precond_install_rds_pos1(item, weapon) return precond_install_rds(item, weapon, 1) end
+function precond_install_rds_pos2(item, weapon) return precond_install_rds(item, weapon, 2) end
+function precond_install_rds_pos3(item, weapon) return precond_install_rds(item, weapon, 3) end
+
+local function can_install_any_canted_sight(item, weapon)
+	if precond_install(item, weapon) then return true end
+	for slot = 1, 3 do
+		if precond_install_rds(item, weapon, slot) then return true end
+	end
+	return false
+end
+
+function precond_remove(weapon)
+	local id = weapon and weapon:id() or 0
+	if irons_by_weapon[id] then
+		if IsWeapon(weapon) then return game.translate_string("st_remove_canted_sight") end
+		irons_by_weapon[id] = nil
+	end
+end
+
+local function precond_move_rds_slot(weapon, slot)
+	if not (weapon and IsWeapon(weapon)) then return end
+	local entry = irons_by_weapon[weapon:id()]
+	if not (entry and entry.kind == ATTACHMENT_RDS) then return end
+	if entry.rds_slot == slot then return end
+	if not is_canted_rds_slot_open(weapon, slot) then return end
+	if slot == 1 then return game.translate_string("st_move_canted_rds_pos1") end
+	if slot == 2 then return game.translate_string("st_move_canted_rds_pos2") end
+	if slot == 3 then return game.translate_string("st_move_canted_rds_pos3") end
+end
+
+function precond_move_rds_pos1(weapon) return precond_move_rds_slot(weapon, 1) end
+function precond_move_rds_pos2(weapon) return precond_move_rds_slot(weapon, 2) end
+function precond_move_rds_pos3(weapon) return precond_move_rds_slot(weapon, 3) end
+
+local function move_rds_slot(weapon, slot)
+	if not (weapon and IsWeapon(weapon)) then return end
+	local entry = irons_by_weapon[weapon:id()]
+	if not (entry and entry.kind == ATTACHMENT_RDS) then return end
+	if not is_canted_rds_slot_open(weapon, slot) then return end
+	entry.rds_slot = slot
+	update_visuals(weapon)
+	local snd = sound_object("interface\\inv_upgrade")
+	snd:play(db.actor)
+end
+
+function move_rds_pos1(weapon) move_rds_slot(weapon, 1) end
+function move_rds_pos2(weapon) move_rds_slot(weapon, 2) end
+function move_rds_pos3(weapon) move_rds_slot(weapon, 3) end
+
+function remove_irons(weapon)
+	if not (weapon and irons_by_weapon[weapon:id()]) then return end
+	local entry = irons_by_weapon[weapon:id()]
+	if entry.removed then return end
+	entry.removed = true
+	local created = alife_create_item(entry.section, db.actor, { cond = entry.cond })
+	if z_3dss_thermal_battery and z_3dss_thermal_battery.on_canted_removed then
+		z_3dss_thermal_battery.on_canted_removed(weapon, created, entry.section)
+	end
+	irons_by_weapon[weapon:id()] = nil
+	canted_irons_aim_state[weapon:id()] = nil
+	adjust_weight(weapon)
+	clear_canted_alt_aim(weapon)
+	remove_visuals(weapon)
+	update_builtin_irons(weapon)
+	local snd = sound_object("interface\\inv_upgrade")
+	snd:play(db.actor)
+end
+
+local function install_entry(item, weapon, kind, rds_slot)
+	remove_irons(weapon)
+	irons_by_weapon[weapon:id()] = {
+		section = item:section(),
+		cond = item:condition(),
+		wpn_base = get_wpn_base(weapon),
+		kind = kind or ATTACHMENT_IRONS,
+		rds_slot = rds_slot,
+	}
+	if z_3dss_thermal_battery and z_3dss_thermal_battery.on_canted_installed then
+		z_3dss_thermal_battery.on_canted_installed(item, weapon)
+	end
+	alife_release(item)
+	local snd = sound_object("interface\\inv_upgrade")
+	snd:play(db.actor)
+	update_visuals(weapon)
+end
+
+function install_irons(item, weapon)
+	weapon = resolve_weapon(weapon)
+	if not precond_install(item, weapon) then return end
+	if weapon_has_rds_scope(weapon) or weapon_has_blocks_irons_scope(weapon) then
+		notify(game.translate_string("st_canted_sight_blocked_by_scope"))
+		return
+	end
+	install_entry(item, weapon, ATTACHMENT_IRONS, nil)
+end
+
+local function install_rds(item, weapon, slot)
+	weapon = resolve_weapon(weapon)
+	if not precond_install_rds(item, weapon, slot) then return end
+	if weapon_has_rds_scope(weapon) then
+		notify(game.translate_string("st_canted_sight_blocked_by_scope"))
+		return
+	end
+	install_entry(item, weapon, ATTACHMENT_RDS, slot)
+end
+
+function install_rds_pos1(item, weapon) install_rds(item, weapon, 1) end
+function install_rds_pos2(item, weapon) install_rds(item, weapon, 2) end
+function install_rds_pos3(item, weapon) install_rds(item, weapon, 3) end
+
+local function schedule_dragged_scope_refresh(scope, weapon)
+	if not (scope and weapon and IsWeapon(weapon)) then return end
+	local old_id = weapon:id()
+	local entry = irons_by_weapon[old_id]
+	if not entry then return end
+	local scope_section = scope:section()
+	if not scope_section or not IsItem("scope", scope_section) then return end
+	if section_has_rds(scope_section) or (entry.kind == ATTACHMENT_IRONS and section_blocks_irons(scope_section)) then
+		remove_irons(weapon)
+		return
+	end
+	local new_sec = (get_wpn_base(weapon) or weapon:section()) .. "_" .. scope_section
+	CreateTimeEvent("scripted_canted_irons", "drag_scope_" .. tostring(old_id), 0, function()
+		local migrated = false
+		db.actor:iterate_inventory(function(_, inv_item)
+			if inv_item:section() == new_sec and not irons_by_weapon[inv_item:id()] then
+				migrate_entry(old_id, inv_item:id(), entry)
+				migrated = true
+			end
+		end, db.actor)
+		if not migrated then
+			update_visuals(level.object_by_id(old_id) or weapon)
+		end
+		return true
+	end)
+end
+
+function on_item_drag_dropped(from, to, slot_from, slot_to)
+	if slot_from ~= EDDListType.iActorBag then return end
+	if not (slot_to == EDDListType.iActorBag or slot_to == EDDListType.iActorSlot) then return end
+	if from and is_canted_irons(from) and to and is_supported_weapon(to) then
+		install_irons(from, to)
+	elseif from and is_supported_weapon(from) and to and is_canted_irons(to) then
+		install_irons(to, from)
+	elseif from and is_canted_rds(from) and to and is_supported_weapon(to) then
+		for slot = 1, 3 do
+			if precond_install_rds(from, to, slot) then install_rds(from, to, slot); return end
+		end
+	elseif from and is_supported_weapon(from) and to and is_canted_rds(to) then
+		for slot = 1, 3 do
+			if precond_install_rds(to, from, slot) then install_rds(to, from, slot); return end
+		end
+	elseif from and to and IsWeapon(to) then
+		schedule_dragged_scope_refresh(from, to)
+	elseif from and IsWeapon(from) and to then
+		schedule_dragged_scope_refresh(to, from)
+	end
+end
+
+function save_state(mdata)
+	mdata.scripted_canted_irons = irons_by_weapon
+end
+
+function load_state(mdata)
+	clear_canted_alt_aim_owner()
+	irons_by_weapon = mdata.scripted_canted_irons or {}
+	applied_visual_models = {}
+	blanked_reflex_reticles = {}
+	canted_alt_aim_owner_id = nil
+end
+
+function server_entity_on_unregister(se_obj)
+	if not se_obj then return end
+	local tracked = irons_by_weapon[se_obj.id]
+		or applied_visual_models[se_obj.id]
+		or blanked_reflex_reticles[se_obj.id]
+		or canted_irons_aim_state[se_obj.id] ~= nil
+		or canted_alt_aim_owner_id == se_obj.id
+		or runtime_hud_adjust_weapon_id == se_obj.id
+	if not tracked then return end
+	local weapon = level.object_by_id(se_obj.id)
+	if canted_alt_aim_owner_id == se_obj.id or runtime_hud_adjust_weapon_id == se_obj.id then
+		clear_canted_alt_aim_by_id(se_obj.id, weapon)
+	elseif weapon and blanked_reflex_reticles[se_obj.id] then
+		restore_regular_reflex_reticles(weapon)
+	end
+	blanked_reflex_reticles[se_obj.id] = nil
+	applied_visual_models[se_obj.id] = nil
+	irons_by_weapon[se_obj.id] = nil
+	canted_irons_aim_state[se_obj.id] = nil
+end
+
+migrate_entry = function(old_id, new_id, entry)
+	if not (old_id and new_id and entry) then return end
+	if entry.removed then return end
+	local current = irons_by_weapon[old_id]
+	if current and current ~= entry then return end
+	irons_by_weapon[new_id] = entry
+	irons_by_weapon[old_id] = nil
+	applied_visual_models[old_id] = nil
+	applied_visual_models[new_id] = nil
+	CreateTimeEvent("scripted_canted_irons", "migrate_" .. tostring(old_id), 0, function()
+		local old_weapon = level.object_by_id(old_id)
+		local new_weapon = level.object_by_id(new_id)
+		if canted_alt_aim_owner_id == old_id or runtime_hud_adjust_weapon_id == old_id then
+			clear_canted_alt_aim_by_id(old_id, old_weapon)
+		elseif old_weapon and blanked_reflex_reticles[old_id] then
+			restore_regular_reflex_reticles(old_weapon)
+		end
+		blanked_reflex_reticles[old_id] = nil
+		adjust_weight(old_weapon)
+		update_visuals(new_weapon)
+		return true
+	end)
+end
+
+local function install_clone_patches()
+	if clone_patch_installed then return end
+	local original_clone_weapon = _G.alife_clone_weapon
+	if original_clone_weapon then
+		_G.alife_clone_weapon = function(se_obj, section, parent_id)
+			local old_id = se_obj and se_obj.id
+			local entry = old_id and irons_by_weapon[old_id]
+			local new_sec = section or (se_obj and se_obj:section_name())
+			local new_weapon = original_clone_weapon(se_obj, section, parent_id)
+			if entry and new_weapon and entry.wpn_base == base_section(new_sec) then
+				migrate_entry(old_id, new_weapon.id, entry)
+			end
+			return new_weapon
+		end
+		clone_patch_installed = true
+	end
+end
+
+local function install_item_weapon_patches()
+	if item_weapon_patch_installed or not item_weapon then return end
+	local original_attach_scope = item_weapon.attach_scope
+	if original_attach_scope then
+		item_weapon.attach_scope = function(item, weapon)
+			local scope_has_rds = item and section_has_rds(item:section())
+			local scope_blocks_irons = item and section_blocks_irons(item:section())
+			local old_id = weapon and weapon:id()
+			local current_entry = old_id and irons_by_weapon[old_id]
+			local blocked_by_scope = scope_has_rds or (scope_blocks_irons and current_entry and current_entry.kind == ATTACHMENT_IRONS)
+			local entry = (not blocked_by_scope) and current_entry
+			local new_sec = entry and ((get_wpn_base(weapon) or weapon:section()) .. "_" .. item:section())
+			if blocked_by_scope then
+				remove_irons(weapon)
+			end
+			original_attach_scope(item, weapon)
+			if entry and new_sec then
+				CreateTimeEvent("scripted_canted_irons", "attach_scope_" .. old_id, 0, function()
+					db.actor:iterate_inventory(function(_, inv_item)
+						if inv_item:section() == new_sec and not irons_by_weapon[inv_item:id()] then
+							migrate_entry(old_id, inv_item:id(), entry)
+						end
+					end, db.actor)
+					return true
+				end)
+			end
+		end
+	end
+
+	local original_detach_scope = item_weapon.detach_scope
+	if original_detach_scope then
+		item_weapon.detach_scope = function(weapon)
+			local old_id = weapon and weapon:id()
+			local entry = old_id and irons_by_weapon[old_id]
+			local base_sec = entry and get_wpn_base(weapon)
+			original_detach_scope(weapon)
+			if entry and base_sec then
+				CreateTimeEvent("scripted_canted_irons", "detach_scope_" .. old_id, 0, function()
+					db.actor:iterate_inventory(function(_, inv_item)
+						if inv_item:section() == base_sec and not irons_by_weapon[inv_item:id()] then
+							migrate_entry(old_id, inv_item:id(), entry)
+						end
+					end, db.actor)
+					return true
+				end)
+			end
+		end
+	end
+	item_weapon_patch_installed = true
+end
+
+local function install_addon_hooks()
+	if addon_hook_installed or not utils_item then return end
+
+	original_attach_addon = utils_item.attach_addon
+	original_detach_addon = utils_item.detach_addon
+
+	if original_attach_addon then
+		utils_item.attach_addon = function(wpn, addon, typ, ignore)
+			local result = original_attach_addon(wpn, addon, typ, ignore)
+			if typ == "scope" then
+				local addon_section = type(addon) == "string" and addon or (addon and addon.section and addon:section())
+				local entry = wpn and irons_by_weapon[wpn:id()]
+				if section_has_rds(addon_section)
+					or weapon_has_rds_scope(wpn)
+					or (entry and entry.kind == ATTACHMENT_IRONS and (section_blocks_irons(addon_section) or weapon_has_blocks_irons_scope(wpn)))
+				then
+					remove_irons(wpn)
+				else
+					update_visuals(wpn)
+				end
+			end
+			return result
+		end
+	end
+
+	if original_detach_addon then
+		utils_item.detach_addon = function(wpn, addon, typ, ignore)
+			local result = original_detach_addon(wpn, addon, typ, ignore)
+			if typ == "scope" then
+				update_visuals(wpn)
+			end
+			return result
+		end
+	end
+
+	addon_hook_installed = true
+end
+
+local function get_canted_sight_icon(cell, obj, sec)
+	if not (cell and obj) then return end
+	if cell.showcase ~= 0 then return end
+	if not IsWeapon(obj) then return end
+	local entry = irons_by_weapon[obj:id()]
+	if not (entry and entry.section) then return end
+	local sight_axis = utils_xml.get_item_axis(entry.section)
+	local weapon_axis = utils_xml.get_item_axis(sec)
+	if not (sight_axis and weapon_axis) then return end
+	local icon_scale = 0.65
+	local icon_overlap = 12
+	return {
+		icon_layer       = entry.section,
+		icon_layer_x     = -(sight_axis.w * 0.5) + icon_overlap,
+		icon_layer_y     = 2,
+		icon_layer_scale = icon_scale,
+	}
+end
+
+local function refresh_animation_visual_state(weapon)
+	if not (weapon and IsWeapon(weapon)) then return end
+	if IsMelee(weapon) then return end
+	local entry = irons_by_weapon[weapon:id()]
+	if not entry then
+		update_builtin_irons(weapon)
+		return
+	end
+
+	-- Script attachments persist across HUD animations. Rebuild only if the
+	-- engine unexpectedly dropped the main visual; otherwise only reassert
+	-- bone states that an animation can overwrite.
+	if not weapon:get_attachment(MAIN_ATTACHMENT) then
+		update_visuals(weapon)
+		return
+	end
+	force_hide_irons(weapon)
+	update_scripted_irons_aim_bones(weapon)
+end
+
+local function actor_on_hud_animation_play(_, weapon)
+	refresh_animation_visual_state(weapon)
+end
+
+local function actor_item_to_slot(obj)
+	update_visuals(obj)
+end
+
+local function actor_on_changed_slot(new_slot, new_obj, prev_slot, prev_obj)
+	clear_canted_alt_aim(prev_obj)
+	update_visuals(prev_obj)
+	update_visuals(new_obj)
+	sync_canted_alt_aim(new_obj, false)
+end
+
+local function actor_on_weapon_zoom_type_changed(weapon, previous, current)
+	update_scripted_irons_aim_bones(weapon)
+	sync_canted_alt_aim(weapon, false, current)
+end
+
+local function actor_on_weapon_zoom_in(weapon)
+	update_scripted_irons_aim_bones(weapon)
+	sync_canted_alt_aim(weapon, false)
+end
+
+local function actor_on_weapon_zoom_out(weapon)
+	update_scripted_irons_aim_bones(weapon)
+	sync_canted_alt_aim(weapon, false)
+end
+
+local function actor_on_weapon_tilt_start(weapon)
+	weapon = weapon or active_weapon()
+	if not (weapon and IsWeapon(weapon)) then return end
+	if not irons_by_weapon[weapon:id()] then return end
+
+	apply_canted_alt_aim(weapon)
+end
+
+local function actor_on_weapon_tilt_end(weapon)
+	weapon = weapon or active_weapon()
+	if not (weapon and IsWeapon(weapon)) then return end
+	if not irons_by_weapon[weapon:id()] then return end
+	if not is_canted_alt_aim_active(weapon) then return end
+
+	apply_canted_alt_aim(weapon)
+	blank_regular_reflex_reticles(weapon)
+end
+
+local function install_cover_tilt_compat()
+	if cover_tilt_callback_installed then return true end
+	if not (weapon_cover_tilt and type(weapon_cover_tilt.add_callback) == "function") then return false end
+
+	weapon_cover_tilt.add_callback("actor_on_weapon_tilt_start", actor_on_weapon_tilt_start)
+	weapon_cover_tilt.add_callback("actor_on_weapon_tilt_end", actor_on_weapon_tilt_end)
+	cover_tilt_callback_installed = true
+	return true
+end
+
+function get_compatible_sections(weapon)
+	if not (weapon and IsWeapon(weapon)) then return {} end
+	if not is_supported_weapon(weapon) then return {} end
+	local sec = weapon:section()
+	if not highlight_cache[sec] then
+		local list = {}
+		for _, item_sec in ipairs(get_allowed_canted_sight_sections(weapon)) do
+			local fake = { section = function() return item_sec end }
+			if can_install_any_canted_sight(fake, weapon) then
+				list[#list + 1] = item_sec
+			end
+		end
+		highlight_cache[sec] = list
+	end
+	return highlight_cache[sec]
+end
+function ActorMenu_on_item_focus_receive(obj)
+	if not (obj and IsWeapon(obj)) then return end
+	if not is_supported_weapon(obj) then return end
+	local inventory = GetActorMenu()
+	if not (inventory and inventory:IsShown()) then return end
+	for _, item_sec in ipairs(get_compatible_sections(obj)) do
+		inventory:highlight_section_in_slot(item_sec, EDDListType.iActorBag)
+		inventory:highlight_section_in_slot(item_sec, EDDListType.iPartnerTradeBag)
+		inventory:highlight_section_in_slot(item_sec, EDDListType.iDeadBodyBag)
+		inventory:highlight_section_in_slot(item_sec, EDDListType.iActorTrade)
+		inventory:highlight_section_in_slot(item_sec, EDDListType.iPartnerTrade)
+	end
+end
+
+function get_target_mode()
+	return editor_target
+end
+
+function toggle_target_mode()
+	editor_target = editor_target == "main" and "front" or "main"
+end
+
+function get_move_both_mode()
+	return move_both_irons
+end
+
+function toggle_move_both_mode()
+	move_both_irons = not move_both_irons
+end
+
+function set_mouse_drag_active(value)
+	mouse_drag_active = value == true
+end
+
+function is_editor_open()
+	return editor_open
+end
+
+function has_irons_installed(weapon)
+	return weapon and irons_by_weapon[weapon:id()] ~= nil
+end
+
+function get_installed_section(weapon)
+	local entry = weapon and irons_by_weapon[weapon:id()]
+	return entry and entry.section or nil
+end
+
+function get_active_target_label()
+	local weapon = active_weapon()
+	local entry = weapon and irons_by_weapon[weapon:id()]
+	if not entry then return "none" end
+	if move_both_irons then
+		return "Both | " .. (get_wpn_base(weapon) or weapon:section())
+	end
+	return editor_target == "front" and ("Front | " .. (get_wpn_base(weapon) or weapon:section())) or ("Rear | " .. (get_wpn_base(weapon) or weapon:section()))
+end
+function get_active_model_count()
+	local weapon = active_weapon()
+	local entry = weapon and irons_by_weapon[weapon:id()]
+	return canted_visual_count(entry)
+end
+
+function get_active_model_index()
+	return normalize_model_index(editor_model_index, get_active_model_count())
+end
+
+function get_active_model_label()
+	local count = get_active_model_count()
+	if count <= 1 then return "Model 1/1" end
+	return "Model " .. tostring(get_active_model_index()) .. "/" .. tostring(count)
+end
+
+function reset_editor_model_index()
+	local weapon = active_weapon()
+	local entry = weapon and irons_by_weapon[weapon:id()]
+	local count = canted_visual_count(entry)
+	if entry and entry.model_index then
+		editor_model_index = normalize_model_index(entry.model_index, count)
+	else
+		editor_model_index = configured_canted_model_index(weapon, entry, count)
+	end
+end
+
+function cycle_editor_model_index()
+	local weapon = active_weapon()
+	local entry = weapon and irons_by_weapon[weapon:id()]
+	local count = canted_visual_count(entry)
+	if count <= 1 then return end
+	editor_model_index = normalize_model_index(editor_model_index + 1, count)
+	if entry then
+		entry.model_index = editor_model_index
+	end
+	update_visuals(weapon)
+end
+
+function get_precision_level()
+	return precision_level
+end
+
+function set_precision_level(level)
+	precision_level = math.max(0, math.min(10, tonumber(level) or precision_level))
+end
+
+function get_aim_precision_level()
+	return aim_precision_level
+end
+
+function set_aim_precision_level(level)
+	aim_precision_level = math.max(0, math.min(10, tonumber(level) or aim_precision_level))
+end
+
+local function adjustment_amount(mode, command)
+	local divisor = 2 ^ precision_level
+	if mode == "rot" then return ROTATION_STEP / divisor end
+	if mode == "scale" then return SCALE_STEP / divisor end
+	return POSITION_STEP / divisor
+end
+
+local function aim_adjustment_amount(mode)
+	local divisor = 2 ^ aim_precision_level
+	if mode == "rot" then return ROTATION_STEP / divisor end
+	return POSITION_STEP / divisor
+end
+
+local function normalized_position_amount(value, axis, amount)
+	local scale = 1
+	if value then
+		if axis == "x" then
+			scale = math.abs(tonumber(value.sx) or 1)
+		elseif axis == "y" then
+			scale = math.abs(tonumber(value.sy) or 1)
+		elseif axis == "z" then
+			scale = math.abs(tonumber(value.sz) or 1)
+		end
+	end
+	if scale < POSITION_AXIS_SCALE_EPSILON then scale = 1 end
+	return amount / scale
+end
+
+local function active_context()
+	local weapon = active_weapon()
+	if not weapon then
+		notify("Equip a weapon first.")
+		return
+	end
+	update_visuals(weapon)
+	local entry = irons_by_weapon[weapon:id()]
+	if not entry then
+		notify("No canted irons installed on this weapon.")
+		return
+	end
+	local main = weapon:get_attachment(MAIN_ATTACHMENT)
+	if not main then return end
+	if editor_target == "front" then
+		local front = weapon:get_attachment(FRONT_ATTACHMENT)
+		if not front then
+			return
+		end
+		return weapon, entry, front, transform_state(weapon, entry.section)
+	end
+	return weapon, entry, main, transform_state(weapon, entry.section)
+end
+
+local function active_contexts()
+	if not move_both_irons then
+		local weapon, entry, attachment, value = active_context()
+		if not weapon then return nil end
+		return { { weapon = weapon, entry = entry, attachment = attachment, value = value, target = editor_target } }
+	end
+
+	local previous_target = editor_target
+	local contexts = {}
+	editor_target = "main"
+	local weapon, entry, attachment, value = active_context()
+	if weapon then
+		contexts[#contexts + 1] = { weapon = weapon, entry = entry, attachment = attachment, value = value, target = "main" }
+		editor_target = "front"
+		local _, _, front_attachment, front_value = active_context()
+		if front_attachment then
+			contexts[#contexts + 1] = { weapon = weapon, entry = entry, attachment = front_attachment, value = front_value, target = "front" }
+		end
+	end
+	editor_target = previous_target
+	if #contexts == 0 then return nil end
+	return contexts
+end
+
+local function apply_adjustment(value, command, mode, amount)
+	if mode == "pos" then
+		if command == "xup" or command == "xdown" then value.x = value.x + normalized_position_amount(value, "x", amount) end
+		if command == "yup" or command == "ydown" then value.y = value.y + normalized_position_amount(value, "y", amount) end
+		if command == "zup" or command == "zdown" then value.z = value.z + normalized_position_amount(value, "z", amount) end
+	elseif mode == "rot" then
+		if command == "xup" or command == "xdown" then value.rx = value.rx + amount end
+		if command == "yup" or command == "ydown" then value.ry = value.ry + amount end
+		if command == "zup" or command == "zdown" then value.rz = value.rz + amount end
+	elseif mode == "scale" then
+		if command == "scale_up" or command == "scale_down" then
+			value.sx = math.max(0.000001, value.sx + amount)
+			value.sy = math.max(0.000001, value.sy + amount)
+			value.sz = math.max(0.000001, value.sz + amount)
+		elseif command == "xup" or command == "xdown" then
+			value.sx = math.max(0.000001, value.sx + amount)
+		elseif command == "yup" or command == "ydown" then
+			value.sy = math.max(0.000001, value.sy + amount)
+		elseif command == "zup" or command == "zdown" then
+			value.sz = math.max(0.000001, value.sz + amount)
+		end
+	end
+end
+
+function execute_command(command)
+	if command == "mode_pos" then key_mode = "pos"; return end
+	if command == "mode_rot" then key_mode = "rot"; return end
+	if command == "mode_scale" then key_mode = "scale"; return end
+	if command == "target_mode" then toggle_target_mode(); return end
+	if command == "move_both" then toggle_move_both_mode(); return end
+	if command == "model_mode" then cycle_editor_model_index(); return end
+	if command == "save_ltx" then save_active(); return end
+	if command == "save_rds_pos1" then save_active_rds_position(1); return end
+	if command == "save_rds_pos2" then save_active_rds_position(2); return end
+	if command == "save_rds_pos3" then save_active_rds_position(3); return end
+	if command == "clear_cache" then clear_ltx_cache(); return end
+	if command == "copy" then copy_active_transform(); return end
+	if command == "paste" then paste_active_transform(); return end
+
+	local is_adjustment = command == "xup" or command == "yup" or command == "zup"
+		or command == "xdown" or command == "ydown" or command == "zdown"
+		or command == "scale_up" or command == "scale_down"
+	if not is_adjustment then return end
+
+	local contexts = active_contexts()
+	if not contexts then return end
+	local mode = key_mode
+	if command == "scale_up" or command == "scale_down" then mode = "scale" end
+	local amount = adjustment_amount(mode, command)
+	if command == "xdown" or command == "ydown" or command == "zdown" or command == "scale_down" then
+		amount = -amount
+	end
+	for _, ctx in ipairs(contexts) do
+		apply_adjustment(ctx.value, command, mode, amount)
+		apply_transform(ctx.attachment, ctx.value)
+		force_hide_irons(ctx.weapon)
+	end
+end
+
+local function reset_group(group)
+	local contexts = active_contexts()
+	if not contexts then return end
+	local previous_target = editor_target
+	for _, ctx in ipairs(contexts) do
+		editor_target = ctx.target or "main"
+		local defaults = default_transform(ctx.weapon, ctx.entry.section)
+		if group == "pos" then
+			ctx.value.x, ctx.value.y, ctx.value.z = defaults.x, defaults.y, defaults.z
+		elseif group == "rot" then
+			ctx.value.rx, ctx.value.ry, ctx.value.rz = defaults.rx, defaults.ry, defaults.rz
+		elseif group == "scale" then
+			ctx.value.sx, ctx.value.sy, ctx.value.sz = defaults.sx, defaults.sy, defaults.sz
+		end
+		apply_transform(ctx.attachment, ctx.value)
+	end
+	editor_target = previous_target
+end
+
+function reset_active_position() reset_group("pos") end
+function reset_active_rotation() reset_group("rot") end
+function reset_active_scale() reset_group("scale") end
+
+function copy_active_transform()
+	local _, _, _, value = active_context()
+	copied_transform = clone_transform(value)
+	notify("Copied canted irons transform.")
+end
+
+function paste_active_transform()
+	local _, _, attachment, value = active_context()
+	if not (attachment and copied_transform) then return end
+	for k, v in pairs(copied_transform) do
+		value[k] = v
+	end
+	apply_transform(attachment, value)
+	notify("Pasted canted irons transform.")
+end
+
+local function formatted_number(value, trim_zeroes)
+	if trim_zeroes == nil then trim_zeroes = true end
+	local formatted = string.format("%.6f", value or 0)
+	if trim_zeroes then
+		formatted = formatted:gsub("0+$", ""):gsub("%.$", "")
+		if formatted == "-0" or formatted == "" then formatted = "0" end
+	end
+	return formatted
+end
+
+local function formatted_vector(x, y, z, trim_zeroes)
+	return string.format("%s, %s, %s",
+		formatted_number(x, trim_zeroes),
+		formatted_number(y, trim_zeroes),
+		formatted_number(z, trim_zeroes))
+end
+
+local function parse_assignment_line(line)
+	local key, value = line:match("^%s*([^=;%s][^=]-)%s*=%s*(.-)%s*$")
+	if not key then return nil end
+	return trim(key), value
+end
+
+local function align_cache_sections(lines)
+	local section_start = nil
+	local key_width = 0
+
+	local function align_section(section_end)
+		if not section_start or key_width == 0 then return end
+		for i = section_start, section_end do
+			local key, value = parse_assignment_line(lines[i])
+			if key then
+				lines[i] = string.format("%-" .. key_width .. "s = %s", key, value)
+			end
+		end
+	end
+
+	for i, line in ipairs(lines) do
+		if line:match("^%s*!?%[([^%]]+)%]%s*$") then
+			align_section(i - 1)
+			section_start = i + 1
+			key_width = 0
+		elseif section_start then
+			local key = parse_assignment_line(line)
+			if key then key_width = math.max(key_width, #key) end
+		end
+	end
+	align_section(#lines)
+end
+
+local function replace_cache_section(path, section, block)
+	local lines = {}
+	local input = io.open(path, "r")
+	if input then
+		local skipping = false
+		for line in input:lines() do
+			local header = line:match("^%s*!?%[([^%]]+)%]%s*$")
+			if header then skipping = header == section end
+			if not skipping then lines[#lines + 1] = line end
+		end
+		input:close()
+	end
+	while #lines > 0 and trim(lines[#lines]) == "" do
+		table.remove(lines)
+	end
+	if #lines > 0 then lines[#lines + 1] = "" end
+	for _, line in ipairs(block) do lines[#lines + 1] = line end
+	align_cache_sections(lines)
+	local output = io.open(path, "w")
+	if not output then return false end
+	output:write(table.concat(lines, "\n"))
+	output:write("\n")
+	output:close()
+	return true
+end
+
+local function add_assignment(assignments, key, value)
+	assignments[#assignments + 1] = { key, value }
+end
+
+local function write_cache_section(section, assignments)
+	local path = getFS():update_path("$game_config$", "") .. CACHE_FILE
+	local updates = {}
+	local update_order = {}
+	local key_width = 0
+	for _, assignment in ipairs(assignments) do
+		local key = assignment[1]
+		updates[key] = assignment[2]
+		update_order[#update_order + 1] = key
+		key_width = math.max(key_width, #key)
+	end
+
+	local section_lines = nil
+	local input = io.open(path, "r")
+	if input then
+		local in_section = false
+		for line in input:lines() do
+			local header = line:match("^%s*!?%[([^%]]+)%]%s*$")
+			if header then
+				in_section = header == section
+				if in_section then
+					section_lines = { line }
+				end
+			elseif in_section then
+				section_lines[#section_lines + 1] = line
+				local key = parse_assignment_line(line)
+				if key then key_width = math.max(key_width, #key) end
+			end
+		end
+		input:close()
+	end
+
+	local block = section_lines or { "[" .. section .. "]" }
+	local seen = {}
+	for i, line in ipairs(block) do
+		local key, value = parse_assignment_line(line)
+		if key then
+			if updates[key] ~= nil then
+				value = updates[key]
+				seen[key] = true
+			end
+			block[i] = string.format("%-" .. key_width .. "s = %s", key, value)
+		end
+	end
+	while #block > 0 and trim(block[#block]) == "" do
+		table.remove(block)
+	end
+	for _, key in ipairs(update_order) do
+		if not seen[key] then
+			block[#block + 1] = string.format("%-" .. key_width .. "s = %s", key, updates[key])
+		end
+	end
+	block[#block + 1] = ""
+	return replace_cache_section(path, section, block)
+end
+
+local function active_assignments(aim_override, rds_save_slot)
+	local weapon, entry = active_context()
+	if not weapon then return nil end
+	local assignments = {}
+	local section = weapon:section() or get_wpn_base(weapon)
+	local previous_target = editor_target
+	editor_target = "main"
+	local main_value = transform_state(weapon, entry.section)
+	editor_target = "front"
+	local front_value = transform_state(weapon, entry.section)
+	editor_target = previous_target
+
+	add_assignment(assignments, "canted_sights_bone", main_value.parent_bone)
+	if entry.kind == ATTACHMENT_RDS and entry.rds_slot then
+		local save_slot = tonumber(rds_save_slot)
+		if save_slot then
+			for slot = 1, 3 do
+				local key = "canted_rds_position" .. tostring(slot)
+				if slot == save_slot then
+					add_assignment(assignments, key, formatted_vector(main_value.x, main_value.y, main_value.z))
+				else
+					local existing = get_weapon_ltx_string(weapon, key)
+					if existing then add_assignment(assignments, key, existing) end
+				end
+			end
+		else
+			add_assignment(assignments, "canted_sights_pos", formatted_vector(main_value.x, main_value.y, main_value.z))
+		end
+		add_assignment(assignments, "canted_sights_rot", formatted_vector(main_value.rx, main_value.ry, main_value.rz, true))
+		add_assignment(assignments, "canted_sights_scale", formatted_vector(main_value.sx, main_value.sy, main_value.sz))
+	else
+		add_assignment(assignments, "canted_sights_pos", formatted_vector(main_value.x, main_value.y, main_value.z))
+		add_assignment(assignments, "canted_sights_rot", formatted_vector(main_value.rx, main_value.ry, main_value.rz, true))
+		add_assignment(assignments, "canted_sights_scale", formatted_vector(main_value.sx, main_value.sy, main_value.sz))
+		add_assignment(assignments, "front_iron_pos", formatted_vector(front_value.x, front_value.y, front_value.z))
+		add_assignment(assignments, "front_iron_rot", formatted_vector(front_value.rx, front_value.ry, front_value.rz, true))
+		add_assignment(assignments, "front_iron_scale", formatted_vector(front_value.sx, front_value.sy, front_value.sz))
+	end
+
+	local aim = aim_override or get_canted_aim_value(weapon, entry, false)
+	if aim then
+		local aim_item_key = canted_aim_item_key_for_weapon(weapon, entry, canted_visual_count(entry), rds_save_slot)
+		add_assignment(assignments, "canted_aim_pos_" .. aim_item_key, formatted_vector(aim.pos.x, aim.pos.y, aim.pos.z))
+		add_assignment(assignments, "canted_aim_rot_" .. aim_item_key, formatted_vector(aim.rot.x, aim.rot.y, aim.rot.z, true))
+	end
+	return weapon, section, assignments
+end
+
+function save_active()
+	local weapon, section, assignments = active_assignments()
+	if not weapon then return end
+	if write_cache_section(section, assignments) then
+		notify("Saved " .. section .. " to " .. CACHE_FILE .. ".")
+	else
+		notify("Could not write " .. CACHE_FILE .. ".")
+	end
+end
+
+function is_active_rds()
+	local weapon = active_weapon()
+	local entry = weapon and irons_by_weapon[weapon:id()]
+	return entry and entry.kind == ATTACHMENT_RDS or false
+end
+
+function get_active_s3ds_section(weapon)
+	if not (weapon and IsWeapon(weapon)) then return nil end
+	local entry = irons_by_weapon[weapon:id()]
+	if not entry then return nil end
+	if not is_canted_alt_aim_active(weapon) then return nil end
+	return entry.section
+end
+
+function save_active_rds_position(slot)
+	local previous_target = editor_target
+	editor_target = "main"
+	local weapon, entry = active_context()
+	editor_target = previous_target
+	if not weapon then return end
+	if not (entry and entry.kind == ATTACHMENT_RDS) then
+		notify("The active canted sight is not an RDS.")
+		return
+	end
+	slot = math.max(1, math.min(3, tonumber(slot) or entry.rds_slot or 1))
+	previous_target = editor_target
+	editor_target = "main"
+	local _, section, assignments = active_assignments(nil, slot)
+	editor_target = previous_target
+	if not section then return end
+	if write_cache_section(section, assignments) then
+		notify("Saved canted RDS position " .. tostring(slot) .. " for " .. section .. " to " .. CACHE_FILE .. ".")
+	else
+		notify("Could not write " .. CACHE_FILE .. ".")
+	end
+end
+
+local function active_aim_context(create)
+	local weapon = active_weapon()
+	if not weapon then
+		notify("Equip a weapon first.")
+		return nil
+	end
+	update_visuals(weapon)
+	local entry = irons_by_weapon[weapon:id()]
+	if not entry then
+		notify("No canted irons installed on this weapon.")
+		return nil
+	end
+	local aim, section = get_canted_aim_value(weapon, entry, create)
+	if not aim then
+		notify("No canted aim values found for " .. tostring(entry.section) .. ".")
+		return nil
+	end
+	return weapon, entry, aim, section
+end
+
+function get_active_aim_label()
+	local weapon = active_weapon()
+	local entry = weapon and irons_by_weapon[weapon:id()]
+	if not entry then return "none" end
+	return "Slot " .. tostring(entry.rds_slot or 1) .. " | " .. tostring(get_wpn_base(weapon) or weapon:section()) .. " | " .. tostring(entry.section)
+end
+
+function get_aim_step(mode)
+	return aim_adjustment_amount(mode == "rot" and "rot" or "pos")
+end
+
+function adjust_aim_value(mode, axis, amount)
+	local weapon, entry, aim = active_aim_context(true)
+	if not weapon then return false end
+	mode = mode == "rot" and "rot" or "pos"
+	axis = (axis == "y" or axis == "z") and axis or "x"
+	local value = mode == "rot" and aim.rot or aim.pos
+	value[axis] = (value[axis] or 0) + (tonumber(amount) or 0)
+	apply_canted_alt_aim(weapon)
+	return true
+end
+
+function get_active_aim_values()
+	local weapon, entry, aim = active_aim_context(true)
+	if not weapon then return nil end
+	return aim
+end
+
+function set_active_aim_values(pos_x, pos_y, pos_z, rot_x, rot_y, rot_z)
+	local weapon, entry, aim = active_aim_context(true)
+	if not weapon then return false end
+	local px, py, pz = tonumber(pos_x), tonumber(pos_y), tonumber(pos_z)
+	local rx, ry, rz = tonumber(rot_x), tonumber(rot_y), tonumber(rot_z)
+	if px then aim.pos.x = px end
+	if py then aim.pos.y = py end
+	if pz then aim.pos.z = pz end
+	if rx then aim.rot.x = rx end
+	if ry then aim.rot.y = ry end
+	if rz then aim.rot.z = rz end
+	apply_canted_alt_aim(weapon)
+	return true
+end
+
+function copy_active_aim_transform()
+	local weapon, entry, aim = active_aim_context(true)
+	if not weapon then return false end
+	copied_aim_transform = {
+		pos = { x = aim.pos.x, y = aim.pos.y, z = aim.pos.z },
+		rot = { x = aim.rot.x, y = aim.rot.y, z = aim.rot.z },
+	}
+	notify("Copied canted aim transform.")
+	return true
+end
+
+function paste_active_aim_transform()
+	local weapon, entry, aim = active_aim_context(true)
+	if not (weapon and copied_aim_transform) then return false end
+	aim.pos.x = copied_aim_transform.pos.x
+	aim.pos.y = copied_aim_transform.pos.y
+	aim.pos.z = copied_aim_transform.pos.z
+	aim.rot.x = copied_aim_transform.rot.x
+	aim.rot.y = copied_aim_transform.rot.y
+	aim.rot.z = copied_aim_transform.rot.z
+	apply_canted_alt_aim(weapon)
+	notify("Pasted canted aim transform.")
+	return true
+end
+
+function execute_aim_command(command)
+	if command == "mode_pos" then key_mode = "pos"; return end
+	if command == "mode_rot" then key_mode = "rot"; return end
+	if command == "save_ltx" then save_aim_active(); return end
+	if command == "reset_pos" then reset_active_aim_position(); return end
+	if command == "reset_rot" then reset_active_aim_rotation(); return end
+	if command == "copy_transform" then copy_active_aim_transform(); return end
+	if command == "paste_transform" then paste_active_aim_transform(); return end
+	local is_adjustment = command == "xup" or command == "yup" or command == "zup" or command == "xdown" or command == "ydown" or command == "zdown"
+	if not is_adjustment then return end
+	local weapon, entry, aim = active_aim_context(true)
+	if not weapon then return end
+	local mode = key_mode == "rot" and "rot" or "pos"
+	local amount = aim_adjustment_amount(mode)
+	if command == "xdown" or command == "ydown" or command == "zdown" then amount = -amount end
+	local value = mode == "rot" and aim.rot or aim.pos
+	if command == "xup" or command == "xdown" then value.x = value.x + amount end
+	if command == "yup" or command == "ydown" then value.y = value.y + amount end
+	if command == "zup" or command == "zdown" then value.z = value.z + amount end
+	apply_canted_alt_aim(weapon)
+end
+
+function reset_active_aim_position()
+	local weapon, entry, aim = active_aim_context(true)
+	if not weapon then return end
+	aim.pos.x, aim.pos.y, aim.pos.z = 0, 0, 0
+	apply_canted_alt_aim(weapon)
+end
+
+function reset_active_aim_rotation()
+	local weapon, entry, aim = active_aim_context(true)
+	if not weapon then return end
+	aim.rot.x, aim.rot.y, aim.rot.z = 0, 0, 0
+	apply_canted_alt_aim(weapon)
+end
+
+function save_aim_active()
+	local weapon, entry, aim, section = active_aim_context(true)
+	if not weapon then return end
+	local _, _, assignments = active_assignments(aim)
+	if not assignments then return end
+	if write_cache_section(section, assignments) then
+		notify("Saved canted aim for " .. section .. " to " .. CACHE_FILE .. ".")
+	else
+		notify("Could not write " .. CACHE_FILE .. ".")
+	end
+end
+
+function clear_ltx_cache()
+	local path = getFS():update_path("$game_config$", "") .. CACHE_FILE
+	local output = io.open(path, "w")
+	if output then
+		output:write("")
+		output:close()
+		notify("Cleared " .. CACHE_FILE .. ".")
+	end
+end
+
+local function apply_mouse_drag(x, y)
+	if not mouse_drag_active then return end
+	local contexts = active_contexts()
+	if not contexts then return end
+	local mode = key_mode
+	local amount = adjustment_amount(mode)
+	if (key_state(DIK_keys.DIK_LSHIFT) or 0) ~= 0 or (key_state(DIK_keys.DIK_RSHIFT) or 0) ~= 0 then
+		amount = amount * FINE_DRAG_MULT
+	end
+	local dx = (tonumber(x) or 0) * amount
+	local dy = (tonumber(y) or 0) * amount
+	if dx == 0 and dy == 0 then return end
+
+	for _, ctx in ipairs(contexts) do
+		if mode == "pos" then
+			ctx.value.x = ctx.value.x + normalized_position_amount(ctx.value, "x", dx)
+			ctx.value.y = ctx.value.y - normalized_position_amount(ctx.value, "y", dy)
+		elseif mode == "rot" then
+			ctx.value.ry = ctx.value.ry + dx
+			ctx.value.rx = ctx.value.rx + dy
+		elseif mode == "scale" then
+			local delta = -dy
+			ctx.value.sx = math.max(0.000001, ctx.value.sx + delta)
+			ctx.value.sy = math.max(0.000001, ctx.value.sy + delta)
+			ctx.value.sz = math.max(0.000001, ctx.value.sz + delta)
+		end
+		apply_transform(ctx.attachment, ctx.value)
+		force_hide_irons(ctx.weapon)
+	end
+end
+
+local function on_before_mouse_move(x, y, disabled, flags)
+	if not mouse_drag_active then return end
+	apply_mouse_drag(x, y)
+	if flags then flags.ret_value = true end
+end
+
+function set_editor_open(value)
+	editor_open = value == true
+end
+
+function get_editor_weapon_movement_enabled()
+	return editor_weapon_movement_enabled
+end
+
+function set_editor_weapon_movement_enabled(value)
+	value = value == true
+	if editor_weapon_movement_enabled == value then return end
+	editor_weapon_movement_enabled = value
+
+	if not editor_open then return end
+	local weapon = active_weapon()
+	if value and weapon then
+		enable_item_position_offset(weapon)
+	else
+		disable_item_position_offset()
+	end
+end
+
+local function force_editor_aim()
+	if not editor_open then return true end
+	local weapon = active_weapon()
+	local c_weapon = weapon and weapon:cast_Weapon()
+	if not (weapon and c_weapon) then return false end
+	if c_weapon:IsZoomed() then
+		if not editor_aim_was_active then
+			forced_aim_weapon_id = forced_aim_weapon_id or weapon:id()
+		end
+		return true
+	end
+
+	level.press_action(bind_to_dik(key_bindings.kWPN_ZOOM))
+	if c_weapon:IsZoomed() then
+		forced_aim_weapon_id = weapon:id()
+		return true
+	end
+	return false
+end
+
+local function update_editor_aim()
+	if not editor_open or forced_aim_weapon_id then return end
+	local now = time_global()
+	if now < next_aim_retry or aim_retry_count >= AIM_RETRY_LIMIT then return end
+	next_aim_retry = now + AIM_RETRY_INTERVAL
+	aim_retry_count = aim_retry_count + 1
+	force_editor_aim()
+end
+
+local function tracked_camera_position(weapon)
+	if not weapon then return nil end
+	local bone = get_canted_irons_bone(weapon)
+	local candidates = { bone, "wpn_body" }
+	for _, candidate in ipairs(candidates) do
+		if candidate and candidate ~= "" then
+			local position_ok, position = pcall(weapon.bone_position, weapon, candidate, true)
+			if position_ok and position then
+				return candidate, position
+			end
+		end
+	end
+	return nil
+end
+
+local function update_editor_camera(weapon)
+	if not (editor_open and editor_demo_active and camera_follow_active and weapon) then return end
+	local now = time_global()
+	if now < next_camera_update then return end
+	next_camera_update = now + CAMERA_UPDATE_INTERVAL
+
+	local tracked_bone, position = tracked_camera_position(weapon)
+	if not position then return end
+
+	if tracked_bone ~= last_camera_bone then
+		last_camera_bone = tracked_bone
+		last_camera_bone_position = { x = position.x, y = position.y, z = position.z }
+		return
+	end
+
+	if not last_camera_bone_position then
+		last_camera_bone_position = { x = position.x, y = position.y, z = position.z }
+		return
+	end
+
+	local dx = position.x - last_camera_bone_position.x
+	local dy = position.y - last_camera_bone_position.y
+	local dz = position.z - last_camera_bone_position.z
+	last_camera_bone_position.x = position.x
+	last_camera_bone_position.y = position.y
+	last_camera_bone_position.z = position.z
+
+	local moved = math.abs(dx) >= CAMERA_MOVEMENT_EPSILON
+		or math.abs(dy) >= CAMERA_MOVEMENT_EPSILON
+		or math.abs(dz) >= CAMERA_MOVEMENT_EPSILON
+	if moved then
+		camera_bone_stable_since = nil
+	else
+		camera_bone_stable_since = camera_bone_stable_since or now
+	end
+
+	local settled = camera_bone_stable_since
+		and now - camera_bone_stable_since >= CAMERA_SETTLE_TIME
+	local timed_out = now - camera_follow_started >= CAMERA_FOLLOW_TIMEOUT
+	if not (settled or timed_out) then return end
+
+	local camera_position = vector():set(position.x + CAMERA_X_OFFSET, position.y, position.z)
+	local camera_direction = vector():set(position.x, position.y, position.z):sub(camera_position):normalize()
+	exec_console_cmd(string.format(
+		"demo_set_cam_position %.6f,%.6f,%.6f",
+		camera_position.x, camera_position.y, camera_position.z))
+	exec_console_cmd(string.format(
+		"demo_set_cam_direction %.6f,%.6f,0",
+		camera_direction:getH(), camera_direction:getP()))
+	camera_follow_active = false
+end
+
+local function restore_editor_aim()
+	if not forced_aim_weapon_id then return end
+	local weapon = level.object_by_id(forced_aim_weapon_id)
+	local c_weapon = weapon and weapon:cast_Weapon()
+	forced_aim_weapon_id = nil
+	if not (c_weapon and c_weapon:IsZoomed()) then return end
+
+	level.release_action(bind_to_dik(key_bindings.kWPN_ZOOM))
+	if c_weapon:IsZoomed() then
+		level.press_action(bind_to_dik(key_bindings.kWPN_ZOOM))
+	end
+end
+
+function start_editor_session()
+	set_editor_open(true)
+	local weapon = active_weapon()
+	local c_weapon = weapon and weapon:cast_Weapon()
+	editor_aim_was_active = c_weapon and c_weapon:IsZoomed() or false
+	forced_aim_weapon_id = nil
+	aim_retry_count = 0
+	force_editor_aim()
+	if editor_weapon_movement_enabled then
+		enable_item_position_offset(weapon)
+	else
+		disable_item_position_offset()
+	end
+	reset_editor_model_index()
+	next_aim_retry = time_global() + AIM_RETRY_INTERVAL
+	next_camera_update = 0
+	last_camera_bone = nil
+	last_camera_bone_position = nil
+	camera_follow_active = true
+	camera_follow_started = time_global()
+	camera_bone_stable_since = nil
+	if not editor_demo_active then
+		editor_demo_active = true
+		exec_console_cmd("demo_record_return_ctrl_inputs scripted_canted_irons_editor 100")
+	end
+end
+
+function stop_editor_session()
+	set_editor_open(false)
+	mouse_drag_active = false
+	disable_item_position_offset()
+	if editor_demo_active then
+		editor_demo_active = false
+		exec_console_cmd("demo_record_stop")
+	end
+	aim_retry_count = 0
+	last_camera_bone = nil
+	last_camera_bone_position = nil
+	camera_follow_active = false
+	camera_bone_stable_since = nil
+	restore_editor_aim()
+	editor_aim_was_active = false
+end
+
+function update_editor_session()
+	if not editor_open then return end
+	local weapon = active_weapon()
+	if weapon then
+		update_visuals(weapon)
+		if editor_weapon_movement_enabled then
+			enable_item_position_offset(weapon)
+		else
+			disable_item_position_offset()
+		end
+	else
+		disable_item_position_offset()
+	end
+	update_editor_aim()
+	update_editor_camera(weapon)
+end
+
+function on_game_start()
+	rebuild_rds_scope_sections()
+	if ini_sys:section_exist("scripted_canted_irons_list") and utils_data and utils_data.collect_sections then
+		for sec in pairs(utils_data.collect_sections(ini_sys, { "scripted_canted_irons_list" })) do
+			known_irons[sec] = true
+		end
+	end
+	install_clone_patches()
+	install_item_weapon_patches()
+	install_addon_hooks()
+	install_standard_hud_editor_compat()
+	install_cover_tilt_compat()
+	if rax_icon_layers then
+		rax_icon_layers.register("canted_sight", get_canted_sight_icon)
+	end
+	if custom_functor_autoinject then
+		custom_functor_autoinject.add_functor("add_canted_irons", precond_remove, precond_remove, nil, remove_irons, true)
+		custom_functor_autoinject.add_functor("move_canted_rds_pos1", precond_move_rds_pos1, precond_move_rds_pos1, nil, move_rds_pos1, true)
+		custom_functor_autoinject.add_functor("move_canted_rds_pos2", precond_move_rds_pos2, precond_move_rds_pos2, nil, move_rds_pos2, true)
+		custom_functor_autoinject.add_functor("move_canted_rds_pos3", precond_move_rds_pos3, precond_move_rds_pos3, nil, move_rds_pos3, true)
+	end
+	RegisterScriptCallback("ActorMenu_on_item_drag_drop", on_item_drag_dropped)
+	RegisterScriptCallback("save_state", save_state)
+	RegisterScriptCallback("load_state", load_state)
+	RegisterScriptCallback("server_entity_on_unregister", server_entity_on_unregister)
+	RegisterScriptCallback("actor_on_first_update", function()
+		install_standard_hud_editor_compat()
+		install_cover_tilt_compat()
+		update_visuals(active_weapon())
+	end)
+	RegisterScriptCallback("actor_item_to_slot", actor_item_to_slot)
+	RegisterScriptCallback("actor_on_changed_slot", actor_on_changed_slot)
+	RegisterScriptCallback("actor_on_weapon_zoom_type_changed", actor_on_weapon_zoom_type_changed)
+	RegisterScriptCallback("actor_on_weapon_zoom_in", actor_on_weapon_zoom_in)
+	RegisterScriptCallback("actor_on_weapon_zoom_out", actor_on_weapon_zoom_out)
+	RegisterScriptCallback("ActorMenu_on_item_focus_receive", ActorMenu_on_item_focus_receive)
+	RegisterScriptCallback("on_before_mouse_move", on_before_mouse_move)
+	if animation_common then
+		animation_common.add_anim_mutator(actor_on_hud_animation_play, 1200)
+	else
+		RegisterScriptCallback("actor_on_hud_animation_play", actor_on_hud_animation_play)
+	end
+end
+
+
+
+
+

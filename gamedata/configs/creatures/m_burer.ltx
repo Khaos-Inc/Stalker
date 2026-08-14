@@ -29,7 +29,7 @@ psy_quadratic_factor	=	0.0
 psy_max_distance		=	26.0
 psy_max_power			=	0.25
 psy_sound				=	anomaly\psy_voices_1_l		;monsters\controller\controller_presence_l
-psy_pp_effector_name	= 	psy_antenna 				;postprocess_psi
+psy_pp_effector_name	= 	;psy_antenna 				;postprocess_psi
 psy_pp_highest_at		= 	0.1
 
 radiation_max_distance		=	5
@@ -180,9 +180,9 @@ eat_sound_delay			= 3000
 attack_sound_delay		= 14000;4000
 
 
-sound_distant_idle			= monsters\burer\burer_idle_
-distant_idle_sound_delay	= 80000
-distant_idle_sound_range	= 100.0
+sound_distant_idle			= ambient\soundscape\mutants\burer\distant_
+distant_idle_sound_delay  = 50000
+distant_idle_sound_range		= 50.0
 
 
 SoundThreshold			= 0.06             ; range [0..1]
@@ -225,28 +225,31 @@ weight_to_stamina_hit			=	0.11 ;0.25 ;kg to stamina %
 Gravi_Cooldown				= 6840  ; milisec
 Gravi_MinDist				= 1     ; meter
 Gravi_MaxDist				= 18  ; meter
-Gravi_Speed					= 33	; meter/sec
+Gravi_Speed					= 34	; meter/sec
 Gravi_Step					= 2		; meter
 Gravi_Time_To_Hold			= 1940	; milisec
 Gravi_Radius				= 3.0
 Gravi_Impulse_To_Objects	= 70.0
-Gravi_Impulse_To_Enemy		= 330.0
-Gravi_Hit_Power				= 0.61
+Gravi_Impulse_To_Enemy		= 400.0
+Gravi_Hit_Power				= 1.32
+
+
 
 ;-------------------------------------------------------------------------
 ; Tele Ability
 ;-------------------------------------------------------------------------
 Tele_Max_Handled_Objects = 3;
 Tele_Max_Time			 = 6200;  // (s) max time to be in telekinesis
-Tele_Time_To_Hold		 = 340
+Tele_Time_To_Hold		 = 370
 Tele_Object_Min_Mass	 = 10
-Tele_Object_Max_Mass	 = 1000.0
-Tele_Find_Radius		 = 25.0
+Tele_Object_Max_Mass	 = 1150.0
+Tele_Find_Radius		 = 30.0
 Tele_Min_Distance		 = 5
 Tele_Max_Distance		 = 60
 Tele_Raise_Speed		 = 7
-Tele_Fly_Velocity		 = 50 ;50
+Tele_Fly_Velocity		 = 13000 ;50
 Tele_Object_Height		 = 3  ;2
+
 
 sound_tele_hold			= monsters\burer\burer_tele_hold
 sound_tele_throw		= monsters\burer\burer_tele_throw
@@ -612,7 +615,7 @@ Gravi_Time_To_Hold			= 2100	; milisec
 Gravi_Radius				= 3.0
 Gravi_Impulse_To_Objects	= 60.0
 Gravi_Impulse_To_Enemy		= 1000.0
-Gravi_Hit_Power				= 0.56
+Gravi_Hit_Power				= 1.32
 
 ; Tele Strike
 Tele_Max_Handled_Objects = 3	;1;3	

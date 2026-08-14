@@ -1,0 +1,25 @@
+; Add reticle_profiles to the normal scope item section.
+; The context-menu option appears on a weapon only while this scope is attached.
+
+[example_scope]
+reticle_profiles         = example_reticle_acss, example_reticle_mildot
+reticle_default_profile  = example_reticle_acss
+
+; reticle_name should point to a string-table ID.
+; Any omitted s3ds_* field continues to use the scope's normal value.
+
+[example_reticle_acss]
+reticle_name             = st_example_reticle_acss
+reticle_texture          = wpn\scope_reticles\example_acss
+s3ds_reticle_size        = 1.15
+s3ds_eye_relief          = 0.08
+s3ds_exit_pupil          = 0.12
+s3ds_ffp                 = 1
+
+[example_reticle_mildot]
+reticle_name             = st_example_reticle_mildot
+reticle_texture          = wpn\scope_reticles\example_mildot
+s3ds_reticle_size        = 0.9
+s3ds_eye_relief          = 0.1
+s3ds_exit_pupil          = 0.1
+s3ds_ffp                 = 0

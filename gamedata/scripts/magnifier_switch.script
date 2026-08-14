@@ -12,12 +12,253 @@ local wpn_name
 local suppress_mwheel
 local mag_table, mag_table_inv
 local unique_mappings, unique_mappings_inv
+local magnifier_states = {}
+local hud_adjust_owner_id
+
+local MAGNIFIER_ON_BONE = "mag_on"
+local MAGNIFIER_OFF_BONE = "mag_off"
+local STATE_KEY = "magnifier_switch_bone_states"
+
+local function bone_exists(obj, bone)
+  if not (obj and bone) then return false end
+  local ok, id = pcall(obj.bone_id, obj, bone, true)
+  return ok and type(id) == "number" and id >= 0 and id ~= 65535 and id ~= 4294967295
+end
+
+local function set_bone(obj, bone, visible, recursive, hud_only)
+  if not bone_exists(obj, bone) then return false end
+  if recursive == nil then recursive = false end
+  local ok = pcall(obj.set_bone_visible, obj, bone, visible, recursive, true)
+  if ok and not hud_only then
+    pcall(obj.set_bone_visible, obj, bone, visible, recursive, false)
+  end
+  return ok
+end
+
+local function resolve_profiles(sec)
+  if not (sec and mag_table and mag_table_inv and unique_mappings and unique_mappings_inv) then return nil end
+
+  local off_section, on_section, current_state
+  if unique_mappings[sec] then
+    off_section, on_section, current_state = sec, unique_mappings[sec], 0
+  elseif unique_mappings_inv[sec] then
+    off_section, on_section, current_state = unique_mappings_inv[sec], sec, 1
+  else
+    local base_sec = ini_sys:r_string_ex(sec, "parent_section")
+    local scope_sec = base_sec and sec:sub(#base_sec + 2)
+    if scope_sec and mag_table[scope_sec] then
+      off_section = base_sec .. "_" .. scope_sec
+      on_section = base_sec .. "_" .. mag_table[scope_sec]
+      current_state = 0
+    elseif scope_sec and mag_table_inv[scope_sec] then
+      off_section = base_sec .. "_" .. mag_table_inv[scope_sec]
+      on_section = base_sec .. "_" .. scope_sec
+      current_state = 1
+    end
+  end
+
+  if not (off_section and on_section
+    and ini_sys:section_exist(off_section)
+    and ini_sys:section_exist(on_section))
+  then
+    return nil
+  end
+
+  return {
+    off_section = off_section,
+    on_section = on_section,
+    current_state = current_state,
+    key = off_section .. "|" .. on_section,
+  }
+end
+
+local function state_record(wpn, profiles)
+  local id = wpn and wpn:id()
+  if not (id and profiles) then return nil end
+  local record = magnifier_states[id]
+  if type(record) ~= "table" or record.key ~= profiles.key then
+    record = { key = profiles.key, state = 1 }
+    magnifier_states[id] = record
+  end
+  return record
+end
+
+function get_state(wpn)
+  local profiles = wpn and resolve_profiles(wpn:section())
+  local record = state_record(wpn, profiles)
+  return record and record.state or nil
+end
+
+function is_bone_mode(wpn)
+  return wpn ~= nil
+    and resolve_profiles(wpn:section()) ~= nil
+    and bone_exists(wpn, MAGNIFIER_ON_BONE)
+    and bone_exists(wpn, MAGNIFIER_OFF_BONE)
+end
+
+function get_effective_section(wpn)
+  if not is_bone_mode(wpn) then return wpn and wpn:section() or nil end
+  local profiles = resolve_profiles(wpn:section())
+  return get_state(wpn) == 0 and profiles.off_section or profiles.on_section
+end
+
+function get_target_section(wpn, state)
+  local profiles = wpn and resolve_profiles(wpn:section())
+  if not profiles then return nil, nil end
+  local current = is_bone_mode(wpn) and get_state(wpn) or profiles.current_state
+  local target = state
+  if target ~= 0 and target ~= 1 then target = current == 1 and 0 or 1 end
+  return target == 0 and profiles.off_section or profiles.on_section, target
+end
+
+local function read_hud_vector(section, key, fallback_x, fallback_y, fallback_z)
+  local value = ini_sys:r_string_ex(section, key .. "_16x9") or ini_sys:r_string_ex(section, key)
+  if not value then return fallback_x or 0, fallback_y or 0, fallback_z or 0 end
+  local parts = str_explode(value, ",")
+  return tonumber(parts[1]) or 0, tonumber(parts[2]) or 0, tonumber(parts[3]) or 0
+end
+
+local function standard_hud_editor_open()
+  return ui_debug_wpn_hud and ui_debug_wpn_hud.GUI and ui_debug_wpn_hud.GUI:IsShown()
+end
+
+local function apply_effective_hud_profile(wpn)
+  if not (wpn and is_bone_mode(wpn) and hud_adjust and not standard_hud_editor_open()) then return false end
+  local effective = get_effective_section(wpn)
+  local hud_section = effective and ini_sys:r_string_ex(effective, "hud")
+  if not (hud_section and ini_sys:section_exist(hud_section)) then return false end
+
+  local offset_keys = {
+    [0] = { "hands_position", "hands_orientation" },
+    [1] = { "aim_hud_offset_pos", "aim_hud_offset_rot" },
+    [2] = { "gl_hud_offset_pos", "gl_hud_offset_rot" },
+    [4] = { "lowered_hud_offset_pos", "lowered_hud_offset_rot" },
+    [5] = { "base_hud_offset_pos", "base_hud_offset_rot" },
+    [6] = { "attach_base_hud_offset_pos", "attach_base_hud_offset_rot" },
+    [7] = { "attach_mount_hud_offset_pos", "attach_mount_hud_offset_rot" },
+  }
+  for index, keys in pairs(offset_keys) do
+    local px, py, pz = read_hud_vector(hud_section, keys[1])
+    local rx, ry, rz = read_hud_vector(hud_section, keys[2])
+    hud_adjust.set_vector(0, index, px, py, pz)
+    hud_adjust.set_vector(1, index, rx, ry, rz)
+  end
+
+  local item_px, item_py, item_pz = read_hud_vector(hud_section, "item_position")
+  local item_rx, item_ry, item_rz = read_hud_vector(hud_section, "item_orientation")
+  hud_adjust.set_vector(0, 12, item_px, item_py, item_pz)
+  hud_adjust.set_vector(1, 12, item_rx, item_ry, item_rz)
+
+  local aim_px, aim_py, aim_pz = read_hud_vector(hud_section, "aim_hud_offset_pos")
+  local aim_rx, aim_ry, aim_rz = read_hud_vector(hud_section, "aim_hud_offset_rot")
+  local alt_px, alt_py, alt_pz = read_hud_vector(hud_section, "aim_hud_offset_alt_pos", aim_px, aim_py, aim_pz)
+  local alt_rx, alt_ry, alt_rz = read_hud_vector(hud_section, "aim_hud_offset_alt_rot", aim_rx, aim_ry, aim_rz)
+  hud_adjust.set_vector(0, 3, alt_px, alt_py, alt_pz)
+  hud_adjust.set_vector(1, 3, alt_rx, alt_ry, alt_rz)
+  hud_adjust.set_vector(0, 8, aim_px, aim_py, aim_pz)
+  hud_adjust.set_vector(1, 8, aim_rx, aim_ry, aim_rz)
+  hud_adjust.set_vector(0, 9, alt_px, alt_py, alt_pz)
+  hud_adjust.set_vector(1, 9, alt_rx, alt_ry, alt_rz)
+
+  local zoom_factor = ini_sys:r_float_ex(effective, "scope_zoom_factor") or 0
+  hud_adjust.set_value("attach_scale", ini_sys:r_float_ex(hud_section, "attach_scale") or 1)
+  hud_adjust.set_value("scope_zoom_factor", zoom_factor)
+  hud_adjust.set_value("gl_zoom_factor", ini_sys:r_float_ex(effective, "gl_zoom_factor") or 0)
+  hud_adjust.set_value("scope_zoom_factor_alt", ini_sys:r_float_ex(effective, "scope_zoom_factor_alt") or 0)
+  hud_adjust.enabled(true)
+  hud_adjust_owner_id = wpn:id()
+
+  local c_wpn = wpn:cast_Weapon()
+  if c_wpn and c_wpn:IsZoomed() and c_wpn:GetZoomType() == 0 then
+    c_wpn:SetZoomFactor(zoom_factor)
+  end
+  return true
+end
+
+local function release_effective_hud_profile(wpn)
+  if not hud_adjust_owner_id then return end
+  if wpn and wpn:id() == hud_adjust_owner_id then return end
+  if not standard_hud_editor_open() and hud_adjust then hud_adjust.enabled(false) end
+  hud_adjust_owner_id = nil
+end
+
+local function refresh_profile_consumers(wpn)
+  if z_3d_scopes and z_3d_scopes.update_shader then
+    z_3d_scopes.update_shader(wpn)
+  end
+  if z_mark_switch and z_mark_switch.refresh_weapon then
+    z_mark_switch.refresh_weapon(wpn)
+  end
+  if z_3dss_lens_hider and z_3dss_lens_hider.sync_magnifier_lenses then
+    z_3dss_lens_hider.sync_magnifier_lenses(wpn)
+  end
+end
+
+local function sync_magnifier_bones(wpn, hud_only)
+  if not is_bone_mode(wpn) then return false end
+
+  if get_state(wpn) == 0 then
+    set_bone(wpn, MAGNIFIER_ON_BONE, false, true, hud_only)
+    set_bone(wpn, MAGNIFIER_OFF_BONE, true, false, hud_only)
+  else
+    set_bone(wpn, MAGNIFIER_OFF_BONE, false, false, hud_only)
+    set_bone(wpn, MAGNIFIER_ON_BONE, true, false, hud_only)
+  end
+  return true
+end
+
+class "MagnifierHudAttachHook" (CUIScriptWnd)
+
+function MagnifierHudAttachHook:__init() super()
+  self:Show(false)
+  self:Enable(false)
+end
+
+function MagnifierHudAttachHook:Update()
+  CUIScriptWnd.Update(self)
+  sync_magnifier_bones(db.actor and db.actor:active_item(), true)
+end
+
+local hud_attach_hook
+
+function on_hud_attach()
+  local wpn = db.actor and db.actor:active_item()
+  if sync_magnifier_bones(wpn, true) then
+    apply_effective_hud_profile(wpn)
+    refresh_profile_consumers(wpn)
+  end
+
+  if not hud_attach_hook then
+    hud_attach_hook = MagnifierHudAttachHook()
+  end
+  return hud_attach_hook
+end
+
+local function sync_bone_mode(wpn)
+  if not sync_magnifier_bones(wpn) then return false end
+  apply_effective_hud_profile(wpn)
+  refresh_profile_consumers(wpn)
+  return true
+end
+
+local function set_state(wpn, profiles, state)
+  local record = state_record(wpn, profiles)
+  if not record then return false end
+  record.state = state == 0 and 0 or 1
+  return true
+end
+
+local function play_switch_sound()
+  if not (settings.switch_sound and db.actor) then return end
+  local snd = sound_object("interface\\magnifier_flip")
+  if snd then snd:play(db.actor, 0, sound_object.s2d) end
+end
 
 function init()
   local ini = ini_file_ex(config_filename)
-  mag_table = ini:collect_section("magnifier_mappings")
+  mag_table = ini:collect_section("magnifier_mappings") or {}
   mag_table_inv = invert_table(mag_table)
-  unique_mappings = ini:collect_section("unique_mappings")
+  unique_mappings = ini:collect_section("unique_mappings") or {}
   unique_mappings_inv = invert_table(unique_mappings)
 end
 
@@ -70,7 +311,7 @@ function cancel_show_sound(alias, parent, result)
   end
 end
 
-function switch_magnifier(wpn, sec, new_sec)
+local function switch_section_fallback(wpn, sec, new_sec)
   -- ver local
   local final_index = 0
   wpn = wpn or db.actor:active_item()
@@ -205,6 +446,65 @@ function switch_magnifier(wpn, sec, new_sec)
   end
 end
 
+function switch_magnifier(wpn, sec, new_sec, requested_state)
+  wpn = wpn or (db.actor and db.actor:active_item())
+  if not (wpn and wpn:cast_Weapon()) then return end
+  if wpn:weapon_in_grenade_mode() then return wpn:switch_state(9) end
+
+  sec = sec or wpn:section()
+  local profiles = resolve_profiles(sec)
+  if not profiles then return end
+
+  local target_state = requested_state
+  if target_state ~= 0 and target_state ~= 1 then
+    if new_sec == profiles.off_section then
+      target_state = 0
+    elseif new_sec == profiles.on_section then
+      target_state = 1
+    else
+      new_sec, target_state = get_target_section(wpn)
+    end
+  end
+  new_sec = new_sec or (target_state == 0 and profiles.off_section or profiles.on_section)
+
+  if not is_bone_mode(wpn) then
+    return switch_section_fallback(wpn, sec, new_sec)
+  end
+
+  -- Existing saves may still hold the old off-section. Migrate that item once so
+  -- the engine's native zoom configuration comes from the mapped on-section.
+  if profiles.current_state == 0 and target_state == 1 then
+    local old_id = wpn:id()
+    local replacement = switch_section_fallback(wpn, sec, profiles.on_section)
+    local replacement_id = replacement and replacement.id
+    if type(replacement_id) == "function" then
+      local ok, value = pcall(replacement_id, replacement)
+      replacement_id = ok and value or nil
+    end
+    if replacement_id then
+      magnifier_states[old_id] = nil
+      magnifier_states[replacement_id] = { key = profiles.key, state = 1 }
+      nextTick(function()
+        local obj = level.object_by_id(replacement_id)
+        if obj then sync_bone_mode(obj) end
+        return true
+      end, 3)
+    end
+    return replacement
+  end
+
+  if get_state(wpn) == target_state then
+    sync_bone_mode(wpn)
+    return wpn
+  end
+
+  set_state(wpn, profiles, target_state)
+  sync_bone_mode(wpn)
+  play_switch_sound()
+  printdebug("switch_magnifier | bone mode section=%s effective=%s state=%s", sec, new_sec, target_state)
+  return wpn
+end
+
 local no_recursion = false
 function delay_aimmode_toggle()
   no_recursion = true
@@ -222,7 +522,7 @@ function on_before_key_press(key, bind, dis, flags)
 
     local wpn = db.actor:active_item()
     local sec = wpn and wpn:section()
-    local new_sec = sec and get_new_section(sec)
+    local new_sec = wpn and get_target_section(wpn)
     if not new_sec then return end
 
     local allow_key = bind ~= key_bindings.kWPN_FUNC
@@ -239,7 +539,9 @@ function on_before_key_press(key, bind, dis, flags)
       end
     end
 
-    ui_mcm.simple_press("magnifier_switch_aimmode", key, delay_aimmode_toggle)
+    if bind == key_bindings.kWPN_FUNC then
+      ui_mcm.simple_press("magnifier_switch_aimmode", key, delay_aimmode_toggle)
+    end
   end
 end
 
@@ -267,32 +569,40 @@ function on_mouse_wheel(dir, flags)
   local sec = wpn and wpn:section()
   if not (sec and (not settings.mwheel_switch_ads_only or axr_main.weapon_is_zoomed)) then return end
 
+  if not settings.use_mousewheel then
+    if is_bone_mode(wpn) and get_state(wpn) == 0 and axr_main.weapon_is_zoomed then
+      flags.ret_value = false
+    end
+    return
+  end
+
+  dir = tonumber(dir)
+  if dir ~= 0 and dir ~= 1 then return end
+
   local zoom_inverted = get_console():get_bool("mouse_wheel_invert_zoom")
-  local next_state = zoom_inverted and ((dir == 1 and 0) or (dir == 0 and 1)) or dir
-  local new_sec = sec and next_state and get_new_section(sec, next_state)
+  local next_state = zoom_inverted and (1 - dir) or dir
+  local new_sec = wpn and get_target_section(wpn, next_state)
   printdebug("on_mouse_wheel | zoom_inverted: %s, next_state: %s", zoom_inverted, next_state)
   if new_sec then
-    flags.ret_value = not switch_magnifier(wpn, sec, new_sec)
+    flags.ret_value = false
+    switch_magnifier(wpn, sec, new_sec, next_state)
   end
 end
 
 function on_option_change(mcm)
   if mcm then
     for k, v in pairs(magnifier_switch_mcm.defaults) do
-      settings[k] = ui_mcm.get("magnifier_switch/" .. k)
+      settings[k] = magnifier_switch_mcm.get_config(k)
       if settings[k] == nil then settings[k] = v end
     end
 
     printdebug("on_option_change | use_mousewheel: %s", tostring(settings.use_mousewheel))
-    if settings.use_mousewheel then
-      UnregisterScriptCallback("on_before_key_press", on_before_key_press)
-      UnregisterScriptCallback("on_key_hold", on_key_hold)
-      RegisterScriptCallback("on_mouse_wheel", on_mouse_wheel)
-    else
-      RegisterScriptCallback("on_before_key_press", on_before_key_press)
-      RegisterScriptCallback("on_key_hold", on_key_hold)
-      UnregisterScriptCallback("on_mouse_wheel", on_mouse_wheel)
-    end
+    UnregisterScriptCallback("on_before_key_press", on_before_key_press)
+    UnregisterScriptCallback("on_key_hold", on_key_hold)
+    UnregisterScriptCallback("on_mouse_wheel", on_mouse_wheel)
+    RegisterScriptCallback("on_before_key_press", on_before_key_press)
+    RegisterScriptCallback("on_key_hold", on_key_hold)
+    RegisterScriptCallback("on_mouse_wheel", on_mouse_wheel)
   end
 end
 
@@ -311,12 +621,68 @@ item_parts.get_parts_con = function(obj, id, eval)
   return og_gpc(obj, id, eval) or {}
 end]]
 
+local function actor_item_to_slot(obj)
+  sync_bone_mode(obj)
+end
+
+local function actor_on_changed_slot(new_slot, new_obj, prev_slot, prev_obj)
+  release_effective_hud_profile(new_obj)
+  if new_obj then
+    sync_bone_mode(new_obj)
+  end
+end
+
+local function actor_on_hud_animation_play(_, obj)
+  sync_magnifier_bones(obj, true)
+end
+
+local function actor_on_weapon_zoom_in(obj)
+  if obj and is_bone_mode(obj) then
+    apply_effective_hud_profile(obj)
+    refresh_profile_consumers(obj)
+  end
+end
+
+local function save_state(m_data)
+  m_data[STATE_KEY] = magnifier_states
+end
+
+local function load_state(m_data)
+  magnifier_states = type(m_data[STATE_KEY]) == "table" and m_data[STATE_KEY] or {}
+  hud_adjust_owner_id = nil
+end
+
+local function server_entity_on_unregister(se_obj)
+  if not se_obj then return end
+  magnifier_states[se_obj.id] = nil
+  if hud_adjust_owner_id == se_obj.id then hud_adjust_owner_id = nil end
+end
+
+local function actor_on_first_update()
+  local wpn = db.actor and db.actor:active_item()
+  if wpn then
+    sync_bone_mode(wpn)
+  end
+end
+
 function on_game_start()
   init()
   --RegisterScriptCallback("on_before_key_press", on_before_key_press)
   --RegisterScriptCallback("on_key_hold", on_key_hold)
   --RegisterScriptCallback("on_mouse_wheel", on_mouse_wheel)
   RegisterScriptCallback("on_option_change", on_option_change)
+  RegisterScriptCallback("actor_item_to_slot", actor_item_to_slot)
+  RegisterScriptCallback("actor_on_changed_slot", actor_on_changed_slot)
+  RegisterScriptCallback("actor_on_weapon_zoom_in", actor_on_weapon_zoom_in)
+  RegisterScriptCallback("actor_on_first_update", actor_on_first_update)
+  if animation_common then
+    animation_common.add_anim_mutator(actor_on_hud_animation_play, 1200)
+  else
+    RegisterScriptCallback("actor_on_hud_animation_play", actor_on_hud_animation_play)
+  end
+  RegisterScriptCallback("save_state", save_state)
+  RegisterScriptCallback("load_state", load_state)
+  RegisterScriptCallback("server_entity_on_unregister", server_entity_on_unregister)
   on_option_change(mcm_keybinds)
 
   if ish_toggle_scope and ish_toggle_scope_mcm then

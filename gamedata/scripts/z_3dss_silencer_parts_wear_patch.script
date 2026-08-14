@@ -1,0 +1,64 @@
+local function clamp(value, minimum, maximum)
+	return math.max(minimum, math.min(maximum, value))
+end
+
+local function random_roll(chance)
+	return math.random(1, 100000) <= chance * 100
+end
+
+local function damage_random_part(parts)
+	local choices = {}
+	for part, condition in pairs(parts) do
+		if not string.find(part, "barrel") and type(condition) == "number" then
+			choices[#choices + 1] = part
+		end
+	end
+	if #choices == 0 then return false end
+
+	local part = choices[math.random(1, #choices)]
+	parts[part] = math.max(1, parts[part] - math.random(5, 12))
+	return true
+end
+
+local function wear_barrel(parts)
+	local changed = false
+	for part, condition in pairs(parts) do
+		if string.find(part, "barrel") and type(condition) == "number" then
+			parts[part] = math.max(0, condition - 1)
+			changed = true
+		end
+	end
+	return changed
+end
+
+local function extra_suppressor_parts_wear(_, weapon)
+	local api = z_3dss_silencer_condition
+	if not (weapon and api and api.get_parts_wear_multiplier and item_parts) then return end
+	if weapon:weapon_in_grenade_mode() then return end
+
+	local extra = api.get_parts_wear_multiplier(weapon) - 1
+	if extra <= 0 then return end
+	local parts = item_parts.get_parts_con(weapon, nil, true)
+	if type(parts) ~= "table" then return end
+
+	local old_ammo = weapon:get_ammo_type() % 3 ~= 0
+	local condition = math.floor(clamp(weapon:condition(), 0, 1) * 100)
+	local threshold = type(get_config) == "function" and tonumber(get_config("threshold")) or 85
+	local overheat = type(get_overheat_modifier) == "function" and tonumber(get_overheat_modifier(weapon)) or 1
+	local shot_dec = ini_sys:r_float_ex(weapon:section(), "condition_shot_dec") or 0.0005
+
+	local part_chance = old_ammo and 6 or 2
+	if condition < threshold then
+		part_chance = (threshold - condition) * shot_dec * 2000 * overheat
+		if old_ammo then part_chance = part_chance + 20 end
+	end
+	local barrel_chance = (old_ammo and 40 or 20) * overheat
+
+	local changed = random_roll(part_chance * extra) and damage_random_part(parts)
+	changed = (random_roll(barrel_chance * extra) and wear_barrel(parts)) or changed
+	if changed then item_parts.set_parts_con(weapon:id(), parts) end
+end
+
+function on_game_start()
+	RegisterScriptCallback("actor_on_weapon_fired", extra_suppressor_parts_wear)
+end

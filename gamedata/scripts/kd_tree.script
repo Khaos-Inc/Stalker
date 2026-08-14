@@ -185,9 +185,9 @@ function kdTree(points, metric, dimensions)
             local dimension = self.dimensions[node.dimension]
 
             if point[dimension] < node.obj[dimension] then
-                return nodeSearch(node.left, node)
+                return nodeSearch(node.left)
             else
-                return nodeSearch(node.right, node)
+                return nodeSearch(node.right)
             end
         end
 

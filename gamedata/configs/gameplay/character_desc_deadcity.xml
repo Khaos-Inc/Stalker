@@ -1,4 +1,4 @@
-<?xml version='1.0' encoding="windows-1251"?>
+п»ї<?xml version='1.0' encoding="windows-1251"?>
 <!--	CoC 1.4.10 - DoctorX Questlines 1.6 -->
 <xml>
 
@@ -6,7 +6,7 @@
     <specific_character id="cit_killers_merc_trader_stalker" team_default="1">
 		<name>cit_killers_merc_trader_stalker_name</name>
 		<icon>ui_inGame2_merc_trade</icon>
-		<bio>??????? ???????. Ж’???????В¤ ?????????В¤ ???????????.</bio>
+		<bio>??????? ???????. ????????¤ ?????????¤ ???????????.</bio>
 		<class>cit_killers_merc_trader_stalker</class>
 		<community>killer</community>
 		<map_icon x="1" y="0"/>
@@ -56,8 +56,10 @@
 		<actor_dialog>debt_pay_off</actor_dialog>
 		<actor_dialog>dm_ordered_task_dialog</actor_dialog>
 		<actor_dialog>drx_sl_change_faction_dialog</actor_dialog>
-        <actor_dialog>find_blackbox_mlr_reward_killer</actor_dialog> <!-- MLR -->		
+        <actor_dialog>find_blackbox_mlr_reward_killer</actor_dialog> <!-- MLR -->	
+		<actor_dialog>cit_killers_minigame</actor_dialog>
 		<actor_dialog>actor_break_dialog</actor_dialog>
+		<actor_dialog>armor_exchange_insider_mercenary</actor_dialog>
     </specific_character>
 
 
@@ -65,7 +67,7 @@
     <specific_character id="cit_killers_merc_mechanic_stalker" team_default="1">
 		<name>cit_killers_merc_mechanic_stalker_name</name>
 		<icon>ui_inGame2_merc_tech</icon>
-		<bio>??????? ???????. Ж’???????В¤ ?????????В¤ ???????????.</bio>
+		<bio>??????? ???????. ????????¤ ?????????¤ ???????????.</bio>
 		<class>cit_killers_merc_mechanic_stalker</class>
 		<community>killer</community>
 		<map_icon x="1" y="0"/>
@@ -97,7 +99,7 @@
 	<specific_character id="cit_killers_merc_medic_stalker" team_default="1">
 		<name>cit_killers_merc_medic_stalker_name</name>
 		<icon>ui_inGame2_merc_2</icon>
-		<bio>??????? ???????. Ж’???????В¤ ?????????В¤ ???????????.</bio>
+		<bio>??????? ???????. ????????¤ ?????????¤ ???????????.</bio>
 		<class>cit_killers_merc_medic_stalker</class>
 		<community>killer</community>
 		<map_icon x="1" y="0"/>
@@ -106,7 +108,7 @@
 		<reputation>1149</reputation>
 		<money min="1000000" max="1000000" infinitive="1"/>
 		<visual>actors\stalker_merc\stalker_merc_medic_2</visual>
-		<snd_config>characters_voice\human\killer_3\</snd_config>
+		<snd_config>characters_voice\human\killer_1\</snd_config>
 		<supplies>
 	
 		</supplies>
@@ -192,6 +194,7 @@
 		<actor_dialog>dm_bribe</actor_dialog>
 		<!--actor_dialog>information_about_stash_aslan</actor_dialog-->
 		<!--actor_dialog>information_about_stash_aslan1</actor_dialog-->
+		<actor_dialog>cit_killers_minigame</actor_dialog>
 		<actor_dialog>actor_break_dialog</actor_dialog>
     </specific_character>
 

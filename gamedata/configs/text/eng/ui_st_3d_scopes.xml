@@ -6,31 +6,220 @@
 	</string>
 	
 	<string id="ui_mcm_3d_scopes_title">
-		<text>Shader 3D Scopes</text>
+		<text>3D Shader Scopes for GAMMA</text>
 	</string>
-
-	<string id="ui_mcm_3d_scopes_zoom_factor">
+	
+	
+	<string id="ui_mcm_menu_3d_scopes_scope_settings">
+		<text>Scope Settings</text>
+	</string>
+	<string id="ui_mcm_3d_scopes_scope_settings_zoom_factor">
 		<text>Zoom factor</text>
 	</string>
-
-	<string id="ui_mcm_3d_scopes_nvg_blur">
+	<string id="ui_mcm_3d_scopes_scope_settings_zoom_factor_desc">
+		<text>Adds some camera zoom on top of the base zoom of the scope to simulate a lensing effect. Higher values cause drop in scope resolution. 1.3 is a good number.</text>
+	</string>
+	<string id="ui_mcm_3d_scopes_scope_settings_nvg_blur">
 		<text>Blur scope in Beefs NVG</text>
 	</string>
-
-	<string id="ui_mcm_3d_scopes_parallax_shadow">
+	<string id="ui_mcm_3d_scopes_scope_settings_parallax_shadow">
 		<text>Render parallax shadow</text>
 	</string>
-
-	<string id="ui_mcm_3d_scopes_see_through">
+	<string id="ui_mcm_3d_scopes_scope_settings_see_through">
 		<text>Reticle and exit pupil are always visible</text>
 	</string>
-
-	<string id="ui_mcm_3d_scopes_thermal_pixelation">
+	<string id="ui_mcm_3d_scopes_scope_settings_thermal_pixelation">
 		<text>Pixelate thermal scopes when using zoom</text>
 	</string>
-
-	<string id="ui_mcm_3d_scopes_chromatism">
+	<string id="ui_mcm_3d_scopes_scope_settings_chromatism">
 		<text>Scopes have chromatism</text>
 	</string>
+	<string id="ui_mcm_3d_scopes_scope_settings_nvg_force_alt">
+		<text>NVG canted aim with scopes</text>
+	</string>
+	<string id="ui_mcm_3d_scopes_scope_settings_nvg_force_alt_desc">
+		<text>Certain scopes are too big to be used with NVGs and are forced into a canted aim mode when this option is on. Scopes that are compatible will be listed in their descriptions.</text>
+	</string>
+	<string id="ui_mcm_3d_scopes_scope_settings_canted_sight_editors">
+		<text>Enable canted sight adjustment UIs</text>
+	</string>
+	<string id="ui_mcm_3d_scopes_scope_settings_canted_sight_editors_desc">
+		<text>Allows the canted sight aim and visual position adjustment interfaces to be opened.</text>
+	</string>
+	<string id="ui_mcm_3d_scopes_scope_settings_shader_switcher">
+		<text>Simulated two-eye aiming</text>
+	</string>
+	<string id="ui_mcm_3d_scopes_scope_settings_shader_switcher_desc">
+		<text>Master switch for simulated two-eye aiming. Toggle off to disable transparent effect on all sights/scopes/irons.</text>
+	</string>	
+	<string id="ui_mcm_3d_scopes_scope_settings_shader_switcher_scopes">
+		<text>Switch scope housings</text>
+	</string>
+	<string id="ui_mcm_3d_scopes_scope_settings_shader_switcher_scopes_desc">
+		<text>Applies simulated two-eye aiming to scopes. This option has no effect when simulated two-eye aiming is disabled.</text>
+	</string>
+	<string id="ui_mcm_3d_scopes_scope_settings_shader_switcher_sights">
+		<text>Switch red dot housings</text>
+	</string>
+	<string id="ui_mcm_3d_scopes_scope_settings_shader_switcher_sights_desc">
+		<text>Applies simulated two-eye aiming to sights. This option has no effect when simulated two-eye aiming is disabled.</text>
+	</string>	
+	<string id="ui_mcm_3d_scopes_scope_settings_shader_switcher_rear_irons">
+		<text>Include rear iron sights</text>
+	</string>
+	<string id="ui_mcm_3d_scopes_scope_settings_shader_switcher_rear_irons_desc">
+		<text>Applies simulated two-eye aiming to iron sights. This option has no effect when simulated two-eye aimingg is disabled.</text>
+	</string>
+	<string id="ui_mcm_3d_scopes_scope_settings_shader_switcher_opacity">
+		<text>ADS housing opacity</text>
+	</string>
+	<string id="ui_mcm_3d_scopes_scope_settings_shader_switcher_opacity_desc">
+		<text>Sets the opacity of affected weapon meshes. 1 is more transparent and a less blurry housing, 10 is less transparent and a more blurry housing.</text>
+	</string>
 
+
+	<string id="ui_mcm_3d_scopes_magnifier_switch_tab">
+		<text>Magnifier Switch</text>
+	</string>
+	<string id="ui_mcm_3d_scopes_magnifier_switch_use_mousewheel">
+		<text>Use Mousewheel</text>
+	</string>
+	<string id="ui_mcm_3d_scopes_magnifier_switch_use_mousewheel_desc">
+		<text>Uses mousewheel input for magnifier switching and disables the keybind settings below.</text>
+	</string>
+	<string id="ui_mcm_3d_scopes_magnifier_switch_mwheel_switch_ads_only">
+		<text>Mousewheel Switch On ADS Only</text>
+	</string>
+	<string id="ui_mcm_3d_scopes_magnifier_switch_mwheel_switch_ads_only_desc">
+		<text>Disables magnifier switching with the mousewheel while not aiming.</text>
+	</string>
+	<string id="ui_mcm_3d_scopes_magnifier_switch_mwheel_weapon_swap">
+		<text>Enable Mousewheel Weapon Swap</text>
+	</string>
+	<string id="ui_mcm_3d_scopes_magnifier_switch_mwheel_weapon_swap_desc">
+		<text>Controls the mouse_wheel_change_weapon console setting.</text>
+	</string>
+	<string id="ui_mcm_3d_scopes_magnifier_switch_switch_bind">
+		<text>Magnifier Switch Keybind</text>
+	</string>
+	<string id="ui_mcm_3d_scopes_magnifier_switch_switch_bind_desc">
+		<text>When assigned to the Sight Aim Mode Toggle key, normal key behavior remains available when the magnifier cannot switch or the configured modifier and input mode are not performed.</text>
+	</string>
+	<string id="ui_mcm_3d_scopes_magnifier_switch_modifier">
+		<text>Magnifier switch modifier</text>
+	</string>
+	<string id="ui_mcm_3d_scopes_magnifier_switch_press_type">
+		<text>Magnifier switch input mode</text>
+	</string>
+	<string id="ui_mcm_3d_scopes_magnifier_switch_keep_aim_toggle">
+		<text>Maintain ADS Toggle</text>
+	</string>
+	<string id="ui_mcm_3d_scopes_magnifier_switch_keep_aim_toggle_desc">
+		<text>Maintains ADS while switching the magnifier when ADS toggle mode is used.</text>
+	</string>
+	<string id="ui_mcm_3d_scopes_magnifier_switch_switch_sound">
+		<text>Play Sound Effect</text>
+	</string>
+	<string id="ui_mcm_3d_scopes_magnifier_switch_switch_sound_desc">
+		<text>Plays a sound effect when the magnifier mode changes.</text>
+	</string>
+	<string id="ui_mcm_3d_scopes_magnifier_switch_debug">
+		<text>Debug logging</text>
+	</string>
+
+
+	<string id="ui_mcm_3d_scopes_mark_switch_tab">
+		<text>Mark Switch</text>
+	</string>
+	<string id="ui_mcm_3d_scopes_mark_switch_keybind">
+		<text>Mark switch keybind</text>
+	</string>
+	<string id="ui_mcm_3d_scopes_mark_switch_modifier">
+		<text>Mark switch modifier</text>
+	</string>
+	<string id="ui_mcm_3d_scopes_mark_switch_press_type">
+		<text>Mark switch input mode</text>
+	</string>
+	<string id="ui_mcm_3d_scopes_mark_switch_keybind_reverse">
+		<text>Reverse mark switch keybind</text>
+	</string>
+	<string id="ui_mcm_3d_scopes_mark_switch_modifier_reverse">
+		<text>Reverse mark switch modifier</text>
+	</string>
+	<string id="ui_mcm_3d_scopes_mark_switch_press_type_reverse">
+		<text>Reverse mark switch input mode</text>
+	</string>
+
+	
+	<string id="ui_mcm_3d_scopes_camo_system">
+		<text>Camo System</text>
+	</string>
+	<string id="ui_mcm_3d_scopes_camo_system_camo_keybind">
+		<text>Camo wheel keybind</text>
+	</string>
+	<string id="ui_mcm_3d_scopes_camo_system_camo_modifier">
+		<text>Camo wheel modifier</text>
+	</string>
+	<string id="ui_mcm_3d_scopes_camo_system_camo_press_type">
+		<text>Camo wheel input mode</text>
+	</string>
+	<string id="ui_mcm_3d_scopes_camo_system_camo_shared_unlocks">
+		<text>Cross-weapon camo discovery</text>
+	</string>
+	<string id="ui_mcm_3d_scopes_camo_system_camo_shared_unlocks_desc">
+		<text>Discovering a camo on one weapon unlocks similar camo colors on others.</text>
+	</string>
+	<string id="ui_mcm_3d_scopes_camo_system_camo_debug_mode">
+		<text>Debug</text>
+	</string>
+	<string id="ui_mcm_3d_scopes_camo_system_camo_debug_mode_desc">
+		<text>Makes every configured camo available without changing saved discovery progress.</text>
+	</string>
+
+	<string id="ui_mcm_3d_scopes_reticle_profiles">
+		<text>Reticle Profiles</text>
+	</string>
+	<string id="ui_mcm_3d_scopes_reticle_profiles_default_profile">
+		<text>Default profile</text>
+	</string>
+
+	<string id="ui_mcm_3d_scopes_reticle_profiles">
+		<text>Reticle Profiles</text>
+	</string>
+	<string id="ui_mcm_3d_scopes_reticle_profiles_default_profile">
+		<text>Default profile</text>
+	</string>
+	
+	<string id="ui_3dss_camo_locked">
+		<text>%s camo not yet discovered.</text>
+	</string>
+	<string id="ui_3dss_camo_discovered">
+		<text>New camo discovered for %s: %s</text>
+	</string>
+	
+	<string id="ui_3dss_available_camos">
+		<text>Available Camos</text>
+	</string>
+	
+	<string id="st_3dss_change_reticle">
+		<text>change reticle</text>
+	</string>
+
+	<string id="st_3dss_scope_nvg_compatible">
+		<text>%c[d_cyan] • %c[0,255,255,255] This scope can be used with NVGs</text>
+	</string>	
+
+	<string id="ui_mcm_3d_scopes_silencer_wear">
+		<text>Silencer Wear</text>
+	</string>
+	<string id="ui_mcm_3d_scopes_silencer_wear_silencer_wear_enabled">
+		<text>Enable silencer condition effects</text>
+	</string>
+	<string id="ui_mcm_3d_scopes_silencer_wear_silencer_wear_enabled_desc">
+		<text>Enables condition loss, reduced bonuses, additional weapon-part wear, and zero-condition detachment. Disabling this preserves current condition while silencers resotring vanilla function.</text>
+	</string>
+	<string id="st_3dss_silencer_condition">
+		<text>%c[0,255,255,255]Suppressor Condition:</text>
+	</string>
+	
 </string_table>

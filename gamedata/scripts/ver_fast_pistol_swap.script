@@ -1,0 +1,231 @@
+--[[ sample anim_table --> { ["anm_end"] = 0,["anm_name"] = anm_show,["anm_mixin"] = false,["anm_state"] = 1,["anm_speed"] = 1,["anm_mixin2"] = false,} ]]
+-- sample options_modded_exes_mouse.PAGE table 
+-- { ["gr"] = { [1] = { ["link"] = ui_options_slider_other,["size"] = { [1] = 512,[2] = 50,} ,["id"] = slide_modded_exes_mouse,["type"] = slide,["text"] = ui_mm_mouse_modded_exes,} ,[2] = { ["step"] = 0.01,["max"] = 3,["min"] = 0.10000000149012,["id"] = mouse_sens_vertical,["type"] = track,["cmd"] = mouse_sens_vertical,["def"] = 1,["val"] = 2,} ,[3] = { ["content"] = { [1] = function: 0x11d04a70,} ,["restart"] = false,["id"] = mouse_wheel_change_weapon,["type"] = list,["cmd"] = mouse_wheel_change_weapon,["curr"] = { [1] = function: 0x11d28eb8,} ,["val"] = 0,} ,[4] = { ["content"] = { [1] = function: 0x11fd1710,} ,["restart"] = false,["id"] = mouse_wheel_invert_change_weapon,["type"] = list,["cmd"] = mouse_wheel_invert_change_weapon,["curr"] = { [1] = function: 0x11d048e0,} ,["val"] = 0,} ,[5] = { ["content"] = { [1] = function: 0x11fd19c0,} ,["restart"] = false,["id"] = mouse_wheel_invert_zoom,["type"] = list,["cmd"] = mouse_wheel_invert_zoom,["curr"] = { [1] = function: 0x11fd1878,} ,["val"] = 0,} ,} ,["sh"] = true,["id"] = mouse,} 
+-- { ["gr"] = { [1] = { ["link"] = ui_options_slider_other,["size"] = { [1] = 512,[2] = 50,} ,["id"] = slide_modded_exes_mouse,["type"] = slide,["text"] = ui_mm_mouse_modded_exes,} ,[2] = { ["step"] = 0.01,["max"] = 3,["min"] = 0.10000000149012,["id"] = mouse_sens_vertical,["type"] = track,["cmd"] = mouse_sens_vertical,["def"] = 1,["val"] = 2,} ,[3] = { ["stack"] = 1,["content"] = { [1] = function: 0x11d04a70,} ,["restart"] = false,["id"] = mouse_wheel_change_weapon,["type"] = list,["cmd"] = mouse_wheel_change_weapon,["curr"] = { [1] = function: 0x11d28eb8,} ,["val"] = 0,} ,[4] = { ["stack"] = 1,["content"] = { [1] = function: 0x11fd1710,} ,["restart"] = false,["id"] = mouse_wheel_invert_change_weapon,["type"] = list,["cmd"] = mouse_wheel_invert_change_weapon,["curr"] = { [1] = function: 0x11d048e0,} ,["val"] = 0,} ,[5] = { ["stack"] = 1,["content"] = { [1] = function: 0x11fd19c0,} ,["restart"] = false,["id"] = mouse_wheel_invert_zoom,["type"] = list,["cmd"] = mouse_wheel_invert_zoom,["curr"] = { [1] = function: 0x11fd1878,} ,["val"] = 0,} ,} ,["sh"] = true,["id"] = mouse,} 
+
+
+function on_game_start()
+	--RegisterScriptCallback("actor_on_hud_animation_play", fast_pistol_swap)
+	RegisterScriptCallback("on_option_change", get_mcm_values)
+	RegisterScriptCallback("actor_on_first_update", get_mcm_values)
+	RegisterScriptCallback("on_key_press", on_key_press)
+	RegisterScriptCallback("on_mouse_wheel", on_mouse_wheel)
+end
+
+function on_mouse_wheel(dir, flags)
+
+		printdbg("mouse direction is " .. tostring(dir))
+		local mouse_dir = 1
+		local invert = get_console_cmd(0, "mouse_wheel_invert_change_weapon")
+		if invert then
+			printdbg("invert is set to " .. invert)
+			printdbg("invert type is " .. type(invert))
+		else
+			printdbg("invert type is " .. type(invert))
+		end
+		next_kind_pistol = false
+		if dir == 0 then
+			mouse_dir = -1
+		elseif dir == 1 then
+			mouse_dir = 1
+		end
+		local mouse_change = mouse_dir
+		--printdbg("invert is " .. tostring(invert))
+		if invert == "1" then
+			mouse_change = (-1) * (mouse_change)
+			printdbg("mouse change inverted")
+		end
+		printdbg("mouse change is " .. mouse_change)
+		local active_slot = db.actor:active_slot()
+		printdbg("active slot is " .. active_slot)
+		local next_slot = active_slot + mouse_change
+		printdbg("next slot is " .. next_slot)
+		if next_slot == 1 then
+			printdbg("first slot called!")
+			obj = db.actor:item_in_slot(1)
+			if not obj then
+				return
+			end
+			if obj:is_weapon() then
+				next_sec = obj:section()
+				next_kind = ini_sys:r_string_ex(next_sec, "kind")
+				if next_kind == "w_pistol" then
+				next_kind_pistol = true
+				end
+			end
+		elseif next_slot == 2 then
+			printdbg("second slot called!")
+			obj = db.actor:item_in_slot(2)
+			if not obj then
+				return
+			end
+			if obj:is_weapon() then
+				next_sec = obj:section()
+				next_kind = ini_sys:r_string_ex(next_sec, "kind")
+				if next_kind == "w_pistol" then
+				next_kind_pistol = true
+				end
+			end
+		elseif next_slot == 3 then
+			printdbg("third slot called!")
+			obj = db.actor:item_in_slot(3)
+			if not obj then
+				return
+			end
+			if obj:is_weapon() then
+				next_sec = obj:section()
+				next_kind = ini_sys:r_string_ex(next_sec, "kind")
+				if next_kind == "w_pistol" then
+				next_kind_pistol = true
+				end
+			end
+		end
+
+end
+
+function on_key_press(key)
+	local bind = dik_to_bind(key)
+	if bind == key_bindings.kWPN_FIRE then return end
+	next_kind_pistol = false
+    if (bind == key_bindings.kWPN_1) then
+		printdbg("first slot called!")
+		obj = db.actor:item_in_slot(1)
+		if not obj then
+			return
+		end
+		if obj:is_weapon() then
+			next_sec = obj:section()
+			next_kind = ini_sys:r_string_ex(next_sec, "kind")
+			if next_kind == "w_pistol" then
+			next_kind_pistol = true
+			end
+		end
+	elseif (bind == key_bindings.kWPN_2) then
+		printdbg("second slot called!")
+		obj = db.actor:item_in_slot(2)
+		if not obj then
+			return
+		end
+		if obj:is_weapon() then
+			next_sec = obj:section()
+			next_kind = ini_sys:r_string_ex(next_sec, "kind")
+			if next_kind == "w_pistol" then
+			next_kind_pistol = true
+			end
+		end
+	elseif (bind == key_bindings.kWPN_3) then
+		printdbg("third slot called!")
+		obj = db.actor:item_in_slot(3)
+		if not obj then
+			return
+		end
+		if obj:is_weapon() then
+			next_sec = obj:section()
+			next_kind = ini_sys:r_string_ex(next_sec, "kind")
+			if next_kind == "w_pistol" then
+			next_kind_pistol = true
+			end
+		end
+	end
+end
+
+function fast_pistol_swap(anim_table, wpn)
+	if next_kind_pistol then
+		ver_fast_pistol_swap(anim_table, wpn)
+	else
+		printdbg("next_kind_pistol is false!")
+	end
+	return
+end
+
+
+local mcm_pistol_swap_delay = 0.1
+local mcm_fast_pistol_swap_multiplier = 1.5
+local mcm_fast_gun_swap_multiplier = 1.5
+local mcm_debug = true
+local mcm_fast_swap = true
+local faster_show_anim = false
+
+function get_mcm_values()
+	mcm_fast_swap 						= ui_mcm.get("ver_pistol_swap/fast_swap")
+	mcm_debug							= ui_mcm.get("ver_pistol_swap/debug")
+	mcm_fast_pistol_swap_multiplier		= ui_mcm.get("ver_pistol_swap/pistol_swap_multiplier")
+	mcm_fast_gun_swap_multiplier		= ui_mcm.get("ver_pistol_swap/gun_swap_multiplier")
+end
+
+function printdbg(text, ...)
+	if mcm_debug then
+		printf("[pistol_swap]" .. text, ...)
+	end
+end
+
+function disable_faster_show_anim()
+	faster_show_anim = false
+	printdbg("faster_show_anim set to false!")
+	return
+end
+
+function ver_fast_pistol_swap(anim_table, wpn)
+	-- get_mcm_values()
+	if mcm_fast_swap then
+		--[[local table = dump(anim_table)
+		printdbg(table)]]
+		
+		if not wpn then
+			return
+		end
+
+		local sec = wpn:section()
+		local kind = ini_sys:r_string_ex(sec,"kind")
+		local anim_length = 0
+		local single_handed = true
+		local anim_section_name = tostring(ini_sys:r_string_ex(sec,"hud"))
+		local motion_name = tostring(anim_table.anm_name)
+		local speed = anim_table.anm_speed
+		printdbg("wpn sec is " .. tostring(sec))
+		if wpn and wpn.cast_Weapon and wpn:is_weapon() then
+			single_handed = wpn:cast_Weapon():IsSingleHanded()
+			printdbg("single_handed is " .. tostring(single_handed))
+		end
+		if starts_with(anim_table.anm_name, ("anm_hide")) and not single_handed then
+			anim_motion = ini_sys:r_string_ex(anim_section_name, tostring(anim_table.anm_name))
+			--local anim_params = str_explode(anim_motion, ",")
+			--local anim_speed = anim_params[3] or 1
+			local anim_speed = anim_table.anm_speed
+			anim_length = game.get_motion_length(anim_section_name, motion_name, speed) * tonumber(1/(anim_speed))
+			anim_length = (tonumber(anim_length)/1000) + mcm_pistol_swap_delay
+			faster_show_anim = true
+			printdbg(("anim length is " .. tonumber(anim_length - mcm_pistol_swap_delay)) .. ( " and its type is " .. type(anim_length)))
+			--CreateTimeEvent("ver_pistol_swap_ev", "ver_pistol_swap_id", anim_length, disable_faster_show_anim)
+			printdbg("anim_hide with two hand weapon detected!")
+			printdbg("speed multiplier is " .. mcm_fast_gun_swap_multiplier)
+			anim_table.anm_speed = anim_speed * mcm_fast_gun_swap_multiplier
+		end
+		
+		printdbg("faster_show_anim is " .. tostring(faster_show_anim))
+		if starts_with(anim_table.anm_name, ("anm_show")) and kind == "w_pistol" and faster_show_anim then
+			old_anim_speed = anim_table.anm_speed
+			faster_show_anim = false
+			anim_length_show = (game.get_motion_length(anim_section_name, motion_name, speed) * tonumber(1/(anim_table.anm_speed)))/1000
+			anim_table.anm_speed = anim_table.anm_speed * mcm_fast_pistol_swap_multiplier
+			printdbg("speed increase attempted!")
+		elseif starts_with(anim_table.anm_name, ("anm_show")) then
+			faster_show_anim = false
+		end
+	end
+end
+
+animation_common.add_anim_mutator(fast_pistol_swap, 0.01)
+
+function dump(o)
+   if type(o) == 'table' then
+      local s = '{ '
+      for k,v in pairs(o) do
+         if type(k) ~= 'number' then k = '"'..k..'"' end
+         s = s .. '['..k..'] = ' .. dump(v) .. ','
+      end
+      return s .. '} '
+   else
+      return tostring(o)
+   end
+end

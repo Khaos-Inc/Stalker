@@ -1,0 +1,195 @@
+local settings  = {}
+local debug     = false
+
+local random		= math.random
+local frandom		= random_float
+local num           = tonumber
+local clamp			= _g.clamp
+local max           = math.max
+local abs           = math.min
+local floor         = math.floor
+local sin           = math.sin
+local pi            = math.pi
+local smallest      = 0.0000001
+local idp           = round_idp
+local string_format = string.format
+
+local r0 = function(number) return idp(number, 0) end
+local r4 = function(number) return idp(number, 4) end
+
+-- If an integrated silencer weapon isn't set up properly (as in, its silencer_status isn't set to 1), define it here
+local wpn_silencer	= {
+	--["wpn_pb"] = true,
+	--["wpn_val"] = true,		-- like so
+}
+
+function get_silencer()
+	return wpn_silencer or nil
+end
+
+function add_silencer(sect)
+    if not sect then return end
+    wpn_silencer[sect] = true
+end
+
+function remove_silencer(sect)
+    if not sect or not wpn_silencer[sect] then return end
+    wpn_silencer[sect] = nil
+end
+
+-- If you have a mod that adds new UBGL rounds, add them here so that they trigger the UBGL recoil
+local ubgl_ammo		= {
+	"m209",
+	"vog-25",
+	"vog-30",
+}
+
+function get_ubgl_ammo_table()
+	return ubgl_ammo or nil
+end
+
+local function trace(str, ...)
+	if debug == true then
+		printf("= ER:P Utils >> " .. str, ...)
+	end
+end
+
+local actor_psy_table = {}
+local function get_actor_psy_table()
+	if is_not_empty(actor_psy_table) then return end
+	local m_data = alife_storage_manager.get_state()
+
+	arszi_psy.save_state(m_data) 
+	actor_psy_table = m_data.psy_table
+end
+
+function get_psy()
+    return actor_psy_table or nil
+end
+
+function lerp(a, b, f)
+    if a and b and f then
+        return a + f * (b - a)
+	end
+
+	return a or b or 0
+end
+
+function cool_math(shot, smax, mult, variation, sec, fov)	-- that's a banger name for a function right there
+	fov = fov or false
+	shot = abs(num(shot and shot or 1))
+	smax = max(r0(lerp(1, abs(num(smax and smax or 1)), settings.main.max_shots_power)), 1)
+	mult = max(lerp(0, num(mult and mult or 0), settings.main.max_recoil_power), (-1 + smallest))
+	variation = abs(num(variation and variation or 0))
+
+	local res = 0
+
+    -- "table" for microadjusting the sine curve
+	-- n_smax   : mult
+    -- 1.376567 : 1.1
+	-- 1.693955 : 1.25
+	-- 2.152578 : 1.5
+	-- 3 : 2
+	-- 4.622205 : 3
+
+	local n_smax = max(floor(smax * 1.693955), 1) -- INSANE magic number to line up the sine curve
+
+	if mult > -0.8 then
+		mult = lerp(0, mult, 1.25)
+	else
+		mult = lerp((-1 + smallest), mult, 0.25)	-- ensures division never reaches 0 or a negative number (both kinda break the gimmick)
+	end
+
+	local wpn_fx = enhanced_recoil_main.wpn_fx[sec]
+	if settings.diff.reverse_scaling and not wpn_fx.force_norm and not fov then
+		return cringe_math(shot, smax, mult, variation, sec, n_smax)
+	end
+
+	if shot == 1 then
+		res = 0.0
+	elseif shot < n_smax and shot > 1 then
+		local t = (shot-1) / n_smax
+		res = (mult * sin(t * pi * 0.5))	-- cool sine curve [https://www.desmos.com/calculator/rin2mfxqpr]
+	elseif shot >= n_smax and shot > 1 then
+		res = mult
+	end
+
+	if shot >= smax then
+		variation = variation * 2
+	end
+
+	res = r4(1 + res)
+	
+    trace(string_format("cool_math() >> shot=%s || smax=%s n_smax=%s || mult=%s || var=%s >>>> res=%s", shot, smax, n_smax, mult, variation, res))
+	
+	return res, (1 + variation)
+end
+
+function cringe_math(shot, smax, mult, variation, sec, n_smax)
+	shot = r0(max(n_smax - (shot - (n_smax * 0.25)), 1)) -- trust me on the address cap
+
+	local lerpmult = clamp(normalize(mult, -0.5, mult * 10), 0, 1)
+
+	if mult > -0.5 then
+		mult = lerp(mult, mult * 10, lerpmult)
+	else
+		lerpmult = normalize(mult, -0.5, (1 - smallest))
+		mult = lerp(mult, (-1 + smallest), lerpmult)		-- ensures division never reaches 0 or a negative number (both kinda break the gimmick)
+	end
+
+	if shot < n_smax then
+		enhanced_recoil_main.caglord_off()
+	elseif shot >= n_smax then
+		if (frandom(0, 1) <= lerp(0, variation, 0.5)) then
+			enhanced_recoil_main.caglord_on()
+		end
+	end
+
+	if shot == 1 then
+		res = 0.0
+	elseif shot < n_smax and shot > 1 then
+		local t = shot / n_smax
+		res = (mult * sin(t * pi * 0.5))	-- cool sine curve [https://www.desmos.com/calculator/rin2mfxqpr]
+	elseif shot >= n_smax and shot > 1 then
+		res = mult
+	end
+
+	if shot < n_smax then
+		variation = variation * 2
+	end
+
+	res = r4(1 + res)
+
+	if shot < n_smax and settings.diff.reverse_buffer then
+		res = lerp(res, 1 + mult, 0.25)
+	end
+	
+    trace(string_format("CRINGE_math() >> shot=%s || smax=%s n_smax=%s || mult=%s || var=%s >>>> res=%s", shot, smax, n_smax, mult, variation, res))
+
+	return res, (1 + variation)
+end
+
+local function actor_on_first_update()
+    get_actor_psy_table()
+    settings = enhanced_recoil_main.settings or enhanced_recoil_main.load_defaults()
+end
+
+local curr_fps = 1
+local function actor_on_update()
+	local f_time = device().f_time_delta
+	curr_fps = f_time > 0 and floor(1 / f_time + 0.5) or 0
+end
+
+function get_fps()
+	return curr_fps
+end
+
+local function on_option_change()
+    settings = enhanced_recoil_main.settings or enhanced_recoil_main.load_defaults()
+end
+
+function on_game_start()
+    RegisterScriptCallback("actor_on_first_update", actor_on_first_update)
+	RegisterScriptCallback("actor_on_update", actor_on_update)
+    RegisterScriptCallback("on_option_change", on_option_change)
+end

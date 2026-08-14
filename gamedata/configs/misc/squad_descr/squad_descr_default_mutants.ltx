@@ -7,62 +7,62 @@
 
 [zombied_sim_squad_novice]:online_offline_group
 faction 		= zombied
-npc_random 		= sim_default_zombied_0, sim_default_zombied_1, sim_default_zombied_1, sim_default_zombied_2
-npc_in_squad    = 3, 4
+npc_random 		= sim_default_zombied_0, sim_default_zombied_0, sim_default_zombied_0, sim_default_zombied_0, sim_default_zombied_1
+npc_in_squad    = 1, 3
 common			= true
 
 [zombied_sim_squad_advanced]:online_offline_group
 faction 		= zombied
-npc_random 		= sim_default_zombied_1, sim_default_zombied_2, sim_default_zombied_3
-npc_in_squad    = 3, 4
+npc_random 		= sim_default_zombied_1, sim_default_zombied_1, sim_default_zombied_1, sim_default_zombied_2, sim_default_zombied_2
+npc_in_squad    = 1, 3
 common			= true
 
 [zombied_sim_squad_veteran]:online_offline_group
 faction 		= zombied
-npc_random 		= sim_default_zombied_2, sim_default_zombied_3, sim_default_zombied_4
-npc_in_squad    = 3, 4
+npc_random 		= sim_default_zombied_2, sim_default_zombied_2, sim_default_zombied_3, sim_default_zombied_3
+npc_in_squad    = 1, 3
 common			= true
 
 [zombied_sim_squad_mix]:online_offline_group		;added
 faction 		= zombied
-npc_random 		= sim_default_zombied_0, sim_default_zombied_1, sim_default_zombied_2, sim_default_zombied_3, sim_default_zombied_4
-npc_in_squad    = 3, 4
+npc_random 		= sim_default_zombied_0, sim_default_zombied_1, sim_default_zombied_2, sim_default_zombied_3
+npc_in_squad    = 1, 3
 common			= true
 
 [simulation_zombie]:online_offline_group
 faction         = monster_zombied_day
-npc_random      = zombie_weak, zombie_normal, zombie_strong
-npc_in_squad    = 3, 4
+npc_random      = sim_default_zombied_0, sim_default_zombied_1, sim_default_zombied_2
+npc_in_squad    = 1, 3
 common			= true
 
 [simulation_zombie_3_6]:online_offline_group
 faction         = monster_zombied_day
-npc_random      = zombie_weak, zombie_normal, zombie_strong
-npc_in_squad    = 4, 6
+npc_random      = sim_default_zombied_0, sim_default_zombied_1, sim_default_zombied_2
+npc_in_squad    = 1, 4
 common			= true
 
 [simulation_mix_zombie]:online_offline_group		;added
 faction         = monster_zombied_day
-npc_random      = zombie_weak, zombie_normal, zombie_strong
-npc_in_squad    = 3, 4
+npc_random      = sim_default_zombied_0, sim_default_zombied_1, sim_default_zombied_2
+npc_in_squad    = 1, 3
 common			= true
 
 [simulation_zombie_blind]:online_offline_group		;added
 faction         = monster_zombied_night
-npc_random      = zombie_blind
-npc_in_squad    = 2, 3
+npc_random      = sim_default_zombied_2, sim_default_zombied_3
+npc_in_squad    = 1, 3
 common			= true
 
 [simulation_zombie_blind_3zomb]:online_offline_group		;added
 faction         = monster_zombied_night
-npc             = zombie_blind, sim_default_zombied_2, sim_default_zombied_3, sim_default_zombied_4
-npc_in_squad    = 4
+npc             = sim_default_zombied_2, sim_default_zombied_2, sim_default_zombied_3
+npc_in_squad    = 1, 4
 common			= true
 
 [simulation_zombie_blind_3zomb_civ]:online_offline_group		;added
 faction         = monster_zombied_night
-npc             = zombie_blind, zombie_weak, zombie_normal, zombie_strong
-npc_in_squad    = 4
+npc             = sim_default_zombied_2, sim_default_zombied_2, sim_default_zombied_3
+npc_in_squad    = 1, 3
 common			= true
 
 ;------------------------------------------------
@@ -152,6 +152,12 @@ npc_random      = pseudodog_grey_weak, pseudodog_grey_weak, pseudodog_normal, ps
 npc_in_squad    = 1, 2
 common			= true
 
+[simulation_pseudodog_squad]:online_offline_group
+faction         = monster_predatory_day
+npc_random      = pseudodog_normal, pseudodog_strong, pseudodog_grey_strong
+npc_in_squad    = 2, 3
+common			= true
+
 ;------------------------------------------------
 ;----< Cat >-----|
 
@@ -175,6 +181,13 @@ faction         = monster_zombied_day
 npc_random      = fracture_normal, fracture_weak, fracture_strong, fracture_2, fracture_3
 npc_in_squad    = 1, 2
 common			= true
+
+[simulation_fracture_squad]:online_offline_group
+faction         = monster_zombied_day
+npc_random      = fracture_normal, fracture_weak, fracture_strong, fracture_2, fracture_3
+npc_in_squad    = 3
+common			= true
+
 
 ;------------------------------------------------
 ;----< Snork >-----|
@@ -202,31 +215,31 @@ common			= true
 [simulation_lurker_blue]:online_offline_group
 faction         = monster_predatory_day
 npc_random      = lurker_1_weak, lurker_1_normal, lurker_1_strong
-npc_in_squad    = 1, 2
+npc_in_squad    = 2, 4
 common			= true
 
 [simulation_lurker_brown]:online_offline_group
 faction         = monster_predatory_day
 npc_random      = lurker_2_weak, lurker_2_normal, lurker_2_strong
-npc_in_squad    = 1, 2
+npc_in_squad    = 2, 3 
 common			= true
 
 [simulation_lurker_black]:online_offline_group
 faction         = monster_predatory_day
 npc_random      = lurker_3_weak, lurker_3_normal, lurker_3_strong
-npc_in_squad    = 1, 2
+npc_in_squad    = 2, 3
 common			= true
 
 [simulation_lurker]:online_offline_group
 faction         = monster_predatory_day
 npc_random      = lurker_1_weak, lurker_1_normal, lurker_1_strong, lurker_2_weak, lurker_2_normal, lurker_2_strong, lurker_3_weak, lurker_3_normal, lurker_3_strong
-npc_in_squad    = 1, 2
+npc_in_squad    = 1
 common			= true
 
 [simulation_lurker_1_2]:online_offline_group
 faction         = monster_predatory_day
 npc_random      = lurker_1_weak, lurker_1_normal, lurker_1_strong, lurker_2_weak, lurker_2_normal, lurker_2_strong, lurker_3_weak, lurker_3_normal, lurker_3_strong
-npc_in_squad    = 2
+npc_in_squad    = 1, 3
 common			= true
 
 ;------------------------------------------------
@@ -234,7 +247,7 @@ common			= true
 
 [simulation_bloodsucker]:online_offline_group
 faction         = monster_predatory_night
-npc_random      = bloodsucker_red_weak, bloodsucker_green_weak, bloodsucker_black_weak, bloodsucker_red_normal, bloodsucker_green_normal, bloodsucker_black_normal, bloodsucker_red_strong, bloodsucker_green_strong, bloodsucker_black_strong	;, bloodsucker_strong_big
+npc_random      = psysucker_3_normal, psysucker_3_strong, bloodsucker_red_weak, bloodsucker_green_weak, bloodsucker_black_weak, bloodsucker_red_normal, bloodsucker_green_normal, bloodsucker_black_normal, bloodsucker_red_strong, bloodsucker_green_strong, bloodsucker_black_strong	;, bloodsucker_strong_big
 npc_in_squad    = 1
 common			= true
 
@@ -258,7 +271,7 @@ common			= true
 
 [simulation_bloodsucker_1_2]:online_offline_group
 faction         = monster_predatory_night
-npc_random      = bloodsucker_red_weak, bloodsucker_green_weak, bloodsucker_black_weak, bloodsucker_red_normal, bloodsucker_green_normal, bloodsucker_black_normal, bloodsucker_red_strong, bloodsucker_green_strong, bloodsucker_black_strong	;, bloodsucker_strong_big
+npc_random      = psysucker_3_normal, psysucker_3_strong, bloodsucker_red_weak, bloodsucker_green_weak, bloodsucker_black_weak, bloodsucker_red_normal, bloodsucker_green_normal, bloodsucker_black_normal, bloodsucker_red_strong, bloodsucker_green_strong, bloodsucker_black_strong	;, bloodsucker_strong_big
 npc_in_squad    = 1, 2
 common			= true
 
@@ -266,6 +279,12 @@ common			= true
 faction         = monster_predatory_night
 npc_random      = bloodsucker_red_weak, bloodsucker_green_weak, bloodsucker_black_weak
 npc_in_squad    = 2
+common			= true
+
+[simulation_bloodsucker_squad]:online_offline_group
+faction         = monster_predatory_night
+npc_random      = psysucker_3_normal, psysucker_3_strong, bloodsucker_black_normal, bloodsucker_black_strong, bloodsucker_green_normal
+npc_in_squad    = 2, 3
 common			= true
 
 ;------------------------------------------------
@@ -319,8 +338,8 @@ common			= true
 
 [simulation_karlik]:online_offline_group		;Added
 faction         = monster_zombied_night
-npc_random      = m_karlik_e
-npc_in_squad    = 1
+npc_random      = m_karlik_e, psysucker_3_strong
+npc_in_squad    = 2, 3
 common			= true
 
 ;------------------------------------------------
@@ -381,20 +400,20 @@ common			= true
 
 [simulation_contr_3sn_3gzomb]:online_offline_group
 faction         = monster_zombied_day
-npc             = snork_weak3, zombie_weak, zombie_weak, zombie_normal, snork_weak, snork_weak2, m_controller_normal
+npc             = snork_weak3, sim_default_zombied_3, sim_default_zombied_2, sim_default_zombied_1, snork_weak, snork_weak2, m_controller_normal
 npc_in_squad    = 7
 common			= true
 
 [simulation_contr_6gzomb]:online_offline_group
 faction         = monster_zombied_day
-npc             = zombie_weak, zombie_weak, zombie_weak, zombie_normal, zombie_weak, zombie_normal, m_controller_normal
+npc             = sim_default_zombied_3, sim_default_zombied_2, sim_default_zombied_1, sim_default_zombied_0, sim_default_zombied_0, m_controller_normal
 npc_in_squad    = 7
 common			= true
 
 [simulation_contr_2sn_4zomb]:online_offline_group
 faction         = monster_zombied_day
-npc             = snork_weak, snork_weak2, sim_default_zombied_1, sim_default_zombied_1, sim_default_zombied_2, sim_default_zombied_3, m_controller_normal
-npc_in_squad    = 7
+npc             = snork_weak, snork_weak, sim_default_zombied_2, sim_default_zombied_3, m_controller_normal
+npc_in_squad    = 5
 common			= true
 
 [simulation_contr_4tush_3sn]:online_offline_group
@@ -411,14 +430,14 @@ common			= true
 
 [simulation_contr_4zomb_norm]:online_offline_group
 faction         = monster_zombied_day
-npc             = sim_default_zombied_2, sim_default_zombied_2, sim_default_zombied_1, sim_default_zombied_3, m_controller_normal
-npc_in_squad    = 5
+npc             = sim_default_zombied_2, sim_default_zombied_1, sim_default_zombied_1, m_controller_normal
+npc_in_squad    = 4
 common			= true
 
 [simulation_contr_4zomb_str]:online_offline_group
 faction         = monster_zombied_day
-npc             = sim_default_zombied_4, sim_default_zombied_4, sim_default_zombied_2, sim_default_zombied_3, m_controller_normal2
-npc_in_squad    = 5
+npc             = sim_default_zombied_2, sim_default_zombied_3, sim_default_zombied_3, m_controller_normal2
+npc_in_squad    = 4
 common			= true
 
 [simulation_contr_5sn]:online_offline_group
@@ -427,31 +446,37 @@ npc             = snork_weak, snork_weak, snork_strong, snork_strong, snork_stro
 npc_in_squad    = 6
 common			= true
 
+[simulation_contr_squad]:online_offline_group
+faction         = monster_zombied_day
+npc             = m_controller_normal, m_controller_normal2, m_controller_normal1111, m_controller_normal777, m_controller_normal888
+npc_in_squad    = 2
+common			= true
+
 ;------------------------------------------------
 ;----< Poltergeist >-----|
 ;������� m_poltergeist_normal_black, m_poltergeist_normal_flame
 [simulation_poltergeist_tele]:online_offline_group
-faction         = monster_special
-npc_random      = m_poltergeist_normal_tele
-npc_in_squad    = 1, 1
+faction         = monster_predatory_day
+npc_random      = m_poltergeist_normal_tele, m_poltergeist_normal_flame
+npc_in_squad    = 1, 2
 common			= true
 
 [simulation_poltergeist_flame]:online_offline_group
-faction         = monster_special
+faction         = monster_predatory_day
 npc_random      = m_poltergeist_normal_flame
-npc_in_squad    = 1, 1
+npc_in_squad    = 1, 2
 common			= true
 
 [simulation_poltergeist_black]:online_offline_group
-faction         = monster_special
+faction         = monster_predatory_day
 npc_random      = m_poltergeist_normal_black
-npc_in_squad    = 1, 1
+npc_in_squad    = 1, 2
 common			= true
 
 [simulation_poltergeist]:online_offline_group		;added
-faction         = monster_special
+faction         = monster_predatory_day
 npc_random      = m_poltergeist_normal_tele, m_poltergeist_normal_flame, m_poltergeist_normal_black
-npc_in_squad    = 1, 1
+npc_in_squad    = 1, 2
 common			= true
 
 ;------------------------------------------------
@@ -468,34 +493,45 @@ common			= true
 
 [simulation_chimera]:online_offline_group
 faction         = monster_special
-npc_random      = chimera_normal, chimera_weak, chimera_strong, chimera_normal2, chimera_normal3, chimera_strong2, chimera_strong3, chimera_strong4
+npc_random      = chimera_strong, chimera_normal3, chimera_strong2, chimera_strong3, chimera_strong4
+npc_in_squad    = 1
+common			= true
+
+[simulation_chimera_south]:online_offline_group
+faction         = monster_special
+npc_random      = chimera_normal2, chimera_normal, chimera_weak
 npc_in_squad    = 1
 common			= true
 
 [simulation_chimera_2weak]:online_offline_group
 faction         = monster_special
-npc_random      = chimera_weak
+npc_random      = chimera_normal, chimera_normal2, chimera_normal3
 npc_in_squad    = 2
 common			= true
 
 [simulation_chimera_zaton]:online_offline_group
 faction         = monster_special
-npc_random      = chimera_normal
-npc_in_squad    = 1, 1
+npc_random      = chimera_strong, chimera_normal3, chimera_strong2, chimera_strong3, chimera_strong4
+npc_in_squad    = 1
 target_smart    = {=is_dark_night} nil, {~50} zat_sim_5, {~50} zat_sim_3, {~50} zat_sim_1, {~50} zat_sim_18, {~50} zat_sim_10, {~50} zat_sim_7, zat_sim_26
 common			= true
 
 [simulation_chimera_pripyat]:online_offline_group
 faction         = monster_special
-npc_random      = chimera_normal
-npc_in_squad    = 1, 1
+npc_random      = chimera_strong, chimera_normal3, chimera_strong2, chimera_strong3, chimera_strong4
+npc_in_squad    = 1
 target_smart    = {=is_dark_night} nil, pri_a17
 common			= true
 
 [simulation_chimera_jupiter]:online_offline_group
 faction         = monster_special
-npc_random      = chimera_normal
-npc_in_squad    = 1, 1
+npc_random      = chimera_strong, chimera_normal3, chimera_strong2, chimera_strong3, chimera_strong4
+npc_in_squad    = 1
+common			= true
+
+[simulation_chimera_squad]:online_offline_group
+faction         = monster_special
+npc             = chimera_strong2, pseudodog_strong, pseudodog_grey_strong
 common			= true
 
 ;------------------------------------------------
@@ -510,6 +546,12 @@ common			= true
 [simulation_gigant_2weak]:online_offline_group
 faction         = monster_special
 npc_random      = gigant_weak
+npc_in_squad    = 2
+common			= true
+
+[simulation_gigant_squad]:online_offline_group
+faction         = monster_special
+npc_random      = gigant_normal, gigant_strong, gigant_jumper
 npc_in_squad    = 2
 common			= true
 

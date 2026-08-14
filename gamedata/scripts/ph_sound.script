@@ -67,8 +67,6 @@ function snd_source:update(delta)
     if self.st.sound_set == true then
         self.st.sound_set = false
 
-		self.played_sound = ui_pda_radio_tab.get_playing_object(1) -- Zone FM
-		--[[
 		if self.st.random then
 			self.played_sound = xr_sound.get_sound_object(self.st.theme, "random")
 		elseif self.st.looped then
@@ -76,7 +74,6 @@ function snd_source:update(delta)
 		else
 			self.played_sound = xr_sound.get_sound_object(self.st.theme, "seq")
 		end
-		--]]
 
 		if self.played_sound ~= nil then
 			self.played_sound:play_at_pos (self.object, self.object:position ())

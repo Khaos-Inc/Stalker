@@ -25,6 +25,12 @@ local formations = {
 										 { dir = vector ():set (0.7, 0, -1), dist = 9.6 },
 										 { dir = vector ():set (-0.7, 0, -1), dist = 9.6}
 										 }
+
+
+local function isempty(s)
+  	return s == nil or s == ''
+end
+
 local function get_npc_command(npc)
 	local squad = get_object_squad(npc)
 	if not (squad) then 
@@ -56,21 +62,25 @@ local function get_npc_command(npc)
 		end
 	end
 	
-	local dir_s = formations[_index].dir
-	local dist_s = formations[_index].dist
+	if isempty(formations[_index]) then
+		return npc:level_vertex_id(), npc:direction()
+	else
+		local dir_s = formations[_index].dir
+		local dist_s = formations[_index].dist
 
-	local angle = yaw_degree(dir_s, vector():set(0, 0, 1))
-	local vvv = vector_cross(dir_s, vector():set(0, 0, 1))
-	if vvv.y < 0 then
-		angle = -angle
-	end
+		local angle = yaw_degree(dir_s, vector():set(0, 0, 1))
+		local vvv = vector_cross(dir_s, vector():set(0, 0, 1))
+		if vvv.y < 0 then
+			angle = -angle
+		end
 	
-	dir_s = vector_rotate_y(dir, angle)
+		dir_s = vector_rotate_y(dir, angle)
 
-	local d = 2
-	local vertex = level.vertex_in_direction(level.vertex_in_direction(vertex_id, dir_s, dist_s), dir, d)
+		local d = 2
+		local vertex = level.vertex_in_direction(level.vertex_in_direction(vertex_id, dir_s, dist_s), dir, d)
 
-	return vertex, dir
+		return vertex, dir
+	end
 end 
 
 class "evaluator_reached_task_location" ( property_evaluator )

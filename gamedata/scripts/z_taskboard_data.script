@@ -207,7 +207,29 @@ local function scan_nearby_npcs()
     local radius = config.scanning_range
     local actor_pos = db.actor:position()
     local candidates = {}
+    local npcwhodat = interfector_core.comm
 
+    level.iterate_nearest(actor_pos, radius, function(obj)  
+        if not (IsStalker(obj) and obj:alive()) then return end  
+        if EXCLUDED_NPC_SECTIONS[obj:section()] then return end  
+        local obj_comm = obj:character_community()  
+        local comm_faction = npcwhodat  
+        if npcwhodat and ini_sys:section_exist(npcwhodat) then  
+            comm_faction = ini_sys:r_string_ex(npcwhodat, "community") or npcwhodat  
+        end  
+        local rel = relation_registry.community_relation(comm_faction, obj_comm)  
+        local myfriend = (comm_faction == obj_comm) or (rel >= 0)
+        if not myfriend then return end
+    
+        local is_companion = obj:has_info("npcx_is_companion")  
+        if is_companion and not config.companions_give_tasks then return end  
+  
+        table.insert(candidates, {  
+        npc      = obj,  
+        distance = actor_pos:distance_to(obj:position()),  
+        })  
+    end)
+--[[
     level.iterate_nearest(actor_pos, radius, function(obj)
         local is_friendly_stalker = IsStalker(obj)
             and obj:alive()
@@ -215,7 +237,7 @@ local function scan_nearby_npcs()
 
         if not is_friendly_stalker then return end
         if EXCLUDED_NPC_SECTIONS[obj:section()] then return end
-
+        
         local is_companion = obj:has_info("npcx_is_companion")
         if is_companion and not config.companions_give_tasks then return end
 
@@ -224,18 +246,28 @@ local function scan_nearby_npcs()
             distance = actor_pos:distance_to(obj:position()),
         })
     end)
-
-    for _, sid in ipairs(STORY_NPC_IDS) do
-        local story_id = story_objects.object_id_by_story_id[sid]
-        if story_id then
-            local npc = db.storage[story_id] and db.storage[story_id].object
-            if npc and actor_pos:distance_to(npc:position()) <= radius then
-                table.insert(candidates, {
-                    npc      = npc,
-                    distance = actor_pos:distance_to(npc:position()),
-                })
-            end
-        end
+]]
+    for _, sid in ipairs(STORY_NPC_IDS) do  
+        local story_id = story_objects.object_id_by_story_id[sid]  
+        if story_id then  
+            local npc = db.storage[story_id] and db.storage[story_id].object  
+            if npc and npc:alive() and actor_pos:distance_to(npc:position()) <= radius then  
+                local obj_comm = npc:character_community()  
+                local comm_faction = npcwhodat  
+                if npcwhodat and ini_sys:section_exist(npcwhodat) then  
+                    comm_faction = ini_sys:r_string_ex(npcwhodat, "community") or npcwhodat  
+                end  
+                local rel = relation_registry.community_relation(comm_faction, obj_comm)  
+                local myfriend = (comm_faction == obj_comm) or (rel >= 0)  
+    
+                if myfriend then  
+                    table.insert(candidates, {  
+                        npc      = npc,  
+                        distance = actor_pos:distance_to(npc:position()),  
+                    })  
+                end  
+            end  
+        end  
     end
 
     table.sort(candidates, function(a, b) return a.distance < b.distance end)

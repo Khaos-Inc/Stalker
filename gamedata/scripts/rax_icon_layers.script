@@ -110,13 +110,8 @@ function add_icon_layer(self,ele, base, sec_m, tbl)
 	local x = tbl.icon_layer_x or 0
 	local y = tbl.icon_layer_y or 0
 	local axis = utils_xml.get_item_axis(sec_l, grid_size)
-
-	-- demonized: HD Inventory Icons Framework
-	local icon_override = aaa_rax_icon_override_mcm and aaa_rax_icon_override_mcm.icon_override
-	local scale = icon_override and icon_override:section_exist(sec_l) and (icon_override:r_float_ex(sec_l, "inv_grid_scale") or 1) or SYS_GetParam(2, sec_l, "inv_grid_scale", 1)
-	local w = math.ceil(axis.w / scale)
-	local h = math.ceil(axis.h / scale)
-
+	local w = axis.w
+	local h = axis.h
 	local scale = tbl.icon_layer_scale or 1
 	local scale_pos = scale * (grid_size/50)
 
@@ -150,14 +145,17 @@ function add_icon_layer(self,ele, base, sec_m, tbl)
 	ele:SetWndPos(vector2():set( x_s + w_off , y_s + h_off ))
 	ele:SetWndSize(vector2():set( w_s , h_s ))
 	ele:Show(true)
+
+	
+	
 end
 
 function add_texture_layer(self,ele, base, sec_m, tbl)
 	local grid_size = self.grid_size
-	local x = tonumber(tbl.x) or 0
-	local y = tonumber(tbl.y) or 0
-	local w = tonumber(tbl.w) or 0
-	local h = tonumber(tbl.h) or 0
+	local x = tbl.x or 0
+	local y = tbl.y or 0
+	local w = tbl.w
+	local h = tbl.h
 	local scale = 1
 	local scale_pos = scale * (grid_size/50)
 

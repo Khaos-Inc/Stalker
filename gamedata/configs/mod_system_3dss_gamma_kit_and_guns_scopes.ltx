@@ -22,17 +22,26 @@
 	s3ds_reticle_size 	= 5
 	s3ds_image_type 	= 2
 	s3ds_reticle_type 	= 6
-	ms_count 			= 2
+	s3ds_image_type 	= 1
+	s3ds_nvg_gen    	= 3
+	s3ds_fusion_outline = true
+	s3ds_fusion_color 	= 2
 	magnifications 		= 1-10
 
 ![wpn_gauss_quest]
 	s3ds_reticle_size 	= 5
 	s3ds_image_type 	= 2
 	s3ds_reticle_type 	= 6
-	ms_count 			= 2
-	magnification 		= 1-10
+	s3ds_image_type 	= 1
+	s3ds_nvg_gen    	= 3
+	s3ds_fusion_outline = true
+	s3ds_fusion_color 	= 2
+	magnifications 		= 1-10
 	
-![wpn_l96a1]	
+![wpn_l96a1]
+reticle_profiles        = l98_atacr_milr, l98_atacr_moar, l98_genii, l98_p3l, l98_p4fl
+reticle_default_profile = l98_atacr_milr
+	
 	s3ds_reticle_size 	= 4.5
 	s3ds_eye_relief 	= 2.5
 	s3ds_exit_pupil		= 0.4	
@@ -42,7 +51,10 @@
 	ms_colors 			= scope_black, scope_red	
 	magnifications 		= 3-16
 
-![wpn_l96a1m]		
+![wpn_l96a1m]	
+reticle_profiles        = l98_atacr_milr, l98_atacr_moar, l98_genii, l98_p3l, l98_p4fl
+reticle_default_profile = l98_atacr_milr
+	
 	s3ds_reticle_size 	= 4.5
 	s3ds_eye_relief 	= 2.5
 	s3ds_exit_pupil		= 0.4	
@@ -60,6 +72,8 @@
 	magnifications 		= 6	
 
 ![wpn_fal_aus_kit_aus_tri];acog
+reticle_profiles        = acog_ta11_donut, acog_ta11e_chevron, acog_ta31_300blk, acog_ta31_crosshair, acog_ta31_rco_chevron, acog_ta31h_horseshoe_dot, acog_ta33_horseshoe_dot, acog_ta50_crosshair
+reticle_default_profile = acog_ta11_donut
 	s3ds_reticle_size 	= 4.2
 	s3ds_eye_relief 	= 2
 	s3ds_exit_pupil		= 0.56
@@ -80,6 +94,9 @@
 	magnifications 		= 1,4
 	
 ![wpn_fal_aus_kit_fal_leup];leupold
+reticle_profiles        = cqbss_7.62_cmr_w, cqbss_acss_griffin_mil, cqbss_acss_griffin_mil_m8, cqbss_eotech_vudu, cqbss_h_27d, cqbss_m_tmr
+reticle_default_profile = cqbss_m_tmr
+
 	s3ds_reticle_size 	= 4.35
 	s3ds_eye_relief 	= 4
 	s3ds_exit_pupil		= 0.4	
@@ -117,6 +134,9 @@
 	magnifications		= 3	
 	
 ![wpn_k98_mod]	
+reticle_profiles        = k98_fml, k98_fml1, k98_fml_mb, k98_fml_t1, k98_fml_tr1h
+reticle_default_profile = k98_fml
+
 	s3ds_reticle_size 	= 4.6
 	s3ds_eye_relief 	= 3.1
 	s3ds_reticle_type 	= 2
@@ -126,6 +146,8 @@
 	magnifications 		= 3-24
 	
 ![wpn_k98_mod_skeet]
+reticle_profiles        = k98_fml_nv, k98_fml1_nv, k98_fml_mb_nv, k98_fml_t1_nv, k98_fml_tr1h_nv
+
 	s3ds_reticle_size 	= 4.6
 	s3ds_eye_relief 	= 3.1
 	s3ds_ffp			= 1	
@@ -136,6 +158,9 @@
 	magnifications		= 3-24
 
 ![wpn_k98_mod_silen98]
+reticle_profiles        = k98_fml, k98_fml1, k98_fml_mb, k98_fml_t1, k98_fml_tr1h
+reticle_default_profile = k98_fml
+
 	s3ds_reticle_size 	= 4.6
 	s3ds_eye_relief 	= 3.1
 	s3ds_reticle_type 	= 2
@@ -145,6 +170,8 @@
 	magnifications		= 3-24
 	
 ![wpn_k98_mod_silen98_skeet]
+reticle_profiles        = k98_fml_nv, k98_fml1_nv, k98_fml_mb_nv, k98_fml_t1_nv, k98_fml_tr1h_nv
+
 	s3ds_reticle_size 	= 4.6
 	s3ds_eye_relief 	= 3.1
 	s3ds_ffp			= 1	
@@ -155,6 +182,9 @@
 	magnifications		= 3-24
 	
 ![wpn_k98_mauser_kit]
+reticle_profiles        = k98_fml, k98_fml1, k98_fml_mb, k98_fml_t1, k98_fml_tr1h
+reticle_default_profile = k98_fml
+
 	s3ds_reticle_size 	= 4.6
 	s3ds_eye_relief 	= 3.1
 	s3ds_reticle_type 	= 2
@@ -164,6 +194,8 @@
 	magnifications		= 3-24
 	
 ![wpn_k98_mauser_kit_skeet]
+reticle_profiles        = k98_fml_nv, k98_fml1_nv, k98_fml_mb_nv, k98_fml_t1_nv, k98_fml_tr1h_nv
+
 	s3ds_reticle_size 	= 4.6
 	s3ds_eye_relief 	= 3.1
 	s3ds_ffp			= 1	
@@ -174,61 +206,86 @@
 	magnifications		= 3-24
 
 ![wpn_remington700]
+reticle_profiles        = r700_fine_duplex, r700_firedot_duplex, r700_firedot_tri-moa, r700_impact-23-moa, r700_impact-29-moa, r700_tmoa
+reticle_default_profile = r700_fine_duplex
+
 	s3ds_reticle_size 	= 4.4
 	s3ds_eye_relief 	= 4
 	s3ds_exit_pupil		= 0.45
 	magnifications		= 3-12	
 
 ![wpn_remington700_archangel]
+reticle_profiles        = r700_fine_duplex, r700_firedot_duplex, r700_firedot_tri-moa, r700_impact-23-moa, r700_impact-29-moa, r700_tmoa
+reticle_default_profile = r700_fine_duplex
+
 	s3ds_reticle_size 	= 4.4
 	s3ds_eye_relief 	= 4
 	s3ds_exit_pupil		= 0.45
 	magnifications		= 3-18
 
 ![wpn_remington700_mod_x_gen3]
+reticle_profiles        = r700_fine_duplex, r700_firedot_duplex, r700_firedot_tri-moa, r700_impact-23-moa, r700_impact-29-moa, r700_tmoa
+reticle_default_profile = r700_fine_duplex
+
 	s3ds_reticle_size 	= 4.4
 	s3ds_eye_relief 	= 4
 	s3ds_exit_pupil		= 0.45
 	magnifications		= 3-18	
 
 ![wpn_remington700_mod_x_gen3_pn23]
+reticle_profiles        = r700_fine_duplex_nv, r700_firedot_duplex_nv, r700_firedot_tri-moa_nv , r700_impact-23-moa_nv , r700_impact-29-moa_nv , r700_tmoa_nv
+
 	s3ds_image_type		= 1
 	s3ds_reticle_type 	= 1
 	ms_count 			= 0	
 	magnifications		= 3-18
 	
 ![wpn_remington700_mod_x_gen3_skeet]
+reticle_profiles        = r700_fine_duplex_hv, r700_firedot_duplex_hv, r700_firedot_tri-moa_hv, r700_impact-23-moa_hv, r700_impact-29-moa_hv, r700_tmoa_hv
+
 	s3ds_image_type		= 2
 	s3ds_reticle_type 	= 1	
 	ms_count			= 2	
 	magnifications		= 3-18
 
 ![wpn_remington700_magpul_pro]
+reticle_profiles        = r700_fine_duplex, r700_firedot_duplex, r700_firedot_tri-moa, r700_impact-23-moa, r700_impact-29-moa, r700_tmoa
+reticle_default_profile = r700_fine_duplex
+
 	s3ds_reticle_size 	= 4.4
 	s3ds_eye_relief 	= 4
 	s3ds_exit_pupil		= 0.45
 	magnifications		= 3-18
 	
 ![wpn_remington700_magpul_pro_pn23]
+reticle_profiles        = r700_fine_duplex_nv, r700_firedot_duplex_nv, r700_firedot_tri-moa_nv , r700_impact-23-moa_nv , r700_impact-29-moa_nv , r700_tmoa_nv
+
 	s3ds_image_type		= 1
 	s3ds_reticle_type 	= 1
 	ms_count 			= 0	
 	magnifications		= 3-18
 	
 ![wpn_remington700_mod_x_gen3_skeet]
-	s3ds_image_type		= 2
+reticle_profiles        = r700_fine_duplex_hv, r700_firedot_duplex_hv, r700_firedot_tri-moa_hv, r700_impact-23-moa_hv, r700_impact-29-moa_hv, r700_tmoa_hv
+
+	;s3ds_image_type		= 2
 	s3ds_reticle_type 	= 1	
 	ms_count			= 2	
 	magnifications		= 3-18
 	
 ![wpn_remington700_lapua700]
+reticle_profiles        = r700_fine_duplex, r700_firedot_duplex, r700_firedot_tri-moa, r700_impact-23-moa, r700_impact-29-moa, r700_tmoa
+reticle_default_profile = r700_fine_duplex
+
 	s3ds_reticle_size 	= 4.4
 	s3ds_eye_relief 	= 4
 	s3ds_exit_pupil		= 0.45
 	magnifications		= 3-24	
 
 ![wpn_remington700_lapua700_skeet]
-	s3ds_image_type		= 2
+reticle_profiles        = r700_fine_duplex_hv, r700_firedot_duplex_hv, r700_firedot_tri-moa_hv, r700_impact-23-moa_hv, r700_impact-29-moa_hv, r700_tmoa_hv
+
+	;s3ds_image_type		= 2
 	s3ds_reticle_type 	= 1	
 	ms_count			= 2	
 	magnifications		= 3-18
@@ -277,7 +334,7 @@
 	s3ds_exit_pupil		= 0.37	
 	s3ds_ffp			= 1
 	s3ds_reticle_type 	= 2
-    s3ds_image_type		= 2
+    ;s3ds_image_type		= 2
 	ms_count 			= 2
     ms_colors           = scope_black, scope_red
 	magnifications 		= 3.5-10
@@ -316,6 +373,9 @@
 	magnifications 		= 3-20	
 	
 ![wpn_steyr_scout_big]
+reticle_profiles        = scout_msr2, scout_p3l, scout_p4fl
+reticle_default_profile = scout_msr2
+
 	s3ds_reticle_size 	= 4.5
 	s3ds_eye_relief 	= 4.2
 	s3ds_exit_pupil		= 0.4	

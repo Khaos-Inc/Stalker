@@ -1,0 +1,59 @@
+-- scripted_canted_irons_ui_details.script
+-- Adds compatible canted sights to the weapon details panel using the same injection pattern as compatible magazines.
+
+local function clone_function(fn)
+	local dumped = string.dump(fn)
+	local cloned = loadstring(dumped)
+	local i = 1
+	while true do
+		local name = debug.getupvalue(fn, i)
+		if not name then break end
+		debug.upvaluejoin(cloned, i, fn, i)
+		i = i + 1
+	end
+	return cloned
+end
+
+local function get_details_canted_sights(obj)
+	if not (scripted_canted_irons and obj and IsWeapon(obj)) then return nil end
+	local getter = scripted_canted_irons.get_compatible_sections
+	if not getter then return nil end
+	local sights = getter(obj)
+	if sights and #sights > 0 then return sights end
+	return nil
+end
+
+if ui_itm_details and ui_itm_details.UIItemSheet and not ui_itm_details.UIItemSheet.ResetSuperSuper_canted_sights then
+	ui_itm_details.UIItemSheet.ResetSuperSuper_canted_sights = clone_function(ui_itm_details.UIItemSheet.Reset)
+
+	ui_itm_details.UIItemSheet.Reset = function(self, obj)
+		local sights = get_details_canted_sights(obj)
+		if not sights then
+			ui_itm_details.UIItemSheet.ResetSuperSuper_canted_sights(self, obj)
+			return
+		end
+
+		local sec = ini_sys:r_string_ex(obj:section(), "parent_section") or obj:section()
+		local scopes = parse_list(ini_sys, sec, "scopes")
+		local has_detachable_scopes = scopes and #scopes > 0
+
+		local original_AddLine = ui_itm_details.UIItemSheet.AddLine
+		local injected = false
+
+		ui_itm_details.UIItemSheet.AddLine = function(self_inner, xml, offset)
+			original_AddLine(self_inner, xml, offset)
+			local after_scope = self_inner.CC["scope"] ~= nil
+			local after_integrated_scope_anchor = not has_detachable_scopes and self_inner.CC["ammo"] ~= nil
+			if not injected and (after_scope or after_integrated_scope_anchor) then
+				injected = true
+				local xml_inner = self_inner.xml
+				self_inner:AddText(xml_inner, "text_b_l", 0, game.translate_string("st_canted_compatible_sights"))
+				self_inner.CC["compatible_canted_sights"] = self_inner:AddContainer(xml_inner, "cont", 0, sights)
+				original_AddLine(self_inner, xml_inner, 0)
+			end
+		end
+
+		ui_itm_details.UIItemSheet.ResetSuperSuper_canted_sights(self, obj)
+		ui_itm_details.UIItemSheet.AddLine = original_AddLine
+	end
+end

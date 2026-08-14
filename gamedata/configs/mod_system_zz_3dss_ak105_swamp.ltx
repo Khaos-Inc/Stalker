@@ -1,14 +1,36 @@
 ![wpn_ak105_swamp]
 scopes		= 1p59, 1pn93n2_1gs, ac10632, acog, ado, aim_acro, aimpoint, bravo4, c-more, c79, cortex, e0t2, e0t2_magd, echo1, ekp8_18, exps3, gauss_sight, hamr, he510, kemper, leupold, marchf, march_f_shorty, march_f_shorty_alt, mark8_rmr, mepro, pk6, pn23, ps320, romeo4, spec_alt, specter, t12, triji, uh1_magd, uh2
 	
-lewd_lens_hide_enabled       = true
-lewd_lens_hide_bone          = lens
-lewd_lens_hide_delays        = 0.1,0
-lewd_lens_hide_aim_mode      = true, false, false	
+lens_hide_enabled       = true
+lens_hide_bone          = lens
+lens_hide_delays        = 0.1,0
+lens_hide_aim_mode      = true, false, false	
 
 scope_dynamic_zoom               = off
 scope_zoom_factor                = 0
 
+;---------------------------------------------SCRIPTED CANTED SIGHTS-----------------------------------
+canted_sights 		 = canted_deltapoint, canted_docter, canted_t12
+
+canted_sights_bone	  = wpn_body
+canted_sights_pos   = 0.001650, 0.071100, 0.271000
+canted_sights_rot   = 0, 0, 0
+canted_sights_scale = 1.115000, 1.115000, 1.115000
+
+open_slots	= 1, 2
+canted_rds_position1 = 0.001650, 0.071100, 0.271000
+canted_rds_position2 = 0.001650, 0.071100, 0.384500
+
+canted_aim_pos_canted_deltapoint = -0.108225, -0.069479, -0.05
+canted_aim_rot_canted_deltapoint = 0.000147, -0.000144, 0.825
+
+canted_aim_pos_canted_docter     = -0.108372, -0.064448, -0.05
+canted_aim_rot_canted_docter     = 0.000147, -0.000144, 0.825
+
+canted_aim_pos_canted_t12        = -0.108078, -0.069675, -0.05
+canted_aim_rot_canted_t12        = 0.000147, -0.000144, 0.825
+
+;------------------------------------------------------------------------------------------------------
 ![wpn_ak105_swamp_hud]
 item_position                    = 0.000104, -0.000122, 0
 fire_point                       = 0, 0, 0
@@ -26,10 +48,15 @@ anm_reload_empty        		= wpn_hand_aksu_tact_reload_empty_swamp, wpn_aksu_tact
         aim_hud_offset_rot               = 0.000147, -0.000144, 0
         aim_hud_offset_rot_16x9          = 0.000147, -0.000144, 0
 		
-        aim_hud_offset_alt_pos           = -0.138268, -0.077075, -0.031722
-        aim_hud_offset_alt_pos_16x9      = -0.138268, -0.077075, -0.031722
-        aim_hud_offset_alt_rot           = 0.000147, -0.000144, 0.7
-        aim_hud_offset_alt_rot_16x9      = 0.000147, -0.000144, 0.7
+        aim_hud_offset_alt_pos           = -0.115126, -0.092451, -0.031722
+        aim_hud_offset_alt_pos_16x9      = -0.115126, -0.092451, -0.031722
+        aim_hud_offset_alt_rot           = 0.000147, -0.000144, 0.9
+        aim_hud_offset_alt_rot_16x9      = 0.000147, -0.000144, 0.9
+
+        lowered_hud_offset_pos           = 0.083602, -0.047941, -0.00833
+        lowered_hud_offset_pos_16x9      = 0.083602, -0.047941, -0.00833
+        lowered_hud_offset_rot           = -0.070405, -0.622748, 0.349937
+        lowered_hud_offset_rot_16x9      = -0.070405, -0.622748, 0.349937
 		
         base_hud_offset_pos              = -0.03258, -0.027463, 0.026235
         base_hud_offset_pos_16x9         = -0.03258, -0.027463, 0.026235
@@ -345,7 +372,7 @@ item_visual                              = dynamics\weapons\wpn_ak105\wpn_ak105_
 		
 ;----------------------------------------------------------------------------------------
 [wpn_ak105_swamp_e0t2_magd_off]:wpn_ak105_swamp
-hud						= wpn_ak105_swamp_e0t2_magd_off_hud
+;hud						= wpn_ak105_swamp_e0t2_magd_off_hud
 
 1icon_layer			    = e0t2_magd_off_x
 1icon_layer_x			= 49
@@ -357,7 +384,7 @@ item_visual                              = dynamics\weapons\wpn_ak105\wpn_ak105_
         aim_hud_offset_pos_16x9          = -0.083401, 0.006495, -0.05
 		
 ;----------------------------------------------------------------------------------------
-[wpn_ak105_swamp_echo1]:wpn_ak105_swamp, echo1
+[wpn_ak105_swamp_echo1]:wpn_ak105_swamp, echo1_s
 hud						= wpn_ak105_swamp_echo1_hud
 
 1icon_layer			    = echo1_x
@@ -545,7 +572,7 @@ hud						= wpn_ak105_swamp_uh1_magd_off_hud
 1icon_layer_y			= -23
 
 [wpn_ak105_swamp_uh1_magd_off_hud]:wpn_ak105_swamp_hud
-item_visual                              = dynamics\weapons\wpn_ak105\wpn_ak105_swamp_uh1_magd_off_hud.ogf
+;item_visual                              = dynamics\weapons\wpn_ak105\wpn_ak105_swamp_uh1_magd_off_hud.ogf
         aim_hud_offset_pos               = -0.083419, 0.003945, -0.05
         aim_hud_offset_pos_16x9          = -0.083419, 0.003945, -0.05
 

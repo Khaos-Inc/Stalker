@@ -169,8 +169,11 @@ inv_grid_height                                        = 1
 inv_grid_x                                             = 7
 inv_grid_y                                             = 3
 cost                                                   = 0
+;use1_allow_db         					          	   = true											   
 use1_functor                					       = ui_pda_npc_tab.menu_view
-use1_action_functor         					       = ui_pda_npc_tab.use_view
+use1_action_functor         					       = ui_pda_npc_tab.use_view 
+;slot												   = 13 
+
 
 [itm_pda_uncommon]:itm_pda_common
 
@@ -778,6 +781,25 @@ zone_class_35		                                   = zone_mosquito_bald_weak
 zone_class_36		                                   = zone_mosquito_bald_average
 zone_class_37		                                   = zone_mosquito_bald_strong
 
+zone_class_38										   = zone_mine_darkness
+zone_class_39										   = zone_mine_flash
+zone_class_40										   = zone_mine_ghost
+zone_class_41										   = zone_mine_gold
+zone_class_42										   = zone_mine_green_dragon
+zone_class_43										   = zone_mine_mefistotel
+zone_class_44										   = zone_mine_net
+zone_class_45										   = zone_mine_point
+zone_class_46										   = zone_mine_radar
+zone_class_47										   = zone_mine_sphere
+
+zone_class_48										   = zone_mine_acid
+zone_class_49										   = zone_mine_electra
+zone_class_50										   = zone_mine_springboard
+zone_class_51										   = zone_mine_vortex
+zone_class_52										   = zone_mine_blast
+zone_class_53										   = zone_mine_zharka
+zone_class_54										   = zone_mine_vapour
+
 zone_freq_1			                                   = 0.05, 2
 zone_freq_2			                                   = 0.05, 2
 zone_freq_3			                                   = 0.05, 2
@@ -815,6 +837,23 @@ zone_freq_34		                                   = 0.05, 2
 zone_freq_35		                                   = 0.05, 2
 zone_freq_36		                                   = 0.05, 2
 zone_freq_37		                                   = 0.05, 2
+zone_freq_38		                                   = 0.05, 2
+zone_freq_39										   = 0.05, 2
+zone_freq_40										   = 0.05, 2
+zone_freq_41										   = 0.05, 2
+zone_freq_42										   = 0.05, 2
+zone_freq_43										   = 0.05, 2
+zone_freq_44										   = 0.05, 2
+zone_freq_45										   = 0.05, 2
+zone_freq_46										   = 0.05, 2
+zone_freq_47										   = 0.05, 2
+zone_freq_48										   = 0.05, 2
+zone_freq_49										   = 0.05, 2
+zone_freq_50										   = 0.05, 2
+zone_freq_51										   = 0.05, 2
+zone_freq_52										   = 0.05, 2
+zone_freq_53										   = 0.05, 2
+zone_freq_54										   = 0.05, 2
 
 [detector_scientific_hud]:detector_base_hud
 
@@ -1055,8 +1094,8 @@ anm_throw_end										   = tactical_torch_throw_end, idle_tactical_torch
 
 [flashlight_definition]
 type                                                   = 2 ; type  0-Direct 1-Point 2-Spot 3-OMNIPART 4-Reflected
-range                                                  = 20 ; range                 <in meters>
-range_r2                                               = 20 ; range                 <in meters>
+range                                                  = 30 ; range                 <in meters>
+range_r2                                               = 30 ; range                 <in meters>
 color                                                  = 0.8,0.7,0.8,0.2 ; four color components <r,g,b,a> 0.f<X<3.f
 color_r2                                               = 1.0,0.9,1.0,0.9 ; four color components <r,g,b,a> 0.f<X<3.f
 color_animator                                         = empty ; color animator name   (empty - not using animator) //light_torch_01
@@ -1143,8 +1182,8 @@ tier                                                   = 5
 
 [torch_definition]
 type											= 2										; type  0-Direct 1-Point 2-Spot 3-OMNIPART 4-Reflected
-range           								= 25									; range                 <in meters>
-range_r2        								= 25			 						; range                 <in meters>
+range           								= 38									; range                 <in meters>
+range_r2        								= 38			 						; range                 <in meters>
 color           								= 0.8,0.7,0.7,0.2						; four color components <r,g,b,a> 0.f<X<3.f
 color_r2        								= 1.0,0.9,0.9,0.9						; four color components <r,g,b,a> 0.f<X<3.f
 color_animator  								= empty									; color animator name   (empty - not using animator) //light_torch_01

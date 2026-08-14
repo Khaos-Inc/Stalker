@@ -1,0 +1,99 @@
+; 3DSS GAMMA CAMO SYSTEM - EXAMPLE CONFIG
+;
+; Save an actual weapon configuration as an .ltx file in:
+; gamedata\configs\items\settings\camo\
+;
+; The exact base weapon section must be present. Camo variants use the base
+; section followed by an underscore and a unique suffix.
+;
+; Texture keys such as body, metal, and furniture are arbitrary. Matching keys
+; identify which texture from each section belongs to the same weapon material.
+; Texture paths may omit the .dds extension.
+
+[wpn_example]
+camo_name                         = st_3dss_camo_base
+camo_icon                         = ui_camo_base
+body                              = dynamics\weapons\example\base\weapon_body
+metal                             = dynamics\weapons\example\base\weapon_metal
+furniture                         = dynamics\weapons\example\base\weapon_furniture
+
+; This variant is available immediately because camo_unlock_required is absent.
+; It can drop for any faction at the uncommon rarity.
+
+[wpn_example_tan]
+camo_name                         = st_3dss_camo_tan
+camo_icon                         = ui_camo_tan
+camo_rarity                       = uncommon
+body                              = dynamics\weapons\example\tan\tan_body
+metal                             = dynamics\weapons\example\tan\tan_metal
+furniture                         = dynamics\weapons\example\tan\tan_furniture
+
+; This variant must first be discovered on a weapon.
+; Before discovery, it remains visible on the camo wheel with a transparent icon
+; and cannot be selected.
+;
+; The unlock ID allows discovery to unlock matching camos on other weapons when
+; "Cross-weapon camo discovery" is enabled in the MCM.
+;
+; Named unlock IDs always share discovery when both the arbitrary key suffix and
+; value match. They are not controlled by the cross-weapon discovery toggle:
+;
+; camo_unlock_id_weapon_kit        = example_black_kit
+;
+; For example, discovering any camo with that exact key and value also unlocks
+; matching camos on the base gun or any of its weapon-kit variants.
+;
+; It only drops for the listed factions. Faction-specific rarities override the
+; general rarity. Setting a faction to none excludes it.
+
+[wpn_example_black]
+camo_name                         = st_3dss_camo_black
+camo_icon                         = ui_camo_black
+camo_unlock_required              = true
+camo_unlock_id                    = black
+camo_unlock_id_weapon_kit         = example_black_kit
+camo_drop_factions                = monolith, killer
+camo_rarity                       = rare
+camo_rarity_monolith              = uncommon
+camo_rarity_killer                = none
+body                              = dynamics\weapons\example\black\black_body
+metal                             = dynamics\weapons\example\black\black_metal
+furniture                         = dynamics\weapons\example\black\black_furniture
+
+; DROP RULES
+;
+; camo_rarity = common | uncommon | rare | very_rare | legendary | none
+;   Makes a variant eligible to drop using the named rarity. The default
+;   relative weights are defined in CAMO_RARITY_WEIGHTS near the top of
+;   z_3dss_gamma_camo_system.script, where they can be tuned in one place.
+;
+; camo_drop_factions = faction_1, faction_2
+;   Restricts the variant to the listed factions. This list takes precedence
+;   over its general rarity.
+;
+; camo_rarity_faction = rarity
+;   Overrides camo_rarity for one faction. Use none to prevent the camo from
+;   dropping for that faction.
+;
+; AUTOMATIC BASE
+;
+; The base section does not require a rarity. It automatically joins a
+; faction's drop pool whenever at least one variant is eligible for that faction.
+; Its missing rarity defaults to common. Add camo_rarity to the base section to
+; override that behavior.
+;
+; CAMO NAMES AND ICONS
+;
+; camo_name should contain a localization string ID defined in an XML string
+; table, for example:
+;
+; <string id="st_3dss_camo_black">
+;     <text>Black</text>
+; </string>
+;
+; camo_icon should contain a texture ID defined in a texture-description XML,
+; for example:
+;
+; <file name="ui\camo_ui_icon">
+;     <texture id="ui_camo_black" x="0" y="0" width="64" height="64" />
+; </file>

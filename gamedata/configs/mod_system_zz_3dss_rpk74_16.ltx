@@ -3,11 +3,6 @@
 <scopes						 = point_aimpro, compm4s, rakurs
 !hud_fov
 
-lewd_lens_hide_enabled       = true
-lewd_lens_hide_bone          = lens
-lewd_lens_hide_delays        = 0.1,0
-lewd_lens_hide_aim_mode      = true, false, false
-
 icons_texture		= ui\ui_icon_rpk16_box
 inv_grid_width     = 5
 inv_grid_height    = 2
@@ -20,9 +15,42 @@ upgr_icon_y                              = 100
 upgr_icon_width                          = 300
 upgr_icon_height                         = 150
 
+use_alt_aim_hud		= true
+
         silencer_x                  = 221
         silencer_y                  = 5
-		
+
+lens_hide_enabled       = true
+lens_hide_bone          = lens
+lens_hide_delays        = 0.1,0
+lens_hide_aim_mode      = true, false, false
+;---------------------------------------------SCRIPTED CANTED SIGHTS-----------------------------------
+canted_sights = canted_kac, canted_deltapoint, canted_docter, canted_t12
+
+canted_sights_bone         = wpn_body
+canted_sights_pos   = -0.001875, 0.076875, 0.020625
+canted_sights_rot   = 0, 0, 0
+canted_sights_scale = 1.130000, 1.130000, 1.130000
+front_iron_pos      = -0.001875, 0.076875, 0.340625
+front_iron_rot      = 0, 0, 0
+front_iron_scale    = 1.130000, 1.130000, 1.130000
+
+open_slots 			 = 1, 2
+canted_rds_position1 = -0.001875, 0.076875, 0.017500
+canted_rds_position2 = -0.001875, 0.076875, 0.227500
+
+canted_aim_pos_canted_kac        = -0.104213, -0.082897, -0.04
+canted_aim_rot_canted_kac        = 0, 0, 0.825
+
+canted_aim_pos_canted_deltapoint = -0.103786, -0.073404, -0.04
+canted_aim_rot_canted_deltapoint = 0, 0, 0.825
+
+canted_aim_pos_canted_docter     = -0.103946, -0.068461, -0.04
+canted_aim_rot_canted_docter     = 0, 0, 0.825
+
+canted_aim_pos_canted_t12        = -0.10376, -0.073724, -0.04
+canted_aim_rot_canted_t12        = 0, 0, 0.825
+;------------------------------------------------------------------------------------------------------		
 ![wpn_rpk74_16_hud]
 fire_point					= 0, 0, 0
 
@@ -39,6 +67,11 @@ anm_shots_aim              		= rpk16_vgrip_shoot_aim_3dss, shoot
         aim_hud_offset_rot               = -1e-06, -9.5e-05, 0
         aim_hud_offset_rot_16x9          = -1e-06, -9.5e-05, 0
 
+        aim_hud_offset_alt_pos           = -0.121313, -0.096903, -0.04
+        aim_hud_offset_alt_pos_16x9      = -0.121313, -0.096903, -0.04
+        aim_hud_offset_alt_rot           = -1e-06, -9.5e-05, 0.9
+        aim_hud_offset_alt_rot_16x9      = -1e-06, -9.5e-05, 0.9
+		
         base_hud_offset_pos              = -0.037138, -0.028272, 0.02245
         base_hud_offset_pos_16x9         = -0.037138, -0.028272, 0.02245
         base_hud_offset_rot              = 0, 0, 0.130847
@@ -250,12 +283,12 @@ item_visual                	 	 = dynamics\weapons\wpn_rpk74_16\wpn_rpk74_16_t12_
 1icon_layer_x	= 79
 1icon_layer_y	= -14	
 ![wpn_rpk74_16_acog_hud]
-        aim_hud_offset_pos               = -0.087979, 0.006028, -0.122864
-        aim_hud_offset_pos_16x9          = -0.087979, 0.006028, -0.122864
+        aim_hud_offset_pos               = -0.087979, 0.006028, -0.102717
+        aim_hud_offset_pos_16x9          = -0.087979, 0.006028, -0.102717
         aim_hud_offset_rot               = -1e-06, -9.5e-05, 0
         aim_hud_offset_rot_16x9          = -1e-06, -9.5e-05, 0
 		
-![wpn_rpk74_16_triji]:acog_s
+![wpn_rpk74_16_triji]:triji_s
 icons_texture		= ui\ui_icon_rpk16_box
 inv_grid_width     = 5
 inv_grid_height    = 2
@@ -270,8 +303,8 @@ inv_grid_y         = 0
 2icon_layer_y	= -10
 		use_alt_aim_hud	= true
 ![wpn_rpk74_16_triji_hud]
-        aim_hud_offset_pos               = -0.087979, 0.006028, -0.122864
-        aim_hud_offset_pos_16x9          = -0.087979, 0.006028, -0.122864
+        aim_hud_offset_pos               = -0.087979, 0.006028, -0.102717
+        aim_hud_offset_pos_16x9          = -0.087979, 0.006028, -0.102717
         aim_hud_offset_rot               = -1e-06, -9.5e-05, 0
         aim_hud_offset_rot_16x9          = -1e-06, -9.5e-05, 0
 
@@ -285,8 +318,8 @@ inv_grid_y         = 0
 1icon_layer_x	= 60
 1icon_layer_y	= -19
 ![wpn_rpk74_16_specter_hud]
-        aim_hud_offset_pos               = -0.08719, 0.00421, -0.099985
-        aim_hud_offset_pos_16x9          = -0.08719, 0.00421, -0.099985
+        aim_hud_offset_pos               = -0.08719, 0.00421, -0.079513
+        aim_hud_offset_pos_16x9          = -0.08719, 0.00421, -0.079513
         aim_hud_offset_rot               = -1e-06, -9.5e-05, 0
         aim_hud_offset_rot_16x9          = -1e-06, -9.5e-05, 0
 		
@@ -305,8 +338,8 @@ inv_grid_y         = 0
 2icon_layer_y	= -10
 		use_alt_aim_hud = true
 ![wpn_rpk74_16_spec_alt_hud]
-        aim_hud_offset_pos               = -0.08719, 0.00421, -0.099985
-        aim_hud_offset_pos_16x9          = -0.08719, 0.00421, -0.099985
+        aim_hud_offset_pos               = -0.08719, 0.00421, -0.079513
+        aim_hud_offset_pos_16x9          = -0.08719, 0.00421, -0.079513
         aim_hud_offset_rot               = -1e-06, -9.5e-05, 0
         aim_hud_offset_rot_16x9          = -1e-06, -9.5e-05, 0
 
@@ -371,12 +404,13 @@ inv_grid_y         = 0
         aim_hud_offset_rot_16x9          = -1e-06, -9.5e-05, 0
 		
 ![wpn_rpk74_16_susat]:susat_s
+open_slots 			 = 2
 1icon_layer		= susat_x
 1icon_layer_x	= 93
 1icon_layer_y	= -14	
 ![wpn_rpk74_16_susat_hud]
-        aim_hud_offset_pos               = -0.087324, -0.007253, -0.12744
-        aim_hud_offset_pos_16x9          = -0.087324, -0.007253, -0.12744
+        aim_hud_offset_pos               = -0.087324, -0.007253, -0.087511
+        aim_hud_offset_pos_16x9          = -0.087324, -0.007253, -0.087511
         aim_hud_offset_rot               = -1e-06, -9.5e-05, 0
         aim_hud_offset_rot_16x9          = -1e-06, -9.5e-05, 0
 		
@@ -392,6 +426,8 @@ inv_grid_y         = 0
 ;----------------------------------------------------------------------------------------		
 [wpn_rpk74_16_gee36]:wpn_rpk74_16, gee36_s
 hud                     = wpn_rpk74_16_gee36_hud
+
+open_slots 			 = 2
 
 1icon_layer				= gee36_x
 1icon_layer_x			= 73
@@ -412,6 +448,8 @@ item_visual                              = dynamics\weapons\wpn_rpk74_16\wpn_rpk
 [wpn_rpk74_16_c79]:wpn_rpk74_16, c79_s
 hud                     = wpn_rpk74_16_c79_hud
 
+open_slots 			 = 2
+
 1icon_layer				= c79_x
 1icon_layer_x			= 85
 1icon_layer_y			= -15
@@ -420,8 +458,8 @@ use_alt_aim_hud          = true
 
 [wpn_rpk74_16_c79_hud]:wpn_rpk74_16_hud
 item_visual                              = dynamics\weapons\wpn_rpk74_16\wpn_rpk74_16_c79_hud.ogf	
-        aim_hud_offset_pos               = -0.087395, 0.002157, -0.093788
-        aim_hud_offset_pos_16x9          = -0.087395, 0.002157, -0.093788
+        aim_hud_offset_pos               = -0.087395, 0.002157, -0.051999
+        aim_hud_offset_pos_16x9          = -0.087395, 0.002157, -0.051999
 		
         aim_hud_offset_alt_pos           = -0.087525, -0.024907, -0.03
         aim_hud_offset_alt_pos_16x9      = -0.087525, -0.024907, -0.03
@@ -485,8 +523,8 @@ hud                     = wpn_rpk74_16_ps320_hud
 
 [wpn_rpk74_16_ps320_hud]:wpn_rpk74_16_hud
 item_visual                              = dynamics\weapons\wpn_rpk74_16\wpn_rpk74_16_ps320_hud.ogf	
-        aim_hud_offset_pos               = -0.087508, 0.005065, -0.108422
-        aim_hud_offset_pos_16x9          = -0.087508, 0.005065, -0.108422
+        aim_hud_offset_pos               = -0.087508, 0.005065, -0.086563
+        aim_hud_offset_pos_16x9          = -0.087508, 0.005065, -0.086563
 ;----------------------------------------------------------------------------------------		
 [wpn_rpk74_16_uh1_magd]:wpn_rpk74_16, uh1_magd_s
 hud                     = wpn_rpk74_16_uh1_magd_hud
@@ -497,8 +535,8 @@ hud                     = wpn_rpk74_16_uh1_magd_hud
 
 [wpn_rpk74_16_uh1_magd_hud]:wpn_rpk74_16_hud
 item_visual                              = dynamics\weapons\wpn_rpk74_16\wpn_rpk74_16_uh1_magd_hud.ogf	
-        aim_hud_offset_pos               = -0.087504, 0.001781, -0.103932
-        aim_hud_offset_pos_16x9          = -0.087504, 0.001781, -0.103932
+        aim_hud_offset_pos               = -0.087504, 0.001781, -0.091915
+        aim_hud_offset_pos_16x9          = -0.087504, 0.001781, -0.091915
 ;----------------------------------------------------------------------------------------		
 [wpn_rpk74_16_uh1_magd_off]:wpn_rpk74_16
 hud                     = wpn_rpk74_16_uh1_magd_off_hud

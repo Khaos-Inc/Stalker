@@ -1,0 +1,332 @@
+-- UI panel for scripted canted irons placement.
+
+GUI = nil
+
+class "ScriptedCantedIronsUI" (CUIScriptWnd)
+
+function ScriptedCantedIronsUI:__init() super()
+	self:InitControls()
+end
+
+function ScriptedCantedIronsUI:__finalize() end
+
+function ScriptedCantedIronsUI:InitControls()
+	self:SetWndRect(Frect():set(0, 0, 1024, 768))
+	self:SetAutoDelete(true)
+
+	self.xml = CScriptXmlInit()
+	local xml = self.xml
+	xml:ParseFile("scripted_canted_irons_ui.xml")
+
+	self.my_wnd = xml:InitStatic("background", self)
+
+	self.text_mode = xml:InitTextWnd("background:text2", self.my_wnd)
+	self.text_mode:SetTextAlignment(0)
+
+	self.btn_xup = xml:Init3tButton("background:button_x_up", self.my_wnd)
+	self.btn_xup:TextControl():SetText("X+")
+	self:Register(self.btn_xup, "button_x_up")
+	self:AddCallback("button_x_up", ui_events.BUTTON_CLICKED, self.OnXUp, self)
+
+	self.btn_yup = xml:Init3tButton("background:button_y_up", self.my_wnd)
+	self.btn_yup:TextControl():SetText("Y+")
+	self:Register(self.btn_yup, "button_y_up")
+	self:AddCallback("button_y_up", ui_events.BUTTON_CLICKED, self.OnYUp, self)
+
+	self.btn_zup = xml:Init3tButton("background:button_z_up", self.my_wnd)
+	self.btn_zup:TextControl():SetText("Z+")
+	self:Register(self.btn_zup, "button_z_up")
+	self:AddCallback("button_z_up", ui_events.BUTTON_CLICKED, self.OnZUp, self)
+
+	self.btn_xdown = xml:Init3tButton("background:button_x_down", self.my_wnd)
+	self.btn_xdown:TextControl():SetText("X-")
+	self:Register(self.btn_xdown, "button_x_down")
+	self:AddCallback("button_x_down", ui_events.BUTTON_CLICKED, self.OnXDown, self)
+
+	self.btn_ydown = xml:Init3tButton("background:button_y_down", self.my_wnd)
+	self.btn_ydown:TextControl():SetText("Y-")
+	self:Register(self.btn_ydown, "button_y_down")
+	self:AddCallback("button_y_down", ui_events.BUTTON_CLICKED, self.OnYDown, self)
+
+	self.btn_zdown = xml:Init3tButton("background:button_z_down", self.my_wnd)
+	self.btn_zdown:TextControl():SetText("Z-")
+	self:Register(self.btn_zdown, "button_z_down")
+	self:AddCallback("button_z_down", ui_events.BUTTON_CLICKED, self.OnZDown, self)
+
+	self.btn_mode_pos = xml:Init3tButton("background:button_mode_pos", self.my_wnd)
+	self.btn_mode_pos:TextControl():SetText("Pos")
+	self:Register(self.btn_mode_pos, "button_mode_pos")
+	self:AddCallback("button_mode_pos", ui_events.BUTTON_CLICKED, self.OnModePos, self)
+
+	self.btn_mode_rot = xml:Init3tButton("background:button_mode_rot", self.my_wnd)
+	self.btn_mode_rot:TextControl():SetText("Rot")
+	self:Register(self.btn_mode_rot, "button_mode_rot")
+	self:AddCallback("button_mode_rot", ui_events.BUTTON_CLICKED, self.OnModeRot, self)
+
+	self.btn_mode_scale = xml:Init3tButton("background:button_mode_scale", self.my_wnd)
+	self.btn_mode_scale:TextControl():SetText("Scale")
+	self:Register(self.btn_mode_scale, "button_mode_scale")
+	self:AddCallback("button_mode_scale", ui_events.BUTTON_CLICKED, self.OnModeScale, self)
+
+	self.btn_scale_up = xml:Init3tButton("background:button_scale_up", self.my_wnd)
+	self.btn_scale_up:TextControl():SetText("Scale Up")
+	self:Register(self.btn_scale_up, "button_scale_up")
+	self:AddCallback("button_scale_up", ui_events.BUTTON_CLICKED, self.OnScaleUp, self)
+
+	self.btn_scale_down = xml:Init3tButton("background:button_scale_down", self.my_wnd)
+	self.btn_scale_down:TextControl():SetText("Scale Down")
+	self:Register(self.btn_scale_down, "button_scale_down")
+	self:AddCallback("button_scale_down", ui_events.BUTTON_CLICKED, self.OnScaleDown, self)
+
+	self.precision_label = xml:InitStatic("background:precision_label", self.my_wnd)
+	self.precision_label:TextControl():SetText("Precision")
+	self.precision_slider = xml:InitTrackBar("background:precision_slider", self.my_wnd)
+	self.precision_slider:SetOptFBounds(0, 10)
+	self.precision_slider:SetStep(1)
+	self.precision_slider:SetFValue(scripted_canted_irons.get_precision_level())
+	self.precision_value = xml:InitTextWnd("background:precision_value", self.my_wnd)
+	self.last_precision_level = scripted_canted_irons.get_precision_level()
+
+	self.btn_target_mode = xml:Init3tButton("background:button_target_mode", self.my_wnd)
+	self:Register(self.btn_target_mode, "button_target_mode")
+	self:AddCallback("button_target_mode", ui_events.BUTTON_CLICKED, self.OnTargetMode, self)
+
+	self.btn_move_both = xml:Init3tButton("background:button_move_both", self.my_wnd)
+	self:Register(self.btn_move_both, "button_move_both")
+	self:AddCallback("button_move_both", ui_events.BUTTON_CLICKED, self.OnMoveBoth, self)
+
+	self.btn_model_mode = xml:Init3tButton("background:button_model_mode", self.my_wnd)
+	self:Register(self.btn_model_mode, "button_model_mode")
+	self:AddCallback("button_model_mode", ui_events.BUTTON_CLICKED, self.OnModelMode, self)
+
+	self.btn_reset_pos = xml:Init3tButton("background:button_reset_pos", self.my_wnd)
+	self.btn_reset_pos:TextControl():SetText("Reset Pos")
+	self:Register(self.btn_reset_pos, "button_reset_pos")
+	self:AddCallback("button_reset_pos", ui_events.BUTTON_CLICKED, self.OnResetPosition, self)
+
+	self.btn_reset_rot = xml:Init3tButton("background:button_reset_rot", self.my_wnd)
+	self.btn_reset_rot:TextControl():SetText("Reset Rot")
+	self:Register(self.btn_reset_rot, "button_reset_rot")
+	self:AddCallback("button_reset_rot", ui_events.BUTTON_CLICKED, self.OnResetRotation, self)
+
+	self.btn_reset_scale = xml:Init3tButton("background:button_reset_scale", self.my_wnd)
+	self.btn_reset_scale:TextControl():SetText("Reset Scale")
+	self:Register(self.btn_reset_scale, "button_reset_scale")
+	self:AddCallback("button_reset_scale", ui_events.BUTTON_CLICKED, self.OnResetScale, self)
+
+	self.btn_copy = xml:Init3tButton("background:button_copy_transform", self.my_wnd)
+	self.btn_copy:TextControl():SetText("Copy")
+	self:Register(self.btn_copy, "button_copy_transform")
+	self:AddCallback("button_copy_transform", ui_events.BUTTON_CLICKED, self.OnCopyTransform, self)
+
+	self.btn_paste = xml:Init3tButton("background:button_paste_transform", self.my_wnd)
+	self.btn_paste:TextControl():SetText("Paste")
+	self:Register(self.btn_paste, "button_paste_transform")
+	self:AddCallback("button_paste_transform", ui_events.BUTTON_CLICKED, self.OnPasteTransform, self)
+
+	self.btn_save = xml:Init3tButton("background:button_save_params", self.my_wnd)
+	self.btn_save:TextControl():SetText("Save to LTX")
+	self:Register(self.btn_save, "button_save_params")
+	self:AddCallback("button_save_params", ui_events.BUTTON_CLICKED, self.OnSave, self)
+
+	self.btn_save_rds_pos1 = xml:Init3tButton("background:button_save_rds_pos1", self.my_wnd)
+	self.btn_save_rds_pos1:TextControl():SetText("Save Pos 1")
+	self:Register(self.btn_save_rds_pos1, "button_save_rds_pos1")
+	self:AddCallback("button_save_rds_pos1", ui_events.BUTTON_CLICKED, self.OnSaveRdsPos1, self)
+
+	self.btn_save_rds_pos2 = xml:Init3tButton("background:button_save_rds_pos2", self.my_wnd)
+	self.btn_save_rds_pos2:TextControl():SetText("Save Pos 2")
+	self:Register(self.btn_save_rds_pos2, "button_save_rds_pos2")
+	self:AddCallback("button_save_rds_pos2", ui_events.BUTTON_CLICKED, self.OnSaveRdsPos2, self)
+
+	self.btn_save_rds_pos3 = xml:Init3tButton("background:button_save_rds_pos3", self.my_wnd)
+	self.btn_save_rds_pos3:TextControl():SetText("Save Pos 3")
+	self:Register(self.btn_save_rds_pos3, "button_save_rds_pos3")
+	self:AddCallback("button_save_rds_pos3", ui_events.BUTTON_CLICKED, self.OnSaveRdsPos3, self)
+
+	self.btn_clear_cache = xml:Init3tButton("background:button_clear_cache", self.my_wnd)
+	self.btn_clear_cache:TextControl():SetText("Clear LTX Cache")
+	self:Register(self.btn_clear_cache, "button_clear_cache")
+	self:AddCallback("button_clear_cache", ui_events.BUTTON_CLICKED, self.OnClearCache, self)
+
+	self.btn_weapon_movement = xml:Init3tButton("background:button_weapon_movement", self.my_wnd)
+	self:Register(self.btn_weapon_movement, "button_weapon_movement")
+	self:AddCallback("button_weapon_movement", ui_events.BUTTON_CLICKED, self.OnWeaponMovement, self)
+
+
+	self:UpdateModeLabel()
+end
+
+function ScriptedCantedIronsUI:UpdateModeLabel()
+	local mode_str = "Pos"
+	if scripted_canted_irons.key_mode == "rot" then
+		mode_str = "Rot"
+	elseif scripted_canted_irons.key_mode == "scale" then
+		mode_str = "Scale"
+	end
+	local target = scripted_canted_irons.get_move_both_mode() and "Both Irons"
+		or (scripted_canted_irons.get_target_mode() == "front" and "Front Iron" or "Rear Iron")
+	self.text_mode:SetText(target .. " " .. mode_str .. " | " .. scripted_canted_irons.get_active_target_label())
+	if self.btn_target_mode then
+		self.btn_target_mode:TextControl():SetText(scripted_canted_irons.get_target_mode() == "front" and "Switch to Rear Iron" or "Switch to Front Iron")
+	end
+	if self.btn_move_both then
+		self.btn_move_both:TextControl():SetText(scripted_canted_irons.get_move_both_mode() and "Move Both Irons: On" or "Move Both Irons: Off")
+	end
+	if self.btn_model_mode then
+		local count = scripted_canted_irons.get_active_model_count and scripted_canted_irons.get_active_model_count() or 1
+		self.btn_model_mode:Show(count > 1)
+		self.btn_model_mode:TextControl():SetText(scripted_canted_irons.get_active_model_label and scripted_canted_irons.get_active_model_label() or "Model 1/1")
+	end
+	if self.precision_value then
+		local level = scripted_canted_irons.get_precision_level()
+		self.precision_value:SetText(level == 0 and "Normal" or tostring(level))
+	end
+	if self.btn_weapon_movement then
+		local enabled = scripted_canted_irons.get_editor_weapon_movement_enabled()
+		self.btn_weapon_movement:TextControl():SetText(enabled and "Weapon Movement: On" or "Weapon Movement: Off")
+	end
+	local is_rds = scripted_canted_irons.is_active_rds and scripted_canted_irons.is_active_rds()
+	if self.btn_save_rds_pos1 then self.btn_save_rds_pos1:Show(is_rds) end
+	if self.btn_save_rds_pos2 then self.btn_save_rds_pos2:Show(is_rds) end
+	if self.btn_save_rds_pos3 then self.btn_save_rds_pos3:Show(is_rds) end
+end
+
+function ScriptedCantedIronsUI:Dispatch(command)
+	if not command then return end
+	scripted_canted_irons.execute_command(command)
+	self:UpdateModeLabel()
+end
+
+function ScriptedCantedIronsUI:OnXUp()       self:Dispatch("xup") end
+function ScriptedCantedIronsUI:OnYUp()       self:Dispatch("yup") end
+function ScriptedCantedIronsUI:OnZUp()       self:Dispatch("zup") end
+function ScriptedCantedIronsUI:OnXDown()     self:Dispatch("xdown") end
+function ScriptedCantedIronsUI:OnYDown()     self:Dispatch("ydown") end
+function ScriptedCantedIronsUI:OnZDown()     self:Dispatch("zdown") end
+function ScriptedCantedIronsUI:OnModePos()   self:Dispatch("mode_pos") end
+function ScriptedCantedIronsUI:OnModeRot()   self:Dispatch("mode_rot") end
+function ScriptedCantedIronsUI:OnModeScale() self:Dispatch("mode_scale") end
+function ScriptedCantedIronsUI:OnScaleUp()   self:Dispatch("scale_up") end
+function ScriptedCantedIronsUI:OnScaleDown() self:Dispatch("scale_down") end
+function ScriptedCantedIronsUI:OnTargetMode() self:Dispatch("target_mode") end
+function ScriptedCantedIronsUI:OnMoveBoth()   self:Dispatch("move_both") end
+function ScriptedCantedIronsUI:OnModelMode()  self:Dispatch("model_mode") end
+function ScriptedCantedIronsUI:OnResetPosition() scripted_canted_irons.reset_active_position(); self:UpdateModeLabel() end
+function ScriptedCantedIronsUI:OnResetRotation() scripted_canted_irons.reset_active_rotation(); self:UpdateModeLabel() end
+function ScriptedCantedIronsUI:OnResetScale() scripted_canted_irons.reset_active_scale(); self:UpdateModeLabel() end
+function ScriptedCantedIronsUI:OnCopyTransform() self:Dispatch("copy") end
+function ScriptedCantedIronsUI:OnPasteTransform() self:Dispatch("paste") end
+function ScriptedCantedIronsUI:OnSave() self:Dispatch("save_ltx") end
+function ScriptedCantedIronsUI:OnSaveRdsPos1() self:Dispatch("save_rds_pos1") end
+function ScriptedCantedIronsUI:OnSaveRdsPos2() self:Dispatch("save_rds_pos2") end
+function ScriptedCantedIronsUI:OnSaveRdsPos3() self:Dispatch("save_rds_pos3") end
+function ScriptedCantedIronsUI:OnClearCache() self:Dispatch("clear_cache") end
+function ScriptedCantedIronsUI:OnWeaponMovement()
+	local enabled = scripted_canted_irons.get_editor_weapon_movement_enabled()
+	scripted_canted_irons.set_editor_weapon_movement_enabled(not enabled)
+	self:UpdateModeLabel()
+end
+
+function ScriptedCantedIronsUI:OnKeyboard(key, keyboard_action)
+	if keyboard_action == ui_events.WINDOW_KEY_PRESSED then
+		if key == DIK_keys.DIK_ESCAPE then
+			close_ui()
+		elseif key == DIK_keys.MOUSE_2 then
+			scripted_canted_irons.set_mouse_drag_active(true)
+		end
+	elseif keyboard_action == ui_events.WINDOW_KEY_RELEASED and key == DIK_keys.MOUSE_2 then
+		scripted_canted_irons.set_mouse_drag_active(false)
+	end
+end
+
+function ScriptedCantedIronsUI:Update()
+	CUIScriptWnd.Update(self)
+	scripted_canted_irons.update_editor_session()
+	if not self:IsShown() or not self.precision_slider then return end
+	local level = math.floor(self.precision_slider:GetFValue() + 0.5)
+	if level ~= self.last_precision_level then
+		self.last_precision_level = level
+		scripted_canted_irons.set_precision_level(level)
+		self:UpdateModeLabel()
+	end
+end
+
+local function editors_enabled()
+	return not (z_3d_scopes_mcm and z_3d_scopes_mcm.get_config)
+		or z_3d_scopes_mcm.get_config("canted_sight_editors") ~= false
+end
+
+function show_ui()
+	if not editors_enabled() then return end
+	if GUI == nil then
+		GUI = ScriptedCantedIronsUI()
+	end
+	if GUI and not GUI:IsShown() then
+		if not scripted_canted_irons.is_editor_open() then
+			scripted_canted_irons.start_editor_session()
+		end
+		GUI:ShowDialog(true)
+		Register_UI("ScriptedCantedIronsUI", "scripted_canted_irons_ui", GUI)
+		GUI:UpdateModeLabel()
+	end
+end
+
+function open_ui()
+	show_ui()
+end
+
+function close_ui()
+	scripted_canted_irons.set_mouse_drag_active(false)
+	if GUI and GUI:IsShown() then
+		GUI:HideDialog()
+		Unregister_UI("ScriptedCantedIronsUI")
+		scripted_canted_irons.stop_editor_session()
+		GUI = nil
+	elseif scripted_canted_irons and scripted_canted_irons.is_editor_open and scripted_canted_irons.is_editor_open() then
+		scripted_canted_irons.stop_editor_session()
+		GUI = nil
+	end
+end
+
+local function on_key_press(key)
+	local shift_down = (key_state(DIK_keys.DIK_LSHIFT) or 0) ~= 0 or (key_state(DIK_keys.DIK_RSHIFT) or 0) ~= 0
+	if key == DIK_keys.DIK_ADD and shift_down then
+		show_ui()
+	end
+end
+
+
+local cancel_anims = {
+anm_idle = true,
+anm_idle_0 = true,
+anm_idle_1 = true,
+anm_idle_2 = true,
+anm_idle_variant1 = true,
+anm_idle_variant2 = true,
+anm_idle_empty = true,
+anm_idle_aim = true,
+anm_idle_g = true,
+anm_idle_g_aim = true,
+anm_idle_w_gl = true,
+anm_idle_w_gl_aim = true,
+anm_idle_empty_w_gl = true,
+anm_idle_empty_w_gl_aim	= true,
+anm_bore = true,
+anm_idle_g = true,
+anm_bore_aim = true
+}
+
+local function actor_on_hud_animation_play(anm_table)
+	if not (anm_table and anm_table.anm_name) then return end
+	if GUI and GUI:IsShown() and cancel_anims[anm_table.anm_name] then
+		anm_table.anm_speed = 0.000000000000001
+	end
+end
+function on_game_start()
+	RegisterScriptCallback("actor_on_hud_animation_play", actor_on_hud_animation_play)
+	RegisterScriptCallback("on_key_press", on_key_press)
+end
+
+
+

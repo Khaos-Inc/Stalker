@@ -2,6 +2,7 @@
 active = walker@stand
 suitable = {=check_npc_name(pri_a22_army_signaller) +pri_b35_actor_is_guided -pri_b35_actor_rest -pri_a25_rfi_source_eliminated} true
 prior = 200
+on_combat = combat
 
 [walker@stand]
 path_walk = spawn
@@ -16,3 +17,6 @@ use = {!actor_enemy +pri_b35_ui -pri_b35_actor_rest =dist_to_actor_le(10) =see_a
 meet_dialog = pri_a22_army_signaller_b35_about_merc
 allow_break	= false
 trade_enable = false
+
+[combat]
+combat_type = {=cond_scheme_cover()} cover, {=cond_scheme_camper()} camper

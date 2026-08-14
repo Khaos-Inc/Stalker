@@ -328,7 +328,7 @@ function get_actor_weight_ratio()
         return ratio
 end
 
-local function actor_has_light_source()
+function actor_has_light_source()
         if not db.actor then return false end
         local torch = db.actor:item_in_slot(10)
         local flash = db.actor:item_in_slot(9)
@@ -341,11 +341,17 @@ local function actor_has_light_source()
         return actor_torch_on or actor_flash_on
 end
 
---[[local function actor_is_behind(npc, actor)
+function actor_is_flanking(npc, actor)
         local npc_dir = npc:direction()
-        local to_actor = vector():set(actor:position()):sub(npc:position()):normalize()
-        return npc_dir:dotproduct(to_actor) < -0.2
-end]]--
+        local to_actor = vector():set(actor:position())
+        to_actor:sub(npc:position())
+        to_actor:normalize()
+
+        local dot = npc_dir:dotproduct(to_actor)
+        if dot < 0.1 then return true end
+
+        return false
+end
 
 ----------------------------------------------------------------------------
 -- NPC ON UPDATE

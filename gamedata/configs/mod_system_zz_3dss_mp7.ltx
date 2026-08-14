@@ -1,12 +1,43 @@
-;==============================================================================
 ![wpn_mp7]
 >scopes						 = aim_acro, bossxe, lco1, uh2, p1x42, romeo8, specter, monstrum, trihawk, vulcan, t12, echo1, c79, e0t2_magd
 <scopes					     = compm4s
 
-lewd_lens_hide_enabled       = true
-lewd_lens_hide_bone          = lens
-lewd_lens_hide_delays        = 0.1,0
-lewd_lens_hide_aim_mode      = true, false, false	
+lens_hide_enabled       = true
+lens_hide_bone          = lens
+lens_hide_delays        = 0.1,0
+lens_hide_aim_mode      = true, false, false	
+
+use_alt_aim_hud			= true
+
+;---------------------------------------------SCRIPTED CANTED SIGHTS-----------------------------------
+canted_sights = canted_kac, canted_deltapoint, canted_docter, canted_t12
+
+canted_sights_bone         = wpn_body
+canted_sights_pos         = 0.000234, 0.080781, -0.076719
+canted_sights_rot         = 0, 0, 0
+canted_sights_scale       = 1.305, 1.305, 1.305
+front_iron_pos            = 0.000234, 0.080781, 0.153281
+front_iron_rot            = 0, 0, 0
+front_iron_scale          = 1.305, 1.305, 1.305
+
+open_slots 			 = 1, 2
+canted_rds_position1      = 0.000234, 0.080781, -0.066719
+canted_rds_position2      = 0.000234, 0.080781, 0.143281
+
+canted_aim_pos_canted_kac = -0.044046, -0.036862, -0.04
+canted_aim_rot_canted_kac = 0.007282, -0.000965, 0.825
+
+canted_aim_pos_canted_deltapoint = -0.043719, -0.025726, -0.04
+canted_aim_rot_canted_deltapoint = 0.007282, -0.000965, 0.825
+ms_dot_offset_canted_deltapoint = 0.004, 0.003
+
+canted_aim_pos_canted_docter     = -0.043942, -0.020099, -0.04
+canted_aim_rot_canted_docter     = 0.007282, -0.000965, 0.825
+ms_dot_offset_canted_docter = 0.004, 0.003
+
+canted_aim_pos_canted_t12        = -0.043684, -0.026177, -0.04
+canted_aim_rot_canted_t12        = 0.007282, -0.000965, 0.825
+;------------------------------------------------------------------------------------------------------
 ![wpn_mp7_hud]
 fire_bone                   = muzzle
 fire_point                  = 0.0, 0.0, 0.0
@@ -20,6 +51,11 @@ fire_point                  = 0.0, 0.0, 0.0
         aim_hud_offset_pos_16x9          = -0.000641, -0.00569, -0.06
         aim_hud_offset_rot               = -0.006951, 0.000773, -0.006
         aim_hud_offset_rot_16x9          = -0.006951, 0.000773, -0.006
+
+        aim_hud_offset_alt_pos           = -0.059849, -0.035899, 0
+        aim_hud_offset_alt_pos_16x9      = -0.059849, -0.035899, 0
+        aim_hud_offset_alt_rot           = -0.006951, 0.000773, 0.9
+        aim_hud_offset_alt_rot_16x9      = -0.006951, 0.000773, 0.9
 		
         base_hud_offset_pos              = -0.005234, -0.033603, 0.021768
         base_hud_offset_pos_16x9         = -0.005234, -0.033603, 0.021768
@@ -48,8 +84,8 @@ fire_point                  = 0.0, 0.0, 0.0
 inv_grid_x         = 8
 inv_grid_y         = 2
 1icon_layer		= d0cter_x	
-1icon_layer_x	= 20
-1icon_layer_y   = -8		
+1icon_layer_x	= 70
+1icon_layer_y   = -8	
 ![wpn_mp7_d0cter_hud]
         aim_hud_offset_pos               = -0.000489, 0.011081, -0.06
         aim_hud_offset_pos_16x9          = -0.000489, 0.011081, -0.06
@@ -60,7 +96,7 @@ inv_grid_y         = 2
 inv_grid_x         = 8
 inv_grid_y         = 2
 1icon_layer		= aim_low_x	
-1icon_layer_x	= 18
+1icon_layer_x	= 68
 1icon_layer_y   = -4			
 ![wpn_mp7_aim_low_hud]
         aim_hud_offset_pos               = -0.000427, 0.009489, -0.06
@@ -72,7 +108,7 @@ inv_grid_y         = 2
 inv_grid_x         = 8
 inv_grid_y         = 2
 1icon_layer		= e0t2_x
-1icon_layer_x	= 22
+1icon_layer_x	= 72
 1icon_layer_y   = -12				
 ![wpn_mp7_e0t2_hud]
         aim_hud_offset_pos               = -0.000291, -0.009683, -0.06
@@ -84,7 +120,7 @@ inv_grid_y         = 2
 inv_grid_x         = 8
 inv_grid_y         = 2
 1icon_layer		= deltapoint_x
-1icon_layer_x	= 18
+1icon_layer_x	= 68
 1icon_layer_y   = -4		
 ![wpn_mp7_deltapoint_hud]
         aim_hud_offset_pos               = -0.000585, 0.002335, -0.06
@@ -96,7 +132,7 @@ inv_grid_y         = 2
 inv_grid_x         = 8
 inv_grid_y         = 2
 1icon_layer		= rmr_x			
-1icon_layer_x	= 18
+1icon_layer_x	= 68
 1icon_layer_y   = -3	
 ![wpn_mp7_rmr_hud]
         aim_hud_offset_pos               = -0.000554, 0.008064, -0.06
@@ -108,7 +144,7 @@ inv_grid_y         = 2
 inv_grid_x         = 8
 inv_grid_y         = 2
 1icon_layer		= kemper_x	
-1icon_layer_x	= 18
+1icon_layer_x	= 68
 1icon_layer_y   = -11			
 ![wpn_mp7_kemper_hud]
         aim_hud_offset_pos               = -0.000376, -0.011643, -0.06
@@ -123,7 +159,7 @@ hud				= wpn_mp7_bossxe_hud
 inv_grid_x         = 8
 inv_grid_y         = 2
 1icon_layer			    = bossxe_x
-1icon_layer_x	= 19
+1icon_layer_x	= 69
 1icon_layer_y   = -12
 
 use_alt_aim_hud     = true
@@ -145,7 +181,7 @@ hud				= wpn_mp7_aim_acro_hud
 inv_grid_x         = 8
 inv_grid_y         = 2
 1icon_layer			    = aim_acro_x
-1icon_layer_x	= 19
+1icon_layer_x	= 69
 1icon_layer_y   = -19
 
 [wpn_mp7_aim_acro_hud]:wpn_mp7_hud
@@ -159,7 +195,7 @@ hud				= wpn_mp7_uh2_hud
 inv_grid_x         = 8
 inv_grid_y         = 2
 1icon_layer			    = uh2_x
-1icon_layer_x	= 22
+1icon_layer_x	= 72
 1icon_layer_y   = -12
 
 [wpn_mp7_uh2_hud]:wpn_mp7_hud
@@ -173,7 +209,7 @@ hud				= wpn_mp7_p1x42_hud
 inv_grid_x         = 8
 inv_grid_y         = 2
 1icon_layer			    = p1x42_x
-1icon_layer_x	= 22
+1icon_layer_x	= 72
 1icon_layer_y   = -15
 
 [wpn_mp7_p1x42_hud]:wpn_mp7_hud
@@ -187,7 +223,7 @@ hud				= wpn_mp7_lco1_hud
 inv_grid_x         = 8
 inv_grid_y         = 2
 1icon_layer			    = lco1_x
-1icon_layer_x	= 22
+1icon_layer_x	= 72
 1icon_layer_y   = -9
 
 [wpn_mp7_lco1_hud]:wpn_mp7_hud
@@ -201,7 +237,7 @@ hud				= wpn_mp7_romeo8_hud
 inv_grid_x         = 8
 inv_grid_y         = 2
 1icon_layer			    = romeo8_x
-1icon_layer_x	= 22
+1icon_layer_x	= 72
 1icon_layer_y   = -17
 
 [wpn_mp7_romeo8_hud]:wpn_mp7_hud
@@ -215,7 +251,7 @@ hud                                      = wpn_mp7_t12_hud
 inv_grid_x         = 8
 inv_grid_y         = 2
 1icon_layer                              = t12_x
-1icon_layer_x	= 25
+1icon_layer_x	= 75
 1icon_layer_y   = -12
 	
 [wpn_mp7_t12_hud]:wpn_mp7_hud
@@ -237,13 +273,13 @@ item_visual                              = anomaly_weapons\wpn_mp7\wpn_mp7_t12_h
 inv_grid_x         = 8
 inv_grid_y         = 2
         1icon_layer					= monstrum_x
-1icon_layer_x	= 15
+1icon_layer_x	= 65
 1icon_layer_y   = -12
 
 [wpn_mp7_monstrum_hud]:wpn_mp7_hud
 item_visual                              = anomaly_weapons\wpn_mp7\wpn_mp7_monstrum_hud.ogf
-        aim_hud_offset_pos               = -0.000772, -0.001477, -0.131534
-        aim_hud_offset_pos_16x9          = -0.000772, -0.001477, -0.131534
+        aim_hud_offset_pos               = -0.000772, -0.001477, -0.1277
+        aim_hud_offset_pos_16x9          = -0.000772, -0.001477, -0.1277
 ;--------------------------------------------------------------------------------
 [wpn_mp7_trihawk]:wpn_mp7, trihawk_s
         hud                         = wpn_mp7_trihawk_hud
@@ -251,13 +287,13 @@ item_visual                              = anomaly_weapons\wpn_mp7\wpn_mp7_monst
 inv_grid_x         = 8
 inv_grid_y         = 2
         1icon_layer					= trihawk_x
-1icon_layer_x	= 11
+1icon_layer_x	= 61
 1icon_layer_y   = -13
 
 [wpn_mp7_trihawk_hud]:wpn_mp7_hud
 item_visual                              = anomaly_weapons\wpn_mp7\wpn_mp7_trihawk_hud.ogf
-        aim_hud_offset_pos               = -0.000453, -0.015767, -0.094576
-        aim_hud_offset_pos_16x9          = -0.000453, -0.015767, -0.094576
+        aim_hud_offset_pos               = -0.000453, -0.015767, -0.07924
+        aim_hud_offset_pos_16x9          = -0.000453, -0.015767, -0.07924
 ;--------------------------------------------------------------------------------
 [wpn_mp7_specter]:wpn_mp7, specter_s
         hud                         = wpn_mp7_specter_hud
@@ -265,13 +301,13 @@ item_visual                              = anomaly_weapons\wpn_mp7\wpn_mp7_triha
 inv_grid_x         = 8
 inv_grid_y         = 2
         1icon_layer					= specter_x
-1icon_layer_x	= -11
+1icon_layer_x	= 41
 1icon_layer_y   = -13
 
 [wpn_mp7_specter_hud]:wpn_mp7_hud
 item_visual                              = anomaly_weapons\wpn_mp7\wpn_mp7_specter_hud.ogf
-        aim_hud_offset_pos               = -0.000227, -0.01188, -0.102289
-        aim_hud_offset_pos_16x9          = -0.000227, -0.01188, -0.102289
+        aim_hud_offset_pos               = -0.000277, -0.011516, -0.116129
+        aim_hud_offset_pos_16x9          = -0.000277, -0.011516, -0.116129
 ;--------------------------------------------------------------------------------
 [wpn_mp7_vulcan]:wpn_mp7, vulcan_s
         hud                         = wpn_mp7_vulcan_hud
@@ -279,9 +315,8 @@ item_visual                              = anomaly_weapons\wpn_mp7\wpn_mp7_spect
 inv_grid_x         = 8
 inv_grid_y         = 2
         1icon_layer					= vulcan_x
-        1icon_layer_x				= 25
-        1icon_layer_y				= -25
-1icon_layer_x	= -11
+
+1icon_layer_x	= 41
 1icon_layer_y   = -13
 
 [wpn_mp7_vulcan_hud]:wpn_mp7_hud
@@ -295,7 +330,7 @@ item_visual                              = anomaly_weapons\wpn_mp7\wpn_mp7_vulca
 inv_grid_x         = 8
 inv_grid_y         = 2
         1icon_layer					= c79_x
-1icon_layer_x	= 14
+1icon_layer_x	= 64
 1icon_layer_y   = -9
 
 [wpn_mp7_c79_hud]:wpn_mp7_hud
@@ -309,7 +344,7 @@ item_visual                              = anomaly_weapons\wpn_mp7\wpn_mp7_c79_h
 inv_grid_x         = 8
 inv_grid_y         = 2
         1icon_layer					= e0t2_magd_x
-1icon_layer_x	= -12
+1icon_layer_x	= 42
 1icon_layer_y   = -11
 
 [wpn_mp7_e0t2_magd_hud]:wpn_mp7_hud
@@ -323,7 +358,7 @@ item_visual                              = anomaly_weapons\wpn_mp7\wpn_mp7_e0t2_
 inv_grid_x         = 8
 inv_grid_y         = 2
         1icon_layer					= e0t2_magd_x
-1icon_layer_x	= -12
+1icon_layer_x	= 42
 1icon_layer_y   = -11
 
 [wpn_mp7_e0t2_magd_off_hud]:wpn_mp7_hud
@@ -337,7 +372,7 @@ item_visual                              = anomaly_weapons\wpn_mp7\wpn_mp7_e0t2_
 inv_grid_x         = 8
 inv_grid_y         = 2
         1icon_layer					= echo1_x
-1icon_layer_x	= 14
+1icon_layer_x	= 64
 1icon_layer_y   = -9
 
 [wpn_mp7_echo1_hud]:wpn_mp7_hud

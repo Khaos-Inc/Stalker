@@ -53,7 +53,8 @@ function msg_box_ui:__init(obj,disable_msg,item) super()
 	self:Register(self.message_box, "msg_box")
 
 	self:InitCallBacks()
-	self:InitControls()
+	self:OnMsgOk()	
+
 end
 
 function msg_box_ui:__finalize()

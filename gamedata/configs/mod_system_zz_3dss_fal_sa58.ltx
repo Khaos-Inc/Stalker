@@ -19,16 +19,42 @@ upgr_icon_height                         = 150
         silencer_x                  = 209
         silencer_y                  = 11
 		
-lewd_lens_hide_enabled       = true
-lewd_lens_hide_bone          = lens
-lewd_lens_hide_delays        = 0.1,0
-lewd_lens_hide_aim_mode      = true, false, false	
+lens_hide_enabled       = true
+lens_hide_bone          = lens
+lens_hide_delays        = 0.1,0
+lens_hide_aim_mode      = true, false, false	
 
 use_alt_aim_hud				= true
 laser_status				= true
+
+snd_reload_empty_variant1				 = weapons\ak12custom\ak12_m1_reload_empty
+snd_reload_misfire                       = weapons\librarian_ak74\unjam
+
+;---------------------------------------------SCRIPTED CANTED SIGHTS-----------------------------------
+canted_sights 		 = canted_deltapoint, canted_docter, canted_t12
+
+open_slots	= 1
+
+canted_sights_bone	  = muzzle
+canted_sights_pos   = 0.000050, 0.035900, -0.332300
+canted_sights_rot   = 0, 0, 0
+canted_sights_scale = 1.130000, 1.130000, 1.130000
+
+canted_aim_pos_canted_deltapoint = -0.102785, -0.088247, -0.05
+canted_aim_rot_canted_deltapoint = 0, 0, 0.831
+ms_dot_offset_canted_deltapoint	 = 0.005, 0.00
+
+canted_aim_pos_canted_docter     = -0.102948, -0.083309, -0.05
+canted_aim_rot_canted_docter     = 0, 0, 0.831
+ms_dot_offset_canted_docter		 = 0.005, 0.000
+
+canted_aim_pos_canted_t12        = -0.102526, -0.08878, -0.05
+canted_aim_rot_canted_t12        = 0, 0, 0.831
+;------------------------------------------------------------------------------------------------------
 ![wpn_fal_sa58_osw_hud]
 anm_shots               	= sa_ins_shoot_grip_3dss, shoot
 anm_shots_aim              	= sa_ins_shoot_aim_grip_3dss, shoot
+anm_reload_misfire          = sa_ins_unjam, unjam
 
 fire_bone      	= muzzle
 fire_point		= 0, 0, 0
@@ -46,15 +72,20 @@ fire_point		= 0, 0, 0
         aim_hud_offset_rot               = 4.5e-05, -9.7e-05, 0.011671
         aim_hud_offset_rot_16x9          = 4.5e-05, -9.7e-05, 0.011671
 
-        aim_hud_offset_alt_pos           = -0.143353, -0.090595, -0.030514
-        aim_hud_offset_alt_pos_16x9      = -0.143353, -0.090595, -0.030514
-        aim_hud_offset_alt_rot           = 4.5e-05, -9.7e-05, 0.6
-        aim_hud_offset_alt_rot_16x9      = 4.5e-05, -9.7e-05, 0.6
+        aim_hud_offset_alt_pos           = -0.09402, -0.138506, 0
+        aim_hud_offset_alt_pos_16x9      = -0.09402, -0.138506, 0
+        aim_hud_offset_alt_rot           = 4.5e-05, -9.7e-05, 1
+        aim_hud_offset_alt_rot_16x9      = 4.5e-05, -9.7e-05, 1
 
-        base_hud_offset_pos              = -0.046199, -0.037684, 0.059977
-        base_hud_offset_pos_16x9         = -0.046199, -0.037684, 0.059977
-        base_hud_offset_rot              = 0, 0, 0.12232
-        base_hud_offset_rot_16x9         = 0, 0, 0.12232
+        lowered_hud_offset_pos           = 0.073008, -0.03811, 0.011097
+        lowered_hud_offset_pos_16x9      = 0.073008, -0.03811, 0.011097
+        lowered_hud_offset_rot           = 0.077591, -0.706942, 0.137899
+        lowered_hud_offset_rot_16x9      = 0.077591, -0.706942, 0.137899
+		
+        base_hud_offset_pos              = -0.04726, -0.035556, 0.057992
+        base_hud_offset_pos_16x9         = -0.04726, -0.035556, 0.057992
+        base_hud_offset_rot              = 0, 0, 0.101836
+        base_hud_offset_rot_16x9         = 0, 0, 0.101836
 ;---------------------------------------------------SIGHTS---------------------------------------------------
 ![wpn_fal_sa58_osw_eot]
 1icon_layer		= eot_x
@@ -547,7 +578,7 @@ hud                    = wpn_fal_sa58_osw_e0t2_magd_off_hud
 1icon_layer_y			= -13
 
 [wpn_fal_sa58_osw_e0t2_magd_off_hud]:wpn_fal_sa58_osw_hud
-item_visual                              = dynamics\weapons\wpn_fal_sa58_osw\wpn_fal_sa58_osw_e0t2_magd_off_hud.ogf	
+;item_visual                              = dynamics\weapons\wpn_fal_sa58_osw\wpn_fal_sa58_osw_e0t2_magd_off_hud.ogf	
         aim_hud_offset_pos               = -0.093302, -0.006822, -0.05
         aim_hud_offset_pos_16x9          = -0.093302, -0.006822, -0.05
 		

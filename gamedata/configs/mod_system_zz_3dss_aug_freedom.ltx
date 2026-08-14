@@ -35,10 +35,10 @@ upgr_icon_width                          = 350
 	s3ds_chroma_power	=
 	magnifications 		=
 	
-lewd_lens_hide_enabled       = true
-lewd_lens_hide_bone          = lens
-lewd_lens_hide_delays        = 0.1,0
-lewd_lens_hide_aim_mode      = true, false, false	
+lens_hide_enabled       = true
+lens_hide_bone          = lens
+lens_hide_delays        = 0.1,0
+lens_hide_aim_mode      = true, false, false	
 
         use_alt_aim_hud                  = true
         laser_status                     = true
@@ -331,9 +331,11 @@ item_visual		= anomaly_weapons\wpn_aug_9mm\wpn_aug_9mm_tac30_hud.ogf
 
 ;-----------------------------------------------------------------------------
 [wpn_aug_freedom_spectre_tactical_kit]:wpn_aug_freedom, e0t2_magd_s
-hud                                      = wpn_aug_freedom_spectre_tactical_kit_hud
+hud					= wpn_aug_freedom_spectre_tactical_kit_hud
 
-visual                                   = dynamics\weapons\wpn_aug_9mm\wpn_aug_9mm_spectre.ogf
+parent_section 		= wpn_aug_freedom_spectre_tactical_kit
+
+visual				= dynamics\weapons\wpn_aug_9mm\wpn_aug_9mm_spectre.ogf
 
 inv_grid_x = 10
 inv_grid_y = 0
@@ -361,17 +363,20 @@ upgr_icon_width                          = 350
         silencer_x                       = 215
         silencer_y                       = 10
 
+custom_ui_func 				= magnifier_switch.on_hud_attach
+
+
 [wpn_aug_freedom_spectre_tactical_kit_hud]:wpn_aug_freedom_hud
         item_visual                      = anomaly_weapons\wpn_aug_9mm\wpn_aug_9mm_spectre_hud.ogf
 
-        aim_hud_offset_pos               = -0.081496, 0.017988, -0.1
-        aim_hud_offset_pos_16x9          = -0.081496, 0.017988, -0.1
+        aim_hud_offset_pos               = -0.081496, 0.017988, -0.117483
+        aim_hud_offset_pos_16x9          = -0.081496, 0.017988, -0.117483
 
 ;-----------------------------------------------------------------------------
 [wpn_aug_freedom_spectre_tactical_kit_off]:wpn_aug_freedom_spectre_tactical_kit
-hud                                      = wpn_aug_freedom_spectre_tactical_kit_off_hud
+hud					= wpn_aug_freedom_spectre_tactical_kit_off_hud
 
-visual                                   = dynamics\weapons\wpn_aug_9mm\wpn_aug_9mm_spectre.ogf
+visual				= dynamics\weapons\wpn_aug_9mm\wpn_aug_9mm_spectre.ogf
 
 inv_grid_x = 10
 inv_grid_y = 0
@@ -397,16 +402,17 @@ inv_grid_y = 0
 [wpn_aug_freedom_spectre_tactical_kit_off_hud]:wpn_aug_freedom_spectre_tactical_kit_hud
         item_visual                      = anomaly_weapons\wpn_aug_9mm\wpn_aug_9mm_spectre_off_hud.ogf
 
-        aim_hud_offset_pos               = -0.081496, 0.017988, -0.101525
-        aim_hud_offset_pos_16x9          = -0.081496, 0.017988, -0.101525
+        aim_hud_offset_pos               = -0.081496, 0.017988, -0.1
+        aim_hud_offset_pos_16x9          = -0.081496, 0.017988, -0.1
 
-;-----------------------------------------------------------------------------
 ;-----------------------------------------------------------------------------
 ;-----------------------------------------------------------------------------
 [wpn_aug_freedom_infiltrator_tactical_kit]:wpn_aug_freedom, acog_s
-hud                                      = wpn_aug_freedom_infiltrator_tactical_kit_hud
+hud					= wpn_aug_freedom_infiltrator_tactical_kit_hud
 
-visual                                   = dynamics\weapons\wpn_aug_9mm\wpn_aug_9mm_infiltrator.ogf
+parent_section 		= wpn_aug_freedom_infiltrator_tactical_kit
+
+visual				= dynamics\weapons\wpn_aug_9mm\wpn_aug_9mm_infiltrator.ogf
 
 inv_grid_x = 10
 inv_grid_y = 2
@@ -432,7 +438,10 @@ upgr_icon_width                          = 350
         silencer_status                  = 2
         silencer_x                       = 195
         silencer_y                       = 5
-	
+
+custom_ui_func = magnifier_switch.on_hud_attach
+lens_hide_mag_off_restore 	= true	
+
 [wpn_aug_freedom_infiltrator_tactical_kit_hud]:wpn_aug_freedom_hud
         item_visual                      = anomaly_weapons\wpn_aug_9mm\wpn_aug_9mm_infiltrator_hud.ogf
 
@@ -443,9 +452,9 @@ upgr_icon_width                          = 350
 
 ;-----------------------------------------------------------------------------
 [wpn_aug_freedom_infiltrator_tactical_kit_off]:wpn_aug_freedom_infiltrator_tactical_kit, acog_s
-hud                                      = wpn_aug_freedom_infiltrator_tactical_kit_off_hud
+hud					= wpn_aug_freedom_infiltrator_tactical_kit_off_hud
 
-visual                                   = dynamics\weapons\wpn_aug_9mm\wpn_aug_9mm_infiltrator.ogf
+visual				= dynamics\weapons\wpn_aug_9mm\wpn_aug_9mm_infiltrator.ogf
 
 inv_grid_x = 10
 inv_grid_y = 2

@@ -1,8 +1,35 @@
 ![wpn_gauss]:gauss_s
-lewd_lens_hide_enabled       = true	
-lewd_lens_hide_bone          = attach_sight
-lewd_lens_hide_delays        = 0.1,0
-lewd_lens_hide_aim_mode      = true, false, false		
+use_alt_aim_hud				 = true
+
+lens_hide_enabled       = true	
+lens_hide_bone          = attach_sight
+lens_hide_delays        = 0.1,0
+lens_hide_aim_mode      = true, false, false
+
+;---------------------------------------------SCRIPTED CANTED SIGHTS-----------------------------------
+canted_sights 		= canted_deltapoint, canted_docter
+
+canted_sights_bone	= body_gauss
+canted_sights_pos   = -0.000350, 0.061750, 0.009750
+canted_sights_rot   = 0, 0, 0
+canted_sights_scale = 0.826000, 0.826000, 0.826000
+
+open_slots			= 1, 2
+canted_rds_position2			 = -0.00035, 0.105109, 0.01725
+
+canted_aim_pos_canted_deltapoint        = -0.079469, -0.04787, 0
+canted_aim_rot_canted_deltapoint        = 0, 0, 0.825
+canted_aim_pos_canted_deltapoint_pos2_2 = -0.058991, -0.023891, 0
+canted_aim_rot_canted_deltapoint_pos2_2 = 0, 0, 0
+ms_dot_offset_canted_deltapoint	= -0.0055,-0.003
+
+canted_aim_pos_canted_docter            = -0.079549, -0.044492, 0
+canted_aim_rot_canted_docter            = 0, 0, 0.825
+canted_aim_pos_canted_docter_pos2_2     = -0.059018, -0.020513, 0
+canted_aim_rot_canted_docter_pos2_2     = 0, 0, 0
+ms_dot_offset_canted_docter	= -0.0055,-0.003
+
+;------------------------------------------------------------------------------------------------------	
 ![wpn_gauss_hud]
         anm_shots_aim                   	  = gauss_shot_aim, gauss_shot
 		anm_shot_aim_l                   	  = gauss_shot_aim, gauss_shot_last
@@ -12,21 +39,29 @@ lewd_lens_hide_aim_mode      = true, false, false
         hands_position                   = -0.008924, -0.183726, -0.136475
         hands_position_16x9              = -0.008924, -0.183726, -0.136475
 
-        aim_hud_offset_pos               = -0.059095, 0.009625, -0.053112
-        aim_hud_offset_pos_16x9          = -0.059095, 0.009625, -0.053112
+        aim_hud_offset_pos               = -0.05913, 0.00966, -0.053112
+        aim_hud_offset_pos_16x9          = -0.05913, 0.00966, -0.053112
         aim_hud_offset_rot               = -7.2e-05, 5.8e-05, 0
         aim_hud_offset_rot_16x9          = -7.2e-05, 5.8e-05, 0
 
-        base_hud_offset_pos              = -0.02812, -0.011322, 0.000986
-        base_hud_offset_pos_16x9         = -0.02812, -0.011322, 0.000986
-        base_hud_offset_rot              = 0, 0, 0.146212
-        base_hud_offset_rot_16x9         = 0, 0, 0.146212
+        aim_hud_offset_alt_pos           = -0.086352, -0.057339, 0
+        aim_hud_offset_alt_pos_16x9      = -0.086352, -0.057339, 0
+        aim_hud_offset_alt_rot           = -7.2e-05, 5.8e-05, 0.7
+        aim_hud_offset_alt_rot_16x9      = -7.2e-05, 5.8e-05, 0.7
+		
+        base_hud_offset_pos              = -0.029439, -0.008411, 0.022381
+        base_hud_offset_pos_16x9         = -0.029439, -0.008411, 0.022381
+        base_hud_offset_rot              = 0, 0, 0.105245
+        base_hud_offset_rot_16x9         = 0, 0, 0.105245
+
+        lowered_hud_offset_pos           = 0.066341, -0.007898, 0.05076
+        lowered_hud_offset_pos_16x9      = 0.066341, -0.007898, 0.05076
 		
 ![wpn_gauss_quest]:gauss_s
-lewd_lens_hide_enabled       = true	
-lewd_lens_hide_bone          = attach_sight
-lewd_lens_hide_delays        = 0.1,0
-lewd_lens_hide_aim_mode      = true, false, false	
+lens_hide_enabled       = true	
+lens_hide_bone          = attach_sight
+lens_hide_delays        = 0.1,0
+lens_hide_aim_mode      = true, false, false	
 ![wpn_gauss_quest_hud]				
         anm_shots_aim                   	  = gauss_shot_aim, gauss_shot
 		anm_shot_aim_l                   	  = gauss_shot_aim, gauss_shot_last
@@ -45,3 +80,6 @@ lewd_lens_hide_aim_mode      = true, false, false
         base_hud_offset_pos_16x9         = -0.02812, -0.011322, 0.000986
         base_hud_offset_rot              = 0, 0, 0.146212
         base_hud_offset_rot_16x9         = 0, 0, 0.146212
+		
+        lowered_hud_offset_pos           = 0.066341, -0.007898, 0.05076
+        lowered_hud_offset_pos_16x9      = 0.066341, -0.007898, 0.05076		

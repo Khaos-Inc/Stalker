@@ -10,13 +10,13 @@ spawn_snork
 spawn_greh
 
 [spawn_zombied]
-spawn_squads = simulation_chimera, simulation_chimera_2weak
-spawn_num = 1
+spawn_squads = simulation_chimera_squad, simulation_chimera_squad
+spawn_num = {+bar_deactivate_radar_done} 1, 0
 
 [spawn_snork]
-spawn_squads = simulation_gigant_2weak, simulation_gigant
-spawn_num = 1
+spawn_squads = simulation_gigant_squad, simulation_gigant_squad
+spawn_num = {+bar_deactivate_radar_done} 1, 0
 
 [spawn_greh]
-spawn_squads = greh_sim_squad_novice, greh_sim_squad_advanced, greh_sim_squad_advanced, greh_sim_squad_veteran
-spawn_num = {=is_warfare} 0,{+ms_decisive_blow} 1, {+mortal_sin} 2, 0
+spawn_squads = greh_sim_squad_veteran
+spawn_num = {=is_warfare} 0,{+ms_decisive_blow} 1, {+mortal_sin} 2, 2

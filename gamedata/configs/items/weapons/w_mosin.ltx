@@ -170,6 +170,7 @@ snd_shoot_actor				                = wpn_obrez_snd_shoot_actor
 snd_silncer_shot				            = wpn_obrez_snd_silenced_shoot
 snd_silncer_shot_actor				        = wpn_obrez_snd_silenced_shoot_actor  
 
+scripted_snd_close                                  = weapons\obrez\obrez_reload_end
 ![wpn_mosin_k_snd_shoot]
 snd_1_layer                                                       = weapons\obrez\mosin_shoot
 snd_2_layer                                                       = weapons\obrez\bolt
@@ -244,6 +245,9 @@ anm_shots                                = obrez_shoot
 anm_shot_l                               = obrez_shoot_last
 anm_show                                 = obrez_draw
 anm_bore                                 = obrez_inspect
+
+ts_pattern_reload_interrupt     = anm_add_cartridge, ^anm_idle.*, anm_close 
+ts_pattern_reload_empty_interrupt     = anm_add_cartridge_empty, ^anm_idle.*, anm_close
 
 shell_bone                               = gilza
 shell_dir                                = 0.0, 1.0, 0.0

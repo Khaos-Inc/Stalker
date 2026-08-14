@@ -1,8 +1,35 @@
-;==============================================================================	
 ![wpn_udp9]
 >scopes		= exps3, he510, hco, romeo4, romeo8, vulcan, monstrum, tac30, trihawk, t12, echo1, c79, triji, spec_alt, mepro, bossxe
 <scopes		= compm4s, march_f_shorty, uh1_magd, pn23
 
+use_alt_aim_hud		= true
+
+;---------------------------------------------SCRIPTED CANTED SIGHTS-----------------------------------
+canted_sights = canted_kac, canted_deltapoint, canted_docter, canted_t12
+
+canted_sights_bone         = wpn_body
+canted_sights_pos   = 0, 0.076719, 0.005547
+canted_sights_rot   = 0, 0, 0
+canted_sights_scale = 1.095625, 1.095625, 1.095625
+front_iron_pos      = 0, 0.076719, 0.245547
+front_iron_rot      = 0, 0, 0
+front_iron_scale    = 1.095625, 1.095625, 1.095625
+
+open_slots 			 = 1
+canted_rds_position1 = 0, 0.076719, 0.175547
+
+canted_aim_pos_canted_kac        = -0.08994, -0.065725, 0
+canted_aim_rot_canted_kac        = 0, 0, 0.825
+
+canted_aim_pos_canted_deltapoint = -0.089573, -0.056445, 0
+canted_aim_rot_canted_deltapoint = 0, 0, 0.825
+
+canted_aim_pos_canted_docter     = -0.089726, -0.051752, 0
+canted_aim_rot_canted_docter     = 0, 0, 0.825
+
+canted_aim_pos_canted_t12        = -0.089573, -0.056783, 0
+canted_aim_rot_canted_t12        = 0, 0, 0.825
+;------------------------------------------------------------------------------------------------------
 ![wpn_udp9_hud]	
 fire_point                               = 0, 0, 0
 
@@ -19,6 +46,11 @@ fire_point                               = 0, 0, 0
         aim_hud_offset_rot               = 7.8e-05, 3.9e-05, 0
         aim_hud_offset_rot_16x9          = 7.8e-05, 3.9e-05, 0
 
+        aim_hud_offset_alt_pos           = -0.090138, -0.065659, 0
+        aim_hud_offset_alt_pos_16x9      = -0.090138, -0.065659, 0
+        aim_hud_offset_alt_rot           = 7.8e-05, 3.9e-05, 0.9
+        aim_hud_offset_alt_rot_16x9      = 7.8e-05, 3.9e-05, 0.9
+		
         base_hud_offset_pos              = -0.001645, -0.025434, 0.073702
         base_hud_offset_pos_16x9         = -0.001645, -0.025434, 0.073702
         base_hud_offset_rot              = 0, 0, 0.121175

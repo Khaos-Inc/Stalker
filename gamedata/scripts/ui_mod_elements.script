@@ -6,10 +6,10 @@ function on_game_start()
 	RegisterScriptCallback("actor_on_first_update", actor_on_first_update)
 end
 -------------------------------------------------------
---		пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ 21 пїЅпїЅпїЅ Call of Chernobyl		--
+--		Адаптация игры 21 для Call of Chernobyl		--
 --				FonSwong 23.02.2016
 
---		пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ NPC, пїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ		--
+--		Создание диалогов для NPC, а также правка скриптового текста		--
 --				First_Lieutenant_Skelja					--
 -------------------------------------------------------
 card_game_21_minimum_rate=50
@@ -24,11 +24,64 @@ function actor_on_first_update()
 end
 function init_main_settings()
 	if (ini_sys:r_string_ex("string_table","language") == "rus") then
+		st_21_point_your_card_value = 'Вы:'
+		st_21_point_enemy_card_value = 'Соперник:'
+		st_21_point_rate_field = 'Ваша ставка на выигрыш:'
+		st_21_point_infoline_1 = 'В вашем рюкзаке денег:'
+		st_21_point_infoline_2 = 'Минимальная ставка - '..card_game_21_minimum_rate..', максимальная ставка -'
+		st_21_point_money = 'рублей.'
+		st_21_point_info_about_your = 'Вы: ставка'
+		st_21_point_info_about_enemy = 'Противник: ставка'
+		st_21_point_web_money = 'электронных рублей.'
+		st_21_point_winner_your_1 = 'Вы выиграли. Выигрыш составил -'
+		st_21_point_winner_your_2 = 'рублей. Сумма очков: вы -'
+		st_21_point_winner_your_3 = ', противник -'
+		st_21_point_winner_enemy_1 = 'Вы проиграли. Проиграш составил -'
+		st_21_point_winner_enemy_2 = 'рублей. Сумма очков: вы -'
+		st_21_point_winner_enemy_3 = ', противник -'
+		st_21_point_winner_equally_1 = 'Ничья. Сумма очков: вы -'
+		st_21_point_winner_equally_2 = ', противник -'
+		st_21_point_title = 'Игра: 21 очко'
+		st_21_point_dont_money_to_rate = 'Повышение ставки невозможно: не хватает денег.'
+		st_21_point_dont_take_rate = 'Продолжение игры невозможно: ставки не сделаны.'
+		st_21_point_dont_take_rate2 = 'Ты просадил все деньги, сталкер!'
+		st_21_point_dont_take_rate3 = 'Минимальная ставка - '..card_game_21_minimum_rate
+		st_question_game_title = 'Игра: Что? Где? Когда?'
+		st_question_game_reward_advice = 'Заработан совет:'
+		st_question_game_reward_money = 'Получены деньги:'
+		st_in_web_money = 'Получены деньги:'
 	else
+		st_21_point_your_card_value = 'You:'
+		st_21_point_your_card_value = 'You:'
+		st_21_point_enemy_card_value = 'Opponent:'
+		st_21_point_rate_field = 'Your Bet:'
+		st_21_point_infoline_1 = 'Money Remaining:'
+		st_21_point_infoline_2 = 'Minimum Bet - '..card_game_21_minimum_rate..', Maximum Bet -'
+		st_21_point_money = 'RU.'
+		st_21_point_info_about_your = 'You bet'
+		st_21_point_info_about_enemy = 'Opponent bet'
+		st_21_point_web_money = 'RU'
+		st_21_point_winner_your_1 = 'You win! Winnings:'
+		st_21_point_winner_your_2 = 'RU. Score: You -'
+		st_21_point_winner_your_3 = ', Them -'
+		st_21_point_winner_enemy_1 = 'You lost. Total -'
+		st_21_point_winner_enemy_2 = 'RU. Score: You -'
+		st_21_point_winner_enemy_3 = ', Tie. Score: You -'
+		st_21_point_winner_equally_1 = 'Push. Total: You -'
+		st_21_point_winner_equally_2 = ', Them -'
+		st_21_point_title = 'Blackjack '
+		st_21_point_dont_money_to_rate = 'CANNOT RAISE BET: NOT ENOUGH MONEY'
+		st_21_point_dont_take_rate = 'CANNOT START GAME: NO BETS PLACED'
+		st_21_point_dont_take_rate2 = 'YOU HAVE NO MONEY LEFT!'
+		st_21_point_dont_take_rate3 = 'Minimum Bet - '..card_game_21_minimum_rate
+		st_question_game_title = 'Игра: Что? Где? Когда?'
+		st_question_game_reward_advice = 'Заработан совет:'
+		st_question_game_reward_money = 'Получены деньги:'
+		st_in_web_money = 'Money Taken:'
 	end
 end
 -------------------------------------------------------
---                пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ: пїЅпїЅпїЅпїЅпїЅпїЅпїЅ                --
+--                Переменная: таблица                --
 -------------------------------------------------------
 table_mod_data_all={}
 table_mod_data_actor={}
@@ -52,7 +105,7 @@ table_m_capture_hits={}
 table_flashlight={}
 table_squad_dm={}
 -------------------------------------------------------
---             пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ: false/true                --
+--             Переменная: false/true                --
 -------------------------------------------------------
 bool_approach_sleep_began=false
 bool_approach_sleep=false
@@ -84,7 +137,7 @@ bool_is_ui_disabled=false
 bool_mod_update=true
 bool_data_loaded=false
 -------------------------------------------------------
---                пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ: пїЅпїЅпїЅпїЅпїЅ                  --
+--                Переменная: число                  --
 -------------------------------------------------------
 value_bodyguard_release_victim=0
 value_capture_meal_monster_id=0
@@ -107,7 +160,7 @@ value_webmoney_course_from=20
 value_webmoney_course_before=80
 value_pstor_factor=0
 ------------------------------------------------------------------------------
---                        пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ: 21 пїЅпїЅпїЅпїЅ                           --
+--                        Карточная игра: 21 очко                           --
 ------------------------------------------------------------------------------
 card_game_21_stage="need_rate"
 card_game_21_take_else="empty_card"
@@ -681,7 +734,7 @@ end
 
 
 ------------------------------------------------------------------------------
---                       пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ                    --
+--                       Загрузчик информационных блоков                    --
 ------------------------------------------------------------------------------
 local information_control = nil
 class "information_block" (CUIScriptWnd)
@@ -746,43 +799,43 @@ function information_block_show(mb_type,reason_type,text,extra_value)
    end
    information_control:Show(mb_type,reason_type,text,extra_value)
 end
--- 'пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ.
+-- 'Обьект живой.
 function object_alive(victim)
    if victim:alive()==true then 
       return true 
    end
    return false
 end
--- 'пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ.
+-- 'Обьект живой.
 function object_exists(obj,is_live)
    return level.present() and obj~=nil and (is_live==false or ((is_live==nil or is_live==true) and obj:alive()==true))
 end
--- 'пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ UI.
+-- 'Установка отсутствия UI.
 function set_ui_disabled()
    bool_is_ui_disabled=true
 end
--- 'пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ UI.
+-- 'Установка присутствия UI.
 function set_ui_worked()
    bool_is_ui_disabled=false
 end
--- 'пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ, пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ:пїЅпїЅпїЅ:пїЅпїЅ.
+-- 'Запуск окошка, в котором нужно нажимать кнопки Да:Нет:Ок.
 function run_choose_box(type,reason,text,extra_value)
    if object_exists(db.actor) and device().precache_frame==0 then
       ui_mod_elements.information_block_show(type,reason,text,extra_value)
    end
 end
--- 'пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ.
+-- 'Удалить предмет обьекта, из слота.
 function remove_item_from_slot(victim,slot_number)
    if victim:item_in_slot(tonumber(slot_number))~=nil then
       remove_object_by_id(victim:item_in_slot(tonumber(slot_number)):id())
    end
 end
--- 'пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ.
+-- 'Случайный выбор значения из переменной.
 function get_random_line(line)
     line_table=parse_general_names(line)
     return get_random_string(line_table)
 end
--- 'пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ. 
+-- 'Парсинг значений разделённых запятыми в таблицу. 
 function parse_general_names(s)
    local t = {}
    for name in string.gfind(s,"([%w_\\]+)%p*") do
@@ -824,7 +877,7 @@ function parse_codicil(name)
    end
    return name
 end
--- 'пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ.
+-- 'Присутствие в названии строки.
 function find_in_string(where,what)
    if where~=nil and what~=nil and string.find(where,what) then 
       return true
@@ -833,11 +886,11 @@ function find_in_string(where,what)
    end
    return false
 end
--- 'пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ.
+-- 'Случайный выбор строки из таблицы.
 function get_random_string(tbl)
     return tbl[math.random(table.getn(tbl))]
 end
--- 'пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ.
+-- 'Отсутствие в названии строки.
 function find_out_string(where,what)
    if where~=nil and what~=nil and string.find(where,what) then 
       return false
@@ -846,24 +899,24 @@ function find_out_string(where,what)
    end
    return true
 end
--- 'пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ parse_general_names пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ.
+-- 'Пропуск функции parse_general_names через фильтр, потому как эта функция считывает точку как запятую.
 function avail_codicil(name)
    if (find_in_string(name,"ammo_5") or find_in_string(name,"ammo_7") or find_in_string(name,"ammo_11") or find_in_string(name,"ammo_12") or find_in_string(name,"grenade_gd") or find_in_string(name,"ammo_og") or find_in_string(name,"ammo_vog") or (find_in_string(name,"wpn_rg") and find_out_string(name,"rgd"))) and find_out_string(name,"12x7") then 
       return false
    end
    return true
 end
--- 'пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ
+-- 'Случайное число
 function get_rnd(v1,v2)
    if v1==nil and v2==nil then v1,v2=1,2 end
    local rnd_value=math.random(v1,v2)
    return rnd_value
 end
--- 'пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ.
+-- 'Считывать главные опции.
 function r_mod_params(val_type,target_string,default_value,use_action)
    return get_params_by_section("mod_parameters\\mod_params.ltx","mod_params",val_type,target_string,default_value,use_action)
 end
--- 'пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ.
+-- 'Фунция чтения параметров с конфигов.
 function get_params_by_section(ini_name,section,val_type,target_string,default_value,use_action)
    local ini,line=ini_file(ini_name),section
    if val_type=="number" then
@@ -924,7 +977,7 @@ function get_params_by_section(ini_name,section,val_type,target_string,default_v
       return 0
    end
 end
--- 'пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ.
+-- 'Работа с электронными деньгами.
 function relocate_web_money(num,type,with_news,show_time)
    local web_money=read_mod_param("actor_web_money")
    if web_money==nil then web_money=0 end
@@ -939,7 +992,7 @@ function relocate_web_money(num,type,with_news,show_time)
       end
    end
 end
--- 'пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ.
+-- 'Чтение глобальной переменной.
 function read_mod_param(variable_name,safe)
    if table_mod_data_actor[variable_name]~=nil then
       return table_mod_data_actor[variable_name]
@@ -984,7 +1037,7 @@ function info_give_on_boolean(value,info,inversion)
       end
    end
 end
--- 'пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅ.
+-- 'Запись глобальной переменной в таблицу, из которой эти данные потом перекочуют в файл.
 function write_mod_param(variable_name,variable_value)
    table_mod_data_actor[variable_name]=variable_value
 end
@@ -1012,7 +1065,7 @@ function news_relocate_web_money(actor,type,amount,show_time)
 		end
 	end
 end
--- 'пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ.
+-- 'Проверка на адекватность значения.
 function exists(val)
    return val~=nil and val~="nil"
 end

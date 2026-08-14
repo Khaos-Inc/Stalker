@@ -1,0 +1,130 @@
+local MAIN_ATTACHMENT = "scripted_canted_irons_main"
+local NORMAL_AIM_SHADER = [[models\reflex_reticle_simple_3db_cutout]]
+
+local changed_reticles = {}
+
+local function shader_name(shader)
+	local name = string.lower(tostring(shader or ""))
+	name = string.gsub(name, "\\", "/")
+	return string.match(name, "([^/]+)$") or name
+end
+
+local function is_reflex_reticle_shader(shader)
+	local name = shader_name(shader)
+	return name == "reflex_reticle_simple"
+		or name == "reflex_reticle_simple_3db"
+		or name == "models_reflex_reticle_simple"
+		or name == "models_reflex_reticle_simple_3db"
+end
+
+local function installed_section(weapon)
+	if not (scripted_canted_irons and scripted_canted_irons.get_installed_section) then return nil end
+	local ok, section = pcall(scripted_canted_irons.get_installed_section, weapon)
+	return ok and section or nil
+end
+
+local function attachment_for(weapon)
+	if not (weapon and weapon.get_attachment) then return nil end
+	local ok, attachment = pcall(weapon.get_attachment, weapon, MAIN_ATTACHMENT)
+	return ok and attachment or nil
+end
+
+local function restore_reticle(weapon)
+	local id = weapon and weapon:id()
+	local changed = id and changed_reticles[id]
+	if not changed then return end
+
+	local attachment = attachment_for(weapon)
+	if attachment and attachment.set_shader then
+		for visual_id, shader in pairs(changed) do
+			pcall(attachment.set_shader, attachment, visual_id, shader, nil)
+		end
+	end
+	changed_reticles[id] = nil
+end
+
+local function apply_reticle(weapon)
+	local attachment = attachment_for(weapon)
+	if not (attachment and attachment.get_shaders and attachment.set_shader) then return end
+	if not installed_section(weapon) then return end
+
+	local ok, materials = pcall(attachment.get_shaders, attachment)
+	if not (ok and type(materials) == "table") then return end
+
+	local id = weapon:id()
+	local changed = changed_reticles[id] or {}
+	for visual_id, material in pairs(materials) do
+		if type(visual_id) == "number" and material
+			and is_reflex_reticle_shader(material.shader) then
+			changed[visual_id] = changed[visual_id] or material.shader
+			pcall(attachment.set_shader, attachment, visual_id, NORMAL_AIM_SHADER, nil)
+		end
+	end
+
+	if next(changed) then
+		changed_reticles[id] = changed
+	end
+end
+
+local function normal_ads_active(weapon)
+	if not (weapon and IsWeapon(weapon)) then return false end
+	if not installed_section(weapon) then return false end
+	local active = db.actor and db.actor:active_item()
+	if not (active and active:id() == weapon:id()) then return false end
+
+	local c_weapon = weapon:cast_Weapon()
+	if not c_weapon then return false end
+	local ok_zoomed, zoomed = pcall(function() return c_weapon:IsZoomed() end)
+	local ok_type, zoom_type = pcall(function() return c_weapon:GetZoomType() end)
+	return ok_zoomed and zoomed and ok_type and zoom_type == 0
+end
+
+local function refresh(weapon)
+	if not (weapon and IsWeapon(weapon)) then return end
+	if normal_ads_active(weapon) then
+		apply_reticle(weapon)
+	else
+		restore_reticle(weapon)
+	end
+end
+
+local function actor_on_hud_animation_play(_, weapon)
+	refresh(weapon)
+end
+
+local function actor_on_weapon_zoom_type_changed(weapon)
+	refresh(weapon)
+end
+
+local function actor_on_weapon_zoom_in(weapon)
+	refresh(weapon)
+end
+
+local function actor_on_weapon_zoom_out(weapon)
+	restore_reticle(weapon)
+end
+
+local function actor_on_changed_slot(new_slot, new_obj, prev_slot, prev_obj)
+	restore_reticle(prev_obj)
+	refresh(new_obj)
+end
+
+local function server_entity_on_unregister(se_obj)
+	if se_obj then changed_reticles[se_obj.id] = nil end
+end
+
+function on_game_start()
+	RegisterScriptCallback("actor_on_weapon_zoom_type_changed", actor_on_weapon_zoom_type_changed)
+	RegisterScriptCallback("actor_on_weapon_zoom_in", actor_on_weapon_zoom_in)
+	RegisterScriptCallback("actor_on_weapon_zoom_out", actor_on_weapon_zoom_out)
+	RegisterScriptCallback("actor_on_changed_slot", actor_on_changed_slot)
+	RegisterScriptCallback("server_entity_on_unregister", server_entity_on_unregister)
+	RegisterScriptCallback("actor_on_first_update", function()
+		refresh(db.actor and db.actor:active_item())
+	end)
+	if animation_common then
+		animation_common.add_anim_mutator(actor_on_hud_animation_play, 1300)
+	else
+		RegisterScriptCallback("actor_on_hud_animation_play", actor_on_hud_animation_play)
+	end
+end

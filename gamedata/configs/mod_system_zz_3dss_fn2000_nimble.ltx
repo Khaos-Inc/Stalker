@@ -1,4 +1,3 @@
-;==============================================================================
 ![wpn_fn2000_nimble]
 <scopes						 = point_aimpro, marchf 
 >scopes						 = aim_acro, he510, romeo8, uh2, gauss_sight, t12, gee36, triji, spec_alt, mark8_rmr, razorhd, uh1_magd, hamr, ps320
@@ -8,11 +7,38 @@
 	s3ds_exit_pupil		=
 	s3ds_chroma_power	=
 	magnifications 		=	
+
+use_alt_aim_hud				 = true
 	
-lewd_lens_hide_enabled       = true
-lewd_lens_hide_bone          = lens
-lewd_lens_hide_delays        = 0.1,0
-lewd_lens_hide_aim_mode      = true, false, false	
+lens_hide_enabled       = true
+lens_hide_bone          = lens
+lens_hide_delays        = 0.1,0
+lens_hide_aim_mode      = true, false, false
+;---------------------------------------------SCRIPTED CANTED SIGHTS-----------------------------------
+canted_sights 		= canted_deltapoint, canted_docter, canted_t12
+
+canted_sights_bone         = wpn_body
+canted_sights_pos   = 0.000250, 0.102000, -0.024750
+canted_sights_rot   = 0, 0, 0
+canted_sights_scale = 1.220000, 1.220000, 1.220000
+front_iron_pos      = 0.000250, 0.102000, 0.200000
+front_iron_rot      = 0, 0, 0
+front_iron_scale    = 1.220000, 1.220000, 1.220000
+
+open_slots 			 = 1
+canted_rds_position1 = 0.000250, 0.102000, 0.156000
+
+canted_aim_pos_canted_deltapoint = -0.106, -0.074276, -0.08
+canted_aim_rot_canted_deltapoint = 0, 0, 0.828
+ms_dot_offset_canted_deltapoint	= 0.0035, 0.005
+
+canted_aim_pos_canted_docter     = -0.106173, -0.069067, -0.08
+canted_aim_rot_canted_docter     = 0, 0, 0.828
+ms_dot_offset_canted_docter	= 0.0035, 0.005
+
+canted_aim_pos_canted_t12        = -0.105973, -0.074756, -0.08
+canted_aim_rot_canted_t12        = 0, 0, 0.828
+;------------------------------------------------------------------------------------------------------	
 ![wpn_fn2000_nimble_hud]
         hands_orientation                = -0.478292, -0.0064, -1.010909
         hands_orientation_16x9           = -0.478292, -0.0064, -1.010909
@@ -29,6 +55,11 @@ lewd_lens_hide_aim_mode      = true, false, false
         gl_hud_offset_rot                = -0.108365, 0.059398, 0.25494
         gl_hud_offset_rot_16x9           = -0.108365, 0.059398, 0.25494
 
+        aim_hud_offset_alt_pos           = -0.120661, -0.103368, 0.025471
+        aim_hud_offset_alt_pos_16x9      = -0.120661, -0.103368, 0.025471
+        aim_hud_offset_alt_rot           = -0.000187, 0.000102, 0.9
+        aim_hud_offset_alt_rot_16x9      = -0.000187, 0.000102, 0.9
+		
         base_hud_offset_pos              = -0.022538, -0.031977, 0.026454
         base_hud_offset_pos_16x9         = -0.022538, -0.031977, 0.026454
         base_hud_offset_rot              = 0, 0, 0.131422
@@ -205,8 +236,8 @@ item_visual				= anomaly_weapons\wpn_fn2000\wpn_fn2000_nimble_t12_hud.ogf
 
 		use_alt_aim_hud					 = false
 ![wpn_fn2000_nimble_specter_hud]
-        aim_hud_offset_pos               = -0.081207, 0.002652, -0.125623
-        aim_hud_offset_pos_16x9          = -0.081207, 0.002652, -0.125623
+        aim_hud_offset_pos               = -0.081207, 0.002652, -0.097757
+        aim_hud_offset_pos_16x9          = -0.081207, 0.002652, -0.097757
         aim_hud_offset_rot               = -0.000187, 0.000102, 0
         aim_hud_offset_rot_16x9          = -0.000187, 0.000102, 0
 		
@@ -240,8 +271,8 @@ hud					= wpn_fn2000_nimble_gauss_sight_hud
 
 [wpn_fn2000_nimble_gauss_sight_hud]:wpn_fn2000_nimble_hud
 item_visual				= anomaly_weapons\wpn_fn2000\wpn_fn2000_nimble_gauss_hud.ogf
-        aim_hud_offset_pos               = -0.081538, 0.003072, -0.128187
-        aim_hud_offset_pos_16x9          = -0.081538, 0.003072, -0.128187
+        aim_hud_offset_pos               = -0.081538, 0.003072, -0.107837
+        aim_hud_offset_pos_16x9          = -0.081538, 0.003072, -0.107837
 		
 ;-----------------------------------------------------------------------------		
 [wpn_fn2000_nimble_gee36]:wpn_fn2000_nimble, gee36_s
@@ -299,8 +330,8 @@ use_alt_aim_hud			= true
 
 [wpn_fn2000_nimble_spec_alt_hud]:wpn_fn2000_nimble_hud
 item_visual				= anomaly_weapons\wpn_fn2000\wpn_fn2000_nimble_spec_alt_hud.ogf
-        aim_hud_offset_pos               = -0.081207, 0.002652, -0.125623
-        aim_hud_offset_pos_16x9          = -0.081207, 0.002652, -0.125623
+        aim_hud_offset_pos               = -0.081207, 0.002652, -0.097757
+        aim_hud_offset_pos_16x9          = -0.081207, 0.002652, -0.097757
 
         aim_hud_offset_alt_pos           = -0.105825, -0.072049, -0.07
         aim_hud_offset_alt_pos_16x9      = -0.105825, -0.072049, -0.07
@@ -363,7 +394,7 @@ hud					= wpn_fn2000_nimble_uh1_magd_off_hud
 1icon_layer_y			= -16
 
 [wpn_fn2000_nimble_uh1_magd_off_hud]:wpn_fn2000_nimble_hud
-item_visual				= anomaly_weapons\wpn_fn2000\wpn_fn2000_nimble_uh1_magd_off_hud.ogf
+;item_visual				= anomaly_weapons\wpn_fn2000\wpn_fn2000_nimble_uh1_magd_off_hud.ogf
         aim_hud_offset_pos               = -0.081713, 0.001643, -0.07
         aim_hud_offset_pos_16x9          = -0.081713, 0.001643, -0.07
 		
@@ -377,8 +408,8 @@ hud					= wpn_fn2000_nimble_ps320_hud
 
 [wpn_fn2000_nimble_ps320_hud]:wpn_fn2000_nimble_hud
 item_visual				= anomaly_weapons\wpn_fn2000\wpn_fn2000_nimble_ps320_hud.ogf
-        aim_hud_offset_pos               = -0.081711, 0.005024, -0.125619
-        aim_hud_offset_pos_16x9          = -0.081711, 0.005024, -0.125619
+        aim_hud_offset_pos               = -0.081711, 0.005024, -0.111972
+        aim_hud_offset_pos_16x9          = -0.081711, 0.005024, -0.111972
 		
 ;-----------------------------------------------------------------------------		
 [wpn_fn2000_nimble_hamr]:wpn_fn2000_nimble, hamr_s

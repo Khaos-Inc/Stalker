@@ -1,47 +1,38 @@
-<!-- 
-	Anomaly Modconfiguration Menu strings
-	
--->
-
 <string_table>
-
 	<string id="ui_mcm_menu_bountysquads">
-		<text>Bounty Squads Expansion</text>
+		<text>Bounty Squads Exp</text>
 	</string>
 	<string id="ui_mcm_title_bountysquads">
 		<text>Bounty Squads Expansion</text>
 	</string>
-
 	<string id="ui_mcm_bountysquads_delay">
-		<text>Delay between potential spawns</text>
+		<text>Задержка между потенциальным спавном</text>
 	</string>
 	<string id="ui_mcm_bountysquads_delay_desc">
-		<text>This is the minimum amount of time (in in-game hours) that must pass before even considering to spawn a bounty squad. Whether a bounty squad spawns depends on each faction's chance to spawn a bounty squad.</text>
+		<text>Это минимальное количество времени (в игровых часах), которое должно пройти, прежде чем даже будет рассмотрен вопрос о создании отряда головорезов. Это зависит от шанса каждой фракции создать отряд головорезов</text>
 	</string>
 	<string id="ui_mcm_bountysquads_delay_spawn">
-		<text>Time between spawn updates</text>
+		<text>Время между обновлениями спавна</text>
 	</string>
 	<string id="ui_mcm_bountysquads_delay_spawn_desc">
-		<text>This is the amount of time (in real seconds) in-between updates to the actor's faction, reputation, and spawn check. This time is counted after game-load, so the actor must be within linked-level range of a hostile position for this amount of time before a bounty squad has any chance of spawning.</text>
+		<text>Это количество времени (в реальных секундах) между обновлениями фракции ГГ (главного героя), его репутации и проверки спавна. Это время считается после загрузки игры, поэтому ГГ должен находиться в пределах диапазона связанного уровня от враждебной позиции в течение этого периода времени, прежде чем у отряда головорезов появится шанс заспавниться</text>
 	</string>
 	<string id="ui_mcm_bountysquads_delay_state">
-		<text>Time between actor location updates</text>
+		<text>Время между обновлениями местоположения ГГ</text>
 	</string>
 	<string id="ui_mcm_bountysquads_delay_state_desc">
-		<text>This is the amount of time (in real seconds) in-between updates to the actor's location. Bounty squads will re-target the actor's current position after this much time. They will also back off if the actor is in a 'safe' location with nearby allies.</text>
+		<text>Это количество времени (в реальных секундах) между обновлениями местоположения ГГ. Отряды головорезов будут повторно нацеливаться на текущую позицию ГГ по прошествии этого времени. Они также отступят, если ГГ находится в «безопасном» месте с ближайшими союзниками</text>
 	</string>
 	<string id="ui_mcm_bountysquads_base_spawn_chance">
-		<text>Base spawn chance</text>
+		<text>Базовый шанс спавна</text>
 	</string>
 	<string id="ui_mcm_bountysquads_base_spawn_chance_desc">
-		<text>This is the base spawn chance: the chance for a bounty squad to spawn on a given update when the actor has not killed any members of that faction. The total spawn chance for a bounty squad to spawn is calculated as (base_spawn_chance * faction_multiplier), where the faction multiplier depends on how many of the faction's members have died to the actor. Recommended to keep this value low, as the faction multiplier will ensure that bounty squads become very likely to spawn.</text>
+		<text>Это базовый шанс спавна: шанс появления отряда головорезов в данном обновлении, когда ГГ не убил ни одного члена этой фракции. Общий шанс появления отряда головорезов рассчитывается так: (базовый_шанс_спавна * множитель_фракции), где множитель фракции зависит от того, сколько членов фракции умерло из-за ГГ. Рекомендуется держать это значение на низком уровне, так как множитель фракции гарантирует, что отряды за головами будут появляться с большой вероятностью</text>
 	</string>
 	<string id="ui_mcm_bountysquads_spawn_mult_attacked_increment">
-		<text>Multiplier increment per death</text>
+		<text>Увеличение множителя за смерть</text>
 	</string>
 	<string id="ui_mcm_bountysquads_spawn_mult_attacked_increment_desc">
-		<text>If the actor is especially belligerent to a specific faction, they will have a higher chance to send bounty squads after them. Each time the actor kills a STALKER, the victim's faction will increase their multiplier to spawn a bounty squad, faction_multiplier, by this amount. For example, if this value is set to 0.5, the first time that the actor kills a member of a faction will increase the multiplier to 1.5. The next victim will increase it to 2.0, and so on.</text>
+		<text>Если ГГ особенно агрессивен по отношению к определенной фракции, у этой фракции будет больше шансов послать за ним отряды головорезов. Каждый раз, когда ГГ убивает СТАЛКЕРА, фракция будет увеличивать свой множитель (множитель_фракции) на эту величину, чтобы создать отряд головорезов. Например, если это значение установлено на 0,5, при первом убийстве ГГ члена фракции, множитель увеличится до 1,5. Следующая жертва увеличит его до 2.0 и так далее</text>
 	</string>
-
-
 </string_table>

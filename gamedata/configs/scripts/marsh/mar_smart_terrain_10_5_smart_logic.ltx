@@ -49,16 +49,19 @@ on_info = {=pure_enemy_dist_le(5)} beh@idle
 active = animpoint@mar_smart_terrain_10_5_camp_work_1
 suitable = {=is_night} true
 prior = 45
+on_combat = combat
 
 [logic@mar_smart_terrain_10_5_camp_work_2]
 active = animpoint@mar_smart_terrain_10_5_camp_work_2
 suitable = {=is_night} true
 prior = 45
+on_combat = combat
 
 [logic@mar_smart_terrain_10_5_camp_work_3]
 active = animpoint@mar_smart_terrain_10_5_camp_work_3
 suitable = {=is_night} true
 prior = 45
+on_combat = combat
 
 [logic@mar_smart_terrain_10_5_camp_work_4]
 active = animpoint@mar_smart_terrain_10_5_camp_work_4
@@ -69,6 +72,10 @@ prior = 45
 active = animpoint@mar_smart_terrain_10_5_camp_work_5
 suitable = {=is_night} true
 prior = 45
+on_combat = combat
+
+[combat]
+combat_type = {=cond_scheme_cover()} cover, {=cond_scheme_camper()} camper
 
 [animpoint@mar_smart_terrain_10_5_camp_work_1]
 cover_name = mar_smart_terrain_10_5_animpoint_kamp1

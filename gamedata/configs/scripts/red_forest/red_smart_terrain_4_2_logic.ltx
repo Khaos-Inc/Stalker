@@ -1,19 +1,25 @@
 [logic@red_smart_terrain_4_2_camp_work_1]
 active = animpoint@red_smart_terrain_4_2_animpoint_kamp1
 prior = 200
+on_combat = combat
 
 [logic@red_smart_terrain_4_2_camp_work_2]
 active = animpoint@red_smart_terrain_4_2_animpoint_kamp2
 prior = 200
+on_combat = combat
 
 [logic@red_smart_terrain_4_2_camp_work_4]
 active = animpoint@red_smart_terrain_4_2_animpoint_kamp4
 prior = 200
+on_combat = combat
 
 [logic@red_smart_terrain_4_2_camp_work_5]
 active = animpoint@red_smart_terrain_4_2_animpoint_kamp5
 prior = 200
+on_combat = combat
 
+[combat]
+combat_type = {=cond_scheme_cover()} cover, {=cond_scheme_camper()} camper
 
 [animpoint@red_smart_terrain_4_2_animpoint_kamp1]
 cover_name = red_smart_terrain_4_2_animpoint_kamp1

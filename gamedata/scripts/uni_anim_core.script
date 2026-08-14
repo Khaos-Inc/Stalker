@@ -59,10 +59,10 @@ local function anm_jammed(anm_table, item)
     local jam_type = nil
     -- Check for WPO jams
     if arti_jamming then
-        local jam_status = arti_jamming.get_jam_status(item:id())
-        if jam_status == arti_jamming.JamType.FailureToEject then
+        local jam_status = arti_jamming.get_jammed(item:id())
+        if jam_status == 2 then
             jam_type = "_jammed"
-        elseif jam_status == arti_jamming.JamType.DoubleFeed then
+        elseif jam_status == 3 then
             jam_type = "_superjammed"
         end
     end

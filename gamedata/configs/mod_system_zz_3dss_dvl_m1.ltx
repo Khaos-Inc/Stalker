@@ -2,10 +2,35 @@
 >scopes		 = ado, cortex, razorhd, ps320, tac30 
 !hud_fov
 
-lewd_lens_hide_enabled       = true		
-lewd_lens_hide_bone          = lens
-lewd_lens_hide_delays        = 0.1,0
-lewd_lens_hide_aim_mode      = true, false, false
+use_alt_aim_hud				 = true
+
+lens_hide_enabled       = true		
+lens_hide_bone          = lens
+lens_hide_delays        = 0.1,0
+lens_hide_aim_mode      = true, false, false
+
+;---------------------------------------------SCRIPTED CANTED SIGHTS--------------------------------------
+canted_sights = canted_deltapoint, canted_docter, canted_t12
+
+canted_sights_bone  = wpn_body
+canted_sights_pos   = -0.001300, 0.070600, 0.222500
+canted_sights_rot    = 0, 0, 0
+canted_sights_scale  = 1.139500, 1.139500, 1.139500
+
+open_slots 			 = 1
+canted_rds_position1 = -0.001300, 0.070600, 0.222500
+
+canted_aim_pos_canted_deltapoint = -0.13941, -0.096055, -0.05
+canted_aim_rot_canted_deltapoint = -0.000167, -0.000208, 0.825
+ms_dot_offset_canted_deltapoint	= 0.001, 0.001
+
+canted_aim_pos_canted_docter     = -0.139617, -0.091057, -0.05
+canted_aim_rot_canted_docter     = -0.000167, -0.000208, 0.825
+ms_dot_offset_canted_docter	= 0.001, 0.001
+
+canted_aim_pos_canted_t12        = -0.137823, -0.098664, -0.05
+canted_aim_rot_canted_t12        = -0.000167, -0.000208, 0.825
+;------------------------------------------------------------------------------------------------------
 ![wpn_dvl10_m1_hud]
         item_position                   = 0.000731, 0.002729, 0.007252
         shell_bone                  	= shell
@@ -39,6 +64,16 @@ lewd_lens_hide_aim_mode      = true, false, false
         base_hud_offset_pos_16x9         = -0.07413, -0.031275, 0.037131
         base_hud_offset_rot              = 0, 0, 0.120611
         base_hud_offset_rot_16x9         = 0, 0, 0.120611
+
+        aim_hud_offset_alt_pos           = -0.142539, -0.134396, 0
+        aim_hud_offset_alt_pos_16x9      = -0.142539, -0.134396, 0
+        aim_hud_offset_alt_rot           = 0.000258, -8e-06, 0.9
+        aim_hud_offset_alt_rot_16x9      = 0.000258, -8e-06, 0.9
+		
+        lowered_hud_offset_pos           = 0.096693, -0.022118, -0.014797
+        lowered_hud_offset_pos_16x9      = 0.096693, -0.022118, -0.014797
+        lowered_hud_offset_rot           = 0.046881, -0.779099, 0.1
+        lowered_hud_offset_rot_16x9      = 0.046881, -0.779099, 0.1
 		
 ![wpn_dvl10_m1_acog]:acog_s
 1icon_layer 	= acog_x

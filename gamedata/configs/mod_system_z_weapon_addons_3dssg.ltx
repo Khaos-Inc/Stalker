@@ -6,7 +6,9 @@ hamr						= scope
 razorhd						= scope
 uh2							= scope
 uh1_magd					= scope
+;uh1_magd_off				= scope
 e0t2_magd					= scope
+;e0t2_magd_off				= scope
 lco1						= scope
 march_f_shorty				= scope
 march_f_shorty_alt			= scope
@@ -36,8 +38,8 @@ p434						= scope
 tac30						= scope
 ado							= scope
 echo1						= scope
-spectre_tactical_kit		= scope
-infiltrator_tactical_kit	= scope
+1p69						= scope
+pritseldob					= scope
 aim_t2                      = scope
 aim_t2_magd					= scope
 e0t2_magd_unity				= scope
@@ -50,6 +52,7 @@ dppro	                    = scope
 drs	                        = scope
 atacr	                    = scope
 atacr_voodoo	            = scope
+
 
 ;-----------------------------------------------------------------------------
 ;                               COLLIMATORS
@@ -67,6 +70,8 @@ inv_grid_height    = 1
 inv_grid_x         = 0
 inv_grid_y         = 2
 repair_type                                         = scope
+red_dot 			= true
+
 
 ;-------------------------------------------------------------------------------
 [1p87]:addon
@@ -82,6 +87,8 @@ inv_grid_height    = 1
 inv_grid_x         = 1
 inv_grid_y         = 12
 repair_type                                         = scope
+red_dot 			= true
+
 
 ;-------------------------------------------------------------------------------
 [aim_acro]:addon
@@ -97,8 +104,8 @@ inv_grid_height    = 1
 inv_grid_x         = 1
 inv_grid_y         = 13
 repair_type                                         = scope
+red_dot 			= true
 
-;--------------------------------------------------------------------------------------
 
 ;--------------------------------------------------------------------------------------
 [bossxe]:addon
@@ -114,6 +121,8 @@ inv_grid_height    = 1
 inv_grid_x         = 18
 inv_grid_y         = 19
 repair_type                                         = scope
+red_dot 			= true
+
 
 ;-------------------------------------------------------------------------------
 [exps3]:addon
@@ -129,6 +138,8 @@ inv_grid_height    = 1
 inv_grid_x         = 1
 inv_grid_y         = 14
 repair_type                                         = scope
+red_dot 			= true
+
 
 ;-------------------------------------------------------------------------------
 [hco]:addon
@@ -144,6 +155,8 @@ inv_grid_height    = 1
 inv_grid_x         = 1
 inv_grid_y         = 15
 repair_type                                         = scope
+red_dot 			= true
+
 
 ;-------------------------------------------------------------------------------
 [he510]:addon
@@ -159,6 +172,8 @@ inv_grid_height    = 1
 inv_grid_x         = 1
 inv_grid_y         = 16
 repair_type                                         = scope
+red_dot 			= true
+
 
 ;--------------------------------------------------------------------------------------------------------------
 [lco1]:addon
@@ -174,6 +189,8 @@ inv_grid_height    = 1
 inv_grid_x         = 1
 inv_grid_y         = 17
 repair_type                                         = scope
+red_dot 			= true
+
 
 ;--------------------------------------------------------------------------------------------------------------
 [magnifier]:addon
@@ -204,6 +221,8 @@ inv_grid_height    = 1
 inv_grid_x         = 1
 inv_grid_y         = 18
 repair_type                                         = scope
+red_dot 			= true
+
 
 ;-----------------------------------------------------------------------------
 [pk6]:addon
@@ -219,6 +238,8 @@ inv_grid_height    = 1
 inv_grid_x         = 1
 inv_grid_y         = 19
 repair_type                                         = scope
+red_dot 			= true
+
 
 ;-------------------------------------------------------------------------------
 [romeo4]:addon
@@ -234,6 +255,8 @@ inv_grid_height    = 1
 inv_grid_x         = 2
 inv_grid_y         = 0
 repair_type                                         = scope
+red_dot 			= true
+
 
 ;-------------------------------------------------------------------------------
 [romeo8]:addon
@@ -249,6 +272,8 @@ inv_grid_height    = 1
 inv_grid_x         = 2
 inv_grid_y         = 1
 repair_type                                         = scope
+red_dot 			= true
+
 
 ;-----------------------------------------------------------------------------
 [t12]:addon
@@ -264,9 +289,18 @@ inv_grid_height    = 1
 inv_grid_x         = 2
 inv_grid_y         = 2
 repair_type                                         = scope
+red_dot 			= true
+
+use_condition = true
+condition_bar = power_progess_bar
+
+battery_texture       = wpn\scope_reticles\t12
+battery_texture_75    = wpn\scope_reticles\t12\t12_75
+battery_texture_50    = wpn\scope_reticles\t12\t12_50
+battery_texture_25    = wpn\scope_reticles\t12\t12_25
+battery_texture_10    = wpn\scope_reticles\t12\t12_10
 
 ;-------------------------------------------------------------------------------
-
 [uh2]:addon
 visual				                                = anomaly_weapons\wpn_addons\uh1.ogf
 cost                		                        = 18950
@@ -280,14 +314,28 @@ inv_grid_height    = 1
 inv_grid_x         = 2
 inv_grid_y         = 3
 repair_type                                         = scope
-
-;-------------------------------------------------------------------------------
-
+red_dot 			= true
 
 
 ;-----------------------------------------------------------------------------
 ;                                  OPTICS
 ;-----------------------------------------------------------------------------
+[1p69]:addon
+visual				                                = anomaly_weapons\wpn_addons\1p63.ogf
+cost                		                        = 10000
+inv_name        		                            = st_addon_scope_pk1_obzor
+inv_name_short  		                            = st_addon_scope_pk1_obzor
+description    			                            = st_addon_scope_pk1_obzor_descr
+inv_weight        		                            = 0.6
+visual				                                = anomaly_weapons\wpn_addons\1p59.ogf
+icons_texture                                       = ui\ui_icon_scopes_3dss
+inv_grid_width     = 2
+inv_grid_height    = 1
+inv_grid_x         = 18
+inv_grid_y         = 0
+repair_type                                         = scope
+
+;-------------------------------------------------------------------------------
 [ado]:addon
 visual				                                = anomaly_weapons\wpn_addons\ado.ogf
 cost                		                        = 45000
@@ -346,6 +394,8 @@ inv_grid_height    = 1
 inv_grid_x         = 16
 inv_grid_y         = 3
 repair_type                                         = scope
+has_rds				= true
+hides_irons			= true
 
 ;--------------------------------------------------------------------------------------------------------------
 [e0t2_magd]:addon
@@ -361,9 +411,10 @@ inv_grid_height    = 1
 inv_grid_x         = 16
 inv_grid_y         = 4
 repair_type                                         = scope
+has_rds				= true
 
 ;--------------------------------------------------------------------------------------------------------------
-[e0t2_magd_off]:addon;dummy scope section
+[e0t2_magd_off]:addon ;dummy scope section
 visual				                                = anomaly_weapons\wpn_addons\e0t2_mag.ogf
 cost                		                        = 23280
 inv_name        		                            = st_addon_scope_e0t2_mag
@@ -377,6 +428,8 @@ inv_grid_x         = 16
 inv_grid_y         = 4
 repair_type                                         = scope
 script_binding 										= magnifier_switch.bind_dummy
+has_rds				= true
+
 
 ;-------------------------------------------------------------------------------
 [echo1]:addon
@@ -392,7 +445,13 @@ inv_grid_height    = 1
 inv_grid_x         = 16
 inv_grid_y         = 5
 repair_type                                         = scope
-		
+
+battery_texture       = wpn\scope_reticles\sig_sauer_echo1_thermal_reflex_sight
+battery_texture_75    = wpn\scope_reticles\echo1\echo1_75
+battery_texture_50    = wpn\scope_reticles\echo1\echo1_50
+battery_texture_25    = wpn\scope_reticles\echo1\echo1_25
+battery_texture_10    = wpn\scope_reticles\echo1\echo1_10
+	
 ;--------------------------------------------------------------------------------------
 [gee36]:addon
 visual				                                = anomaly_weapons\wpn_addons\gee36.ogf
@@ -407,6 +466,8 @@ inv_grid_height    = 1
 inv_grid_x         = 15
 inv_grid_y         = 6
 repair_type                                         = scope
+hides_irons			= true
+blocks_irons 		= true
 
 ;-------------------------------------------------------------------------------
 [hamr]:addon
@@ -421,6 +482,7 @@ inv_grid_height    = 1
 inv_grid_x         = 16
 inv_grid_y         = 7
 repair_type                                         = scope
+has_rds				= true
 
 ;-------------------------------------------------------------------------------
 [infiltrator_tactical_kit]:addon
@@ -482,6 +544,7 @@ inv_grid_height    = 1
 inv_grid_x         = 16
 inv_grid_y         = 9
 repair_type                                         = scope
+has_rds				= true
 
 ;-------------------------------------------------------------------------------
 [monstrum]:addon
@@ -587,6 +650,9 @@ inv_grid_x         = 2
 inv_grid_y         = 5
 repair_type                                         = scope	
 
+use_condition = true
+condition_bar = power_progess_bar
+
 ;-----------------------------------------------------------------------------
 [spectre_tactical_kit]:addon
 visual				                                = dynamics\weapons\wpn_tac_kit_cases\wpn_tac_kit_case_small.ogf
@@ -662,9 +728,10 @@ inv_grid_height    = 1
 inv_grid_x         = 16
 inv_grid_y         = 16
 repair_type                                         = scope
+has_rds				= true
 
 ;--------------------------------------------------------------------------------------------------------------
-[uh1_magd_off]:addon;dummy scope section
+[uh1_magd_off]:addon ;dummy scope section
 visual				                                = anomaly_weapons\wpn_addons\uh1_mag.ogf
 cost                		                        = 25280
 inv_name        		                            = st_addon_scope_razor_mag
@@ -678,6 +745,8 @@ inv_grid_x         = 16
 inv_grid_y         = 16
 repair_type                                         = scope
 script_binding 										= magnifier_switch.bind_dummy
+has_rds				= true
+
 
 ;-------------------------------------------------------------------------------------
 [vulcan]:addon
@@ -704,6 +773,7 @@ inv_grid_width     = 1
 inv_grid_height    = 1
 inv_grid_x         = 0
 inv_grid_y         = 0
+red_dot 			= true
 
 ![1p29]
 visual				                                = anomaly_weapons\wpn_addons\1p29.ogf
@@ -728,6 +798,7 @@ inv_grid_width     = 1
 inv_grid_height    = 1
 inv_grid_x         = 0
 inv_grid_y         = 3
+red_dot 			= true
 
 ![1p78gs]
 visual				                                = anomaly_weapons\wpn_addons\1p78gs.ogf
@@ -753,6 +824,9 @@ inv_grid_height    = 1
 inv_grid_x         = 0
 inv_grid_y         = 6
 
+use_condition = true
+condition_bar = power_progess_bar
+
 ![ac10632]
 visual				                                = anomaly_weapons\wpn_addons\ac10632.ogf
 icons_texture                                       = ui\ui_icon_scopes_3dss
@@ -760,6 +834,7 @@ inv_grid_width     = 1
 inv_grid_height    = 1
 inv_grid_x         = 0
 inv_grid_y         = 7
+red_dot 			= true
 
 ![ac11090]
 
@@ -792,6 +867,7 @@ inv_grid_width     = 1
 inv_grid_height    = 1
 inv_grid_x         = 0
 inv_grid_y         = 11
+red_dot 			= true
 
 ![aimpoint]
 visual				                                = anomaly_weapons\wpn_addons\aimpoint.ogf
@@ -800,6 +876,7 @@ inv_grid_width     = 1
 inv_grid_height    = 1
 inv_grid_x         = 0
 inv_grid_y         = 12
+red_dot 			= true
 
 ![c-more]
 visual				                                = anomaly_weapons\wpn_addons\c-more.ogf
@@ -808,6 +885,7 @@ inv_grid_width     = 1
 inv_grid_height    = 1
 inv_grid_x         = 0
 inv_grid_y         = 13
+red_dot 			= true
 
 ![chs]
 icons_texture                                       = ui\ui_icon_scopes_3dss
@@ -823,6 +901,7 @@ inv_grid_width     = 1
 inv_grid_height    = 1
 inv_grid_x         = 0
 inv_grid_y         = 15
+red_dot 			= true
 
 ![cortex]
 visual				                                = anomaly_weapons\wpn_addons\cortex.ogf
@@ -839,6 +918,7 @@ inv_grid_width     = 1
 inv_grid_height    = 1
 inv_grid_x         = 0
 inv_grid_y         = 16
+red_dot 			= true
 
 ![deltapoint]
 visual				                                = anomaly_weapons\wpn_addons\deltapoint.ogf
@@ -847,6 +927,7 @@ inv_grid_width     = 1
 inv_grid_height    = 1
 inv_grid_x         = 0
 inv_grid_y         = 17
+red_dot 			= true
 
 ![e0t2]
 visual				                                = anomaly_weapons\wpn_addons\e0t2.ogf
@@ -855,6 +936,7 @@ inv_grid_width     = 1
 inv_grid_height    = 1
 inv_grid_x         = 0
 inv_grid_y         = 18
+red_dot 			= true
 
 ![ekp8_02]
 visual				                                = anomaly_weapons\wpn_addons\ekp8_02.ogf
@@ -863,6 +945,7 @@ inv_grid_width     = 1
 inv_grid_height    = 1
 inv_grid_x         = 0
 inv_grid_y         = 19
+red_dot 			= true
 
 ![ekp8_18]
 visual				                                = anomaly_weapons\wpn_addons\ekp8_18.ogf
@@ -871,6 +954,7 @@ inv_grid_width     = 1
 inv_grid_height    = 1
 inv_grid_x         = 1
 inv_grid_y         = 0
+red_dot 			= true
 
 ![eot]
 visual				                                = anomaly_weapons\wpn_addons\eot.ogf
@@ -879,6 +963,7 @@ inv_grid_width     = 1
 inv_grid_height    = 1
 inv_grid_x         = 1
 inv_grid_y         = 1
+red_dot 			= true
 
 ![gauss_sight]
 visual				                                = anomaly_weapons\wpn_addons\gauss.ogf
@@ -887,6 +972,12 @@ inv_grid_width     = 2
 inv_grid_height    = 1
 inv_grid_x         = 18
 inv_grid_y         = 2
+hides_irons			= true
+
+use_condition 		= true
+condition_bar		= power_progess_bar
+battery_texture		= wpn\scope_reticles\flir
+battery_texture_off	= wpn\scope_reticles\flir_off
 
 ![kashtan_rmr]
 visual				                                = anomaly_weapons\wpn_addons\kashtan.ogf
@@ -895,6 +986,7 @@ inv_grid_width     = 1
 inv_grid_height    = 1
 inv_grid_x         = 1
 inv_grid_y         = 11
+has_rds				= true
 
 ![kemper]
 visual				                                = anomaly_weapons\wpn_addons\kemper.ogf
@@ -903,6 +995,7 @@ inv_grid_width     = 1
 inv_grid_height    = 1
 inv_grid_x         = 1
 inv_grid_y         = 2
+red_dot 			= true
 
 ![kobra]
 visual				                                = anomaly_weapons\wpn_addons\kobra.ogf
@@ -911,6 +1004,7 @@ inv_grid_width     = 1
 inv_grid_height    = 1
 inv_grid_x         = 1
 inv_grid_y         = 3
+red_dot 			= true
 
 ![kp_sr2]
 icons_texture                                       = ui\ui_icon_scopes_3dss
@@ -918,6 +1012,7 @@ inv_grid_width     = 1
 inv_grid_height    = 1
 inv_grid_x         = 1
 inv_grid_y         = 4
+red_dot 			= true
 
 ![leupold]
 visual				                                = anomaly_weapons\wpn_addons\leupold.ogf
@@ -934,6 +1029,7 @@ inv_grid_width     = 2
 inv_grid_height    = 1
 inv_grid_x         = 18
 inv_grid_y         = 4
+has_rds				= true
 
 ![marchf]
 visual				                                = anomaly_weapons\wpn_addons\marchf.ogf
@@ -950,6 +1046,8 @@ inv_grid_width     = 1
 inv_grid_height    = 1
 inv_grid_x         = 1
 inv_grid_y         = 5
+red_dot 			= true
+
 
 ![okp]
 visual				                                = anomaly_weapons\wpn_addons\okp.ogf
@@ -958,6 +1056,8 @@ inv_grid_width     = 1
 inv_grid_height    = 1
 inv_grid_x         = 1
 inv_grid_y         = 6
+red_dot 			= true
+
 
 ![pgo7gs]
 visual				                                = anomaly_weapons\wpn_addons\pgo7.ogf
@@ -974,6 +1074,8 @@ inv_grid_width     = 1
 inv_grid_height    = 1
 inv_grid_x         = 1
 inv_grid_y         = 7
+red_dot 			= true
+
 
 ![pn23]
 visual				                                = anomaly_weapons\wpn_addons\pn23.ogf
@@ -990,6 +1092,8 @@ inv_grid_width     = 1
 inv_grid_height    = 1
 inv_grid_x         = 1
 inv_grid_y         = 8
+red_dot 			= true
+
 
 ![ps01]
 visual				                                = anomaly_weapons\wpn_addons\ps01.ogf
@@ -1022,6 +1126,7 @@ inv_grid_width     = 2
 inv_grid_height    = 1
 inv_grid_x         = 18
 inv_grid_y         = 8
+has_rds				= true
 
 ![rmr]
 visual				                                = anomaly_weapons\wpn_addons\rmr.ogf
@@ -1030,6 +1135,8 @@ inv_grid_width     = 1
 inv_grid_height    = 1
 inv_grid_x         = 1
 inv_grid_y         = 9
+red_dot 			= true
+
 
 ![rakurs]
 visual				                                = anomaly_weapons\wpn_addons\rakurs.ogf
@@ -1038,6 +1145,8 @@ inv_grid_width     = 1
 inv_grid_height    = 1
 inv_grid_x         = 1
 inv_grid_y         = 10
+red_dot 			= true
+
 
 ![spec_alt]
 visual				                                = anomaly_weapons\wpn_addons\spec_alt.ogf
@@ -1046,6 +1155,7 @@ inv_grid_width     = 2
 inv_grid_height    = 1
 inv_grid_x         = 18
 inv_grid_y         = 11
+has_rds				= true
 
 ![specter]
 visual				                                = anomaly_weapons\wpn_addons\specter.ogf
@@ -1078,6 +1188,7 @@ inv_grid_width     = 2
 inv_grid_height    = 1
 inv_grid_x         = 18
 inv_grid_y         = 14
+has_rds				= true
 
 ![usp1]
 visual				                                = anomaly_weapons\wpn_addons\1p29.ogf

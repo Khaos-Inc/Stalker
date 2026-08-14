@@ -1,0 +1,18 @@
+function blocking_ui_open()
+    if not db.actor then
+        return true
+    end
+    if db.actor.is_talking and db.actor:is_talking() then
+        return true
+    end
+    if actor_menu and actor_menu.inventory_opened and actor_menu.inventory_opened() then
+        return true
+    end
+    if ActorMenu and ActorMenu.get_pda_menu then
+        local pda = ActorMenu.get_pda_menu()
+        if pda and pda:IsShown() then
+            return true
+        end
+    end
+    return false
+end

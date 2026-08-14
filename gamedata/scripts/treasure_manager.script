@@ -106,14 +106,14 @@ local tools_map_tiers = {
     ["l10_limansk"] = {3, 3, 3, 4, 4, 4, 4, 5},
     ["l10_red_forest"] = {3, 4, 4, 4, 4, 4, 4, 4, 4, 5},
     ["l10_radar"] = {3, 4, 4, 4, 4, 4, 4, 4, 4},
-    ["zaton"] = {3, 3, 4, 4, 5},
-    ["jupiter"] = {3, 3, 4, 4, 5},
-    ["pripyat"] = {3, 4, 4, 4, 5, 5, 5, 5},
+    ["zaton"] =   {3, 3, 4, 4, 4, 4, 4, 5, 5, 5},
+    ["jupiter"] = {3, 3, 4, 4, 4, 4, 4, 5, 5, 5},
+    ["pripyat"] = {3, 4, 4, 5, 5, 5, 5},
     ["l11_hospital"] = {4, 5},
-    ["l11_pripyat"] = {4, 5},
-    ["l12_stancia"] = {4, 4, 4, 5, 5, 5, 5, 5},
-    ["l12_stancia_2"] = { 4, 4, 4, 5, 5, 5, 5},
-    ["l13_generators"] = {4, 4, 4, 5, 5, 5, 5, 5, 5, 5},
+    ["l11_pripyat"] = {3, 4, 4, 5, 5, 5, 5},
+    ["l12_stancia"] = {4, 4, 5, 5, 5, 5, 5},
+    ["l12_stancia_2"] = { 4, 4, 5, 5, 5, 5},
+    ["l13_generators"] = {4, 4, 5, 5, 5, 5, 5, 5, 5},
     ["l03u_agr_underground"] = {3, 4, 5},
     ["l08u_brainlab"] = {3, 4, 5},
     ["labx8"] = {3, 4, 5},
@@ -496,15 +496,7 @@ function set_random_stash(no_spot, hint, bonus_items, id, dbg)
 	if db.actor and (no_spot ~= true) and (type(no_spot) ~= "string") then -- it has to be a marked non-ISG stash
 		local cnt = load_var(db.actor, "toolkit_reward_count") or 0
 		local factor = stash_rare.start_chance * (cnt / stash_rare.task_num)
-		local rare_true = false
-
-		if (ui_mcm and ui_mcm.get("black_road_revisited/isolated_and_hated") == true) then
-			rare_true = math.random(1,100) <= ui_mcm.get("black_road_revisited/yellow_chance") 
-		else
-			rare_true = (cnt >= stash_rare.task_num) and (math.random(100) < factor)
-		end
-
-		if (rare_true) then
+		if (cnt >= stash_rare.task_num) and (math.random(100) < factor) then
 		
 			-- Shift to next toolkit
 			local last_index = load_var(db.actor, "toolkit_reward_last")
@@ -669,7 +661,7 @@ function set_random_stash(no_spot, hint, bonus_items, id, dbg)
 		
 		if tools_lvl_tier == 1 then
 			tool_table = {
-				[1] = "itm_basickit",
+				[1] = "itm_ammokit",
 				[2] = "itm_drugkit",
 				}
 			tool_type = tool_table[math.random(#tool_table)]
@@ -678,10 +670,12 @@ function set_random_stash(no_spot, hint, bonus_items, id, dbg)
 		
 		if tools_lvl_tier == 2 then
 			tool_table = {
-				[1] = "itm_drugkit",
+				[1] = "itm_ammokit",
 				[2] = "itm_drugkit",
-				[3] = "itm_basickit",
+				[3] = "itm_drugkit",
 				[4] = "itm_basickit",
+				[5] = "itm_basickit",
+				[6] = "itm_basickit",
 				}
 			tool_type = tool_table[math.random(#tool_table)]
 			if tool_type == "itm_basickit" and not has_alife_info("actor_find_basic_kit") then
@@ -692,10 +686,10 @@ function set_random_stash(no_spot, hint, bonus_items, id, dbg)
 		
 		if tools_lvl_tier == 3 then
 			tool_table = {
-				[1] = "itm_drugkit",
-				[2] = "itm_drugkit",
-				[3] = "itm_drugkit",
-				[4] = "itm_basickit",
+				[1] = "itm_ammokit",
+				[2] = "itm_ammokit",
+				[3] = "itm_ammokit",
+				[4] = "itm_drugkit",
 				[5] = "itm_basickit",
 				[6] = "itm_basickit",
 				[7] = "itm_basickit",
@@ -864,37 +858,18 @@ function try_spawn_treasure(box)
             if (se_obj) then
                 if (IsOutfit(se_obj)) then
                     local data = utils_stpk.get_item_data(se_obj)
-					local condition = (math.random(5, 35) / 100)
-					-- Isolated and Hated armor mode change
-					if ui_mcm and ui_mcm.get("black_road_revisited/armor_mode") == 2 then
-						data.condition = condition * (math.random(130, 170) / 100)
-					elseif ui_mcm and ui_mcm.get("black_road_revisited/armor_mode") == 3 then
-						data.condition = (math.random(1,58) / 100)
-					else
-						data.condition = condition
-					end
+                    data.condition = (math.random(5, 35) / 100) -- Grok's Stash Overhaul, armor_condition
                     utils_stpk.set_item_data(data, se_obj)
                 end
 
                 alife():register(se_obj)
             end
         else -- End of Grok's Stash Overhaul Edit -- Every other items are spawned following conditions defined in item_prop_table at the beginning of the script
-			local ammo_rand = math.random(10, 25)
-			if (ui_mcm and ui_mcm.get("black_road_revisited/isolated_and_hated") and ui_mcm.get("black_road_revisited/ammo_boost")) then
-				local ammo_pick = math.random(1,100)
-				if ammo_pick < 50 then
-					ammo_rand = math.random(20,40)
-				elseif ammo_pick < 83 then
-					ammo_rand = math.random(40,80)
-				else
-					ammo_rand = math.random(80,160)
-				end
-			end
             local item_prop_table = {
                cond_r = {30, 70}, 
                cond_ct = "part", 
                cond_cr = {0.5, 0.75, 1}, 
-               ammo = ammo_rand }
+               ammo = math.random(10, 25) }
             alife_create_item(section, box, item_prop_table)
         end
     end

@@ -1,8 +1,7 @@
 -- Workshop Logic
 function UseWorkshop(id)
 	local stash_id = GetStash(id)
-	CreateTimeEvent("hf_workshop", "get_stash_items_"..id, 0, GiveStashItemsToActor, id, stash_id)
-	CreateTimeEvent("hf_workshop","open_workshop_"..id,0.1,OpenWorkshop)
+	CreateTimeEvent("hf_workshop","open_workshop_"..id,0.1,OpenWorkshop, stash_id)
 end
 
 function CreateStash(id)
@@ -76,10 +75,15 @@ function GiveStashItemsToActor(workshop_id, stash_id)
 	return true
 end
 
-function OpenWorkshop()
-	workshop_ui_ref = ui_workshop.get_workshop_ui(nil, nil, {false,false,false,false,false}, false)
+function OpenWorkshop(stashId)
+	workshop_ui_ref = ui_workshop.get_workshop_ui(nil, nil, {false,false,false,false,false}, false, stashId)
 	if (workshop_ui_ref) then
 		workshop_ui_ref:ShowDialog(true)
+		workshop_ui_ref.dlg_craft.stashId = stashId
+		workshop_ui_ref.dlg_upgrade.stashId = stashId
+		workshop_ui_ref.dlg_state.stashId = stashId
+		workshop_ui_ref.dlg_repair.stashId = stashId
+		workshop_ui_ref.stashId = stashId
 	end
 	return true
 end

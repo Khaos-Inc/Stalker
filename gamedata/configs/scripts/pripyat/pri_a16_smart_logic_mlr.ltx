@@ -2,51 +2,64 @@
 active = animpoint@pri_a16_camp_work_1
 suitable = {!surge_started} true
 prior = 200
+on_combat = combat
 
 [logic@pri_a16_camp_work_2]
 active = animpoint@pri_a16_camp_work_2
 suitable = {!surge_started} true
 prior = 200
+on_combat = combat
 
 [logic@pri_a16_camp_work_3]
 active = animpoint@pri_a16_camp_work_3
 suitable = {!surge_started} true
 prior = 200
+on_combat = combat
 
 [logic@pri_a16_camp_work_4]
 active = animpoint@pri_a16_camp_work_4
 suitable = {!surge_started} true
 prior = 200
+on_combat = combat
 
 [logic@pri_a16_camp_work_5]
 active = animpoint@pri_a16_camp_work_5
 suitable = {!surge_started} true
 prior = 200
+on_combat = combat
 
 [logic@pri_a16_camp_work_6]
 active = animpoint@pri_a16_camp_work_6
 suitable = {!surge_started} true
 prior = 200
+on_combat = combat
 
 [logic@pri_a16_camp_work_7]
 active = animpoint@pri_a16_camp_work_7
 suitable = {!surge_started} true
 prior = 200
+on_combat = combat
 
 [logic@pri_a16_camp_work_8]
 active = animpoint@pri_a16_camp_work_8
 suitable = {!surge_started} true
 prior = 200
+on_combat = combat
 
 [logic@pri_a16_camp_work_9]
 active = animpoint@pri_a16_camp_work_9
 suitable = {=is_night !surge_started} true
 prior = 200
+on_combat = combat
 
 [logic@pri_a16_camp_work_10]
 active = animpoint@pri_a16_camp_work_10
 suitable = {!surge_started} true
 prior = 200
+on_combat = combat
+
+[combat]
+combat_type = {=cond_scheme_cover()} cover, {=cond_scheme_camper()} camper
 
 [meet_random]
 close_anim 		= nil

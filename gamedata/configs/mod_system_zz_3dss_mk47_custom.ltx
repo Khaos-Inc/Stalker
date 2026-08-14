@@ -4,9 +4,41 @@
         position                         = -0.074753, 0.144625, -0.120845
         shell_point                      = 0.118568, -0.053341, 0.242516
 
+use_alt_aim_hud		= true
+
+;---------------------------------------------SCRIPTED CANTED SIGHTS-----------------------------------
+canted_sights 		= canted_deltapoint, canted_docter, canted_t12
+
+canted_sights_bone  = wpn_body
+canted_sights_pos   = -0.00084, 0.057215, 0.001122
+canted_sights_rot   = 0, 0, 0
+canted_sights_scale = 1.13, 1.13, 1.13
+front_iron_pos      = -0.00084, 0.057215, 0.30422
+front_iron_rot      = 0, 0, 0
+front_iron_scale    = 1.13, 1.13, 1.13
+
+open_slots 			 = 1
+canted_rds_position1 = -0.00084, 0.057215, 0.175901
+
+canted_aim_pos_canted_deltapoint = -0.091315, -0.055674, -0.02
+canted_aim_rot_canted_deltapoint = -0.000444, 0.000083, 0.8
+ms_dot_offset_canted_deltapoint = 0, 0.006
+
+canted_aim_pos_canted_docter     = -0.091415, -0.050678, -0.02
+canted_aim_rot_canted_docter     = -0.000444, 0.000083, 0.8
+ms_dot_offset_canted_docter = 0, 0.006
+
+canted_aim_pos_canted_t12        = -0.091105, -0.055972, -0.02
+canted_aim_rot_canted_t12        = -0.000444, 0.000083, 0.8
+;------------------------------------------------------------------------------------------------------
 ![wpn_mk47_sup_hud]
 anm_shots                                = mk47new_shoot_3dss, shoot
 
+        aim_hud_offset_alt_pos           = -0.092278, -0.07562, 0
+        aim_hud_offset_alt_pos_16x9      = -0.092278, -0.07562, 0
+        aim_hud_offset_alt_rot           = 0.000541, 8e-06, 0.8
+        aim_hud_offset_alt_rot_16x9      = 0.000541, 8e-06, 0.8
+		
         base_hud_offset_pos              = -0.012157, -0.02149, 0.050414
         base_hud_offset_pos_16x9         = -0.012157, -0.02149, 0.050414
         base_hud_offset_rot              = 0.00043, -0.000256, 0.114352
@@ -39,7 +71,7 @@ anm_shots                                = mk47new_shoot_3dss, shoot
         aim_hud_offset_alt_rot_16x9      = 0, 0, -0.025
 
 ![wpn_mk47_sup_spec_alt]:specter_s	
-![wpn_mk47_sup_spec_alt_hud	]
+![wpn_mk47_sup_spec_alt_hud]
         aim_hud_offset_pos               = -0.061055, 0.006178, -0.061111
         aim_hud_offset_pos_16x9          = -0.061055, 0.006178, -0.061111
 

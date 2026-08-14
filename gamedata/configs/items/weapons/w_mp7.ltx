@@ -1,4 +1,3 @@
-;------------------------------------------------------------------------------------------------
 [wpn_mp7]:identity_immunities,weapon_probability,default_weapon_params,wpn_mp7_sounds
 GroupControlSection                      = spawn_group
 $npc                                     = on
@@ -300,7 +299,7 @@ anm_bore_jammed                          = mp7_sed_idle, idle_jammed
         anm_shots_jammed_aim             = mp7_sed_shot_aim, mp7_sed_shot_jammed
 
         anm_reload_misfire_aim           = mp7_sed_misfire_aim
-        anm_reload_misfire_empty_aim           = mp7_sed_misfire_aim, mp7_sed_misfire_aim_empty
+        anm_reload_misfire_empty_aim     = mp7_sed_misfire_aim, mp7_sed_misfire_aim_empty
 		
         anm_switch_mode_aim              = mp7_sed_mod_switch_aim, idle
 		anm_switch_mode_empty_aim        = mp7_sed_mod_switch_aim, idle_empty
@@ -311,14 +310,14 @@ anm_bore_jammed                          = mp7_sed_idle, idle_jammed
 		anm_bore_jammed_aim              = mp7_sed_aim, idle_jammed
 		
 		anm_ammo_check                   = mp7_sed_ammo_check
-        anm_ammo_check_empty             = mp7_sed_ammo_check_empty
-		anm_ammo_check_jammed            = mp7_sed_ammo_check_jammed
-        anm_ammo_check_empty_jammed      = mp7_sed_ammo_check_jammed
+        anm_ammo_check_empty             = mp7_sed_ammo_check, mp7_sed_ammo_check_empty
+		anm_ammo_check_jammed            = mp7_sed_ammo_check, mp7_sed_ammo_check_jammed
+        anm_ammo_check_empty_jammed      = mp7_sed_ammo_check, mp7_sed_ammo_check_jammed
 		
 		anm_ammo_check_aim               = mp7_sed_ammo_check_aim
-        anm_ammo_check_empty_aim         = mp7_sed_ammo_check_empty_aim, mp7_sed_ammo_check_empty_aim
-		anm_ammo_check_jammed_aim        = mp7_sed_ammo_check_jammed_aim, mp7_sed_ammo_check_jammed_aim
-		anm_ammo_check_empty_jammed_aim  = mp7_sed_ammo_check_empty_aim, mp7_sed_ammo_check_empty_jammed_aim
+        anm_ammo_check_empty_aim         = mp7_sed_ammo_check_aim, mp7_sed_ammo_check_empty_aim
+		anm_ammo_check_jammed_aim        = mp7_sed_ammo_check_aim, mp7_sed_ammo_check_jammed_aim
+		anm_ammo_check_empty_jammed_aim  = mp7_sed_ammo_check_aim, mp7_sed_ammo_check_empty_jammed_aim
 
 
 shell_bone                               = wpn_body

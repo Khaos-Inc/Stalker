@@ -4,7 +4,7 @@
 	Link       : https://www.moddb.com/mods/stalker-anomaly/addons/shader-3d-scopes
 	Author     : party_50
 	Date       : 01.03.2024
-	Last Edit  : 23.05.2025 - MsPizza727
+	Last Edit  : 08.08.2026
 	=====================================================================
 --]]
 
@@ -15,8 +15,15 @@ local PARALLAX_SHADOW
 local SEE_THROUGH
 local THERMAL_PIXELATION
 local CHROMATISM
-local LENS_BRIGHTNESS
 local MAS_SCALE = 1
+local ZOOM_NORMAL = 0
+local ZOOM_ALT = 1
+local NVG_GAIN_MIN = 0.5
+local NVG_GAIN_MAX = 2.0
+local NVG_GAIN_STEPS = 3
+local NVG_KEY_HOLD_MS = 500
+local FUSION_WHITE_FADE_MS = 2500
+local FUSION_WHITE_FADE_STEPS = 75
 
 local ALL_PARAMETERS = {
 	s3ds_reticle_size = "float",
@@ -31,13 +38,27 @@ local ALL_PARAMETERS = {
 	s3ds_reticle_type = "float",
 	s3ds_dirt_intensity = "float",
 	s3ds_chroma_power = "float",
+	s3ds_nvg_gen = "float",
+	s3ds_nvg_gain = "float",
+	s3ds_fusion_outline = "bool",
+	s3ds_fusion_color = "float",
 	
 	s3ds_lens_color = "s3ds_color"
 }
 
 local last_weapon_id
 local last_scope
-
+local pending_zoom_weapon_id
+local pending_zoom_type
+local scope_nvg_gain = {}
+local scope_nvg_gain_direction = {}
+local scope_nvg_configured_gain = {}
+local nvg_key_pressed_at
+local nvg_gain_sound
+local fusion_white_fade_started_at
+local fusion_white_fade_weapon_id
+local fusion_white_fade_step = FUSION_WHITE_FADE_STEPS
+local fusion_white_fade_info
 
 local inventory_upgrade_base = ui_inventory.UIInventory.RMode_UpgradeYes
 local workshop_upgrade_base = ui_workshop.UIWorkshopUpgrade.Upgrade
@@ -55,18 +76,37 @@ end
 
 function on_option_change()
 	ZOOM_FACTOR = z_3d_scopes_mcm.get_config("zoom_factor")
-	LENS_BRIGHTNESS = z_3d_scopes_mcm.get_config("lens_brightness")
 	NVG_BLUR = z_3d_scopes_mcm.get_config("nvg_blur")
 	PARALLAX_SHADOW = z_3d_scopes_mcm.get_config("parallax_shadow")
 	SEE_THROUGH = z_3d_scopes_mcm.get_config("see_through")
 	THERMAL_PIXELATION = z_3d_scopes_mcm.get_config("thermal_pixelation")
 	CHROMATISM = z_3d_scopes_mcm.get_config("chromatism")
+	NVG_FORCE_ALT = z_3d_scopes_mcm.get_config("nvg_force_alt")
 
 	last_weapon_id = nil
 end
 
-function get_sight_section(wpn)
-	local wpn_section = wpn:section()
+local function effective_weapon_section(wpn)
+	if magnifier_switch and magnifier_switch.get_effective_section then
+		return magnifier_switch.get_effective_section(wpn) or wpn:section()
+	end
+	return wpn:section()
+end
+
+function get_sight_section(wpn, zoom_type)
+	local wpn_section = effective_weapon_section(wpn)
+
+	if scripted_canted_irons then
+		local canted_section
+		if zoom_type == ZOOM_ALT and scripted_canted_irons.get_installed_section then
+			canted_section = scripted_canted_irons.get_installed_section(wpn)
+		elseif zoom_type == nil and scripted_canted_irons.get_active_s3ds_section then
+			canted_section = scripted_canted_irons.get_active_s3ds_section(wpn)
+		end
+		if canted_section then
+			return canted_section, true
+		end
+	end
 	
 	local modular_attachments = ini_sys:r_bool_ex(wpn_section, "modular_attachments", false)
 	if modular_attachments then
@@ -88,6 +128,10 @@ end
 function parse_key(section, key, type)
 	if type == "float" then
 		return ini_sys:r_float_ex(section, key)
+	elseif type == "bool" then
+		if ini_sys:line_exist(section, key) then
+			return ini_sys:r_bool_ex(section, key, false)
+		end
 	elseif type == "s3ds_color" then
 		local value = ini_sys:r_string_ex(section, key)
 		if value then
@@ -101,26 +145,61 @@ function parse_key(section, key, type)
 	end
 end
 
-function parse_parameters(wpn)
+function parse_parameters(wpn, zoom_type)
 	local values = {}
+	local wpn_section = effective_weapon_section(wpn)
 	wpn:iterate_installed_upgrades(
 		function(upgr_sec)
 			for key, type in pairs(ALL_PARAMETERS) do
-				values[key] = parse_key(upgr_sec, key, type)
+				local upgrade_value = parse_key(upgr_sec, key, type)
+				if upgrade_value ~= nil then
+					values[key] = upgrade_value
+				end
 			end
 		end
 	)
-	local modular_attachments = ini_sys:r_bool_ex(wpn:section(), "modular_attachments", false)
-	local sight_section = get_sight_section(wpn)
+	local modular_attachments = ini_sys:r_bool_ex(wpn_section, "modular_attachments", false)
+	local sight_section, scripted_canted_sight = get_sight_section(wpn, zoom_type)
 	for key, type in pairs(ALL_PARAMETERS) do
+		if not values[key] and sight_section and scripted_canted_sight then
+			values[key] = parse_key(sight_section, key, type)
+		end
 		if not values[key] and not modular_attachments then
-			values[key] = parse_key(wpn:section(), key, type)
+			values[key] = parse_key(wpn_section, key, type)
 		end
 		if not values[key] and sight_section then
 			values[key] = parse_key(sight_section, key, type)
 		end
 		if not values[key] then
 			values[key] = parse_key("s3ds_defaults", key, type)
+		end
+	end
+
+	if sight_section
+		and not scripted_canted_sight
+		and z_3dss_reticle_profiles
+		and z_3dss_reticle_profiles.get_profile_section
+		and z_3dss_reticle_profiles.get_selected_profile
+	then
+		local profile_section = z_3dss_reticle_profiles.get_profile_section(wpn)
+		local profile = z_3dss_reticle_profiles.get_selected_profile(profile_section)
+		if profile then
+			for key, type in pairs(ALL_PARAMETERS) do
+				local profile_value = parse_key(profile, key, type)
+				if profile_value ~= nil then
+					values[key] = profile_value
+				end
+			end
+		end
+	end
+
+	-- Generation, initial gain and fusion settings belong to the active scope.
+	if sight_section then
+		for _, key in ipairs({ "s3ds_nvg_gen", "s3ds_nvg_gain", "s3ds_fusion_outline", "s3ds_fusion_color" }) do
+			local scope_value = parse_key(sight_section, key, ALL_PARAMETERS[key])
+			if scope_value ~= nil then
+				values[key] = scope_value
+			end
 		end
 	end
 	
@@ -134,16 +213,88 @@ function get(info, key, default)
 	return default
 end
 
-function pack_binary_settings()
-	return (NVG_BLUR and 1 or 0)
+local function clamp(value, minimum, maximum)
+	return math.max(minimum, math.min(maximum, value))
+end
+
+local function scope_nvg_key(wpn, zoom_type)
+	local sight_section = get_sight_section(wpn, zoom_type)
+	return tostring(sight_section or effective_weapon_section(wpn))
+end
+
+local function resolve_scope_nvg(info, wpn, zoom_type)
+	local generation = math.floor(tonumber(get(info, "s3ds_nvg_gen", 1)) or 1)
+	generation = clamp(generation, 1, 4)
+	if generation == 4 then
+		return generation, NVG_GAIN_MIN
+	end
+
+	local key = scope_nvg_key(wpn, zoom_type)
+	local configured_gain = clamp(tonumber(get(info, "s3ds_nvg_gain", 1.0)) or 1.0, NVG_GAIN_MIN, NVG_GAIN_MAX)
+	if scope_nvg_gain[key] == nil or scope_nvg_configured_gain[key] ~= configured_gain then
+		scope_nvg_gain[key] = configured_gain
+		scope_nvg_gain_direction[key] = configured_gain < NVG_GAIN_MAX
+		scope_nvg_configured_gain[key] = configured_gain
+	end
+
+	return generation, scope_nvg_gain[key]
+end
+
+function pack_binary_settings(nvg_generation, nvg_gain, fusion_outline, fusion_color, custom_battery_texture_off)
+	local selected_fusion_color = clamp(math.floor(tonumber(fusion_color) or 1), 1, 3)
+	local settings = (NVG_BLUR and 1 or 0)
 		+ (PARALLAX_SHADOW and 1 or 0) * 2
 		+ (SEE_THROUGH and 1 or 0) * 4
 		+ (THERMAL_PIXELATION and 1 or 0) * 8
 		+ (CHROMATISM and 1 or 0) * 16
+		+ (fusion_outline and 1 or 0) * 32
+
+	local generation = clamp(math.floor(tonumber(nvg_generation) or 1), 1, 4)
+	local gain_step = clamp(math.floor((tonumber(nvg_gain) or NVG_GAIN_MIN) * 10 + 0.5), 5, 20)
+	-- Vector console parameters are limited to -100..100. Keep the legacy
+	-- settings in the integer part and encode scope NV data in the fraction.
+	local fusion_code = (selected_fusion_color - 1) + (custom_battery_texture_off and 3 or 0)
+	return settings + generation * 0.1 + gain_step * 0.001 + fusion_code * 0.0001
 end
 
-function update_shader(wpn)
-	info = parse_parameters(wpn)
+local function pack_dirt_and_white_fade(info, fusion_color)
+	local dirt = clamp(tonumber(get(info, "s3ds_dirt_intensity", 0)) or 0, 0, 1)
+	if clamp(math.floor(tonumber(fusion_color) or 1), 1, 3) ~= 3 then
+		return dirt
+	end
+
+	local dirt_step = math.floor(dirt * 100 + 0.5)
+	local fade_step = clamp(math.floor(fusion_white_fade_step or FUSION_WHITE_FADE_STEPS), 0, FUSION_WHITE_FADE_STEPS)
+	return (dirt_step * 101 + fade_step) / 102
+end
+
+local function update_shader_param_3(info, fusion_color)
+	get_console():execute(
+		"s3ds_param_3 " ..
+		get(info, "s3ds_image_type", "0") .. ", " ..
+		get(info, "s3ds_reticle_type", "0") .. ", " ..
+		pack_dirt_and_white_fade(info, fusion_color) .. ", " ..
+		get(info, "s3ds_chroma_power", "0"))
+end
+
+function update_shader(wpn, zoom_type)
+	if z_3dss_reticle_profiles and z_3dss_reticle_profiles.apply_to_weapon then
+		z_3dss_reticle_profiles.apply_to_weapon(wpn)
+	end
+	info = parse_parameters(wpn, zoom_type)
+	local nvg_generation, nvg_gain = resolve_scope_nvg(info, wpn, zoom_type)
+	local fusion_outline = get(info, "s3ds_fusion_outline", false)
+	local fusion_color = get(info, "s3ds_fusion_color", 1)
+	local thermal_charge = -1
+	local custom_battery_texture_off = false
+	if z_3dss_thermal_battery and z_3dss_thermal_battery.get_shader_charge then
+		thermal_charge = z_3dss_thermal_battery.get_shader_charge(wpn, zoom_type, info)
+		if z_3dss_thermal_battery.has_custom_off_texture then
+			custom_battery_texture_off = z_3dss_thermal_battery.has_custom_off_texture(wpn, zoom_type, info)
+		end
+	end
+	thermal_charge = clamp(tonumber(thermal_charge) or -1, -1, 1)
+	local packed_lens_and_charge = 1.25 + (thermal_charge + 1) * 0.001
 	
 	get_console():execute(
 		"s3ds_param_1 " .. 
@@ -155,54 +306,338 @@ function update_shader(wpn)
 	get_console():execute(
 		"s3ds_param_2 " .. 
 		get(info, "s3ds_reflection_hue", "0") .. ", " ..
-		(LENS_BRIGHTNESS or 1.25) .. ", " ..
+		packed_lens_and_charge .. ", " ..
 		get(info, "s3ds_min_zoom_1x", "0") .. ", " ..
 		((ZOOM_FACTOR or 1.5) + (MAS_SCALE/1000)))
 	
-	get_console():execute(
-		"s3ds_param_3 " .. 
-		get(info, "s3ds_image_type", "0") .. ", " ..
-		get(info, "s3ds_reticle_type", "0") .. ", " ..
-		get(info, "s3ds_dirt_intensity", "0") .. ", " ..
-		get(info, "s3ds_chroma_power", "0"))
+	update_shader_param_3(info, fusion_color)
 	
 	get_console():execute(
 		"s3ds_param_4 " .. 
 		get(info, "s3ds_lens_color", "0, 0, 0") .. ", " ..
-		pack_binary_settings())
+		pack_binary_settings(nvg_generation, nvg_gain, fusion_outline, fusion_color, custom_battery_texture_off))
+end
+
+local function reset_fusion_white_fade()
+	fusion_white_fade_started_at = nil
+	fusion_white_fade_weapon_id = nil
+	fusion_white_fade_info = nil
+	fusion_white_fade_step = FUSION_WHITE_FADE_STEPS
+end
+
+local function start_fusion_white_fade(wpn, requested_zoom_type)
+	if not wpn then
+		reset_fusion_white_fade()
+		return
+	end
+
+	local c_wpn = wpn:cast_Weapon()
+	local zoom_type = requested_zoom_type
+	if zoom_type == nil then
+		zoom_type = c_wpn and c_wpn['GetZoomType'](c_wpn)
+	end
+	local fade_info = parse_parameters(wpn, zoom_type)
+	local fusion_outline = get(fade_info, "s3ds_fusion_outline", false)
+	local fusion_color = clamp(math.floor(tonumber(get(fade_info, "s3ds_fusion_color", 1)) or 1), 1, 3)
+	if not fusion_outline or fusion_color ~= 3 then
+		reset_fusion_white_fade()
+		return
+	end
+
+	fusion_white_fade_started_at = time_global()
+	fusion_white_fade_weapon_id = wpn:id()
+	fusion_white_fade_info = fade_info
+	fusion_white_fade_step = 0
+	update_shader_param_3(fade_info, fusion_color)
+end
+
+local function fusion_white_on_zoom_in(wpn)
+	start_fusion_white_fade(wpn or (db.actor and db.actor:active_item()))
+end
+
+local function fusion_white_on_zoom_out()
+	reset_fusion_white_fade()
+end
+
+local function active_nvg_scope()
+	if not (db.actor and db.actor:alive()) then return nil end
+	local wpn = db.actor:active_item()
+	if not wpn then return nil end
+
+	local c_wpn = wpn:cast_Weapon()
+	if not (c_wpn and c_wpn['IsZoomed'](c_wpn)) then return nil end
+	local zoom_type = c_wpn['GetZoomType'](c_wpn)
+	local info = parse_parameters(wpn, zoom_type)
+	if math.floor(tonumber(get(info, "s3ds_image_type", 0)) or 0) ~= 1 then
+		return nil
+	end
+	return wpn, zoom_type, info
+end
+
+local function scope_nvg_mark_is_off(wpn, zoom_type)
+	if not (z_mark_switch and type(z_mark_switch.parse_parameters) == "function") then return false end
+	local ok, mark_info = pcall(z_mark_switch.parse_parameters, wpn, zoom_type)
+	if not (ok and type(mark_info) == "table") then return false end
+	return tonumber(mark_info.ms_count) == 2 and tonumber(mark_info.ms_current) == 1
+end
+
+local function adjust_scope_nvg_gain()
+	local wpn, zoom_type, info = active_nvg_scope()
+	if not wpn then return end
+	if scope_nvg_mark_is_off(wpn, zoom_type) then return end
+
+	local generation, current = resolve_scope_nvg(info, wpn, zoom_type)
+	if generation == 4 then return end
+
+	local key = scope_nvg_key(wpn, zoom_type)
+	local increasing = scope_nvg_gain_direction[key] ~= false
+	local step = (NVG_GAIN_MAX - NVG_GAIN_MIN) / NVG_GAIN_STEPS
+
+	if increasing then
+		current = math.min(NVG_GAIN_MAX, current + step)
+		if current >= NVG_GAIN_MAX then
+			scope_nvg_gain_direction[key] = false
+		end
+	else
+		current = math.max(NVG_GAIN_MIN, current - step)
+		if current <= NVG_GAIN_MIN then
+			scope_nvg_gain_direction[key] = true
+		end
+	end
+
+	scope_nvg_gain[key] = current
+	if not nvg_gain_sound then
+		nvg_gain_sound = sound_object('interface\\inv_nvg')
+	end
+	nvg_gain_sound:play(db.actor, 0, sound_object.s2d)
+	update_shader(wpn, zoom_type)
+end
+
+local function scope_nvg_on_key_press(key)
+	if dik_to_bind(key) == key_bindings.kNIGHT_VISION then
+		nvg_key_pressed_at = time_global()
+	end
+end
+
+local function scope_nvg_on_key_release(key)
+	if dik_to_bind(key) ~= key_bindings.kNIGHT_VISION then return end
+	local pressed_at = nvg_key_pressed_at
+	nvg_key_pressed_at = nil
+	if pressed_at and time_global() - pressed_at < NVG_KEY_HOLD_MS then
+		adjust_scope_nvg_gain()
+	end
 end
 
 function actor_on_update()
 	if not (db.actor and db.actor:alive()) then
+		reset_fusion_white_fade()
 		return
 	end
 	
 	local wpn = db.actor:active_item()
 	if not wpn then
 		last_weapon_id = nil
+		pending_zoom_weapon_id = nil
+		pending_zoom_type = nil
+		reset_fusion_white_fade()
 		return
+	end
+
+	local c_wpn = wpn:cast_Weapon()
+	if fusion_white_fade_started_at then
+		if not (c_wpn and c_wpn['IsZoomed'](c_wpn)) or fusion_white_fade_weapon_id ~= wpn:id() then
+			reset_fusion_white_fade()
+		else
+			local elapsed = time_global() - fusion_white_fade_started_at
+			local next_step = clamp(math.floor(elapsed * FUSION_WHITE_FADE_STEPS / FUSION_WHITE_FADE_MS), 0, FUSION_WHITE_FADE_STEPS)
+			if next_step ~= fusion_white_fade_step then
+				fusion_white_fade_step = next_step
+				update_shader_param_3(fusion_white_fade_info, 3)
+			end
+			if next_step >= FUSION_WHITE_FADE_STEPS then
+				fusion_white_fade_started_at = nil
+				fusion_white_fade_weapon_id = nil
+				fusion_white_fade_info = nil
+			end
+		end
+	end
+	local zoom_type
+	if pending_zoom_weapon_id == wpn:id() then
+		local actual_zoom_type = c_wpn and c_wpn['GetZoomType'](c_wpn)
+		if actual_zoom_type == pending_zoom_type then
+			pending_zoom_weapon_id = nil
+			pending_zoom_type = nil
+		else
+			zoom_type = pending_zoom_type
+		end
+	elseif pending_zoom_weapon_id then
+		pending_zoom_weapon_id = nil
+		pending_zoom_type = nil
 	end
 	
 	if not last_weapon_id or last_weapon_id ~= wpn:id() then
 		wpn_hud = ini_sys:r_string_ex(wpn:section(), "hud", nil)
 		MAS_SCALE = ini_sys:r_string_ex(wpn_hud, "attach_scale", 1)
 		last_weapon_id = wpn:id()
-		update_shader(wpn)
+		update_shader(wpn, zoom_type)
 	end
 	
-	local c_wpn = wpn:cast_Weapon()
 	local scope
 	if c_wpn then
 		scope = c_wpn['GetScopeName'](c_wpn)
 	end
-	if last_scope ~= scope then
-		last_scope = scope
-		update_shader(wpn)
+	local sight_section = get_sight_section(wpn, zoom_type)
+	local sight_key = tostring(scope or "") .. "|" .. tostring(sight_section or "")
+	if last_scope ~= sight_key then
+		last_scope = sight_key
+		update_shader(wpn, zoom_type)
 	end
 end
 
+local function s3ds_on_zoom_type_changed(obj, previous, current)
+	if not obj then return end
+	pending_zoom_weapon_id = obj:id()
+	pending_zoom_type = current
+	update_shader(obj, current)
+	local c_wpn = obj:cast_Weapon()
+	if c_wpn and c_wpn['IsZoomed'](c_wpn) then
+		start_fusion_white_fade(obj, current)
+	end
+
+	local scope = c_wpn and c_wpn['GetScopeName'](c_wpn)
+	local sight_section = get_sight_section(obj, current)
+	last_weapon_id = obj:id()
+	last_scope = tostring(scope or "") .. "|" .. tostring(sight_section or "")
+end
+
+---------------------------------------------------------------------------------------
+--                              NVG FORCE ALT AIM
+---------------------------------------------------------------------------------------
+
+local NVG_BLOCKED_SCOPES_SECTION = "3dss_nvg_blocked_scopes"
+local NVG_BLOCKED_WEAPONS_SECTION = "3dss_nvg_blocked_weapons"
+local NVG_BLOCK_CONFIG = "items\\settings\\3dss_nvg_blocked.ltx"
+local NVG_COMPATIBLE_TEXT = "st_3dss_scope_nvg_compatible"
+local nvg_block_ini
+
+local function nvg_ltx_blocked(section, entry)
+	return nvg_block_ini ~= nil
+		and entry ~= nil
+		and nvg_block_ini:section_exist(section)
+		and nvg_block_ini:line_exist(section, entry)
+end
+
+local original_build_desc_footer = ui_item.build_desc_footer
+
+ui_item.build_desc_footer = function(obj, sec, str)
+	local result = original_build_desc_footer(obj, sec, str)
+	if IsItem("scope", sec) and not nvg_ltx_blocked(NVG_BLOCKED_SCOPES_SECTION, sec) then
+		result = string.gsub(result, "%s+$", "")
+		while string.sub(result, -2) == "\\n" do
+			result = string.gsub(string.sub(result, 1, -3), "%s+$", "")
+		end
+		result = result .. "\\n " .. game.translate_string(NVG_COMPATIBLE_TEXT) .. "\\n \\n"
+	end
+	return result
+end
+
+local function nvg_apply_alt_zoom_factor(wpn)
+	if not wpn then return end
+	local c_wpn = wpn:cast_Weapon()
+	if not c_wpn then return end
+	if c_wpn:GetZoomType() ~= ZOOM_ALT then return end
+
+	local alt_zoom = ini_sys:r_float_ex(wpn:section(), "scope_zoom_factor_alt") or 0
+	c_wpn:SetZoomFactor(alt_zoom)
+end
+
+local function nvg_refresh_alt_zoom_params()
+	local console = get_console()
+	if not console then return end
+	local scope_factor = tonumber(console:get_string("scope_factor"))
+	if not scope_factor then return end
+
+	-- ForceSetZoomType changes only the zoom-type number. Re-submitting the
+	-- current scope factor makes the engine refresh scope_dynamic_zoom_alt and
+	-- the rest of the parameters belonging to the alternate sight.
+	console:execute("scope_factor " .. tostring(scope_factor))
+end
+
+local function nvg_refresh_alt_zoom_factor(wpn_id)
+	CreateTimeEvent("nvg_force_alt", "nvg_refresh_alt_zoom_factor", 0.01, function()
+		local w = db.actor and db.actor:active_item()
+		if not (w and w:id() == wpn_id) then return true end
+		nvg_apply_alt_zoom_factor(w)
+		return true
+	end)
+end
+local function nvg_should_block()
+	if not NVG_FORCE_ALT then return false end
+	if not item_device.nv_state then return false end
+	local wpn = db.actor and db.actor:active_item()
+	if not wpn then return false end
+	-- Check weapon list first: if listed, that weapon section is blocked.
+	if nvg_ltx_blocked(NVG_BLOCKED_WEAPONS_SECTION, wpn:section()) then return true end
+	-- Check the attached scope against the scope list.
+	local scope = utils_item.get_attached_scope(wpn)
+	if scope then
+		return nvg_ltx_blocked(NVG_BLOCKED_SCOPES_SECTION, scope)
+	end
+	return false
+end
+
+local function nvg_force_alt_aim(zoom_before)
+	CreateTimeEvent("nvg_force_alt", "nvg_force_alt_aim", 0, function()
+		local w = db.actor and db.actor:active_item()
+		if not (w and w:cast_Weapon()) then return true end
+		w:cast_Weapon():ForceSetZoomType(ZOOM_ALT)
+		nvg_refresh_alt_zoom_params()
+		SendScriptCallback("actor_on_weapon_zoom_type_changed", w, zoom_before, ZOOM_ALT)
+		nvg_apply_alt_zoom_factor(w)
+		nvg_refresh_alt_zoom_factor(w:id())
+		return true
+	end)
+end
+
+local function nvg_on_before_key_press(dik, bind, dis, flags)
+	if not nvg_should_block() then return end
+
+	local wpn = db.actor:active_item()
+	if not wpn then return end
+	local c_wpn = wpn:cast_Weapon()
+	if not c_wpn then return end
+
+	local zoom_type = c_wpn:GetZoomType()
+
+	if bind == key_bindings.kWPN_ZOOM and zoom_type == ZOOM_NORMAL then
+		flags.ret_value = false
+		nvg_force_alt_aim(ZOOM_NORMAL)
+		return
+	end
+
+	if bind == key_bindings.kWPN_FUNC and zoom_type == ZOOM_ALT then
+		flags.ret_value = false
+		return
+	end
+end
+
+local function nvg_on_zoom_type_changed(obj, previous, current)
+	if current ~= ZOOM_NORMAL then return end
+	if previous ~= ZOOM_ALT then return end
+	if not nvg_should_block() then return end
+	nvg_force_alt_aim(previous)
+end
+
 function on_game_start()
+	nvg_block_ini = ini_file(NVG_BLOCK_CONFIG)
 	on_option_change()
-	RegisterScriptCallback("on_option_change", on_option_change)
-	RegisterScriptCallback("actor_on_update", actor_on_update)
+	RegisterScriptCallback("on_option_change",               on_option_change)
+	RegisterScriptCallback("actor_on_update",                actor_on_update)
+	RegisterScriptCallback("on_key_press",                   scope_nvg_on_key_press)
+	RegisterScriptCallback("on_key_release",                 scope_nvg_on_key_release)
+	RegisterScriptCallback("on_before_key_press",            nvg_on_before_key_press)
+	RegisterScriptCallback("actor_on_weapon_zoom_in",        fusion_white_on_zoom_in)
+	RegisterScriptCallback("actor_on_weapon_zoom_out",       fusion_white_on_zoom_out)
+	RegisterScriptCallback("actor_on_weapon_zoom_type_changed", s3ds_on_zoom_type_changed)
+	RegisterScriptCallback("actor_on_weapon_zoom_type_changed", nvg_on_zoom_type_changed)
 end

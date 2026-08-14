@@ -221,22 +221,19 @@ function utils_ui.UICellItem:Set(obj, area)
 	if not x or not y or not w or not h then
 		return false
 	end
-
-	-- demonized: HD Inventory Icons Framework
-	local scale = icon_override:section_exist(sec) and (icon_override:r_float_ex(sec, "inv_grid_scale") or 1) or SYS_GetParam(2, sec, "inv_grid_scale", 1)
+	
 	x = x * grid_size
 	y = y * grid_size
-	w = math.ceil(w * grid_size / scale)
-	h = math.ceil(h * grid_size / scale)
+	w = w * grid_size
+	h = h * grid_size
 	
 	self.ID = is_obj and obj:id() or nil
 	self.section = sec
 	self.area = area
-	self.X = x
-	self.Y = y
+	--self.X = x
+	--self.Y = y
 	self.W = w
 	self.H = h
-	self.scale = scale
 
 	-- Trade mode
 	--if self:Check_TradeMode(obj, sec) then
@@ -287,19 +284,14 @@ end
 function utils_ui.UICellItem:Create_Layer(ele, base, sec_m, sec_l, str_x, str_y, str_scale)
 	local ratio = utils_xml.screen_ratio()
 	local grid_size = self.grid_size
-
 	local x = str_x and (icon_override:section_exist(sec_m) and icon_override:r_float_ex(sec_m,str_x) or SYS_GetParam(2,sec_m, str_x)) or 0 
 	local y = str_y and (icon_override:section_exist(sec_m) and icon_override:r_float_ex(sec_m,str_y) or SYS_GetParam(2,sec_m, str_y)) or 0
-
-	-- demonized: HD Inventory Icons Framework
-	local scale = icon_override:section_exist(sec_l) and (icon_override:r_float_ex(sec_l,"inv_grid_scale") or 1) or SYS_GetParam(2, sec_l, "inv_grid_scale", 1)
-	local w = math.ceil((icon_override:section_exist(sec_l) and icon_override:r_float_ex(sec_l,"inv_grid_width") or SYS_GetParam(2,sec_l, "inv_grid_width",1)) * grid_size / scale)
-	local h = math.ceil((icon_override:section_exist(sec_l) and icon_override:r_float_ex(sec_l,"inv_grid_height") or SYS_GetParam(2,sec_l, "inv_grid_height",1)) * grid_size / scale)
-
+	local w = (icon_override:section_exist(sec_l) and icon_override:r_float_ex(sec_l,"inv_grid_width") or SYS_GetParam(2,sec_l, "inv_grid_width",1)) * grid_size
+	local h = (icon_override:section_exist(sec_l) and icon_override:r_float_ex(sec_l,"inv_grid_height") or SYS_GetParam(2,sec_l, "inv_grid_height",1)) * grid_size
 	local scale = str_scale and (icon_override:section_exist(sec_m) and icon_override:r_float_ex(sec_m,str_scale) or SYS_GetParam(2,sec_m, str_scale)) or 1
 	local scale_pos = scale * (grid_size/50)
 
-	local rot = ele:GetHeading() > 0
+	local rot =  ele:GetHeading() > 0
 	local x_s = x * ratio * scale_pos
 	local y_s = y * scale_pos
 	local w_s = w * ratio * scale
@@ -311,19 +303,18 @@ function utils_ui.UICellItem:Create_Layer(ele, base, sec_m, sec_l, str_x, str_y,
 		-- despite rotation, movement for x and y stays normal! 
 		-- Move start pos to match the one for rotated base icon
 		local w_b, h_b = base:GetWidth(), base:GetHeight()
-		local x_st = (w_b/2) - (h_b/2)*ratio
-		local y_st = (w_b/2) + (h_b/2)
+		local x_st = (w_b/2) - (h_b/2)
+		local y_st = h_b + x_st
 		
-		--printf("w:%s,h:%s, y:%s,x:%s",w_b, h_b, y_st,x_st)
 		-- On 90 rotation, x and y are inverted, y axis goes negative simulate normal x movement
 		x_s = x_st + (y * ratio * scale_pos)
 		y_s = y_st - (x * scale_pos) 
 		w_s = w * scale
 		h_s = h * scale
-		w_off = (h_s* ratio/2)
+		w_off = (h_s - h_s *ratio/2)
 		h_off = -w_s/2
 	end
-	
+
 	ele:InitTexture( utils_xml.get_icons_texture(sec_l) )
 	ele:SetTextureRect(Frect():set( utils_xml.get_item_axis(sec_l, nil, true) ))
 	ele:SetStretchTexture(true)
@@ -401,12 +392,6 @@ function utils_xml.set_icon(sec, hidden, XML_temp, XML_box, XML_box_small)
 	local h, w
 	ico.w = ico.w * ico_size * ico_width
 	ico.h = ico.h * ico_size
-
-	-- demonized: HD Inventory Icons Framework
-	local scale = SYS_GetParam(2, sec, "inv_grid_scale", 1)
-	ico.w = math.ceil(ico.w / scale)
-	ico.h = math.ceil(ico.h / scale)
-	
 	local ratio = ico.w/ico.h
 	for i=1,2 do
 		local w_t, h_t = 0, 0
@@ -503,10 +488,8 @@ function utils_ui.UICellContainer:On_Drag(idx, tg, set)
 			local sec = self.cell[self.hold.idx].section
 			
 			if sec then
-				-- demonized: HD Inventory Icons Framework
-				local scale = icon_override:section_exist(sec) and (icon_override:r_float_ex(sec,"inv_grid_scale") or 1) or SYS_GetParam(2, sec, "inv_grid_scale", 1)
-				self.hold.w = math.ceil((icon_override:section_exist(sec) and icon_override:r_float_ex(sec,"inv_grid_width") or SYS_GetParam(2,sec, "inv_grid_width") )* self.grid_size * ratio / scale)
-				self.hold.h = math.ceil((icon_override:section_exist(sec) and icon_override:r_float_ex(sec,"inv_grid_height") or SYS_GetParam(2,sec, "inv_grid_height")) * self.grid_size / scale)
+				self.hold.w = (icon_override:section_exist(sec) and icon_override:r_float_ex(sec,"inv_grid_width") or SYS_GetParam(2,sec, "inv_grid_width") )* self.grid_size * ratio
+				self.hold.h = (icon_override:section_exist(sec) and icon_override:r_float_ex(sec,"inv_grid_height") or SYS_GetParam(2,sec, "inv_grid_height")) * self.grid_size
 				
 				self.hold.ico:InitTexture( utils_xml.get_icons_texture(sec) )
 				self.hold.ico:SetTextureRect(Frect():set( utils_xml.get_item_axis(sec, nil, true) ))
@@ -697,19 +680,13 @@ function utils_ui.UICellContainer:FindFreeCell(obj, sec)
 	local w =  (icon_override:section_exist(sec) and icon_override:r_float_ex(sec,"inv_grid_width") or SYS_GetParam(2,sec, "inv_grid_width", 1) )
 	local h =  (icon_override:section_exist(sec) and icon_override:r_float_ex(sec,"inv_grid_height") or SYS_GetParam(2,sec, "inv_grid_height", 1))
 
-	-- demonized: HD Inventory Icons Framework
-	local scale = icon_override:section_exist(sec) and (icon_override:r_float_ex(sec, "inv_grid_scale") or 1) or SYS_GetParam(2, sec, "inv_grid_scale", 1)
-	w = math.ceil(w / scale)
-	h = math.ceil(h / scale)
-
 	-- Avoid icons that don't fit
 	if w > self.cols then
 		return false
 	end
-
 	-- Sorting by kind: when sorting a new kind, always start from last row taken by previous kind
 	if self.sort_method == "kind" then
-		self.rKind.current = item_order[ab_k[sec]]
+		self.rKind.current = item_order[ab_k[sec] ]
 		if (self.rKind.last ~= self.rKind.current) then
 			
 			local cnt = self.line_cnt + 1
@@ -728,6 +705,7 @@ function utils_ui.UICellContainer:FindFreeCell(obj, sec)
 			self.rKind.row = self.row_end + 1
 		end
 	end
+
 	
 	local row_s = self.rKind.row
 	local rows = #self.grid

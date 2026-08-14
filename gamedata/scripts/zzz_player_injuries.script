@@ -255,12 +255,12 @@ local function SaveHealthStatus()
 	utils_obj.save_var(db.actor,"timedhp.leftleg",timedhp.leftleg)
 end
 local function LoadHealthStatus()
-	health.head=utils_obj.load_var(db.actor,"health.head") or maxhp.head
-	health.torso=utils_obj.load_var(db.actor,"health.torso") or maxhp.torso
-	health.rightarm=utils_obj.load_var(db.actor,"health.rightarm") or maxhp.rightarm
-	health.leftarm=utils_obj.load_var(db.actor,"health.leftarm") or maxhp.leftarm
-	health.rightleg=utils_obj.load_var(db.actor,"health.rightleg") or maxhp.rightleg
-	health.leftleg=utils_obj.load_var(db.actor,"health.leftleg") or maxhp.leftleg
+	health.head=utils_obj.load_var(db.actor,"health.head") --or maxhp.head
+	health.torso=utils_obj.load_var(db.actor,"health.torso") --or maxhp.torso
+	health.rightarm=utils_obj.load_var(db.actor,"health.rightarm") --or maxhp.rightarm
+	health.leftarm=utils_obj.load_var(db.actor,"health.leftarm") --or maxhp.leftarm
+	health.rightleg=utils_obj.load_var(db.actor,"health.rightleg") --or maxhp.rightleg
+	health.leftleg=utils_obj.load_var(db.actor,"health.leftleg") --or maxhp.leftleg
 	
 	timedhp.head=utils_obj.load_var(db.actor,"timedhp.head") or 0
 	timedhp.torso=utils_obj.load_var(db.actor,"timedhp.torso") or 0
@@ -1202,9 +1202,9 @@ local function on_key_press(dik)
 		if showtexthud>0 then
 			healthstatus=not healthstatus
 		else
-			if show_hud_type==0 then show_hud_type=1; show_hud_change_time=time_global()
-			elseif show_hud_type==1 then show_hud_type=2; show_hud_change_time=time_global()
-			elseif show_hud_type==2 then show_hud_type=0; show_hud_change_time=time_global() 
+			if show_hud_type==0 then show_hud_type=1 show_hud_change_time=time_global()
+			elseif show_hud_type==1 then show_hud_type=2 show_hud_change_time=time_global()
+			elseif show_hud_type==2 then show_hud_type=0 show_hud_change_time=time_global() 
 			end
 		end
 		xr_sound.set_sound_play(db.actor:id(), "pda_tips")
@@ -1596,6 +1596,7 @@ end
 
 local function actor_on_before_death()
 	HUDUpdate()
+	--[[
 	health.head=maxhp.head
 	health.torso=maxhp.torso
 	health.rightarm=maxhp.rightarm
@@ -1608,6 +1609,7 @@ local function actor_on_before_death()
 	timedhp.leftarm=0
 	timedhp.rightleg=0
 	timedhp.leftleg=0
+	]]
 	SaveHealthStatus()
 	if volume_sound_x then
 		exec_console_cmd("snd_volume_eff " .. volume_sound_x)

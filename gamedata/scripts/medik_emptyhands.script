@@ -1,0 +1,57 @@
+local SLOT = 15
+local ITEM_SECTION = "medik_emptyhands"
+local SPAWN_COOLDOWN_MS = 3000
+local spawn_at = 0
+
+local function enabled()
+    if medik_mcm and medik_mcm.empty_hands_enabled then
+        return medik_mcm.empty_hands_enabled()
+    end
+    return true
+end
+
+function ensure_item()
+    if not db.actor then
+        return
+    end
+    if enabled() then
+        if not db.actor:item_in_slot(SLOT) then
+            local now = time_global and time_global() or 0
+            if now >= spawn_at then
+                alife_create_item(ITEM_SECTION, db.actor)
+                spawn_at = now + SPAWN_COOLDOWN_MS
+            end
+        end
+    else
+        local obj = db.actor:item_in_slot(SLOT)
+        if obj then
+            alife_release(obj)
+        end
+    end
+end
+
+function is_drawn()
+    local it = db.actor and db.actor:active_item()
+    return it ~= nil and it:section() == ITEM_SECTION
+end
+
+function is_available()
+    return enabled() and db.actor ~= nil and db.actor:item_in_slot(SLOT) ~= nil
+end
+
+function try_draw()
+    if not is_available() then
+        ensure_item()
+        return false
+    end
+    if not is_drawn() then
+        db.actor:activate_slot(SLOT)
+    end
+    return true
+end
+
+function put_away()
+    if is_drawn() then
+        db.actor:activate_slot(0)
+    end
+end

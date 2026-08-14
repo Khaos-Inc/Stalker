@@ -304,11 +304,11 @@ f_stage[0] = function(tsk,task_id)
 		M.smart_pos = {x=p.x,y=p.y,z=p.z}
 		
 		local pool = {
-			"af_dummy_battery_lead_box",
-			"af_dummy_glassbeads_lead_box",
-			"af_electra_moonlight_lead_box",
-			"af_night_star_lead_box",
-			"af_soul_lead_box",
+			"af_dummy_battery",
+			"af_dummy_glassbeads",
+			"af_electra_moonlight",
+			"af_night_star",
+			"af_soul",
 		}
 		M.reward = {
 			pool[math.random(#pool)],

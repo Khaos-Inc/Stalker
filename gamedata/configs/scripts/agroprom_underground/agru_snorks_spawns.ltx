@@ -1,5 +1,7 @@
 [logic]
-active = sr_idle@line_0
+active = sr_idle@nil
+
+[sr_idle@nil]
 
 [sr_idle@line_0]
 on_actor_in_zone = agru_snork_spawn_1_zone | sr_idle@line_1 %=play_sound(agru_snorks) =spawn_object(agru_snork_1:agru_snork_spawn_1:0)%

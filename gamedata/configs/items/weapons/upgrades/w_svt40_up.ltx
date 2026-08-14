@@ -29,7 +29,7 @@ inv_weight                               = +0.184
 [up_sect_firste_svt40]
 cost                                     = 5270
 value                                    = "7.62x54"
-ammo_class                               = ammo_7.62x54_7h1, ammo_7.62x54_7h1_bad, ammo_7.62x54_7h1_verybad, ammo_7.62x54_ap, ammo_7.62x54_ap_bad, ammo_7.62x54_ap_verybad, ammo_7.62x54_7h14, ammo_7.62x54_7h14_bad, ammo_7.62x54_7h14_verybad, ammo_pkm_100, ammo_pkm_100_bad, ammo_pkm_100_verybad
+ammo_class                               = ammo_7.62x54_7h1, ammo_7.62x54_7h1_bad, ammo_7.62x54_7h1_verybad, ammo_7.62x54_ap, ammo_7.62x54_ap_bad, ammo_7.62x54_ap_verybad, ammo_7.62x54_7h14, ammo_7.62x54_7h14_bad, ammo_7.62x54_7h14_verybad
 
 [up_sect_firstf_svt40]
 cost                                     = 5380
@@ -178,20 +178,20 @@ icon                                     = ui_inGame2_upgrade_IL86_17
 [up_firstf_svt40]
 scheme_index                             = 2, 1
 known                                    = 1
-effects                                  =
-section                                  = up_sect_firstf_svt40
-property                                 = prop_calibre
-
+effects                                  = up_gr_seconcd_svt40
+section                                  = up_sect_secona_svt40
+property                                 = prop_rpm
 precondition_functor                     = inventory_upgrades.precondition_functor_a
-precondition_parameter                   = true
+precondition_parameter                   = a & b
 effect_functor                           = inventory_upgrades.effect_functor_a
 effect_parameter                         = something_here
+
 prereq_functor                           = inventory_upgrades.prereq_functor_a
 prereq_tooltip_functor                   = inventory_upgrades.prereq_tooltip_functor_a
 prereq_params                            =
-name                                     = st_up_add_b5_name
-description                              = st_up_add_b5_descr
-icon                                     = ui_inGame2_upgrade_AKM_74_2_17
+name                                     = st_up_stvs_c2_name
+description                              = st_up_stvs_c2_descr
+icon                                     = ui_inGame2_upgrade_SVUmk2_9
 
 [up_secona_svt40]
 scheme_index                             = 0, 1

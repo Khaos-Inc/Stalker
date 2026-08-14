@@ -12,7 +12,7 @@ ef_weapon_type			= 15
 
 ;----------- Anomaly settings -----------------------
 max_start_power		= 0
-attenuation			= 0.5
+attenuation			= 0.54
 
 idle_particles		= ;zones\zone_thermal_idle
 ;blowout_particles	=
@@ -30,7 +30,7 @@ idle_sound			= ambient\fire2					;iinoiyiiue caoe
 ;entrance_sound		= ambient\zhar									;i?e iiiaaaiee iauaeoa a aiiiaee?
 
 
-hit_type		= light_burn
+hit_type		= burn
 
 disable_time		= -1	;время игнорирования неживого объекта в зоне (-1 если не нужно)
 disable_time_small	= -1		;время игнорирования маленького неживого объекта в зоне (-1 если не нужно)
@@ -44,7 +44,7 @@ blowout_light		= off
 idle_light			= off
 
 awaking_time		= 100
-blowout_time		= 300
+blowout_time		= 400
 accamulate_time		= 100
 
 blowout_wind		= off
@@ -58,20 +58,16 @@ shape_edge_color		= 32, 32, 32, 255
 $spawn 			= "zones\field_thermal_weak"
 
 ;----------- Anomaly settings -----------------------
-max_start_power		= 0.1
-
-
+max_start_power		= 0.25
 
 [zone_field_thermal_average]:zone_field_thermal
 $spawn 			= "zones\field_thermal_average"
 
 ;----------- Anomaly settings -----------------------
-max_start_power		= 0.1
-
-
+max_start_power		= 0.33
 
 [zone_field_thermal_strong]:zone_field_thermal
 $spawn 			= "zones\field_thermal_strong"
 
 ;----------- Anomaly settings -----------------------
-max_start_power		= 0.1
+max_start_power		= 0.50

@@ -1,0 +1,388 @@
+local UI_NAME = "UI3DSSCamoWheel"
+local UI_XML = "ui_3dss_camo_wheel.xml"
+
+local gui
+local open_time = 0
+
+local slot_keys = {
+	DIK_keys.DIK_1,
+	DIK_keys.DIK_2,
+	DIK_keys.DIK_3,
+	DIK_keys.DIK_4,
+	DIK_keys.DIK_5,
+	DIK_keys.DIK_6,
+	DIK_keys.DIK_7,
+	DIK_keys.DIK_8,
+	DIK_keys.DIK_9,
+}
+
+local function camo_api_ready()
+	return z_3dss_gamma_camo_system
+		and z_3dss_gamma_camo_system.get_camo_options
+		and z_3dss_gamma_camo_system.select_camo
+end
+
+local function active_weapon()
+	local weapon = db.actor and db.actor:active_item()
+	return weapon and IsWeapon(weapon) and weapon or nil
+end
+
+local function configured_key()
+	if not (z_3d_scopes_mcm and z_3d_scopes_mcm.get_config) then
+		return -1
+	end
+	return tonumber(z_3d_scopes_mcm.get_config("camo_keybind")) or -1
+end
+
+local function configured_modifier()
+	if not (z_3d_scopes_mcm and z_3d_scopes_mcm.get_config) then
+		return 0
+	end
+	return tonumber(z_3d_scopes_mcm.get_config("camo_modifier")) or 0
+end
+
+local function configured_press_type()
+	if not (z_3d_scopes_mcm and z_3d_scopes_mcm.get_config) then
+		return 0
+	end
+	return tonumber(z_3d_scopes_mcm.get_config("camo_press_type")) or 0
+end
+
+local function input_allowed(key)
+	if key ~= configured_key() then return false end
+	if ui_mcm and ui_mcm.get_mod_key
+		and not ui_mcm.get_mod_key(configured_modifier())
+	then
+		return false
+	end
+	return true
+end
+
+local function circular_difference(a, b)
+	return math.abs(math.atan2(math.sin(a - b), math.cos(a - b)))
+end
+
+class "UI3DSSCamoWheel" (CUIScriptWnd)
+
+function UI3DSSCamoWheel:__init()
+	super()
+	self.weapon_id = nil
+	self.options = {}
+	self.entries = {}
+	self.hovered_index = nil
+
+	self:InitControls()
+end
+
+function UI3DSSCamoWheel:InitControls()
+	self:SetWndRect(Frect():set(0, 0, 1024, 768))
+	self:SetAutoDelete(true)
+	self:AllowMovement(true)
+
+	self.xml = CScriptXmlInit()
+	self.xml:ParseFile(UI_XML)
+	self.dialog = self.xml:InitStatic("wheel", self)
+	self.xml:InitStatic("wheel:background", self.dialog)
+	self.cursor = self.xml:InitStatic("wheel:cursor", self.dialog)
+	self.cursor:EnableHeading(true)
+	self.cursor:SetWndPos(vector2():set(
+		(self.dialog:GetWidth() - self.cursor:GetWidth()) * 0.5,
+		(self.dialog:GetHeight() * 0.5) - self.cursor:GetHeight()
+	))
+	self.xml:InitStatic("wheel:center_image", self.dialog)
+	self.hint = self.xml:InitTextWnd("wheel:hint", self.dialog)
+end
+
+function UI3DSSCamoWheel:ClearEntries()
+	for _, entry in ipairs(self.entries) do
+		if entry.widget then
+			self.dialog:DetachChild(entry.widget)
+		end
+	end
+	self.entries = {}
+	self.hovered_index = nil
+end
+
+function UI3DSSCamoWheel:CreateEntry(option, index, count)
+	local widget = self.xml:InitStatic("wheel:option", self.dialog)
+	local hover = self.xml:InitStatic("wheel:option:hover", widget)
+	local selected = self.xml:InitStatic("wheel:option:selected", widget)
+	local icon = self.xml:InitStatic("wheel:option:icon", widget)
+	local number = self.xml:InitTextWnd("wheel:option:number", widget)
+
+	local scale = math.max(0.55, math.min(1, 7 / count))
+	local width = widget:GetWidth() * scale
+	local height = widget:GetHeight() * scale
+	local center_x = self.dialog:GetWidth() * 0.5
+	local center_y = self.dialog:GetHeight() * 0.5
+	local radius_x = math.max(0, center_x - (width * 0.55))
+	local radius_y = math.max(0, center_y - (height * 0.55))
+	local angle = (-math.pi * 0.5) + ((2 * math.pi * (index - 1)) / count)
+
+	widget:SetWndSize(vector2():set(width, height))
+	widget:SetWndPos(vector2():set(
+		center_x + (math.cos(angle) * radius_x) - (width * 0.5),
+		center_y + (math.sin(angle) * radius_y) - (height * 0.5)
+	))
+
+	hover:SetWndSize(vector2():set(width, height))
+	hover:SetWndPos(vector2():set(0, 0))
+	hover:Show(false)
+
+	selected:SetWndSize(vector2():set(width, height))
+	selected:SetWndPos(vector2():set(0, 0))
+	selected:Show(option.selected == true)
+
+	local has_icon = option.icon and string.find(option.icon, "%S")
+	if has_icon then
+		local icon_width = width * 0.65
+		local icon_height = height * 0.65
+		icon:SetWndSize(vector2():set(icon_width, icon_height))
+		icon:SetWndPos(vector2():set(
+			(width - icon_width) * 0.5,
+			(height - icon_height) * 0.5
+		))
+		icon:InitTexture(option.icon)
+		icon:SetStretchTexture(true)
+		if option.locked then
+			icon:SetTextureColor(GetARGB(70, 255, 255, 255))
+		end
+		icon:Show(true)
+
+		local number_width = width * 0.3
+		local number_height = height * 0.3
+		number:SetWndSize(vector2():set(number_width, number_height))
+		number:SetWndPos(vector2():set(width - number_width, 0))
+	else
+		icon:Show(false)
+		number:SetWndSize(vector2():set(width, height))
+		number:SetWndPos(vector2():set(0, 0))
+	end
+	number:SetText(index <= 9 and tostring(index) or "")
+
+	self.entries[index] = {
+		option = option,
+		widget = widget,
+		hover = hover,
+		selected = selected,
+		angle = angle,
+	}
+end
+
+function UI3DSSCamoWheel:BuildEntries()
+	self:ClearEntries()
+
+	local count = #self.options
+	for index, option in ipairs(self.options) do
+		self:CreateEntry(option, index, count)
+	end
+
+	for index, option in ipairs(self.options) do
+		if option.selected then
+			self:SetHovered(index)
+			return
+		end
+	end
+
+	if count > 0 then
+		self:SetHovered(1)
+	end
+end
+
+function UI3DSSCamoWheel:Reset(weapon, options)
+	self.weapon_id = weapon:id()
+	self.options = options
+	self:BuildEntries()
+end
+
+function UI3DSSCamoWheel:SetHovered(index)
+	if self.hovered_index == index then return end
+
+	if self.hovered_index and self.entries[self.hovered_index] then
+		self.entries[self.hovered_index].hover:Show(false)
+	end
+
+	self.hovered_index = index
+	local entry = index and self.entries[index]
+	if entry then
+		entry.hover:Show(true)
+		self.hint:SetText(entry.option.label or entry.option.section or "")
+	else
+		self.hint:SetText("")
+	end
+end
+
+function UI3DSSCamoWheel:UpdateHoveredEntry()
+	if #self.entries == 0 then return end
+
+	local mouse = GetCursorPosition()
+	local dialog_pos = self.dialog:GetWndPos()
+	local center_x = dialog_pos.x + (self.dialog:GetWidth() * 0.5)
+	local center_y = dialog_pos.y + (self.dialog:GetHeight() * 0.5)
+	local dx = mouse.x - center_x
+	local dy = mouse.y - center_y
+	local x_scale = (device().height / device().width) / (768 / 1024)
+
+	if (dx * dx) + (dy * dy) < 100 then
+		return
+	end
+
+	local mouse_angle = math.atan2(dy, dx / x_scale)
+	local best_index
+	local best_difference
+
+	for index, entry in ipairs(self.entries) do
+		local difference = circular_difference(mouse_angle, entry.angle)
+		if not best_difference or difference < best_difference then
+			best_index = index
+			best_difference = difference
+		end
+	end
+
+	if best_index then
+		self:SetHovered(best_index)
+	end
+end
+
+function UI3DSSCamoWheel:UpdateCursor()
+	local mouse = GetCursorPosition()
+	local dialog_pos = self.dialog:GetWndPos()
+	local center_screen_x = dialog_pos.x + (self.dialog:GetWidth() * 0.5)
+	local center_screen_y = dialog_pos.y + (self.dialog:GetHeight() * 0.5)
+	local x_scale = (device().height / device().width) / (768 / 1024)
+	local angle = math.atan2(
+		-(mouse.x - center_screen_x) / x_scale,
+		-(mouse.y - center_screen_y)
+	)
+
+	angle = angle < 0 and (2 * math.pi) + angle or angle
+	angle = (2 * math.pi) - angle
+
+	local orbit_y = -self.cursor:GetHeight() * 0.5
+	local point_x = -math.sin(angle) * orbit_y * x_scale
+	local point_y = math.cos(angle) * orbit_y
+	local center_x = self.dialog:GetWidth() * 0.5
+	local center_y = self.dialog:GetHeight() * 0.5
+
+	self.cursor:SetWndPos(vector2():set(
+		center_x + point_x - (self.cursor:GetWidth() * 0.5),
+		center_y + point_y - (self.cursor:GetHeight() * 0.5)
+	))
+	self.cursor:SetHeading((2 * math.pi) - angle)
+end
+
+function UI3DSSCamoWheel:SelectEntry(index)
+	local entry = index and self.entries[index]
+	local weapon = self.weapon_id and level.object_by_id(self.weapon_id)
+	if not (entry and weapon and IsWeapon(weapon)) then return end
+
+	local option = entry.option
+	if option.locked then
+		z_3dss_gamma_camo_system.notify_locked_camo(option.label)
+		return
+	end
+
+	if z_3dss_gamma_camo_system.select_camo(
+		weapon,
+		option.file,
+		option.section
+	) then
+		self:Close()
+	end
+end
+
+function UI3DSSCamoWheel:Update()
+	CUIScriptWnd.Update(self)
+	self:UpdateCursor()
+	self:UpdateHoveredEntry()
+end
+
+function UI3DSSCamoWheel:OnKeyboard(dik, keyboard_action)
+	local result = CUIScriptWnd.OnKeyboard(self, dik, keyboard_action)
+	if result == false and keyboard_action == ui_events.WINDOW_KEY_PRESSED then
+		if dik == DIK_keys.DIK_ESCAPE or dik == DIK_keys.MOUSE_2 then
+			self:Close()
+			return true
+		end
+
+		if dik == DIK_keys.MOUSE_1 then
+			self:SelectEntry(self.hovered_index)
+			return true
+		end
+
+		for index, key in ipairs(slot_keys) do
+			if dik == key then
+				self:SelectEntry(index)
+				return true
+			end
+		end
+
+		if dik == configured_key() and time_global() > open_time + 150 then
+			self:Close()
+			return true
+		end
+	end
+	return result
+end
+
+function UI3DSSCamoWheel:Close()
+	if self:IsShown() then
+		self:HideDialog()
+		self:Show(false)
+		Unregister_UI(UI_NAME)
+		if gui == self then
+			gui = nil
+		end
+	end
+end
+
+local function open_camo_wheel()
+	if not camo_api_ready() then return end
+
+	if gui and gui:IsShown() then
+		gui:Close()
+		return
+	end
+
+	local weapon = active_weapon()
+	if not weapon then return end
+
+	local options = z_3dss_gamma_camo_system.get_camo_options(weapon)
+	if #options == 0 then return end
+
+	gui = UI3DSSCamoWheel()
+	gui:ShowDialog(true)
+	gui:Reset(weapon, options)
+	open_time = time_global()
+	Register_UI(UI_NAME, "ui_3dss_camo_wheel")
+end
+
+function on_key_press(key)
+	if input_allowed(key) and configured_press_type() == 0 then
+		open_camo_wheel()
+	end
+end
+
+function on_key_release(key)
+	if not input_allowed(key) or configured_press_type() ~= 1 then return end
+	if ui_mcm and ui_mcm.double_tap
+		and ui_mcm.double_tap("3dss_camo_wheel_bind", key)
+	then
+		open_camo_wheel()
+	end
+end
+
+function on_key_hold(key)
+	if not input_allowed(key) or configured_press_type() ~= 2 then return end
+	if ui_mcm and ui_mcm.key_hold
+		and ui_mcm.key_hold("3dss_camo_wheel_bind", key)
+	then
+		open_camo_wheel()
+	end
+end
+
+function on_game_start()
+	RegisterScriptCallback("on_key_press", on_key_press)
+	RegisterScriptCallback("on_key_release", on_key_release)
+	RegisterScriptCallback("on_key_hold", on_key_hold)
+end

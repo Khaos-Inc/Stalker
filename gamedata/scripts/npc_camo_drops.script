@@ -1,0 +1,85 @@
+local EVENT_NAMESPACE = "3dss_npc_camo_drops"
+
+local function is_weapon(obj)
+    if not obj or not obj.cast_Weapon then return false end
+    local ok, weapon = pcall(obj.cast_Weapon, obj)
+    return ok and weapon ~= nil
+end
+
+local function camo_system()
+    local system = z_3dss_gamma_camo_system
+    return system and system.assign_drop_camo and system or nil
+end
+
+local function npc_faction(npc)
+    if not npc then return nil end
+    local ok, faction = pcall(npc.character_community, npc)
+    return ok and faction ~= "" and faction or nil
+end
+
+local function assign_weapon_camo(npc, weapon, system, faction)
+    system = system or camo_system()
+    faction = faction or npc_faction(npc)
+    if not (system and faction and is_weapon(weapon)) then return false end
+    return system.assign_drop_camo(weapon, faction)
+end
+
+local function refresh_weapon_camo(npc, weapon)
+    local system = camo_system()
+    if not (system and is_weapon(weapon)) then return end
+
+    if not assign_weapon_camo(npc, weapon, system) and system.refresh_camo then
+        system.refresh_camo(weapon)
+    end
+end
+
+function npc_on_net_spawn(npc)
+    if not (npc and npc.id and npc.iterate_inventory) then return end
+
+    local npc_id = npc:id()
+    local event_key = "spawn_" .. tostring(npc_id)
+    RemoveTimeEvent(EVENT_NAMESPACE, event_key)
+    CreateTimeEvent(EVENT_NAMESPACE, event_key, 0, function(id)
+        local current = level.object_by_id(id)
+        if current and current.iterate_inventory then
+            local system = camo_system()
+            local faction = npc_faction(current)
+            if system and faction then
+                current:iterate_inventory(function(_, item)
+                    if is_weapon(item) then
+                        assign_weapon_camo(current, item, system, faction)
+                    end
+                end, current)
+            end
+        end
+        return true
+    end, npc_id)
+end
+
+function npc_on_item_take(npc, item)
+    if is_weapon(item) then assign_weapon_camo(npc, item) end
+end
+
+function npc_on_weapon_state_changed(npc, weapon)
+    refresh_weapon_camo(npc, weapon)
+end
+
+function npc_on_death_callback(npc)
+    if not (npc and npc.iterate_inventory) then return end
+
+    local system = camo_system()
+    local faction = npc_faction(npc)
+    if not (system and faction) then return end
+
+    npc:iterate_inventory(function(_, item)
+        if is_weapon(item) then assign_weapon_camo(npc, item, system, faction) end
+    end, npc)
+end
+
+function on_game_start()
+    RegisterScriptCallback("npc_on_net_spawn", npc_on_net_spawn)
+    RegisterScriptCallback("npc_on_item_take", npc_on_item_take)
+    RegisterScriptCallback("npc_on_weapon_strapped", npc_on_weapon_state_changed)
+    RegisterScriptCallback("npc_on_weapon_unstrapped", npc_on_weapon_state_changed)
+    RegisterScriptCallback("npc_on_death_callback", npc_on_death_callback)
+end

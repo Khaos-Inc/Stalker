@@ -1,4 +1,3 @@
-;------------------------------------------------------------------------------------------------
 [wpn_k98]:identity_immunities,weapon_probability,default_weapon_params,wpn_k98_sounds
 GroupControlSection                      = spawn_group
 $npc                                     = on
@@ -159,7 +158,7 @@ snd_empty		                         = weapons\k98\kar98k_empty
 snd_add_cartridge1		                 = weapons\k98\kar98k_cartridge_1
 snd_add_cartridge2                       = weapons\k98\kar98k_cartridge_2
 snd_add_cartridge3                       = weapons\k98\kar98k_cartridge_3
-
+scripted_snd_close                                  = weapons\k98\kar98k_reload_end
 ;------------------------------------------------------------------------------------------------
 [wpn_k98_hud]:hud_base
 item_visual                              = anomaly_weapons\wpn_kar98k\wpn_kar98k_hud.ogf
@@ -210,6 +209,8 @@ anm_shot_l                               = jadey_kar_shoot_last
 anm_show                                 = jadey_kar_draw
 anm_bore                                 = jadey_kar_inspect
 
+ts_pattern_reload_interrupt     = anm_add_cartridge, ^anm_idle.*, anm_close 
+ts_pattern_reload_empty_interrupt     = anm_add_cartridge_empty, ^anm_idle.*, anm_close
 shell_bone                               = wpn_body
 shell_dir                                = 0.0, 1.0, 0.0
 shell_point                              = 0, 0, 0

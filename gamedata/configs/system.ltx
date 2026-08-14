@@ -49,19 +49,19 @@
 #include "extracontent.ltx"
 #include "localization.ltx"
 #include "smart_cover.ltx"
-#include "models\awr_dynamic_objects.ltx"	; AWR								 
+#include "models\awr_dynamic_objects.ltx"    ; AWR                                 
 
 #include "vehicles.ltx"
 
 [smart_terrain]
-GroupControlSection		= 
-$spawn 					= "ai\smart_terrain"
-;$prefetch 				= 4
-$def_sphere				= 2
-class					= SMRTTRRN
-script_binding			= bind_smart_terrain.bind
-shape_transp_color		= 100, 100, 180, 60 ;0x1800FF00
-shape_edge_color		= 32, 32, 32, 255 ;0xFF202020
+GroupControlSection        = 
+$spawn                     = "ai\smart_terrain"
+;$prefetch                 = 4
+$def_sphere                = 2
+class                    = SMRTTRRN
+script_binding            = bind_smart_terrain.bind
+shape_transp_color        = 100, 100, 180, 60 ;0x1800FF00
+shape_edge_color        = 32, 32, 32, 255 ;0xFF202020
 
 [zone_pick_dof]
 near                                     = -1500.0
@@ -105,51 +105,51 @@ specific_characters_files                = character_desc_general, character_des
 ;New in Anomaly (ported from CoC 1.5): You can have as many slots as you want, simply create slot_active_* and slot_persistent_* for it in sequential order
 ;Set slot_persistent_* = false to treat actor inventory as a 'slot'. Setting highlight_equipped = true in the item section will highlight equipped items in inventory
 [inventory]
-take_dist                                = 2	                                       ; not used at all
-max_weight    							 = 35
-max_ruck    							 = 92
-max_belt                                 = 5	         ;16
+take_dist                                = 2                                           ; not used at all
+max_weight                                 = 35
+max_ruck                                 = 92
+max_belt                                 = 5             ;16
 
-slot_persistent_1                        = false	     ;knife
+slot_persistent_1                        = false         ;knife
 slot_active_1                            = true
 
-slot_persistent_2                        = false	     ;weapon 1
+slot_persistent_2                        = false         ;weapon 1
 slot_active_2                            = true
 
-slot_persistent_3                        = false	     ;weapon 2
+slot_persistent_3                        = false         ;weapon 2
 slot_active_3                            = true
 
-slot_persistent_4                        = false	     ;grenades
+slot_persistent_4                        = false         ;grenades
 slot_active_4                            = true
 
-slot_persistent_5                        = false	     ;binocular
+slot_persistent_5                        = false         ;binocular
 slot_active_5                            = true
 
-slot_persistent_6                        = true		     ;bolt
+slot_persistent_6                        = true             ;bolt
 slot_active_6                            = true
 
-slot_persistent_7                        = false	     ;outfit
+slot_persistent_7                        = false         ;outfit
 slot_active_7                            = false
 
-slot_persistent_8                        = false	;true	         ;pda
+slot_persistent_8                        = false    ;true             ;pda
 slot_active_8                            = true
 
-slot_persistent_9                        = false	;true	         ;detector
+slot_persistent_9                        = false    ;true             ;detector
 slot_active_9                            = false
 
-slot_persistent_10                       = false	;true	         ;torch
+slot_persistent_10                       = false    ;true             ;torch
 slot_active_10                           = false
 
-slot_persistent_11                       = false	     ;artefact
+slot_persistent_11                       = false         ;artefact
 slot_active_11                           = true
 
-slot_persistent_12                       = false	     ;helmet
+slot_persistent_12                       = false         ;helmet
 slot_active_12                           = false
 
-slot_persistent_13                       = false	     ;backpack
+slot_persistent_13                       = false         ;backpack
 slot_active_13                           = false
 
-slot_persistent_14                       = true	         ;script animation
+slot_persistent_14                       = true             ;script animation
 slot_active_14                           = true
 
 
@@ -194,17 +194,17 @@ i_upgrade           = 12
 i_part              = 13
 
 [button_sort_settings]
-button_amount = 8
+button_amount = 10
 hotkeys = true
 
 [button_sort_tab_1]
 kinds = s_all
 
 [button_sort_tab_2]
-kinds = w_base, w_pistol, w_shotgun, w_smg, w_rifle, w_sniper, w_explosive, w_melee, w_misc
+kinds = w_base, w_pistol, w_shotgun, w_smg, w_rifle, w_sniper, w_melee, w_misc, w_explosive
 
 [button_sort_tab_3]
-kinds = o_light, o_medium, o_sci, o_heavy, o_helmet, i_backpack
+kinds = o_light, o_medium, o_sci, o_heavy, o_helmet, i_backpack, i_attach
 
 [button_sort_tab_4]
 kinds = w_ammo
@@ -213,13 +213,21 @@ kinds = w_ammo
 kinds = i_arty, i_arty_junk, i_arty_cont, i_mutant_belt, i_mutant_part
 
 [button_sort_tab_6]
-kinds = i_device, i_tool, i_repair, i_upgrade, i_kit, i_attach
+kinds = i_device, i_tool, i_repair, i_kit, w_mbolt
 
 [button_sort_tab_7]
-kinds = i_mutant_raw, i_mutant_cooked, i_food, i_drink, i_medical
+kinds = i_mutant_raw, i_mutant_cooked, i_food, i_drink
 
 [button_sort_tab_8]
+kinds = i_medical
+
+
+[button_sort_tab_9]
+kinds = i_upgrade
+
+[button_sort_tab_10]
 kinds = i_misc, i_letter, i_part, i_quest
+
 
 
 ;------------------------------------------------------------------
@@ -227,7 +235,7 @@ kinds = i_misc, i_letter, i_part, i_quest
 GroupControlSection                      = spawn_group
 $spawn                                   = "physics\hanging lamp"
 class                                    = SO_HLAMP
-script_binding                           = bind_dynamic_light.init
+script_binding                           = bind_physic_object.init
 
 
 [lights_signal_light]
@@ -247,46 +255,46 @@ script_binding                           = bind_physic_object.init
 
 [explosion_marks]
 wallmarks                                = wm\wm_grenade
-dist                                     = 0.5	                                       ;2.4  ;
-size                                     = 0.6	                                       ;0.4  ;
+dist                                     = 0.5                                           ;2.4  ;
+size                                     = 0.6                                           ;0.4  ;
 max_count                                = 5
 
 [bloody_marks]
 wallmarks                                = wm\wm_blood_1,wm\wm_blood_2,wm\wm_blood_3,wm\wm_blood_4,wm\wm_blood_5,wm\wm_blood_6,wm\wm_blood_7,wm\wm_blood_8,wm\wm_blood_9,wm\wm_blood_10,wm\wm_blood_11,wm\wm_blood_1_1,wm\wm_blood_1_2,wm\wm_blood_1_3,wm\wm_blood_1_4,wm\wm_blood_1_5
-dist                                     = 8.0	;2.0  ;2.4                             ;(м) max расстољние отлета крови
-max_size                                 = 0.6	;0.4                                   ;(м)радиус пљтна при хите силой nominal hit по большому объекту (по маленькому *0.5)
-min_size                                 = 0.3	;0.07                                  ;(м)минимальнvй радиус пљтна
-nominal_hit                              = 0.50	 	                                       ;величина номинального хита, при котором разлетаетсљ максимум крови (max_size)
+dist                                     = 8.0    ;2.0  ;2.4                             ;(Г¬) max Г°Г Г±Г±ГІГ®ВљГ­ГЁГҐ Г®ГІГ«ГҐГІГ  ГЄГ°Г®ГўГЁ
+max_size                                 = 0.6    ;0.4                                   ;(Г¬)Г°Г Г¤ГЁГіГ± ГЇВљГІГ­Г  ГЇГ°ГЁ ГµГЁГІГҐ Г±ГЁГ«Г®Г© nominal hit ГЇГ® ГЎГ®Г«ГјГёГ®Г¬Гі Г®ГЎГєГҐГЄГІГі (ГЇГ® Г¬Г Г«ГҐГ­ГјГЄГ®Г¬Гі *0.5)
+min_size                                 = 0.3    ;0.07                                  ;(Г¬)Г¬ГЁГ­ГЁГ¬Г Г«ГјГ­vГ© Г°Г Г¤ГЁГіГ± ГЇВљГІГ­Г 
+nominal_hit                              = 0.50                                                ;ГўГҐГ«ГЁГ·ГЁГ­Г  Г­Г®Г¬ГЁГ­Г Г«ГјГ­Г®ГЈГ® ГµГЁГІГ , ГЇГ°ГЁ ГЄГ®ГІГ®Г°Г®Г¬ Г°Г Г§Г«ГҐГІГ ГҐГІГ±Вљ Г¬Г ГЄГ±ГЁГ¬ГіГ¬ ГЄГ°Г®ГўГЁ (max_size)
 
-;капли крови
+;ГЄГ ГЇГ«ГЁ ГЄГ°Г®ГўГЁ
 
 blood_drops                              = wm\wm_blood_drop_1,wm\wm_blood_drop_2,wm\wm_blood_drop_3,wm\wm_blood_drop_4
-start_blood_size                         = 0.5	                                       ;размер ранv чтоб начала капать кровь
-stop_blood_size                          = 0.25	                                       ;размер ранv чтоб кровь остановилась (должно бvть меньше start_blood_size)
+start_blood_size                         = 0.5                                           ;Г°Г Г§Г¬ГҐГ° Г°Г Г­v Г·ГІГ®ГЎ Г­Г Г·Г Г«Г  ГЄГ ГЇГ ГІГј ГЄГ°Г®ГўГј
+stop_blood_size                          = 0.25                                           ;Г°Г Г§Г¬ГҐГ° Г°Г Г­v Г·ГІГ®ГЎ ГЄГ°Г®ГўГј Г®Г±ГІГ Г­Г®ГўГЁГ«Г Г±Гј (Г¤Г®Г«Г¦Г­Г® ГЎvГІГј Г¬ГҐГ­ГјГёГҐ start_blood_size)
 
-blood_drop_time                          = 0.2	                                       ;OBSOLETE
-blood_drop_time_min                      = 1.5	                                       ;
-blood_drop_time_max                      = 2.5	                                       ;
-blood_drop_size                          = 0.2	                                       ;размер капли (м) крови, котораљ упала
+blood_drop_time                          = 0.2                                           ;OBSOLETE
+blood_drop_time_min                      = 1.5                                           ;
+blood_drop_time_max                      = 2.5                                           ;
+blood_drop_size                          = 0.2                                           ;Г°Г Г§Г¬ГҐГ° ГЄГ ГЇГ«ГЁ (Г¬) ГЄГ°Г®ГўГЁ, ГЄГ®ГІГ®Г°Г Вљ ГіГЇГ Г«Г 
 
 
 [entity_fire_particles]
 fire_particles                           = damage_fx\burn_creatures
-start_burn_size                          = 0.0003	                                       ;размер ожега после которого начать играть партиклv огнљ
-stop_burn_size                           = 0.0001	                                       ;размер ожега после которого остановить партиклv
-min_burn_time                            = 10000	                                       ;минимальное времљ отvгрvша партиклов (даже если рана уже зажила)
+start_burn_size                          = 0.0003                                           ;Г°Г Г§Г¬ГҐГ° Г®Г¦ГҐГЈГ  ГЇГ®Г±Г«ГҐ ГЄГ®ГІГ®Г°Г®ГЈГ® Г­Г Г·Г ГІГј ГЁГЈГ°Г ГІГј ГЇГ Г°ГІГЁГЄГ«v Г®ГЈГ­Вљ
+stop_burn_size                           = 0.0001                                           ;Г°Г Г§Г¬ГҐГ° Г®Г¦ГҐГЈГ  ГЇГ®Г±Г«ГҐ ГЄГ®ГІГ®Г°Г®ГЈГ® Г®Г±ГІГ Г­Г®ГўГЁГІГј ГЇГ Г°ГІГЁГЄГ«v
+min_burn_time                            = 10000                                           ;Г¬ГЁГ­ГЁГ¬Г Г«ГјГ­Г®ГҐ ГўГ°ГҐГ¬Вљ Г®ГІvГЈГ°vГёГ  ГЇГ Г°ГІГЁГЄГ«Г®Гў (Г¤Г Г¦ГҐ ГҐГ±Г«ГЁ Г°Г Г­Г  ГіГ¦ГҐ Г§Г Г¦ГЁГ«Г )
 
 [hud_cursor]
-;все размерv в процентах от длинv экрана
-cross_length    	= 0.0010 ;0.0015
-min_radius      	= 0.0
-max_radius      	= 0.0
-radius_lerp_speed 	= 0.08
-cross_color     	= 0.7,0.7,0.7,0.5
-disp_scale      	= 0.08
+;ГўГ±ГҐ Г°Г Г§Г¬ГҐГ°v Гў ГЇГ°Г®Г¶ГҐГ­ГІГ Гµ Г®ГІ Г¤Г«ГЁГ­v ГЅГЄГ°Г Г­Г 
+cross_length        = 0.0010 ;0.0015
+min_radius          = 0.0
+max_radius          = 0.0
+radius_lerp_speed     = 0.08
+cross_color         = 0.7,0.7,0.7,0.5
+disp_scale          = 0.08
 
 [hud_hitmark]
-hit_mark_texture                         = ui\ui_hud_hit_mark	                                       ; ui\ui_empty
+hit_mark_texture                         = ui\ui_hud_hit_mark                                           ; ui\ui_empty
 grenade_mark_texture                     = ui\ui_hud_grenade_mark
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -305,7 +313,7 @@ visual                                   = dynamics\equipments\item_document_1.o
 
 inv_name                                 = Document
 inv_name_short                           = Document
-inv_weight                               = 1	                                       ;0.2
+inv_weight                               = 1                                           ;0.2
 
 inv_grid_width                           = 1
 inv_grid_height                          = 1
@@ -353,7 +361,7 @@ lim_yaw                                  = 0, 0
 lim_zoom                                 = 1, 5
 rot_speed                                = 2, 2, 2
 offset                                   = 0.5,0.2,-1.1
-autoaim_speed_y                          = 0.5, 3.14	                                       ;min,max speed
+autoaim_speed_y                          = 0.5, 3.14                                           ;min,max speed
 autoaim_speed_x                          = 0.5, 3.14
 
 [mounted_weapon_cam]
@@ -373,10 +381,10 @@ lim_yaw                                  = -2.0, 2.0
 rot_speed                                = 3.14, 1.0, 0
 
 [car_free_cam]
-lim_pitch                                = -1, 1.56	                                       ;0, 1.56
-lim_yaw                                  = 0, 0	                                       ;0, 0
-lim_zoom                                 = 5, 10	                                       ;1, 7
-rot_speed                                = 3.14, 1.0, 10	                                       ;3.14, 1.0, 10
+lim_pitch                                = -1, 1.56                                           ;0, 1.56
+lim_yaw                                  = 0, 0                                           ;0, 0
+lim_zoom                                 = 5, 10                                           ;1, 7
+rot_speed                                = 3.14, 1.0, 10                                           ;3.14, 1.0, 10
 
 [car_look_cam]
 lim_pitch                                = 0, 1.56
@@ -415,12 +423,12 @@ $spawn                                   = "ai\graph point"
 ; Trade
 ;-----------------------------------------------------------------
 [trade]
-;коэффициентv изменениљ ценv при торговле в зависимости от отношениљ к персонажу
-;линейно апроксимируітсљ между значениљ
-buy_price_factor_hostile                 = 1                                     ;коэффициент покупки при goodwill = -100
-buy_price_factor_friendly                = 1                                     ;коэффициент покупки при goodwill = 100
-sell_price_factor_hostile                = 1                                     ;коэффициент покупки при goodwill = -100
-sell_price_factor_friendly               = 1                                     ;коэффициент покупки при goodwill = 100
+;ГЄГ®ГЅГґГґГЁГ¶ГЁГҐГ­ГІv ГЁГ§Г¬ГҐГ­ГҐГ­ГЁВљ Г¶ГҐГ­v ГЇГ°ГЁ ГІГ®Г°ГЈГ®ГўГ«ГҐ Гў Г§Г ГўГЁГ±ГЁГ¬Г®Г±ГІГЁ Г®ГІ Г®ГІГ­Г®ГёГҐГ­ГЁВљ ГЄ ГЇГҐГ°Г±Г®Г­Г Г¦Гі
+;Г«ГЁГ­ГҐГ©Г­Г® Г ГЇГ°Г®ГЄГ±ГЁГ¬ГЁГ°ГіВіГІГ±Вљ Г¬ГҐГ¦Г¤Гі Г§Г­Г Г·ГҐГ­ГЁВљ
+buy_price_factor_hostile                 = 1                                     ;ГЄГ®ГЅГґГґГЁГ¶ГЁГҐГ­ГІ ГЇГ®ГЄГіГЇГЄГЁ ГЇГ°ГЁ goodwill = -100
+buy_price_factor_friendly                = 1                                     ;ГЄГ®ГЅГґГґГЁГ¶ГЁГҐГ­ГІ ГЇГ®ГЄГіГЇГЄГЁ ГЇГ°ГЁ goodwill = 100
+sell_price_factor_hostile                = 1                                     ;ГЄГ®ГЅГґГґГЁГ¶ГЁГҐГ­ГІ ГЇГ®ГЄГіГЇГЄГЁ ГЇГ°ГЁ goodwill = -100
+sell_price_factor_friendly               = 1                                     ;ГЄГ®ГЅГґГґГЁГ¶ГЁГҐГ­ГІ ГЇГ®ГЄГіГЇГЄГЁ ГЇГ°ГЁ goodwill = 100
 
 
 
@@ -428,12 +436,12 @@ sell_price_factor_friendly               = 1                                    
 
 [spawn_group_zone]
 GroupControlSection                      = spawn_group_zone
-$spawn                                   = "ai\group zone"	                                       ; option for Level Editor
+$spawn                                   = "ai\group zone"                                           ; option for Level Editor
 class                                    = AI_SPGRP
 
 [spawn_group]
 GroupControlSection                      = spawn_group
-$spawn                                   = "ai\spawn group"	                                       ; option for Level Editor
+$spawn                                   = "ai\spawn group"                                           ; option for Level Editor
 class                                    = AI_SPGRP
 
 [level_changer]
@@ -457,7 +465,7 @@ script_binding                           = xr_zones.bind
 object_damage_factor                     = 1.2f
 
 ;*****************************************
-; ++=+іLT+і- Lі+=
+; ++=+ВіLT+Ві- LВі+=
 ;*****************************************
 [stalker_names_stalker]
 name_cnt                                 = 123 ; 104
@@ -494,15 +502,15 @@ last_name_cnt                            = 245 ; 200
 
 [script_object]
 GroupControlSection                      = spawn_group
-$spawn                                   = "script\script object"	                                       ; option for Level Editor
-$npc                                     = on	                                       ; option for Level Editor
+$spawn                                   = "script\script object"                                           ; option for Level Editor
+$npc                                     = on                                           ; option for Level Editor
 ; $prefetch           = 32                    ;
-Scheduled                                = on	                                       ; option for ALife Simulator
-Human                                    = off	                                       ; option for ALife Simulator
-cform                                    = skeleton	                                       ; collision class
-class                                    = SCRPTOBJ	                                       ; AI class
+Scheduled                                = on                                           ; option for ALife Simulator
+Human                                    = off                                           ; option for ALife Simulator
+cform                                    = skeleton                                           ; collision class
+class                                    = SCRPTOBJ                                           ; AI class
 
-;параметрv показvваниљ входљих сообений PDA в главном мені
+;ГЇГ Г°Г Г¬ГҐГІГ°v ГЇГ®ГЄГ Г§vГўГ Г­ГЁВљ ГўГµГ®Г¤Вљ ГЁГµ Г±Г®Г®ГЎ ГҐГ­ГЁГ© PDA Гў ГЈГ«Г ГўГ­Г®Г¬ Г¬ГҐГ­Ві
 [maingame_ui]
 pda_msgs_max_show_time                   = 20000
 info_msgs_max_show_time                  = 10000
@@ -564,13 +572,13 @@ inv_grid_width                           = 2
 inv_grid_height                          = 1
 inv_grid_x                               = 14
 inv_grid_y                               = 7
-attach_angle_offset                      = -1.5708,0.1919,3.1416	                                       ;устанавливаетсљ в радианах Angle*PI/180
+attach_angle_offset                      = -1.5708,0.1919,3.1416                                           ;ГіГ±ГІГ Г­Г ГўГ«ГЁГўГ ГҐГІГ±Вљ Гў Г°Г Г¤ГЁГ Г­Г Гµ Angle*PI/180
 attach_position_offset                   = 0.075, 0.066, 0.023
 attach_bone_name                         = bip01_l_hand
 auto_attach                              = false
-anim_item								 = true
+anim_item                                 = true
 
-; рация для правой руки
+; Г°Г Г¶ГЁГї Г¤Г«Гї ГЇГ°Г ГўГ®Г© Г°ГіГЄГЁ
 [hand_radio_r]:identity_immunities
 GroupControlSection                      = spawn_group
 discovery_dependency                     =
@@ -586,7 +594,7 @@ inv_grid_width                           = 2
 inv_grid_height                          = 1
 inv_grid_x                               = 14
 inv_grid_y                               = 7
-attach_angle_offset                      = 1.571,0.75,0.0	                                       ;устанавливаетсљ в радианах Angle*PI/180
+attach_angle_offset                      = 1.571,0.75,0.0                                           ;ГіГ±ГІГ Г­Г ГўГ«ГЁГўГ ГҐГІГ±Вљ Гў Г°Г Г¤ГЁГ Г­Г Гµ Angle*PI/180
 attach_position_offset                   = 0.015, -0.084, 0.023
 attach_bone_name                         = bip01_r_hand
 auto_attach                              = false
@@ -612,17 +620,17 @@ inv_grid_width                           = 2
 inv_grid_height                          = 1
 inv_grid_x                               = 14
 inv_grid_y                               = 9
-attach_angle_offset                      = 3.080506,-1.493053,-1.202040	                                       ;устанавливаетсЯ в радианах Angle*PI/180
+attach_angle_offset                      = 3.080506,-1.493053,-1.202040                                           ;ГіГ±ГІГ Г­Г ГўГ«ГЁГўГ ГҐГІГ±Гџ Гў Г°Г Г¤ГЁГ Г­Г Гµ Angle*PI/180
 attach_position_offset                   = 0.080000,0.021273,0.100000
 attach_bone_name                         = bip01_r_hand
 auto_attach                              = false
 
 [breakable_object]
 class                                    = O_BRKBL
-remove_time                              = 10	                                       ;after remove_time seconds object will be removed after it is breaked
-hit_break_threthhold                     = 0.	                                       ;weapon impact can stand breakable_object
-collision_break_threthhold               = 2000.f	                                       ;collision impact can stand breakable_object
-immunity_factor                          = 1.3	                                       ;hit power multiplier
+remove_time                              = 10                                           ;after remove_time seconds object will be removed after it is breaked
+hit_break_threthhold                     = 0.                                           ;weapon impact can stand breakable_object
+collision_break_threthhold               = 2000.f                                           ;collision impact can stand breakable_object
+immunity_factor                          = 1.3                                           ;hit power multiplier
 
 [climable_object]
 class                                    = O_CLMBL
@@ -739,15 +747,15 @@ shape_edge_color                         = 32, 32, 32, 255
 bonce_damage_factor_for_objects          = 1.
 
 [pkm_visual_memory]
-min_view_distance                        = 1	                                       ;0.4        ; коэффициент, которvй множитсљ на eye_range, в зависимости от угла
-max_view_distance                        = 1	                                       ;0.8        ; коэффициент, которvй множитсљ на eye_range, в зависимости от угла
-visibility_threshold                     = 50	                                       ;150.0       ; значение, при достижении суммой которого объект считаетсљ видимvм
-always_visible_distance                  = 1	                                       ;0.1
+min_view_distance                        = 1                                           ;0.4        ; ГЄГ®ГЅГґГґГЁГ¶ГЁГҐГ­ГІ, ГЄГ®ГІГ®Г°vГ© Г¬Г­Г®Г¦ГЁГІГ±Вљ Г­Г  eye_range, Гў Г§Г ГўГЁГ±ГЁГ¬Г®Г±ГІГЁ Г®ГІ ГіГЈГ«Г 
+max_view_distance                        = 1                                           ;0.8        ; ГЄГ®ГЅГґГґГЁГ¶ГЁГҐГ­ГІ, ГЄГ®ГІГ®Г°vГ© Г¬Г­Г®Г¦ГЁГІГ±Вљ Г­Г  eye_range, Гў Г§Г ГўГЁГ±ГЁГ¬Г®Г±ГІГЁ Г®ГІ ГіГЈГ«Г 
+visibility_threshold                     = 50                                           ;150.0       ; Г§Г­Г Г·ГҐГ­ГЁГҐ, ГЇГ°ГЁ Г¤Г®Г±ГІГЁГ¦ГҐГ­ГЁГЁ Г±ГіГ¬Г¬Г®Г© ГЄГ®ГІГ®Г°Г®ГЈГ® Г®ГЎГєГҐГЄГІ Г±Г·ГЁГІГ ГҐГІГ±Вљ ГўГЁГ¤ГЁГ¬vГ¬
+always_visible_distance                  = 1                                           ;0.1
 time_quant                               = 0.00001
-decrease_value                           = 0.1	                                       ; значение, на которое уменьшаетсљ вес, если объект попал в фрустум, но отсЈксљ по каким-то причинам
+decrease_value                           = 0.1                                           ; Г§Г­Г Г·ГҐГ­ГЁГҐ, Г­Г  ГЄГ®ГІГ®Г°Г®ГҐ ГіГ¬ГҐГ­ГјГёГ ГҐГІГ±Вљ ГўГҐГ±, ГҐГ±Г«ГЁ Г®ГЎГєГҐГЄГІ ГЇГ®ГЇГ Г« Гў ГґГ°ГіГ±ГІГіГ¬, Г­Г® Г®ГІГ±ВЈГЄГ±Вљ ГЇГ® ГЄГ ГЄГЁГ¬-ГІГ® ГЇГ°ГЁГ·ГЁГ­Г Г¬
 velocity_factor                          = 0.5
-luminocity_factor                        = 0.5	                                       ; фактор освеениљ (только длљ LктЈра)
-transparency_threshold                   = 0.4	                                       ;
+luminocity_factor                        = 0.5                                           ; ГґГ ГЄГІГ®Г° Г®Г±ГўГҐ ГҐГ­ГЁВљ (ГІГ®Г«ГјГЄГ® Г¤Г«Вљ LГЄГІВЈГ°Г )
+transparency_threshold                   = 0.4                                           ;
 view_fov_deg                             = 90
 view_aspect                              = 1
 view_far_plane                           = 100
@@ -759,14 +767,14 @@ swing_normal_rot1                        = 30.0
 swing_normal_rot2                        = 1.0
 swing_normal_speed                       = 2.0
 ; fast
-swing_fast_amp1                          = 0.35	                                       ;0.25
-swing_fast_amp2                          = .20	                                       ;0.15
+swing_fast_amp1                          = 0.35                                           ;0.25
+swing_fast_amp2                          = .20                                           ;0.15
 swing_fast_rot1                          = 5
-swing_fast_rot2                          = .5	                                       ;0.75
-swing_fast_speed                         = 0.5	                                       ;1
+swing_fast_rot2                          = .5                                           ;0.75
+swing_fast_speed                         = 0.5                                           ;1
 
 [ph_capture_visuals]
-;Список объектов которvе можно таскать.
+;Г‘ГЇГЁГ±Г®ГЄ Г®ГЎГєГҐГЄГІГ®Гў ГЄГ®ГІГ®Г°vГҐ Г¬Г®Г¦Г­Г® ГІГ Г±ГЄГ ГІГј.
 
 ;NPC
 actors\stalker_bandit\stalker_bandit_1   =
@@ -1384,3 +1392,4 @@ monsters\snork\snorkdead4                =
 monsters\snork\snorkdead5                =
 monsters\burer\burer2                    =
 monsters\burer\burer2_dead               =
+

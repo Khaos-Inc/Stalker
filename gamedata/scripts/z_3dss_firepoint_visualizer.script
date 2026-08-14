@@ -1,0 +1,261 @@
+-- Lua-only fire point / fire direction visualizer for HUD setup.
+
+local ENABLED = false
+local GIZMOS_INITIALIZED = false
+local GIZMOS = {}
+local UPDATE_SCHEDULED = false
+local PREFIX = "z_3dss_firepoint_visualizer_"
+local CROSS_SIZE = 0.025
+local FALLBACK_CROSSHAIR_DISTANCE = 100
+local UPDATE_INTERVAL = 33
+local NEXT_UPDATE_TIME = 0
+
+local function notify(text)
+	if actor_menu and actor_menu.set_msg then
+		actor_menu.set_msg(1, text, 3)
+	else
+		printf("[3DSS FIREPOINT VISUALIZER] %s", text)
+	end
+end
+
+local function read_param(section, key, default)
+	if not section or not key then return default end
+	if SYS_GetParam then
+		local ok, value = pcall(SYS_GetParam, 0, section, key, default)
+		if ok and value ~= nil then return value end
+	end
+	if ini_sys and ini_sys.line_exist and ini_sys:line_exist(section, key) then
+		return ini_sys:r_string_ex(section, key) or default
+	end
+	return default
+end
+
+local function string_to_vec(value, default)
+	local def = default or { 0, 0, 0 }
+	if type(value) ~= "string" then value = "" end
+	local parts = {}
+	for part in string.gmatch(value, "([^,]+)") do
+		parts[#parts + 1] = part
+	end
+	local x = tonumber(parts and parts[1]) or def[1] or 0
+	local y = tonumber(parts and parts[2]) or def[2] or 0
+	local z = tonumber(parts and parts[3]) or def[3] or 0
+	return vector():set(x, y, z)
+end
+
+local function hide_gizmos()
+	for _, gizmo in pairs(GIZMOS) do
+		if type(gizmo) == "table" then
+			for _, line in ipairs(gizmo) do
+				if line then line.visible = false end
+			end
+		elseif gizmo then
+			gizmo.visible = false
+		end
+	end
+end
+
+local function add_line(name)
+	local line = debug_render.add_object(PREFIX .. name, DBG_ScriptObject.line):cast_dbg_line()
+	line.hud = false
+	line.visible = false
+	return line
+end
+
+local function initialize_gizmos()
+	if GIZMOS_INITIALIZED then return true end
+	if not (debug_render and DBG_ScriptObject) then
+		printf("[3DSS FIREPOINT VISUALIZER] debug_render is not available.")
+		return false
+	end
+
+	GIZMOS.fire_point = { add_line("fire_point_h"), add_line("fire_point_v") }
+	GIZMOS.fire_bone = { add_line("fire_bone_h"), add_line("fire_bone_v") }
+	GIZMOS.fire_dir = add_line("fire_dir")
+
+	GIZMOS_INITIALIZED = true
+	return true
+end
+
+local function set_line(line, point_a, point_b, color)
+	if not (line and point_a and point_b) then return end
+	line.visible = true
+	line.color = color
+	line.point_a = point_a
+	line.point_b = point_b
+end
+
+local function set_cross(lines, pos, color)
+	if not (lines and pos) then return end
+	local right = vector():set(device().cam_right):normalize_safe():mul(CROSS_SIZE)
+	local top = vector():set(device().cam_top):normalize_safe():mul(CROSS_SIZE)
+	set_line(lines[1], vector():set(pos):sub(right), vector():set(pos):add(right), color)
+	set_line(lines[2], vector():set(pos):sub(top), vector():set(pos):add(top), color)
+end
+
+local function crosshair_point()
+	local dist = nil
+	local ok, value = pcall(level.get_target_dist)
+	if ok and value and value > 0 then dist = value end
+	dist = dist or FALLBACK_CROSSHAIR_DISTANCE
+	return vector():mad(device().cam_pos, device().cam_dir, dist)
+end
+
+local function active_weapon()
+	if not (db and db.actor) then return nil end
+	local wpn = db.actor:active_item()
+	if not wpn then return nil end
+	if not read_param(wpn:section(), "hud", nil) then return nil end
+	return wpn
+end
+
+local function is_silenced(wpn)
+	local ok, result = pcall(function()
+		return wpn:weapon_is_silencer()
+	end)
+	return ok and result == true
+end
+
+local function fire_data(wpn)
+	local weapon_section = wpn:section()
+	local hud_section = read_param(weapon_section, "hud", nil)
+	if not hud_section then return nil end
+
+	local fire_bone = read_param(hud_section, "fire_bone", "wpn_body")
+	local fire_point = read_param(hud_section, "fire_point", "0,0,0")
+	if is_silenced(wpn) then
+		fire_bone = read_param(hud_section, "fire_bone_silencer", fire_bone)
+		fire_point = read_param(hud_section, "fire_point_silencer", fire_point)
+	end
+
+	local offset = string_to_vec(fire_point, { 0, 0, 0 })
+	local pos = nil
+	local bone_pos = nil
+	local ok = pcall(function()
+		bone_pos = wpn:bone_position(fire_bone, true)
+		local mat = wpn:bone_transform(fire_bone, true)
+		pos = vector():set(bone_pos)
+		mat:transform_tiny(pos, offset)
+		pos:hud_to_world()
+		bone_pos:hud_to_world()
+	end)
+	if not ok or not pos then return nil end
+
+	local fire_dir = string_to_vec(read_param(hud_section, "fire_direction", "0,0,1"), { 0, 0, 1 })
+	ok = pcall(function()
+		local item_transform = wpn:xform(true)
+		item_transform:transform_dir(fire_dir)
+		fire_dir:normalize()
+		if fire_dir:dotproduct(device().cam_dir) < 0 then
+			fire_dir:invert()
+		end
+	end)
+	if not ok then return nil end
+
+	local end_pos = crosshair_point()
+	return pos, bone_pos, end_pos
+end
+
+local function update_gizmos()
+	if not ENABLED then return end
+	if not initialize_gizmos() then return end
+
+	local wpn = active_weapon()
+	if not wpn then
+		hide_gizmos()
+		return
+	end
+
+	local fire_point, fire_bone, fire_end = fire_data(wpn)
+	if not fire_point then
+		hide_gizmos()
+		return
+	end
+
+	set_cross(GIZMOS.fire_point, fire_point, fcolor():set(0, 1, 0, 1))
+	set_cross(GIZMOS.fire_bone, fire_bone, fcolor():set(1, 1, 0, 1))
+	set_line(GIZMOS.fire_dir, fire_point, fire_end, fcolor():set(1, 0.2, 0, 1))
+end
+
+local function schedule_update()
+	if UPDATE_SCHEDULED or not ENABLED then return end
+	UPDATE_SCHEDULED = true
+	NEXT_UPDATE_TIME = time_global() + UPDATE_INTERVAL
+	level.add_call(
+		function()
+			return (not ENABLED) or time_global() >= NEXT_UPDATE_TIME
+		end,
+		function()
+			UPDATE_SCHEDULED = false
+			if not ENABLED then return end
+			local ok, err = pcall(update_gizmos)
+			if not ok then
+				printf("[3DSS FIREPOINT VISUALIZER] update failed: %s", tostring(err))
+				disable()
+				return
+			end
+			schedule_update()
+		end
+	)
+end
+
+function enable()
+	if ENABLED then return end
+	ENABLED = true
+	schedule_update()
+	notify("Fire point visualizer: on")
+end
+
+function disable()
+	if not ENABLED then return end
+	ENABLED = false
+	hide_gizmos()
+	notify("Fire point visualizer: off")
+end
+
+function toggle()
+	if ENABLED then
+		disable()
+	else
+		enable()
+	end
+end
+
+function is_enabled()
+	return ENABLED
+end
+
+function print_debug()
+	local wpn = active_weapon()
+	if not wpn then
+		printf("[3DSS FIREPOINT VISUALIZER] no active weapon with hud")
+		return
+	end
+	local hud = read_param(wpn:section(), "hud", nil)
+	printf("[3DSS FIREPOINT VISUALIZER] enabled=%s weapon=%s hud=%s fire_bone=%s fire_point=%s fire_direction=%s",
+		tostring(ENABLED),
+		tostring(wpn:section()),
+		tostring(hud),
+		tostring(read_param(hud, "fire_bone", "wpn_body")),
+		tostring(read_param(hud, "fire_point", "0,0,0")),
+		tostring(read_param(hud, "fire_direction", "0,0,1"))
+	)
+end
+
+local function on_key_press(key)
+	local shift_down = (key_state(DIK_keys.DIK_LSHIFT) or 0) ~= 0 or (key_state(DIK_keys.DIK_RSHIFT) or 0) ~= 0
+	if shift_down and key == DIK_keys.DIK_MULTIPLY then
+		toggle()
+	end
+end
+
+local function cleanup()
+	disable()
+end
+
+function on_game_start()
+	RegisterScriptCallback("on_key_press", on_key_press)
+	RegisterScriptCallback("actor_on_before_death", cleanup)
+	RegisterScriptCallback("actor_on_net_destroy", cleanup)
+	RegisterScriptCallback("on_before_level_changing", cleanup)
+end

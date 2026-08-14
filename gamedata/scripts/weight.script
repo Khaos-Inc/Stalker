@@ -1,3 +1,6 @@
+-- Custom weight adder/multiplier with removal, written by demonized
+-- Based on Arti's speed.script
+
 local ceil = math.ceil
 
 local get_game_factor = game_difficulties.get_game_factor
@@ -6,6 +9,7 @@ local weights = {
     carry_weight = 0,
     --max_walk_weight = 0
 }
+
 local weight_adders = {}
 local weight_multipliers = {}
 local not_first_update = true

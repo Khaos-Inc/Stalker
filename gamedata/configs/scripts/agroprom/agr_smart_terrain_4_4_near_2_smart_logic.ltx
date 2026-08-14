@@ -3,26 +3,34 @@
 active = animpoint@agr_smart_terrain_4_4_near_2_camp_work_1
 suitable = {!surge_started} true
 prior = 45
+on_combat = combat
 
 [logic@agr_smart_terrain_4_4_near_2_camp_work_2]
 active = animpoint@agr_smart_terrain_4_4_near_2_camp_work_2
 suitable = {!surge_started} true
 prior = 45
+on_combat = combat
 
 [logic@agr_smart_terrain_4_4_near_2_camp_work_3]
 active = animpoint@agr_smart_terrain_4_4_near_2_camp_work_3
 suitable = {!surge_started} true
 prior = 45
+on_combat = combat
 
 [logic@agr_smart_terrain_4_4_near_2_camp_work_4]
 active = animpoint@agr_smart_terrain_4_4_near_2_camp_work_4
 suitable = {!surge_started} true
 prior = 45
+on_combat = combat
 
 [logic@agr_smart_terrain_4_4_near_2_camp_work_5]
 active = animpoint@agr_smart_terrain_4_4_near_2_camp_work_5
 suitable = {!surge_started} true
 prior = 45
+on_combat = combat
+
+[combat]
+combat_type = {=cond_scheme_cover()} cover, {=cond_scheme_camper()} camper
 
 [animpoint@agr_smart_terrain_4_4_near_2_camp_work_1]
 cover_name = agr_smart_terrain_4_4_near_2_animpoint_kamp1

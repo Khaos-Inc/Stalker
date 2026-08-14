@@ -2,11 +2,32 @@
 >scopes		= t12, exps3, he510, p1x42
 <scopes		= aim_low, aimpoint, point_aimpro, eot, rakurs
 !hud_fov 
-lewd_lens_hide_enabled       = true
-lewd_lens_hide_bone          = lens
-lewd_lens_hide_delays        = 0.1,0
-lewd_lens_hide_aim_mode      = true, false, false	
+lens_hide_enabled       = true
+lens_hide_bone          = lens
+lens_hide_delays        = 0.1,0
+lens_hide_aim_mode      = true, false, false	
 
+;---------------------------------------------SCRIPTED CANTED SIGHTS-----------------------------------
+canted_sights 		= canted_deltapoint, canted_docter, canted_t12
+
+canted_sights_bone  = wpn_body
+canted_sights_pos   = 0.002043, 0.07868, 0.265546
+canted_sights_rot   = 0, 0, 0
+canted_sights_scale = 1.114375, 1.114375, 1.114375
+
+open_slots 			 = 1
+
+canted_rds_position1 = 0.002043, 0.07868, 0.265546
+
+canted_aim_pos_canted_deltapoint = -0.098479, -0.066702, -0.06
+canted_aim_rot_canted_deltapoint = 0.000273, 0.000838, 0.825
+
+canted_aim_pos_canted_docter     = -0.098729, -0.061671, -0.06
+canted_aim_rot_canted_docter     = 0.000273, 0.000838, 0.825
+
+canted_aim_pos_canted_t12        = -0.098472, -0.067053, -0.06
+canted_aim_rot_canted_t12        = 0.000273, 0.000838, 0.825
+;------------------------------------------------------------------------------------------------------
 ![wpn_akm_isg_hud]
 fire_bone			= muzzle
 fire_point			= 0, 0, 0
@@ -361,10 +382,10 @@ item_visual                		= dynamics\weapons\wpn_akm_isg\wpn_akm_isg_t12_hud.
         aim_hud_offset_rot               = -6e-05, -0.000412, 0
         aim_hud_offset_rot_16x9          = -6e-05, -0.000412, 0
 		
-        aim_hud_offset_alt_pos           = -0.09057, -0.061452, -0.08
-        aim_hud_offset_alt_pos_16x9      = -0.09057, -0.061452, -0.08
-        aim_hud_offset_alt_rot           = -6e-05, -0.000412, 0.78
-        aim_hud_offset_alt_rot_16x9      = -6e-05, -0.000412, 0.78
+        aim_hud_offset_alt_pos           = -0.099072, -0.066374, -0.08
+        aim_hud_offset_alt_pos_16x9      = -0.099072, -0.066374, -0.08
+        aim_hud_offset_alt_rot           = -6e-05, -0.000412, 0.82
+        aim_hud_offset_alt_rot_16x9      = -6e-05, -0.000412, 0.82
 		
 ![wpn_akm_isg_march_f_shorty]:march_shorty_s
 1icon_layer		= march_f_shorty_x

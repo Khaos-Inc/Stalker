@@ -1250,7 +1250,7 @@ end
 function DynamicNewsManager:GossipDeathByStalker(sender,victim,who) -- hearing stalker killing a stalker
 	--printf(">>> Dyn News: GossipDeathByStalker - call")
 	local cls = dynamic_news_helper.GetWeaponClass(who)
-	if (cls == 1 or cls == 9 or cls == 6) then 
+	if (cls == 1 or cls == 9) then 
 		return false
 	end
 	
@@ -1268,12 +1268,6 @@ function DynamicNewsManager:GossipDeathByStalker(sender,victim,who) -- hearing s
 	if (not tbl_1) or (not tbl_2) then
 		return false
 	end
-
-	-- Chance of message when killing stalker
-    local chanceThreshold = 0.5
-    if math.random() > chanceThreshold then
-        return false
-    end
 	
 	local a = tbl_1[math.random(#tbl_1)]
 	local b = dynamic_news_helper.GetWeaponDescription(who,2)
@@ -1412,7 +1406,7 @@ end
 function DynamicNewsManager:GossipDeathOfMutant(victim,who,comm) -- hearing stalker killing a mutant
 	--printf(">>> Dyn News: GossipDeathOfMutant - call")
 	local cls = dynamic_news_helper.GetWeaponClass(who)
-	if (cls == 1 or cls == 9 or cls == 6) then 
+	if (cls == 1 or cls == 9) then 
 		return false
 	end
 	
@@ -1426,12 +1420,6 @@ function DynamicNewsManager:GossipDeathOfMutant(victim,who,comm) -- hearing stal
 	if (not tbl_1) or (not tbl_2) then
 		return false
 	end
-
-	-- Chance of message when killing mutant
-    local chanceThreshold = 0.5
-    if math.random() > chanceThreshold then
-        return false
-    end
 	
 	local a = tbl_1[math.random(#tbl_1)]
 	local b = dynamic_news_helper.GetWeaponDescription(who,2)

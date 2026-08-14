@@ -252,35 +252,6 @@ function Add_Condition_Text(self, xml, obj, sec, clsid)
 
 	self.cond_text = self.cond_text or utjan_xml:InitTextWnd("counter_text", self.cell)
 
-	local cond = obj:condition()  
-	local str = SYS_GetParam(0,sec, "condition_bar","condition_progess_bar")  
-	local props = bar_list[str]  
-	local color = props.def or lerp_color( cond , props.min , props.mid , props.max )  
-	local part_type = get_part_type(sec)
-	local cond_percent = math.ceil(cond * 100)
-	
-	if part_type == "weapon" then
-		if cond_percent >= settings.part_dots.wpo_green then color = clr_g
-		elseif cond_percent >= settings.part_dots.wpo_yellow then color = clr_y
-		elseif cond_percent >= settings.part_dots.wpo_orange then color = clr_o
-		else color = clr_r
-		end
-	elseif part_type == "outfit" then
-		if cond_percent >= settings.part_dots.opo_green then color = clr_g
-		elseif cond_percent >= settings.part_dots.opo_yellow then color = clr_y
-		elseif cond_percent >= settings.part_dots.opo_orange then color = clr_o
-		elseif cond_percent > -1 then color = clr_r
-		end
-	end
-	
-	if color then
-		self.cond_text:SetTextColor( color )
-	end
-
-
-
-
---[[
 	local cond = obj:condition()
 	local str = SYS_GetParam(0,sec, "condition_bar","condition_progess_bar")
 	local props = bar_list[str]
@@ -288,26 +259,6 @@ function Add_Condition_Text(self, xml, obj, sec, clsid)
 	if color then
 		self.cond_text:SetTextColor( color )
 	end
-
-	local cond = obj:condition()
-	local str = SYS_GetParam(0,sec, "condition_bar","condition_progess_bar")
-	local props = bar_list[str]
-	local color = props.def or lerp_color( cond , props.min , props.mid , props.max )
-	if color then
-		if get_part_type(section) = "weapon" then  
-			if cond >= settings.part_dots.wpo_green then color = clr_g
-			elseif cond >= settings.part_dots.wpo_yellow then color = clr_y
-			elseif cond >= settings.part_dots.wpo_orange then color = clr_o
-			elseif cond > -1 then color = clr_r end
-    	elseif string.find(obj, "^prt_o_") then
-			if cond >= settings.part_dots.opo_green then color = clr_g
-			elseif cond >= settings.part_dots.opo_yellow then color = clr_y
-			elseif cond >= settings.part_dots.opo_orange then color = clr_o
-			elseif cond > -1 then color = clr_r end
-    	end  
-		self.cond_text:SetTextColor( color )
-	end
-]]
 
 	local text = math.ceil(cond * 100) .. "%"
 	local text_padding_w = is_equipped and 0 or settings.cond_text.padding + 1
@@ -369,20 +320,6 @@ function Add_Condition_Text(self, xml, obj, sec, clsid)
     self.cond_text:Show(true)
 end
 -- END ADD CONDITION TEXT 
-
-function get_part_type(section)  
-    if type(section) ~= "string" then  
-        return nil  
-    end  
-      
-    if string.find(section, "^prt_w_") then
-        return "weapon"  
-    elseif string.find(section, "^prt_o_") then  
-        return "outfit"  
-    else  
-        return nil  
-    end  
-end
 
 -- ADD PART CONDITION BARS
 function is_short_gun(obj, clsid, sec)

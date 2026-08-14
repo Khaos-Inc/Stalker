@@ -1,0 +1,13 @@
+function on_mcm_load()
+  op = { 
+     id = "ver_pistol_swap", sh = true, gr =
+      {
+        { id = "ver_pistol_swap_Title", type = "slide", text = "ui_mcm_menu_ver_pistol_swap_Title", link = "ui_options_slider_player", size = {512, 50}, spacing = 20 },
+		{ id = "fast_swap", type = "check", val = 1, def = true, },
+		{ id = "pistol_swap_multiplier", type = "track", val = 2, def = 1.5, min = 0, max = 5, step = 0.1, },
+		{ id = "gun_swap_multiplier", type = "track", val = 2, def = 1.5, min = 0, max = 5, step = 0.1, },
+		{ id = "debug", type = "check", val = 1, def = false, },
+      }
+    }
+  return op
+end

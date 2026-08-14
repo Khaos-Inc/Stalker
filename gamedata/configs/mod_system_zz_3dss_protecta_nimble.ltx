@@ -18,11 +18,33 @@ fire_modes                               = 1, -1
 
 snd_add_cartridge				        = weapons\librarian_striker\insert_fast
 
-lewd_lens_hide_enabled       = true
-lewd_lens_hide_bone          = lens
-lewd_lens_hide_delays        = 0.1,0
-lewd_lens_hide_aim_mode      = true, false, false	
+use_alt_aim_hud			= true
 
+lens_hide_enabled       = true
+lens_hide_bone          = lens
+lens_hide_delays        = 0.1,0
+lens_hide_aim_mode      = true, false, false	
+
+;---------------------------------------------SCRIPTED CANTED SIGHTS-----------------------------------
+canted_sights = canted_deltapoint, canted_docter, canted_t12
+
+canted_sights_bone         = wpn_body
+canted_sights_pos			= 0.000156, 0.090781, 0.230000
+canted_sights_rot			= 0, 0, 0
+canted_sights_scale			= 1.078125, 1.078125, 1.078125
+
+open_slots 			 = 1
+canted_rds_position1             = 0.000156, 0.090781, 0.230000
+
+canted_aim_pos_canted_deltapoint = -0.12566, -0.07994, -0.05
+canted_aim_rot_canted_deltapoint = 0.003944, 0, 0.8328
+
+canted_aim_pos_canted_docter     = -0.125933, -0.075256, -0.05
+canted_aim_rot_canted_docter     = 0.003944, 0, 0.8328
+
+canted_aim_pos_canted_t12        = -0.125586, -0.080251, -0.05
+canted_aim_rot_canted_t12        = 0.003944, 0, 0.8328
+;------------------------------------------------------------------------------------------------------
 ![wpn_protecta_nimble_hud]
 fire_point		= 0,0,0.065
 fire_bone		= muzzle
@@ -39,10 +61,10 @@ anm_add_cartridge						= striker_hand_insert, striker_insert, 1.5
         aim_hud_offset_rot               = -0.00393, -3e-05, 0
         aim_hud_offset_rot_16x9          = -0.00393, -3e-05, 0
 
-        aim_hud_offset_alt_pos           = -0.157176, -0.090743, 0
-        aim_hud_offset_alt_pos_16x9      = -0.157176, -0.090743, 0
-        aim_hud_offset_alt_rot           = -0.00393, -3e-05, 0.7
-        aim_hud_offset_alt_rot_16x9      = -0.00393, -3e-05, 0.7
+        aim_hud_offset_alt_pos           = -0.126678, -0.112307, 0
+        aim_hud_offset_alt_pos_16x9      = -0.126678, -0.112307, 0
+        aim_hud_offset_alt_rot           = -0.00393, -3e-05, 0.9
+        aim_hud_offset_alt_rot_16x9      = -0.00393, -3e-05, 0.9
 
         base_hud_offset_pos              = -0.051322, -0.028083, 0.020488
         base_hud_offset_pos_16x9         = -0.051322, -0.028083, 0.020488

@@ -1,0 +1,15 @@
+![ph_idle]
+on_info = {+bar_arena_fight} ph_idle@sound
+
+![ph_idle@sound]
+on_info = %=play_sound(arena_public)%
+on_info1 = {+bar_arena_fight_begin} %=play_sound(bar_arena_public)%
+on_info2 = {+bar_arena_public_death} %=stop_sound(arena_public)% ph_idle@sound2
+on_info3 = {-bar_arena_fight_begin -bar_arena_fight -totaliz_begin_over_dialog} %=stop_sound(arena_public)% ph_idle
+
+[ph_idle@sound2]
+on_info = %=play_sound(bar_arena_public_death) =play_sound(arena_public)%
+on_signal = sound_end | ph_idle@sound3 
+
+[ph_idle@sound3]
+on_info = ph_idle %-bar_arena_public_death =stop_sound(arena_public)%

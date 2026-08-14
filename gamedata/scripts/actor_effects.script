@@ -1069,12 +1069,12 @@ function Update_Impact(actor)
 			end
 			
 			-- drop player's active item
-			if (math.random() < (prev_health - actor.health)/2.5) then
+			--[[if (math.random() < (prev_health - actor.health)/2.5) then
 				local active_item = actor:active_item()
 				if active_item and (not opt.health.no_drop_wnp[active_item:section()]) then
 					actor:drop_item(active_item)
 				end
-			end
+			end--]]
 		end
 	end
 	
@@ -1666,6 +1666,8 @@ local function actor_on_update()
 	Update_StaminaHUD(actor)
 end
 
+local dte = demonized_time_events
+
 local function on_key_release(key)
 	animation_start = true
 	local bind = dik_to_bind(key)
@@ -1716,6 +1718,23 @@ local function on_key_release(key)
 		if not (pda_menu:IsShown()) and db.actor:item_in_slot(8) then
 			if (pda3d) then
 				db.actor:activate_slot(8)
+				dte.CreateTimeEvent("grok_zoom_pda", "grok_zoom_pda_in", 1.38, function()
+					level.press_action(bind_to_dik(key_bindings.kWPN_RELOAD))
+					printf("PDA Out")
+					wpn = db.actor:active_item()
+					if wpn then
+						state = wpn:get_state()
+						printf(state)
+						if state == 1 then
+							dte.CreateTimeEvent("grok_zoom_pda", "grok_zoom_pda_in2", 0.3, function()
+							level.press_action(bind_to_dik(key_bindings.kWPN_RELOAD))
+							printf("PDA Out")
+							return true
+						end)
+						end
+					end
+					return true
+				end)
 			else
 				pda_menu:ShowDialog(true)
 			end

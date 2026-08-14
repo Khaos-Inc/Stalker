@@ -2,10 +2,33 @@
 <scopes						 = 0kp2, aimpoint, point_aimpro, e0t2, ekp8_18, eot, rakurs
 >scopes                      = p1x42, pk6, pso1m21, ps01
 
-lewd_lens_hide_enabled       = true
-lewd_lens_hide_bone          = lens
-lewd_lens_hide_delays        = 0.1,0
-lewd_lens_hide_aim_mode      = true, false, false
+use_alt_aim_hud				= true
+
+lens_hide_enabled       = true
+lens_hide_bone          = lens
+lens_hide_delays        = 0.1,0
+lens_hide_aim_mode      = true, false, false
+
+;---------------------------------------------SCRIPTED CANTED SIGHTS-----------------------------------
+canted_sights 		 = canted_deltapoint, canted_docter, canted_t12
+
+open_slots	= 1
+
+canted_sights_bone	  = wpn_body
+canted_sights_pos   = 0.002500, 0.084050, 0.230325
+canted_sights_rot   = 0, 0, 0
+canted_sights_scale = 1.140000, 1.140000, 1.140000
+
+canted_aim_pos_canted_deltapoint = -0.092936, -0.074035, -0.05
+canted_aim_rot_canted_deltapoint = 0, 0, 0.825
+
+canted_aim_pos_canted_docter     = -0.093193, -0.069066, -0.05
+canted_aim_rot_canted_docter     = 0, 0, 0.825
+
+canted_aim_pos_canted_t12        = -0.092983, -0.074457, -0.05
+canted_aim_rot_canted_t12        = 0, 0, 0.825
+
+;------------------------------------------------------------------------------------------------------
 ![wpn_ak74u_tac_hud] 
 anm_shots               		= wpn_hand_aksu_tact_shoot_3dss, wpn_aksu_tact_shoot
 
@@ -19,15 +42,15 @@ anm_shots               		= wpn_hand_aksu_tact_shoot_3dss, wpn_aksu_tact_shoot
         aim_hud_offset_rot               = -3.8e-05, 0.000121, 0
         aim_hud_offset_rot_16x9          = -3.8e-05, 0.000121, 0
 		
-        aim_hud_offset_alt_pos           = -0.001513, 0.016862, -0.05
-        aim_hud_offset_alt_pos_16x9      = -0.001513, 0.016862, -0.05
-        aim_hud_offset_alt_rot           = -3.8e-05, 0.000121, -0.45
-        aim_hud_offset_alt_rot_16x9      = -3.8e-05, 0.000121, -0.45
+        aim_hud_offset_alt_pos           = -0.103161, -0.07968, -0.04
+        aim_hud_offset_alt_pos_16x9      = -0.103161, -0.07968, -0.04
+        aim_hud_offset_alt_rot           = -3.8e-05, 0.000121, 0.8
+        aim_hud_offset_alt_rot_16x9      = -3.8e-05, 0.000121, 0.8
 
-        base_hud_offset_pos              = -0.019646, -0.008063, 0.0189
-        base_hud_offset_pos_16x9         = -0.019646, -0.008063, 0.0189
-        base_hud_offset_rot              = 0, 0, 0.141598
-        base_hud_offset_rot_16x9         = 0, 0, 0.141598
+        base_hud_offset_pos              = -0.018745, -0.00572, 0.0189
+        base_hud_offset_pos_16x9         = -0.018745, -0.00572, 0.0189
+        base_hud_offset_rot              = 0, 0, 0.102349
+        base_hud_offset_rot_16x9         = 0, 0, 0.102349
 ;---------------------------------------------------SIGHTS---------------------------------------------------	
 ![wpn_ak74u_tac_ekp8_02]
 1icon_layer		= ekp8_02_x
@@ -194,10 +217,10 @@ item_visual                		= dynamics\weapons\wpn_ak74u_tac\wpn_ak74u_tac_pk6_
         aim_hud_offset_rot               = -3.8e-05, 0.000121, 0
         aim_hud_offset_rot_16x9          = -3.8e-05, 0.000121, 0
 
-        aim_hud_offset_alt_pos           = 0.006556, 0.031549, -0.06
-        aim_hud_offset_alt_pos_16x9      = 0.006556, 0.031549, -0.06
-        aim_hud_offset_alt_rot           = -3.8e-05, 0.000121, -0.55
-        aim_hud_offset_alt_rot_16x9      = -3.8e-05, 0.000121, -0.55
+        aim_hud_offset_alt_pos           = -0.103161, -0.07968, -0.04
+        aim_hud_offset_alt_pos_16x9      = -0.103161, -0.07968, -0.04
+        aim_hud_offset_alt_rot           = -3.8e-05, 0.000121, 0.8
+        aim_hud_offset_alt_rot_16x9      = -3.8e-05, 0.000121, 0.8
 		
 ![wpn_ak74u_tac_usp1]:1p29_s
 1icon_layer         = 1p29_x
@@ -208,10 +231,10 @@ item_visual                		= dynamics\weapons\wpn_ak74u_tac\wpn_ak74u_tac_pk6_
         aim_hud_offset_rot               = -3.8e-05, 0.000121, 0
         aim_hud_offset_rot_16x9          = -3.8e-05, 0.000121, 0
 
-        aim_hud_offset_alt_pos           = 0.006556, 0.031549, -0.06
-        aim_hud_offset_alt_pos_16x9      = 0.006556, 0.031549, -0.06
-        aim_hud_offset_alt_rot           = -3.8e-05, 0.000121, -0.55
-        aim_hud_offset_alt_rot_16x9      = -3.8e-05, 0.000121, -0.55
+        aim_hud_offset_alt_pos           = -0.103161, -0.07968, -0.04
+        aim_hud_offset_alt_pos_16x9      = -0.103161, -0.07968, -0.04
+        aim_hud_offset_alt_rot           = -3.8e-05, 0.000121, 0.8
+        aim_hud_offset_alt_rot_16x9      = -3.8e-05, 0.000121, 0.8
 
 ![wpn_ak74u_tac_ps01]:ps01_s
 1icon_layer         = ps01_x
@@ -222,10 +245,10 @@ item_visual                		= dynamics\weapons\wpn_ak74u_tac\wpn_ak74u_tac_pk6_
         aim_hud_offset_rot               = -3.8e-05, 0.000121, 0
         aim_hud_offset_rot_16x9          = -3.8e-05, 0.000121, 0
 
-        aim_hud_offset_alt_pos           = 0.006556, 0.031549, -0.06
-        aim_hud_offset_alt_pos_16x9      = 0.006556, 0.031549, -0.06
-        aim_hud_offset_alt_rot           = -3.8e-05, 0.000121, -0.55
-        aim_hud_offset_alt_rot_16x9      = -3.8e-05, 0.000121, -0.55
+        aim_hud_offset_alt_pos           = -0.103161, -0.07968, -0.04
+        aim_hud_offset_alt_pos_16x9      = -0.103161, -0.07968, -0.04
+        aim_hud_offset_alt_rot           = -3.8e-05, 0.000121, 0.8
+        aim_hud_offset_alt_rot_16x9      = -3.8e-05, 0.000121, 0.8
 		
 ![wpn_ak74u_tac_pso2]:pso2_s
 1icon_layer         = pso2_x
@@ -236,10 +259,10 @@ item_visual                		= dynamics\weapons\wpn_ak74u_tac\wpn_ak74u_tac_pk6_
         aim_hud_offset_rot               = -3.8e-05, 0.000121, 0
         aim_hud_offset_rot_16x9          = -3.8e-05, 0.000121, 0
 
-        aim_hud_offset_alt_pos           = 0.006556, 0.031549, -0.06
-        aim_hud_offset_alt_pos_16x9      = 0.006556, 0.031549, -0.06
-        aim_hud_offset_alt_rot           = -3.8e-05, 0.000121, -0.55
-        aim_hud_offset_alt_rot_16x9      = -3.8e-05, 0.000121, -0.55
+        aim_hud_offset_alt_pos           = -0.103161, -0.07968, -0.04
+        aim_hud_offset_alt_pos_16x9      = -0.103161, -0.07968, -0.04
+        aim_hud_offset_alt_rot           = -3.8e-05, 0.000121, 0.8
+        aim_hud_offset_alt_rot_16x9      = -3.8e-05, 0.000121, 0.8
 		
 ![wpn_ak74u_tac_pritseldob]:pso2_s
 ![wpn_ak74u_tac_pritseldob_hud]
@@ -262,10 +285,10 @@ item_visual                		= dynamics\weapons\wpn_ak74u_tac\wpn_ak74u_tac_pk6_
         aim_hud_offset_rot               = -3.8e-05, 0.000121, 0
         aim_hud_offset_rot_16x9          = -3.8e-05, 0.000121, 0
 
-        aim_hud_offset_alt_pos           = 0.006556, 0.031549, -0.06
-        aim_hud_offset_alt_pos_16x9      = 0.006556, 0.031549, -0.06
-        aim_hud_offset_alt_rot           = -3.8e-05, 0.000121, -0.55
-        aim_hud_offset_alt_rot_16x9      = -3.8e-05, 0.000121, -0.55
+        aim_hud_offset_alt_pos           = -0.103161, -0.07968, -0.04
+        aim_hud_offset_alt_pos_16x9      = -0.103161, -0.07968, -0.04
+        aim_hud_offset_alt_rot           = -3.8e-05, 0.000121, 0.8
+        aim_hud_offset_alt_rot_16x9      = -3.8e-05, 0.000121, 0.8
 		
 ![wpn_ak74u_tac_1pn93n2_1gs]:1pn93n2_s
 1icon_layer                              = 1pn93n2_1gs_x
@@ -277,10 +300,10 @@ item_visual                		= dynamics\weapons\wpn_ak74u_tac\wpn_ak74u_tac_pk6_
         aim_hud_offset_rot               = -3.8e-05, 0.000121, 0
         aim_hud_offset_rot_16x9          = -3.8e-05, 0.000121, 0
 
-        aim_hud_offset_alt_pos           = 0.006556, 0.031549, -0.06
-        aim_hud_offset_alt_pos_16x9      = 0.006556, 0.031549, -0.06
-        aim_hud_offset_alt_rot           = -3.8e-05, 0.000121, -0.55
-        aim_hud_offset_alt_rot_16x9      = -3.8e-05, 0.000121, -0.55
+        aim_hud_offset_alt_pos           = -0.103161, -0.07968, -0.04
+        aim_hud_offset_alt_pos_16x9      = -0.103161, -0.07968, -0.04
+        aim_hud_offset_alt_rot           = -3.8e-05, 0.000121, 0.8
+        aim_hud_offset_alt_rot_16x9      = -3.8e-05, 0.000121, 0.8
 		
 ![wpn_ak74u_tac_1p78gs]:1p78_s
 1icon_layer         = 1p78gs_x
@@ -291,10 +314,10 @@ item_visual                		= dynamics\weapons\wpn_ak74u_tac\wpn_ak74u_tac_pk6_
         aim_hud_offset_rot               = -3.8e-05, 0.000121, 0
         aim_hud_offset_rot_16x9          = -3.8e-05, 0.000121, 0
 
-        aim_hud_offset_alt_pos           = 0.006556, 0.031549, -0.06
-        aim_hud_offset_alt_pos_16x9      = 0.006556, 0.031549, -0.06
-        aim_hud_offset_alt_rot           = -3.8e-05, 0.000121, -0.55
-        aim_hud_offset_alt_rot_16x9      = -3.8e-05, 0.000121, -0.55
+        aim_hud_offset_alt_pos           = -0.103161, -0.07968, -0.04
+        aim_hud_offset_alt_pos_16x9      = -0.103161, -0.07968, -0.04
+        aim_hud_offset_alt_rot           = -3.8e-05, 0.000121, 0.8
+        aim_hud_offset_alt_rot_16x9      = -3.8e-05, 0.000121, 0.8
 		
 ![wpn_ak74u_tac_kashtan_rmr]:1p78_s
 ![wpn_ak74u_tac_kashtan_rmr_hud]
@@ -320,7 +343,7 @@ item_visual                	= dynamics\weapons\wpn_ak74u_tac\wpn_ak74u_tac_pso1m
         aim_hud_offset_pos               = -0.059429, 0.016455, -0.063378
         aim_hud_offset_pos_16x9          = -0.059429, 0.016455, -0.063378
 
-        aim_hud_offset_alt_pos           = 0.006556, 0.031549, -0.06
-        aim_hud_offset_alt_pos_16x9      = 0.006556, 0.031549, -0.06
-        aim_hud_offset_alt_rot           = -3.8e-05, 0.000121, -0.55
-        aim_hud_offset_alt_rot_16x9      = -3.8e-05, 0.000121, -0.55
+        aim_hud_offset_alt_pos           = -0.103161, -0.07968, -0.04
+        aim_hud_offset_alt_pos_16x9      = -0.103161, -0.07968, -0.04
+        aim_hud_offset_alt_rot           = -3.8e-05, 0.000121, 0.8
+        aim_hud_offset_alt_rot_16x9      = -3.8e-05, 0.000121, 0.8

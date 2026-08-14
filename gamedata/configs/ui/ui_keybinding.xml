@@ -99,4 +99,15 @@
 		<command id="kb_custom_25"						exe="custom25"/>
 		-->
 	</group>
+	
+	<!-- 
+		I'm currently looking for ways to make this conflict free but haven't found one yet.
+		I've included two mods i'm using for compatibility but even if you don't use them you can leave the entries.
+		Loading my mod after the two from below ensures compatibility.
+	-->
+	<group name="kb_grp_mods">
+		<command id="kb_unjam"							exe="custom22"/>
+		<command id="kb_quickmeele"						exe="custom24"/> <!-- Quick Meele Keybinding -->
+		<command id="kb_tp_companion"					exe="custom23"/> <!-- Teleport Companions Keybinding -->
+	</group>
 </keybingidg>

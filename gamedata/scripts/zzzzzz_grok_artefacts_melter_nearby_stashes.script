@@ -1,0 +1,160 @@
+--[[
+	Monkey patch: grok_artefacts_melter.script
+	Extends artefact melter to use nearby stashes for empowerment
+
+	Features:
+	- Searches nearby stashes for empowerment materials (left panel)
+	- Searches nearby stashes for empowerable artefacts (right panel)
+	- Uses same range as workshop crafting (default 10m)
+--]]
+
+local default_range = 10
+
+function on_game_start()
+	-- Monkey patch grok_artefacts_melter.UIRepair:InitInventory to include nearby stashes
+	local original_InitInventory = grok_artefacts_melter.UIRepair.InitInventory
+
+	function grok_artefacts_melter.UIRepair:InitInventory(n)
+		-- Get stash range from MCM
+		local stash_range = ui_mcm and ui_mcm.get("craft_from_stashes/range") or default_range
+
+		local inv = {}
+		local size_t = 0
+
+		-- Compatible artefacts list to empower
+		if n == 1 then
+			-- Search player inventory
+			db.actor:iterate_inventory(function(owner, obj)
+				artefact_to_repair = obj:section()
+				local sec = obj:section()
+				local main_section = ini_sys:r_string_ex(sec, "repair_type") or sec
+				if (self.repair_only and self.repair_only[main_section]) then
+					local con = math.ceil(obj:condition() * 100)
+					if (con and con >= (self.min_condition * 100) and con <= self.max_condition * 100) then
+						size_t = size_t + 1
+						inv[size_t] = obj
+					end
+				end
+			end)
+
+			-- Search nearby stashes
+			if GetStashesInRange and IterateStashesInRange then
+				IterateStashesInRange(function(temp, obj)
+					artefact_to_repair = obj:section()
+					local sec = obj:section()
+					local main_section = ini_sys:r_string_ex(sec, "repair_type") or sec
+					if (self.repair_only and self.repair_only[main_section]) then
+						local con = math.ceil(obj:condition() * 100)
+						if (con and con >= (self.min_condition * 100) and con <= self.max_condition * 100) then
+							size_t = size_t + 1
+							inv[size_t] = obj
+						end
+					end
+				end, stash_range)
+			end
+			-- In items_artefacts.ltx, use_condition is commented out:
+			-- ;use_condition = true
+			-- So FindSimilar sees artefacts as having no condition → stacks all same-section artefacts into one cell. This is engine-level behavior. The fix is to set disable_stack = true on the containers before Reinit
+			--printf("! [DEBUG] Melter n=1: found %s artefacts, disable_stack=%s, repair_only=%s", size_t, tostring(self.CC[1].disable_stack), tostring(self.repair_only ~= nil))
+			self.CC[1].disable_stack = true
+			--printf("! [DEBUG] Melter n=1: disable_stack after set=%s", tostring(self.CC[1].disable_stack))
+			self.CC[1]:Reinit(inv)
+
+		-- Compatible material list to use
+		elseif n == 2 then
+			local obj_s = self.CC[1]:GetCell_Selected(true)
+			if (not obj_s) then
+				return
+			end
+
+			local inf = {}
+
+			local function search_materials(owner, obj)
+				local sec = obj:section()
+				obj_s_kind = SYS_GetParam(0, obj_s:section(), "kind")
+				obj_kind = SYS_GetParam(0, obj:section(), "kind")
+
+				if (obj_s:section() == obj:section() or obj_s_kind == "i_arty_junk" and obj_kind == "i_arty_junk") then
+					local strengthen
+					if (obj_s:section() == obj:section()) then
+						strengthen = "strong"
+					else
+						strengthen = "weak"
+					end
+
+					if (obj) and (obj:id() ~= obj_s:id()) and (obj:id() ~= self.obj:id()) then
+						local bonus
+						if (self.parts_match and sec == obj_s:section()) or (self.parts_sections and self.parts_sections[sec]) then
+							local obj_con = obj:condition()
+							if strengthen == "strong" then
+								bonus = math.floor(obj_con * 100, 0, 98)
+							else
+								bonus = math.floor(obj_con * 100 / 3, 0, 98)
+							end
+						end
+
+						if bonus then
+							size_t = size_t + 1
+							inv[size_t] = obj
+							inf[size_t] = bonus
+						end
+					end
+				end
+			end
+
+			-- Search player inventory
+			db.actor:iterate_inventory(search_materials, nil)
+
+			-- Search nearby stashes
+			if GetStashesInRange and IterateStashesInRange then
+				IterateStashesInRange(search_materials, stash_range)
+			end
+
+			self.CC[2].disable_stack = true
+			self.CC[2]:Reinit(inv, inf)
+
+			local fnt = GetFontSmall()
+			local clr_b = utils_xml.get_color("pda_blue", true)
+			for idx, ci in pairs(self.CC[2].cell) do
+				if ci:IsShown() then
+					local con100 = ci.flags.info
+					ci:Add_CustomText(("+" .. con100), nil, nil, clr_b, fnt)
+				end
+			end
+		end
+	end
+
+	-- Patch OnRepair to reinit both panels after empowerment
+	-- Delayed to allow alife_release to propagate before rescanning stashes
+	local original_OnRepair = grok_artefacts_melter.UIRepair.OnRepair
+	function grok_artefacts_melter.UIRepair:OnRepair()
+		-- Save empowered artefact id before original resets the UI
+		local obj_1 = self.CC[1]:GetCell_Selected(true)
+		local empowered_id = obj_1 and obj_1:id()
+		original_OnRepair(self)
+		local self_ref = self
+		CreateTimeEvent("melter_reinit", "melter_reinit", 0.1, function()
+			if not (self_ref and self_ref:IsShown()) then return true end
+			-- Rescan stashes and reinit CC[1] (right panel - artefacts to empower)
+			self_ref:InitInventory(1)
+			-- Find and select the empowered artefact by id, fallback to first
+			local target_idx = nil
+			for idx, ci in pairs(self_ref.CC[1].cell) do
+				if ci:IsShown() then
+					if ci.ID == empowered_id then
+						target_idx = idx
+						break
+					elseif not target_idx then
+						target_idx = idx
+					end
+				end
+			end
+			if target_idx then
+				self_ref.CC[1]:On_Select(target_idx)
+				-- Rescan stashes and reinit CC[2] (left panel - materials)
+				self_ref:InitInventory(2)
+			end
+			return true
+		end)
+	end
+end

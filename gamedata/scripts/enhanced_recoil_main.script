@@ -1,0 +1,872 @@
+local ini_eff		= ini_file("plugins\\enhanced_recoil_platinum.ltx")
+local debug			= false
+
+-- If you want to scale the base randomness factor, change this number
+-- Values ranging from 0.15 ~ 0.33 look best, higher means less control
+local random_offset	= 0.25
+
+local shot_address	= 1
+local caglord		= false
+
+local normalize		= _g.normalize
+local clamp			= _g.clamp
+local random        = math.random
+local frandom       = random_float
+local max           = math.max
+local min           = math.min
+local abs           = math.abs
+local idp           = round_idp
+local modf          = math.modf
+local num           = tonumber
+local string_find	= string.find
+local string_format	= string.format
+local string_gsub	= string.gsub
+local string_gmatch	= string.gmatch
+local _ipairs		= ipairs
+
+local smallest      = 0.0000001
+
+local modifiers		= enhanced_recoil_modifiers
+local utils			= enhanced_recoil_utils
+local lerp			= utils.lerp
+
+has_3dss			= false
+
+wpn_fx        = {}
+
+function get_random_offset()
+	return random_offset or nil
+end
+
+function get_ini_eff()
+	return ini_eff or nil
+end
+
+function caglord_on()
+	caglord = true
+end
+
+function caglord_off()
+	caglord = false
+end
+
+local r3 = function(number) return idp(number, 3) end
+
+local function trace(str, ...)
+	if debug == true then
+		printf("= ER:P Main >> " .. str, ...)
+	end
+end
+
+local nextTick = _G.nextTick or function(f, n)
+	n = math.floor(math.max(n or 1, 1))
+	AddUniqueCall(function()
+		if n == 1 then
+			return f()
+		else
+			n = n - 1
+			return false
+		end
+	end)
+end
+
+local function parse_anims(curr_ini_eff, sec, add_default)
+	if not curr_ini_eff then return end
+	if wpn_fx[sec] then return end
+	local sec_p = SYS_GetParam(0, sec, "parent_section") or sec
+
+	if wpn_fx[sec_p] and (sec_p ~= sec) then 
+		wpn_fx[sec] = wpn_fx[sec_p]
+	elseif curr_ini_eff:section_exist(sec_p) then
+		if not (curr_ini_eff:r_string_ex(sec_p, "cam_anim") and curr_ini_eff:r_string_ex(sec_p, "cam_recoil") and curr_ini_eff:r_string_ex(sec_p, "cam_shake")) then
+			return
+		end
+
+		local tbl = {}
+		
+		-- parse camera animation speed
+		tbl.cam_anim = curr_ini_eff:r_float_ex(sec_p, "cam_anim") or 5
+
+		-- parse camera shake intensity
+		tbl.cam_shake = {}
+		local s = curr_ini_eff:r_string_ex(sec_p, "cam_shake")
+		local _s = str_explode(s, ",")
+		for i = 1, 3 do
+			local __s = str_explode(_s[i] or "0", ":")
+			__s[1] = abs(num(__s[1])) or 0.0
+
+			if __s[2] and num(__s[2]) then
+				__s[2] = abs(num(__s[2])) or 0.0
+			else
+				__s[2] = "none"
+			end
+
+			tbl.cam_shake[#tbl.cam_shake+1] = __s
+		end
+
+		-- parse camera recoil intensity
+		tbl.cam_recoil = {}
+		local r = curr_ini_eff:r_string_ex(sec_p, "cam_recoil")
+		local _r = str_explode(r, ",")
+		for i = 1, 2 do
+			local __r = str_explode(_r[i] or "0", ":")
+			__r[1] = abs(num(__r[1])) or 0.0
+
+			if __r[2] and num(__r[2]) then
+				__r[2] = abs(num(__r[2])) or 0.0
+			else
+				__r[2] = "none"
+			end
+
+			tbl.cam_recoil[#tbl.cam_recoil+1] = __r
+		end
+
+		-- parse ppe
+		tbl.postprocess = {}
+		local p = curr_ini_eff:r_string_ex(sec_p, "postprocess")
+		if p and p ~= "" then
+			for k, v in string_gmatch(p, "([%w_%-%s%.]+)=([%w_%-%s%.]+)") do
+				tbl.postprocess[k] = abs(num(v))
+			end
+		end
+
+		-- parse miscellaneous modifiers
+		tbl.cam_fov 		= curr_ini_eff:r_float_ex(sec_p, "cam_fov") or 0.0
+		tbl.gun_shake_k 	= curr_ini_eff:r_float_ex(sec_p, "gun_shake_k") or 0.0
+		tbl.max_recoil 		= curr_ini_eff:r_float_ex(sec_p, "max_recoil") or 1.0
+		tbl.max_shots 		= curr_ini_eff:r_float_ex(sec_p, "max_shots") or 1
+		tbl.hyperburst_k 	= curr_ini_eff:r_float_ex(sec_p, "hburst_k") or 1.0
+		tbl.variance_k 		= curr_ini_eff:r_float_ex(sec_p, "variance_k") or 1.0
+		tbl.h_max_r_k 		= curr_ini_eff:r_float_ex(sec_p, "h_max_r_k") or 1.0
+		tbl.h_var_k 		= curr_ini_eff:r_float_ex(sec_p, "h_var_k") or 1.0
+		tbl.reset_k 		= curr_ini_eff:r_float_ex(sec_p, "reset_k") or 1.0
+		tbl.cam_return 		= curr_ini_eff:r_bool_ex(sec_p, "cam_return") or false
+		tbl.force_norm 		= curr_ini_eff:r_bool_ex(sec_p, "force_norm") or false
+		tbl.force_cam		= curr_ini_eff:r_bool_ex(sec_p, "force_cam") or false
+
+		-- check if there's a defined pattern
+		tbl.has_pattern = curr_ini_eff:line_exist(sec_p, "e_1") and true or false
+
+		if (not wpn_fx[sec_p]) and (sec ~= sec_p) then
+			wpn_fx[sec_p] = tbl
+		end
+
+		wpn_fx[sec] = tbl
+	else
+		trace("parse_anims() >> No profile defined for [%s]", sec_p)
+		wpn_fx[sec_p] = (add_default == true) and wpn_fx["base_recoil"] or true
+	end
+end
+
+local function parse_pattern(sec)
+	local tbl = {}
+	local sec_p = SYS_GetParam(0, sec, "parent_section") or sec
+	tbl = wpn_fx[sec_p]
+
+	-- clear cam_recoil table
+	tbl.cam_recoil = {}
+
+	-- parse pattern recoil for the current shot index
+	local r = ini_eff:r_string_ex(sec_p, "cam_recoil")
+	for a = shot_address, 1, -1 do
+		local pick = string_format("e_%s", a) or "e_1"
+		if ini_eff:line_exist(sec_p, pick) then
+			r = ini_eff:r_string_ex(sec_p, pick)
+			break
+		end
+	end
+
+	local _r = str_explode(r, ",")
+	for i = 1, 2 do
+		local __r = str_explode(_r[i] or "0", ":")
+		__r[1] = abs(num(__r[1])) or 0.0
+		
+		if __r[2] and num(__r[2]) then
+			__r[2] = abs(num(__r[2])) or 0.0
+		else
+			__r[2] = "none"
+		end
+
+		tbl.cam_recoil[#tbl.cam_recoil+1] = __r
+	end
+
+	wpn_fx[sec_p] = tbl
+	
+	if wpn_fx[sec_p] and (sec ~= sec_p) then
+		wpn_fx[sec] = wpn_fx[sec_p]
+		return
+	end
+end
+
+local function clamp_effect_power(effect_power)
+	return max(0.001, effect_power)
+end
+
+local function clamp_random_power(random_power)
+	return max(0.001, random_power)
+end
+
+local effect_min_id = 5000
+local effect_max_id = 30000
+local effect_id = effect_min_id
+local function next_effect_id()
+	effect_id = effect_id + 1
+	if effect_id > effect_max_id then
+		effect_id = effect_min_id
+	end
+end
+
+local function add_cam_effector(filename, anim_id, cyclic, callback_str, cam_fov, hud, effect_power)
+	local current_id = effect_id
+	local ace = level.add_cam_effector
+	ace(filename, effect_id, cyclic, callback_str, cam_fov, hud, effect_power)
+	next_effect_id()
+	return current_id
+end
+
+local function add_pp_effector(filename, anim_id, cyclic)
+	local current_id = effect_id
+	local ape = level.add_pp_effector	-- monke
+	ape(filename, effect_id, cyclic)
+	next_effect_id()
+	return current_id
+end
+
+local abakan_state = 0
+local function shoot_effect(sect)
+	if not db.actor then return end
+	local wpn = db.actor:active_item()
+	if not wpn then return end
+	local cwep = wpn:cast_Weapon()
+	if not cwep then return end
+	trace(string_format("shoot_effect() >> Begin for [%s] @ %s", sect, time_global()))
+
+	local anims 		= {}
+	local s 			= wpn_fx[sect].cam_anim
+
+	if not wpn_fx[sect].force_cam then
+		local realrpm = cwep:RealRPM()
+		if s == 5 and realrpm > 800 then s = 4 end
+		if s == 4 and realrpm > 1400 then s = 3 end
+		if s == 3 and realrpm > 1800 then s = 2 end
+		if s == 2 and realrpm > 2000 then s = 1 end
+	end
+
+	local fps = utils.get_fps()
+	local fps_mod = 1 / lerp(1.0075, 0.9925, normalize(fps, 30, 200))
+
+	-- nonsense block to adjust time event timing so that low fps doesn't break it
+	local fps_timer_k = 1.0
+	if fps < 60 and fps >= 30 then
+		fps_timer_k = 1 + (normalize(fps, 30, 60))
+	elseif fps < 30 and fps >= 15 then
+		fps_timer_k = 2 + (normalize(fps, 15, 30))
+	elseif fps < 15 and fps >= 8 then
+		fps_timer_k = 3 + (normalize(fps, 8, 15))
+	elseif fps < 8  and fps >= 4 then
+		fps_timer_k = 4 + (normalize(fps, 4, 8))
+	elseif fps < 4 and fps >= 2 then
+		fps_timer_k = 5 + (normalize(fps, 2, 4))
+	elseif fps < 2 then
+		fps_timer_k = 6
+	end
+
+	if fps < 40 and s < 5 then s = 5 end
+	if fps < 60 and s < 4 then s = 4 end
+
+	local shake_s 		= clamp(s - 2, 1, 5)
+
+	if fps < 40 and shake_s < 5 then shake_s = 5 end
+	if fps < 60 and shake_s < 4 then shake_s = 4 end
+
+	local zoomed 		= axr_main.weapon_is_zoomed
+	local effect_power 	= 1.0
+	local random_power 	= 1.0
+
+	local mod_i, mod_r 	= modifiers.process_modifiers(effect_power, random_power, wpn, wpn_fx[sect])
+
+	effect_power = clamp_effect_power(effect_power * lerp(1, mod_i, settings.main.m_effect_power))
+	random_power = clamp_random_power(random_power * lerp(1, mod_r, settings.main.m_random_power))
+
+	trace(string_format("shoot_effect() >> Final powers:: effect=%s || random=%s", effect_power, random_power))
+
+	local wpn_silencer = utils.get_silencer()
+	local s3ds_mod = (has_3dss and get_console():get_bool("r__3Dfakescope") and (wpn:weapon_is_scope() or SYS_GetParam(2, sect, "scope_zoom_factor") ~= 0)) and true or false
+	local silencer = (((wpn:weapon_silencer_status() >= 1 and wpn:weapon_is_silencer()) or wpn_silencer[sect]) and true) or false
+
+	local hyperburst_divisor = 1.0
+	if 	(settings.main.flexible_hyperburst == true) or 
+		(settings.main.flexible_hyperburst == false and 
+			(	
+				string_find(sect, "an94", 1, true) or 
+				string_find(sect, "an_94", 1, true) or 
+				string_find(sect, "abakan", 1, true) or 
+				string_find(sect, "an-94", 1, true) or
+				string_find(sect, "obokan", 1, true)
+			)
+		) then
+
+		local fire_modes = SYS_GetParam(0, sect, "fire_modes") or "-1"
+		local max_burst = 2
+		local _f = str_explode(fire_modes, ",")
+
+		local go = true
+		
+		for i = 1, #_f do 
+			_f[i] = num(_f[i])
+			if type(_f[i]) ~= "number" then
+				go = false
+				break
+			end
+		end
+
+		if type(_f[1]) == "number" and #_f > 1 and go then
+			table.sort(_f)
+			max_burst = _f[#_f] - 1
+
+			-- hyperburst handling
+			if	-- if the weapon has >= 1 ammo or is below the max burst count
+				(cwep:GetAmmoElapsed() > 0 and abakan_state < max_burst)
+				-- if not on semi auto
+			and cwep:GetFireMode() ~= 1
+				-- check for the presence of "rpm_mode_2" and that it isn't the same as "rpm"
+			and (SYS_GetParam(2, sect, "rpm_mode_2") and (SYS_GetParam(2, sect, "rpm_mode_2") ~= SYS_GetParam(2, sect, "rpm")))
+				-- check for "cycle_down" if on full auto
+			and ((SYS_GetParam(1, sect, "cycle_down") and cwep:GetFireMode() == -1) or (cwep:GetFireMode() > 1))
+				-- check if hyperburst_mod is above 0x
+			and wpn_fx[sect].hyperburst_k > 0.0
+			then
+				local old_effect_power = effect_power
+				shot_address = 1
+
+				if (cwep:GetAmmoElapsed() > 1 and (abakan_state < max_burst)) then
+					effect_power = clamp_effect_power(effect_power * 0.025)
+
+					-- catch tap fires
+					local state = "enhanced_recoil_main"
+					local state_id = "abakan_tap_fire_catch_" .. sect
+					local timer = clamp(cwep:ModeRPM(), 0.016667, 0.016667 * 4)
+					
+					local function catch_tap_fire(key)
+						if key == bind_to_dik(key_bindings.kWPN_FIRE) then
+							if (not wpn) or (wpn and cwep:GetAmmoElapsed() <= 0) or (abakan_state > max_burst) or (abakan_state <= 0) then
+								UnregisterScriptCallback("on_key_release", catch_tap_fire)
+								return true
+							end
+
+							abakan_state = max_burst + 1
+							shoot_effect(sect)
+							UnregisterScriptCallback("on_key_release", catch_tap_fire)
+							return true
+						end
+					end
+					
+					RegisterScriptCallback("on_key_release", catch_tap_fire)
+
+					ResetTimeEvent(state, state_id, timer)
+					CreateTimeEvent(state, state_id, timer, 
+						function()
+							UnregisterScriptCallback("on_key_release", catch_tap_fire)
+							return true
+						end)
+				end
+
+				-- increased recoil for the last shot of the burst (or the last bullet in the mag)
+				if (cwep:GetAmmoElapsed() == 1 or abakan_state == max_burst) then
+					effect_power = clamp_effect_power(old_effect_power)
+				else
+					hyperburst_divisor = lerp(old_effect_power, effect_power, wpn_fx[sect].hyperburst_k)
+					effect_power = hyperburst_divisor
+				end
+
+				abakan_state = abakan_state + 1
+				shot_address = max(abakan_state - 1, 1)
+
+			end
+		end
+	end
+
+	if abakan_state > 0 then
+		-- Clear hyperburst count after some time
+		-- Add small epsilon to timer for better behaviour on full auto consecutive shots
+		local state = "enhanced_recoil_main"
+		local state_id = "abakan_state_reset_" .. sect
+		local timer = cwep:RPM() + (cwep:RPM() * 0.5) * fps_timer_k -- a shot and 50% of a shot to reset hyper, so that it doesn't reset on full auto, and doesn't allow spam
+		ResetTimeEvent(state, state_id, timer)
+		CreateTimeEvent(state, state_id, timer, 
+			function()
+				abakan_state = 0
+				return true
+			end)
+	end
+
+	-- Build camera shake effect table (e1, e2, e6)
+	for i, v in _ipairs(wpn_fx[sect].cam_shake) do
+		local cnt, dec = modf(v[1])
+
+		if v[2] == "none" then 
+			v[2] = shake_s 
+		end
+
+		if v[2] ~= shake_s then
+			if fps < 40 and v[2] < 5 then v[2] = 5 end
+			if fps < 60 and v[2] < 4 then v[2] = 4 end
+		end
+
+		dec = dec and dec or 0
+
+		if dec > 0 then 
+			cnt = cnt + 1
+		end
+
+		if cnt > 0 then 
+			anims[#anims+1] = { e = (i == 3) and 6 or i, d = random(0, 1), c = cnt, f = dec, x = v[2] } 
+		end
+	end
+
+	-- Build viewmodel pull effect table (e3)
+	if abs(wpn_fx[sect].cam_fov) > 0 then
+		local cnt, dec = modf(wpn_fx[sect].cam_fov)
+
+		dec = dec and dec or 0
+
+		if dec > 0 then
+			cnt = cnt + 1
+		end
+
+		if cnt > 0 then
+			anims[#anims+1] = { e = 3, d = 1, c = cnt, f = dec }
+		end
+	else
+		anims[#anims+1] = { e = 3, d = 1, c = 0, f = 0 }
+	end
+
+	-- Build camera recoil effect table (e4, e5)
+	for i, v in _ipairs(wpn_fx[sect].cam_recoil) do
+		local cnt, dec, mult, rand = 1, 0, 1, 1
+
+		if v[2] == "none" then 
+			v[2] = nil 
+		end
+
+		if i == 1 then
+			mult, rand = utils.cool_math(shot_address, wpn_fx[sect].max_shots, wpn_fx[sect].max_recoil * wpn_fx[sect].h_max_r_k, random_offset * wpn_fx[sect].variance_k * wpn_fx[sect].h_var_k * random_power * settings.main.random_power, sect)
+		else
+			mult, rand = utils.cool_math(shot_address, wpn_fx[sect].max_shots, wpn_fx[sect].max_recoil, random_offset * wpn_fx[sect].variance_k * random_power * settings.main.random_power, sect)
+		end
+
+		local roffset = frandom(1, rand)
+		cnt, dec = modf((v[1] / mult) * roffset)
+
+		if wpn_fx[sect].has_pattern == true and settings.main.allow_patterns == true then
+			mult, rand = utils.cool_math(shot_address, 10000, 0, random_offset * wpn_fx[sect].variance_k * random_power * settings.main.random_power * 0.5, sect)
+			roffset = frandom(1, lerp(1.0, rand, 0.5))
+			cnt, dec = modf((v[1] / mult) * roffset)
+		end
+
+		trace("Final %s recoil:: cnt=%s dec=%s || mult=%s rand=%s || offset=%s", (((i==1) and "Horizontal") or "Vertical"), cnt, dec, mult, rand, roffset)
+
+		dec = dec and dec or 0
+
+		if dec > 0 then
+			cnt = cnt + 1
+		end
+
+		if cnt > 0 then
+			anims[#anims+1] = { e = (i == 1) and 4 or 5, d = v[2] or random(0, 1), c = cnt, f = dec }
+		end
+	end
+	
+	-- nonsense block that adjusts recoil as you get to looking directly up/down
+	local max_pitch = utils_data.deg2rad(88)
+	local horz_hijack, vert_hijack = 1.0, 1.0
+	local cam_dir = device().cam_dir
+	horz_hijack = clamp(normalize(max_pitch - min(abs(cam_dir:getP()), max_pitch), 0, max_pitch), smallest, 1)
+	vert_hijack = clamp(normalize(max_pitch - min(cam_dir:getP(), max_pitch), 0, max_pitch), 0.4, 1)
+
+	-- turns out cam effectors are framerate dependant AND have different max intensities?????
+	local s_hijack = 1.0
+	if s == 4 then s_hijack = 1.200664219542			-- trust these numbers
+	elseif s == 3 then s_hijack = 1.9085857182551
+	elseif s == 2 then s_hijack = 1.6484281257499
+	elseif s == 1 then s_hijack = 1.4664816396243 end
+
+	local shake_hijack = 1.0
+	if shake_s == 4 then shake_hijack = 1.200664219542
+	elseif shake_s == 3 then shake_hijack = 1.9085857182551
+	elseif shake_s == 2 then shake_hijack = 1.6484281257499
+	elseif shake_s == 1 then shake_hijack = 1.4664816396243 end
+
+	-- process all camera movement (shake + recoil) except for the fov pull here
+	local cam_dir_HPB = vector():set(0, 0, 0)
+	for i, a in _ipairs(anims) do
+		local n = string_format([[shoot\s%s_e%s_%s.anm]], a.x, a.e, a.d)
+
+		for ii = 1, a.c do
+			local anim_id = i + ii
+
+			-- exclude viewmodel fov pull
+			if a.e ~= 3 then
+				-- horz/vert shake + roll
+				if a.e ~= 5 and a.e ~= 4 and a.x > 0 then
+					add_cam_effector(n, anim_id, false, "", 0, true, (effect_power * settings.main.shake_power * ((a.e == 6) and 0.2 or 1.0) * ((a.e == 1) and horz_hijack or ((a.e == 2 and vert_hijack or 1.0))) * ((zoomed == 1) and 0.5 or 1.0) * ((ii == a.c) and (a.f > 0 and a.f or 1.0) or 1.0) * (1 / lerp(1.0, shake_hijack, 0.5))) / hyperburst_divisor)
+				-- horz/vert recoil
+				elseif (a.e == 4) or (a.e == 5) then
+					if settings.diff.reverse_scaling and not wpn_fx[sect].force_norm and caglord then
+						a.d = random(0, 1)
+					end
+
+					n = string_format([[shoot\s%s_e%s_%s.anm]], s, a.e, a.d)
+
+					add_cam_effector(n, anim_id, false, "", 0, true, effect_power * settings.main.effect_power * fps_mod * ((a.e == 4) and horz_hijack or vert_hijack) * ((ii == a.c) and (a.f > 0 and a.f or 1.0) or 1.0) * s_hijack)
+
+					-- if not in hyperburst and the weapon doesn't use cam_return = true
+					if not wpn_fx[sect].cam_return and hyperburst_divisor == 1.0 then
+						local current_id = effect_id
+						
+						local timer = ((1 / 30) * ini_eff:r_float_ex("cam_anim_" .. s, "frames_peak") * 1000) * fps_timer_k
+						local tgtarget = time_global()
+
+						-- remove camera effector roughly at the peak of the animation
+						nextTick(		-- nextTick is much better than CreateTimeEvent as it turns out
+							function()
+								if time_global() > tgtarget + timer then
+									cam_dir = device().cam_dir
+									cam_dir_HPB = cam_dir_HPB:set(cam_dir:getH(), cam_dir:getP(), 0)
+									db.actor:set_actor_direction(-cam_dir_HPB.x, -cam_dir_HPB.y)
+									level.remove_cam_effector(current_id - 1)
+									return true
+								end
+							end, 2)
+						
+						-- add it back in at a vastly reduced strength to smooth out the transition
+						nextTick(
+							function()
+								if time_global() > tgtarget + (timer * 0.75) then
+									add_cam_effector(n, anim_id, false, "", 0, true, effect_power * settings.main.effect_power * fps_mod * ((a.e == 4) and horz_hijack or vert_hijack) * ((ii == a.c) and (a.f > 0 and a.f or 1.0) or 1.0) * 0.125 * s_hijack)
+									return true
+								end
+							end, 2)
+					end
+				end
+			end
+		end
+	end
+
+	-- process all viewmodel shake here
+	if settings.main.gun_shake > 0 then
+		for i, a in _ipairs(anims) do	
+			local n = string_format([[shoot\s%s_e%s_%s.anm]], shake_s, a.e, a.d)
+
+			for ii = 1, a.c do
+				local anim_id = i + ii + 1000
+
+				-- horz/vert, except pull and tilt
+				if a.e == 1 or a.e == 2 then
+					add_cam_effector(n, anim_id + 1, false, "", 0, false, effect_power * wpn_fx[sect].gun_shake_k * settings.main.gun_shake * ((zoomed == 1) and 0.15 or 1.0) * ((ii == a.c) and (a.f > 0 and a.f or 1.0) or 1.0) * 0.05 * ((random(0, 1)) and -1 or 1))
+				-- viewmodel pull
+				elseif a.e == 3 then
+					add_cam_effector(n, anim_id + 1, false, "", 0, false, effect_power * (abs(wpn_fx[sect].gun_shake_k) * (-1 * lerp(1.0, ((5 - s) / 5), 0.5))) * settings.main.gun_shake * ((zoomed == 1) and 0.15 or 1.0) * ((s3ds_mod == 1) and 0.1 or 1.0) * ((ii == a.c) and (a.f > 0 and a.f or 1.0) or 1.0))
+				end
+			end
+		end
+	end
+
+	-- process fov pull effect here
+	if settings.main.fov_power > 0 then
+		-- build fov pull effect table
+		local anims_b = {}
+		local mult, _ = utils.cool_math(shot_address, wpn_fx[sect].max_shots, 3.0, random_offset, sect, true)
+		local cnt, dec = modf((wpn_fx[sect].cam_fov / 4.0) * mult)
+
+		dec = dec and dec or 0
+
+		if dec > 0 then
+			cnt = cnt + 1
+		end
+
+		if cnt > 0 then
+			anims_b[#anims_b+1] = { c = cnt, f = dec }
+		end
+
+		for i, a in _ipairs(anims_b) do
+			local n = string_format([[shoot\s%s_e3_1.anm]], s)
+
+			for ii = 1, a.c do
+				local anim_id = i + ii + 2000
+				add_cam_effector(n, anim_id + 2, false, "", 0, true, settings.main.fov_power * ((zoomed == 1) and 0.33 or 0.5) * ((s3ds_mod == 1) and 0.1 or 1.0) * ((ii == a.c) and (a.f > 0 and a.f or 1.0) or 1.0))
+			end
+		end
+	end
+
+	-- process ppe here
+	if settings.main.ppe_power > 0 then
+		for k, v in pairs(wpn_fx[sect].postprocess) do
+			local eid = random(88800, 88850)
+			
+			eid = add_pp_effector(string_format([[shoot\%s_s%s.ppe]], k, shake_s), eid, false)
+			v = max(0.0000001, v * settings.main.ppe_power * (silencer and 0.75 or 1.0) * min((effect_power + 1.0) * 0.5, 1.0))
+			
+			level.set_pp_effector_factor(eid, v)
+		end
+	end
+end
+
+local function Update_Shooting(obj, wpn, ammo_elapsed, grenade_elapsed, ammo_type, grenade_type)
+	if (obj:id() ~= AC_ID) or not wpn then return end
+
+	local wpn_obj = utils_item.item_is_fa(wpn) and wpn
+	if wpn_obj then
+		local sec = wpn_obj:section()
+
+		if (not wpn_fx[sec]) then 
+			parse_anims(ini_eff, sec, false) 
+		end
+
+		if (wpn_fx[sec] and wpn_fx[sec] ~= true) and (settings.main.allow_patterns == true and wpn_fx[sec].has_pattern == true) then
+			parse_pattern(sec)
+		end
+
+		if (wpn_fx[sec] == true) or (not wpn_fx[sec]) then 
+			return 
+		end
+
+		shoot_effect(sec)
+
+		shot_address = shot_address + 1
+		local state = "enhanced_recoil_main"
+		local state_id = "reset_shot_address_" .. sec
+		local timer = (clamp(wpn:cast_Weapon():GetCamRelaxSpeed(), 0.1, 1.0) or 0.1) * clamp(wpn_fx[sec].reset_k or 1.0, 0.1, 10.0)
+		ResetTimeEvent(state, state_id, timer)
+		CreateTimeEvent(state, state_id, timer, 
+			function()
+				shot_address = 1
+				return true
+			end)
+	end
+end
+
+local function trim_ammo_name(sec)
+	if not sec then return end
+
+	local 	_a = sec
+			_a = string_gsub(_a, "ammo_", "")
+			_a = string_gsub(_a, "_bad", "")
+			_a = string_gsub(_a, "_verybad", "")
+	
+	return _a
+end
+
+local function actor_on_weapon_before_fire(flags)
+	if not db.actor then return end
+	local wpn = db.actor:active_item()
+	if not wpn then return end
+	if game.actor_weapon_lowered() then return end
+
+	local sec = wpn:section()
+    local sec_p = SYS_GetParam(0, sec, "parent_section") or sec
+	local we_id = wpn:id()
+
+	if wpn and utils_item.item_is_fa(wpn) then
+		local cwep = wpn:cast_Weapon()
+		if not cwep then return end
+
+		-- check if the weapon shot is a UBGL to add recoil
+		if wpn:weapon_grenadelauncher_status() >= 1 and wpn:weapon_is_grenadelauncher() and wpn:get_state() == 0 then
+			local ammo_list = utils_item.get_ammo(sec, we_id)
+			local go = false
+			local ubgl_ammo = utils.get_ubgl_ammo_table()
+			for i = 1, #ubgl_ammo do
+				if trim_ammo_name(ammo_list[1]) == ubgl_ammo[i] then
+					go = true
+					break
+				end
+			end
+
+			if cwep:GetAmmoElapsed() == 1 and go == true then
+				local ubgl_sec = SYS_GetParam(0, sec, "grenade_launcher_name") or "wpn_addon_grenade_launcher"
+				if not wpn_fx[ubgl_sec] then
+					parse_anims(ini_eff, ubgl_sec, false)
+				end
+				if wpn_fx[ubgl_sec] and wpn_fx[ubgl_sec] ~= true then
+					shoot_effect(ubgl_sec)
+				end
+			end
+		end
+
+		-- make sure the new recoil is properly implemented for the gun being fired, if true, remove all cam_dispersion
+		if (	(ini_eff:line_exist(sec_p, "cam_anim")) 
+			and (ini_eff:line_exist(sec_p, "cam_shake"))
+			and (ini_eff:line_exist(sec_p, "cam_recoil"))
+			and (ini_eff:line_exist(sec_p, "cam_fov"))
+			and (ini_eff:line_exist(sec_p, "gun_shake_k"))
+			and (ini_eff:line_exist(sec_p, "max_recoil"))
+			and (ini_eff:line_exist(sec_p, "postprocess"))) then
+				cwep:SetCamRelaxSpeed(cwep:RPM() * 2.5)
+				cwep:SetCamDispersion(0.0)
+				cwep:SetCamDispersionInc(0.0)
+				cwep:SetCamDispersionFrac(0.0)
+				cwep:SetCamMaxAngleVert(1.0)
+				cwep:SetCamMaxAngleHorz(0.0)
+				cwep:SetCamStepAngleHorz(0.0)
+				cwep:SetZoomCamRelaxSpeed(cwep:RPM() * 2.5)
+				cwep:SetZoomCamDispersion(0.0)
+				cwep:SetZoomCamDispersionInc(0.0)
+				cwep:SetZoomCamDispersionFrac(0.0)
+				cwep:SetZoomCamMaxAngleVert(1.0)
+				cwep:SetZoomCamMaxAngleHorz(0.0)
+				cwep:SetZoomCamStepAngleHorz(0.0)
+        end
+	end
+end
+
+-- MCM
+function load_defaults()
+	local t = {}
+	local op = zzzz_enhanced_recoil_mcm.op
+	for i, v in _ipairs(op.gr) do
+		if v.gr then
+			t[v.id] = {}
+			for ii, vv in _ipairs(v.gr) do
+				if vv.gr then
+					t[v.id][vv.id] = {}
+					for iii, vvv in _ipairs(vv.gr) do
+						if vvv.def ~= nil then
+							t[v.id][vv.id][vvv.id] = vvv.def
+						end
+					end
+				elseif vv.def ~= nil then
+					t[v.id][vv.id] = vv.def
+				end
+			end
+		elseif v.def ~= nil then
+			t[v.id] = v.def
+		end
+	end
+	return t
+end
+
+settings = load_defaults()
+local function load_settings()
+	settings = load_defaults()
+	if ui_mcm then
+		for k, v in pairs(settings) do
+			if type(settings[k]) == "table" then
+				for kk, vv in pairs(settings[k]) do
+					if type(settings[k][kk]) == "table" then
+						for kkk, vvv in pairs(settings[k][kk]) do
+							settings[k][kk][kkk] = ui_mcm.get("recoilplat/" .. k .. "/" .. kk .. "/" .. kkk)
+						end
+					else
+						settings[k][kk] = ui_mcm.get("recoilplat/" .. k .. "/" .. kk)
+					end
+				end
+			else
+				settings[k] = ui_mcm.get("recoilplat/" .. k)
+			end
+		end
+	end
+	return settings
+end
+
+local function on_option_change()
+	load_settings()
+	ini_eff:section_for_each(function(sec) parse_anims(ini_eff, sec) end)
+end
+
+local function actor_on_first_update()
+	on_option_change()
+	ini_eff:section_for_each(function(sec) parse_anims(ini_eff, sec) end)
+end
+--[[
+local contrast_id = 99003
+local blur_id = 99002
+local shock_id = 99001
+local surge_id = 99000
+local function setup_alcohol()
+	level.remove_pp_effector(contrast_id)
+	level.remove_pp_effector(blur_id)
+	level.remove_pp_effector(shock_id)
+	level.remove_pp_effector(surge_id)
+	level.add_pp_effector("nightvision_redy.ppe", contrast_id, true)
+	level.add_pp_effector("shock.ppe", blur_id, true)
+	level.add_pp_effector("surge_shock_old.ppe", shock_id, true)
+	level.add_pp_effector("nightvision_tactical_02.ppe", surge_id, true)
+	level.set_pp_effector_factor(contrast_id, 0.0)
+	level.set_pp_effector_factor(blur_id, 0.0)
+	level.set_pp_effector_factor(shock_id, 0.0)
+	level.set_pp_effector_factor(surge_id, 0.0)
+end
+
+local alc_interval = 16*5
+local alc_last = 0
+local dizzy_last = 0
+local function actor_on_update()
+	if ((time_global() - alc_last) > alc_interval) then
+        alc_last = time_global()
+		local dizzy = db.actor:cast_Actor():conditions():GetAlcohol()
+
+		if dizzy_last == 0 then
+			setup_alcohol()
+		end
+
+		local factor_1 = r3(clamp(dizzy, 0, 1))
+		local factor_2 = r3(clamp(dizzy * 3, 0, 1))
+		local factor_3 = r3(clamp((dizzy - 0.333) * 3, 0, 1))
+		local factor_4 = r3(clamp((dizzy - 0.667) * 3.33, 0, 1))
+
+		level.set_pp_effector_factor(contrast_id, factor_1)
+		level.set_pp_effector_factor(blur_id, factor_2)
+		level.set_pp_effector_factor(shock_id, factor_3)
+		level.set_pp_effector_factor(surge_id, factor_4)
+		
+		dizzy_last = dizzy
+	end
+end
+]]
+function on_game_start()
+	RegisterScriptCallback("on_option_change", on_option_change)
+	RegisterScriptCallback("actor_on_first_update", actor_on_first_update)
+	RegisterScriptCallback("actor_on_weapon_fired", Update_Shooting)
+	RegisterScriptCallback("actor_on_weapon_before_fire", actor_on_weapon_before_fire)
+	RegisterScriptCallback("actor_on_update", actor_on_update)
+end
+
+-- patch out vanilla enhanced recoil
+local actor_effects_update_shooting = actor_effects.Update_Shooting
+function actor_effects.Update_Shooting(obj, wpn, ammo_elapsed, grenade_elapsed, ammo_type, grenade_type)
+	if not wpn then return end
+	local sec_p = SYS_GetParam(0, wpn and wpn:section(), "parent_section") or wpn:section()
+	if (wpn_fx and (wpn_fx[sec_p] == true or not wpn_fx[sec_p])) or not ini_eff:section_exist(sec_p) then
+		actor_effects_update_shooting(obj, wpn, ammo_elapsed, grenade_elapsed, ammo_type, grenade_type)
+	end
+end
+
+-- patch out gbo enhanced recoil
+if grok_bo_enhanced_recoil then
+	local grok_bo_enhanced_recoil_update_shooting = grok_bo_enhanced_recoil.Update_Shooting
+	function grok_bo_enhanced_recoil.Update_Shooting(obj, wpn, ammo_elapsed, grenade_elapsed, ammo_type, grenade_type)
+		if not wpn then return end
+		local sec_p = SYS_GetParam(0, wpn and wpn:section(), "parent_section") or wpn:section()
+		if (wpn_fx and (wpn_fx[sec_p] == true or not wpn_fx[sec_p])) or not ini_eff:section_exist(sec_p) then
+			grok_bo_enhanced_recoil_update_shooting(obj, wpn, ammo_elapsed, grenade_elapsed, ammo_type, grenade_type)
+		end
+	end
+
+	-- just in case you for some reason have recoil gold still enabled alongside this mod
+	if grok_bo_enhanced_recoil.actor_on_weapon_before_fire then
+		local grok_bo_enhanced_recoil_actor_on_weapon_before_fire = grok_bo_enhanced_recoil.actor_on_weapon_before_fire
+		function grok_bo_enhanced_recoil.actor_on_weapon_before_fire(flags)
+			if not db.actor then return end
+			local wpn = db.actor:active_item()
+			if not wpn then return end
+			if game.actor_weapon_lowered() then return end
+
+			local sec = wpn:section()
+			local sec_p = SYS_GetParam(0, sec, "parent_section") or sec
+			if (wpn_fx and (wpn_fx[sec_p] == true or not wpn_fx[sec_p])) or not ini_eff:section_exist(sec_p) then
+				grok_bo_enhanced_recoil_actor_on_weapon_before_fire(flags)
+			end
+		end
+	end
+end

@@ -1,0 +1,601 @@
+local DEBUG = false
+
+local LASER_BONES = { "base_laser", "laser" }
+local LASER_MOUNT_BONE = "laser_mount"
+local RAIL_COVER_BONE = "rail_cover"
+local SIGHT_MOUNT_BONE = "mount"
+local IRONS_OFF_BONE = "irons_off"
+
+local laser_hidden = {}
+local laser_mount_hidden = {}
+local rail_cover_hidden = {}
+local irons_off_hidden = {}
+local addon_hook_installed = false
+local laser_control_hook_installed = false
+local original_attach_addon
+local original_detach_addon
+local original_toggle_laser
+local original_set_laser
+
+local function dbg(fmt, ...)
+	if not DEBUG then return end
+	printf("[3DSS HIDE BONES] " .. fmt, ...)
+end
+
+local function play_feedback(high)
+	if not db or not db.actor then return end
+	local snd = sound_object("interface\\inv_attach_scope")
+	snd:play(db.actor, 0, sound_object.s2d)
+	snd.frequency = high and 1.15 or 0.85
+end
+
+local function play_feedback(attach)
+    if not db or not db.actor then return end
+    local snd = attach and sound_object("interface\\inv_attach_rail") or sound_object("interface\\inv_detach_rail")
+    snd:play(db.actor, 0, sound_object.s2d)
+end
+
+local function is_weapon(obj)
+	return obj and IsWeapon and IsWeapon(obj)
+end
+
+local function bone_exists(obj, bone)
+	if not (obj and bone and bone ~= "") then return false end
+
+	local ok, id = pcall(function()
+		return obj:bone_id(bone, true)
+	end)
+	if not ok or type(id) ~= "number" then return false end
+
+	return id >= 0 and id ~= 65535 and id ~= 4294967295
+end
+
+local function bone_visible(obj, bone)
+	if not bone_exists(obj, bone) then return false end
+	local ok, visible = pcall(obj.bone_visible, obj, bone, true)
+	if ok then return visible == true end
+	ok, visible = pcall(obj.bone_visible, obj, bone)
+	return ok and visible == true
+end
+local function set_bone(obj, bone, visible)
+	if not bone_exists(obj, bone) then return false end
+	local ok, err = pcall(obj.set_bone_visible, obj, bone, visible, true, true)
+	if not ok then
+		printf("[3DSS HIDE BONES] ERROR | failed to set bone %s on %s: %s", bone, obj:name(), tostring(err))
+		return false
+	end
+	dbg("%s bone=%s visible=%s", obj:section(), bone, tostring(visible))
+	return true
+end
+
+local function has_any_bone(obj, bones)
+	for _, bone in ipairs(bones) do
+		if bone_exists(obj, bone) then return true end
+	end
+	return false
+end
+
+local function has_laser_bone(obj)
+	return has_any_bone(obj, LASER_BONES)
+end
+
+local function has_laser_mount_bone(obj)
+	return bone_exists(obj, LASER_MOUNT_BONE)
+end
+
+local function has_rail_cover_bone(obj)
+	return bone_exists(obj, RAIL_COVER_BONE)
+end
+
+local function has_sight_mount_bone(obj)
+	return bone_exists(obj, SIGHT_MOUNT_BONE)
+end
+
+local function has_regular_sight(obj)
+	if not is_weapon(obj) then return false end
+	local c_weapon = obj:cast_Weapon()
+	if c_weapon and c_weapon:IsScopeAttached() then return true end
+
+	local section = obj:section()
+	local parent_section = section and ini_sys:r_string_ex(section, "parent_section")
+	return parent_section and parent_section ~= "" and section ~= parent_section
+end
+
+local function has_canted_sight(obj)
+	return scripted_canted_irons
+		and scripted_canted_irons.has_irons_installed
+		and scripted_canted_irons.has_irons_installed(obj) == true
+end
+
+local function should_show_sight_mount(obj)
+	return has_regular_sight(obj) or has_canted_sight(obj)
+end
+
+local function base_parent_has_laser(obj)
+	if not obj then return false end
+	local section = obj:section()
+	if not section then return false end
+
+	local parent_section = ini_sys:r_string_ex(section, "parent_section")
+	local base_section = parent_section and parent_section ~= "" and parent_section or section
+	return ini_sys:r_bool_ex(base_section, "laser_status", false) == true
+end
+
+local function weapon_state_key(obj)
+	if not obj then return nil end
+	local section = obj:section()
+	local parent_section = section and ini_sys:r_string_ex(section, "parent_section")
+	if parent_section and parent_section ~= "" then
+		return parent_section
+	end
+	return section or obj:id()
+end
+
+local function hidden_state(tbl, obj)
+	local key = weapon_state_key(obj)
+	if key and tbl[key] == true then return true end
+	local id = obj and obj:id()
+	if id and tbl[id] == true then
+		if key then tbl[key] = true end
+		tbl[id] = nil
+		return true
+	end
+	return false
+end
+
+local function set_hidden_state(tbl, obj, value)
+	local key = weapon_state_key(obj)
+	if key then tbl[key] = value and true or nil end
+	local id = obj and obj:id()
+	if id then tbl[id] = nil end
+end
+
+local function refresh_laser_bones(obj)
+	if not is_weapon(obj) then return end
+
+	local mount_hidden = hidden_state(laser_mount_hidden, obj)
+	local laser_should_show = not mount_hidden and not hidden_state(laser_hidden, obj)
+	local has_laser_mount = has_laser_mount_bone(obj)
+	local rail_cover_should_show = (mount_hidden or not has_laser_mount)
+		and not hidden_state(rail_cover_hidden, obj)
+
+	if has_laser_mount then
+		set_bone(obj, LASER_MOUNT_BONE, not mount_hidden)
+	end
+	set_bone(obj, RAIL_COVER_BONE, rail_cover_should_show)
+
+	for _, bone in ipairs(LASER_BONES) do
+		set_bone(obj, bone, laser_should_show)
+	end
+end
+
+local function refresh_sight_mount_bone(obj)
+	if not is_weapon(obj) then return end
+	if not has_sight_mount_bone(obj) then return end
+	set_bone(obj, SIGHT_MOUNT_BONE, should_show_sight_mount(obj))
+end
+
+function refresh_weapon(obj)
+	if not is_weapon(obj) then return end
+	refresh_laser_bones(obj)
+	refresh_sight_mount_bone(obj)
+end
+
+local function active_weapon()
+	if not db or not db.actor then return nil end
+	local obj = db.actor:active_item()
+	if is_weapon(obj) then return obj end
+	return nil
+end
+
+local function resolve_weapon(obj)
+	if is_weapon(obj) then return obj end
+	return active_weapon()
+end
+
+local function context_weapon(obj)
+	return is_weapon(obj) and obj or nil
+end
+
+local function is_laser_blocked(obj)
+	obj = resolve_weapon(obj)
+	if not obj then return false end
+	return hidden_state(laser_hidden, obj) or hidden_state(laser_mount_hidden, obj)
+end
+
+local function force_laser_off()
+	if zzz_bas_laser_control and zzz_bas_laser_control.set_laser then
+		zzz_bas_laser_control.set_laser(0)
+	end
+end
+
+local function object_by_id(id)
+	if not id then return nil end
+	if get_object_by_id then return get_object_by_id(id) end
+	if level and level.object_by_id then return level.object_by_id(id) end
+	return nil
+end
+
+function should_hide_irons_off(obj)
+	obj = resolve_weapon(obj)
+	return obj and hidden_state(irons_off_hidden, obj) == true
+end
+
+function precond_hide_irons_off(obj)
+	obj = context_weapon(obj)
+	return obj and bone_visible(obj, IRONS_OFF_BONE) and not hidden_state(irons_off_hidden, obj)
+end
+
+function precond_show_irons_off(obj)
+	obj = context_weapon(obj)
+	return obj and hidden_state(irons_off_hidden, obj)
+end
+function precond_hide_laser(obj)
+	obj = context_weapon(obj)
+	return obj and base_parent_has_laser(obj) and has_laser_bone(obj)
+		and not hidden_state(laser_hidden, obj) and not hidden_state(laser_mount_hidden, obj)
+end
+
+function precond_show_laser(obj)
+	obj = context_weapon(obj)
+	return obj and base_parent_has_laser(obj) and has_laser_bone(obj)
+		and hidden_state(laser_hidden, obj) and not hidden_state(laser_mount_hidden, obj)
+end
+
+function precond_hide_laser_mount(obj)
+	obj = context_weapon(obj)
+	return obj and has_laser_mount_bone(obj) and not hidden_state(laser_mount_hidden, obj)
+end
+
+function precond_show_laser_mount(obj)
+	obj = context_weapon(obj)
+	return obj and has_laser_mount_bone(obj) and hidden_state(laser_mount_hidden, obj)
+end
+
+local function rail_cover_can_be_toggled(obj)
+	return obj
+		and has_rail_cover_bone(obj)
+		and not bone_visible(obj, LASER_MOUNT_BONE)
+end
+
+function precond_hide_rail_cover(obj)
+	obj = context_weapon(obj)
+	return obj
+		and rail_cover_can_be_toggled(obj)
+		and bone_visible(obj, RAIL_COVER_BONE)
+		and not hidden_state(rail_cover_hidden, obj)
+end
+
+function precond_show_rail_cover(obj)
+	obj = context_weapon(obj)
+	return obj and rail_cover_can_be_toggled(obj) and hidden_state(rail_cover_hidden, obj)
+end
+
+function label_hide_laser()
+	return "st_3dss_hide_laser"
+end
+
+function label_show_laser()
+	return "st_3dss_show_laser"
+end
+
+function label_hide_laser_mount()
+	return "st_3dss_hide_laser_mount"
+end
+
+function label_show_laser_mount()
+	return "st_3dss_show_laser_mount"
+end
+
+function label_hide_rail_cover()
+	return "st_3dss_hide_rail_cover"
+end
+
+function label_show_rail_cover()
+	return "st_3dss_show_rail_cover"
+end
+
+function label_hide_irons_off()
+	return "st_3dss_hide_irons_off"
+end
+
+function label_show_irons_off()
+	return "st_3dss_show_irons_off"
+end
+
+function hide_laser(obj)
+	obj = context_weapon(obj)
+	if not obj then return end
+	set_hidden_state(laser_hidden, obj, true)
+	refresh_laser_bones(obj)
+	force_laser_off()
+	play_feedback(false)
+end
+
+function show_laser(obj)
+	obj = context_weapon(obj)
+	if not obj then return end
+	set_hidden_state(laser_hidden, obj, nil)
+	refresh_laser_bones(obj)
+	play_feedback(true)
+end
+
+function hide_laser_mount(obj)
+	obj = context_weapon(obj)
+	if not obj then return end
+	set_hidden_state(laser_mount_hidden, obj, true)
+	refresh_laser_bones(obj)
+	force_laser_off()
+	play_feedback(false)
+end
+
+function show_laser_mount(obj)
+	obj = context_weapon(obj)
+	if not obj then return end
+	set_hidden_state(laser_mount_hidden, obj, nil)
+	refresh_laser_bones(obj)
+	play_feedback(true)
+end
+
+function hide_rail_cover(obj)
+	obj = context_weapon(obj)
+	if not obj or not rail_cover_can_be_toggled(obj) then return end
+	set_hidden_state(rail_cover_hidden, obj, true)
+	refresh_laser_bones(obj)
+	play_feedback(false)
+end
+
+function show_rail_cover(obj)
+	obj = context_weapon(obj)
+	if not obj or not rail_cover_can_be_toggled(obj) then return end
+	set_hidden_state(rail_cover_hidden, obj, nil)
+	refresh_laser_bones(obj)
+	play_feedback(true)
+end
+
+function hide_irons_off(obj)
+	obj = context_weapon(obj)
+	if not obj then return end
+	set_hidden_state(irons_off_hidden, obj, true)
+	if scripted_canted_irons and scripted_canted_irons.update_builtin_irons_public then
+		scripted_canted_irons.update_builtin_irons_public(obj)
+	else
+		set_bone(obj, IRONS_OFF_BONE, false)
+	end
+	play_feedback(false)
+end
+
+function show_irons_off(obj)
+	obj = context_weapon(obj)
+	if not obj then return end
+	set_hidden_state(irons_off_hidden, obj, nil)
+	if scripted_canted_irons and scripted_canted_irons.update_builtin_irons_public then
+		scripted_canted_irons.update_builtin_irons_public(obj)
+	else
+		set_bone(obj, IRONS_OFF_BONE, true)
+	end
+	play_feedback(true)
+end
+
+local function menu_toggle_laser(obj)
+	obj = context_weapon(obj)
+	if not obj
+		or not base_parent_has_laser(obj)
+		or not has_laser_bone(obj)
+		or hidden_state(laser_mount_hidden, obj)
+	then
+		return
+	end
+	return hidden_state(laser_hidden, obj) and label_show_laser() or label_hide_laser()
+end
+
+local function toggle_laser(obj)
+	obj = context_weapon(obj)
+	if not obj or not base_parent_has_laser(obj) then return end
+	if hidden_state(laser_hidden, obj) then
+		show_laser(obj)
+	else
+		hide_laser(obj)
+	end
+end
+
+local function menu_toggle_laser_mount(obj)
+	obj = context_weapon(obj)
+	if not obj or not has_laser_mount_bone(obj) then return end
+	return hidden_state(laser_mount_hidden, obj) and label_show_laser_mount() or label_hide_laser_mount()
+end
+
+local function toggle_laser_mount(obj)
+	obj = context_weapon(obj)
+	if not obj then return end
+	if hidden_state(laser_mount_hidden, obj) then
+		show_laser_mount(obj)
+	else
+		hide_laser_mount(obj)
+	end
+end
+
+local function menu_toggle_rail_cover(obj)
+	obj = context_weapon(obj)
+	if not obj or not rail_cover_can_be_toggled(obj) then return end
+	if hidden_state(rail_cover_hidden, obj) then
+		return label_show_rail_cover()
+	end
+	if bone_visible(obj, RAIL_COVER_BONE) then
+		return label_hide_rail_cover()
+	end
+end
+
+local function toggle_rail_cover(obj)
+	obj = context_weapon(obj)
+	if not obj or not rail_cover_can_be_toggled(obj) then return end
+	if hidden_state(rail_cover_hidden, obj) then
+		show_rail_cover(obj)
+	else
+		hide_rail_cover(obj)
+	end
+end
+
+local function menu_toggle_irons_off(obj)
+	obj = context_weapon(obj)
+	if not obj then return end
+	if hidden_state(irons_off_hidden, obj) then
+		return label_show_irons_off()
+	end
+	if bone_visible(obj, IRONS_OFF_BONE) then
+		return label_hide_irons_off()
+	end
+end
+
+local function toggle_irons_off(obj)
+	obj = context_weapon(obj)
+	if not obj then return end
+	if hidden_state(irons_off_hidden, obj) then
+		show_irons_off(obj)
+	else
+		hide_irons_off(obj)
+	end
+end
+
+function actor_item_to_slot(obj)
+	refresh_weapon(obj)
+end
+
+function actor_on_changed_slot()
+	refresh_weapon(active_weapon())
+end
+
+function actor_on_weapon_zoom_type_changed(obj)
+	refresh_weapon(obj)
+end
+
+function ActorMenu_on_item_focus_receive(obj)
+	refresh_weapon(obj)
+end
+
+local function install_addon_hooks()
+	if addon_hook_installed or not utils_item then return end
+
+	original_attach_addon = utils_item.attach_addon
+	original_detach_addon = utils_item.detach_addon
+
+	if original_attach_addon then
+		utils_item.attach_addon = function(wpn, addon, typ, ignore)
+			local result = original_attach_addon(wpn, addon, typ, ignore)
+			if typ == "scope" then
+				refresh_weapon(wpn)
+			end
+			return result
+		end
+	end
+
+	if original_detach_addon then
+		utils_item.detach_addon = function(wpn, addon, typ, ignore)
+			local result = original_detach_addon(wpn, addon, typ, ignore)
+			if typ == "scope" then
+				refresh_weapon(wpn)
+			end
+			return result
+		end
+	end
+
+	addon_hook_installed = true
+end
+
+local function install_laser_control_hooks()
+	if laser_control_hook_installed or not zzz_bas_laser_control then return end
+
+	original_toggle_laser = zzz_bas_laser_control.toggle_laser
+	original_set_laser = zzz_bas_laser_control.set_laser
+
+	if original_toggle_laser then
+		zzz_bas_laser_control.toggle_laser = function(id)
+			local obj = object_by_id(id)
+			if is_laser_blocked(obj) then
+				if original_set_laser then original_set_laser(0) end
+				return
+			end
+			return original_toggle_laser(id)
+		end
+	end
+
+	if original_set_laser then
+		zzz_bas_laser_control.set_laser = function(on_off, section)
+			if is_laser_blocked(active_weapon()) then
+				return original_set_laser(0)
+			end
+			return original_set_laser(on_off, section)
+		end
+	end
+
+	laser_control_hook_installed = true
+end
+
+local function actor_on_first_update()
+	install_laser_control_hooks()
+	refresh_weapon(active_weapon())
+end
+
+function save_state(mdata)
+	mdata.z_3dss_hide_bones = {
+		laser_hidden = laser_hidden,
+		laser_mount_hidden = laser_mount_hidden,
+		rail_cover_hidden = rail_cover_hidden,
+		irons_off_hidden = irons_off_hidden,
+	}
+end
+
+function load_state(mdata)
+	local data = mdata.z_3dss_hide_bones or {}
+	laser_hidden = data.laser_hidden or {}
+	laser_mount_hidden = data.laser_mount_hidden or {}
+	rail_cover_hidden = data.rail_cover_hidden or {}
+	irons_off_hidden = data.irons_off_hidden or {}
+end
+
+function on_game_start()
+	install_addon_hooks()
+	install_laser_control_hooks()
+
+	if custom_functor_autoinject then
+		custom_functor_autoinject.add_functor(
+			"3dss_hide_laser",
+			menu_toggle_laser,
+			menu_toggle_laser,
+			nil,
+			toggle_laser,
+			true
+		)
+		custom_functor_autoinject.add_functor(
+			"3dss_hide_laser_mount",
+			menu_toggle_laser_mount,
+			menu_toggle_laser_mount,
+			nil,
+			toggle_laser_mount,
+			true
+		)
+		custom_functor_autoinject.add_functor(
+			"3dss_hide_rail_cover",
+			menu_toggle_rail_cover,
+			menu_toggle_rail_cover,
+			nil,
+			toggle_rail_cover,
+			true
+		)
+		custom_functor_autoinject.add_functor(
+			"3dss_hide_irons_off",
+			menu_toggle_irons_off,
+			menu_toggle_irons_off,
+			nil,
+			toggle_irons_off,
+			true
+		)
+	end
+	RegisterScriptCallback("save_state", save_state)
+	RegisterScriptCallback("load_state", load_state)
+	RegisterScriptCallback("actor_item_to_slot", actor_item_to_slot)
+	RegisterScriptCallback("actor_on_changed_slot", actor_on_changed_slot)
+	RegisterScriptCallback("actor_on_weapon_zoom_type_changed", actor_on_weapon_zoom_type_changed)
+	RegisterScriptCallback("ActorMenu_on_item_focus_receive", ActorMenu_on_item_focus_receive)
+	RegisterScriptCallback("actor_on_first_update", actor_on_first_update)
+end

@@ -57,16 +57,6 @@ function get_itm_type(name)
 	then
 		return "medical"
 	end
-
-	if sfind(name,"carrier")
-	or sfind(name,"bolt")
-	or sfind(name,"tube")
-	or sfind(name,"spring")
-	or sfind(name,"barrel")
-	or sfind(name,"trigger")
-	then
-		return "gunpart"
-	end
 	
 	--if sfind(name,"repair") then
 		--return "tool"
@@ -118,12 +108,7 @@ function init_settings()
 	if (inited) then return end
 	inited = true
 	
-	ws_files = {"dynamic_item_spawn.ltx", "dynamic_item_spawn_iandh.ltx", "dynamic_item_spawn_balls.ltx", "dynamic_item_spawn_awry.ltx", "dynamic_item_spawn_custom.ltx"}
-	if ui_mcm then
-		ini_dyn = ini_file("items\\settings\\" .. ws_files[ui_mcm.get("black_road_revisited/worldspawn_file")])
-	else
-		ini_dyn = ini_file("items\\settings\\dynamic_item_spawn.ltx")
-	end
+	ini_dyn = ini_file("items\\settings\\dynamic_item_spawn.ltx")
 	
 	local n,m = 0,0
 	local result, id, value = "","",""
@@ -269,24 +254,7 @@ function try_spawn_world_item(ignore)
 			world_itm_off[_name] = nil
 			
 			local box_size = ini_sys:r_u32(section, "box_size")
-			if (ui_mcm and ui_mcm.get("black_road_revisited/isolated_and_hated") == true and ui_mcm.get("black_road_revisited/ammo_boost") == true) then
-				-- Ammo parts are increased but not as much as regular ammo
-				if (string.find(section, "bullet_") or string.find(section, "casing_") or string.find(section, "powder_")) then
-					world_itm_num[_name] = math.random( math.ceil(box_size * 0.5) , math.ceil(box_size * 1) )
-				else
-					local total_boxes = (math.random() * 2.3) + .3
-
-					-- Increase worldspawn ammo for traderless mode and make it spawn multiple boxes if the amount is greater than the quantity of the amount of ammo that can be in the box
-					while total_boxes > 1 do
-						alife_create_item(section, {pos, info.lvl_id, info.gm_id})
-						total_boxes = total_boxes - 1
-					end
-					-- world_itm_num[_name] = math.random( math.ceil(box_size * 0.4) , math.ceil(box_size * 2))
-					world_itm_num[_name] = math.ceil(box_size * total_boxes)
-				end
-			else
-				world_itm_num[_name] = math.random( math.ceil(box_size * 0.15) , math.ceil(box_size * 0.50) )
-			end
+			world_itm_num[_name] = math.random( math.ceil(box_size * 0.15) , math.ceil(box_size * 0.50) )
 			
 			print_debug("/ Game Setup | created ammo [%s](%s) - place: %s - size = %s", section, se_obj.id, _name, world_itm_num[_name])
 		else
@@ -313,12 +281,7 @@ function try_spawn_world_item(ignore)
 				
 					-- Parts
 					if IsItem("part",section) then
-						-- Isolated and Hated boost chance for better weapon parts condition in worldspawns
-						if (ui_mcm and ui_mcm.get("black_road_revisited/isolated_and_hated") == true and ui_mcm.get("black_road_revisited/good_barrels") == true and get_itm_type(section) == "gunpart") then
-							world_itm_num[_name] = (math.random(55,95)/100)
-						else
-							world_itm_num[_name] = (math.random(35,75)/100)
-						end
+						world_itm_num[_name] = (math.random(35,75)/100)
 						print_debug("/ Game Setup | created degraded item [%s](%s) - place: %s - con = %s", section, se_obj.id, _name, world_itm_num[_name])
 						
 					-- Degradable items
@@ -474,7 +437,7 @@ local function actor_on_first_update()
 	-- Setup items
 	local multi = game_difficulties.get_eco_factor("random_items") or 0.5
   -- ZCP
-  if smr_amain_mcm and smr_amain_mcm.get_config("smr_enabled") then
+  if smr_amain_mcm.get_config("smr_enabled") then
     multi = smr_loot_mcm.get_config("random_items")
   end
   -- ZCP END

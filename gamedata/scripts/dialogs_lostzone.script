@@ -18,7 +18,7 @@ local lttz_faction_infos = {
 			[2] = "living_legend_csky_answer",
 			[3] = "mortal_sin_csky",
 			[4] = "operation_afterglow_csky",
-			[5] = "living_legend_st",
+			[5] = "living_legend_alt",
 		},
 		task = {
 			[1] = "lttz_ll_finish_csky",
@@ -27,7 +27,7 @@ local lttz_faction_infos = {
 			[4] = "lttz_ms_ambush_csky",
 			[5] = "lttz_ms_urban_warfare_csky",
 			[6] = "lttz_ms_zone_hero_csky",
-			[7] = "lttz_ll_visit_barkeep",
+			[7] = "lttz_ll_visit_blackjack",
 		}
 	},
 	
@@ -494,7 +494,7 @@ function oa_transmission_report_honest_reward_freedom(first_speaker, second_spea
 end
 
 function oa_transmission_report_honest_reward_ecolog(first_speaker, second_speaker) 
-	dialogs.relocate_item_section_to_actor(first_speaker, second_speaker, "af_gravi_af_aac")
+	dialogs.relocate_item_section_to_actor(first_speaker, second_speaker, "af_gravi")
 	xr_effects.inc_faction_goodwill_to_actor(db.actor, nil, {"ecolog", 50})	
 end
 
@@ -897,17 +897,17 @@ local function actor_on_first_update()
 			
 				if (current_level ~= "jupiter_underground") and (not has_alife_info("lttz_hb_leaving_jup_u_done")) then
 					printdbg("- ISG Story | iSG squads left Jupiter Underground")
-					xr_effects.remove_squad(nil,nil,{"jup_depo_isg_leader_squad"})
-					xr_effects.remove_squad(nil,nil,{"jup_depo_isg_guard_squad"})
-					xr_effects.remove_squad(nil,nil,{"jup_u_isg_guard_squad"})
-					xr_effects.remove_squad(nil,nil,{"jup_u_isg_guard_2_squad"})
-					xr_effects.remove_squad(nil,nil,{"pass_hall_isg_companion_squad"})
+					-- xr_effects.remove_squad(nil,nil,{"jup_depo_isg_leader_squad"})
+					-- xr_effects.remove_squad(nil,nil,{"jup_depo_isg_guard_squad"})
+					-- xr_effects.remove_squad(nil,nil,{"jup_u_isg_guard_squad"})
+					-- xr_effects.remove_squad(nil,nil,{"jup_u_isg_guard_2_squad"})
+					-- xr_effects.remove_squad(nil,nil,{"pass_hall_isg_companion_squad"})
 					give_info("lttz_hb_leaving_jup_u_done")
 					
 				elseif (current_level ~= "jupiter") and (not has_alife_info("lttz_hb_leaving_jup_done")) then
 					printdbg("- ISG Story | iSG squads left Jupiter")
-					xr_effects.remove_squad(nil,nil,{"jup_depo_isg_tech_squad"})
-					xr_effects.remove_squad(nil,nil,{"jup_depo_isg_recon_squad"})
+					-- xr_effects.remove_squad(nil,nil,{"jup_depo_isg_tech_squad"})
+					-- xr_effects.remove_squad(nil,nil,{"jup_depo_isg_recon_squad"})
 					give_info("lttz_hb_leaving_jup_done")
 				end
 			end

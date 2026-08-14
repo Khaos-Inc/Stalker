@@ -20,11 +20,42 @@ upgr_icon_y                              = 100
 upgr_icon_height                         = 150
 upgr_icon_width                          = 350
 
-lewd_lens_hide_enabled       = true
-lewd_lens_hide_bone          = lens
-lewd_lens_hide_delays        = 0.1,0
-lewd_lens_hide_aim_mode      = true, false, false	
+lens_hide_enabled       = true
+lens_hide_bone          = lens
+lens_hide_delays        = 0.1,0
+lens_hide_aim_mode      = true, false, false	
 
+use_alt_aim_hud			= true
+
+;---------------------------------------------SCRIPTED CANTED SIGHTS-----------------------------------
+canted_sights = canted_kac, canted_deltapoint, canted_docter, canted_t12
+
+canted_sights_bone         = wpn_body
+canted_sights_pos   = 0.003418, 0.092783, -0.015266
+canted_sights_rot   = 0, 0, 0
+canted_sights_scale = 0.94, 0.94, 0.94
+front_iron_pos      = 0.003418, 0.092783, 0.26
+front_iron_rot      = 0, 0, 0
+front_iron_scale    = 0.94, 0.94, 0.94
+
+open_slots 			 = 1, 2
+canted_rds_position1                  = 0.003418, 0.092783, -0.002633
+canted_rds_position2                  = 0.003418, 0.092783, 0.156941
+
+canted_aim_pos_canted_kac = -0.092107, -0.067708, -0.05
+canted_aim_rot_canted_kac = 0, 0, 0.825
+
+canted_aim_pos_canted_deltapoint = -0.091459, -0.060365, -0.05
+canted_aim_rot_canted_deltapoint = 0, 0, 0.83
+ms_dot_offset_canted_deltapoint	= -0.002, 0
+
+canted_aim_pos_canted_docter          = -0.091606, -0.056187, -0.05
+canted_aim_rot_canted_docter          = 0, 0, 0.83
+ms_dot_offset_canted_docter  	= -0.002, 0
+
+canted_aim_pos_canted_t12             = -0.091413, -0.060472, -0.01
+canted_aim_rot_canted_t12             = 0, 0, 0.83
+;------------------------------------------------------------------------------------------------------
 ![wpn_scar_siber_hud]
 anm_shots                                = scar_hand_shoot_3dss, scar_shoot
 anm_idle_sprint                          = scar_hand_run_grip
@@ -46,6 +77,11 @@ fire_point		= 0, 0, 0
         aim_hud_offset_rot               = 8.9e-05, -4.9e-05, 0.003
         aim_hud_offset_rot_16x9          = 8.9e-05, -4.9e-05, 0.003
 
+        aim_hud_offset_alt_pos           = -0.102128, -0.073119, 0
+        aim_hud_offset_alt_pos_16x9      = -0.102128, -0.073119, 0
+        aim_hud_offset_alt_rot           = 8.9e-05, -4.9e-05, 0.8
+        aim_hud_offset_alt_rot_16x9      = 8.9e-05, -4.9e-05, 0.8
+		
         gl_hud_offset_pos                = -0.055967, 0.015435, -0.08
         gl_hud_offset_pos_16x9           = -0.055967, 0.015435, -0.08
         gl_hud_offset_rot                = 0.066229, 0.008444, 0.15
@@ -311,10 +347,10 @@ inv_grid_y			= 0
         aim_hud_offset_rot               = 8.9e-05, -4.9e-05, 0.003
         aim_hud_offset_rot_16x9          = 8.9e-05, -4.9e-05, 0.003
 
-        aim_hud_offset_alt_pos           = -0.09375, -0.055, -0.08
-        aim_hud_offset_alt_pos_16x9      = -0.09375, -0.055, -0.08
-        aim_hud_offset_alt_rot           = 8.9e-05, -4.9e-05, 0.78
-        aim_hud_offset_alt_rot_16x9      = 8.9e-05, -4.9e-05, 0.78
+        aim_hud_offset_alt_pos           = -0.091596, -0.058892, -0.08
+        aim_hud_offset_alt_pos_16x9      = -0.091596, -0.058892, -0.08
+        aim_hud_offset_alt_rot           = 8.9e-05, -4.9e-05, 0.823
+        aim_hud_offset_alt_rot_16x9      = 8.9e-05, -4.9e-05, 0.823
 		
 ![wpn_scar_siber_spec_alt]:specter_s
 icons_texture		= ui\ui_scar_new    
@@ -333,10 +369,10 @@ inv_grid_y			= 0
         aim_hud_offset_rot               = 8.9e-05, -4.9e-05, 0.003
         aim_hud_offset_rot_16x9          = 8.9e-05, -4.9e-05, 0.003
 
-        aim_hud_offset_alt_pos           = -0.09375, -0.055, -0.08
-        aim_hud_offset_alt_pos_16x9      = -0.09375, -0.055, -0.08
-        aim_hud_offset_alt_rot           = 8.9e-05, -4.9e-05, 0.78
-        aim_hud_offset_alt_rot_16x9      = 8.9e-05, -4.9e-05, 0.78
+        aim_hud_offset_alt_pos           = -0.091596, -0.058892, -0.08
+        aim_hud_offset_alt_pos_16x9      = -0.091596, -0.058892, -0.08
+        aim_hud_offset_alt_rot           = 8.9e-05, -4.9e-05, 0.823
+        aim_hud_offset_alt_rot_16x9      = 8.9e-05, -4.9e-05, 0.823
 		
 ![wpn_scar_siber_mark8_rmr]:leupold_s
 icons_texture		= ui\ui_scar_new    
@@ -355,10 +391,10 @@ inv_grid_y			= 0
         aim_hud_offset_rot               = 8.9e-05, -4.9e-05, 0.003
         aim_hud_offset_rot_16x9          = 8.9e-05, -4.9e-05, 0.003
 
-        aim_hud_offset_alt_pos           = -0.09375, -0.055, -0.08
-        aim_hud_offset_alt_pos_16x9      = -0.09375, -0.055, -0.08
-        aim_hud_offset_alt_rot           = 8.9e-05, -4.9e-05, 0.78
-        aim_hud_offset_alt_rot_16x9      = 8.9e-05, -4.9e-05, 0.78
+        aim_hud_offset_alt_pos           = -0.091596, -0.058892, -0.08
+        aim_hud_offset_alt_pos_16x9      = -0.091596, -0.058892, -0.08
+        aim_hud_offset_alt_rot           = 8.9e-05, -4.9e-05, 0.823
+        aim_hud_offset_alt_rot_16x9      = 8.9e-05, -4.9e-05, 0.823
 
 ;----------------------------------------------------------------------------------------		
 [wpn_scar_siber_gee36]:wpn_scar_siber, gee36_s
@@ -370,8 +406,8 @@ hud                     = wpn_scar_siber_gee36_hud
 
 [wpn_scar_siber_gee36_hud]:wpn_scar_siber_hud
 item_visual                              = dynamics\weapons\wpn_scar_siber\wpn_scar_siber_gee36_hud.ogf	
-        aim_hud_offset_pos               = -0.071578, 0.006318, -0.14381
-        aim_hud_offset_pos_16x9          = -0.071578, 0.006318, -0.14381
+        aim_hud_offset_pos               = -0.071578, 0.006318, -0.112505
+        aim_hud_offset_pos_16x9          = -0.071578, 0.006318, -0.112505
 		
         aim_hud_offset_alt_pos           = -0.071647, -0.008438, -0.08
         aim_hud_offset_alt_pos_16x9      = -0.071647, -0.008438, -0.08
@@ -400,15 +436,16 @@ hud                     = wpn_scar_siber_march_f_shorty_alt_hud
 2icon_layer_x   = 120
 2icon_layer_y   = -6
 
+	use_alt_aim_hud	= true
 [wpn_scar_siber_march_f_shorty_alt_hud]:wpn_scar_siber_hud
 item_visual                              = dynamics\weapons\wpn_scar_siber\wpn_scar_siber_march_f_shorty_alt_hud.ogf	
         aim_hud_offset_pos               = -0.071713, 0.009381, -0.101253
         aim_hud_offset_pos_16x9          = -0.071713, 0.009381, -0.101253
 		
-        aim_hud_offset_alt_pos           = -0.084756, -0.054529, -0.08
-        aim_hud_offset_alt_pos_16x9      = -0.084756, -0.054529, -0.08
-        aim_hud_offset_alt_rot           = 8.9e-05, -4.9e-05, 0.78
-        aim_hud_offset_alt_rot_16x9      = 8.9e-05, -4.9e-05, 0.78		
+        aim_hud_offset_alt_pos           = -0.091596, -0.058892, -0.08
+        aim_hud_offset_alt_pos_16x9      = -0.091596, -0.058892, -0.08
+        aim_hud_offset_alt_rot           = 8.9e-05, -4.9e-05, 0.823
+        aim_hud_offset_alt_rot_16x9      = 8.9e-05, -4.9e-05, 0.823
 ;----------------------------------------------------------------------------------------		
 [wpn_scar_siber_e0t2_magd]:wpn_scar_siber, e0t2_magd_s
 hud                     = wpn_scar_siber_e0t2_magd_hud
@@ -477,6 +514,7 @@ hud                     = wpn_scar_siber_devo_hud
 1icon_layer_x			= 61
 1icon_layer_y			= -13
 
+	use_alt_aim_hud	= true
 [wpn_scar_siber_devo_hud]:wpn_scar_siber_hud
 item_visual                              = dynamics\weapons\wpn_scar_siber\wpn_scar_siber_devo_hud.ogf	
         aim_hud_offset_pos               = -0.071781, 0.018297, -0.160915
@@ -496,8 +534,8 @@ hud                     = wpn_scar_siber_hamr_hud
 
 [wpn_scar_siber_hamr_hud]:wpn_scar_siber_hud
 item_visual                              = dynamics\weapons\wpn_scar_siber\wpn_scar_siber_hamr_hud.ogf
-        aim_hud_offset_pos               = -0.07171, 0.006745, -0.116036
-        aim_hud_offset_pos_16x9          = -0.07171, 0.006745, -0.116036
+        aim_hud_offset_pos               = -0.071798, 0.006921, -0.109007
+        aim_hud_offset_pos_16x9          = -0.071798, 0.006921, -0.109007
 	
         aim_hud_offset_alt_pos           = -0.071784, -0.019552, -0.08
         aim_hud_offset_alt_pos_16x9      = -0.071784, -0.019552, -0.08

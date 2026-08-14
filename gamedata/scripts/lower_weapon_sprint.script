@@ -338,12 +338,44 @@ function actor_on_weapon_jammed()
 	end
 end
 
+-- Sprint start/end aliases used directly or selected by ts_pattern/ts_strict
+-- transitions. Cancelling them leaves the current idle animation unchanged.
+local blocked_sprint_animations = {
+	anm_idle_sprint_jammed = true,
+	anm_sprint_start_w_gl = true,
+	anm_sprint_end_w_gl = true,
+	anm_sprint_start_g = true,
+	anm_sprint_end_g = true,
+	anm_sprint_start_w_gl_jammed = true,
+	anm_sprint_end_w_gl_jammed = true,
+	anm_sprint_start = true,
+	anm_sprint_end = true,
+	anm_sprint_start_jammed = true,
+	anm_sprint_end_jammed = true,
+}
+
+local function block_sprint_animation(anm_table, wpn)
+	if (is_current_wpn_in_blacklist() ~= reverse_blacklist) then return end
+	if not anm_table or not wpn or not IsWeapon(wpn) then return end
+
+	if blocked_sprint_animations[anm_table.anm_name] then
+		anm_table.anm_name = "$cancel"
+		return true
+	end
+end
+
 -- Register All Callbacks
 function on_game_start()
 	RegisterScriptCallback("on_key_press",on_key_press_blacklist)
 	RegisterScriptCallback("on_key_hold",on_key_hold)
 	RegisterScriptCallback("on_option_change", on_option_change)
 	on_option_change()
+
+	if animation_common and animation_common.add_anim_mutator then
+		animation_common.add_anim_mutator(block_sprint_animation, 998)
+	else
+		RegisterScriptCallback("actor_on_hud_animation_play", block_sprint_animation)
+	end
 	
 	RegisterScriptCallback( "actor_on_movement_changed", actor_on_movement_changed )
 	RegisterScriptCallback( "actor_on_hud_animation_end", actor_on_hud_animation_end )

@@ -345,8 +345,6 @@ local function timer_disassembly_outfit(npc_id, result_details, result_condition
 		actor_menu.set_item_news('fail', 'weapon', "st_dis_text_10", name)
 
 	end
-	
-	table.sort(result_details)
 
 	-- Creating parts in inventory
 	for i=1,#result_details do
@@ -385,7 +383,7 @@ function disassembly_outfit(obj, obj_d)
 		if (k ~= sec) and (math.random(100) <= (disassembly_chance + con*100)) then
 			local index = #result_details
 			result_details[index + 1] = k
-			result_conditions[index + 1] = IsItem("part",k) and utils_item.get_cond_static(v) or v
+			result_conditions[index + 1] = v
 		end
 	end
 	
@@ -412,15 +410,15 @@ function disassembly_outfit(obj, obj_d)
 	local degr_val = itms_disassemble[obj_d:section()]
 	utils_item.degrade( obj_d , degr_val )
 	
-	-- Increase Statistic
+	--Increase Statistic
 	game_statistics.increment_statistic("items_disassembled")
 	clear_parts_con(id)
 	gameplay_disguise.clear_patch(id)
 	
-	-- Play animation
+	--Play animation
 	actor_effects.play_item_fx("disassemble_cloth_fast")
 	
-	-- Process
+	--Process
 	CreateTimeEvent(0,"delay_disassembly" .. id, delay, timer_disassembly_outfit, npc:id(), result_details, result_conditions, name)
 end
 

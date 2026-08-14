@@ -110,7 +110,7 @@ zzzz_arti_jamming_repairs.custom_disassembly_weapon = function(obj, obj_d)
 	end
 
 	-- Unload mag and get ammo
-	mag_support.eject_mag(obj)
+	obj:force_unload_magazine(true)
 
 	-- Collect weapon parts
 	for k,v in pairs(parts) do

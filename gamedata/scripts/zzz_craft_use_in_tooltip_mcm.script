@@ -344,6 +344,10 @@ function getCraftableItems(sec)
 			end
 		end
 	end
+	
+	if sec == "itm_artefactskit" or sec == "prt_i_scrap" or sec == "prt_i_wood" or sec == "prt_i_fasteners" then
+		items_craftable = {}
+	end
 
 	return items_craftable
 end
