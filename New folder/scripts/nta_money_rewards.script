@@ -1,5 +1,0 @@
-for i=1,10 do
-    nta_money_rewards['give_money_' .. i .. '000'] = function ()
-        dialogs.relocate_money( db.actor, i * 1000, "in" )
-    end
-end
