@@ -1,0 +1,465 @@
+--\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ wpn_uzi \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+[uzi_barrel]:attachment_base
+kind  =  uzi
+inv_ui_sign				= uzi_bar
+visual						= w_att_huds\uzi_barrel	
+inv_name					= uzi_barrel
+inv_name_short			= uzi_barrel
+cost							= 700
+inv_weight					= 0.1
+inv_grid_width			= 2
+inv_grid_x         			= 31
+inv_grid_y         			= 35
+1icon_layer = clean2_ico
+attachment_point = uzi_barrel|0,0,0|0,0,0
+attachment_slots =	uzi_zatvor|zatvor|0,0,0|0,0,0#uzi_muzzle|wpn_body|0,0,0|0,0,0
+item_tags =	barrel
+override_section = uzi_barrel_attributes
+
+[uzi_barrel_attributes]
+weapon_lenght = 0.1
+bullet_speed = 1.31
+k_hit_koeff = 1.15
+fire_dispersion_base = 0.13
+zoom_rotate_time = 0.08
+recoil_koeff = -0.05
+inertia_koeff = 1.2
+[uzi_barrel_att]
+weapon_lenght				=	0.1
+bullet_speed				= 1.31
+k_hit_koeff						= 1.15
+fire_dispersion_base		= 0.13
+zoom_rotate_time = 0.08
+recoil_koeff            = -0.28
+inertia_koeff            = 1.2
+
+[uzi_zatvor]:attachment_base
+kind  =  uzi
+inv_ui_sign				= uzi_bolt
+visual						= w_att_huds\uzi_zatvor	
+inv_name					= uzi_zatvor
+inv_name_short			= uzi_zatvor
+cost							= 750
+inv_weight					= 0.17
+inv_grid_width			= 2
+inv_grid_x         			= 16
+inv_grid_y         			= 35
+1icon_layer = clean_lub2_ico
+attachment_point = uzi_zatvor|0,0,0|0,0,0
+attachment_slots = uzi_spring|wpn_body|0,0,0|0,0,0
+item_tags =	zatvor
+override_section = uzi_zatvor_attributes
+
+[uzi_zatvor_attributes]
+rpm = 600
+zoom_rotate_time = 0.07
+impair_koeff = 0.8
+recoil_koeff = -0.1
+[uzi_zatvor_att]:rpm_600_zatvor_att
+zoom_rotate_time = 0.07
+impair_koeff = 0.8
+recoil_koeff = -0.1
+
+[uzi_zatvor_old]:uzi_zatvor
+kind  =  uzi
+inv_ui_sign				= uzi_bolt-
+visual						= w_att_huds\uzi_zatvor_old	
+inv_name					= uzi_zatvor_old
+cost							= 700
+inv_grid_x         			= 18
+override_section = uzi_zatvor_old_attributes
+
+inv_weight = 0.17
+[uzi_zatvor_old_attributes]
+zoom_rotate_time = 0.07
+rpm = 625
+impair_koeff = 1.1
+[uzi_zatvor_old_att]:uzi_zatvor_att
+zoom_rotate_time = 0.07
+rpm = 625
+impair_koeff = 1.1
+
+[uzi_spring]:attachment_base
+kind  =  uzi
+inv_ui_sign				= uzi_spr
+visual						= w_att_huds\uzi_spring	
+inv_name					= uzi_spring
+inv_name_short			= uzi_springS
+cost							= 450
+inv_weight					= 0.07
+inv_grid_x         			= 17
+inv_grid_y         			= 34
+1icon_layer = clean1_ico
+attachment_point		= uzi_spring|0,0,0|0,0,0
+attachment_slots		= uzi_cover|wpn_body|0,0,0|0,0,0
+item_tags	=	spring
+override_section = uzi_spring_attributes
+
+[uzi_spring_attributes]
+
+[uzi_spring_recoil_buffer_15]:uzi_spring
+kind  =  uzi
+inv_ui_sign				= uzi_spr15
+visual						= w_att_huds\uzi_spring_recoil_buffer_15	
+inv_name					= uzi_spring_recoil_buffer_15
+inv_name_short			= uzi_spring_recoil_buffer_15S
+cost							= 750
+inv_weight					= 0.1
+inv_grid_x         			= 18
+override_section = uzi_spring_recoil_buffer_15_attributes
+
+[uzi_spring_recoil_buffer_15_attributes]
+rpm_koeff = 0.334
+[uzi_spring_recoil_buffer_15_att]
+rpm_koeff = 0.334
+
+[uzi_spring_recoil_buffer_45]:uzi_spring
+kind  =  uzi
+inv_ui_sign				= uzi_spr45
+visual						= w_att_huds\uzi_spring_recoil_buffer_45	
+inv_name					= uzi_spring_recoil_buffer_45
+inv_name_short			= uzi_spring_recoil_buffer_45S
+cost							= 1100
+inv_weight					= 0.12
+inv_grid_x         			= 19
+override_section = uzi_spring_recoil_buffer_45_attributes
+
+[uzi_spring_recoil_buffer_45_attributes]
+rpm_koeff = 0.584
+[uzi_spring_recoil_buffer_45_att]
+rpm_koeff = 0.584
+
+[uzi_cover]:attachment_base
+kind  =  uzi
+inv_ui_sign				= uzi_cover
+visual						= w_att_huds\uzi_cover	
+inv_name					= uzi_cover
+inv_name_short			= uzi_coverS
+cost							= 550
+inv_weight					= 0.08
+inv_grid_width			= 2
+inv_grid_x					= 20
+inv_grid_y					= 34
+attachment_point =	uzi_cover|0,0,0|0,0,0
+attachment_slots =	uzi_cover_rail|wpn_body|0,0,0|0,0,0
+item_tags = cover
+override_section = uzi_cover_attributes
+
+[uzi_cover_attributes]
+zoom_rotate_time = -0.02
+impair_koeff = 0.9
+
+[uzi_cover_up]:uzi_cover
+kind  =  uzi
+inv_ui_sign				= uzi_cover+
+visual						= w_att_huds\uzi_cover_up	
+description				= ar_hg_9n4
+inv_name					= uzi_cover_up
+inv_name_short			= uzi_cover_upS
+cost							= 1250
+inv_weight					= 0.11
+inv_grid_x					= 22
+attachment_slots =	pica_9|wpn_body|0,0.0791,-0.101|0,0,0#pica_4|wpn_body|0.0206,0.073,-0.093|0,0,45
+override_section = uzi_cover_up_attributes
+
+[uzi_cover_up_attributes]
+zoom_rotate_time = -0.02
+recoil_koeff = -0.02
+
+[uzi_cover_rail]:attachment_base
+kind  =  uzi
+inv_ui_sign				= uzi_rail
+visual						= w_att_huds\uzi_cover_rail
+description				= pica_9_up
+inv_name					= uzi_cover_rail
+inv_name_short			= uzi_cover_railS
+cost							= 650
+inv_weight					= 0.05
+inv_grid_x					= 27
+inv_grid_y					= 34
+attachment_point		=	uzi_cover_rail|0,0,0|0,0,0
+attachment_slots =	pica_9|wpn_body|0,0.0791,-0.101|0,0,0
+item_tags =	rail
+override_section = uzi_cover_rail_attributes
+
+[uzi_cover_rail_attributes]
+
+[uzi_muzzle]:attachment_base
+kind  =  uzi
+inv_ui_sign				= uzi_nut
+visual						= w_att_huds\uzi_muzzle	
+inv_name					= uzi_muzzle
+inv_name_short			= uzi_muzzleS
+cost							= 350
+inv_weight					= 0.04
+inv_grid_x         			= 30
+inv_grid_y         			= 34
+attachment_point		=	uzi_muzzle|0,0,0|0,0,0
+item_tags	=	muzzle_device
+override_section = uzi_muzzle_attributes
+
+[uzi_muzzle_attributes]
+
+[uzi_silencer]:uzi_muzzle
+kind  =  uzi
+inv_ui_sign				= uzi_sil
+visual						= w_att_huds\uzi_silencer	
+inv_name					= uzi_silencer
+inv_name_short			= uzi_silencer
+cost							= 2200
+inv_weight					= 0.47
+inv_grid_width			= 2
+inv_grid_x					= 31
+override_section = uzi_silencer_attributes
+
+[uzi_silencer_attributes]
+silencer_status = 1
+silencer_name = wpn_addon_silencer
+silencer_x = 1
+silencer_y = 1
+weapon_lenght = 0.2
+zoom_rotate_time = 0.08
+recoil_koeff = -0.11
+inertia_koeff = 1.3
+
+[uzi_stock_fold_dmg]:attachment_base
+kind  =  uzi
+inv_ui_sign				= uzi_stk-
+visual						= w_att_huds\uzi_stock_fold_dmg	
+inv_name					= uzi_stock_fold_dmg
+inv_name_short			= uzi_stock_fold_dmgS
+cost							= 450
+inv_weight					= 0.13
+inv_grid_x					= 20
+inv_grid_y					= 35
+attachment_point		=	uzi_stock|0,0,0|0,0,0
+override_section = uzi_stock_fold_dmg_attributes
+
+[uzi_stock_fold_dmg_attributes]
+weapon_lenght = 0.05
+zoom_rotate_time = -0.02
+recoil_koeff = -0.12
+inertia_koeff = 0.8
+
+[uzi_stock_fold]:uzi_stock_fold_dmg
+kind  =  uzi
+inv_ui_sign				= uzi_stk
+visual						= w_att_huds\uzi_stock_fold	
+inv_name					= uzi_stock_fold
+inv_name_short			= uzi_stock_fold
+cost							= 1350
+inv_grid_width			= 2
+inv_grid_x					= 21
+item_tags	=	stock
+override_section			= uzi_stock_fold_attributes
+
+inv_weight = 0.13
+[uzi_stock_fold_attributes]
+zoom_rotate_time = 0.03
+recoil_koeff = -0.15
+inertia_koeff = 0.7
+weapon_lenght = 0.2
+
+[uzi_stock_wood]:uzi_stock_fold
+kind  =  uzi
+inv_ui_sign				= uzi_stk_w
+visual						= w_att_huds\uzi_stock_wood	
+inv_name					= uzi_stock_wood
+inv_name_short			= uzi_stock_woodS
+cost							= 1650
+inv_weight					= 0.58
+inv_grid_width			= 2
+inv_grid_x					= 23
+override_section			=	uzi_stock_wood_attributes
+
+[uzi_stock_wood_attributes]
+zoom_rotate_time = 0.06
+recoil_koeff = -0.24
+inertia_koeff = 0.7
+weapon_lenght = 0.2
+[uzi_stock_wood_att]:ak_stock_att
+weapon_lenght = 0.2
+
+[uzi_stock_frame]:uzi_stock_fold
+kind  =  uzi
+inv_ui_sign				= uzi_stk_fr
+visual						= w_att_huds\uzi_stock_frame	
+inv_name					= uzi_stock_frame
+inv_name_short			= uzi_stock_frameS
+cost							= 2000
+inv_weight					= 0.37
+inv_grid_x         			= 25
+attachment_slots		= cheek|wpn_body|0,0,-0.0577|0,0,0
+override_section = uzi_stock_frame_attributes
+
+[uzi_stock_frame_attributes]
+weapon_lenght = 0.2
+zoom_rotate_time = 0.01
+recoil_koeff = -0.17
+inertia_koeff = 0.8
+
+[uzi_stock_mini]:uzi_stock_fold
+kind  =  uzi
+inv_ui_sign				= uzi_stk_m
+visual						= w_att_huds\uzi_stock_mini	
+inv_name					= uzi_stock_mini
+inv_name_short			= uzi_stock_mini
+cost							= 1200
+inv_weight					= 0.15
+inv_grid_x         			= 27
+attachment_slots		= ak_stock_pad|wpn_body|0,-0.02,-0.07|0,0,0
+override_section			=	uzi_stock_mini_attributes
+
+[uzi_stock_mini_attributes]
+zoom_rotate_time = 0.02
+recoil_koeff = -0.18
+inertia_koeff = 0.9
+weapon_lenght = 0.2
+
+[uzi_stock_buffer]:uzi_stock_fold
+kind  =  uzi
+inv_ui_sign				= uzi_sbuff
+visual						= w_att_huds\uzi_stock_buffer	
+inv_name					= uzi_stock_buffer
+inv_name_short			= uzi_stock_bufferS
+cost							= 1100
+inv_weight					= 0.14
+inv_grid_x         			= 29
+attachment_slots		= ar_stock|wpn_body|0,-0.01169,-0.1078|0,0,0
+override_section 		= uzi_stock_buffer_attributes
+
+[uzi_stock_buffer_attributes]
+weapon_lenght = 0.15
+zoom_rotate_time = 0.01
+
+[uzi_hg]:attachment_base
+kind  =  uzi
+inv_ui_sign				= uzi_hg
+visual						= w_att_huds\uzi_hg	
+inv_name					= uzi_hg
+inv_name_short			= uzi_hg
+cost							= 650
+inv_weight					= 0.07
+inv_grid_x					= 24
+inv_grid_y					= 34
+attachment_point		=	uzi_hg|0,0,0|0,0,0
+item_tags =	rail
+override_section			= uzi_hg_attributes
+
+[uzi_hg_attributes]
+animation_prefix = c_
+impair_koeff = 0.9
+[uzi_hg_att]:c_attributes,hg_3_att
+impair_koeff = 0.9
+
+[uzi_hg_pica]:uzi_hg
+kind  =  uzi
+inv_ui_sign				= uzi_hg_pica
+visual						= w_att_huds\uzi_hg_pica		
+description				= pistol_gripSD
+inv_name					= uzi_hg_pica		
+inv_name_short			= uzi_hg_picaS
+cost							= 1100
+inv_weight					= 0.09	
+inv_grid_x					= 25			
+attachment_slots = pica_3|wpn_body|-0.0204,0.0392,0.141|0,0,-90#pica_3|wpn_body|0.0204,0.0392,0.141|0,0,90#picgrp|wpn_body|0,-0.0169,-0.09|0,0,0
+override_section = uzi_hg_pica_attributes
+
+[uzi_hg_pica_attributes]
+animation_prefix = c_
+[uzi_hg_pica_att]:c_attributes,hg_6_att
+
+[uzi_hg_up]:uzi_hg
+kind  =  uzi
+inv_ui_sign = uzi_hg_up
+visual = w_att_huds\uzi_hg_up	
+inv_name = uzi_hg_up		
+inv_name_short = uzi_hg_upS
+cost = 800
+inv_weight = 0.06
+inv_grid_x = 26
+attachment_slots = picgrp|wpn_body|0,-0.0169,-0.12|0,0,0
+override_section = uzi_hg_up_attributes
+
+[uzi_hg_up_attributes]
+animation_prefix = c_
+impair_koeff = 0.9
+
+[mag_wpn_uzi_9x19_fmj]:mag_wpn_base,wg_wpn_uzi,ag_ammo_9x19_fmj
+inv_ui_sign					= uzi_20
+visual							= w_att_huds\uzi_mag_20
+inv_name						= uzi_mag_20
+inv_name_short				= uzi_mag_20
+inv_grid_x						= 33
+inv_grid_y						= 34
+inv_weight						= 0.06
+cost								= 300
+max_mag_size				= 20
+mag_size						= small
+override_section				= mag_wpn_uzi_9x19_fmj_attributes
+
+[mag_wpn_uzi_9x19_fmj_attributes]
+animation_prefix_mag = 20_
+[uzi_mag_20_attributes]
+animation_prefix_mag	=	20_
+
+[mag_wpn_uzi_25_9x19_fmj]:mag_wpn_uzi_9x19_fmj
+inv_ui_sign					= uzi_25
+visual							= w_att_huds\uzi_mag_25
+inv_name						= uzi_mag_25
+inv_name_short				= uzi_mag_25
+inv_grid_y						= 35
+inv_weight						= 0.08
+cost								= 350
+max_mag_size				= 25
+override_section				= mag_wpn_uzi_25_9x19_fmj_attributes
+
+[mag_wpn_uzi_25_9x19_fmj_attributes]
+animation_prefix_mag = 30_
+
+[mag_wpn_uzi_32_9x19_fmj]:mag_wpn_uzi_9x19_fmj
+inv_ui_sign					= uzi_32
+visual							= w_att_huds\uzi_mag_32
+inv_name						= uzi_mag_32
+inv_name_short				= uzi_mag_32
+inv_grid_height				= 2
+inv_grid_x						= 34
+inv_weight						= 0.1
+cost								= 400
+max_mag_size				= 32
+override_section				= mag_wpn_uzi_32_9x19_fmj_attributes
+
+[mag_wpn_uzi_32_9x19_fmj_attributes]
+animation_prefix_mag = 30_
+[mag_wpn_ar9_9x19_fmj]:mag_wpn_uzi_32_9x19_fmj
+
+[mag_wpn_uzi_40_9x19_fmj]:mag_wpn_uzi_32_9x19_fmj
+inv_ui_sign					= uzi_40
+visual							= w_att_huds\uzi_mag_40
+inv_name						= uzi_mag_40
+inv_name_short				= uzi_mag_40
+inv_grid_x						= 35
+inv_weight						= 0.12
+cost								= 450
+max_mag_size				= 40
+mag_size						= medium
+override_section = mag_wpn_uzi_40_9x19_fmj_attributes
+
+[mag_wpn_uzi_40_9x19_fmj_attributes]
+animation_prefix_mag = 30_
+
+[mag_wpn_uzi_75_9x19_fmj]:mag_wpn_uzi_32_9x19_fmj
+inv_ui_sign					= uzi_75
+visual							= w_att_huds\uzi_mag_75
+inv_name						= uzi_mag_75
+inv_name_short				= uzi_mag_75S
+inv_grid_x						= 36
+inv_weight						= 1.11
+cost								= 1400
+max_mag_size				= 75
+mag_size						= large
+override_section				= mag_wpn_uzi_75_9x19_fmj_attributes
+
+[mag_wpn_uzi_75_9x19_fmj_attributes]
+animation_prefix_mag = 75_

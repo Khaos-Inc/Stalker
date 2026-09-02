@@ -1,0 +1,5 @@
+local baseUICPII = utils_ui.UICellProperties_item.__init
+utils_ui.UICellProperties_item.__init = function(self)
+    baseUICPII(self)
+    self.textControl:SetTextComplexMode(true)
+end

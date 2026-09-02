@@ -1,0 +1,62 @@
+[wpn_python]:wpn_kobalt,wpn_python_sounds
+use_detachable_magazines = false
+GroupControlSection				= spawn_group
+$spawn                      				= "weapons\Desert Eagle"
+inv_grid_width     					= 3
+inv_grid_height    					= 2
+inv_grid_x         						= 12
+inv_grid_y         						= 7
+inv_name                    				= wpn_python
+inv_name_short              			= wpn_pythonS
+description                 				= wpn_python_descr
+max_radius								= 300
+ph_mass                     				= 2
+npc_rpm  = 450
+inv_weight               				= 0.5
+cost                        					= 29000
+ammo_class								= ammo_357_hp_mag, ammo_357_hp_mag_bad, ammo_357_hp_mag_verybad, ammo_357_fmj_mag, ammo_357_fmj_mag_bad
+attachment_slots						=	slot_magazin|magazin|0,0,0|0,0,0#python_barrel|wpn_body|0,0,0|0,0,0#python_grip|wpn_body|0,0,0|0,0,0
+aimpoint_offset_y					= 0.060948
+ui_render_cam_offset				 = 0.28, -0.12, 1.16
+visual                      					= w_att_huds\python.ogf
+hud                         					= wpn_python_hud
+[wpn_python_hud]:hud_base
+
+weapon_recoil_vert         = 3.83
+weapon_recoil_vert_inc     = 0.383
+weapon_recoil_horz         = 2.80
+weapon_recoil_ret_speed    = 5.0
+
+
+item_visual                 				= w_att_huds\python_hud.ogf
+hands_position						= 0.06, -0.06, -0.05
+hands_position_16x9				= 0.06, -0.06, -0.05
+hands_orientation					= 0.3, 0.5, 0
+hands_orientation_16x9			= 0.3, 0.5, 0
+aim_hud_offset_pos				= -0.0601, 0.023, -0.05
+aim_hud_offset_pos_16x9		= -0.0601, 0.023, -0.05
+aim_hud_offset_rot					= 0.012, 0.0062, 0
+aim_hud_offset_rot_16x9		= 0.012, 0.0062, 0
+
+anm_bore                              		= rev_g_bore, idle
+anm_hide									= rev_g_holster, idle, 1.11
+anm_show									= rev_g_show, idle, 1.11
+anm_idle										= rev_g_idle, idle
+anm_idle_aim								= rev_g_idle_aim, idle
+anm_idle_aim_moving				= rev_g_walk_aim, idle
+anm_idle_aim_moving_crouch	= rev_g_walk_aim, idle
+anm_idle_moving						= rev_g_walk, idle
+anm_idle_moving_crouch			= rev_g_walk, idle
+anm_open									= rev_g_reload_open, open
+anm_open_empty						= rev_g_reload_open_empty, open_empty
+anm_add_cartridge						= rev_g_reload_add, add, 0.8
+anm_close									= rev_g_reload_close, close, 1.4	;1.33
+anm_shots									= rev_g_shoot, shoot
+anm_reload_misfire						= rev_g_unjam, unjam
+anm_idle_sprint							= glock_m_idle_sprint, idle
+shell_bone									= wpn_body
+
+shooting_backward_offset		= 0.04,0.03		;0.02,0.015
+shooting_ret_speed					= 15
+shooting_ret_aim_speed			= 20
+shooting_min_LRUD_power	= 0.01

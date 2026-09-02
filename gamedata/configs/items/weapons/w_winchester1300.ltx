@@ -1,0 +1,96 @@
+[wpn_wincheaster1300]:wpn_remington870,wpn_wincheaster1300_sounds
+use_detachable_magazines = false
+inv_grid_y					= 57
+inv_name						= wpn_wincheaster1300
+inv_name_short			= wpn_wincheaster1300
+description					= wpn_wincheaster1300_descr
+inv_weight					= 1.55
+cost								= 25000
+attachment_slots			= slot_magazin|magazin|0,0,0|0,0,0#1300_zatvor|zatvor|0,0,0|0,0,0#1300_sight|wpn_body|0,0,0|0,0,0#1300_stock|wpn_body|0,0,0|0,0,0
+aimpoint_offset_y 		= 0.067735
+ui_render_cam_offset	= 0.34, -0.11, 1.3
+weapon_lenght			= 0.55
+visual							= w_att_huds\1300.ogf
+hud								= wpn_1300_hud
+
+[wpn_1300_hud]:wpn_870_hud
+
+weapon_recoil_vert         = 3.97
+weapon_recoil_vert_inc     = 1.98
+weapon_recoil_horz         = 5.22
+weapon_recoil_ret_speed    = 2
+
+
+item_visual                	 					= w_att_huds\1300_hud.ogf
+;aim_hud_offset_pos						= -0.06, 0.041, -0.07
+;aim_hud_offset_pos_16x9				= -0.06, 0.041, -0.07
+;aim_hud_offset_rot							= -0.001, 0.0063, 0
+;aim_hud_offset_rot_16x9				= -0.001, 0.0063, 0
+
+aim_hud_offset_pos						= -0.08, 0.041, -0.1
+aim_hud_offset_pos_16x9				= -0.08, 0.041, -0.1
+aim_hud_offset_rot							= -0.001, 0.0063, 0
+aim_hud_offset_rot_16x9				= -0.001, 0.0063, 0
+
+anm_bore                              			= 1300_cs_bore, idle
+anm_hide										= 1300_cs_holster, idle
+anm_show										= 1300_cs_show, idle
+anm_idle											= 1300_cs_idle, idle
+anm_idle_aim									= 1300_cs_idle_aim, idle
+anm_idle_aim_moving					= 1300_cs_walk_aim, idle
+anm_idle_aim_moving_crouch		= 1300_cs_walk_aim, idle
+anm_idle_moving							= 1300_cs_walk, idle, 0.85
+anm_idle_moving_crouch				= 1300_cs_walk, idle, 0.7
+anm_open_empty							= 1300_cs_reload_open_e, open
+anm_open										= 1300_cs_reload_open, open
+anm_add_cartridge							= 1300_cs_reload_add, add
+anm_add_cartridge_empty				= 1300_cs_reload_add_e, add_empty
+anm_close										= 1300_cs_reload_close, close
+anm_shots										= 1300_cs_shoot, shoot
+anm_reload_misfire							= 1300_cs_unjam, unjam
+anm_idle_sprint								= 1300_cs_idle_sprint, idle
+cg_anm_bore                              			= 1300_cg_bore, idle
+cg_anm_hide										= 1300_cg_holster, idle
+cg_anm_show										= 1300_cg_show, idle
+cg_anm_idle										= 1300_cg_idle, idle
+cg_anm_idle_aim									= 1300_cg_idle_aim, idle
+cg_anm_idle_aim_moving					= 1300_cg_walk_aim, idle
+cg_anm_idle_aim_moving_crouch		= 1300_cg_walk_aim, idle
+cg_anm_idle_moving							= 1300_cg_walk, idle, 0.85
+cg_anm_idle_moving_crouch				= 1300_cg_walk, idle, 0.7
+cg_anm_open										= 1300_cg_reload_open, open
+cg_anm_open_empty							= 1300_cg_reload_open_e, open
+cg_anm_add_cartridge_empty			= 1300_cg_reload_add_e, add_empty
+cg_anm_close										= 1300_cg_reload_close, close
+cg_anm_shots										= 1300_cg_shoot, shoot
+cg_anm_reload_misfire						= 1300_cg_unjam, unjam
+cg_anm_idle_sprint								= 1300_cg_idle_sprint, idle
+c_anm_bore												= 1300_c_bore, idle
+c_anm_hide												= 1300_c_holster, idle
+c_anm_show											= 1300_c_show, idle
+c_anm_idle												= 1300_c_idle, idle
+c_anm_idle_aim										= 1300_c_idle_aim, idle
+c_anm_idle_aim_moving							= 1300_c_walk_aim, idle
+c_anm_idle_aim_moving_crouch				= 1300_c_walk_aim, idle
+c_anm_idle_moving									= 1300_c_walk, idle, 0.85
+c_anm_idle_moving_crouch					= 1300_c_walk, idle, 0.7
+c_anm_open_empty								= 1300_c_reload_open, open
+c_anm_open											= 1300_c_reload_open, open
+c_anm_add_cartridge								= 1300_c_reload_add, add
+c_anm_add_cartridge_empty					= 1300_c_reload_add_e, add_empty
+c_anm_close											= 1300_c_reload_close, close
+c_anm_shots											= 1300_c_shoot, shoot
+c_anm_reload_misfire								= 1300_c_unjam, unjam
+c_anm_idle_sprint									= 1300_c_idle_sprint, idle
+t_anm_add_cartridge_empty				= 1300_t_reload_add_e, add_empty
+t_anm_shots										= 1300_t_shoot, shoot
+t_anm_reload_misfire							= 1300_t_unjam, unjam
+r_anm_add_cartridge_empty					= 1300_r_reload_add_e, add_empty
+r_anm_shots											= 1300_r_shoot, shoot
+r_anm_reload_misfire								= 1300_r_unjam, unjam
+v_anm_add_cartridge_empty				= 1300_v_reload_add_e, add_empty
+v_anm_shots										= 1300_v_shoot, shoot
+v_anm_reload_misfire							= 1300_v_unjam, unjam
+h_anm_add_cartridge_empty					= 1300_h_reload_add_e, add_empty
+h_anm_shots											= 1300_h_shoot, shoot
+h_anm_reload_misfire								= 1300_h_unjam, unjam

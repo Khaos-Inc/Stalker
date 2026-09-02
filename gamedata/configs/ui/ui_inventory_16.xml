@@ -1,8 +1,4 @@
 <w>
-	 <trade_bg x="0" y="0" width="1025" height="768" stretch="1">
-			<texture>ui_inGame2_modern_trade_bg</texture>
-	</trade_bg>
-
 	<!-- Right side -->
 	<player x="648" y="0" width="377" height="768" stretch="1">
 		<background x="0" y="0" width="377" height="768" stretch="1">
@@ -10,27 +6,19 @@
 		</background>
 		
 		<!-- item containers -->
-		<cont_bag x="14" y="119" width="346" height="610" stretch="1"/>
+		<cont_bag x="14" y="119" width="346" height="575" stretch="1"/>
 		<cont_trade x="14" y="114" width="346" height="164" stretch="1"/>
-		<cont_trade_bag x="14" y="337" width="346" height="390" stretch="1"/>
+		<cont_trade_bag x="14" y="340" width="346" height="369" stretch="1"/>
 		
 		<!-- info -->
-		<icon x="269" y="15" width="99" height="86" stretch="1"/>
-		<community_overlay x="216" y="14" width="153" height="89" stretch="1" />
-		<community_icon x="110" y="28" width="25" height="32" stretch="1" />
-		
-		<rank x="17" y="55" width="217" height="14">
-			<text align="l" font="letterica16" color="ui_3"/>
-		</rank>
-		<rank_icon x="182" y="24" width="37" height="47" stretch="1"/>
-		
 		<name x="17" y="28" width="217" height="16">
-			<text align="l" font="letterica18" color="ui_white"/>
+			<text align="l" font="letterica18" color="ui_2"/>
 		</name>
 		<community x="17" y="46" width="217" height="14">
 			<text align="l" font="letterica16" color="ui_3"/>
 		</community>
-		<money x="137" y="80" width="104" height="22">
+		<icon x="269" y="16" width="99" height="87" stretch="1"/>
+		<money x="140" y="80" width="104" height="22">
 			<text align="r" font="graffiti22"/>
 		</money>
 		
@@ -52,32 +40,33 @@
 			<text font="graffiti22" align="c">ui_st_put_all</text>
 			<text_color>
 				<e color ="ui_6"/>
-				<t color ="ui_white"/>
+				<t color ="ui_black"/>
 				<d color ="ui_5"/>
-				<h color ="ui_white"/>
+				<h color ="ui_black"/>
 			</text_color>
 		</putall_button>
 	
 		<!-- trade info -->
 		<trade_delimiter x="0" y="226" width="375" height="163" stretch="1">
 			<texture>ui_inGame2_center_trade_devider_16</texture>
-			<trade_caption x="118" y="85" width="48" height="16">
-				<text align="r" font="letterica18" color="ui_3">ui_total_price</text>
+			<trade_caption x="118" y="82" width="48" height="16">
+				<text align="r" font="letterica16" color="ui_3">ui_total_price</text>
 			</trade_caption>
-			<trade_price x="186" y="85" width="40" height="16">
-				<text align="l" font="letterica18"/>
+			<trade_price x="186" y="82" width="40" height="16">
+				<text align="l" font="letterica16"/>
 			</trade_price>
 			<trade_weight_max x="206" y="82" width="40" height="16">
 				<text align="l" font="letterica16" color="ui_3"/>
 			</trade_weight_max>
-			<trade_sell_button x="11" y="61" width="107" height="26" stretch="1" hint="ui_st_sell_hint">
+			<trade_sell_button x="11" y="58" width="107" height="26" stretch="1" hint="ui_st_sell_hint">
 				<window_name>trade_sell_button</window_name>
+				<texture>ui_inGame2_inventory_button</texture>
 				<text font="graffiti22" align="c">ui_st_sell</text>
 				<text_color>
 					<e color ="ui_6"/>
-					<t color ="ui_white"/>
+					<t color ="ui_black"/>
 					<d color ="ui_5"/>
-					<h color ="ui_white"/>
+					<h color ="ui_black"/>
 				</text_color>
 			</trade_sell_button>
 		</trade_delimiter>
@@ -151,11 +140,6 @@
 				<highlight stretch="1">
 					<texture>ui_inGame2_detector_highlighter</texture>
 				</highlight>
-				<bar x="16" y="49" width="48" height="6" horz="1" min="0" max="1" pos="0" stretch="1">
-					<progress stretch="1">
-						<texture r="142" g="149" b="149">ui_inGame2_inventory_status_bar</texture>
-					</progress>
-				</bar>
 			</cell_5>
 			
 			<cell_6 x="10" y="323" width="33" height="41" stretch="1"><!--6 Bolt -->
@@ -366,78 +350,62 @@
 		</cont_picker>
 		
 		<!-- Sorter -->
-		<sorter x="20" y="735" width="244" height="29">
-			<btn_1 x="0" y="0" width="23" height="29" hint="ui_st_tab_all" stretch="1">
+		<sorter x="20" y="735" width="230" height="29">
+			<btn_1 x="0" y="0" width="28" height="29" hint="ui_st_tab_all" stretch="1">
 				<texture>ui_inGame2_btn_sort_all</texture>
 			</btn_1>
-			<txt_1 x="0" y="0" width="20" height="25" stretch="1">
+			<txt_1 x="0" y="0" width="25" height="25" stretch="1">
 				<text complex_mode="1" font="letterica18" align="r" vert_align="b" a="100" r="150" g="150" b="255"/>
 			</txt_1>
 			
-			<btn_2 x="23" y="0" width="23" height="29" hint="ui_st_tab_weapons" stretch="1">
+			<btn_2 x="29" y="0" width="28" height="29" hint="ui_st_tab_weapons" stretch="1">
 				<texture>ui_inGame2_btn_sort_weapon</texture>
 			</btn_2>
-			<txt_2 x="23" y="0" width="20" height="25" stretch="1">
+			<txt_2 x="29" y="0" width="25" height="25" stretch="1">
 				<text complex_mode="1" font="letterica18" align="r" vert_align="b" a="100" r="150" g="150" b="255"/>
 			</txt_2>
 			
-			<btn_3 x="46" y="0" width="23" height="29" hint="ui_st_tab_armor" stretch="1">
+			<btn_3 x="58" y="0" width="28" height="29" hint="ui_st_tab_armor" stretch="1">
 				<texture>ui_inGame2_btn_sort_outfit</texture>
 			</btn_3>
-			<txt_3 x="46" y="0" width="20" height="25" stretch="1">
+			<txt_3 x="58" y="0" width="25" height="25" stretch="1">
 				<text complex_mode="1" font="letterica18" align="r" vert_align="b" a="100" r="150" g="150" b="255"/>
 			</txt_3>
 			
-			<btn_4 x="69" y="0" width="23" height="29" hint="ui_st_tab_ammo" stretch="1">
+			<btn_4 x="87" y="0" width="28" height="29" hint="ui_st_tab_ammo" stretch="1">
 				<texture>ui_inGame2_btn_sort_ammo</texture>
 			</btn_4>
-			<txt_4 x="69" y="0" width="20" height="25" stretch="1">
+			<txt_4 x="87" y="0" width="25" height="25" stretch="1">
 				<text complex_mode="1" font="letterica18" align="r" vert_align="b" a="100" r="150" g="150" b="255"/>
 			</txt_4>
 			
-			<btn_5 x="92" y="0" width="23" height="29" hint="ui_st_tab_artefact" stretch="1">
+			<btn_5 x="116" y="0" width="28" height="29" hint="ui_st_tab_artefact" stretch="1">
 				<texture>ui_inGame2_btn_sort_arty</texture>
 			</btn_5>
-			<txt_5 x="92" y="0" width="20" height="25" stretch="1">
+			<txt_5 x="116" y="0" width="25" height="25" stretch="1">
 				<text complex_mode="1" font="letterica18" align="r" vert_align="b" a="100" r="150" g="150" b="255"/>
 			</txt_5>
 			
-			<btn_6 x="115" y="0" width="23" height="29" hint="ui_st_tab_tools" stretch="1">
+			<btn_6 x="145" y="0" width="28" height="29" hint="ui_st_tab_tools" stretch="1">
 				<texture>ui_inGame2_btn_sort_utility</texture>
 			</btn_6>
-			<txt_6 x="115" y="0" width="20" height="25" stretch="1">
+			<txt_6 x="145" y="0" width="25" height="25" stretch="1">
 				<text complex_mode="1" font="letterica18" align="r" vert_align="b" a="100" r="150" g="150" b="255"/>
 			</txt_6>
 			
-			<btn_7 x="138" y="0" width="23" height="29" hint="ui_st_tab_food" stretch="1">
-				<texture>ui_inGame2_btn_sort_food</texture>
+			<btn_7 x="174" y="0" width="28" height="29" hint="ui_st_tab_consumables" stretch="1">
+				<texture>ui_inGame2_btn_sort_consumable</texture>
 			</btn_7>
-			<txt_7 x="138" y="0" width="20" height="25" stretch="1">
+			<txt_7 x="174" y="0" width="25" height="25" stretch="1">
 				<text complex_mode="1" font="letterica18" align="r" vert_align="b" a="100" r="150" g="150" b="255"/>
 			</txt_7>
 			
-			<btn_8 x="161" y="0" width="23" height="29" hint="ui_st_tab_meds" stretch="1">
-				<texture>ui_inGame2_btn_sort_meds</texture>
+			<btn_8 x="203" y="0" width="28" height="29" hint="ui_st_tab_misc" stretch="1">
+				<texture>ui_inGame2_btn_sort_misc</texture>
 			</btn_8>
-			<txt_8 x="166" y="0" width="20" height="25" stretch="1">
+			<txt_8 x="203" y="0" width="25" height="25" stretch="1">
 				<text complex_mode="1" font="letterica18" align="r" vert_align="b" a="100" r="150" g="150" b="255"/>
 			</txt_8>
-			
-			<btn_9 x="184" y="0" width="23" height="29" hint="ui_st_tab_upgrades" stretch="1">
-				<texture>ui_inGame2_btn_sort_upgrades</texture>
-			</btn_9>
-			<txt_9 x="187" y="0" width="20" height="25" stretch="1">
-				<text complex_mode="1" font="letterica18" align="r" vert_align="b" a="100" r="150" g="150" b="255"/>
-			</txt_9>
-			
-			<btn_10 x="207" y="0" width="23" height="29" hint="ui_st_tab_misc" stretch="1">
-				<texture>ui_inGame2_btn_sort_misc</texture>
-			</btn_10>
-			<txt_10 x="210" y="0" width="20" height="25" stretch="1">
-				<text complex_mode="1" font="letterica18" align="r" vert_align="b" a="100" r="150" g="150" b="255"/>
-			</txt_10>
-					
-			
 		</sorter>
 			
 		<!-- Status -->
@@ -451,273 +419,82 @@
 				</text>
 			</hint_wnd>
 	
-			<icon x="-3" y="-3">
+			<icon x="-3" y="-5">
 				<normal width="22" height="28" stretch="1"/>
 				<active width="22" height="28" stretch="1" light_anim="ui_slow_blinking_alpha"/>
 			</icon>
 				
-			<health_sensor x="12" y="42" width="80" height="18">
-				<state_progress x="0" y="1" width="70" height="18" horz="1" min="0" max="1" pos="0">
+			<health_sensor x="12" y="42" width="225" height="18">
+				<state_progress x="19" y="0" width="225" height="18" horz="1" min="0" max="1" pos="0">
+					<progress stretch="1">
+						<texture r="100" g="100" b="100">ui_inGame2_inventory_health_bar</texture>
+					</progress>
 				</state_progress>
-				
-				<stats x="20" y="2" width="80" height="18">
-					<text align="l" font="graffiti22"> </text>
-				</stats>
-				<stats_bonus x="0" y="2" width="80" height="18">
-					<text align="l" font="graffiti22"> </text> <!-- No such stat! -->
-				</stats_bonus>
-				<stats_bonus_regen x="90" y="2" width="20" height="18">
-					<text align="r" font="graffiti22"> </text>
-				</stats_bonus_regen>
 			</health_sensor>
-			
-			
-			<power_sensor x="76" y="42" width="80" height="18">
-				<state_progress x="0" y="1" width="70" height="18" horz="1" min="0" max="1" pos="0">
-				</state_progress>
-				
-				<stats x="20" y="2" width="80" height="18">
-					<text align="l" font="graffiti22"> </text>
-				</stats>
-				<stats_bonus x="43" y="2" width="80" height="18">
-					<text align="l" font="graffiti22"> </text>
-				</stats_bonus>
-				<stats_bonus_regen x="5" y="2" width="20" height="18">
-					<text align="r" font="graffiti22"> </text>
-				</stats_bonus_regen>
-			</power_sensor>
-
-			<thirst_sensor x="140" y="42" width="80" height="18">
-				<state_progress x="0" y="1" width="70" height="18" horz="1" min="0" max="1" pos="0">
-				</state_progress>
-				
-				<stats x="20" y="2" width="80" height="18">
-					<text align="l" font="graffiti22"> </text>
-				</stats>
-				<stats_bonus x="43" y="2" width="80" height="18">
-					<text align="l" font="graffiti22"> </text>
-				</stats_bonus>
-				<stats_bonus_regen x="5" y="2" width="20" height="18">
-					<text align="r" font="graffiti22"> </text>
-				</stats_bonus_regen>
-			</thirst_sensor>
-			
-			<sleep_sensor x="206" y="42" width="80" height="18">
-				<state_progress x="0" y="1" width="70" height="18" horz="1" min="0" max="1" pos="0">
-				</state_progress>
-				
-				<stats x="20" y="2" width="80" height="18">
-					<text align="l" font="graffiti22"> </text>
-				</stats>
-				<stats_bonus x="43" y="2" width="80" height="18">
-					<text align="l" font="graffiti22"> </text>
-				</stats_bonus>
-				<stats_bonus_regen x="5" y="2" width="20" height="18">
-					<text align="r" font="graffiti22"> </text>
-				</stats_bonus_regen>				
-			</sleep_sensor>
 	
-			<radia_sensor x="12" y="72" width="80" height="18">
-				<state_progress x="0" y="1" width="70" height="18" horz="1" min="0" max="1" pos="0">
+			<radia_sensor x="12" y="72" width="116" height="18">
+				<state_progress x="19" y="1" width="98" height="18" horz="1" min="0" max="1" pos="0">
 					<progress stretch="1">
 						<texture r="100" g="100" b="100">ui_inGame2_inventory_progress_bar</texture>
 					</progress>
 				</state_progress>
-				
-				<stats x="20" y="2" width="80" height="18">
-					<text align="l" font="graffiti22"> </text>
-				</stats>
-				<stats_bonus x="43" y="2" width="80" height="18">
-					<text align="l" font="graffiti22"> </text>
-				</stats_bonus>
-				<stats_bonus_regen x="5" y="2" width="80" height="18">
-					<text align="r" font="graffiti22"> </text>
-				</stats_bonus_regen>
-				
 			</radia_sensor>
 	
-			<acid_sensor x="12" y="100" width="80" height="18">
-				<state_progress x="0" y="1" width="70" height="18" horz="1" min="0" max="1" pos="0">
+			<acid_sensor x="12" y="100" width="116" height="18">
+				<state_progress x="19" y="1" width="98" height="18" horz="1" min="0" max="1" pos="0">
 					<progress stretch="1">
 						<texture r="100" g="100" b="100">ui_inGame2_inventory_progress_bar</texture>
 					</progress>
 				</state_progress>
-				<stats x="20" y="2" width="80" height="18">
-					<text align="l" font="graffiti22"> </text>
-				</stats>
-				<stats_bonus x="43" y="2" width="80" height="18">
-					<text align="l" font="graffiti22" color="ui_3"> </text>
-				</stats_bonus>
-				<stats_bonus_regen x="5" y="2" width="80" height="18">
-					<text align="r" font="graffiti22" color="ui_3"> </text>
-				</stats_bonus_regen>
 			</acid_sensor>
 	
-			<shock_sensor x="12" y="128" width="80" height="18">
-				<state_progress x="0" y="1" width="70" height="18" horz="1" min="0" max="1" pos="0">
+			<shock_sensor x="12" y="128" width="116" height="18">
+				<state_progress x="19" y="1" width="98" height="18" horz="1" min="0" max="1" pos="0">
 					<progress stretch="1">
 						<texture r="100" g="100" b="100">ui_inGame2_inventory_progress_bar</texture>
 					</progress>
 				</state_progress>
-
-				<stats x="20" y="2" width="80" height="18">
-					<text align="l" font="graffiti22"> </text>
-				</stats>
-				<stats_bonus x="43" y="2" width="80" height="18">
-					<text align="l" font="graffiti22" color="ui_3"> </text>
-				</stats_bonus>
-				<stats_bonus_regen x="5" y="2" width="80" height="18">
-					<text align="r" font="graffiti22" color="ui_3"> </text>
-				</stats_bonus_regen>
 			</shock_sensor>
 	
-			<fire_sensor x="12" y="156" width="80" height="18">
-				<state_progress x="0" y="1" width="70" height="18" horz="1" min="0" max="1" pos="0">
+			<fire_sensor x="12" y="156" width="116" height="18">
+				<state_progress x="19" y="1" width="98" height="18" horz="1" min="0" max="1" pos="0">
 					<progress stretch="1">
 						<texture r="100" g="100" b="100">ui_inGame2_inventory_progress_bar</texture>
 					</progress>
 				</state_progress>
-				
-				<stats x="20" y="2" width="80" height="18">
-					<text align="l" font="graffiti22"> </text>
-				</stats>
-				<stats_bonus x="43" y="2" width="80" height="18">
-					<text align="l" font="graffiti22" color="ui_3"> </text>
-				</stats_bonus>
-				<stats_bonus_regen x="5" y="2" width="80" height="18">
-					<text align="r" font="graffiti22" color="ui_3"> </text>
-				</stats_bonus_regen>	
 			</fire_sensor>
 	
-			<psi_sensor x="100" y="72" width="80" height="18">
-				<state_progress x="0" y="1" width="70" height="18" horz="1" min="0" max="1" pos="0">
+			<psi_sensor x="139" y="72" width="116" height="18">
+				<state_progress x="19" y="1" width="98" height="18" horz="1" min="0" max="1" pos="0">
 					<progress stretch="1">
 						<texture r="100" g="100" b="100">ui_inGame2_inventory_progress_bar</texture>
 					</progress>
 				</state_progress>
-				
-				<stats x="20" y="2" width="80" height="18">
-					<text align="l" font="graffiti22"> </text>
-				</stats>
-				<stats_bonus x="43" y="2" width="80" height="18">
-					<text align="l" font="graffiti22" color="ui_3"> </text>
-				</stats_bonus>
-				<stats_bonus_regen x="5" y="2" width="80" height="18">
-					<text align="r" font="graffiti22" color="ui_3"> </text>
-				</stats_bonus_regen>
 			</psi_sensor>
 	
-			<wound_sensor x="100" y="128" width="80" height="18">
-				<state_progress x="0" y="1" width="70" height="18" horz="1" min="0" max="1" pos="0">
+			<wound_sensor x="139" y="100" width="116" height="18">
+				<state_progress x="19" y="1" width="98" height="18" horz="1" min="0" max="1" pos="0">
 					<progress stretch="1">
 						<texture r="100" g="100" b="100">ui_inGame2_inventory_progress_bar</texture>
 					</progress>
 				</state_progress>
-				
-				<stats x="20" y="2" width="80" height="18">
-					<text align="l" font="graffiti22"> </text>
-				</stats>
-				<stats_bonus x="43" y="2" width="80" height="18">
-					<text align="l" font="graffiti22" color="ui_3"> </text>
-				</stats_bonus>
-				<stats_bonus_regen x="5" y="2" width="80" height="18">
-					<text align="r" font="graffiti22" color="ui_3"> </text>
-				</stats_bonus_regen>
 			</wound_sensor>
-			
-			<strike_sensor x="100" y="100" width="80" height="18">
-				<state_progress x="0" y="1" width="70" height="18" horz="1" min="0" max="1" pos="0">
-					<progress stretch="1">
-						<texture r="100" g="100" b="100">ui_inGame2_inventory_progress_bar</texture>
-					</progress>
-				</state_progress>
-				
-				<stats x="20" y="2" width="80" height="18">
-					<text align="l" font="graffiti22"> </text>
-				</stats>
-				<stats_bonus x="43" y="2" width="80" height="18">
-					<text align="l" font="graffiti22" color="ui_3"> </text>
-				</stats_bonus>
-				<stats_bonus_regen x="5" y="2" width="80" height="18">
-					<text align="r" font="graffiti22" color="ui_3"> </text>
-				</stats_bonus_regen>
-			</strike_sensor>
-			
-			<explosion_sensor x="100" y="156" width="80" height="18">
-				<state_progress x="0" y="1" width="70" height="18" horz="1" min="0" max="1" pos="0">
-					<progress stretch="1">
-						<texture r="100" g="100" b="100">ui_inGame2_inventory_progress_bar</texture>
-					</progress>
-				</state_progress>
-				
-				<stats x="20" y="2" width="80" height="18">
-					<text align="l" font="graffiti22"> </text>
-				</stats>
-				<stats_bonus x="43" y="2" width="80" height="18">
-					<text align="l" font="graffiti22" color="ui_3"> </text>
-				</stats_bonus>
-				<stats_bonus_regen x="5" y="2" width="80" height="18">
-					<text align="r" font="graffiti22" color="ui_3"> </text>
-				</stats_bonus_regen>
-			</explosion_sensor>
 	
-			<fire_wound_sensor x="188" y="128" width="80" height="18">
-				<state_progress x="0" y="1" width="70" height="18" horz="1" min="0" max="1" pos="0">
+			<fire_wound_sensor x="139" y="128" width="116" height="18">
+				<state_progress x="19" y="1" width="98" height="18" horz="1" min="0" max="1" pos="0">
 					<progress stretch="1">
 						<texture r="100" g="100" b="100">ui_inGame2_inventory_progress_bar</texture>
 					</progress>
 				</state_progress>
-				
-				<stats x="20" y="-54" width="80" height="18">
-					<text align="l" font="graffiti22"> </text>
-				</stats>
-				<stats_bonus x="43" y="2" width="80" height="18">
-					<text align="l" font="graffiti22" color="ui_3"> </text>
-				</stats_bonus>
-				<stats_bonus2 x="43" y="-54" width="80" height="18">
-					<text align="l" font="graffiti22" color="ui_3"> </text>
-				</stats_bonus2>
-				<stats_bonus_regen x="20" y="2" width="80" height="18">
-					<text align="l" font="graffiti22"> </text>
-				</stats_bonus_regen>
 			</fire_wound_sensor>
-			
-			<br_class_sensor x="188" y="156" width="80" height="18">
-				<state_progress x="0" y="1" width="70" height="18" horz="1" min="0" max="1" pos="0">
+	
+			<power_sensor x="139" y="156" width="116" height="18">
+				<state_progress x="19" y="1" width="98" height="18" horz="1" min="0" max="15" pos="0">
 					<progress stretch="1">
 						<texture r="100" g="100" b="100">ui_inGame2_inventory_progress_bar</texture>
 					</progress>
 				</state_progress>
-				
-				<stats x="20" y="-54" width="80" height="18">
-					<text align="l" font="graffiti22"> </text>
-				</stats>
-				<stats_bonus x="20" y="2" width="80" height="18">
-					<text align="l" font="graffiti22"> </text>
-				</stats_bonus>
-				<stats_bonus_regen x="20" y="2" width="80" height="18">
-					<text align="l" font="graffiti22"> </text>
-				</stats_bonus_regen>
-			</br_class_sensor>
-			
-			<br_mitigation_sensor x="188" y="156" width="80" height="18">
-				<state_progress x="0" y="1" width="70" height="18" horz="1" min="0" max="1" pos="0">
-					<progress stretch="1">
-						<texture r="100" g="100" b="100">ui_inGame2_inventory_progress_bar</texture>
-					</progress>
-				</state_progress>
-				
-				<stats x="43" y="-54" width="80" height="18">
-					<text align="l" font="graffiti22"> </text>
-				</stats>
-				<stats_bonus x="43" y="2" width="80" height="18">
-					<text align="l" font="graffiti22"> </text>
-				</stats_bonus>
-				<stats_bonus_regen x="43" y="2" width="80" height="18">
-					<text align="l" font="graffiti22"> </text>
-				</stats_bonus_regen>
-			</br_mitigation_sensor>
-
+			</power_sensor>
 		</actor_state_info>
 	</equipment>
 	
@@ -730,22 +507,13 @@
 		<!-- item containers -->
 		<cont_bag x="14" y="119" width="346" height="575" stretch="1"/>
 		<cont_trade x="14" y="114" width="346" height="164" stretch="1"/>
-		<cont_trade_bag x="14" y="337" width="346" height="390" stretch="1"/>
+		<cont_trade_bag x="14" y="340" width="346" height="369" stretch="1"/>
 		
 		<trash x="0" y="0" width="375" height="768" stretch="1"/>
 		
 		<!-- info -->
-		<icon x="269" y="15" width="99" height="86" stretch="1"/>
-		<community_overlay x="216" y="14" width="153" height="89" stretch="1" />
-		<community_icon x="-9999" y="28" width="25" height="32" stretch="1" />
-		
-		<rank x="17" y="55" width="217" height="14">
-			<text align="l" font="letterica16" color="ui_3"/>
-		</rank>
-		<rank_icon x="182" y="24" width="37" height="47" stretch="1"/>
-		
 		<name x="17" y="28" width="217" height="16">
-			<text align="l" font="letterica18" color="ui_white"/>
+			<text align="l" font="letterica18" color="ui_2"/>
 		</name>
 		<community x="17" y="46" width="217" height="14">
 			<text align="l" font="letterica16" color="ui_3"/>
@@ -769,69 +537,62 @@
 		<!-- take all -->
 		<takeall_button x="11" y="736" width="140" height="24" stretch="1" hint="ui_st_take_all_hint">
 			<window_name>takeall_button</window_name>
-			<text font="graffiti22" align="c" y = "3">ui_st_take_all</text>
+			<texture>ui_inGame2_big_inventory_button</texture>
+			<text font="graffiti22" align="c">ui_st_take_all</text>
 			<text_color>
 				<e color ="ui_6"/>
-				<t color ="ui_white"/>
+				<t color ="ui_black"/>
 				<d color ="ui_5"/>
-				<h color ="ui_white"/>
+				<h color ="ui_black"/>
 			</text_color>
 		</takeall_button>
 	
 		<!-- trade info -->
 		<trade_delimiter x="0" y="226" width="375" height="163" stretch="1">
 			<texture>ui_inGame2_center_trade_devider_16</texture>
-			<trade_caption x="118" y="85" width="48" height="16">
-				<text align="r" font="letterica18" color="ui_3">ui_total_price</text>
+			<trade_caption x="118" y="82" width="48" height="16">
+				<text align="r" font="letterica16" color="ui_3">ui_total_price</text>
 			</trade_caption>
-			<trade_price x="186" y="85" width="40" height="16">
-				<text align="l" font="letterica18"/>
+			<trade_price x="186" y="82" width="40" height="16">
+				<text align="l" font="letterica16"/>
 			</trade_price>
 			<trade_weight_max x="206" y="82" width="40" height="16">
 				<text align="l" font="letterica16" color="ui_3"/>
 			</trade_weight_max>
-			<trade_buy_button x="11" y="61" width="107" height="26" stretch="1" hint="ui_st_buy_hint">
+			<trade_buy_button x="11" y="58" width="107" height="26" stretch="1" hint="ui_st_buy_hint">
 				<window_name>trade_buy_button</window_name>
+				<texture>ui_inGame2_inventory_button</texture>
 				<text font="graffiti22" align="c">ui_st_buy</text>
 				<text_color>
 					<e color ="ui_6"/>
-					<t color ="ui_white"/>
+					<t color ="ui_black"/>
 					<d color ="ui_5"/>
-					<h color ="ui_white"/>
+					<h color ="ui_black"/>
 				</text_color>
 			</trade_buy_button>
 		</trade_delimiter>
 	</npc>
 
 	<!-- Left Side - Upgrade mode -->
-
 	<upgrade x="0" y="0" width="375" height="768">
-	    <background x="5" y="0" width="375" height="768" stretch="1">
+	    <background x="0" y="0" width="375" height="768" stretch="1">
 		    <texture>ui_inGame2_repair_panel_16</texture>
 	    </background>
 		
 		<!-- info -->
-		<icon x="269" y="15" width="99" height="87" stretch="1"/>
-		<community_overlay x="216" y="14" width="153" height="89" stretch="1" />
-		<community_icon x="-9999" y="28" width="25" height="32" stretch="1" />
-		
-		<rank x="220" y="55" width="217" height="14">
-			<text align="l" font="letterica16" color="ui_3"/>
-		</rank>
-		<rank_icon x="182" y="24" width="37" height="47" stretch="1"/>
-		
 		<name x="17" y="28" width="217" height="16">
-			<text align="l" font="letterica18" color="ui_white"/>
+			<text align="l" font="letterica18" color="ui_2"/>
 		</name>
 		<community x="17" y="46" width="217" height="14">
 			<text align="l" font="letterica16" color="ui_3"/>
 		</community>
+		<icon x="269" y="16" width="99" height="87" stretch="1"/>
 		<money x="140" y="80" width="104" height="22">
 			<text align="r" font="graffiti22"/>
 		</money>
 		
 		<!-- upgrade window -->
-		<repair_button x="232" y="115" width="74" height="33" hint="ui_repair_button_hint" stretch="1">
+		<repair_button x="228" y="115" width="68" height="29" hint="ui_repair_button_hint" stretch="1">
 			<texture>ui_inGame2_repair_button</texture>
 		</repair_button>
 		<scheme x="67" y="291" width="232" height="453" right_ident="0" left_ident="0" top_indent ="0" bottom_indent="0" vert_interval="0" always_show_scroll="0" scroll_profile="hidden"/>

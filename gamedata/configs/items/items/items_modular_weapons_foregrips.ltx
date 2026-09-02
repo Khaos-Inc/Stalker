@@ -1,0 +1,785 @@
+--\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\	AR-FOREGRIPS-FG	\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\--
+
+[foregrip_a3]:attachment_base_ar
+kind = foregrip
+inv_ui_sign				= a3
+visual						= w_att_huds\foregrip_a3_tactical
+inv_name					= foregrip_a3_tactical
+inv_name_short			= foregrip_a3_tacticalS
+cost							= 29900
+inv_weight					= 0.1
+inv_grid_x         = 6
+inv_grid_y         = 18
+attachment_point = picgrp|0,0,0|0,0,0
+item_tags	=	hg
+override_section	=	foregrip_a3_attributes
+
+[foregrip_a3_attributes]
+animation_prefix = t_
+zoom_rotate_time = -0.12
+inertia_koeff = 0.7
+
+
+[foregrip_afg]:attachment_base_ar
+kind = foregrip
+inv_ui_sign				= afg
+visual						= w_att_huds\foregrip_afg
+description				= foregrip_block_descr
+inv_name					= foregrip_afg
+inv_name_short		= foregrip_afgS
+cost							= 13000
+inv_weight				= 0.08
+inv_grid_x         = 20
+inv_grid_y         = 18
+attachment_point	=	picgrp|0,0,0|0,0,0
+item_tags	=	hg
+override_section	=	foregrip_afg_attributes
+[foregrip_afg_attributes]:v_attributes
+zoom_rotate_time = -0.08
+inertia_koeff           = 0.9
+
+[foregrip_afgd]:foregrip_afg
+kind = foregrip
+visual						= w_att_huds\foregrip_afgd
+cost							= 12000
+inv_grid_x         = 21
+override_section = foregrip_afgd_attributes
+
+inv_weight = 0.08
+[foregrip_afgd_attributes]
+animation_prefix = v_
+zoom_rotate_time = -0.08
+inertia_koeff = 0.9
+
+[foregrip_mvg]:foregrip_a3
+kind = foregrip
+inv_ui_sign				= caa_mvg
+visual						= w_att_huds\foregrip_caa_mvg
+inv_name					= foregrip_caa_mvg
+inv_name_short		= foregrip_caa_mvgS
+cost							= 13000
+inv_weight					= 0.11
+inv_grid_x         = 7
+override_section	=	foregrip_mvg_attributes
+
+[foregrip_mvg_attributes]
+animation_prefix = t_
+zoom_rotate_time = -0.04
+recoil_koeff = -0.01
+inertia_koeff = 0.8
+
+[foregrip_cobra]:foregrip_afg
+kind = foregrip
+inv_ui_sign				= cobra
+visual						= w_att_huds\foregrip_cobra
+inv_name					= foregrip_cobra
+inv_name_short			= foregrip_cobraS
+cost							= 15500
+inv_weight					= 0.08
+inv_grid_x         = 22
+override_section	=	foregrip_cobra_attributes
+[foregrip_cobra_attributes]:v_attributes
+zoom_rotate_time = -0.12
+inertia_koeff           = 0.9
+
+[foregrip_cqr]:attachment_base_ar
+kind = foregrip
+inv_ui_sign				= cqr
+visual						= w_att_huds\foregrip_cqr
+description				= foregrip_block_descr
+inv_name					= foregrip_cqr
+inv_name_short			= foregrip_cqrS
+cost							= 32000
+inv_weight					= 0.167
+inv_grid_x         = 19
+inv_grid_y         = 18
+attachment_point	=	picgrp|0,0,0|0,0,0
+item_tags	=	hg
+override_section	=	foregrip_cqr_attributes
+[foregrip_cqr_attributes]:h_attributes
+zoom_rotate_time = -0.04
+recoil_koeff            = -0.02
+inertia_koeff           = 0.8
+
+[foregrip_reg]:foregrip_a3
+kind = foregrip
+inv_ui_sign				= fd_reg
+visual						= w_att_huds\foregrip_fab_defence_reg
+inv_name					= foregrip_fab_defence_reg
+inv_name_short			= foregrip_fab_defence_regS
+cost							= 16900
+inv_weight					= 0.12
+inv_grid_x         = 8
+override_section	=	foregrip_reg_attributes
+
+[foregrip_reg_attributes]
+animation_prefix = t_
+zoom_rotate_time = 0.06
+recoil_koeff = -0.03
+inertia_koeff = 0.9
+[foregrip_fab_defence_reg_attributes]:t_attributes
+zoom_rotate_time = 0.02
+recoil_koeff            = -0.17
+inertia_koeff           = 0.9
+
+[foregrip_tfs]:attachment_base_ar
+kind = foregrip
+inv_ui_sign				= fd_tfs_45
+visual						= w_att_huds\foregrip_fab_defence_tfs
+description				= no_attributes_descr
+inv_name					= foregrip_fab_defence_tfs
+inv_name_short			= foregrip_fab_defence_tfsS
+cost							= 44000
+inv_weight					= 0.16
+inv_grid_x         = 9
+inv_grid_y         = 18
+attachment_point	=	picgrp|0,0,0|0,0,0
+item_tags	=	hg
+override_section	=	foregrip_tfs_attributes
+
+[foregrip_tfs_attributes]
+animation_prefix = r_
+zoom_rotate_time = -0.04
+recoil_koeff = -0.02
+inertia_koeff = 0.7
+[foregrip_fab_defence_tfs_attributes]:r_attributes
+zoom_rotate_time = -0.01
+recoil_koeff            = -0.15
+inertia_koeff           = 0.7
+
+[foregrip_ras]:foregrip_a3
+kind = foregrip
+inv_ui_sign				= RIS
+visual						= w_att_huds\foregrip_folding
+inv_name					= foregrip_folding
+inv_name_short			= foregrip_foldingS
+cost							= 10850
+inv_weight					= 0.11
+inv_grid_x         = 10
+override_section	=	foregrip_ras_attributes
+
+[foregrip_ras_attributes]
+animation_prefix = t_
+zoom_rotate_time = -0.03
+recoil_koeff = -0.01
+inertia_koeff = 0.8
+[foregrip_folding_attributes]:t_attributes
+zoom_rotate_time = -0.02
+recoil_koeff            = -0.11
+inertia_koeff           = 0.8
+
+[foregrip_fortis]:foregrip_afg
+kind = foregrip
+inv_ui_sign				= fortis
+visual						= w_att_huds\foregrip_fortis_shift
+inv_name					= foregrip_fortis_shift
+inv_name_short			= foregrip_fortis_shiftS
+cost							= 31000
+inv_weight					= 0.09
+inv_grid_x         = 23
+override_section	=	foregrip_fortis_attributes
+
+[foregrip_fortis_attributes]
+animation_prefix = v_
+zoom_rotate_time = -0.06
+inertia_koeff = 0.8
+recoil_koeff = -0.01
+[foregrip_fortis_shift_attributes]:v_attributes
+zoom_rotate_time = -0.03
+recoil_koeff            = -0.1
+inertia_koeff           = 0.8
+
+[foregrip_kac]:foregrip_a3
+kind = foregrip
+inv_ui_sign				= kac
+visual						= w_att_huds\foregrip_kac
+inv_name					= foregrip_kac
+inv_name_short			= foregrip_kacS
+cost							= 11000
+inv_weight					= 0.1
+inv_grid_x         = 11
+override_section	=	foregrip_kac_attributes
+
+[foregrip_kac_attributes]
+animation_prefix = t_
+recoil_koeff = -0.02
+inertia_koeff = 0.8
+
+[foregrip_utg]:foregrip_a3
+kind = foregrip
+inv_ui_sign				= utg_qd
+visual						= w_att_huds\foregrip_leapers_utg_ms_qd
+inv_name					= foregrip_leapers_utg_ms_qd
+inv_name_short			= foregrip_leapers_utg_ms_qdS
+cost							= 15000
+inv_weight					= 0.07
+inv_grid_x         = 12
+override_section	=	foregrip_utg_attributes
+[foregrip_utg_attributes]:t_attributes
+zoom_rotate_time = -0.04
+recoil_koeff            = -0.01
+
+[foregrip_rb]:foregrip_utg
+kind = foregrip
+inv_ui_sign				= utg_rb
+visual						= w_att_huds\foregrip_leapers_rb
+inv_name					= foregrip_leapers_utg_rb
+inv_name_short		= foregrip_leapers_utg_rbS
+cost							= 12055
+inv_weight				= 0.09
+inv_grid_x         		= 16
+inv_grid_y         		= 19
+override_section	=	foregrip_rb_attributes
+[foregrip_rb_attributes]:t_attributes
+zoom_rotate_time = 0.01
+recoil_koeff            = -0.02
+inertia_koeff           = 0.8
+
+[foregrip_tfl]:foregrip_utg
+kind = foregrip
+inv_ui_sign				= tfl
+visual						= w_att_huds\foregrip_fd_tfl
+inv_name					= foregrip_fd_tfl
+inv_name_short		= foregrip_fd_tflS
+cost							= 12000
+inv_weight				= 0.12
+inv_grid_x         		= 20
+inv_grid_y         		= 19
+override_section	=	foregrip_tfl_attributes
+
+[foregrip_tfl_attributes]
+animation_prefix = t_
+zoom_rotate_time = -0.02
+recoil_koeff = -0.01
+inertia_koeff = 0.9
+[foregrip_fd_tfl_attributes]:t_attributes 
+zoom_rotate_time = 0.01
+recoil_koeff            = -0.15
+inertia_koeff           = 0.9
+
+[foregrip_tfld]:foregrip_tfl
+kind = foregrip
+visual						= w_att_huds\foregrip_fd_tfld
+inv_grid_x         		= 21
+override_section = foregrip_tfld_attributes
+
+cost = 12000
+inv_weight = 0.11
+[foregrip_tfld_attributes]
+animation_prefix = t_
+zoom_rotate_time = -0.07
+inertia_koeff = 0.9
+
+[foregrip_gps2]:foregrip_a3
+kind = foregrip
+inv_ui_sign				= ebf2
+visual						= w_att_huds\foregrip_ebf2
+inv_name					= foregrip_gps2
+inv_name_short			= foregrip_gps2S
+cost								= 17000
+inv_weight					= 0.24
+inv_grid_x         			= 38
+inv_grid_y         			= 17
+override_section	=	foregrip_gps2_attributes
+[foregrip_gps2_attributes]:t_attributes
+zoom_rotate_time = 0.06
+recoil_koeff            = -0.02
+
+[keymod_foregrip_moe]:attachment_base_ar
+kind = foregrip
+inv_ui_sign				= moe_fvg
+visual						= w_att_huds\keymod_foregrip_moe-fvg
+description				= no_attributes_descr
+inv_name					= keymod_foregrip_moe-fvg
+inv_name_short			= keymod_foregrip_moe-fvgS
+cost							= 16000
+inv_weight					= 0.17
+inv_grid_x         = 13
+inv_grid_y         = 18
+attachment_point		=	keymod_rail_grip|0,0,0|0,0,0
+item_tags	=	hg
+override_section	=	keymod_foregrip_moe_attributes
+
+[keymod_foregrip_moe_attributes]
+animation_prefix = t_
+zoom_rotate_time = 0.04
+recoil_koeff = -0.03
+inertia_koeff = 0.9
+
+[keymod_foregrip_tommy]:keymod_foregrip_moe
+kind = foregrip
+inv_ui_sign				= tommy
+visual							= w_att_huds\keymod_foregrip_tommy
+description				= foregrip_block_descr
+inv_name					= keymod_foregrip_tommy
+inv_name_short		= keymod_foregrip_tommyS
+cost							= 15500
+inv_weight				= 0.4
+inv_grid_x        			= 39
+inv_grid_y         		= 17
+override_section =	keymod_foregrip_tommy_attributes
+[keymod_foregrip_tommy_attributes]:h_attributes
+zoom_rotate_time = 0.15
+recoil_koeff            = -0.04
+inertia_koeff           = 1.1
+
+[foregrip_moe]:foregrip_a3
+kind = foregrip
+inv_ui_sign					= moe_rvg
+visual								= w_att_huds\foregrip_moe-rvg
+inv_name						= foregrip_moe-rvg
+inv_name_short			= foregrip_moe-rvgS
+cost								= 12000
+inv_weight					= 0.11
+inv_grid_x         			= 14
+override_section	=	foregrip_moe_attributes
+
+[foregrip_moe_attributes]
+animation_prefix = t_
+zoom_rotate_time = 0.04
+recoil_koeff = -0.04
+inertia_koeff = 0.9
+
+[foregrip_tgd]:foregrip_a3
+kind = foregrip
+inv_ui_sign				= mp_tgd
+visual						= w_att_huds\foregrip_mp_tgd
+inv_name					= foregrip_mp_tgd
+inv_name_short			= foregrip_mp_tgdS
+cost							= 14000
+inv_weight					= 0.1
+inv_grid_x         = 15
+override_section	=	foregrip_tgd_attributes
+
+[foregrip_tgd_attributes]
+animation_prefix = t_
+zoom_rotate_time = 0.02
+recoil_koeff = -0.03
+
+[foregrip_pts]:foregrip_a3
+kind = foregrip
+inv_ui_sign				= pts
+visual						= w_att_huds\foregrip_pts
+inv_name					= foregrip_pts
+inv_name_short			= foregrip_ptsS
+cost							= 12050
+inv_weight					= 0.11
+inv_grid_x         = 16
+override_section	=	foregrip_pts_attributes
+[foregrip_pts_attributes]:t_attributes
+zoom_rotate_time = -0.02
+recoil_koeff            = -0.01
+inertia_koeff           = 0.9
+
+[foregrip_caa]:attachment_base_ar
+kind = foregrip
+inv_ui_sign				= fg_roni
+visual						= w_att_huds\foregrip_roni
+inv_name					= foregrip_caa_fvg1
+inv_name_short			= foregrip_caa_fvg1S
+cost								= 10350
+inv_weight					= 0.08
+inv_grid_x        			= 36
+inv_grid_y        			= 18
+attachment_point		=	picgrp|0,0,0|0,0,0
+item_tags	=	hg
+override_section	=	foregrip_caa_attributes
+
+[foregrip_caa_attributes]
+animation_prefix = v_
+zoom_rotate_time = -0.06
+inertia_koeff = 0.8
+[foregrip_roni_attributes]:v_attributes
+zoom_rotate_time = -0.03
+recoil_koeff            = -0.07
+inertia_koeff           = 0.8
+
+[mlok_foregrip_pts]:attachment_base_ar
+kind = foregrip
+inv_ui_sign				= ml_pts
+visual						= w_att_huds\mlok_foregrip_pts
+description				= foregrip_block_descr
+inv_name					= mlok_foregrip_pts
+inv_name_short			= mlok_foregrip_ptsS
+cost							= 13850
+inv_weight					= 0.1
+inv_grid_x         = 38
+inv_grid_y         = 18
+attachment_point		=	mlok_rail_grip|0,0,0|0,0,0
+item_tags	=	hg
+override_section	=	mlok_foregrip_pts_attributes
+
+[mlok_foregrip_pts_attributes]
+animation_prefix = t_
+zoom_rotate_time = -0.010
+inertia_koeff = 0.9
+
+[keymod_foregrip_pts]:mlok_foregrip_pts
+kind = foregrip
+inv_ui_sign				= km_pts
+inv_name					= keymod_foregrip_pts
+inv_name_short		= keymod_foregrip_ptsS
+cost							= 10700
+inv_grid_x         		= 39
+attachment_point = keymod_rail_grip|0,0,0|0,0,0
+override_section = keymod_foregrip_pts_attributes
+
+inv_weight = 0.1
+[keymod_foregrip_pts_attributes]
+animation_prefix = t_
+zoom_rotate_time = -0.05
+recoil_koeff = -0.01
+inertia_koeff = 0.9
+
+[foregrip_skel]:foregrip_a3
+kind = foregrip
+inv_ui_sign				= skeleton
+visual						= w_att_huds\foregrip_skel
+inv_name					= foregrip_skel
+inv_name_short			= foregrip_skelS
+cost							= 14000
+inv_weight					= 0.13
+inv_grid_x         = 17
+override_section	=	foregrip_skel_attributes
+
+[foregrip_skel_attributes]
+animation_prefix = t_
+zoom_rotate_time = -0.06
+recoil_koeff = -0.02
+inertia_koeff = 0.9
+
+[foregrip_se5]:foregrip_afg
+kind = foregrip
+inv_ui_sign				= se5
+visual						= w_att_huds\foregrip_stark_se5
+inv_name					= foregrip_stark_se5
+inv_name_short			= foregrip_stark_se5S
+cost							= 25000
+inv_weight					= 0.09
+inv_grid_x         = 24
+override_section	=	foregrip_se5_attributes
+
+[foregrip_se5_attributes]
+animation_prefix = v_
+zoom_rotate_time = -0.06
+recoil_koeff = -0.02
+inertia_koeff = 0.9
+
+[foregrip_skelv]:foregrip_afg
+kind = foregrip
+inv_ui_sign				= skv
+visual						= w_att_huds\foregrip_skelv
+inv_name					= foregrip_skelv
+inv_name_short		= foregrip_skelvS
+cost							= 14000
+inv_weight					= 0.13
+inv_grid_x         = 37
+override_section	=	foregrip_skelv_attributes
+
+[foregrip_skelv_attributes]
+animation_prefix = v_
+zoom_rotate_time = -0.06
+recoil_koeff = -0.02
+inertia_koeff = 0.8
+
+[foregrip_m900]:foregrip_a3
+kind = foregrip
+inv_ui_sign				= sf_m900
+visual						= w_att_huds\foregrip_surefire_m900
+description				= no_attributes_descr
+inv_name					= foregrip_surefire_m900
+inv_name_short			= foregrip_surefire_m900S
+cost							= 27000
+inv_weight					= 0.57
+inv_grid_x         = 18
+is_torch                  = true
+is_torch_laser      = false
+light_section             = tactical_flashlight_default
+flashlight_bone           = laser
+flashlight_bone_axis      = y
+flashlight_bone_invert    = false
+1icon_layer = flashlight_ico
+override_section	=	foregrip_m900_attributes
+
+[foregrip_m900_attributes]
+zoom_rotate_time = 0.12
+recoil_koeff = -0.01
+inertia_koeff = 1.1
+animation_prefix = t_
+[foregrip_surefire_m900_attributes]:keymod_foregrip_tommy_attributes,t_attributes	
+
+[foregrip_rk0]:foregrip_afg
+kind = foregrip
+inv_ui_sign				= rk-0
+visual						= w_att_huds\foregrip_zenitco_rk0
+inv_name					= foregrip_zenitco_rk0
+inv_name_short			= foregrip_zenitco_rk0S
+cost							= 18000
+inv_weight					= 0.14
+inv_grid_x         = 26
+override_section	=	foregrip_rk0_attributes
+
+[foregrip_rk0_attributes]
+animation_prefix = v_
+zoom_rotate_time = -0.04
+recoil_koeff = -0.01
+inertia_koeff = 0.8
+[foregrip_zenitco_rk0_attributes]:v_attributes
+zoom_rotate_time = -0.04
+recoil_koeff            = -0.08
+inertia_koeff           = 0.8
+
+[foregrip_rk6]:foregrip_afg
+kind = foregrip
+inv_ui_sign				= rk-6
+visual						= w_att_huds\foregrip_zenitco_rk6
+inv_name					= foregrip_zenitco_rk6
+inv_name_short			= foregrip_zenitco_rk6S
+cost							= 16000
+inv_weight					= 0.1
+inv_grid_x         = 25
+override_section = foregrip_rk6_attributes
+
+[foregrip_rk6_attributes]
+animation_prefix = v_
+zoom_rotate_time = -0.12
+inertia_koeff = 0.9
+
+[foregrip_rk1]:foregrip_a3
+kind = foregrip
+inv_ui_sign				= rk-1
+visual						= w_att_huds\foregrip_zenitco_rk1
+inv_name					= foregrip_zenitco_rk1
+inv_name_short			= foregrip_zenitco_rk1S
+cost							= 31000
+inv_weight					= 0.17
+inv_grid_x         = 27
+override_section	=	foregrip_rk1_attributes
+
+[foregrip_rk1_attributes]
+animation_prefix = t_
+zoom_rotate_time = 0.06
+recoil_koeff = -0.03
+inertia_koeff = 0.8
+
+[foregrip_rk2]:foregrip_a3
+kind = foregrip
+inv_ui_sign				= rk-2
+visual						= w_att_huds\foregrip_zenitco_rk2
+inv_name					= foregrip_zenitco_rk2
+inv_name_short			= foregrip_zenitco_rk2S
+cost							= 38200
+inv_weight					= 0.2
+inv_grid_x         = 28
+override_section	=	foregrip_rk2_attributes
+
+[foregrip_rk2_attributes]
+animation_prefix = t_
+zoom_rotate_time = 0.04
+recoil_koeff = -0.04
+
+[foregrip_b25u]:attachment_base_ar
+kind = foregrip
+inv_ui_sign				= rk-2_b-25u
+visual						= w_att_huds\foregrip_zenitco_rk2_b25u
+description				= no_attributes_descr
+inv_name					= foregrip_zenitco_rk2_b25u
+inv_name_short			= foregrip_zenitco_rk2_b25uS
+cost								= 71000
+inv_weight					= 0.21
+inv_grid_x       			 = 29
+inv_grid_y       			 = 18
+attachment_point	=	picgrp|0,0,0|0,0,0
+item_tags	=	hg
+override_section	=	foregrip_b25u_attributes
+
+[foregrip_b25u_attributes]
+animation_prefix = r_
+zoom_rotate_time = 0.04
+recoil_koeff = -0.03
+inertia_koeff = 0.7
+
+
+[mlok_foregrip_a3]:attachment_base_ar
+kind = foregrip
+inv_ui_sign				= ml_a3
+visual						= w_att_huds\mlok_foregrip_a3_tactical
+description				= no_attributes_descr
+inv_name					= mlok_foregrip_a3_tactical
+inv_name_short			= mlok_foregrip_a3_tacticalS
+cost							= 24000
+inv_weight					= 0.14
+inv_grid_x         = 30
+inv_grid_y         = 18
+attachment_point = mlok_rail_grip|0,0,0|0,0,0
+item_tags =	hg
+override_section	=	mlok_foregrip_a3_attributes
+
+[mlok_foregrip_a3_attributes]
+animation_prefix = t_
+zoom_rotate_time = -0.12
+inertia_koeff = 0.7
+
+[mlok_foregrip_afg]:attachment_base_ar
+kind = foregrip
+inv_ui_sign				= ml_afg
+visual						= w_att_huds\mlok_foregrip_afg
+description				= foregrip_block_descr
+inv_name					= mlok_foregrip_afg
+inv_name_short			= mlok_foregrip_afgS
+cost							= 13000
+inv_weight					= 0.12
+inv_grid_x         = 31
+inv_grid_y         = 18
+attachment_point = mlok_rail_grip|0,0,0|0,0,0
+item_tags	=	hg
+override_section	=	mlok_foregrip_afg_attributes
+
+[mlok_foregrip_afg_attributes]
+animation_prefix = v_
+zoom_rotate_time = -0.08
+inertia_koeff = 0.9
+
+[mlok_foregrip_moe]:attachment_base_ar
+kind = foregrip
+inv_ui_sign				= moe_mvg
+visual						= w_att_huds\mlok_foregrip_moe-mvg
+description				= no_attributes_descr
+inv_name					= mlok_foregrip_moe_mvg
+inv_name_short			= mlok_foregrip_moe_mvgS
+cost							= 19200
+inv_weight					= 0.1
+inv_grid_x         = 32
+inv_grid_y         = 18
+attachment_point		=	mlok_rail_grip|0,0,0|0,0,0
+item_tags =	hg
+override_section	=	mlok_foregrip_moe_attributes
+
+[mlok_foregrip_moe_attributes]
+animation_prefix = t_
+zoom_rotate_time = 0.04
+recoil_koeff = -0.03
+inertia_koeff = 0.9
+
+[mlok_foregrip_skel]:attachment_base_ar
+kind = foregrip
+inv_ui_sign				= ml_skel
+visual						= w_att_huds\mlok_foregrip_skel
+description				= foregrip_block_descr
+inv_name					= mlok_foregrip_skel
+inv_name_short			= mlok_foregrip_skelS
+cost							= 14400
+inv_weight					= 0.13
+inv_grid_x         = 33
+inv_grid_y         = 18
+attachment_point		=	mlok_rail_grip|0,0,0|0,0,0
+item_tags	=	hg
+override_section	=	mlok_foregrip_skel_attributes
+
+[mlok_foregrip_skel_attributes]
+animation_prefix = v_
+zoom_rotate_time = 0.04
+recoil_koeff = -0.02
+inertia_koeff = 0.8
+
+[mlok_foregrip_stopkit]:attachment_base_ar
+kind = foregrip
+inv_ui_sign				= ml_stopkit
+visual						= w_att_huds\mlok_foregrip_stopkit
+description				= foregrip_block_descr
+inv_name					= mlok_foregrip_stopkit
+inv_name_short			= mlok_foregrip_stopkitS
+cost							= 13100
+inv_weight					= 0.1
+inv_grid_x         = 34
+inv_grid_y         = 18
+attachment_point = mlok_rail_grip|0,0,0|0,0,0
+item_tags =	hg
+override_section	=	mlok_foregrip_stopkit_attributes
+[mlok_foregrip_stopkit_attributes]
+zoom_rotate_time = -0.07
+inertia_koeff           = 0.8
+
+[mlok_foregrip_utg]:attachment_base_ar
+kind = foregrip
+inv_ui_sign				= ml_utg
+visual						= w_att_huds\mlok_foregrip_utg
+description				= foregrip_block_descr
+inv_name					= mlok_foregrip_utg
+inv_name_short			= mlok_foregrip_utgS
+cost							= 14950
+inv_weight					= 0.1
+inv_grid_x         = 35
+inv_grid_y         = 18
+attachment_point = mlok_rail_grip|0,0,0|0,0,0
+item_tags =	hg
+override_section = mlok_foregrip_utg_attributes
+[mlok_foregrip_utg_attributes]:v_attributes
+zoom_rotate_time = -0.06
+inertia_koeff           = 0.9
+
+[mlok_foregrip_hs]:mlok_foregrip_utg
+kind = foregrip
+inv_ui_sign				= ml_hs
+visual						= w_att_huds\mlok_foregrip_hs
+inv_name					= mlok_foregrip_hs
+inv_name_short		= mlok_foregrip_hsS
+cost							= 16700
+
+inv_grid_x         = 40
+inv_grid_y         = 19
+override_section = mlok_foregrip_hs_attributes
+
+inv_weight = 0.1
+[mlok_foregrip_hs_attributes]
+animation_prefix = v_
+zoom_rotate_time = -0.12
+inertia_koeff = 0.9
+
+[mlok_foregrip_fortis]:foregrip_fortis
+kind = foregrip
+inv_ui_sign				= fortis_ml
+visual						= w_att_huds\mlok_foregrip_fortis_shift
+inv_name					= mlok_foregrip_fortis_shift
+cost							= 32850
+inv_weight					= 0.1
+inv_grid_x         = 39
+inv_grid_y         = 19
+attachment_point		=	mlok_rail_grip|0,0,0|0,0,0
+item_tags	=	hg
+override_section	=	mlok_foregrip_fortis_attributes
+
+[mlok_foregrip_fortis_attributes]
+animation_prefix = v_
+zoom_rotate_time = -0.12
+inertia_koeff = 0.8
+
+[foregrip_vfg]:foregrip_utg
+kind = foregrip
+inv_ui_sign				= vfg
+visual						= w_att_huds\foregrip_dd_vfg
+inv_name					= foregrip_dd_vfg
+inv_name_short		= foregrip_dd_vfgS
+cost							= 13000
+inv_weight				= 0.12
+inv_grid_x         		= 22
+inv_grid_y         		= 19
+override_section	=	foregrip_vfg_attributes
+
+[foregrip_vfg_attributes]
+animation_prefix = t_
+zoom_rotate_time = -0.04
+recoil_koeff = -0.01
+
+[foregrip_vfgd]:foregrip_vfg
+kind = foregrip
+visual						= w_att_huds\foregrip_dd_vfgd
+inv_grid_x         		= 23
+override_section = foregrip_vfgd_attributes
+
+cost = 12000
+inv_weight = 0.13
+[foregrip_vfgd_attributes]
+animation_prefix = t_
+zoom_rotate_time = -0.04
+recoil_koeff = -0.01

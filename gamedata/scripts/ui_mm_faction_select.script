@@ -373,7 +373,33 @@ local function actor_on_first_update(binder,delta)
 		start_pos[2] = spawn_path:game_vertex_id(0)
 		start_pos[3] = spawn_path:point(0)
 	end
+	
+	-- Survival mode
+	if (IsSurvivalMode()) then
+		game_relations.change_factions_community_num("zombied",0,-5000)
+		game_relations.change_factions_community_num("monolith",0,-5000)
 
+		local faction = character_community(db.actor):sub(7)
+		if (ini_sys:section_exist("survival_squad_"..faction) and start_pos) then
+			local squad = alife_create("survival_squad_"..faction,start_pos[3],start_pos[1],start_pos[2])
+			if (squad) then
+				axr_companions.companion_squads[squad.id] = squad
+				squad:create_npc(nil,start_pos[3],start_pos[1],start_pos[2])
+				local as
+				for k in squad:squad_members() do
+					local se_obj = k.object or k.id and alife():object(k.id)
+					if (se_obj) then
+						game_relations.change_factions_community_num("zombied",k.id,-5000)
+						SIMBOARD:setup_squad_and_group(se_obj)
+						
+						se_save_var(se_obj.id,se_obj:name(),"companion",true)
+						se_save_var(se_obj.id,se_obj:name(),"companion_cannot_dismiss",true)
+					end
+				end
+			end
+		end
+	end
+	
 	if saved_bolt then
 		alife_storage_manager.get_state().bolt_first = saved_bolt
 	end
@@ -604,7 +630,14 @@ function UINewGame:Main_Controls()
 		cc.showcase      = true
 		cc.disable_drag  = true
 		cc.disable_stack = true
-		cc:SetGridSpecs(35, 2)
+
+		-- The starter-loadout panels are narrower than the normal inventory.
+		-- Using the normal 35px grid leaves too few columns for large weapon
+		-- icons such as TOZ-34 and Protecta, so UICellContainer rejects them
+		-- before creating a cell. Use a smaller showcase-only grid instead.
+		-- This does not change any weapon inv_grid_* configuration and does not
+		-- affect the normal in-game inventory.
+		cc:SetGridSpecs(24, 2)
 	end
 	
 	self.ck_reset = xml:Init3tButton("main_dialog:check_reset", self.dialog)
@@ -1214,7 +1247,12 @@ function UINewGame:LoadLoadout (rand)
 	end
 	
 	-- Update Item containers
+	--self.CC["inventory"]:Reinit(t_inv, p_inv)
+	--WUUT Force non render icons in faction select
+	self.CC["inventory"].forcenorender = true
 	self.CC["inventory"]:Reinit(t_inv, p_inv)
+	self.CC["inventory"].forcenorender = false
+	
 	for idx,ci in pairs(self.CC["inventory"].cell) do
 		if ci:IsShown() then
 			local val = ci.flags.info or 0
@@ -1223,7 +1261,12 @@ function UINewGame:LoadLoadout (rand)
 		end
 	end
 	
+	--self.CC["loadout"]:Reinit(t_loadout, p_loadout)
+	--WUUT Force non render icons in faction select
+	self.CC["loadout"].forcenorender = true
 	self.CC["loadout"]:Reinit(t_loadout, p_loadout)
+	self.CC["loadout"].forcenorender = false
+	
 	for idx,ci in pairs(self.CC["loadout"].cell) do
 		if ci:IsShown() then
 			local val = ci.flags.info or 0
@@ -1378,7 +1421,11 @@ function UINewGame:On_CC_Mouse1(cont, idx)
 	self.text_points_left:SetText(tostring(self.points_left))
 
 	-- Transfer item and points
+	--self.CC[cont]:TransferItem(self.CC[cont2], nil, ci.section)
+	--WUUT Force non render icons in faction select
+	self.CC[cont].forcenorender = true
 	self.CC[cont]:TransferItem(self.CC[cont2], nil, ci.section)
+	self.CC[cont].forcenorender = false
 end
 
 function UINewGame:OnSelectDifficulty()
@@ -1525,11 +1572,11 @@ function UINewGame:UpdateDescr()
 		if not (k == faction) then
 			local v = relation_registry.community_relation("actor_" .. faction, k)
 			if (v >= 1000) then
-				str_stats = str_stats .. "%c[0,150,150,150]• %c[0,50,175,50]" .. game.translate_string("st_faction_" .. k) .. "\\n"
+				str_stats = str_stats .. "%c[0,150,150,150] %c[0,50,175,50]" .. game.translate_string("st_faction_" .. k) .. "\\n"
 			elseif (v <= -1000) then
-				str_stats = str_stats .. "%c[0,150,150,150]• %c[0,175,50,50]" .. game.translate_string("st_faction_" .. k) .. "\\n"
+				str_stats = str_stats .. "%c[0,150,150,150] %c[0,175,50,50]" .. game.translate_string("st_faction_" .. k) .. "\\n"
 			else
-				str_stats = str_stats .. "%c[0,150,150,150]• %c[0,175,175,50]" .. game.translate_string("st_faction_" .. k) .. "\\n"
+				str_stats = str_stats .. "%c[0,150,150,150] %c[0,175,175,50]" .. game.translate_string("st_faction_" .. k) .. "\\n"
 			end
 		end
 	end

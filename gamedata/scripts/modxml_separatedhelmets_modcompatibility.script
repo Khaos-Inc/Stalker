@@ -1,0 +1,30 @@
+function on_game_start()
+    RegisterScriptCallback("on_specific_character_init", function(character_id, data)
+
+-- Expanded Armor Pack
+-- Can't (don't know how to) remove character nodes so we change the model used
+        if character_id == "sim_default_stalker_3_default_eap_62" then
+			data.icon	= "ui_inGame2_neutral_2"
+			data.visual	= "actors\\stalker_neutral\\ps5m_neutral1_outfit"
+        end
+        if character_id == "sim_default_stalker_3_default_eap_65" then
+			data.icon	= "ui_inGame2_neutral_2"
+			data.visual	= "actors\\stalker_neutral\\ps5m_neutral1_outfit"
+        end
+        if character_id == "sim_default_stalker_4_default_eap_12" then
+			data.icon	= "ui_inGame2_neutral_2" -- ui_inGame2_neutral_nauchniy
+			data.visual	= "actors\\stalker_neutral\\ps5m_neutral4_outfit"
+        end
+        if character_id == "sim_default_stalker_4_default_eap_16" then
+			data.icon	= "ui_inGame2_neutral_2" -- ui_inGame2_neutral_nauchniy
+			data.visual	= "actors\\stalker_neutral\\ps5m_neutral4_outfit"
+        end
+
+-- New armor pack [ChoKoLaDka]
+        if character_id == "sim_default_csky_4_chokoladka_0" then
+			data.icon	= "ui_inGame2_csky_exo"
+			data.visual	= "actors\\stalker_nebo\\stalker_nebo_exo_1"
+        end
+
+    end)
+end

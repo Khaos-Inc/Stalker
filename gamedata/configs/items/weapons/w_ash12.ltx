@@ -1,520 +1,396 @@
-;------------------------------------------------------------------------------------------------
-[wpn_ash12]:identity_immunities,weapon_probability,default_weapon_params,wpn_ash12_sounds
-GroupControlSection                      = spawn_group
-$npc                                     = on
-$prefetch                                = 8
-$spawn                                   = "weapons\ash12"
-scheduled                                = off
-cform                                    = skeleton
-parent_section                           = wpn_ash12
+[wpn_ash12]:wpn_rsh12,wpn_ash12_sounds
+GroupControlSection				= spawn_group
+class                                    	= WP_AK74
+animation_slot						= 2
+ef_main_weapon_type				= 2
+ef_weapon_type              		= 6	;8
+slot											= 2
+inv_grid_width							= 6
+inv_grid_x								= 23
+inv_grid_y								= 67
+inv_name									= wpn_ash12
+inv_name_short						= wpn_ash12
+description								= wpn_ash12_descr
+inv_weight								= 3.1
+cost											= 140000
+position									= -0.021, 0.008, 0.025
+orientation								= 0, -5, 0	
+fire_point									= 0.0, 0.02, 0.6
+strap_bone0							= bip01_spine2
+strap_bone1							= bip01_spine1
+strap_position							= -0.26, -0.11, 0.25
+strap_orientation						= -15, -9, 110
+tri_state_reload						= off
+repair_type								= rifle_7
+kind											= w_rifle
+weapon_class							= assault_rifle
+single_handed							= 0
+shell_point								= -0.02, 0.167, 0.082
+shell_dir									= 0, 0, 0.4
+shell_particles							= weapons\762x54
+required_tags_shoot				= barrel,zatvor
+zoom_rotate_time					= 0.15
+ammo_mag_size						= 10
+fire_modes								= 1, -1
+rpm											= 0
+required_tags_cycle					=
+attachment_slots						=	slot_magazin|magazin|0,0,0|0,0,0#ash12_zatvor|zatvor|0,0,0|0,0,0#shak12_barrel|wpn_body|0,0,0|0,0,0#pica_3|wpn_body|-0.0197,0.0451,0.15|0,0,-90#pica_3|wpn_body|0.0197,0.0451,0.15|0,0,90#pica_30|wpn_body|0,0.07322,-0.0952|0,0,0#sight_front|wpn_body|0,0.07322,0.19|0,0,0#sight_rear|wpn_body|0,0.07322,-0.078|0,0,0#picgrp|wpn_body|0,-0.0286,-0.095|0,0,0
+aimpoint_offset_y					= 0.105088
+ui_render_cam_offset				=	0.15, -0.11, 0.98
+additional_hud_offset 			= 0, 0, -0.07
+weapon_lenght						=	0.55
+visual										= w_att_huds\ash12
+hud											= wpn_ash12_hud
+inertia_koeff							= 0.4
 
-class                                    = WP_AK74
-slot                                     = 2
-animation_slot                           = 8
-ef_main_weapon_type                      = 3
-ef_weapon_type                           = 11
-hand_dependence                          = 1
-single_handed                            = 0
+inv_icon_padding  = 0.7
+inv_icon_offset_x = -0.1
+inv_icon_offset_y = 0
 
-icons_texture                            = ui\ui_icons_shak12
-inv_grid_height                          = 2
-inv_grid_width                           = 4
-inv_grid_x                               = 0
-inv_grid_y                               = 0
-inv_name                                 = st_wpn_ash12
-inv_name_short                           = st_wpn_ash12
-description                              = st_wpn_ash12_descr
+positive X = move right
+negative X = move left
+positive Y = move up
+negative Y = move down
 
-kind                                     = w_rifle
-inv_weight                               = 4.5
-cost                                     = 37100
-repair_type                              = rifle_7
-weapon_class                             = assault_rifle
-
-hud                                      = wpn_ash12_hud
-visual                                   = dynamics\weapons\wpn_ash12\wpn_ash12.ogf
-position                                 = -0.026, -0.135, 0
-orientation                              = 0, 0, 0
-fire_bone                                = wpn_body
-fire_point                               = 0, 0.181, 0.3484
-fire_point2                              = 0, 0.106, 0.468
-strap_bone0                              = bip01_spine2
-strap_bone1                              = bip01_spine1
-strap_position                           = -0.3, -0.148, 0.278
-strap_orientation                        = -10, -5, 110
-ph_mass                                  = 7
-
-flame_particles                          = weapons\generic_weapon06
-smoke_particles                          = amik\weapons\smoke_particles\smoke_particles_01
-grenade_flame_particles                  = amik\weapons\grenade_flame_particles\grenade_flame_particles_00
-
-shell_bone                               = wpn_body
-shell_point				                 = 0.0126, 0.186227, -0.1765
-shell_dir				                 = 0, 0, 0.4
-shell_particles				             = weapons\762x54
-
-light_disabled                           = false
-light_color                              = 0.6, 0.5, 0.3
-light_range                              = 4.0
-light_time                               = 0.2
-light_var_color                          = 0.05
-light_var_range                          = 0.5
-
-upgrades                                 = up_gr_firstab_groza, up_gr_seconab_groza, up_gr_thirdab_groza, up_gr_fourtab_groza
-installed_upgrades                       =
-upgrade_scheme                           = upgrade_scheme_ash12
-upgr_icon_path     = ui\ui_icons_shak12
-upgr_icon_x                 = 250
-upgr_icon_y                 = 0
-upgr_icon_width             = 250
-upgr_icon_height            = 100
-
-fire_modes                               = 1, -1
-ammo_class                               = ammo_12.7x55_fmj, ammo_12.7x55_fmj_bad, ammo_12.7x55_fmj_verybad, ammo_12.7x55_ap, ammo_12.7x55_ap_bad, ammo_12.7x55_ap_verybad
-ammo_current                             = 10
-ammo_elapsed                             = 0
-ammo_limit                               = 10
-ammo_mag_size                            = 10
-startup_ammo                             = 10
-
-scopes                                   = acog, ac10632, eot, c-more, sup
-scope_status                             = 0
-scope_name                               = wpn_addon_scope
-scope_x                                  = 53
-scope_y                                  = 7
-scope_zoom_factor                        = 0
-
-silencer_name                            = wpn_sil_shak12
-silencer_status                          = 0
-silencer_x                               = 273
-silencer_y                               = 15
-silencer_light_color                     = 0.6, 0.5, 0.3
-silencer_light_range                     = 2.25
-silencer_light_time                      = 0.2
-silencer_light_var_color                 = 0.05
-silencer_light_var_range                 = 0.5
-silencer_flame_particles                 = weapons\generic_weapon03
-silencer_smoke_particles                 = amik\weapons\smoke_particles\silencer_smoke_particles_02
-
-grenade_class                            = ammo_vog-25, ammo_vog-25_bad, ammo_vog-25_verybad
-grenade_launcher_status                  = 0
-launch_speed                             = 76
-
-hit_impulse                              = 50
-hit_power                                = 1.03, 1.03, 1.03, 1.03
-hit_type                                 = fire_wound
-fire_distance                            = 250
-bullet_speed                             = 900
-rpm                                      = 500
-rpm_empty_click                          = 200
-
-use_aim_bullet = false
-time_to_aim                              = 0.0 ;  1.0
-zoom_enabled                             = true
-zoom_rotate_time                         = 0.25
-reload_dof                               = 0, 0.5, 5, 2.2
-control_inertion_factor = 1.0f
-crosshair_inertion                       = 9
-fire_dispersion_base                     = 0.33
-fire_dispersion_condition_factor         = 0.001
-
-misfire_probability                      = 0.005
-misfire_start_condition                  = 0.7 ;  0.6
-misfire_start_prob                       = 0.0055
-misfire_end_condition                    = 0.1
-misfire_end_prob                         = 0.055
-
-condition_queue_shot_dec                 = 0.0019
-condition_shot_dec                       = 0.0019
-
-cam_return                               = 0
-cam_relax_speed                          = 10
-cam_dispersion                           = 2.5
-cam_dispersion_frac                      = 1.0
-cam_dispersion_inc                       = 0.5
-cam_max_angle                            = 50.0
-cam_max_angle_horz                       = 50.0
-cam_step_angle_horz                      = 1.25
-zoom_cam_relax_speed                     = 9
-zoom_cam_dispersion                      = 2.25
-zoom_cam_dispersion_frac                 = 1.0
-zoom_cam_dispersion_inc                  = 0.25
-zoom_cam_max_angle                       = 50.0
-zoom_cam_max_angle_horz                  = 50.0
-zoom_cam_step_angle_horz                 = 1.25
-
-PDM_disp_accel_factor                    = 1.5
-PDM_disp_base                            = 1.42
-PDM_disp_crouch                          = 1.0
-PDM_disp_crouch_no_acc                   = 1.0
-PDM_disp_vel_factor                      = 1.5
-
-cam_relax_speed_ai                       = 360
-zoom_cam_relax_speed_ai                  = 120.75
-holder_fov_modifier                      = 0.75
-holder_range_modifier                    = 2.00
-min_radius                               = 50
-max_radius                               = 90
-hit_probability_gd_novice                = 1.0
-hit_probability_gd_stalker               = 1.0
-hit_probability_gd_veteran               = 1.0
-hit_probability_gd_master                = 1.0
-
-kill_msg_x                               = 0
-kill_msg_y                               = 0
-kill_msg_width                           = 98
-kill_msg_height                          = 23
-
-script_binding = hidebone_shak12_silencer.bind
-
-snd_reload					              = weapons\ash12\ash12_reload
-snd_reload_empty		                  = weapons\ash12\ash12_reload_empty
-snd_reload_misfire                        = weapons\ash12\ash12_unjam
-snd_switch_mode				              = weapons\ash12\ash12_fire_select
-
-snd_bore				                  = $no_sounds
-scripted_snd_bore						  = weapons\ash12\ash12_inspect
-scripted_snd_bore_empty					  = weapons\ash12\ash12_ins_empty
-scripted_snd_bore_jammed				  = weapons\ash12\ash12_ins_jam
-
-scripted_snd_ammo_check					  = weapons\ash12\ash12_mag_check
-scripted_snd_ammo_check_empty			  = weapons\ash12\ash12_mag_check
-
-use_alt_aim_hud				 = true
+additional_sounds 					= ash12_additional_sounds
+[ash12_additional_sounds]:glock_additional_sounds
+snd_10_mag_in 						= weapons\main\ash12_10_mag_in
+snd_10_mag_out						= weapons\main\ash12_10_mag_out
+snd_20_mag_in 						= weapons\main\ash12_20_mag_in
+snd_20_mag_out						= weapons\main\ash12_20_mag_out
+snd_move_selector					= weapons\main\vepr_firemode_move
+snd_selector							= weapons\main\selector_pp93
+snd_bolt_release						= weapons\main\ash12_bolt_release
+snd_bolt_back							= weapons\main\ash12_bolt_back
+snd_move_arm						= weapons\main\ash12_arm	
+snd_casing								= weapons\main\shells\shell_8_3
 
 [wpn_ash12_hud]:hud_base
-item_visual                              = anomaly_weapons\wpn_ash12\wpn_ash12_hud.ogf
-attach_place_idx                         = 0
-zoom_hide_crosshair                      = true   
 
-item_position                            = 0, 0, 0
-item_orientation                         = 0, 0, 0
-
-hands_orientation                        = 0, 0, 0
-hands_orientation_16x9                   = 0, 0, 0
-        hands_position                   = 0.020305, -0.001289, 0.15
-        hands_position_16x9              = 0.020305, -0.001289, 0.15
-
-        aim_hud_offset_pos               = -0.085158, 0.006589, -0.15
-        aim_hud_offset_pos_16x9          = -0.085158, 0.006589, -0.15
-        aim_hud_offset_rot               = -0.000322, -3.8e-05, 0
-        aim_hud_offset_rot_16x9          = -0.000322, -3.8e-05, 0
-
-lowered_hud_offset_pos           	 = 0.134, 0.0015, 0
-lowered_hud_offset_pos_16x9      	 = 0.134, 0.0015, 0
-lowered_hud_offset_rot           	 = -0.187, -0.7, 0.5
-lowered_hud_offset_rot_16x9      	 = -0.187, -0.7, 0.5
-
-gl_hud_offset_pos                        = 0, 0, 0
-gl_hud_offset_rot                        = 0, 0, 0
-
-lean_hud_offset_pos                      = 0, 0, 0
-lean_hud_offset_rot                      = 0, 0, 0
-
-anm_bore                                 = compiled_ash12_inspect
-anm_show                                 = compiled_ash12_draw
-anm_hide                                 = compiled_ash12_holster
-
-anm_idle                                 = compiled_ash12_idle
-anm_idle_aim                      		 = compiled_ash12_idle_aim
-anm_idle_moving                          = compiled_ash12_walk
-anm_idle_sprint                          = compiled_ash12_sprint
-
-anm_reload                               = compiled_ash12_reload
-anm_reload_empty                         = compiled_ash12_reload_empty
-
-anm_shots                                = compiled_ash12_shoot
-anm_shots_aim                            = compiled_ash12_shoot_aim
-anm_shots_jammed                     	 = compiled_ash12_shoot, compiled_ash12_state_jamshot
-anm_shots_aim_jammed                     = compiled_ash12_shoot_aim, compiled_ash12_state_jamshot
-
-anm_switch_mode                 		 = compiled_ash12_fire_select
-anm_switch_mode_jammed                 	 = compiled_ash12_fire_select, compiled_ash12_state_jam
-
-anm_bore_empty                                  = compiled_ash12_inspect_alt
-anm_bore_jammed                                 = compiled_ash12_inspect_alt, compiled_ash12_state_jam
-
-anm_show_jammed                                 = compiled_ash12_draw, compiled_ash12_state_jam
-anm_hide_jammed                                 = compiled_ash12_holster, compiled_ash12_state_jam
-
-anm_idle_jammed                                 = compiled_ash12_idle, compiled_ash12_state_jam
-anm_idle_aim_jammed                      	    = compiled_ash12_idle_aim, compiled_ash12_state_jam
-anm_idle_moving_jammed                          = compiled_ash12_walk, compiled_ash12_state_jam
-anm_idle_sprint_jammed                          = compiled_ash12_sprint, compiled_ash12_state_jam
-
-anm_ammo_check                           = compiled_ash12_magcheck, compiled_ash12_magcheck
-anm_ammo_check_empty                     = compiled_ash12_magcheck, compiled_ash12_magcheck_empty 
-
-anm_reload_misfire          			 		= compiled_ash12_unjam
-
-shell_bone                               = wpn_body
-shell_dir                                = 0, 1, 0
-shell_point                              = 0.025, 0.0625, -0.176
-
-fire_bone                                = muzzle
-fire_bone2                               = muzzle
-fire_point                               = 0, 0, 0.05
-fire_point2                              = 0, 0, 0
-
-fire_point_silencer                               = 0, 0, 0.1
-
-grenade_bone                             = grenade
-
-freelook_z_offset_mul					 = 0.9
-rpm_anim_fix 							 = false
-
-;------------------------------------------------------------------------------------------------
-[wpn_ash12_ac10632]:wpn_ash12
-
-
-1icon_layer                              = ac10632
-1icon_layer_x                            = 118
-1icon_layer_y                            = -29
-
-hud                                      = wpn_ash12_ac10632_hud
-
-
-[wpn_ash12_ac10632_hud]:wpn_ash12_hud
-item_visual                              = anomaly_weapons\wpn_ash12\wpn_ash12_barska_hud.ogf
-
-
-;------------------------------------------------------------------------------------------------
-[wpn_ash12_acog]:wpn_ash12
-
-
-1icon_layer                              = acog
-1icon_layer_x                            = 108
-1icon_layer_y                            = -28
-
-hud                                      = wpn_ash12_acog_hud
-
-[wpn_ash12_acog_hud]:wpn_ash12_ac10632_hud,hud_low_interia
-item_visual                              = anomaly_weapons\wpn_ash12\wpn_ash12_acog_hud.ogf
-
-;------------------------------------------------------------------------------------------------
-[wpn_ash12_c-more]:wpn_ash12
-
-
-1icon_layer                              = c-more
-1icon_layer_x                            = 122
-1icon_layer_y                            = -26
-
-hud                                      = wpn_ash12_c-more_hud
-
-
-[wpn_ash12_c-more_hud]:wpn_ash12_hud
-item_visual                              = anomaly_weapons\wpn_ash12\wpn_ash12_c-more_hud.ogf
-
-
-;------------------------------------------------------------------------------------------------
-[wpn_ash12_eot]:wpn_ash12
-
-
-1icon_layer                              = eot
-1icon_layer_x                            = 120
-1icon_layer_y                            = -26
-
-hud                                      = wpn_ash12_eot_hud
-
-
-[wpn_ash12_eot_hud]:wpn_ash12_hud
-item_visual                              = anomaly_weapons\wpn_ash12\wpn_ash12_eot_hud.ogf
-
-
-;-SHAK-12------------------------------------------------------------------------------------------------
-[wpn_ash12_sup]:wpn_ash12
-$spawn                                   = "weapons\shak12"
-parent_section                           = wpn_ash12_sup
-inv_name                                 = st_wpn_shak12
-inv_name_short                           = st_wpn_shak12
-description                              = st_wpn_shak12_descr
-
-animation_slot                           = 8
-
-icons_texture                            = ui\ui_icons_shak12
-inv_grid_height                          = 2
-inv_grid_width                           = 5
-inv_grid_x                               = 0
-inv_grid_y                               = 2
-upgr_icon_path     = ui\ui_icons_shak12
-upgr_icon_x                 = 250
-upgr_icon_y                 = 100
-upgr_icon_width             = 250
-upgr_icon_height            = 100
-
-cost                                     = 64000
-
-hud                                      = wpn_ash12_sup_hud
-visual                                   = dynamics\weapons\wpn_shak12\wpn_shak12.ogf
-
-silencer_name                            = wpn_sil_ash12
-silencer_status                          = 2
-silencer_x                               = 230
-silencer_y                               = 3
-
-rpm                                      = 600
-
-fire_dispersion_base                     = 0.29
-
-ammo_current                             = 20
-ammo_limit                               = 20
-ammo_mag_size                            = 20
-startup_ammo                             = 20
-
-cam_return                               = 0
-cam_relax_speed                          = 10
-cam_dispersion                           = 2.5
-cam_dispersion_frac                      = 1.0
-cam_dispersion_inc                       = 0.5
-cam_max_angle                            = 50.0
-cam_max_angle_horz                       = 50.0
-cam_step_angle_horz                      = 1.25
-zoom_cam_relax_speed                     = 9
-zoom_cam_dispersion                      = 2.25
-zoom_cam_dispersion_frac                 = 1.0
-zoom_cam_dispersion_inc                  = 0.25
-zoom_cam_max_angle                       = 50.0
-zoom_cam_max_angle_horz                  = 50.0
-zoom_cam_step_angle_horz                 = 1.25
-
-PDM_disp_base                            = 0.92
-
-condition_queue_shot_dec                 = 0.0025
-condition_shot_dec                       = 0.0025
-
-fire_bone                                = wpn_body
-fire_point                               = 0, 0.186227, 0.3074
-shell_bone                               = wpn_body
-shell_point				                 = 0.022, 0.0, -0.15319
-fire_point_silencer                      = 0, 0.186227, 0.42
-silencer_flame_particles                 = weapons\generic_weapon03
-
-snd_reload					              = weapons\ash12\shak12_reload
-snd_reload_empty		                  = weapons\ash12\shak12_reload_empty
-snd_reload_misfire                        = weapons\ash12\shak12_unjam
-snd_switch_mode				              = weapons\ash12\ash12_fire_select
-
-snd_bore				                  = $no_sounds
-scripted_snd_bore						  = weapons\ash12\ash12_inspect
-scripted_snd_bore_empty					  = weapons\ash12\ash12_ins_empty
-scripted_snd_bore_jammed				  = weapons\ash12\ash12_ins_jam
-
-scripted_snd_ammo_check					  = weapons\ash12\shak12_mag_check
-scripted_snd_ammo_check_empty			  = weapons\ash12\shak12_mag_check
-
-use_alt_aim_hud				 = true
-
-laser_status				 = true
-
-[wpn_ash12_sup_hud]:wpn_ash12_hud
-item_visual                              = anomaly_weapons\wpn_shak12\wpn_shak12_hud.ogf
-
-hands_orientation                        = 0, 0, 0
-hands_orientation_16x9                   = 0, 0, 0
-        hands_position                   = 0.008423, -0.002603, 0.04
-        hands_position_16x9              = 0.008423, -0.002603, 0.04
-
-        aim_hud_offset_pos               = -0.073403, 0.010816, -0.08
-        aim_hud_offset_pos_16x9          = -0.073403, 0.010816, -0.08
-        aim_hud_offset_rot               = 0.001302, 0.000109, 0
-        aim_hud_offset_rot_16x9          = 0.001302, 0.000109, 0
-
-        aim_hud_offset_alt_pos           = -0.1166, -0.088419, 0.054037
-        aim_hud_offset_alt_pos_16x9      = -0.1166, -0.088419, 0.054037
-        aim_hud_offset_alt_rot           = -0.000113, 0.000532, 0.7
-        aim_hud_offset_alt_rot_16x9      = -0.000113, 0.000532, 0.7
-
-anm_bore                                 = compiled_shak12_inspect
-anm_show                                 = compiled_shak12_draw
-anm_hide                                 = compiled_shak12_holster
-
-anm_idle                                 = compiled_shak12_idle
-anm_idle_aim                      		 = compiled_shak12_idle_aim
-anm_idle_moving                          = compiled_shak12_walk
-anm_idle_sprint                          = compiled_shak12_sprint
-
-anm_reload                               = compiled_shak12_reload
-anm_reload_empty                         = compiled_shak12_reload_empty
-
-anm_shots                                = compiled_shak12_shoot
-anm_shots_aim                            = compiled_shak12_shoot_aim
-anm_shots_jammed                     	 = compiled_shak12_shoot, compiled_shak12_state_jamshot
-anm_shots_aim_jammed                     = compiled_shak12_shoot_aim, compiled_shak12_state_jamshot
-
-anm_switch_mode                 		 = compiled_shak12_fire_select
-anm_switch_mode_jammed                 	 = compiled_shak12_fire_select, compiled_shak12_state_jam
-
-anm_bore_empty                                  = compiled_shak12_inspect_alt
-anm_bore_jammed                                 = compiled_shak12_inspect_alt, compiled_shak12_state_jam
-
-anm_show_jammed                                 = compiled_shak12_draw, compiled_shak12_state_jam
-anm_hide_jammed                                 = compiled_shak12_holster, compiled_shak12_state_jam
-
-anm_idle_jammed                                 = compiled_shak12_idle, compiled_shak12_state_jam
-anm_idle_aim_jammed                      	    = compiled_shak12_idle_aim, compiled_shak12_state_jam
-anm_idle_moving_jammed                          = compiled_shak12_walk, compiled_shak12_state_jam
-anm_idle_sprint_jammed                          = compiled_shak12_sprint, compiled_shak12_state_jam
-
-anm_ammo_check                           = compiled_shak12_magcheck, compiled_shak12_magcheck
-anm_ammo_check_empty                     = compiled_shak12_magcheck, compiled_shak12_magcheck_empty 
-
-anm_reload_misfire          			 		= compiled_shak12_unjam
-
-fire_point                               = 0, 0, 0
-shell_point                              = 0.01837, 0.0539, -0.13
-
-;------------------------------------------------------------------------------------------------
-[wpn_ash12_sup_ac10632]:wpn_ash12_sup
-
-1icon_layer                              = ac10632
-1icon_layer_x                            = 121
-1icon_layer_y                            = -19
-inv_grid_y                               = 4
-
-hud                                      = wpn_ash12_sup_ac10632_hud
-
-
-[wpn_ash12_sup_ac10632_hud]:wpn_ash12_sup_hud
-item_visual                              = anomaly_weapons\wpn_shak12\wpn_shak12_barska_hud.ogf
-
-;------------------------------------------------------------------------------------------------
-[wpn_ash12_sup_acog]:wpn_ash12_sup
-
-1icon_layer                              = acog
-1icon_layer_x                            = 124
-1icon_layer_y                            = -18
-inv_grid_y                               = 4
-
-hud                                      = wpn_ash12_sup_acog_hud
-
-[wpn_ash12_sup_acog_hud]:wpn_ash12_sup_ac10632_hud,hud_low_interia
-item_visual                              = anomaly_weapons\wpn_shak12\wpn_shak12_acog_hud.ogf
-
-;------------------------------------------------------------------------------------------------
-[wpn_ash12_sup_c-more]:wpn_ash12_sup
-
-1icon_layer                              = c-more
-1icon_layer_x                            = 129
-1icon_layer_y                            = -16
-inv_grid_y                               = 4
-
-hud                                      = wpn_ash12_sup_c-more_hud
-
-
-[wpn_ash12_sup_c-more_hud]:wpn_ash12_sup_hud
-item_visual                              = anomaly_weapons\wpn_shak12\wpn_shak12_c-more_hud.ogf
-
-;------------------------------------------------------------------------------------------------
-[wpn_ash12_sup_eot]:wpn_ash12_sup
-
-1icon_layer                              = eot
-1icon_layer_x                            = 126
-1icon_layer_y                            = -16
-inv_grid_y                               = 4
-
-hud                                      = wpn_ash12_sup_eot_hud
-
-
-[wpn_ash12_sup_eot_hud]:wpn_ash12_sup_hud
-item_visual                              = anomaly_weapons\wpn_shak12\wpn_shak12_eot_hud.ogf
-
+weapon_recoil_vert         = 1.28
+weapon_recoil_vert_inc     = 0.128
+weapon_recoil_horz         = 2.12
+weapon_recoil_ret_speed    = 2
+
+
+item_visual								= w_att_huds\ash12_hud
+freelook_z_offset_mul					 = 0.6
+hands_position						= 0.08, -0.05, -0.12
+hands_position_16x9				= 0.08, -0.05, -0.12
+hands_orientation					= 0.2, 0.5, 0
+hands_orientation_16x9			= 0.2, 0.5, 0
+aim_hud_offset_pos				= -0.0802, 0.02, -0.08
+aim_hud_offset_pos_16x9		= -0.0802, 0.02, -0.08
+aim_hud_offset_rot					= 0.015, 0.004, 0
+aim_hud_offset_rot_16x9		= 0.015, 0.004, 0
+lowered_hud_offset_pos					= 0.04, -0.02, 0
+lowered_hud_offset_pos_16x9		= 0.04, -0.02, 0
+lowered_hud_offset_rot					= 0.1, -0.7, 0.3
+lowered_hud_offset_rot_16x9			= 0.1, -0.7, 0.3
+
+anm_reload_misfire_sounds				= 0,snd_move_arm|15,snd_bolt_back|31,snd_bolt_release|37,snd_casing
+anm_switch_mode_sounds					= 0,snd_move_selector|18,snd_selector
+anm_reload_p1_sounds						= 0,snd_move_out|18,snd_10_mag_out
+anm_reload_p2_sounds						= 0,snd_move_in|16,snd_10_mag_in
+anm_reload_empty_p1_sounds			= 0,snd_move_out|18,snd_10_mag_out
+anm_reload_empty_p2_sounds			= 0,snd_move_in_empty|16,snd_10_mag_in|51,snd_bolt_back|61,snd_bolt_release
+anm_mag_check_sounds					= 0,snd_move_long|17,snd_10_mag_out|61,snd_10_mag_in
+anm_mag_check_empty_sounds			= 0,snd_move_long|17,snd_10_mag_out|61,snd_10_mag_in
+10_anm_reload_p1_sounds					= 0,snd_move_out|18,snd_10_mag_out
+10_anm_reload_p2_sounds					= 0,snd_move_in|16,snd_10_mag_in
+10_anm_reload_empty_p1_sounds		= 0,snd_move_out|18,snd_10_mag_out
+10_anm_reload_empty_p2_sounds		= 0,snd_move_in_empty|16,snd_10_mag_in|51,snd_bolt_back|61,snd_bolt_release
+10_anm_mag_check_sounds				= 0,snd_move_long|14,snd_10_mag_out|67,snd_10_mag_in
+10_anm_mag_check_empty_sounds	= 0,snd_move_long|14,snd_10_mag_out|67,snd_10_mag_in
+20_anm_reload_p1_sounds					= 0,snd_move_out|18,snd_20_mag_out
+20_anm_reload_p2_sounds					= 0,snd_move_in|16,snd_20_mag_in
+20_anm_reload_empty_p1_sounds		= 0,snd_move_out|18,snd_20_mag_out
+20_anm_reload_empty_p2_sounds		= 0,snd_move_in_empty|16,snd_20_mag_in|51,snd_bolt_back|61,snd_bolt_release
+20_anm_mag_check_sounds				= 0,snd_move_long|14,snd_20_mag_out|67,snd_20_mag_in
+20_anm_mag_check_empty_sounds	= 0,snd_move_long|14,snd_20_mag_out|67,snd_20_mag_in
+c_anm_reload_misfire_sounds					= 0,snd_move_arm|15,snd_bolt_back|31,snd_bolt_release|37,snd_casing
+c_anm_switch_mode_sounds					= 0,snd_move_selector|18,snd_selector
+c_anm_reload_p1_sounds						= 0,snd_move_out|18,snd_10_mag_out
+c_anm_reload_p2_sounds						= 0,snd_move_in|16,snd_10_mag_in
+c_anm_reload_empty_p1_sounds			= 0,snd_move_out|18,snd_10_mag_out
+c_anm_reload_empty_p2_sounds			= 0,snd_move_in_empty|16,snd_10_mag_in|51,snd_bolt_back|61,snd_bolt_release
+c_anm_mag_check_sounds						= 0,snd_move_long|17,snd_10_mag_out|61,snd_10_mag_in
+c_anm_mag_check_empty_sounds			= 0,snd_move_long|17,snd_10_mag_out|61,snd_10_mag_in
+10_c_anm_reload_p1_sounds					= 0,snd_move_out|18,snd_10_mag_out
+10_c_anm_reload_p2_sounds					= 0,snd_move_in|16,snd_10_mag_in
+10_c_anm_reload_empty_p1_sounds		= 0,snd_move_out|18,snd_10_mag_out
+10_c_anm_reload_empty_p2_sounds		= 0,snd_move_in_empty|16,snd_10_mag_in|51,snd_bolt_back|61,snd_bolt_release
+10_c_anm_mag_check_sounds				= 0,snd_move_long|14,snd_10_mag_out|67,snd_10_mag_in
+10_c_anm_mag_check_empty_sounds	= 0,snd_move_long|14,snd_10_mag_out|67,snd_10_mag_in
+20_c_anm_reload_p1_sounds					= 0,snd_move_out|18,snd_20_mag_out
+20_c_anm_reload_p2_sounds					= 0,snd_move_in|16,snd_20_mag_in
+20_c_anm_reload_empty_p1_sounds		= 0,snd_move_out|18,snd_20_mag_out
+20_c_anm_reload_empty_p2_sounds		= 0,snd_move_in_empty|16,snd_20_mag_in|51,snd_bolt_back|61,snd_bolt_release
+20_c_anm_mag_check_sounds				= 0,snd_move_long|14,snd_20_mag_out|67,snd_20_mag_in
+20_c_anm_mag_check_empty_sounds	= 0,snd_move_long|14,snd_20_mag_out|67,snd_20_mag_in
+h_anm_reload_misfire_sounds				= 0,snd_move_arm|15,snd_bolt_back|31,snd_bolt_release|37,snd_casing
+h_anm_switch_mode_sounds					= 0,snd_move_selector|18,snd_selector
+h_anm_reload_p1_sounds						= 0,snd_move_out|18,snd_10_mag_out
+h_anm_reload_p2_sounds						= 0,snd_move_in|16,snd_10_mag_in
+h_anm_reload_empty_p1_sounds			= 0,snd_move_out|18,snd_10_mag_out
+h_anm_reload_empty_p2_sounds			= 0,snd_move_in_empty|16,snd_10_mag_in|51,snd_bolt_back|61,snd_bolt_release
+h_anm_mag_check_sounds						= 0,snd_move_long|17,snd_10_mag_out|61,snd_10_mag_in
+h_anm_mag_check_empty_sounds			= 0,snd_move_long|17,snd_10_mag_out|61,snd_10_mag_in
+10_h_anm_reload_p1_sounds					= 0,snd_move_out|18,snd_10_mag_out
+10_h_anm_reload_p2_sounds					= 0,snd_move_in|16,snd_10_mag_in
+10_h_anm_reload_empty_p1_sounds		= 0,snd_move_out|18,snd_10_mag_out
+10_h_anm_reload_empty_p2_sounds		= 0,snd_move_in_empty|16,snd_10_mag_in|51,snd_bolt_back|61,snd_bolt_release
+10_h_anm_mag_check_sounds				= 0,snd_move_long|14,snd_10_mag_out|67,snd_10_mag_in
+10_h_anm_mag_check_empty_sounds	= 0,snd_move_long|14,snd_10_mag_out|67,snd_10_mag_in
+20_h_anm_reload_p1_sounds					= 0,snd_move_out|18,snd_20_mag_out
+20_h_anm_reload_p2_sounds					= 0,snd_move_in|16,snd_20_mag_in
+20_h_anm_reload_empty_p1_sounds		= 0,snd_move_out|18,snd_20_mag_out
+20_h_anm_reload_empty_p2_sounds		= 0,snd_move_in_empty|16,snd_20_mag_in|51,snd_bolt_back|61,snd_bolt_release
+20_h_anm_mag_check_sounds				= 0,snd_move_long|14,snd_20_mag_out|67,snd_20_mag_in
+20_h_anm_mag_check_empty_sounds	= 0,snd_move_long|14,snd_20_mag_out|67,snd_20_mag_in
+r_anm_reload_misfire_sounds					= 0,snd_move_arm|15,snd_bolt_back|31,snd_bolt_release|37,snd_casing
+r_anm_switch_mode_sounds					= 0,snd_move_selector|18,snd_selector
+r_anm_reload_p1_sounds						= 0,snd_move_out|18,snd_10_mag_out
+r_anm_reload_p2_sounds						= 0,snd_move_in|16,snd_10_mag_in
+r_anm_reload_empty_p1_sounds			= 0,snd_move_out|18,snd_10_mag_out
+r_anm_reload_empty_p2_sounds			= 0,snd_move_in_empty|16,snd_10_mag_in|51,snd_bolt_back|61,snd_bolt_release
+r_anm_mag_check_sounds						= 0,snd_move_long|17,snd_10_mag_out|61,snd_10_mag_in
+r_anm_mag_check_empty_sounds			= 0,snd_move_long|17,snd_10_mag_out|61,snd_10_mag_in
+10_r_anm_reload_p1_sounds					= 0,snd_move_out|18,snd_10_mag_out
+10_r_anm_reload_p2_sounds					= 0,snd_move_in|16,snd_10_mag_in
+10_r_anm_reload_empty_p1_sounds		= 0,snd_move_out|18,snd_10_mag_out
+10_r_anm_reload_empty_p2_sounds		= 0,snd_move_in_empty|16,snd_10_mag_in|51,snd_bolt_back|61,snd_bolt_release
+10_r_anm_mag_check_sounds				= 0,snd_move_long|14,snd_10_mag_out|67,snd_10_mag_in
+10_r_anm_mag_check_empty_sounds	= 0,snd_move_long|14,snd_10_mag_out|67,snd_10_mag_in
+20_r_anm_reload_p1_sounds					= 0,snd_move_out|18,snd_20_mag_out
+20_r_anm_reload_p2_sounds					= 0,snd_move_in|16,snd_20_mag_in
+20_r_anm_reload_empty_p1_sounds		= 0,snd_move_out|18,snd_20_mag_out
+20_r_anm_reload_empty_p2_sounds		= 0,snd_move_in_empty|16,snd_20_mag_in|51,snd_bolt_back|61,snd_bolt_release
+20_r_anm_mag_check_sounds				= 0,snd_move_long|14,snd_20_mag_out|67,snd_20_mag_in
+20_r_anm_mag_check_empty_sounds	= 0,snd_move_long|14,snd_20_mag_out|67,snd_20_mag_in
+t_anm_reload_misfire_sounds					= 0,snd_move_arm|15,snd_bolt_back|31,snd_bolt_release|37,snd_casing
+t_anm_switch_mode_sounds					= 0,snd_move_selector|18,snd_selector
+t_anm_reload_p1_sounds						= 0,snd_move_out|18,snd_10_mag_out
+t_anm_reload_p2_sounds						= 0,snd_move_in|16,snd_10_mag_in
+t_anm_reload_empty_p1_sounds			= 0,snd_move_out|18,snd_10_mag_out
+t_anm_reload_empty_p2_sounds			= 0,snd_move_in_empty|16,snd_10_mag_in|51,snd_bolt_back|61,snd_bolt_release
+t_anm_mag_check_sounds						= 0,snd_move_long|17,snd_10_mag_out|61,snd_10_mag_in
+t_anm_mag_check_empty_sounds			= 0,snd_move_long|17,snd_10_mag_out|61,snd_10_mag_in
+10_t_anm_reload_p1_sounds					= 0,snd_move_out|18,snd_10_mag_out
+10_t_anm_reload_p2_sounds					= 0,snd_move_in|16,snd_10_mag_in
+10_t_anm_reload_empty_p1_sounds		= 0,snd_move_out|18,snd_10_mag_out
+10_t_anm_reload_empty_p2_sounds		= 0,snd_move_in_empty|16,snd_10_mag_in|51,snd_bolt_back|61,snd_bolt_release
+10_t_anm_mag_check_sounds				= 0,snd_move_long|14,snd_10_mag_out|67,snd_10_mag_in
+10_t_anm_mag_check_empty_sounds		= 0,snd_move_long|14,snd_10_mag_out|67,snd_10_mag_in
+20_t_anm_reload_p1_sounds					= 0,snd_move_out|18,snd_20_mag_out
+20_t_anm_reload_p2_sounds					= 0,snd_move_in|16,snd_20_mag_in
+20_t_anm_reload_empty_p1_sounds		= 0,snd_move_out|18,snd_20_mag_out
+20_t_anm_reload_empty_p2_sounds		= 0,snd_move_in_empty|16,snd_20_mag_in|51,snd_bolt_back|61,snd_bolt_release
+20_t_anm_mag_check_sounds				= 0,snd_move_long|14,snd_20_mag_out|67,snd_20_mag_in
+20_t_anm_mag_check_empty_sounds		= 0,snd_move_long|14,snd_20_mag_out|67,snd_20_mag_in
+v_anm_reload_misfire_sounds					= 0,snd_move_arm|15,snd_bolt_back|31,snd_bolt_release|37,snd_casing
+v_anm_switch_mode_sounds					= 0,snd_move_selector|18,snd_selector
+v_anm_reload_p1_sounds						= 0,snd_move_out|18,snd_10_mag_out
+v_anm_reload_p2_sounds						= 0,snd_move_in|16,snd_10_mag_in
+v_anm_reload_empty_p1_sounds			= 0,snd_move_out|18,snd_10_mag_out
+v_anm_reload_empty_p2_sounds			= 0,snd_move_in_empty|16,snd_10_mag_in|51,snd_bolt_back|61,snd_bolt_release
+v_anm_mag_check_sounds						= 0,snd_move_long|17,snd_10_mag_out|61,snd_10_mag_in
+v_anm_mag_check_empty_sounds			= 0,snd_move_long|17,snd_10_mag_out|61,snd_10_mag_in
+10_v_anm_reload_p1_sounds					= 0,snd_move_out|18,snd_10_mag_out
+10_v_anm_reload_p2_sounds					= 0,snd_move_in|16,snd_10_mag_in
+10_v_anm_reload_empty_p1_sounds		= 0,snd_move_out|18,snd_10_mag_out
+10_v_anm_reload_empty_p2_sounds		= 0,snd_move_in_empty|16,snd_10_mag_in|51,snd_bolt_back|61,snd_bolt_release
+10_v_anm_mag_check_sounds				= 0,snd_move_long|14,snd_10_mag_out|67,snd_10_mag_in
+10_v_anm_mag_check_empty_sounds	= 0,snd_move_long|14,snd_10_mag_out|67,snd_10_mag_in
+20_v_anm_reload_p1_sounds					= 0,snd_move_out|18,snd_20_mag_out
+20_v_anm_reload_p2_sounds					= 0,snd_move_in|16,snd_20_mag_in
+20_v_anm_reload_empty_p1_sounds		= 0,snd_move_out|18,snd_20_mag_out
+20_v_anm_reload_empty_p2_sounds		= 0,snd_move_in_empty|16,snd_20_mag_in|51,snd_bolt_back|61,snd_bolt_release
+20_v_anm_mag_check_sounds				= 0,snd_move_long|14,snd_20_mag_out|67,snd_20_mag_in
+20_v_anm_mag_check_empty_sounds	= 0,snd_move_long|14,snd_20_mag_out|67,snd_20_mag_in
+
+anm_bore                          				= ash12_c_bore, idle, 1.2
+anm_hide										= ash12_c_holster, idle
+anm_show										= ash12_c_show, idle
+anm_idle											= ash12_c_idle, idle
+anm_idle_aim									= ash12_c_idle_aim, idle
+anm_idle_aim_moving					= ash12_c_walk_aim, idle
+anm_idle_aim_moving_crouch		= ash12_c_walk_aim, idle
+anm_idle_moving							= ash12_c_walk, idle
+anm_idle_moving_crouch				= ash12_c_walk, idle, 0.5
+anm_shots										= ash12_c_shoot, shoot, 1.2
+anm_reload_misfire							= ash12_c_unjam, unjam, 1.3
+anm_idle_sprint								= ash12_c_idle_sprint, idle
+anm_switch_mode							= ash12_c_firemode, firemode, 1.1
+anm_mag_check								= ash12_c_check, check, 1.2
+anm_mag_check_empty					= ash12_c_check, check_empty, 1.2
+anm_reload										= ash12_c_reload_10_p1, reload_p1, 1.3
+anm_reload_p1								= ash12_c_reload_10_p1, reload_p1, 1.3
+anm_reload_p2								= ash12_c_reload_10_p2, reload_p2, 1.3
+anm_reload_empty							= ash12_c_reload_10_p1, reload_empty_p1, 1.3
+anm_reload_empty_p1					= ash12_c_reload_10_p1, reload_empty_p1, 1.3
+anm_reload_empty_p2					= ash12_c_reload_10e_p2, reload_empty_p2, 1.3
+10_anm_mag_check						= ash12_c_check, check, 1.2
+10_anm_mag_check_empty			= ash12_c_check, check_empty, 1.2
+10_anm_reload								= ash12_c_reload_10_p1, reload_p1, 1.3
+10_anm_reload_p1							= ash12_c_reload_10_p1, reload_p1, 1.3
+10_anm_reload_p2							= ash12_c_reload_10_p2, reload_p2, 1.3
+10_anm_reload_empty					= ash12_c_reload_10_p1, reload_empty_p1, 1.3
+10_anm_reload_empty_p1				= ash12_c_reload_10_p1, reload_empty_p1, 1.3
+10_anm_reload_empty_p2				= ash12_c_reload_10e_p2, reload_empty_p2, 1.3
+20_anm_mag_check						= ash12_c_check, check, 1.2
+20_anm_mag_check_empty			= ash12_c_check, check_empty, 1.2
+20_anm_reload								= ash12_c_reload_10_p1, reload_p1, 1.3
+20_anm_reload_p1							= ash12_c_reload_10_p1, reload_p1, 1.3
+20_anm_reload_p2							= ash12_c_reload_20_p2, reload_p2, 1.3
+20_anm_reload_empty					= ash12_c_reload_20_p1, reload_empty_p1, 1.3
+20_anm_reload_empty_p1				= ash12_c_reload_20_p1, reload_empty_p1, 1.3
+20_anm_reload_empty_p2				= ash12_c_reload_20e_p2, reload_empty_p2, 1.3
+h_anm_bore                          			= ash12_h_bore, idle, 1.2
+h_anm_hide										= ash12_h_holster, idle
+h_anm_show									= ash12_h_show, idle
+h_anm_idle										= ash12_h_idle, idle
+h_anm_idle_aim								= ash12_h_idle_aim, idle
+h_anm_idle_aim_moving					= ash12_h_walk_aim, idle
+h_anm_idle_aim_moving_crouch	= ash12_h_walk_aim, idle
+h_anm_idle_moving						= ash12_h_walk, idle
+h_anm_idle_moving_crouch			= ash12_h_walk, idle, 0.5
+h_anm_shots									= ash12_h_shoot, shoot, 1.2
+h_anm_reload_misfire						= ash12_h_unjam, unjam, 1.3
+h_anm_idle_sprint							= ash12_h_idle_sprint, idle
+h_anm_switch_mode						= ash12_h_firemode, firemode, 1.1
+h_anm_mag_check							= ash12_h_check, check, 1.2
+h_anm_mag_check_empty				= ash12_h_check, check_empty, 1.2
+h_anm_reload									= ash12_h_reload_10_p1, reload_p1, 1.3
+h_anm_reload_p1							= ash12_h_reload_10_p1, reload_p1, 1.3
+h_anm_reload_p2							= ash12_h_reload_10_p2, reload_p2, 1.3
+h_anm_reload_empty						= ash12_h_reload_10_p1, reload_empty_p1, 1.3
+h_anm_reload_empty_p1				= ash12_h_reload_10_p1, reload_empty_p1, 1.3
+h_anm_reload_empty_p2				= ash12_h_reload_10e_p2, reload_empty_p2, 1.3
+10_h_anm_mag_check					= ash12_h_check, check, 1.2
+10_h_anm_mag_check_empty			= ash12_h_check, check_empty, 1.2
+10_h_anm_reload							= ash12_h_reload_10_p1, reload_p1, 1.3
+10_h_anm_reload_p1						= ash12_h_reload_10_p1, reload_p1, 1.3
+10_h_anm_reload_p2						= ash12_h_reload_10_p2, reload_p2, 1.3
+10_h_anm_reload_empty				= ash12_h_reload_10_p1, reload_empty_p1, 1.3
+10_h_anm_reload_empty_p1			= ash12_h_reload_10_p1, reload_empty_p1, 1.3
+10_h_anm_reload_empty_p2			= ash12_h_reload_10e_p2, reload_empty_p2, 1.3
+20_h_anm_mag_check					= ash12_h_check, check, 1.2
+20_h_anm_mag_check_empty			= ash12_h_check, check_empty, 1.2
+20_h_anm_reload							= ash12_c_reload_10_p1, reload_p1, 1.3
+20_h_anm_reload_p1						= ash12_c_reload_10_p1, reload_p1, 1.3
+20_h_anm_reload_p2						= ash12_c_reload_20_p2, reload_p2, 1.3
+20_h_anm_reload_empty				= ash12_c_reload_10_p1, reload_empty_p1, 1.3
+20_h_anm_reload_empty_p1			= ash12_c_reload_10_p1, reload_empty_p1, 1.3
+20_h_anm_reload_empty_p2			= ash12_c_reload_20e_p2, reload_empty_p2, 1.3
+r_anm_bore                          			= ash12_r_bore, idle, 1.2
+r_anm_hide										= ash12_r_holster, idle
+r_anm_show									= ash12_r_show, idle
+r_anm_idle										= ash12_r_idle, idle
+r_anm_idle_aim								= ash12_r_idle_aim, idle
+r_anm_idle_aim_moving					= ash12_r_walk_aim, idle
+r_anm_idle_aim_moving_crouch		= ash12_r_walk_aim, idle
+r_anm_idle_moving							= ash12_r_walk, idle
+r_anm_idle_moving_crouch				= ash12_r_walk, idle, 0.5
+r_anm_shots									= ash12_r_shoot, shoot, 1.2
+r_anm_reload_misfire						= ash12_r_unjam, unjam, 1.3
+r_anm_idle_sprint							= ash12_r_idle_sprint, idle
+r_anm_switch_mode						= ash12_r_firemode, firemode, 1.1
+r_anm_mag_check							= ash12_r_check, check, 1.2
+r_anm_mag_check_empty				= ash12_r_check, check_empty, 1.2
+r_anm_reload									= ash12_r_reload_10_p1, reload_p1, 1.3
+r_anm_reload_p1								= ash12_r_reload_10_p1, reload_p1, 1.3
+r_anm_reload_p2								= ash12_r_reload_10_p2, reload_p2, 1.3
+r_anm_reload_empty						= ash12_r_reload_10_p1, reload_empty_p1, 1.3
+r_anm_reload_empty_p1					= ash12_r_reload_10_p1, reload_empty_p1, 1.3
+r_anm_reload_empty_p2					= ash12_r_reload_10e_p2, reload_empty_p2, 1.3
+10_r_anm_mag_check						= ash12_r_check, check, 1.2
+10_r_anm_mag_check_empty			= ash12_r_check, check_empty, 1.2
+10_r_anm_reload								= ash12_r_reload_10_p1, reload_p1, 1.3
+10_r_anm_reload_p1						= ash12_r_reload_10_p1, reload_p1, 1.3
+10_r_anm_reload_p2						= ash12_r_reload_10_p2, reload_p2, 1.3
+10_r_anm_reload_empty					= ash12_r_reload_10_p1, reload_empty_p1, 1.3
+10_r_anm_reload_empty_p1			= ash12_r_reload_10_p1, reload_empty_p1, 1.3
+10_r_anm_reload_empty_p2			= ash12_r_reload_10e_p2, reload_empty_p2, 1.3
+20_r_anm_mag_check						= ash12_r_check, check, 1.2
+20_r_anm_mag_check_empty			= ash12_r_check, check_empty, 1.2
+20_r_anm_reload								= ash12_c_reload_10_p1, reload_p1, 1.3
+20_r_anm_reload_p1						= ash12_c_reload_10_p1, reload_p1, 1.3
+20_r_anm_reload_p2						= ash12_c_reload_20_p2, reload_p2, 1.3
+20_r_anm_reload_empty					= ash12_c_reload_10_p1, reload_empty_p1, 1.3
+20_r_anm_reload_empty_p1			= ash12_c_reload_10_p1, reload_empty_p1, 1.3
+20_r_anm_reload_empty_p2			= ash12_c_reload_20e_p2, reload_empty_p2, 1.3
+t_anm_bore                          			= ash12_t_bore, idle, 1.2
+t_anm_hide										= ash12_t_holster, idle
+t_anm_show									= ash12_t_show, idle
+t_anm_idle										= ash12_t_idle, idle
+t_anm_idle_aim								= ash12_t_idle_aim, idle
+t_anm_idle_aim_moving					= ash12_t_walk_aim, idle
+t_anm_idle_aim_moving_crouch		= ash12_t_walk_aim, idle
+t_anm_idle_moving							= ash12_t_walk, idle
+t_anm_idle_moving_crouch				= ash12_t_walk, idle, 0.5
+t_anm_shots									= ash12_t_shoot, shoot, 1.2
+t_anm_reload_misfire						= ash12_t_unjam, unjam, 1.3
+t_anm_idle_sprint							= ash12_t_idle_sprint, idle
+t_anm_switch_mode						= ash12_t_firemode, firemode, 1.1
+t_anm_mag_check							= ash12_t_check, check, 1.2
+t_anm_mag_check_empty				= ash12_t_check, check_empty, 1.2
+t_anm_reload									= ash12_t_reload_10_p1, reload_p1, 1.3
+t_anm_reload_p1								= ash12_t_reload_10_p1, reload_p1, 1.3
+t_anm_reload_p2								= ash12_t_reload_10_p2, reload_p2, 1.3
+t_anm_reload_empty						= ash12_t_reload_10_p1, reload_empty_p1, 1.3
+t_anm_reload_empty_p1					= ash12_t_reload_10_p1, reload_empty_p1, 1.3
+t_anm_reload_empty_p2					= ash12_t_reload_10e_p2, reload_empty_p2, 1.3
+10_t_anm_mag_check						= ash12_t_check, check, 1.2
+10_t_anm_mag_check_empty			= ash12_t_check, check_empty, 1.2
+10_t_anm_reload								= ash12_t_reload_10_p1, reload_p1, 1.3
+10_t_anm_reload_p1						= ash12_t_reload_10_p1, reload_p1, 1.3
+10_t_anm_reload_p2						= ash12_t_reload_10_p2, reload_p2, 1.3
+10_t_anm_reload_empty					= ash12_t_reload_10_p1, reload_empty_p1, 1.3
+10_t_anm_reload_empty_p1			= ash12_t_reload_10_p1, reload_empty_p1, 1.3
+10_t_anm_reload_empty_p2			= ash12_t_reload_10e_p2, reload_empty_p2, 1.3
+20_t_anm_mag_check						= ash12_t_check, check, 1.2
+20_t_anm_mag_check_empty			= ash12_t_check, check_empty, 1.2
+20_t_anm_reload								= ash12_c_reload_10_p1, reload_p1, 1.3
+20_t_anm_reload_p1						= ash12_c_reload_10_p1, reload_p1, 1.3
+20_t_anm_reload_p2						= ash12_c_reload_20_p2, reload_p2, 1.3
+20_t_anm_reload_empty					= ash12_c_reload_10_p1, reload_empty_p1, 1.3
+20_t_anm_reload_empty_p1			= ash12_c_reload_10_p1, reload_empty_p1, 1.3
+20_t_anm_reload_empty_p2			= ash12_c_reload_20e_p2, reload_empty_p2, 1.3
+v_anm_bore                          			= ash12_v_bore, idle, 1.2
+v_anm_hide										= ash12_v_holster, idle
+v_anm_show									= ash12_v_show, idle
+v_anm_idle										= ash12_v_idle, idle
+v_anm_idle_aim								= ash12_v_idle_aim, idle
+v_anm_idle_aim_moving					= ash12_v_walk_aim, idle
+v_anm_idle_aim_moving_crouch		= ash12_v_walk_aim, idle
+v_anm_idle_moving							= ash12_v_walk, idle
+v_anm_idle_moving_crouch			= ash12_v_walk, idle, 0.5
+v_anm_shots									= ash12_v_shoot, shoot, 1.2
+v_anm_reload_misfire						= ash12_v_unjam, unjam, 1.3
+v_anm_idle_sprint							= ash12_v_idle_sprint, idle
+v_anm_switch_mode						= ash12_v_firemode, firemode, 1.1
+v_anm_mag_check							= ash12_v_check, check, 1.2
+v_anm_mag_check_empty				= ash12_v_check, check_empty, 1.2
+v_anm_reload									= ash12_v_reload_10_p1, reload_p1, 1.3
+v_anm_reload_p1							= ash12_v_reload_10_p1, reload_p1, 1.3
+v_anm_reload_p2							= ash12_v_reload_10_p2, reload_p2, 1.3
+v_anm_reload_empty						= ash12_v_reload_10_p1, reload_empty_p1, 1.3
+v_anm_reload_empty_p1				= ash12_v_reload_10_p1, reload_empty_p1, 1.3
+v_anm_reload_empty_p2				= ash12_v_reload_10e_p2, reload_empty_p2, 1.3
+10_v_anm_mag_check						= ash12_v_check, check, 1.2
+10_v_anm_mag_check_empty			= ash12_v_check, check_empty, 1.2
+10_v_anm_reload							= ash12_v_reload_10_p1, reload_p1, 1.3
+10_v_anm_reload_p1						= ash12_v_reload_10_p1, reload_p1, 1.3
+10_v_anm_reload_p2						= ash12_v_reload_10_p2, reload_p2, 1.3
+10_v_anm_reload_empty					= ash12_v_reload_10_p1, reload_empty_p1, 1.3
+10_v_anm_reload_empty_p1			= ash12_v_reload_10_p1, reload_empty_p1, 1.3
+10_v_anm_reload_empty_p2			= ash12_v_reload_10e_p2, reload_empty_p2, 1.3
+20_v_anm_mag_check						= ash12_v_check, check, 1.2
+20_v_anm_mag_check_empty			= ash12_v_check, check_empty, 1.2
+20_v_anm_reload								= ash12_c_reload_10_p1, reload_p1, 1.3
+20_v_anm_reload_p1							= ash12_c_reload_10_p1, reload_p1, 1.3
+20_v_anm_reload_p2							= ash12_c_reload_20_p2, reload_p2, 1.3
+20_v_anm_reload_empty					= ash12_c_reload_10_p1, reload_empty_p1, 1.3
+20_v_anm_reload_empty_p1				= ash12_c_reload_10_p1, reload_empty_p1, 1.3
+20_v_anm_reload_empty_p2				= ash12_c_reload_20e_p2, reload_empty_p2, 1.3

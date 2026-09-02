@@ -1,472 +1,539 @@
-;------------------------------------------------------------------------------------------------
-[wpn_glock]:identity_immunities,weapon_probability,default_weapon_params,wpn_glock_sounds
-        GroupControlSection         = spawn_group
-        $npc                        = on
-        $prefetch                   = 8
-        $spawn                      = "weapons\pm"
-        scheduled                   = off
-        cform                       = skeleton
-        
-        class                       = WP_PM
-        slot                        = 1
-        animation_slot              = 1
-        ef_weapon_type              = 5
-        hand_dependence             = 1
-        single_handed               = 1
-        
-        default_to_ruck             = false
-        sprint_allowed              = true
-        
-        inv_grid_height             = 1
-        inv_grid_width              = 2
-        inv_grid_x                  = 53
-        inv_grid_y                  = 80
-        inv_name                    = st_wpn_glock
-        inv_name_short              = st_wpn_glock
-        description                 = st_wpn_glock_descr
-        
-        kind                        = w_pistol
-        inv_weight                  = 0.625
-        cost                        = 10960
-        repair_type                 = pistol
-        
-        hud                         = wpn_glock_hud
-        visual                      = dynamics\weapons\wpn_glock\wpn_glock.ogf
-        position                    = 0, 0, 0
-        orientation                 = 0, 0, 0
-        fire_point              	= 0.0, 0.0, 0.0
-        fire_point2                 = 0.0, 0.0, 0.0
-        ph_mass                     = 1
-		
-        flame_particles             = weapons\generic_weapon03
-        smoke_particles             = weapons\generic_shoot_00
-        grenade_flame_particles     = weapons\generic_weapon01
-        
-		shell_point		 		    = 0, 0.0, 0.0
-		shell_dir		 			= 0, 0, 0.0
-		shell_particles	 			= weapons\9x19
+[wpn_glock]:wpn_beretta,wpn_glock_sounds
+modular_attachments = true
+GroupControlSection	= spawn_group
+inv_grid_width				= 3
+inv_grid_height			= 2
+inv_grid_x                    = 0
+inv_grid_y                    = 11
+inv_name                     = wpn_glock
+inv_name_short           = wpn_glock
+description                  = wpn_glock_descr
+inv_weight                   = 0.4
+cost                             = 23000
+hud                              = wpn_glock_hud
+visual                           = w_att_huds\glock.ogf
+ammo_mag_size			= 17
+attachment_slots			= slot_magazin|magazin|0,0,0|0,0,0#glock_spring|wpn_body|0,0,0|0,0,0#glock_barrel|muzzle|0,0,0|0,0,0#glock_stock|wpn_body|0,0,0|0,0,0#picgrp|wpn_body|0,-0.0263,-0.0981|0,0,0#pica_3|wpn_body|0,0.00933,0.0848|0,0,180#usmount|wpn_body|0,0.00933,0.082|0,0,0
+aimpoint_offset_y		= 0.04207
+npc_rpm  = 450
+ui_render_cam_offset	= 0.3, -0.11, 1.04
 
-        light_disabled              = false
-        light_color                 = 0.6, 0.5, 0.3
-        light_range                 = 3.0
-        light_time                  = 0.2
-        light_var_color             = 0.05
-        light_var_range             = 0.5
-        
-        upgrades                    = up_gr_firstab_glock, up_gr_seconab_glock, up_gr_thirdab_glock, up_gr_fourtab_glock, up_gr_fifthab_glock, up_gr_fifthcd_glock
-        installed_upgrades          =
-        upgrade_scheme              = upgrade_scheme_beretta
-        upgr_icon_x                 = 1150
-        upgr_icon_y                 = 1700
-        upgr_icon_width             = 150
-        upgr_icon_height            = 100
-        
-        fire_modes                  = 1
-        ammo_class                  = ammo_9x19_fmj, ammo_9x19_fmj_bad, ammo_9x19_fmj_verybad, ammo_9x19_pbp, ammo_9x19_pbp_bad, ammo_9x19_pbp_verybad, ammo_9x19_ap, ammo_9x19_ap_bad, ammo_9x19_ap_verybad
-        ammo_elapsed                = 17
-        ammo_mag_size               = 17
-        startup_ammo                = 90
-        
-        scope_status                = 0
-        scope_zoom_factor           = 0
-        
-        silencer_name               = wpn_sil_gemtech
-        silencer_status             = 0
-        silencer_x                  = 60
-        silencer_y                  = -12
-        silencer_light_color        = 0.6, 0.5, 0.3
-        silencer_light_range        = 0.01
-        silencer_light_time         = 0.2
-        silencer_light_var_color    = 0.05
-        silencer_light_var_range    = 0.5
-        silencer_smoke_particles    = weapons\generic_shoot_00
-        
-        grenade_class               = ammo_vog-25, ammo_vog-25_bad, ammo_vog-25_verybad
-        grenade_launcher_status     = 0
-        launch_speed                = 0
-        
-        hit_impulse                 = 24
-        hit_power                   = 0.46, 0.46, 0.46, 0.46
-        hit_type                    = fire_wound
-        fire_distance               = 400
-        bullet_speed                = 360
-        rpm                         = 270
-        rpm_empty_click             = 120
-        
-        use_aim_bullet              = true
-        time_to_aim                 = 0.0 ;  3.0
-        zoom_dof                    = 0.5, 1.0, 180
-        zoom_enabled                = true
-        zoom_rotate_time            = 0.25
-        reload_dof                  = 0.0, 0.5, 5, 1.7
-control_inertion_factor = 1.0f
-        crosshair_inertion          = 3.1
-        fire_dispersion_base        = 0.34
-        fire_dispersion_condition_factor = 0.001
-        
-        misfire_probability         = 0.005
-        misfire_start_condition     = 0.7 ;  0.85
-        misfire_start_prob          = 0.007
-        misfire_end_condition       = 0.09
-        misfire_end_prob            = 0.11
-        hud_fov                                  = 0.65
-        condition_queue_shot_dec    = 0.0016
-        condition_shot_dec          = 0.0016
-        
-		
+inv_icon_rotation = -90, 0, 0
+inv_icon_padding  = 1
 
-snd_draw				                                          = weapons\glock\gluck_draw
-snd_holster				                                          = weapons\glock\gluck_holster
-snd_reload				                                          = weapons\glock\glock17_reload
-snd_reload_empty                                                  = weapons\glock\glock17_reload_full
-snd_close				                                          = weapons\glock\walther_close
-snd_silncer_shot				                                  = weapons\glock\glock17_shoot_s
-snd_reload_misfire                                                = weapons\glock\glock17_revival
-snd_switch_mode                                                   = weapons\glock\glock17_firemode
+inv_icon_padding  = 0.7
+inv_icon_offset_x = 0.0
+inv_icon_offset_y = 0.1
 
-        cam_return                  = 0
-        cam_relax_speed             = 8
-        cam_dispersion              = 2.0
-        cam_dispersion_frac         = 1.0
-        cam_dispersion_inc          = 0.0
-        cam_max_angle               = 50.0
-        cam_max_angle_horz          = 50.0
-        cam_step_angle_horz         = 0.69
-		zoom_cam_dispersion         = 1.5
-        
-        PDM_disp_accel_factor       = 1.355
-        PDM_disp_base               = 0.75
-        PDM_disp_crouch             = 1.0
-        PDM_disp_crouch_no_acc      = 1.0
-        PDM_disp_vel_factor         = 1.35
-        
-        cam_relax_speed_ai          = 360
-        holder_fov_modifier         = 1.0
-        holder_range_modifier       = 1.0
-        min_radius                  = 0
-        max_radius                  = 500
-        hit_probability_gd_novice   = 1.00
-        hit_probability_gd_stalker  = 1.00
-        hit_probability_gd_veteran  = 1.00
-        hit_probability_gd_master   = 1.00
-        
-        kill_msg_x                  = 168
-        kill_msg_y                  = 178
-        kill_msg_width              = 27
-        kill_msg_height             = 23
-		weapon_lower_speed			= 0.2
-		
+positive X = move right
+negative X = move left
+positive Y = move up
+negative Y = move down
+
+additional_sounds		= glock_additional_sounds
+[glock_additional_sounds]
+snd_move_in				= weapons\main\ak_10_mag_in_move
+snd_move_in_empty	= weapons\main\ak_10_mag_in_empty_move
+snd_move_out				= weapons\main\pm_mag_out_move
+snd_move_end			= weapons\main\move_end
+snd_move_long			= weapons\main\move_long
+snd_slow_arm				= weapons\main\slow_arm
+snd_fast_arm				= weapons\main\fast_arm
+snd_selector				= weapons\main\selector3
+snd_mag_in					= weapons\main\glock_mag_in
+snd_mag_out				= weapons\main\glock_mag_out
+snd_mag_in_33			= weapons\main\glock_mag_in_33
+snd_mag_out_33			= weapons\main\glock_mag_out_33
+snd_mag_in_50			= weapons\main\glock_mag_in_50
+snd_mag_out_50			= weapons\main\glock_mag_out_50
+snd_slide_release		= weapons\main\glock_slide_release
+snd_slide_back			= weapons\main\glock_slide_back
+snd_casing					= weapons\main\712_casing
 
 [wpn_glock_hud]:hud_base
-        item_visual                 = anomaly_weapons\wpn_glock\wpn_glock_hud.ogf
-        attach_place_idx            = 0
-        zoom_hide_crosshair         = true
-        
-item_position                    = 0.00133, -0.00497, -0.006967
-item_orientation			     = 0, 0, 0
-		
-        hands_orientation                = 1.47, -0.71333, -5.543992
-        hands_orientation_16x9           = 1.47, -0.71333, -5.543992
-        hands_position                   = -0.019436, -0.061725, -0.061497
-        hands_position_16x9              = -0.019436, -0.061725, -0.061497
 
-        aim_hud_offset_pos               = 0.025162, 0.003109, -0.016008
-        aim_hud_offset_pos_16x9          = 0.025162, 0.003109, -0.016008
-        aim_hud_offset_rot               = -0.014429, 0.02688, -0.093596
-        aim_hud_offset_rot_16x9          = -0.014429, 0.02688, -0.093596
-
-lowered_hud_offset_pos           = 0.046401, 0.027462, 0.046365
-lowered_hud_offset_pos_16x9      = 0.046401, 0.027462, 0.046365
-
-lowered_hud_offset_rot           = 0.212509, -0.152878, -0.095673
-lowered_hud_offset_rot_16x9      = 0.212509, -0.152878, -0.095673
-
-gl_hud_offset_pos           = 0, 0, 0
-gl_hud_offset_rot           = 0, 0, 0
-        
-lean_hud_offset_pos         = 0, 0, 0
-lean_hud_offset_rot         = 0, 0, 0
-        
-safemode_anm				= 
-safemode_anm2				= 
-        
-        anm_hide                    = gluck_hide
-        anm_hide_empty              = gluck_hide, idle_empty
-        anm_idle                    = gluck_idle
-        anm_idle_aim                = gluck_aim
-        anm_idle_aim_empty          = gluck_aim, idle_empty
-        anm_idle_aim_moving         = gluck_walk, idle, 0.75
-        anm_idle_aim_moving_crouch  = gluck_walk, idle, 0.75
-        anm_idle_aim_moving_crouch_empty = gluck_walk, idle_empty, 0.7
-        anm_idle_aim_moving_empty   = glock_idle_moving, idle_empty, 0.75
-        anm_idle_empty              = gluck_idle, idle_empty
-        anm_idle_moving             = gluck_walk
-        anm_idle_moving_crouch      = gluck_walk
-        anm_idle_moving_crouch_empty = gluck_walk, idle_empty
-        anm_idle_moving_empty       = gluck_walk, idle_empty
-        anm_idle_sprint             = gluck_sprint
-        anm_idle_sprint_empty       = gluck_sprint, idle_empty
-        anm_reload                  = gluck_reload, glock17_reload
-        anm_reload_empty            = gluck_reload_empty, glock17_reload_full
-        anm_shot_l                  = gluck_shoot, glock17_shoot_empty
-        anm_shots                   = gluck_shoot, glock17_shoot
-        anm_show                    = gluck_draw
-        anm_show_empty              = gluck_draw, idle_empty
-		anm_bore_empty              = gluck_bore, idle_empty
-		anm_reload_misfire          = gluck_unjam, glock17_revival
-		anm_shots_aim               = gluck_aim_shoot, glock17_shoot_aim
-        anm_shots_aim_l             = gluck_aim_shoot, glock17_shoot_aim_empty
-        anm_idle_aim_start          = gluck_aim_start, idle
-        anm_idle_aim_end            = gluck_aim_end, idle
-        anm_idle_aim_start_empty    = gluck_aim_start, idle_empty
-        anm_idle_aim_end_empty      = gluck_aim_end, idle_empty
-		anm_switch_mode             = gluck_fire_select, idle
-		
-anm_hide_jammed                        = gluck_hide, idle_jammed       
-anm_idle_jammed                        = gluck_idle, idle_jammed   
-anm_idle_aim_jammed                    = gluck_aim, idle_jammed   
-anm_idle_aim_moving_jammed             = gluck_walk, idle_jammed, 0.75
-anm_idle_aim_moving_crouch_jammed      = gluck_walk, idle_jammed,  0.7
-anm_idle_moving_jammed                 = gluck_walk, idle_jammed   
-anm_idle_moving_crouch_jammed          = gluck_walk, idle_jammed, 0.7
-anm_idle_sprint_jammed                 = gluck_sprint, idle_jammed  
-anm_show_jammed                        = gluck_draw, idle_jammed   
-anm_switch_mode_jammed                 = gluck_fire_select, idle_jammed
-anm_bore_jammed                        = gluck_dry, idle_jammed
-anm_idle_aim_start_jammed          = gluck_aim_start, idle_jammed
-anm_idle_aim_end_jammed            = gluck_aim_end, idle_jammed
-
-;--- Переходы спринта---
-
-        anm_sprint_start             = gluck_sprint_start, idle
-        anm_sprint_end               = gluck_sprint_end, idle
-		anm_sprint_start_empty       = gluck_sprint_start, idle_empty
-        anm_sprint_end_empty         = gluck_sprint_end, idle_empty
-		anm_sprint_start_jammed      = gluck_sprint_start, idle_jammed   
-		anm_sprint_end_jammed        = gluck_sprint_end, idle_jammed
-		
-
-;--- Паттерны спринта---
-
-        ts_pattern_sprint_start      = .+, anm_idle_sprint, anm_sprint_start, 1
-        ts_pattern_sprint_end        = anm_idle_sprint, ^anm_idle.*, anm_sprint_end
-        ts_strict_sprint_end_move    = anm_sprint_start, anm_idle_moving, anm_sprint_end  			
-        
-        shell_bone                  = wpn_body
-        shell_point                 = 200, 200 ,200
-        
-        fire_bone                   = wpn_body
-        fire_point                  = 0, 0.07, 0.3
- 
-;------------------------------------------------------------------------------------------------
-[wpn_glock_custom]:wpn_glock
-icons_texture = ui\ui_icon_hs2000
-
-inv_grid_width     = 2
-inv_grid_height    = 1
-inv_grid_x         = 0
-inv_grid_y         = 1
-
-upgr_icon_path     = ui\ui_icon_hs2000
-
-upgr_icon_x        = 50
-upgr_icon_y        = 100
-upgr_icon_width    = 150
-upgr_icon_height   = 100
+weapon_recoil_vert         = 3.11
+weapon_recoil_vert_inc     = 0.311
+weapon_recoil_horz         = 2.6
+weapon_recoil_ret_speed    = 5.0
 
 
+anm_switch_mode_sounds                   = 0,snd_fast_arm|16,snd_selector
+anm_switch_mode_empty_sounds			= 0,snd_fast_arm|16,snd_selector
+anm_reload_p1_sounds                     = 0,snd_move_out|16,snd_mag_out
+anm_reload_p2_sounds                     = 0,snd_move_in|19,snd_mag_in
+anm_reload_empty_p1_sounds               = 0,snd_move_out|16,snd_mag_out
+anm_reload_empty_p2_sounds               = 0,snd_move_in_empty|19,snd_mag_in|47,snd_slide_release
+anm_reload_misfire_sounds                = 0,snd_move_in|19,snd_slide_back|29,snd_slide_release
+17_anm_reload_p1_sounds                  = 0,snd_move_out|16,snd_mag_out
+17_anm_reload_p2_sounds                  = 0,snd_move_in|19,snd_mag_in
+17_anm_reload_empty_p1_sounds            = 0,snd_move_out|16,snd_mag_out
+17_anm_reload_empty_p2_sounds            = 0,snd_move_in_empty|19,snd_mag_in|47,snd_slide_release
+17_anm_mag_check_sounds                  = 0,snd_move_out|16,snd_mag_out|30,snd_move_end|76,snd_mag_in
+17_anm_mag_check_empty_sounds            = 0,snd_move_out|16,snd_mag_out|30,snd_move_end|76,snd_mag_in
+33_anm_reload_p1_sounds                  = 0,snd_move_out|16,snd_mag_out_33
+33_anm_reload_p2_sounds                  = 0,snd_move_in|19,snd_mag_in_33
+33_anm_reload_empty_p1_sounds            = 0,snd_move_out|16,snd_mag_out_33
+33_anm_reload_empty_p2_sounds            = 0,snd_move_in_empty|19,snd_mag_in_33|47,snd_slide_release
+33_anm_mag_check_sounds                  = 0,snd_move_out|16,snd_mag_out_33|30,snd_move_end|76,snd_mag_in_33
+33_anm_mag_check_empty_sounds            = 0,snd_move_out|16,snd_mag_out_33|30,snd_move_end|76,snd_mag_in_33
+50_anm_reload_p1_sounds                  = 0,snd_move_out|16,snd_mag_out_50
+50_anm_reload_p2_sounds                  = 0,snd_move_in|19,snd_mag_in_50
+50_anm_reload_empty_p1_sounds            = 0,snd_move_out|16,snd_mag_out_50
+50_anm_reload_empty_p2_sounds            = 0,snd_move_in_empty|19,snd_mag_in_50|47,snd_slide_release
+50_anm_mag_check_sounds                  = 0,snd_move_out|16,snd_mag_out_50|30,snd_move_end|76,snd_mag_in_50
+50_anm_mag_check_empty_sounds            = 0,snd_move_out|16,snd_mag_out_50|30,snd_move_end|76,snd_mag_in_50
 
-        inv_name                    = st_wpn_hs2000
-        inv_name_short              = st_wpn_hs2000_short
-        description                 = st_wpn_hs2000_descr
-        silencer_status             = 2
-        cost                        = 19680
-        
-        hud                         = wpn_glock_sk1_hud
-        visual                      = dynamics\weapons\wpn_glock\wpn_glock_sk1.ogf
-        ammo_elapsed                = 16
-        ammo_mag_size               = 16
-        installed_upgrades          = up_fiftha_glock, up_thirda_glock
-        
-        rpm                         = 280
-        
-        fire_dispersion_base        = 0.3
-        
-        misfire_start_condition     = 0.7 ;  0.75
-        misfire_start_prob          = 0.006
-        misfire_end_condition       = 0.08
-        misfire_end_prob            = 0.08
-        
-        condition_queue_shot_dec    = 0.00165
-        condition_shot_dec          = 0.00165
- 
+t_anm_switch_mode_sounds                 = 0,snd_fast_arm|17,snd_selector
+t_anm_switch_mode_empty_sounds           = 0,snd_fast_arm|17,snd_selector
+t_anm_reload_p1_sounds                   = 0,snd_move_out|16,snd_mag_out
+t_anm_reload_p2_sounds                   = 0,snd_move_in|19,snd_mag_in
+t_anm_reload_empty_p1_sounds             = 0,snd_move_out|16,snd_mag_out
+t_anm_reload_empty_p2_sounds             = 0,snd_move_in_empty|19,snd_mag_in|47,snd_slide_release
+t_anm_reload_misfire_sounds              = 0,snd_move_in|18,snd_slide_back|29,snd_slide_release
+17_t_anm_reload_p1_sounds                = 0,snd_move_out|16,snd_mag_out
+17_t_anm_reload_p2_sounds                = 0,snd_move_in|19,snd_mag_in
+17_t_anm_reload_empty_p1_sounds          = 0,snd_move_out|16,snd_mag_out
+17_t_anm_reload_empty_p2_sounds          = 0,snd_move_in_empty|19,snd_mag_in|47,snd_slide_release
+17_t_anm_mag_check_sounds                = 0,snd_move_out|16,snd_mag_out|30,snd_move_end|76,snd_mag_in
+17_t_anm_mag_check_empty_sounds          = 0,snd_move_out|16,snd_mag_out|30,snd_move_end|76,snd_mag_in
+33_t_anm_reload_p1_sounds                = 0,snd_move_out|16,snd_mag_out_33
+33_t_anm_reload_p2_sounds                = 0,snd_move_in|19,snd_mag_in_33
+33_t_anm_reload_empty_p1_sounds          = 0,snd_move_out|16,snd_mag_out_33
+33_t_anm_reload_empty_p2_sounds          = 0,snd_move_in_empty|19,snd_mag_in_33|47,snd_slide_release
+33_t_anm_mag_check_sounds                = 0,snd_move_out|16,snd_mag_out_33|30,snd_move_end|76,snd_mag_in_33
+33_t_anm_mag_check_empty_sounds          = 0,snd_move_out|16,snd_mag_out_33|30,snd_move_end|76,snd_mag_in_33
+50_t_anm_reload_p1_sounds                = 0,snd_move_out|16,snd_mag_out_50
+50_t_anm_reload_p2_sounds                = 0,snd_move_in|19,snd_mag_in_50
+50_t_anm_reload_empty_p1_sounds          = 0,snd_move_out|16,snd_mag_out_50
+50_t_anm_reload_empty_p2_sounds          = 0,snd_move_in_empty|19,snd_mag_in_50|47,snd_slide_release
+50_t_anm_mag_check_sounds                = 0,snd_move_out|16,snd_mag_out_50|30,snd_move_end|76,snd_mag_in_50
+50_t_anm_mag_check_empty_sounds          = 0,snd_move_out|16,snd_mag_out_50|30,snd_move_end|76,snd_mag_in_50
 
-[wpn_glock_sk1_hud]:wpn_glock_hud
-        item_visual                 = anomaly_weapons\wpn_glock\wpn_glock_sk1_hud.ogf
-         aim_hud_offset_pos               = 0.025694, -0.003145, -0.016008
-        aim_hud_offset_pos_16x9          = 0.025694, -0.003145, -0.016008
-        aim_hud_offset_rot               = -0.013872, 0.025334, -0.095655
-        aim_hud_offset_rot_16x9          = -0.013872, 0.025334, -0.095655
-;------------------------------------------------------------------------------------------------
-[wpn_glock_modern]:wpn_glock
-icons_texture = ui\ui_icon_glock17
+r_anm_switch_mode_sounds                 = 0,snd_fast_arm|17,snd_selector
+r_anm_switch_mode_empty_sounds           = 0,snd_fast_arm|17,snd_selector
+r_anm_reload_p1_sounds                   = 0,snd_move_out|16,snd_mag_out
+r_anm_reload_p2_sounds                   = 0,snd_move_in|19,snd_mag_in
+r_anm_reload_empty_p1_sounds             = 0,snd_move_out|16,snd_mag_out
+r_anm_reload_empty_p2_sounds             = 0,snd_move_in_empty|19,snd_mag_in|47,snd_slide_release
+r_anm_reload_misfire_sounds              = 0,snd_move_in|18,snd_slide_back|29,snd_slide_release
+17_r_anm_reload_p1_sounds                = 0,snd_move_out|16,snd_mag_out
+17_r_anm_reload_p2_sounds                = 0,snd_move_in|19,snd_mag_in
+17_r_anm_reload_empty_p1_sounds          = 0,snd_move_out|16,snd_mag_out
+17_r_anm_reload_empty_p2_sounds          = 0,snd_move_in_empty|19,snd_mag_in|47,snd_slide_release
+17_r_anm_mag_check_sounds                = 0,snd_move_out|16,snd_mag_out|30,snd_move_end|76,snd_mag_in
+17_r_anm_mag_check_empty_sounds          = 0,snd_move_out|16,snd_mag_out|30,snd_move_end|76,snd_mag_in
+33_r_anm_reload_p1_sounds                = 0,snd_move_out|16,snd_mag_out_33
+33_r_anm_reload_p2_sounds                = 0,snd_move_in|19,snd_mag_in_33
+33_r_anm_reload_empty_p1_sounds          = 0,snd_move_out|16,snd_mag_out_33
+33_r_anm_reload_empty_p2_sounds          = 0,snd_move_in_empty|19,snd_mag_in_33|47,snd_slide_release
+33_r_anm_mag_check_sounds                = 0,snd_move_out|16,snd_mag_out_33|30,snd_move_end|76,snd_mag_in_33
+33_r_anm_mag_check_empty_sounds          = 0,snd_move_out|16,snd_mag_out_33|30,snd_move_end|76,snd_mag_in_33
+50_r_anm_reload_p1_sounds                = 0,snd_move_out|16,snd_mag_out_50
+50_r_anm_reload_p2_sounds                = 0,snd_move_in|19,snd_mag_in_50
+50_r_anm_reload_empty_p1_sounds          = 0,snd_move_out|16,snd_mag_out_50
+50_r_anm_reload_empty_p2_sounds          = 0,snd_move_in_empty|19,snd_mag_in_50|47,snd_slide_release
+50_r_anm_mag_check_sounds                = 0,snd_move_out|16,snd_mag_out_50|30,snd_move_end|76,snd_mag_in_50
+50_r_anm_mag_check_empty_sounds          = 0,snd_move_out|16,snd_mag_out_50|30,snd_move_end|76,snd_mag_in_50
 
-inv_grid_width     = 2
-inv_grid_height    = 1
-inv_grid_x         = 0
-inv_grid_y         = 1
+v_anm_switch_mode_sounds                 = 0,snd_fast_arm|17,snd_selector
+v_anm_switch_mode_empty_sounds           = 0,snd_fast_arm|17,snd_selector
+v_anm_reload_p1_sounds                   = 0,snd_move_out|16,snd_mag_out
+v_anm_reload_p2_sounds                   = 0,snd_move_in|19,snd_mag_in
+v_anm_reload_empty_p1_sounds             = 0,snd_move_out|16,snd_mag_out
+v_anm_reload_empty_p2_sounds             = 0,snd_move_in_empty|19,snd_mag_in|47,snd_slide_release
+v_anm_reload_misfire_sounds              = 0,snd_move_in|18,snd_slide_back|29,snd_slide_release
+17_v_anm_reload_p1_sounds                = 0,snd_move_out|16,snd_mag_out
+17_v_anm_reload_p2_sounds                = 0,snd_move_in|19,snd_mag_in
+17_v_anm_reload_empty_p1_sounds          = 0,snd_move_out|16,snd_mag_out
+17_v_anm_reload_empty_p2_sounds          = 0,snd_move_in_empty|19,snd_mag_in|47,snd_slide_release
+17_v_anm_mag_check_sounds                = 0,snd_move_out|16,snd_mag_out|30,snd_move_end|76,snd_mag_in
+17_v_anm_mag_check_empty_sounds          = 0,snd_move_out|16,snd_mag_out|30,snd_move_end|76,snd_mag_in
+33_v_anm_reload_p1_sounds                = 0,snd_move_out|16,snd_mag_out_33
+33_v_anm_reload_p2_sounds                = 0,snd_move_in|19,snd_mag_in_33
+33_v_anm_reload_empty_p1_sounds          = 0,snd_move_out|16,snd_mag_out_33
+33_v_anm_reload_empty_p2_sounds          = 0,snd_move_in_empty|19,snd_mag_in_33|47,snd_slide_release
+33_v_anm_mag_check_sounds                = 0,snd_move_out|16,snd_mag_out_33|30,snd_move_end|76,snd_mag_in_33
+33_v_anm_mag_check_empty_sounds          = 0,snd_move_out|16,snd_mag_out_33|30,snd_move_end|76,snd_mag_in_33
+50_v_anm_reload_p1_sounds                = 0,snd_move_out|16,snd_mag_out_50
+50_v_anm_reload_p2_sounds                = 0,snd_move_in|19,snd_mag_in_50
+50_v_anm_reload_empty_p1_sounds          = 0,snd_move_out|16,snd_mag_out_50
+50_v_anm_reload_empty_p2_sounds          = 0,snd_move_in_empty|19,snd_mag_in_50|47,snd_slide_release
+50_v_anm_mag_check_sounds                = 0,snd_move_out|16,snd_mag_out_50|30,snd_move_end|76,snd_mag_in_50
+50_v_anm_mag_check_empty_sounds          = 0,snd_move_out|16,snd_mag_out_50|30,snd_move_end|76,snd_mag_in_50
 
-upgr_icon_path     = ui\ui_icon_glock17
+c_anm_switch_mode_sounds                 = 0,snd_fast_arm|17,snd_selector
+c_anm_switch_mode_empty_sounds           = 0,snd_fast_arm|17,snd_selector
+c_anm_reload_p1_sounds                   = 0,snd_move_out|16,snd_mag_out
+c_anm_reload_p2_sounds                   = 0,snd_move_in|19,snd_mag_in
+c_anm_reload_empty_p1_sounds             = 0,snd_move_out|16,snd_mag_out
+c_anm_reload_empty_p2_sounds             = 0,snd_move_in_empty|19,snd_mag_in|47,snd_slide_release
+c_anm_reload_misfire_sounds              = 0,snd_move_in|18,snd_slide_back|29,snd_slide_release
+17_c_anm_reload_p1_sounds                = 0,snd_move_out|16,snd_mag_out
+17_c_anm_reload_p2_sounds                = 0,snd_move_in|19,snd_mag_in
+17_c_anm_reload_empty_p1_sounds          = 0,snd_move_out|16,snd_mag_out
+17_c_anm_reload_empty_p2_sounds          = 0,snd_move_in_empty|19,snd_mag_in|47,snd_slide_release
+17_c_anm_mag_check_sounds                = 0,snd_move_out|16,snd_mag_out|30,snd_move_end|76,snd_mag_in
+17_c_anm_mag_check_empty_sounds          = 0,snd_move_out|16,snd_mag_out|30,snd_move_end|76,snd_mag_in
+33_c_anm_reload_p1_sounds                = 0,snd_move_out|16,snd_mag_out_33
+33_c_anm_reload_p2_sounds                = 0,snd_move_in|19,snd_mag_in_33
+33_c_anm_reload_empty_p1_sounds          = 0,snd_move_out|16,snd_mag_out_33
+33_c_anm_reload_empty_p2_sounds          = 0,snd_move_in_empty|19,snd_mag_in_33|47,snd_slide_release
+33_c_anm_mag_check_sounds                = 0,snd_move_out|16,snd_mag_out_33|30,snd_move_end|76,snd_mag_in_33
+33_c_anm_mag_check_empty_sounds          = 0,snd_move_out|16,snd_mag_out_33|30,snd_move_end|76,snd_mag_in_33
+50_c_anm_reload_p1_sounds                = 0,snd_move_out|16,snd_mag_out_50
+50_c_anm_reload_p2_sounds                = 0,snd_move_in|19,snd_mag_in_50
+50_c_anm_reload_empty_p1_sounds          = 0,snd_move_out|16,snd_mag_out_50
+50_c_anm_reload_empty_p2_sounds          = 0,snd_move_in_empty|19,snd_mag_in_50|47,snd_slide_release
+50_c_anm_mag_check_sounds                = 0,snd_move_out|16,snd_mag_out_50|30,snd_move_end|76,snd_mag_in_50
+50_c_anm_mag_check_empty_sounds          = 0,snd_move_out|16,snd_mag_out_50|30,snd_move_end|76,snd_mag_in_50
 
-upgr_icon_x        = 50
-upgr_icon_y        = 100
-upgr_icon_width    = 150
-upgr_icon_height   = 100
-        inv_name                    = st_wpn_glock_modern
-        inv_name_short              = st_wpn_glock_modern
-        description                 = st_wpn_glock_modern_descr
-        
-        cost                        = 15680
-        
-        hud                         = wpn_glock_sk2_hud
-        visual                      = dynamics\weapons\wpn_glock\wpn_glock_sk2.ogf
-        
-        upgrades                    = up_gr_firstab_glock_auto, up_gr_seconab_glock_auto, up_gr_thirdab_glock_auto, up_gr_fourtab_glock_auto, up_gr_fifthab_glock_auto, up_gr_fifthcd_glock_auto
-        installed_upgrades          = up_fiftha_glock_auto
-        
-        fire_modes                  = 1, -1
-        
-        grenade_class               = ammo_vog-25
-        
-        rpm                         = 1200
-		ammo_elapsed                = 40
-        ammo_mag_size               = 40
-        
-        fire_dispersion_base        = 0.35
-        
-        misfire_start_condition     = 0.7 ;  0.7
-        misfire_start_prob          = 0.006
-        misfire_end_condition       = 0.07
-        misfire_end_prob            = 0.08
-        
-        condition_queue_shot_dec    = 0.0005
-        condition_shot_dec          = 0.0005
-		fire_point              	= 0.0, 0.0, 0.0
-        fire_point2                 = 0.0, 0.0, 0.0
+item_visual							= w_att_huds\glock_hud.ogf
+;hands_position					= 0.06, -0.06, -0.1
+;hands_position_16x9			= 0.06, -0.06, -0.1
+;hands_orientation				= 0.3, 0.3, 0
+;hands_orientation_16x9		= 0.3, 0.3, 0
+;aim_hud_offset_pos				= -0.0604, 0.0415, 0
+;aim_hud_offset_pos_16x9		= -0.0604, 0.0415, 0
+;aim_hud_offset_rot					= 0.008, 0.006, 0
+;aim_hud_offset_rot_16x9		= 0.008, 0.006, 0
 
-snd_draw				                                          = weapons\glock\gluck_draw
-snd_holster				                                          = weapons\glock\gluck_holster
-snd_reload				                                          = weapons\glock\glock17_reload
-snd_reload_empty                                                  = weapons\glock\glock17_reload_full
-snd_close				                                          = weapons\glock\walther_close
-snd_silncer_shot				                                  = weapons\glock\glock17_shoot_s
-snd_reload_misfire                                                = weapons\glock\glock17_revival
-snd_switch_mode                                                   = weapons\glock\glock17_firemode
- 
+;item_position								= 0, 0, -0.5
+;item_orientation							= 0, 0, -0.5
 
-[wpn_glock_sk2_hud]:hud_base
-        attach_place_idx            = 0
-        zoom_hide_crosshair         = true
-        
-item_position                    = 0.00133, -0.00497, -0.006967
-item_orientation			     = 0, 0, 0
-		
-        hands_orientation                = 1.47, -0.71333, -5.543992
-        hands_orientation_16x9           = 1.47, -0.71333, -5.543992
-        hands_position                   = -0.019436, -0.061725, -0.061497
-        hands_position_16x9              = -0.019436, -0.061725, -0.061497
+hands_position					= 0.06, -0.06, -0.05
+hands_position_16x9			= 0.06, -0.06, -0.05
+hands_orientation				= 0.3, 0.3, 0
+hands_orientation_16x9		= 0.3, 0.3, 0
+aim_hud_offset_pos				= -0.0604, 0.042, -0.05
+aim_hud_offset_pos_16x9		= -0.0604, 0.042, -0.05
+aim_hud_offset_rot					= 0.006, 0.006, 0
+aim_hud_offset_rot_16x9		= 0.006, 0.006, 0
 
-lowered_hud_offset_pos           = 0.046401, 0.027462, 0.046365
-lowered_hud_offset_pos_16x9      = 0.046401, 0.027462, 0.046365
+anm_bore												= glock_m_bore, idle, 1.2
+anm_bore_empty									= glock_m_bore_e, idle_empty
+anm_hide												= glock_m_holster_e, idle
+anm_hide_empty										= glock_m_holster_e, idle_empty
+anm_idle													= glock_m_idle, idle
+anm_idle_empty										= glock_m_idle, idle_empty
+anm_idle_aim											= glock_m_idle_aim, idle
+anm_idle_aim_empty								= glock_m_idle_aim, idle_empty
+anm_idle_aim_moving							= glock_m_walk_aim, idle
+anm_idle_aim_moving_crouch				= glock_m_walk_aim, idle
+anm_idle_aim_moving_crouch_empty	= glock_m_walk_aim, idle_empty
+anm_idle_aim_moving_empty					= glock_m_walk_aim, idle_empty
+anm_idle_moving									= glock_m_walk, idle
+anm_idle_moving_crouch						= glock_m_walk, idle, 0.7
+anm_idle_moving_crouch_empty			= glock_m_walk, idle_empty, 0.7
+anm_idle_moving_empty						= glock_m_walk, idle_empty
+anm_shot_l												= glock_m_shoot, shoot_last
+anm_shots												= glock_m_shoot, shoot, 1.5
+anm_show												= glock_m_show_e, idle
+anm_show_empty									= glock_m_show_e, idle_empty
+anm_reload_misfire									= glock_m_unjam, unjam, 1.55
+anm_switch_mode									= glock_m_firemode, firemode, 1.2
+anm_switch_mode_empty						= glock_m_firemode_e, firemode_empty, 1.2
+anm_idle_sprint										= glock_m_idle_sprint, idle
+anm_idle_sprint_empty							= glock_m_idle_sprint, idle_empty
+anm_mag_check										= glock_m_check_17, check, 1.5
+anm_mag_check_empty							= glock_m_check_17, check_empty, 1.5
+anm_reload												= glock_m_reload_17_p1, reload_p1, 1.5
+anm_reload_p1										= glock_m_reload_17_p1, reload_p1, 1.5
+anm_reload_p2										= glock_m_reload_17_p2, reload_p2, 1.5
+anm_reload_empty									= glock_m_reload_17_p1, reload_empty_p1, 1.5
+anm_reload_empty_p1							= glock_m_reload_17_p1, reload_empty_p1, 1.5
+anm_reload_empty_p2							= glock_m_reload_17e_p2, reload_empty_p2, 1.5
+17_anm_reload										= glock_m_reload_17_p1, reload_p1, 1.5
+17_anm_reload_p1									= glock_m_reload_17_p1, reload_p1, 1.5
+17_anm_reload_p2									= glock_m_reload_17_p2, reload_p2, 1.5
+17_anm_reload_empty							= glock_m_reload_17_p1, reload_empty_p1, 1.5
+17_anm_reload_empty_p1						= glock_m_reload_17_p1, reload_empty_p1, 1.5
+17_anm_reload_empty_p2						= glock_m_reload_17e_p2, reload_empty_p2, 1.5
+17_anm_mag_check								= glock_m_check_17, check, 1.5
+17_anm_mag_check_empty					= glock_m_check_17, check_empty, 1.5
+33_anm_reload										= glock_m_reload_33_p1, reload_p1, 1.5
+33_anm_reload_p1									= glock_m_reload_33_p1, reload_p1, 1.5
+33_anm_reload_p2									= glock_m_reload_33_p2, reload_p2, 1.5
+33_anm_reload_empty							= glock_m_reload_33_p1, reload_empty_p1, 1.5
+33_anm_reload_empty_p1						= glock_m_reload_33_p1, reload_empty_p1, 1.5
+33_anm_reload_empty_p2						= glock_m_reload_33e_p2, reload_empty_p2, 1.5
+33_anm_mag_check								= glock_m_check_33, check, 1.5
+33_anm_mag_check_empty					= glock_m_check_33, check_empty, 1.5
+50_anm_reload										= glock_m_reload_50_p1, reload_p1, 1.5
+50_anm_reload_p1									= glock_m_reload_50_p1, reload_p1, 1.5
+50_anm_reload_p2									= glock_m_reload_50_p2, reload_p2, 1.5
+50_anm_reload_empty							= glock_m_reload_50_p1, reload_empty_p1, 1.5
+50_anm_reload_empty_p1						= glock_m_reload_50_p1, reload_empty_p1, 1.5
+50_anm_reload_empty_p2						= glock_m_reload_50e_p2, reload_empty_p2, 1.5
+50_anm_mag_check								= glock_m_check_50, check, 1.5
+50_anm_mag_check_empty					= glock_m_check_50, check_empty, 1.5
 
-lowered_hud_offset_rot           = 0.212509, -0.152878, -0.095673
-lowered_hud_offset_rot_16x9      = 0.212509, -0.152878, -0.095673
+t_anm_bore                               = glock_t_bore, idle, 1.2
+t_anm_bore_empty                         = glock_t_bore_e, idle_empty
+t_anm_hide                               = glock_t_holster_e, idle
+t_anm_hide_empty                         = glock_t_holster_e, idle_empty
+t_anm_idle                               = glock_t_idle, idle
+t_anm_idle_empty                         = glock_t_idle, idle_empty
+t_anm_idle_aim                           = glock_t_idle_aim, idle
+t_anm_idle_aim_empty                     = glock_t_idle_aim, idle_empty
+t_anm_idle_aim_moving                    = glock_t_walk_aim, idle
+t_anm_idle_aim_moving_crouch             = glock_t_walk_aim, idle
+t_anm_idle_aim_moving_crouch_empty       = glock_t_walk_aim, idle_empty
+t_anm_idle_aim_moving_empty              = glock_t_walk_aim, idle_empty
+t_anm_idle_moving                        = glock_t_walk, idle
+t_anm_idle_moving_crouch                 = glock_t_walk, idle, 0.7
+t_anm_idle_moving_crouch_empty           = glock_t_walk, idle_empty, 0.7
+t_anm_idle_moving_empty                  = glock_t_walk, idle_empty
+t_anm_shot_l                             = glock_t_shoot, shoot_last
+t_anm_shots                              = glock_t_shoot, shoot
+t_anm_show                               = glock_t_show_e, idle
+t_anm_show_empty                         = glock_t_show_e, idle_empty
+t_anm_reload_misfire                     = glock_t_unjam, unjam, 1.2
+t_anm_switch_mode                        = glock_t_firemode, idle, 1.2
+t_anm_switch_mode_empty                  = glock_t_firemode_e, idle_empty, 1.2
+t_anm_mag_check                          = glock_t_check_17, check, 1.5
+t_anm_mag_check_empty                    = glock_t_check_17, check_empty, 1.5
+t_anm_reload                             = glock_t_reload_17_p1, reload_p1, 1.5
+t_anm_reload_p1                          = glock_t_reload_17_p1, reload_p1, 1.5
+t_anm_reload_p2                          = glock_t_reload_17_p2, reload_p2, 1.5
+t_anm_reload_empty                       = glock_t_reload_17_p1, reload_empty_p1, 1.5
+t_anm_reload_empty_p1                    = glock_t_reload_17_p1, reload_empty_p1, 1.5
+t_anm_reload_empty_p2                    = glock_t_reload_17e_p2, reload_empty_p2, 1.5
+17_t_anm_reload                          = glock_t_reload_17_p1, reload_p1, 1.5
+17_t_anm_reload_p1                       = glock_t_reload_17_p1, reload_p1, 1.5
+17_t_anm_reload_p2                       = glock_t_reload_17_p2, reload_p2, 1.5
+17_t_anm_reload_empty                    = glock_t_reload_17_p1, reload_empty_p1, 1.5
+17_t_anm_reload_empty_p1                 = glock_t_reload_17_p1, reload_empty_p1, 1.5
+17_t_anm_reload_empty_p2                 = glock_t_reload_17e_p2, reload_empty_p2, 1.5
+17_t_anm_mag_check                       = glock_t_check_17, check, 1.5
+17_t_anm_mag_check_empty                 = glock_t_check_17, check_empty, 1.5
+33_t_anm_reload                          = glock_t_reload_33_p1, reload_p1, 1.5
+33_t_anm_reload_p1                       = glock_t_reload_33_p1, reload_p1, 1.5
+33_t_anm_reload_p2                       = glock_t_reload_33_p2, reload_p2, 1.5
+33_t_anm_reload_empty                    = glock_t_reload_33_p1, reload_empty_p1, 1.5
+33_t_anm_reload_empty_p1                 = glock_t_reload_33_p1, reload_empty_p1, 1.5
+33_t_anm_reload_empty_p2                 = glock_t_reload_33e_p2, reload_empty_p2, 1.5
+33_t_anm_mag_check                       = glock_t_check_33, check, 1.5
+33_t_anm_mag_check_empty                 = glock_t_check_33, check_empty, 1.5
+50_t_anm_reload                          = glock_t_reload_50_p1, reload_p1, 1.5
+50_t_anm_reload_p1                       = glock_t_reload_50_p1, reload_p1, 1.5
+50_t_anm_reload_p2                       = glock_t_reload_50_p2, reload_p2, 1.5
+50_t_anm_reload_empty                    = glock_t_reload_50_p1, reload_empty_p1, 1.5
+50_t_anm_reload_empty_p1                 = glock_t_reload_50_p1, reload_empty_p1, 1.5
+50_t_anm_reload_empty_p2                 = glock_t_reload_50e_p2, reload_empty_p2, 1.5
+50_t_anm_mag_check                       = glock_t_check_50, check, 1.5
+50_t_anm_mag_check_empty                 = glock_t_check_50, check_empty, 1.5
 
-gl_hud_offset_pos           = 0, 0, 0
-gl_hud_offset_rot           = 0, 0, 0
-        
-lean_hud_offset_pos         = 0, 0, 0
-lean_hud_offset_rot         = 0, 0, 0
-        
-safemode_anm				= 
-safemode_anm2				= 
-        
-        anm_bore                    = gluck_bore, idle
-        anm_hide                    = gluck_hide
-        anm_hide_empty              = gluck_hide, idle_empty
-        anm_idle                    = gluck_idle
-        anm_idle_aim                = gluck_aim
-        anm_idle_aim_empty          = gluck_aim, idle_empty
-        anm_idle_aim_moving         = gluck_walk, idle, 0.75
-        anm_idle_aim_moving_crouch  = gluck_walk, idle, 0.75
-        anm_idle_aim_moving_crouch_empty = gluck_walk, idle_empty, 0.7
-        anm_idle_aim_moving_empty   = glock_idle_moving, idle_empty, 0.75
-        anm_idle_empty              = gluck_idle, idle_empty
-        anm_idle_moving             = gluck_walk
-        anm_idle_moving_crouch      = gluck_walk
-        anm_idle_moving_crouch_empty = gluck_walk, idle_empty
-        anm_idle_moving_empty       = gluck_walk, idle_empty
-        anm_idle_sprint             = gluck_sprint
-        anm_idle_sprint_empty       = gluck_sprint, idle_empty
-        anm_show                    = gluck_draw
-        anm_show_empty              = gluck_draw, idle_empty
-	anm_bore_empty              = gluck_bore, idle_empty
-	anm_reload_misfire          = gluck_unjam, glock17_revival
-        anm_idle_aim_start          = gluck_aim_start, idle
-        anm_idle_aim_end            = gluck_aim_end, idle
-        anm_idle_aim_start_empty    = gluck_aim_start, idle_empty
-        anm_idle_aim_end_empty      = gluck_aim_end, idle_empty
-	anm_switch_mode             = gluck_fire_select, idle
-		
-anm_hide_jammed                        = gluck_hide, idle_jammed       
-anm_idle_jammed                        = gluck_idle, idle_jammed   
-anm_idle_aim_jammed                    = gluck_aim, idle_jammed   
-anm_idle_aim_moving_jammed             = gluck_walk, idle_jammed, 0.75
-anm_idle_aim_moving_crouch_jammed      = gluck_walk, idle_jammed,  0.7
-anm_idle_moving_jammed                 = gluck_walk, idle_jammed   
-anm_idle_moving_crouch_jammed          = gluck_walk, idle_jammed, 0.7
-anm_idle_sprint_jammed                 = gluck_sprint, idle_jammed  
-anm_show_jammed                        = gluck_draw, idle_jammed   
-anm_switch_mode_jammed                 = gluck_fire_select, idle_jammed
-anm_bore_jammed                        = gluck_dry, idle_jammed
-anm_idle_aim_start_jammed          = gluck_aim_start, idle_jammed
-anm_idle_aim_end_jammed            = gluck_aim_end, idle_jammed
+v_anm_bore                               = glock_t_bore, idle, 1.2
+v_anm_bore_empty                         = glock_t_bore_e, idle_empty
+v_anm_hide                               = glock_t_holster_e, idle
+v_anm_hide_empty                         = glock_t_holster_e, idle_empty
+v_anm_idle                               = glock_t_idle, idle
+v_anm_idle_empty                         = glock_t_idle, idle_empty
+v_anm_idle_aim                           = glock_t_idle_aim, idle
+v_anm_idle_aim_empty                     = glock_t_idle_aim, idle_empty
+v_anm_idle_aim_moving                    = glock_t_walk_aim, idle
+v_anm_idle_aim_moving_crouch             = glock_t_walk_aim, idle
+v_anm_idle_aim_moving_crouch_empty       = glock_t_walk_aim, idle_empty
+v_anm_idle_aim_moving_empty              = glock_t_walk_aim, idle_empty
+v_anm_idle_moving                        = glock_t_walk, idle
+v_anm_idle_moving_crouch                 = glock_t_walk, idle, 0.7
+v_anm_idle_moving_crouch_empty           = glock_t_walk, idle_empty, 0.7
+v_anm_idle_moving_empty                  = glock_t_walk, idle_empty
+v_anm_shot_l                             = glock_t_shoot, shoot_last
+v_anm_shots                              = glock_t_shoot, shoot
+v_anm_show                               = glock_t_show_e, idle
+v_anm_show_empty                         = glock_t_show_e, idle_empty
+v_anm_reload_misfire                     = glock_t_unjam, unjam, 1.2
+v_anm_switch_mode                        = glock_t_firemode, idle, 1.2
+v_anm_switch_mode_empty                  = glock_t_firemode_e, idle_empty, 1.2
+v_anm_mag_check                          = glock_t_check_17, check, 1.5
+v_anm_mag_check_empty                    = glock_t_check_17, check_empty, 1.5
+v_anm_reload                             = glock_t_reload_17_p1, reload_p1, 1.5
+v_anm_reload_p1                          = glock_t_reload_17_p1, reload_p1, 1.5
+v_anm_reload_p2                          = glock_t_reload_17_p2, reload_p2, 1.5
+v_anm_reload_empty                       = glock_t_reload_17_p1, reload_empty_p1, 1.5
+v_anm_reload_empty_p1                    = glock_t_reload_17_p1, reload_empty_p1, 1.5
+v_anm_reload_empty_p2                    = glock_t_reload_17e_p2, reload_empty_p2, 1.5
+17_v_anm_reload                          = glock_t_reload_17_p1, reload_p1, 1.5
+17_v_anm_reload_p1                       = glock_t_reload_17_p1, reload_p1, 1.5
+17_v_anm_reload_p2                       = glock_t_reload_17_p2, reload_p2, 1.5
+17_v_anm_reload_empty                    = glock_t_reload_17_p1, reload_empty_p1, 1.5
+17_v_anm_reload_empty_p1                 = glock_t_reload_17_p1, reload_empty_p1, 1.5
+17_v_anm_reload_empty_p2                 = glock_t_reload_17e_p2, reload_empty_p2, 1.5
+17_v_anm_mag_check                       = glock_t_check_17, check, 1.5
+17_v_anm_mag_check_empty                 = glock_t_check_17, check_empty, 1.5
+33_v_anm_reload                          = glock_t_reload_33_p1, reload_p1, 1.5
+33_v_anm_reload_p1                       = glock_t_reload_33_p1, reload_p1, 1.5
+33_v_anm_reload_p2                       = glock_t_reload_33_p2, reload_p2, 1.5
+33_v_anm_reload_empty                    = glock_t_reload_33_p1, reload_empty_p1, 1.5
+33_v_anm_reload_empty_p1                 = glock_t_reload_33_p1, reload_empty_p1, 1.5
+33_v_anm_reload_empty_p2                 = glock_t_reload_33e_p2, reload_empty_p2, 1.5
+33_v_anm_mag_check                       = glock_t_check_33, check, 1.5
+33_v_anm_mag_check_empty                 = glock_t_check_33, check_empty, 1.5
+50_v_anm_reload                          = glock_t_reload_50_p1, reload_p1, 1.5
+50_v_anm_reload_p1                       = glock_t_reload_50_p1, reload_p1, 1.5
+50_v_anm_reload_p2                       = glock_t_reload_50_p2, reload_p2, 1.5
+50_v_anm_reload_empty                    = glock_t_reload_50_p1, reload_empty_p1, 1.5
+50_v_anm_reload_empty_p1                 = glock_t_reload_50_p1, reload_empty_p1, 1.5
+50_v_anm_reload_empty_p2                 = glock_t_reload_50e_p2, reload_empty_p2, 1.5
+50_v_anm_mag_check                       = glock_t_check_50, check, 1.5
+50_v_anm_mag_check_empty                 = glock_t_check_50, check_empty, 1.5
 
-;--- Переходы спринта---
+r_anm_bore                               = glock_r_bore, idle, 1.2
+r_anm_bore_empty                         = glock_r_bore_e, idle_empty
+r_anm_hide                               = glock_r_holster_e, idle
+r_anm_hide_empty                         = glock_r_holster_e, idle_empty
+r_anm_idle                               = glock_r_idle, idle
+r_anm_idle_empty                         = glock_r_idle, idle_empty
+r_anm_idle_aim                           = glock_r_idle_aim, idle
+r_anm_idle_aim_empty                     = glock_r_idle_aim, idle_empty
+r_anm_idle_aim_moving                    = glock_r_walk_aim, idle
+r_anm_idle_aim_moving_crouch             = glock_r_walk_aim, idle
+r_anm_idle_aim_moving_crouch_empty       = glock_r_walk_aim, idle_empty
+r_anm_idle_aim_moving_empty              = glock_r_walk_aim, idle_empty
+r_anm_idle_moving                        = glock_r_walk, idle
+r_anm_idle_moving_crouch                 = glock_r_walk, idle, 0.7
+r_anm_idle_moving_crouch_empty           = glock_r_walk, idle_empty, 0.7
+r_anm_idle_moving_empty                  = glock_r_walk, idle_empty
+r_anm_shot_l                             = glock_r_shoot, shoot_last
+r_anm_shots                              = glock_r_shoot, shoot
+r_anm_show                               = glock_r_show_e, idle
+r_anm_show_empty                         = glock_r_show_e, idle_empty
+r_anm_reload_misfire                     = glock_r_unjam, unjam, 1.2
+r_anm_switch_mode                        = glock_r_firemode, idle, 1.2
+r_anm_switch_mode_empty                  = glock_r_firemode_e, idle_empty, 1.2
+r_anm_mag_check                          = glock_r_check_17, check, 1.5
+r_anm_mag_check_empty                    = glock_r_check_17, check_empty, 1.5
+r_anm_reload                             = glock_r_reload_17_p1, reload_p1, 1.5
+r_anm_reload_p1                          = glock_r_reload_17_p1, reload_p1, 1.5
+r_anm_reload_p2                          = glock_r_reload_17_p2, reload_p2, 1.5
+r_anm_reload_empty                       = glock_r_reload_17_p1, reload_empty_p1, 1.5
+r_anm_reload_empty_p1                    = glock_r_reload_17_p1, reload_empty_p1, 1.5
+r_anm_reload_empty_p2                    = glock_r_reload_17e_p2, reload_empty_p2, 1.5
+17_r_anm_reload                          = glock_r_reload_17_p1, reload_p1, 1.5
+17_r_anm_reload_p1                       = glock_r_reload_17_p1, reload_p1, 1.5
+17_r_anm_reload_p2                       = glock_r_reload_17_p2, reload_p2, 1.5
+17_r_anm_reload_empty                    = glock_r_reload_17_p1, reload_empty_p1, 1.5
+17_r_anm_reload_empty_p1                 = glock_r_reload_17_p1, reload_empty_p1, 1.5
+17_r_anm_reload_empty_p2                 = glock_r_reload_17e_p2, reload_empty_p2, 1.5
+17_r_anm_mag_check                       = glock_r_check_17, check, 1.5
+17_r_anm_mag_check_empty                 = glock_r_check_17, check_empty, 1.5
+33_r_anm_reload                          = glock_r_reload_33_p1, reload_p1, 1.5
+33_r_anm_reload_p1                       = glock_r_reload_33_p1, reload_p1, 1.5
+33_r_anm_reload_p2                       = glock_r_reload_33_p2, reload_p2, 1.5
+33_r_anm_reload_empty                    = glock_r_reload_33_p1, reload_empty_p1, 1.5
+33_r_anm_reload_empty_p1                 = glock_r_reload_33_p1, reload_empty_p1, 1.5
+33_r_anm_reload_empty_p2                 = glock_r_reload_33e_p2, reload_empty_p2, 1.5
+33_r_anm_mag_check                       = glock_r_check_33, check, 1.5
+33_r_anm_mag_check_empty                 = glock_r_check_33, check_empty, 1.5
+50_r_anm_reload                          = glock_r_reload_50_p1, reload_p1, 1.5
+50_r_anm_reload_p1                       = glock_r_reload_50_p1, reload_p1, 1.5
+50_r_anm_reload_p2                       = glock_r_reload_50_p2, reload_p2, 1.5
+50_r_anm_reload_empty                    = glock_r_reload_50_p1, reload_empty_p1, 1.5
+50_r_anm_reload_empty_p1                 = glock_r_reload_50_p1, reload_empty_p1, 1.5
+50_r_anm_reload_empty_p2                 = glock_r_reload_50e_p2, reload_empty_p2, 1.5
+50_r_anm_mag_check                       = glock_r_check_50, check, 1.5
+50_r_anm_mag_check_empty                 = glock_r_check_50, check_empty, 1.5
 
-        anm_sprint_start             = gluck_sprint_start, idle
-        anm_sprint_end               = gluck_sprint_end, idle
-	anm_sprint_start_empty       = gluck_sprint_start, idle_empty
-        anm_sprint_end_empty         = gluck_sprint_end, idle_empty
-	anm_sprint_start_jammed      = gluck_sprint_start, idle_jammed   
-	anm_sprint_end_jammed        = gluck_sprint_end, idle_jammed
-		
+c_anm_bore                               = glock_c_bore, idle, 1.2
+c_anm_bore_empty                         = glock_c_bore_e, idle_empty
+c_anm_hide                               = glock_c_holster_e, idle
+c_anm_hide_empty                         = glock_c_holster_e, idle_empty
+c_anm_idle                               = glock_c_idle, idle
+c_anm_idle_empty                         = glock_c_idle, idle_empty
+c_anm_idle_aim                           = glock_c_idle_aim, idle
+c_anm_idle_aim_empty                     = glock_c_idle_aim, idle_empty
+c_anm_idle_aim_moving                    = glock_c_walk_aim, idle
+c_anm_idle_aim_moving_crouch             = glock_c_walk_aim, idle
+c_anm_idle_aim_moving_crouch_empty       = glock_c_walk_aim, idle_empty
+c_anm_idle_aim_moving_empty              = glock_c_walk_aim, idle_empty
+c_anm_idle_moving                        = glock_c_walk, idle
+c_anm_idle_moving_crouch                 = glock_c_walk, idle, 0.7
+c_anm_idle_moving_crouch_empty           = glock_c_walk, idle_empty, 0.7
+c_anm_idle_moving_empty                  = glock_c_walk, idle_empty
+c_anm_shot_l                             = glock_c_shoot, shoot_last
+c_anm_shots                              = glock_c_shoot, shoot
+c_anm_show                               = glock_c_show_e, idle
+c_anm_show_empty                         = glock_c_show_e, idle_empty
+c_anm_reload_misfire                     = glock_c_unjam, unjam, 1.2
+c_anm_switch_mode                        = glock_c_firemode, idle, 1.2
+c_anm_switch_mode_empty                  = glock_c_firemode_e, idle_empty, 1.2
+c_anm_mag_check                          = glock_c_check_17, check, 1.5
+c_anm_mag_check_empty                    = glock_c_check_17, check_empty, 1.5
+c_anm_reload                             = glock_c_reload_17_p1, reload_p1, 1.5
+c_anm_reload_p1                          = glock_c_reload_17_p1, reload_p1, 1.5
+c_anm_reload_p2                          = glock_c_reload_17_p2, reload_p2, 1.5
+c_anm_reload_empty                       = glock_c_reload_17_p1, reload_empty_p1, 1.5
+c_anm_reload_empty_p1                    = glock_c_reload_17_p1, reload_empty_p1, 1.5
+c_anm_reload_empty_p2                    = glock_c_reload_17e_p2, reload_empty_p2, 1.5
+17_c_anm_reload                          = glock_c_reload_17_p1, reload_p1, 1.5
+17_c_anm_reload_p1                       = glock_c_reload_17_p1, reload_p1, 1.5
+17_c_anm_reload_p2                       = glock_c_reload_17_p2, reload_p2, 1.5
+17_c_anm_reload_empty                    = glock_c_reload_17_p1, reload_empty_p1, 1.5
+17_c_anm_reload_empty_p1                 = glock_c_reload_17_p1, reload_empty_p1, 1.5
+17_c_anm_reload_empty_p2                 = glock_c_reload_17e_p2, reload_empty_p2, 1.5
+17_c_anm_mag_check                       = glock_c_check_17, check, 1.5
+17_c_anm_mag_check_empty                 = glock_c_check_17, check_empty, 1.5
+33_c_anm_reload                          = glock_c_reload_33_p1, reload_p1, 1.5
+33_c_anm_reload_p1                       = glock_c_reload_33_p1, reload_p1, 1.5
+33_c_anm_reload_p2                       = glock_c_reload_33_p2, reload_p2, 1.5
+33_c_anm_reload_empty                    = glock_c_reload_33_p1, reload_empty_p1, 1.5
+33_c_anm_reload_empty_p1                 = glock_c_reload_33_p1, reload_empty_p1, 1.5
+33_c_anm_reload_empty_p2                 = glock_c_reload_33e_p2, reload_empty_p2, 1.5
+33_c_anm_mag_check                       = glock_c_check_33, check, 1.5
+33_c_anm_mag_check_empty                 = glock_c_check_33, check_empty, 1.5
+50_c_anm_reload                          = glock_c_reload_50_p1, reload_p1, 1.5
+50_c_anm_reload_p1                       = glock_c_reload_50_p1, reload_p1, 1.5
+50_c_anm_reload_p2                       = glock_c_reload_50_p2, reload_p2, 1.5
+50_c_anm_reload_empty                    = glock_c_reload_50_p1, reload_empty_p1, 1.5
+50_c_anm_reload_empty_p1                 = glock_c_reload_50_p1, reload_empty_p1, 1.5
+50_c_anm_reload_empty_p2                 = glock_c_reload_50e_p2, reload_empty_p2, 1.5
+50_c_anm_mag_check                       = glock_c_check_50, check, 1.5
+50_c_anm_mag_check_empty                 = glock_c_check_50, check_empty, 1.5
 
-;--- Паттерны спринта---
+[wpn_glock21]:wpn_colt1911,wpn_glock21_sounds
+GroupControlSection	= spawn_group
+inv_grid_width		= 3
+inv_grid_height	= 2
+inv_grid_x			= 0
+inv_grid_y			= 61
+inv_name				= wpn_glock21
+inv_name_short	= wpn_glock21
+description			= wpn_glock21_descr
+cost						= 25000
+npc_rpm  = 450
+ammo_mag_size	= 13
+required_tags_shoot	= trigger,barrel,zatvor
+attachment_slots	= slot_magazin|magazin|0,0,0|0,0,0#glock_spring|wpn_body|0,0,0|0,0,0#glock21_barrel|muzzle|0,0,0|0,0,0#glock_stock|wpn_body|0,0,0|0,0,0#picgrp|wpn_body|0,-0.0263,-0.14185|0,0,0#pica_3|wpn_body|0,0.00933,0.0848|0,0,180#usmount|wpn_body|0,0.00933,0.0685|0,0,0
+hud						= wpn_glock21_hud
+visual					= w_att_huds\glock21.ogf
 
-        ts_pattern_sprint_start      = .+, anm_idle_sprint, anm_sprint_start, 1
-        ts_pattern_sprint_end        = anm_idle_sprint, ^anm_idle.*, anm_sprint_end
-        ts_strict_sprint_end_move    = anm_sprint_start, anm_idle_moving, anm_sprint_end  			
-        
-        shell_bone                  = wpn_body
-        shell_point                 = 200, 200 ,200
-        
-        fire_bone                   = wpn_body
-        fire_point                  = 0, 0.07, 0.3
+inv_icon_padding  = 0.7
+inv_icon_offset_x = 0.0
+inv_icon_offset_y = 0.1
+
+positive X = move right
+negative X = move left
+positive Y = move up
+negative Y = move down
+
+[wpn_glock21_hud]:wpn_glock_hud
+
+weapon_recoil_vert         = 4.1
+weapon_recoil_vert_inc     = 0.411
+weapon_recoil_horz         = 2.95
+weapon_recoil_ret_speed    = 5.0
 
 
-
-
-        item_visual                 = anomaly_weapons\wpn_glock\wpn_glock_sk2_hud.ogf
-		
-        anm_reload                  = gluck_auto_reload, glock18_reload
-        anm_reload_empty            = gluck_auto_reload_empty, glock18_reload_full
-        anm_shot_l                  = gluck_shoot_auto, glock17_shoot_empty
-        anm_shots                   = gluck_shoot_auto, glock17_shoot
-	anm_shots_aim               = gluck_aim_shoot_auto, glock17_shoot_aim
-        anm_shots_aim_l             = gluck_aim_shoot_auto, glock17_shoot_aim_empty
-		
-	aim_hud_offset_pos               = 0.025489, 0.00169, -0.026747
-        aim_hud_offset_pos_16x9          = 0.025489, 0.00169, -0.026747
-        aim_hud_offset_rot               = -0.015712, 0.025652, -0.108531
-        aim_hud_offset_rot_16x9          = -0.015712, 0.025652, -0.108531
+item_visual                              = w_att_huds\glock21_hud.ogf
+50_anm_reload_p2                         = glock_m_reload_40_p2, reload_p2, 1.5
+50_anm_reload_empty_p2                   = glock_m_reload_40e_p2, reload_empty_p2, 1.5
+50_c_anm_reload_p2                       = glock_c_reload_40_p2, reload_p2, 1.5
+50_c_anm_reload_empty_p2                 = glock_c_reload_40e_p2, reload_empty_p2, 1.5
+50_r_anm_reload_p2                       = glock_r_reload_40_p2, reload_p2, 1.5
+50_r_anm_reload_empty_p2                 = glock_r_reload_40e_p2, reload_empty_p2, 1.5
+50_t_anm_reload_p2                       = glock_t_reload_40_p2, reload_p2, 1.5
+50_t_anm_reload_empty_p2                 = glock_t_reload_40e_p2, reload_empty_p2, 1.5
+50_v_anm_reload_p2                       = glock_t_reload_40_p2, reload_p2, 1.5
+50_v_anm_reload_empty_p2                 = glock_t_reload_40e_p2, reload_empty_p2, 1.5

@@ -34,38 +34,38 @@ function prepare()
 		{ 	name = "Kill" 							, functor = {kill_npc} 						         , hide_ui = 2 		, key = "DIK_K"			},
 		{ 	name = "Delete" 						, functor = {release_obj} 						     , hide_ui = 2 		, key = "DIK_R"			},
 		{ 	name = "Trade" 							, functor = {go_trade} 						         , hide_ui = 2 		, key = "DIK_T"			},
-		{ 	name = "Trade (All)" 					, functor = {go_trade_all} 						         , hide_ui = 2 			},
-		{ 	name = "Refresh Trade Inventory" 		, functor = {force_trade_rf}},
-		{ 	name = "Become Companion" 				, functor = {set_npc_companion} 				     , hide_ui = 2 		, key = "DIK_C"			},
-		{ 	name = "Can See Me?" 					, functor = {can_see_actor} 					     , hide_ui = 0 								},
-		{ 	name = "Change Faction" 				, functor = {start_faction_changer,true} 			 , hide_ui = 1 								},
-		{ 	name = "List Items" 					, functor = {list_npc_items}                         , hide_ui = 0 								},
-		{ 	name = "Be Friend (Relation)" 			, functor = {set_relation,game_object.friend} 		 , hide_ui = 0 								, target_color = true			},
-		{ 	name = "Be Neutral (Relation)" 			, functor = {set_relation,game_object.neutral} 		 , hide_ui = 0 								, target_color = true			},
-		{ 	name = "Be Enemy (Relation)" 			, functor = {set_relation,game_object.enemy} 		 , hide_ui = 0 								, target_color = true			},
-		{ 	name = "Be Friend (Goodwill)" 			, functor = {set_goodwill,5000} 			         , hide_ui = 0 								, target_color = true			},
-		{ 	name = "Be Neutral (Goodwill)" 			, functor = {set_goodwill,0} 			             , hide_ui = 0 								, target_color = true			},
-		{ 	name = "Be Enemy (Goodwill)" 			, functor = {set_goodwill,-5000} 				     , hide_ui = 0 								, target_color = true			},
-		{ 	name = "Be Friend Squad (Goodwill)" 	, functor = {set_goodwill_squad,5000} 		         , hide_ui = 0 								, target_color = true			},
-		{ 	name = "Be Neutral Squad (Goodwill)" 	, functor = {set_goodwill_squad,0} 		             , hide_ui = 0 								, target_color = true			},
-		{ 	name = "Be Enemy Squad (Goodwill)" 		, functor = {set_goodwill_squad,-5000} 		         , hide_ui = 0 								, target_color = true			},
+		{ 	name = "Trade (all)" 					, functor = {go_trade_all} 						         , hide_ui = 2 			},
+		{ 	name = "Refresh trade inventory" 		, functor = {force_trade_rf}},
+		{ 	name = "Become companion" 				, functor = {set_npc_companion} 				     , hide_ui = 2 		, key = "DIK_C"			},
+		{ 	name = "Can see me?" 					, functor = {can_see_actor} 					     , hide_ui = 0 								},
+		{ 	name = "Change faction" 				, functor = {start_faction_changer,true} 			 , hide_ui = 1 								},
+		{ 	name = "List items" 					, functor = {list_npc_items}                         , hide_ui = 0 								},
+		{ 	name = "Be friend (relation)" 			, functor = {set_relation,game_object.friend} 		 , hide_ui = 0 								, target_color = true			},
+		{ 	name = "Be neutral (relation)" 			, functor = {set_relation,game_object.neutral} 		 , hide_ui = 0 								, target_color = true			},
+		{ 	name = "Be enemy (relation)" 			, functor = {set_relation,game_object.enemy} 		 , hide_ui = 0 								, target_color = true			},
+		{ 	name = "Be friend (goodwill)" 			, functor = {set_goodwill,5000} 			         , hide_ui = 0 								, target_color = true			},
+		{ 	name = "Be neutral (goodwill)" 			, functor = {set_goodwill,0} 			             , hide_ui = 0 								, target_color = true			},
+		{ 	name = "Be enemy (goodwill)" 			, functor = {set_goodwill,-5000} 				     , hide_ui = 0 								, target_color = true			},
+		{ 	name = "Be friend squad (goodwill)" 	, functor = {set_goodwill_squad,5000} 		         , hide_ui = 0 								, target_color = true			},
+		{ 	name = "Be neutral squad (goodwill)" 	, functor = {set_goodwill_squad,0} 		             , hide_ui = 0 								, target_color = true			},
+		{ 	name = "Be enemy squad (goodwill)" 		, functor = {set_goodwill_squad,-5000} 		         , hide_ui = 0 								, target_color = true			},
 	},
 	["action"] = {
-		{ 	name = "Go Incognito" 					, cmd = "invisible on" 						         , hide_ui = 0 		, key = "DIK_I"			},
-		{ 	name = "Ger Rich" 						, cmd = "money 1000000" 					         , hide_ui = 0 		, key = "DIK_M"			},
-		{ 	name = "Delete All Squads" 				, cmd = "alife_release all" 				         , hide_ui = 2 								},
-		{ 	name = "Delete Common Squads" 			, cmd = "alife_release common" 				         , hide_ui = 2 								},
-		{ 	name = "Refresh Game" 					, functor = {reload_textures} 				         , hide_ui = 2 		, key = "DIK_F5"		},
+		{ 	name = "Go incognito" 					, cmd = "invisible on" 						         , hide_ui = 0 		, key = "DIK_I"			},
+		{ 	name = "Go rich" 						, cmd = "money 1000000" 					         , hide_ui = 0 		, key = "DIK_M"			},
+		{ 	name = "Delete all squads" 				, cmd = "alife_release all" 				         , hide_ui = 2 								},
+		{ 	name = "Delete common squads" 			, cmd = "alife_release common" 				         , hide_ui = 2 								},
+		{ 	name = "Refresh game" 					, functor = {reload_textures} 				         , hide_ui = 2 		, key = "DIK_F5"		},
 		{ 	name = "Reload system_ini" 				, cmd = "reload_system_ini" 				         , hide_ui = 0 		, key = "DIK_NUMPAD0"	},
-		{ 	name = "Record Position" 				, functor = {record_position} 				         , hide_ui = 0 		, key = "DIK_P"			},
+		{ 	name = "Record position" 				, functor = {record_position} 				         , hide_ui = 0 		, key = "DIK_P"			},
 		{ 	name = "Reload Weapon HUD" 				, functor = {reload_wpn_hud} 					     , hide_ui = 2 		, key = "DIK_U"			},
-		{ 	name = "Change Faction" 				, functor = {start_faction_changer} 				 , hide_ui = 1 								},
-		{ 	name = "Give Basic Items" 				, functor = {spawn_basic_equipment} 				 , hide_ui = 2 		, key = "DIK_A"			},
-		{ 	name = "Get Nearest Object" 			, cmd = "get_nearest_object cam" 				     , hide_ui = 0 		, key = "DIK_N"			},
-		{ 	name = "Start Emission" 				, cmd = "surge start" 						         , hide_ui = 2 								},
-		{ 	name = "Stop Emission" 					, cmd = "surge stop" 						         , hide_ui = 2 								},
-		{ 	name = "Start Psi-storm" 				, cmd = "psi_storm start" 					         , hide_ui = 2 								},
-		{ 	name = "Stop Psi-storm" 				, cmd = "psi_storm stop" 					         , hide_ui = 2 								},
+		{ 	name = "Change faction" 				, functor = {start_faction_changer} 				 , hide_ui = 1 								},
+		{ 	name = "Give basic items" 				, functor = {spawn_basic_equipment} 				 , hide_ui = 2 		, key = "DIK_A"			},
+		{ 	name = "Get nearest object" 			, cmd = "get_nearest_object cam" 				     , hide_ui = 0 		, key = "DIK_N"			},
+		{ 	name = "Start an emission" 				, cmd = "surge start" 						         , hide_ui = 2 								},
+		{ 	name = "Stop an emission" 				, cmd = "surge stop" 						         , hide_ui = 2 								},
+		{ 	name = "Start a psi-storm" 				, cmd = "psi_storm start" 					         , hide_ui = 2 								},
+		{ 	name = "Stop a psi-storm" 				, cmd = "psi_storm stop" 					         , hide_ui = 2 								},
 	},
 	["toggle"] = {
 		{ 	name = "God mode" 						, console = "g_god" 						         , hide_ui = 0 		, key = "DIK_G"			},
@@ -73,17 +73,17 @@ function prepare()
 		{ 	name = "rsStatistic" 					, console = "rs_stats" 						         , hide_ui = 0 		, key = "DIK_S"			},
 		{ 	name = "Debug HUD" 						, functor = {toggle_debug_hud} 				         , hide_ui = 2 		, key = "DIK_X"			},
 		{ 	name = "Debug Map HUD" 					, functor = {toggle_debug_hud_map} 			         , hide_ui = 2 		, key = "DIK_Z"			},
-		{ 	name = "A-Life Respawns" 				, functor = {toggle_respawn} 				         , hide_ui = 0 								},
+		{ 	name = "A-Life respawns" 				, functor = {toggle_respawn} 				         , hide_ui = 0 								},
 	},
 	["editor"] = {
-		{ 	name = "Item Spawner" 					, functor = {start_item_spawner} 				     , hide_ui = 1 		, key = "DIK_1"			},
-		{ 	name = "Object Spawner" 				, functor = {start_obj_spawner} 				     , hide_ui = 1 		, key = "DIK_2"			},
-		{ 	name = "Weather Editor" 				, functor = {start_weather_editor} 			     	 , hide_ui = 2 		, key = "DIK_3"			},
-		{ 	name = "Lighting Editor" 				, functor = {start_lighting_editor} 		         , hide_ui = 2 		, key = "DIK_4"			},
-		{ 	name = "Weapon HUD Editor" 				, functor = {start_wpn_hud_editor} 			     	 , hide_ui = 2 		, key = "DIK_5"			},
-		{ 	name = "Weapon Stats Editor" 			, functor = {start_itm_weapon_editor}		     	 , hide_ui = 2 		, key = "DIK_6"			},
-		{ 	name = "Outfit Stats Editor" 			, functor = {start_itm_outfit_editor}		     	 , hide_ui = 2 		, key = "DIK_7"			},
---		{ 	name = "Artefact Stats Editor" 			, functor = {start_itm_artfact_editor}		     	 , hide_ui = 2 		, key = "DIK_8"			},
+		{ 	name = "Item spawner" 					, functor = {start_item_spawner} 				     , hide_ui = 1 		, key = "DIK_1"			},
+		{ 	name = "Object spawner" 				, functor = {start_obj_spawner} 				     , hide_ui = 1 		, key = "DIK_2"			},
+		{ 	name = "Weather editor" 				, functor = {start_weather_editor} 			     	 , hide_ui = 2 		, key = "DIK_3"			},
+		{ 	name = "Lighting editor" 				, functor = {start_lighting_editor} 		         , hide_ui = 2 		, key = "DIK_4"			},
+		{ 	name = "Weapon HUD editor" 				, functor = {start_wpn_hud_editor} 			     	 , hide_ui = 2 		, key = "DIK_5"			},
+		{ 	name = "Weapon stats editor" 			, functor = {start_itm_weapon_editor}		     	 , hide_ui = 2 		, key = "DIK_6"			},
+		{ 	name = "Outfit stats editor" 			, functor = {start_itm_outfit_editor}		     	 , hide_ui = 2 		, key = "DIK_7"			},
+--		{ 	name = "Artefact stats editor" 			, functor = {start_itm_artfact_editor}		     	 , hide_ui = 2 		, key = "DIK_8"			},
 		{ 	name = "Pocket Workshop" 				, functor = {start_workshop} 				     	 , hide_ui = 1 		, key = "DIK_9"			},
 		{ 	name = "NPC Logic / Execute" 			, functor = {start_executer}			 		     , hide_ui = 1 		, key = "DIK_0"			},
 	},
@@ -1073,9 +1073,237 @@ itm_to_spawn_table = {
 		[25] = "Weapons (Sniper)",
 		[26] = "Weapons (Explosive)",
 		[27] = "Weapons (Misc.)",
+		[28] = "Ak Handguards",
+		[29] = "Ak Grips",
+		[30] = "Ak Covers",
+		[31] = "Ak Muzzles",
+		[32] = "Ak Barrels",
+		[33] = "Ak GasTubes",
+		[34] = "Ak Stocks",
+		[35] = "Ak 100 Parts",
+		[36] = "Ak Misc",
+		[37] = "74 Barrels",
+		[38] = "74 Muzzles",
+		[39] = "74u Handguards",
+		[40] = "74u Covers",
+		[41] = "74u GasTubes",
+		[42] = "74u Stocks",
+		[43] = "74 Misc",
+		[44] = "Benelli Parts",
+		[45] = "Izh 43",
+		[46] = "Derya",
+		[47] = "Fort 500",
+		[48] = "Higgins",
+		[49] = "Ks 23",
+		[50] = "Ks 23k",
+		[51] = "Mossberg",
+		[52] = "Mp 133",
+		[53] = "Mp 153",
+		[54] = "Protecta",
+		[55] = "Remington",
+		[56] = "Saiga 12",
+		[57] = "Spas 12",
+		[58] = "Toz 194",
+		[59] = "Toz 34",
+		[60] = "Vepr 12",
+		[61] = "Wincheaster",
+		[62] = "12Ga Muzzles",
+		[63] = "Agram",
+		[64] = "Ar 57",
+		[65] = "Ar 9",
+		[66] = "Bizon",
+		[67] = "Gepard",
+		[68] = "Kashtan",
+		[69] = "Kedr",
+		[70] = "Kiparis",
+		[71] = "Luty",
+		[72] = "Mp 40",
+		[73] = "Mp 5",
+		[74] = "P 90",
+		[75] = "Pp 2000",
+		[76] = "Pp 93",
+		[77] = "Ppsh",
+		[78] = "Ump 45",
+		[79] = "Uzi",
+		[80] = "Veresk",
+		[81] = "Vityaz",
+		[82] = "Vz 82",
+		[83] = "Cs5",
+		[84] = "Mosin",
+		[85] = "Omen",
+		[86] = "Orsis",
+		[87] = "Svd",
+		[88] = "Svu",
+		[89] = "Vpo 123",
+		[90] = "Ash12, Vssk, Vsv",
+		[91] = "Aps",
+		[92] = "Beretta",
+		[93] = "Colt 1911",
+		[94] = "Cz 52",
+		[95] = "Cz 75",
+		[96] = "Deagle",
+		[97] = "Fn 57",
+		[98] = "Fnp",
+		[99] = "Fort",
+		[100] = "Glock",
+		[101] = "Grach",
+		[102] = "Grizzly",
+		[103] = "Gsh 18",
+		[104] = "Gyurza",
+		[105] = "Hpsa",
+		[106] = "Kobalt",
+		[107] = "M712",
+		[108] = "Pb",
+		[109] = "Pernach",
+		[110] = "Pl15",
+		[111] = "Pm",
+		[112] = "Python",
+		[113] = "Rex",
+		[114] = "Rsh12",
+		[115] = "Sig220",
+		[116] = "Taurus",
+		[117] = "Tt33",
+		[118] = "Usp",
+		[119] = "Walther",
+		[120] = "Marlin",
+		[121] = "Ar74",
+		[122] = "Mk47",
+		[123] = "Saiga308",
+		[124] = "Val",
+		[125] = "Ar 10",
+		[126] = "Ar Barrels",
+		[127] = "Ar Handguards",
+		[128] = "Ar Grips",
+		[129] = "Ar Uppers",
+		[130] = "Ar Stocks",
+		[131] = "Ar Misc",
+		[132] = "Tiss",
+		[133] = "45 Sile.",
+		[134] = "9 Sile.",
+		[135] = "Foregrips",
+		[136] = "Dovetail Sights",
+		[137] = "Sights",
+		[138] = "Scopes",
+		[139] = "Tac",
+		[140] = "AR Muzzles",
 }
 local itm_to_spawn_classes = {
 		-- kind
+		["ak_hg_short"]         = "Ak Handguards",
+		["ak_grips"]        	= "Ak Grips",
+		["ak_covers"]        	= "Ak Covers",
+		["ak_muzzles"]        	= "Ak Muzzles",
+		["ak_barrels"]        	= "Ak Barrels",
+		["ak_gastubes"]        	= "Ak GasTubes",
+		["ak_stocks"]        	= "Ak Stocks",
+		["ak_100_p"]        	= "Ak 100 Parts",
+		["ak_misc"]        		= "Ak Misc",
+		["74_barrels"]        	= "74 Barrels",
+		["74_muzzles"]        	= "74 Muzzles",
+		["74u_hgs"]     		= "74u Handguards",
+		["74u_covers"]     		= "74u Covers",
+		["74u_gastubes"]     	= "74u GasTubes",
+		["74u_stocks"]     	    = "74u Stocks",
+		["74_misc"]     	    = "74 Misc",
+		["benelli"]     	    = "Benelli Parts",
+		["izh"]     	    	= "Izh 43",
+		["derya"]     	    	= "Derya",
+		["fort5"]     	    	= "Fort 500",
+		["hig"]     	    	= "Higgins",
+		["ks23"]     	    	= "Ks 23",
+		["ks23k"]     	    	= "Ks 23k",
+		["moss"]     	    	= "Mossberg",
+		["133"]     	    	= "Mp 133",
+		["153"]     	    	= "Mp 153",
+		["255"]     	    	= "Protecta",
+		["870"]     	    	= "Remington",
+		["saiga12"]     	    = "Saiga 12",
+		["spas12"]     	   	    = "Spas 12",
+		["toz194"]     	   	    = "Toz 194",
+		["toz34"]     	   	    = "Toz 34",
+		["vepr12"]     	   	    = "Vepr 12",
+		["1300"]     	   	    = "Wincheaster",
+		["12gamuzz"]     	   	= "12Ga Muzzles",
+		["agram"]     	     	= "Agram",
+		["ar57"]     	     	= "Ar 57",
+		["ar9"]     	     	= "Ar 9",
+		["bizon"]     	     	= "Bizon",
+		["gepard"]     	     	= "Gepard",
+		["kashtan"]     	    = "Kashtan",
+		["kedr"]     	    	= "Kedr",
+		["kiparis"]     	    = "Kiparis",
+		["luty"]     	        = "Luty",
+		["mp40"]     	        = "Mp 40",
+		["mp5"]     	        = "Mp 5",
+		["p90"]     	        = "P 90",
+		["p2k"]     	        = "Pp 2000",
+		["pp93"]     	        = "Pp 93",
+		["ppsh"]     	        = "Ppsh",
+		["ump45"]     	        = "Ump 45",
+		["uzi"]     	        = "Uzi",
+		["veresk"]     	        = "Veresk",
+		["vityaz"]     	        = "Vityaz",
+		["vz82"]     	        = "Vz 82",
+		["cs5"]     	        = "Cs5",
+		["mosin"]     	        = "Mosin",
+		["omen"]     	        = "Omen",
+		["orsis"]     	        = "Orsis",
+		["svd"]     	        = "Svd",
+		["svu"]     	        = "Svu",
+		["vpo123"]     	        = "Vpo 123",
+		["vsv"]     	        = "Ash12, Vssk, Vsv",
+		["aps"]     	        = "Aps",
+		["beretta"]     	    = "Beretta",
+		["1911"]     	        = "Colt 1911",
+		["cz52"]     	        = "Cz 52",
+		["cz75"]     	        = "Cz 75",
+		["deagle"]     	        = "Deagle",
+		["fn57"]     	        = "Fn 57",
+		["fnp"]     	        = "Fnp",
+		["fort"]     	        = "Fort",
+		["glock"]     	        = "Glock",
+		["grach"]     	        = "Grach",
+		["grizzly"]     	    = "Grizzly",
+		["gsh"]     	    	= "Gsh 18",
+		["gyurza"]     	    	= "Gyurza",
+		["hpsa"]     	    	= "Hpsa",
+		["kobalt"]     	    	= "Kobalt",
+		["712"]     	    	= "M712",
+		["pb"]     	    		= "Pb",
+		["pernach"]     	    = "Pernach",
+		["pl15"]     	        = "Pl15",
+		["pm"]     	        	= "Pm",
+		["python"]     	        = "Python",
+		["rex"]     	        = "Rex",
+		["rsh"]     	        = "Rsh12",
+		["226"]     	        = "Sig220",
+		["taurus"]     	        = "Taurus",
+		["tt33"]     	        = "Tt33",
+		["usp"]     	        = "Usp",
+		["walther"]     	    = "Walther",
+		["marlin"]     	        = "Marlin",
+		["ar74"]     	        = "Ar74",
+		["mk47"]     	        = "Mk47",
+		["saiga308"]     	    = "Saiga308",
+		["val"]     	    	= "Val",
+		["ar10"]     	    	= "Ar 10",
+		["ar_barrels"]     	    = "Ar Barrels",
+		["ar_hg"]     	        = "Ar Handguards",
+		["ar_grip"]     	    = "Ar Grips",
+		["ar_upper"]     	    = "Ar Uppers",
+		["ar_stock"]     	    = "Ar Stocks",
+		["ar_misc"]     	    = "Ar Misc",
+		["tiss"]     	        = "Tiss",
+		["45sil"]     	        = "45 Sile.",
+		["9sil"]     	        = "9 Sile.",
+		["foregrip"]     	    = "Foregrips",
+		["dovetail"]     	    = "Dovetail Sights",
+		["sights"]     	        = "Sights",
+		["scopes"]     	        = "Scopes",
+		["tac"]     	        = "Tac",
+		["ar_muzzle"]     	    = "AR Muzzles",
+
+
 		["i_arty_junk"]     	= "Artefacts",
 		["i_arty"]     	        = "Artefacts",
 		["ARTEFACT"]            = "Artefacts",
@@ -1192,8 +1420,15 @@ local itm_to_spawn_classes = {
 		["WP_BINOC"]            = "Weapons (Misc.)",
 		["II_BOLT"]             = "Weapons (Misc.)",
 }
+
+function string_starts_with(str, start)
+   return str:sub(1, #start) == start
+end
+
+
 local spawn_itm_table_list
 function get_spawn_table(name)
+
 	if (spawn_itm_table_list and spawn_itm_table_list[name]) then 
 		return spawn_itm_table_list[name]
 	end 
@@ -1226,14 +1461,130 @@ function get_spawn_table(name)
 		["Weapons (Sniper)"]              = {},
 		["Weapons (Explosive)"]           = {},
 		["Weapons (Misc.)"]               = {},
+		["Ak Handguards"]                 = {},
+		["Ak Grips"]                	  = {},
+		["Ak Covers"]                	  = {},
+		["Ak Muzzles"]                	  = {},
+		["Ak Barrels"]                	  = {},
+		["Ak GasTubes"]                	  = {},
+		["Ak Stocks"]                	  = {},
+		["Ak 100 Parts"]                  = {},
+		["Ak Misc"]                		  = {},
+		["74 Barrels"]                	  = {},
+		["74 Muzzles"]                	  = {},
+		["74u Handguards"]                = {},
+		["74u Covers"]                	  = {},
+		["74u GasTubes"]                  = {},
+		["74u Stocks"]                    = {},
+		["74 Misc"]                       = {},
+		["Benelli Parts"]                 = {},
+		["Izh 43"]                 		  = {},
+		["Derya"]                 		  = {},
+		["Fort 500"]                 	  = {},
+		["Higgins"]                 	  = {},
+		["Ks 23"]                 	  	  = {},
+		["Ks 23k"]                 	  	  = {},
+		["Mossberg"]                 	  = {},
+		["Mp 133"]                 		  = {},
+		["Mp 153"]                 		  = {},
+		["Protecta"]                 	  = {},
+		["Remington"]                 	  = {},
+		["Saiga 12"]                 	  = {},
+		["Spas 12"]                 	  = {},
+		["Toz 194"]                 	  = {},
+		["Toz 34"]                 	      = {},
+		["Vepr 12"]                 	  = {},
+		["Wincheaster"]                   = {},
+		["12Ga Muzzles"]                  = {},
+		["Agram"]                 		  = {},
+		["Ar 57"]                 		  = {},
+		["Ar 9"]                 		  = {},
+		["Bizon"]                 		  = {},
+		["Gepard"]                 		  = {},
+		["Kashtan"]                 	  = {},
+		["Kedr"]                 	  	  = {},
+		["Kiparis"]                 	  = {},
+		["Luty"]                 	 	  = {},
+		["Mp 40"]                 	 	  = {},
+		["Mp 5"]                 	 	  = {},
+		["P 90"]                 	 	  = {},
+		["Pp 2000"]                 	  = {},
+		["Pp 93"]                 	      = {},
+		["Ppsh"]                 	      = {},
+		["Ump 45"]                 	      = {},
+		["Uzi"]                 	      = {},
+		["Veresk"]                 	      = {},
+		["Vityaz"]                 	      = {},
+		["Vz 82"]                 	      = {},
+		["Cs5"]                 	      = {},
+		["Mosin"]                 	      = {},
+		["Omen"]                 	      = {},
+		["Orsis"]                 	      = {},
+		["Svd"]                 	      = {},
+		["Svu"]                 	      = {},
+		["Vpo 123"]                 	  = {},
+		["Ash12, Vssk, Vsv"]              = {},
+		["Aps"]              			  = {},
+		["Beretta"]              		  = {},
+		["Colt 1911"]              		  = {},
+		["Cz 52"]              		 	  = {},
+		["Cz 75"]              		 	  = {},
+		["Deagle"]              		  = {},
+		["Fn 57"]              		  	  = {},
+		["Fnp"]              		  	  = {},
+		["Fort"]              		  	  = {},
+		["Glock"]              		  	  = {},
+		["Grach"]              		  	  = {},
+		["Grizzly"]              		  = {},
+		["Gsh 18"]              		  = {},
+		["Gyurza"]              		  = {},
+		["Hpsa"]              		   	  = {},
+		["Kobalt"]              		  = {},
+		["M712"]              		  	  = {},
+		["Pb"]              		  	  = {},
+		["Pernach"]              		  = {},
+		["Pl15"]              		  	  = {},
+		["Pm"]              		  	  = {},
+		["Python"]              		  = {},
+		["Rex"]              		  	  = {},
+		["Rsh12"]              		  	  = {},
+		["Sig220"]              		  = {},
+		["Taurus"]              		  = {},
+		["Tt33"]              		  	  = {},
+		["Usp"]              		  	  = {},
+		["Walther"]              		  = {},
+		["Marlin"]              	  	  = {},
+		["Ar74"]              	  		  = {},
+		["Mk47"]              	  		  = {},
+		["Saiga308"]              	  	  = {},
+		["Val"]              	  		  = {},
+		["Ar 10"]              	  		  = {},
+		["Ar Barrels"]              	  = {},
+		["Ar Handguards"]              	  = {},
+		["Ar Grips"]              	      = {},
+		["Ar Uppers"]              	      = {},
+		["Ar Stocks"]              	      = {},
+		["Ar Misc"]              	      = {},
+		["Tiss"]              	          = {},
+		["45 Sile."]              	      = {},
+		["9 Sile."]              	      = {},
+		["Foregrips"]              	      = {},
+		["Dovetail Sights"]               = {},
+		["Sights"]                        = {},
+		["Scopes"]                        = {},
+		["Tac"]                           = {},
+		["AR Muzzles"]                    = {},
 	}	
 
 	local ltx = ini_file("plugins\\spawner_blacklist.ltx")
 	ini_sys:section_for_each(function(section)
 		if (not ltx:line_exist("ignore_sections",section))
 		and (not s_find(section,"tch_"))
-		and (not s_find(section,"mp_"))
+		--WUUT: replace with starts with
+		--and (not s_find(section,"mp_"))
+		and not string_starts_with(section,"mp_")
 		and (not s_find(section,"_base"))
+		
 		then
 			local class = ini_sys:r_string_ex(section,"class")
 			local kind = ini_sys:r_string_ex(section,"kind") -- special class name for the sake of correct listing
@@ -1433,9 +1784,17 @@ function UIDebug_ItemSpawn:InitItems(index)
 		
 			-- Icons
 			t[i] = spawntbl[i].sec
+			
+			--wuut
+			--printf(tostring(sec))
 		end
 	end
+	--self.d2_CC:Reinit(t)
+	
+	--WUUT Force non render icons in debug
+	self.d2_CC.forcenorender = true
 	self.d2_CC:Reinit(t)
+	self.d2_CC.forcenorender = false
 	
 	for idx,ci in pairs(self.d2_CC.cell) do
 		if ci:IsShown() then
@@ -1444,7 +1803,106 @@ function UIDebug_ItemSpawn:InitItems(index)
 	end
 end
 
+function UIDebug_ItemSpawn:CheckItem(obj, msg)
+	if (type(obj) == "number") then
+		obj = level.object_by_id(obj)
+	end
+	if (not obj) then
+		callstack()
+		printe("!ERROR Can't get item game object!")
+	else
+		self:Print(nil, msg, obj:name())
+	end
+	
+	return obj
+end
+
+function UIDebug_ItemSpawn:Spawn_WeaponBuild(section, loadout_name)
+    printf("Spawn_WeaponBuild base=[" .. tostring(section) .. "] loadout=[" .. tostring(loadout_name) .. "]")
+    local ext = ""
+
+    -- Checks (same checkboxes used by the regular Spawn())
+    local chk_point  = self.dl4_chk_p:GetCheck()
+
+    -- Spawn the real/base weapon section. The selected loadout is applied
+    -- after spawn by module_items.SetUpBuildPostSpawn().
+    local pos, lvid, gvid, id
+    if chk_point then
+        gvid = db.actor:game_vertex_id()
+        local r = level.get_target_dist and level.get_target_dist() or 3
+        pos = vector():set(db.actor:position())
+        pos:add(device().cam_dir:mul(r))
+        pos = vector():set(pos.x,db.actor:position().y,pos.z)
+        lvid = level.vertex_id(pos)
+        ext = "at cursor"
+    else
+        pos = db.actor:position()
+        lvid = db.actor:level_vertex_id()
+        gvid = db.actor:game_vertex_id()
+        id = AC_ID
+        ext = "inside invetory"
+    end
+
+    local se_obj = alife_create_item(section, {pos, lvid, gvid, id})
+
+    if se_obj then
+        self:SetMsg( strformat("Spawned item [%s] (%s) %s", section, se_obj.id, ext) )
+    else
+        self:SetMsg( strformat("No server object made for [%s]", section) , "!" )
+        return
+    end
+
+    if loadout_name and loadout_name ~= false and loadout_name ~= section then
+        module_items.SetUpBuildPostSpawn(se_obj.id, loadout_name)
+    end
+end
+
 function UIDebug_ItemSpawn:Spawn(section)
+
+    -- Old-style weapon variant popup.
+    -- Click weapon name/icon -> popup variants from [weapon_debug_variants].
+    -- The first/base row is always the real weapon section.
+    if (string_starts_with(section, "wpn_")) then
+        local loadouts = module_items.get_weapon_default_attachment_loadouts(section) or {}
+
+        -- Match the old behavior: weapon clicks open a popup, they do not
+        -- immediately spawn. If the new index is missing, the popup still shows
+        -- the base weapon row so the failure is visible in the log instead of
+        -- silently falling through to normal Spawn().
+        if #loadouts == 0 then
+            table.insert(loadouts, { name = section, is_default = true })
+        end
+
+        if(not self.var_spawner) then
+            self.var_spawner = utils_ui.UICellProperties(self)
+        end
+
+        local context_str = {}
+        local context_action = {}
+        local context_params = {}
+        local context_sections = {}
+
+        local action = "Spawn_WeaponBuild"
+
+        for i = 1, #loadouts do
+            local name = loadouts[i].name or section
+            table.insert(context_str, name)
+            table.insert(context_action, action)
+            table.insert(context_params, {section, name})
+            table.insert(context_sections, "green_dot")
+        end
+
+        if #loadouts > 1 then
+            table.insert(context_str, "random")
+            table.insert(context_action, action)
+            table.insert(context_params, {section, "random"})
+            table.insert(context_sections, "green_dot")
+        end
+
+        self.var_spawner:Reset(GetCursorPosition(), context_action, context_str, context_params, context_sections)
+        return
+    end
+
 	-- Get group name
 	local class = ini_sys:r_string_ex(section,"class")
 	local kind = ini_sys:r_string_ex(section,"kind") -- special class name for the sake of correct listing
@@ -1491,6 +1949,10 @@ function UIDebug_ItemSpawn:Update()
 	if (self.msg_wnd_timer and time_global() > self.msg_wnd_timer) then 
 		self.msg_wnd_timer = nil
 		self.msg_wnd:Show(false)
+	end
+	
+	if self.var_spawner and self.var_spawner:IsShown() then
+		return
 	end
 	
 	-- Updating item info box and item cell containers
@@ -1569,6 +2031,10 @@ function UIDebug_ItemSpawn:OnItemType()
 end
 
 function UIDebug_ItemSpawn:OnItemList()
+	if (self.var_spawner) and (self.var_spawner.action_moment) and (time_global() - self.var_spawner.action_moment < 200) then
+		return
+	end
+
 	local pick = self.list:GetSelectedItem()
 	if (not pick) then
 		return
@@ -1587,6 +2053,15 @@ function UIDebug_ItemSpawn:On_CC_Mouse1(cont, idx)
 end
 
 function UIDebug_ItemSpawn:OnKeyboard(dik, keyboard_action)
+	if self.var_spawner then
+		if self.var_spawner:IsShown() then
+			return true
+		end
+		if self.var_spawner.action_moment and (time_global() - self.var_spawner.action_moment < 200) then
+			return true
+		end
+	end
+
 	local res = CUIScriptWnd.OnKeyboard(self,dik,keyboard_action)
 	if (res == false) then
 		self.d2_CC:OnKeyboard(dik, keyboard_action)

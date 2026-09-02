@@ -322,26 +322,10 @@ function ammo_aggregation(obj, npc) -- Sort ammo boxes (called from game_setup)
 	local section = obj:section()
 	local size = obj:ammo_get_count()
 	local box_size = obj:ammo_box_size()
-
---:::::::::::::::::::::::::::::::
---edits for Less Items start here
---:::::::::::::::::::::::::::::::
 	
-	--[[ vanilla:
 	-- Replace damaged ammo with old
 	if _NO_DAMAGED_AMMO and string_find(section,"verybad") then
 		local new_section = string_gsub(section,"verybad","bad")
-		if ini_sys:section_exist(new_section) then
-			alife_release(obj)
-			alife_create_item(new_section, npc, {ammo = size})
-			--printf("~ replaced [%s] with [%s]", section, new_section)
-			return
-		end
-	end --]]
-
-	-- Replace damaged ammo with new
-	if _NO_DAMAGED_AMMO and string_find(section,"_verybad") then
-		local new_section = string_gsub(section,"_verybad","")
 		if ini_sys:section_exist(new_section) then
 			alife_release(obj)
 			alife_create_item(new_section, npc, {ammo = size})
@@ -350,20 +334,6 @@ function ammo_aggregation(obj, npc) -- Sort ammo boxes (called from game_setup)
 		end
 	end
 	
-	-- Replace damaged ammo with new
-	if _NO_DAMAGED_AMMO and string_find(section,"_bad") then
-		local new_section = string_gsub(section,"_bad","")
-		if ini_sys:section_exist(new_section) then
-			alife_release(obj)
-			alife_create_item(new_section, npc, {ammo = size})
-			--printf("~ replaced [%s] with [%s]", section, new_section)
-			return
-		end
-	end
---:::::::::::::::::::::::::::::::
---edits for Less Items end here
---:::::::::::::::::::::::::::::::
-
 	-- Replace home-made buck ammo with regular type
 	if (section == "ammo_12x70_buck_self") then
 		local new_section = "ammo_12x70_buck"
@@ -422,7 +392,7 @@ function ammo_aggregation(obj, npc) -- Sort ammo boxes (called from game_setup)
 			end
 		end
 	end
-
+	
 	return true
 end
 
@@ -704,6 +674,7 @@ function get_grenades(section)
 	local x = s and str_explode(s,",")
 	return x
 end
+
 function UIWheelAmmo:Reset(obj)
 	self.object    = obj
 	self.id        = obj:id()
@@ -730,6 +701,7 @@ function UIWheelAmmo:Reset(obj)
 		printf("ERROR: could not find ammo list for [%s] - grenade mode: %s", self.section, self.grenade_mode)
 		self:Close()
 	end
+	
 	
 	-- Collect all ammo in inventory
 	empty_table(self.ammo_inv)
@@ -843,7 +815,6 @@ function UIWheelAmmo:OnKeyboard(dik, keyboard_action)
 			if (bind == key_bindings.kWPN_NEXT) then
 				ui_delay = time_global() + ui_delay_const				
 				self:SwitchNextAmmo()
-				
 			elseif num and self.key[num] then
 				self:OnAmmo( self.key[num] )
 			elseif (bind == key_bindings.kQUIT or bind == key_bindings.kUSE) then
@@ -1025,11 +996,15 @@ local function actor_on_update()
 end
 
 local function move(npc_id, obj, mode, bag_from)
-    if mode == "loot" and bag_from == EDDListType.iActorBag and IsAmmo(obj) then
-		local box = level.object_by_id(npc_id)
-		if box then
-			CreateTimeEvent("box", "box_agg", 0, ammo_aggregation, obj, box)
-		end
+	if mode == "loot" and bag_from == EDDListType.iActorBag and IsAmmo(obj) then
+		CreateTimeEvent("box", "box_agg", 0, function(ammo_id, box_id)
+			local box = get_object_by_id(box_id)
+			local ammo = get_object_by_id(ammo_id)
+			if box and ammo then  
+				ammo_aggregation(ammo, box)
+			end
+			return true
+		end, obj:id(), npc_id)
 	end
 end
 

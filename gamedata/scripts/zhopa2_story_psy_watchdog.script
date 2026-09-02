@@ -362,6 +362,25 @@ local function is_target_level(level_name)
 	return level_name ~= nil and get_psi_levels()[level_name] == true
 end
 
+function M.actor_travel_block_reason(level_name)
+	if is_story_mode_active() ~= true or has_info("bar_deactivate_radar_done") == true then
+		return nil
+	end
+
+	local community
+	local fn = rawget(_G, "get_actor_true_community")
+	if type(fn) == "function" then
+		local ok, value = pcall(fn)
+		if ok then
+			community = lower_trim(value)
+		end
+	end
+	if community and is_immune_faction(community) then
+		return nil
+	end
+	return is_target_level(level_name) and "story_psi_locked" or nil
+end
+
 local function level_name_by_gvid(gvid)
 	if not (gvid and game_graph and alife) then
 		return nil
@@ -920,6 +939,9 @@ local function server_entity_on_register(se_obj, type_name)
 end
 
 function M.on_game_start()
+	if rawget(_G, "zhopa2_runtime_disabled") == true then
+		return M.on_master_disable()
+	end
 	if not RegisterScriptCallback then
 		callbacks_registered = false
 		debug_log("~ ZHOPA2 psy watchdog error | init_error reason [missing_RegisterScriptCallback]")
@@ -958,6 +980,24 @@ function M.on_game_start()
 		debug_log("~ ZHOPA2 psy watchdog error | init_error reason [callbacks_not_registered]")
 	end
 	return callbacks_registered
+end
+
+function M.on_master_disable()
+	if UnregisterScriptCallback then
+		pcall(UnregisterScriptCallback, "actor_on_first_update", actor_on_first_update)
+		pcall(UnregisterScriptCallback, "actor_on_update", actor_on_update)
+		pcall(UnregisterScriptCallback, "on_game_load", on_game_load)
+		pcall(UnregisterScriptCallback, "on_option_change", on_option_change)
+		pcall(UnregisterScriptCallback, "squad_on_after_level_change", squad_on_after_level_change)
+		pcall(UnregisterScriptCallback, "server_entity_on_register", server_entity_on_register)
+	end
+	invalidate_runtime_caches()
+	runtime.processing_by_sid = {}
+	callbacks_registered = false
+	pending_reconcile = false
+	pending_source = nil
+	next_reconcile_tg = 0
+	return true
 end
 
 function on_game_start()

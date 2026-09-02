@@ -1,313 +1,332 @@
-[wpn_svu]:identity_immunities,weapon_probability,default_weapon_params,wpn_svu_sounds
-GroupControlSection                      = spawn_group
-$npc                                     = on
-$prefetch                                = 8
-$spawn                                   = "weapons\svu"
-scheduled                                = off
-cform                                    = skeleton
-parent_section                           = wpn_svu
+[wpn_svu]:wpn_svd,wpn_svu_sounds
+GroupControlSection	= spawn_group
+$spawn						= "weapons\svu"
+inv_grid_width				= 5
+inv_grid_x					= 31
+inv_name						= wpn_svu
+inv_name_short			= wpn_svu
+description					= wpn_svu_descr
+attachment_slots			=	slot_magazin|magazin|0,0,0|0,0,0#svu_trigger|wpn_body|0,0,0|0,0,0#svd_barrel|muzzle|0,0,0|0,0,0#svu_hg|wpn_body|0,0,0|0,0,0#svd_zatvor|zatvor|0,-0.01,-0.28|0,0,0#svu_stock|wpn_body|0,0,0|0,0,0#svu_cheek|wpn_body|0,0,0|0,0,0#dovetail_side|wpn_body|0.00035,0.0143,-0.01|0,0,0#dovetail_side_low|wpn_body|0.00035,0.0143,-0.021|0,0,0#svu_rear_sight|wpn_body|0,0,0|0,0,0#svd_cover|wpn_body|0,-0.01,-0.28|0,0,0
+ui_render_cam_offset	= 0.32, -0.11, 1.3
+aimpoint_offset_y = 0.111568
+npc_rpm  = 450
+additional_hud_offset 			= 0, 0, -0.07
+weapon_lenght						=	0.01
+inertia_koeff            = 0.4
+visual							= w_att_huds\svu
+hud								= wpn_svu_hud
+additional_sounds		= svu_additional_sounds
+[svu_additional_sounds]:svd_additional_sounds
+snd_mag_inC 						= weapons\main\svu_mag_in
+snd_mag_outC					= weapons\main\svu_mag_out
+snd_move_selector				= weapons\main\vepr_hide_move
+snd_selector						= weapons\main\ak_selector_down
 
-class                                    = WP_SVU
-slot                                     = 2
-animation_slot                           = 2
-ef_main_weapon_type                      = 3
-ef_weapon_type                           = 11
-hand_dependence                          = 1
-single_handed                            = 0
-
-default_to_ruck                          = false
-sprint_allowed                           = true
-
-inv_grid_height                          = 2
-inv_grid_width                           = 5
-inv_grid_x                               = 45
-inv_grid_y                               = 2
-inv_name                                 = st_wpn_svu
-inv_name_short                           = st_wpn_svu
-description                              = st_wpn_svu_descr
-
-kind                                     = w_sniper
-inv_weight                               = 3.81
-cost                                     = 43860
-repair_type                              = rifle_7
-weapon_class                             = sniper_rifle
-
-hud                                      = wpn_svu_hud
-visual                                   = dynamics\weapons\wpn_svu\wpn_svu.ogf
-position                                 = -0.026, -0.084, 0.0
-orientation                              = 0, 0, 0
-fire_point                               = 0.0, 0.128, 0.522
-fire_point2                              = 0.0, 0.128, 0.522
-strap_bone0                              = bip01_spine2
-strap_bone1                              = bip01_spine1
-strap_position                           = -0.26, -0.11, 0.25
-strap_orientation                        = -15, -9, 110
-ph_mass                                  = 3
-
-flame_particles                          = weapons\generic_weapon05
-smoke_particles                          = weapons\generic_shoot_00
-
-shell_point					             = 0.0, 0.128, 0.0
-shell_dir		 			             = 0.0, 0.0, 0.4
-shell_particles				             = weapons\762x54
-
-light_disabled                           = true
-light_color                              = 0.6, 0.5, 0.3
-light_range                              = 4.0
-light_time                               = 0.2
-light_var_color                          = 0.05
-light_var_range                          = 0.5
-
-upgrades                                 = up_gr_firstab_svu, up_gr_seconab_svu, up_gr_thirdab_svu, up_gr_fourtab_svu, up_gr_fourtcd_svu, up_gr_fourtef_svu, up_gr_fifthab_svu
-installed_upgrades                       =
-upgrade_scheme                           = upgrade_scheme_svu
-upgr_icon_x                              = 1750
-upgr_icon_y                              = 300
-upgr_icon_width                          = 300
-upgr_icon_height                         = 100
-
-fire_modes                               = 1
-ammo_class                               = ammo_7.62x54_7h1, ammo_7.62x54_7h1_bad, ammo_7.62x54_7h1_verybad, ammo_7.62x54_ap, ammo_7.62x54_ap_bad, ammo_7.62x54_ap_verybad, ammo_7.62x54_7h14, ammo_7.62x54_7h14_bad, ammo_7.62x54_7h14_verybad
-ammo_elapsed                             = 10
-ammo_mag_size                            = 10
-startup_ammo                             = 10
-
-scopes                                   = 1p29, kobra, ps01
-scope_status                             = 0
-scope_name                               = wpn_addon_scope
-scope_texture                            = 
-scope_x                                  = 60
-scope_y                                  = -2
-scope_zoom_factor                        = 0
-
-silencer_status                          = 1
-
-grenade_launcher_status                  = 0
-
-hit_impulse                              = 40
-hit_power                                = 1.1, 1.1, 1.1, 1.1
-hit_type                                 = fire_wound
-fire_distance                            = 1050
-bullet_speed                             = 805
-rpm                                      = 70
-rpm_empty_click                          = 200
-
-use_aim_bullet                           = false
-time_to_aim                              = 0.0 ;  1.0
-zoom_enabled                             = true
-zoom_rotate_time                         = 0.35
-reload_dof                               = 0.0, 0.5, 5, 2
-control_inertion_factor = 1.0f
-crosshair_inertion                       = 8.8
-fire_dispersion_base                     = 0.092
-fire_dispersion_condition_factor         = 0.001
-
-misfire_probability                      = 0.005
-misfire_start_condition                  = 0.7 ;  0.88
-misfire_start_prob                       = 0.007
-misfire_end_condition                    = 0.1
-misfire_end_prob                         = 0.11
-
-condition_queue_shot_dec                 = 0.0040
-condition_shot_dec                       = 0.0040
-
-cam_return                               = 0
-cam_relax_speed                          = 3.0
-cam_dispersion                           = 1.94
-cam_dispersion_frac                      = 1.1
-cam_dispersion_inc                       = 1.94
-cam_max_angle                            = 50.0
-cam_max_angle_horz                       = 50.0
-cam_step_angle_horz                      = 2.92
-zoom_cam_relax_speed                     = 0.7
-zoom_cam_dispersion                      = 0.75
-zoom_cam_dispersion_frac                 = 1.0
-zoom_cam_dispersion_inc                  = 1.48
-zoom_cam_max_angle                       = 50.0
-zoom_cam_max_angle_horz                  = 50.0
-zoom_cam_step_angle_horz                 = 2.56
-
-PDM_disp_accel_factor                    = 3.05
-PDM_disp_base                            = 1.33
-PDM_disp_crouch                          = 1.0
-PDM_disp_crouch_no_acc                   = 1.0
-PDM_disp_vel_factor                      = 3.05
-
-cam_relax_speed_ai                       = 360
-zoom_cam_relax_speed_ai                  = 120.75
-holder_fov_modifier                      = 1.0
-holder_range_modifier                    = 2.15
-min_radius                               = 0
-max_radius                               = 500
-hit_probability_gd_novice                = 1.00
-hit_probability_gd_stalker               = 1.00
-hit_probability_gd_veteran               = 1.00
-hit_probability_gd_master                = 1.00
-
-kill_msg_x                               = 0
-kill_msg_y                               = 59
-kill_msg_width                           = 80
-kill_msg_height                          = 26
-
+cost                                                    =98000
 
 [wpn_svu_hud]:hud_base
-item_visual                              = anomaly_weapons\wpn_svu\wpn_svu_hud
-attach_place_idx                         = 0
-zoom_hide_crosshair                      = true   
 
-item_position                            = 0, 0, 0
-item_orientation                         = 0, 0, 0
-
-hands_position                           = -0.027, -0.13, 0.03
-hands_position_16x9                      = -0.027, -0.13, 0.03
-hands_orientation                        = -0.5, 1, 0.15
-hands_orientation_16x9                   = -0.5, 1, 0.15
-
-aim_hud_offset_pos                       = -0.0721, 0.012, 0.01
-aim_hud_offset_pos_16x9                  = -0.0721, 0.012, 0.01
-aim_hud_offset_rot                       = 0.0153, 0.0039, 0.003
-aim_hud_offset_rot_16x9                  = 0.0153, 0.0039, 0.003
-
-lowered_hud_offset_pos_16x9              = 0,0,0
-lowered_hud_offset_pos                   = 0,0,0
-lowered_hud_offset_rot_16x9              = 0.1,-0.4,0.4
-lowered_hud_offset_rot                   = 0.1,-0.4,0.4
-
-gl_hud_offset_pos                        = 0, 0, 0
-gl_hud_offset_rot                        = 0, 0, 0
-
-lean_hud_offset_pos                      = 0, 0, 0
-lean_hud_offset_rot                      = 0, 0, 0
-
-anm_hide                                 = svu_holster
-anm_idle                                 = svu_idle
-anm_idle_aim                             = svu_idle_aim
-anm_idle_aim_moving                      = svu_idle_moving, idle, 0.75
-anm_idle_aim_moving_crouch               = svu_idle_crouch
-anm_idle_moving                          = svu_idle_moving
-anm_idle_moving_crouch                   = svu_idle_crouch
-anm_idle_sprint                          = svu_idle_sprint
-anm_reload                               = svu_reload, reload
-anm_reload_empty                         = svu_reload_empty, reload_empty
-anm_shots                                = svu_shoot, shoot
-anm_show                                 = svu_draw
-
-shell_bone                               = gilza
-shell_dir                                = 0, 1, 0
-shell_point                              = 0, 0, 0
-
-fire_bone                                = muzzle
-fire_point                               = 0, 0, 0
-
-freelook_z_offset_mul					 = 0.3
-
-;------------------------------------------------------------------------------------------------
-[wpn_svu_kobra]:wpn_svu
-1icon_layer                              = kobra
-1icon_layer_x                            = 75
-1icon_layer_y                            = 9
+weapon_recoil_vert         = 2.88
+weapon_recoil_vert_inc     = 2.88
+weapon_recoil_horz         = 2.3
+weapon_recoil_ret_speed    = 1
 
 
-hud                                      = wpn_svu_kobra_hud
-visual                                   = dynamics\weapons\wpn_svu\wpn_svu_kobra.ogf
-[wpn_svu_kobra_hud]:wpn_svu_hud
-item_visual                              = anomaly_weapons\wpn_svu\wpn_svu_kobra_hud.ogf
+shooting_backward_offset		= 0.04,0.01
+item_visual                 		= w_att_huds\svu_hud
+freelook_z_offset_mul					 = 0.6
+hands_position						= 0.08, -0.05, -0.12
+hands_position_16x9				= 0.08, -0.05, -0.12
+hands_orientation					= 0.2, 0.3, 0
+hands_orientation_16x9			= 0.2, 0.3, 0
+aim_hud_offset_pos				= -0.0802, 0.0135, -0.08
+aim_hud_offset_pos_16x9		= -0.0802, 0.0135, -0.08
+aim_hud_offset_rot					= 0.011, 0.004, 0
+aim_hud_offset_rot_16x9		= 0.011, 0.004, 0
 
-;------------------------------------------------------------------------------------------------
-[wpn_svu_1p29]:wpn_svu
-1icon_layer                              = 1p29
-1icon_layer_x                            = 72
-1icon_layer_y                            = 6
+anm_reload_misfire_sounds				= 0,snd_move_arm|21,snd_bolt_back|34,snd_bolt_release
+anm_switch_mode_sounds					= 0,snd_move_selector|18,snd_selector
+anm_reload_p1_sounds						= 0,snd_move_out|15,snd_mag_out
+anm_reload_p2_sounds						= 0,snd_move_in|19,snd_mag_in
+anm_reload_empty_p1_sounds			= 0,snd_move_out|15,snd_mag_out
+anm_reload_empty_p2_sounds			= 0,snd_move_in_empty|19,snd_mag_in|49,snd_bolt_release
+anm_mag_check_sounds					= 0,snd_move_long|12,snd_mag_outC|54,snd_mag_inC
+anm_mag_check_empty_sounds			= 0,snd_move_long|12,snd_mag_outC|54,snd_mag_inC
+5_anm_mag_check_sounds					= 0,snd_move_long|12,snd_mag_outC|54,snd_mag_inC
+5_anm_mag_check_empty_sounds		= 0,snd_move_long|12,snd_mag_outC|54,snd_mag_inC
+m_anm_reload_misfire_sounds				= 0,snd_move_arm|21,snd_bolt_back|34,snd_bolt_release
+m_anm_switch_mode_sounds					= 0,snd_move_selector|18,snd_selector
+m_anm_reload_p1_sounds						= 0,snd_move_out|15,snd_mag_out
+m_anm_reload_p2_sounds						= 0,snd_move_in|19,snd_mag_in
+m_anm_reload_empty_p1_sounds			= 0,snd_move_out|15,snd_mag_out
+m_anm_reload_empty_p2_sounds			= 0,snd_move_in_empty|19,snd_mag_in|49,snd_bolt_release
+m_anm_mag_check_sounds					= 0,snd_move_long|12,snd_mag_outC|54,snd_mag_inC
+m_anm_mag_check_empty_sounds		= 0,snd_move_long|12,snd_mag_outC|54,snd_mag_inC
+5_m_anm_mag_check_sounds				= 0,snd_move_long|12,snd_mag_outC|54,snd_mag_inC
+5_m_anm_mag_check_empty_sounds		= 0,snd_move_long|12,snd_mag_outC|54,snd_mag_inC
+c_anm_reload_misfire_sounds					= 0,snd_move_arm|21,snd_bolt_back|34,snd_bolt_release
+c_anm_switch_mode_sounds					= 0,snd_move_selector|18,snd_selector
+c_anm_reload_p1_sounds						= 0,snd_move_out|15,snd_mag_out
+c_anm_reload_p2_sounds						= 0,snd_move_in|19,snd_mag_in
+c_anm_reload_empty_p1_sounds			= 0,snd_move_out|15,snd_mag_out
+c_anm_reload_empty_p2_sounds			= 0,snd_move_in_empty|19,snd_mag_in|49,snd_bolt_release
+c_anm_mag_check_sounds						= 0,snd_move_long|12,snd_mag_outC|54,snd_mag_inC
+c_anm_mag_check_empty_sounds			= 0,snd_move_long|12,snd_mag_outC|54,snd_mag_inC
+5_c_anm_mag_check_sounds					= 0,snd_move_long|12,snd_mag_outC|54,snd_mag_inC
+5_c_anm_mag_check_empty_sounds		= 0,snd_move_long|12,snd_mag_outC|54,snd_mag_inC
+h_anm_reload_misfire_sounds				= 0,snd_move_arm|21,snd_bolt_back|34,snd_bolt_release
+h_anm_switch_mode_sounds					= 0,snd_move_selector|18,snd_selector
+h_anm_reload_p1_sounds						= 0,snd_move_out|15,snd_mag_out
+h_anm_reload_p2_sounds						= 0,snd_move_in|19,snd_mag_in
+h_anm_reload_empty_p1_sounds			= 0,snd_move_out|15,snd_mag_out
+h_anm_reload_empty_p2_sounds			= 0,snd_move_in_empty|19,snd_mag_in|49,snd_bolt_release
+h_anm_mag_check_sounds						= 0,snd_move_long|12,snd_mag_outC|54,snd_mag_inC
+h_anm_mag_check_empty_sounds			= 0,snd_move_long|12,snd_mag_outC|54,snd_mag_inC
+5_h_anm_mag_check_sounds					= 0,snd_move_long|12,snd_mag_outC|54,snd_mag_inC
+5_h_anm_mag_check_empty_sounds		= 0,snd_move_long|12,snd_mag_outC|54,snd_mag_inC
+r_anm_reload_misfire_sounds					= 0,snd_move_arm|21,snd_bolt_back|34,snd_bolt_release
+r_anm_switch_mode_sounds					= 0,snd_move_selector|18,snd_selector
+r_anm_reload_p1_sounds						= 0,snd_move_out|15,snd_mag_out
+r_anm_reload_p2_sounds						= 0,snd_move_in|19,snd_mag_in
+r_anm_reload_empty_p1_sounds			= 0,snd_move_out|15,snd_mag_out
+r_anm_reload_empty_p2_sounds			= 0,snd_move_in_empty|19,snd_mag_in|49,snd_bolt_release
+r_anm_mag_check_sounds						= 0,snd_move_long|12,snd_mag_outC|54,snd_mag_inC
+r_anm_mag_check_empty_sounds			= 0,snd_move_long|12,snd_mag_outC|54,snd_mag_inC
+5_r_anm_mag_check_sounds					= 0,snd_move_long|12,snd_mag_outC|54,snd_mag_inC
+5_r_anm_mag_check_empty_sounds		= 0,snd_move_long|12,snd_mag_outC|54,snd_mag_inC
+t_anm_reload_misfire_sounds					= 0,snd_move_arm|21,snd_bolt_back|34,snd_bolt_release
+t_anm_switch_mode_sounds					= 0,snd_move_selector|18,snd_selector
+t_anm_reload_p1_sounds						= 0,snd_move_out|15,snd_mag_out
+t_anm_reload_p2_sounds						= 0,snd_move_in|19,snd_mag_in
+t_anm_reload_empty_p1_sounds			= 0,snd_move_out|15,snd_mag_out
+t_anm_reload_empty_p2_sounds			= 0,snd_move_in_empty|19,snd_mag_in|49,snd_bolt_release
+t_anm_mag_check_sounds						= 0,snd_move_long|12,snd_mag_outC|54,snd_mag_inC
+t_anm_mag_check_empty_sounds			= 0,snd_move_long|12,snd_mag_outC|54,snd_mag_inC
+5_t_anm_mag_check_sounds					= 0,snd_move_long|12,snd_mag_outC|54,snd_mag_inC
+5_t_anm_mag_check_empty_sounds		= 0,snd_move_long|12,snd_mag_outC|54,snd_mag_inC
+v_anm_reload_misfire_sounds					= 0,snd_move_arm|21,snd_bolt_back|34,snd_bolt_release
+v_anm_switch_mode_sounds					= 0,snd_move_selector|18,snd_selector
+v_anm_reload_p1_sounds						= 0,snd_move_out|15,snd_mag_out
+v_anm_reload_p2_sounds						= 0,snd_move_in|19,snd_mag_in
+v_anm_reload_empty_p1_sounds			= 0,snd_move_out|15,snd_mag_out
+v_anm_reload_empty_p2_sounds			= 0,snd_move_in_empty|19,snd_mag_in|49,snd_bolt_release
+v_anm_mag_check_sounds						= 0,snd_move_long|12,snd_mag_outC|54,snd_mag_inC
+v_anm_mag_check_empty_sounds			= 0,snd_move_long|12,snd_mag_outC|54,snd_mag_inC
+5_v_anm_mag_check_sounds					= 0,snd_move_long|12,snd_mag_outC|54,snd_mag_inC
+5_v_anm_mag_check_empty_sounds		= 0,snd_move_long|12,snd_mag_outC|54,snd_mag_inC
 
+anm_bore                          						= svu_m_bore, idle, 1.3
+anm_bore_empty									= svu_m_bore_e, idle_empty
+anm_hide												= svu_m_holster, idle, 1.15
+anm_hide_empty										= svu_m_holster, idle_empty, 1.2
+anm_show												= svu_m_show, idle, 1.1
+anm_show_empty									= svu_m_show, idle_empty, 1.1
+anm_idle													= svu_m_idle, idle
+anm_idle_empty										= svu_m_idle, idle_empty
+anm_idle_aim											= svu_m_idle_aim, idle
+anm_idle_aim_empty								= svu_m_idle_aim, idle_empty
+anm_idle_aim_moving							= svu_m_walk_aim, idle
+anm_idle_aim_moving_empty					= svu_m_walk_aim, idle_empty
+anm_idle_aim_moving_crouch				= svu_m_walk_aim, idle
+anm_idle_aim_moving_crouch_empty	= svu_m_walk_aim, idle_empty
+anm_idle_moving									= svu_m_walk, idle
+anm_idle_moving_empty						= svu_m_walk, idle_empty
+anm_idle_moving_crouch						= svu_m_walk, idle
+anm_idle_moving_crouch_empty			= svu_m_walk, idle_empty
+anm_shots												= svu_m_shoot, shoot, 1.5
+anm_shot_l												= svu_m_shoot, shoot_last, 1.5
+anm_reload_misfire									= svu_m_unjam, unjam, 1.3
+anm_switch_mode									= svu_m_firemode, firemode, 1.1
+anm_switch_mode_empty						= svu_m_firemode, firemode_empty, 1.1
+anm_idle_sprint										= svu_m_idle_sprint, idle, 1.1
+anm_idle_sprint_empty							= svu_m_idle_sprint, idle_empty, 1.1
+anm_mag_check										= svu_m_check, check, 1.1
+anm_mag_check_empty							= svu_m_check, check_empty, 1.1
+anm_reload												= svu_m_reload_p1, reload_p1, 1.3
+anm_reload_p1										= svu_m_reload_p1, reload_p1, 1.3
+anm_reload_p2										= svu_m_reload_p2, reload_p2, 1.3
+anm_reload_empty									= svu_m_reload_p1, reload_empty_p1, 1.3
+anm_reload_empty_p1							= svu_m_reload_p1, reload_empty_p1, 1.3
+anm_reload_empty_p2							= svu_m_reload_e_p2, reload_empty_p2, 1.3
+5_anm_mag_check									= svu_m_check, check, 1.1
+5_anm_mag_check_empty						= svu_m_check, check_empty, 1.1
 
-hud                                      = wpn_svu_1p29_hud
-visual                                   = dynamics\weapons\wpn_svu\wpn_svu_1p29.ogf
+c_anm_bore                          						= svu_c_bore, idle, 1.3
+c_anm_bore_empty										= svu_c_bore_e, idle_empty
+c_anm_hide													= svu_c_holster, idle, 1.15
+c_anm_hide_empty										= svu_c_holster, idle_empty, 1.2
+c_anm_show												= svu_c_show, idle, 1.1
+c_anm_show_empty									= svu_c_show, idle_empty, 1.1
+c_anm_idle													= svu_c_idle, idle
+c_anm_idle_empty										= svu_c_idle, idle_empty
+c_anm_idle_aim											= svu_c_idle_aim, idle
+c_anm_idle_aim_empty								= svu_c_idle_aim, idle_empty
+c_anm_idle_aim_moving								= svu_c_walk_aim, idle
+c_anm_idle_aim_moving_empty					= svu_c_walk_aim, idle_empty
+c_anm_idle_aim_moving_crouch					= svu_c_walk_aim, idle
+c_anm_idle_aim_moving_crouch_empty		= svu_c_walk_aim, idle_empty
+c_anm_idle_moving										= svu_c_walk, idle
+c_anm_idle_moving_empty							= svu_c_walk, idle_empty
+c_anm_idle_moving_crouch						= svu_c_walk, idle
+c_anm_idle_moving_crouch_empty			= svu_c_walk, idle_empty
+c_anm_shots												= svu_c_shoot, shoot, 1.5
+c_anm_shot_l												= svu_c_shoot, shoot_last, 1.5
+c_anm_reload_misfire									= svu_c_unjam, unjam, 1.3
+c_anm_switch_mode									= svu_c_firemode, firemode, 1.1
+c_anm_switch_mode_empty						= svu_c_firemode, firemode_empty, 1.1
+c_anm_idle_sprint										= svu_c_idle_sprint, idle, 1.1
+c_anm_idle_sprint_empty							= svu_c_idle_sprint, idle_empty, 1.1
+c_anm_mag_check										= svu_c_check, check, 1.1
+c_anm_mag_check_empty							= svu_c_check, check_empty, 1.1
+c_anm_reload												= svu_c_reload_p1, reload_p1, 1.3
+c_anm_reload_p1										= svu_c_reload_p1, reload_p1, 1.3
+c_anm_reload_p2										= svu_c_reload_p2, reload_p2, 1.3
+c_anm_reload_empty									= svu_c_reload_p1, reload_empty_p1, 1.3
+c_anm_reload_empty_p1								= svu_c_reload_p1, reload_empty_p1, 1.3
+c_anm_reload_empty_p2								= svu_c_reload_e_p2, reload_empty_p2, 1.3
+5_c_anm_mag_check									= svu_c_check, check, 1.1
+5_c_anm_mag_check_empty						= svu_c_check, check_empty, 1.1
 
-[wpn_svu_1p29_hud]:wpn_svu_hud
-item_visual                              = anomaly_weapons\wpn_svu\wpn_svu_1p29_hud.ogf
+h_anm_bore                          						= svu_h_bore, idle, 1.3
+h_anm_bore_empty										= svu_h_bore_e, idle_empty
+h_anm_hide													= svu_h_holster, idle, 1.15
+h_anm_hide_empty										= svu_h_holster, idle_empty, 1.2
+h_anm_show												= svu_h_show, idle, 1.1
+h_anm_show_empty									= svu_h_show, idle_empty, 1.1
+h_anm_idle													= svu_h_idle, idle
+h_anm_idle_empty										= svu_h_idle, idle_empty
+h_anm_idle_aim											= svu_h_idle_aim, idle
+h_anm_idle_aim_empty								= svu_h_idle_aim, idle_empty
+h_anm_idle_aim_moving								= svu_h_walk_aim, idle
+h_anm_idle_aim_moving_empty					= svu_h_walk_aim, idle_empty
+h_anm_idle_aim_moving_crouch				= svu_h_walk_aim, idle
+h_anm_idle_aim_moving_crouch_empty		= svu_h_walk_aim, idle_empty
+h_anm_idle_moving									= svu_h_walk, idle
+h_anm_idle_moving_empty							= svu_h_walk, idle_empty
+h_anm_idle_moving_crouch						= svu_h_walk, idle
+h_anm_idle_moving_crouch_empty			= svu_h_walk, idle_empty
+h_anm_shots												= svu_h_shoot, shoot, 1.5
+h_anm_shot_l												= svu_h_shoot, shoot_last, 1.5
+h_anm_reload_misfire									= svu_h_unjam, unjam, 1.3
+h_anm_switch_mode									= svu_h_firemode, firemode, 1.1
+h_anm_switch_mode_empty						= svu_h_firemode, firemode_empty, 1.1
+h_anm_idle_sprint										= svu_h_idle_sprint, idle, 1.1
+h_anm_idle_sprint_empty							= svu_h_idle_sprint, idle_empty, 1.1
+h_anm_mag_check										= svu_h_check, check, 1.1
+h_anm_mag_check_empty							= svu_h_check, check_empty, 1.1
+h_anm_reload												= svu_h_reload_p1, reload_p1, 1.3
+h_anm_reload_p1										= svu_h_reload_p1, reload_p1, 1.3
+h_anm_reload_p2										= svu_h_reload_p2, reload_p2, 1.3
+h_anm_reload_empty									= svu_h_reload_p1, reload_empty_p1, 1.3
+h_anm_reload_empty_p1							= svu_h_reload_p1, reload_empty_p1, 1.3
+h_anm_reload_empty_p2							= svu_h_reload_e_p2, reload_empty_p2, 1.3
+5_h_anm_mag_check									= svu_h_check, check, 1.1
+5_h_anm_mag_check_empty						= svu_h_check, check_empty, 1.1
 
-;------------------------------------------------------------------------------------------------
-[wpn_svu_ps01]:wpn_svu
-1icon_layer                              = ps01
-1icon_layer_x                            = 47
-1icon_layer_y                            = 8
+r_anm_bore                          						= svu_r_bore, idle, 1.3
+r_anm_bore_empty										= svu_r_bore_e, idle_empty
+r_anm_hide													= svu_r_holster, idle, 1.15
+r_anm_hide_empty										= svu_r_holster, idle_empty, 1.2
+r_anm_show												= svu_r_show, idle, 1.1
+r_anm_show_empty									= svu_r_show, idle_empty, 1.1
+r_anm_idle													= svu_r_idle, idle
+r_anm_idle_empty										= svu_r_idle, idle_empty
+r_anm_idle_aim											= svu_r_idle_aim, idle
+r_anm_idle_aim_empty								= svu_r_idle_aim, idle_empty
+r_anm_idle_aim_moving								= svu_r_walk_aim, idle
+r_anm_idle_aim_moving_empty					= svu_r_walk_aim, idle_empty
+r_anm_idle_aim_moving_crouch					= svu_r_walk_aim, idle
+r_anm_idle_aim_moving_crouch_empty		= svu_r_walk_aim, idle_empty
+r_anm_idle_moving										= svu_r_walk, idle
+r_anm_idle_moving_empty							= svu_r_walk, idle_empty
+r_anm_idle_moving_crouch							= svu_r_walk, idle
+r_anm_idle_moving_crouch_empty				= svu_r_walk, idle_empty
+r_anm_shots												= svu_r_shoot, shoot, 1.5
+r_anm_shot_l												= svu_r_shoot, shoot_last, 1.5
+r_anm_reload_misfire									= svu_r_unjam, unjam, 1.3
+r_anm_switch_mode									= svu_r_firemode, firemode, 1.1
+r_anm_switch_mode_empty						= svu_r_firemode, firemode_empty, 1.1
+r_anm_idle_sprint										= svu_r_idle_sprint, idle, 1.1
+r_anm_idle_sprint_empty							= svu_r_idle_sprint, idle_empty, 1.1
+r_anm_mag_check										= svu_r_check, check, 1.1
+r_anm_mag_check_empty							= svu_r_check, check_empty, 1.1
+r_anm_reload												= svu_r_reload_p1, reload_p1, 1.3
+r_anm_reload_p1											= svu_r_reload_p1, reload_p1, 1.3
+r_anm_reload_p2											= svu_r_reload_p2, reload_p2, 1.3
+r_anm_reload_empty									= svu_r_reload_p1, reload_empty_p1, 1.3
+r_anm_reload_empty_p1								= svu_r_reload_p1, reload_empty_p1, 1.3
+r_anm_reload_empty_p2								= svu_r_reload_e_p2, reload_empty_p2, 1.3
+5_r_anm_mag_check									= svu_r_check, check, 1.1
+5_r_anm_mag_check_empty						= svu_r_check, check_empty, 1.1
 
+t_anm_bore                          						= svu_t_bore, idle, 1.3
+t_anm_bore_empty										= svu_t_bore_e, idle_empty
+t_anm_hide													= svu_t_holster, idle, 1.15
+t_anm_hide_empty										= svu_t_holster, idle_empty, 1.2
+t_anm_show												= svu_t_show, idle, 1.1
+t_anm_show_empty									= svu_t_show, idle_empty, 1.1
+t_anm_idle													= svu_t_idle, idle
+t_anm_idle_empty										= svu_t_idle, idle_empty
+t_anm_idle_aim											= svu_t_idle_aim, idle
+t_anm_idle_aim_empty								= svu_t_idle_aim, idle_empty
+t_anm_idle_aim_moving								= svu_t_walk_aim, idle
+t_anm_idle_aim_moving_empty					= svu_t_walk_aim, idle_empty
+t_anm_idle_aim_moving_crouch					= svu_t_walk_aim, idle
+t_anm_idle_aim_moving_crouch_empty		= svu_t_walk_aim, idle_empty
+t_anm_idle_moving										= svu_t_walk, idle
+t_anm_idle_moving_empty							= svu_t_walk, idle_empty
+t_anm_idle_moving_crouch							= svu_t_walk, idle
+t_anm_idle_moving_crouch_empty				= svu_t_walk, idle_empty
+t_anm_shots												= svu_t_shoot, shoot, 1.5
+t_anm_shot_l												= svu_t_shoot, shoot_last, 1.5
+t_anm_reload_misfire									= svu_t_unjam, unjam, 1.3
+t_anm_switch_mode									= svu_t_firemode, firemode, 1.1
+t_anm_switch_mode_empty						= svu_t_firemode, firemode_empty, 1.1
+t_anm_idle_sprint										= svu_t_idle_sprint, idle, 1.1
+t_anm_idle_sprint_empty							= svu_t_idle_sprint, idle_empty, 1.1
+t_anm_mag_check										= svu_t_check, check, 1.1
+t_anm_mag_check_empty							= svu_t_check, check_empty, 1.1
+t_anm_reload												= svu_t_reload_p1, reload_p1, 1.3
+t_anm_reload_p1											= svu_t_reload_p1, reload_p1, 1.3
+t_anm_reload_p2											= svu_t_reload_p2, reload_p2, 1.3
+t_anm_reload_empty									= svu_t_reload_p1, reload_empty_p1, 1.3
+t_anm_reload_empty_p1								= svu_t_reload_p1, reload_empty_p1, 1.3
+t_anm_reload_empty_p2								= svu_t_reload_e_p2, reload_empty_p2, 1.3
+5_t_anm_mag_check									= svu_t_check, check, 1.1
+5_t_anm_mag_check_empty						= svu_t_check, check_empty, 1.1
 
-hud                                      = wpn_svu_pso1_hud
-visual                                   = dynamics\weapons\wpn_svu\wpn_svu_pso1.ogf
-
-[wpn_svu_pso1_hud]:wpn_svu_hud
-item_visual                              = anomaly_weapons\wpn_svu\wpn_svu_pso1_hud.ogf
-
-;------------------------------------------------------------------------------------------------
-;-- Alt
-;------------------------------------------------------------------------------------------------
-[wpn_svu_alt]:wpn_svu
-parent_section                           = wpn_svu_alt
-
-inv_grid_x                               = 45
-inv_grid_y                               = 4
-inv_name                                 = st_wpn_svu_alt
-inv_name_short                           = st_wpn_svu_alt
-
-cost                                     = 48850
-
-hud                                      = wpn_svu_sk1_hud
-visual                                   = dynamics\weapons\wpn_svu\wpn_svu_sk1.ogf
-
-installed_upgrades                       = up_secona_svu
-
-rpm                                      = 78
-
-fire_dispersion_base                     = 0.073
-
-misfire_start_condition                  = 0.7 ;  0.75
-misfire_start_prob                       = 0.004
-misfire_end_condition                    = 0.08
-misfire_end_prob                         = 0.03
-
-condition_queue_shot_dec                 = 0.0045
-condition_shot_dec                       = 0.0045
-
-
-[wpn_svu_sk1_hud]:wpn_svu_hud
-item_visual                              = anomaly_weapons\wpn_svu\wpn_svu_sk1_hud.ogf
-
-;------------------------------------------------------------------------------------------------
-[wpn_svu_alt_1p29]:wpn_svu_alt
-1icon_layer                              = 1p29
-1icon_layer_x                            = 72
-1icon_layer_y                            = 6
-
-
-hud                                      = wpn_svu_1p29_sk1_hud
-visual                                   = dynamics\weapons\wpn_svu\wpn_svu_1p29_sk1.ogf
-
-[wpn_svu_1p29_sk1_hud]:wpn_svu_1p29_hud
-item_visual                              = anomaly_weapons\wpn_svu\wpn_svu_1p29_sk1_hud.ogf
-
-;------------------------------------------------------------------------------------------------
-[wpn_svu_alt_kobra]:wpn_svu_alt
-1icon_layer                              = kobra
-1icon_layer_x                            = 75
-1icon_layer_y                            = 9
-
-
-hud                                      = wpn_svu_kobra_sk1_hud
-visual                                   = dynamics\weapons\wpn_svu\wpn_svu_kobra_sk1.ogf
-
-[wpn_svu_kobra_sk1_hud]:wpn_svu_kobra_hud
-item_visual                              = anomaly_weapons\wpn_svu\wpn_svu_kobra_sk1_hud.ogf
-
-;------------------------------------------------------------------------------------------------
-[wpn_svu_alt_ps01]:wpn_svu_alt
-1icon_layer                              = ps01
-1icon_layer_x                            = 47
-1icon_layer_y                            = 8
-
-
-hud                                      = wpn_svu_pso1_sk1_hud
-item_visual                              = anomaly_weapons\wpn_svu\wpn_svu_pso1_sk1.ogf
-
-[wpn_svu_pso1_sk1_hud]:wpn_svu_pso1_hud
-item_visual                              = anomaly_weapons\wpn_svu\wpn_svu_pso1_sk1_hud.ogf
+v_anm_bore                          						= svu_v_bore, idle, 1.3
+v_anm_bore_empty										= svu_v_bore_e, idle_empty
+v_anm_hide													= svu_v_holster, idle, 1.15
+v_anm_hide_empty										= svu_v_holster, idle_empty, 1.2
+v_anm_show												= svu_v_show, idle, 1.1
+v_anm_show_empty									= svu_v_show, idle_empty, 1.1
+v_anm_idle													= svu_v_idle, idle
+v_anm_idle_empty										= svu_v_idle, idle_empty
+v_anm_idle_aim											= svu_v_idle_aim, idle
+v_anm_idle_aim_empty								= svu_v_idle_aim, idle_empty
+v_anm_idle_aim_moving								= svu_v_walk_aim, idle
+v_anm_idle_aim_moving_empty					= svu_v_walk_aim, idle_empty
+v_anm_idle_aim_moving_crouch					= svu_v_walk_aim, idle
+v_anm_idle_aim_moving_crouch_empty		= svu_v_walk_aim, idle_empty
+v_anm_idle_moving										= svu_v_walk, idle
+v_anm_idle_moving_empty							= svu_v_walk, idle_empty
+v_anm_idle_moving_crouch						= svu_v_walk, idle
+v_anm_idle_moving_crouch_empty			= svu_v_walk, idle_empty
+v_anm_shots												= svu_v_shoot, shoot, 1.5
+v_anm_shot_l												= svu_v_shoot, shoot_last, 1.5
+v_anm_reload_misfire									= svu_v_unjam, unjam, 1.3
+v_anm_switch_mode									= svu_v_firemode, firemode, 1.1
+v_anm_switch_mode_empty						= svu_v_firemode, firemode_empty, 1.1
+v_anm_idle_sprint										= svu_v_idle_sprint, idle, 1.1
+v_anm_idle_sprint_empty							= svu_v_idle_sprint, idle_empty, 1.1
+v_anm_mag_check										= svu_v_check, check, 1.1
+v_anm_mag_check_empty							= svu_v_check, check_empty, 1.1
+v_anm_reload												= svu_v_reload_p1, reload_p1, 1.3
+v_anm_reload_p1										= svu_v_reload_p1, reload_p1, 1.3
+v_anm_reload_p2										= svu_v_reload_p2, reload_p2, 1.3
+v_anm_reload_empty									= svu_v_reload_p1, reload_empty_p1, 1.3
+v_anm_reload_empty_p1							= svu_v_reload_p1, reload_empty_p1, 1.3
+v_anm_reload_empty_p2							= svu_v_reload_e_p2, reload_empty_p2, 1.3
+5_v_anm_mag_check									= svu_v_check, check, 1.1
+5_v_anm_mag_check_empty						= svu_v_check, check_empty, 1.1

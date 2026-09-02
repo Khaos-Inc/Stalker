@@ -1,0 +1,217 @@
+--\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ wpn_sig220 -6 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+[226_trigger]:attachment_base
+kind  =  226
+inv_ui_sign				= 226_trig
+visual						= w_att_huds\220_trigger	
+inv_name					= 226_trigger
+inv_name_short		= 226_triggerS
+cost							= 850
+inv_weight				= 0.08
+inv_grid_x         		= 16
+inv_grid_y         		= 61
+1icon_layer = clean_lub1_ico
+attachment_point	=	226_trigger|0,0,0|0,0,0
+attachment_slots		=	226_barrel|muzzle|0,0,0|0,0,0#226_grips|wpn_body|0,0,0|0,0,0#226_spring|zatvor|0,0,0|0,0,0
+item_tags				=	trigger
+override_section		=	226_trigger_attributes
+
+[226_trigger_attributes]
+
+[226_trigger_up]:226_trigger			
+kind  =  226			
+inv_ui_sign				= 226_auto
+visual						= w_att_huds\220_trigger_up	
+inv_name					= 226_trigger_up
+inv_name_short		= 226_trigger_upS
+cost							= 2900
+inv_weight				= 0.07
+inv_grid_x         		= 17
+override_section = 226_trigger_up_attributes
+
+[226_trigger_up_attributes]
+fire_modes = -1
+
+[226_barrel]:attachment_base
+kind  =  226
+inv_ui_sign				= 226_bar
+visual						= w_att_huds\220_barrel	
+inv_name					= 226_barrel
+inv_name_short		= 226_barrelS
+cost							= 850
+inv_weight				= 0.09
+inv_grid_x         		= 16
+inv_grid_y         		= 62
+1icon_layer = clean1_ico
+attachment_point	=	226_barrel|0,0,0|0,0,0
+attachment_slots		=	226_zatvor|zatvor|0,0,0|0,0,0
+item_tags				=	barrel
+override_section = 226_barrel_attributes
+
+[226_barrel_attributes]
+zoom_rotate_time = 0.02
+recoil_koeff = -0.03
+bullet_speed = 1
+fire_dispersion_base = 0.22
+[226_barrel_att]:cz75_barrel_att
+bullet_speed				= 1
+fire_dispersion_base		= 0.22
+
+[226_barrel_up]:226_barrel
+kind  =  226
+inv_ui_sign				= 226_bar+
+visual						= w_att_huds\220_barrel_up	
+inv_name					= 226_barrel_up
+inv_name_short		= 226_barrel_upS
+cost							= 2900
+inv_weight				= 0.1
+inv_grid_x         		= 17
+attachment_slots		= 226_zatvor|zatvor|0,0,0|0,0,0#9mm_muzzle|muzzle|0,0,0|0,0,0
+override_section = 226_barrel_up_attributes
+
+[226_barrel_up_attributes]
+zoom_rotate_time = 0.02
+recoil_koeff = -0.03
+bullet_speed = 1
+fire_dispersion_base = 0.22
+impair_koeff = 1.1
+[226_barrel_up_att]:226_barrel_att
+impair_koeff = 1.1
+
+[226_spring]:attachment_base
+kind  =  226
+inv_ui_sign				= 226_spr
+visual						= w_att_huds\220_spring	
+inv_name					= 226_spring
+inv_name_short		= 226_springS
+cost							= 300
+inv_weight				= 0.03
+inv_grid_x         		= 18
+inv_grid_y         		= 61
+1icon_layer = clean1_ico
+attachment_point	=	226_spring|0,0,0|0,0,0
+item_tags				=	spring
+override_section = 226_spring_attributes
+
+[226_spring_attributes]
+
+[226_zatvor]:attachment_base
+kind  =  226
+inv_ui_sign				= 226_slide
+visual						= w_att_huds\220_zatvor
+inv_name					= 226_zatvor
+inv_name_short		= 226_zatvorS
+cost							= 850
+inv_weight				= 0.15
+inv_grid_width     	= 2
+inv_grid_x         		= 18
+inv_grid_y         		= 62
+1icon_layer = clean_lub2_ico
+attachment_point	=	226_zatvor|0,0,0|0,0,0
+attachment_slots		=	zatvor_side|zatvor|0,0.04917,-0.020714|0,0,0
+item_tags				=	zatvor
+override_section		= 226_zatvor_attributes
+
+[226_zatvor_attributes]
+rpm = 1000
+impair_koeff = 0.85
+zoom_rotate_time = 0.1
+
+[226_zatvor_pica]:226_zatvor
+kind  =  226
+inv_ui_sign				= 226_sliP
+visual						= w_att_huds\220_zatvor_pica
+description				= pica_4_up
+inv_name					= 226_zatvor_pica
+inv_name_short		= 226_zatvor_picaS
+cost							= 2150
+inv_grid_x         		= 20
+attachment_slots		=	pica_4|zatvor|0,0.046326,-0.01715|0,0,0
+override_section = 226_zatvor_pica_attributes
+
+inv_weight = 0.15
+[226_zatvor_pica_attributes]
+rpm = 1000
+impair_koeff = 0.85
+zoom_rotate_time = 0.1
+recoil_koeff = -0.05
+
+[226_grips_rub]:attachment_base
+kind  =  226
+inv_ui_sign				= 226_pg+
+visual						= w_att_huds\220_grips_rub
+inv_name					= 226_grips_rub
+inv_name_short		= 226_grips_rubS
+cost							= 1550
+inv_weight				= 0.1
+inv_grid_x         		= 23
+inv_grid_y         		= 62
+attachment_point	= 226_grips|0,0,0|0,0,0
+item_tags				= pgrip
+override_section = 226_grips_rub_attributes
+
+[226_grips_rub_attributes]
+zoom_rotate_time = -0.06
+recoil_koeff = -0.03
+
+[226_grips]:226_grips_rub		
+kind  =  226
+inv_ui_sign				= 226_pg
+visual						= w_att_huds\220_grips
+inv_name					= 226_grips
+inv_name_short		= 226_gripsS
+cost							= 2400
+inv_weight				= 0.08
+inv_grid_x         		= 22
+attachment_slots		= glock_stock|wpn_body|0,0,-0.0027|0,0,0
+override_section = 226_grips_attributes
+
+[226_grips_attributes]
+zoom_rotate_time = -0.04
+recoil_koeff = -0.04
+
+[mag_wpn_sig220_9x19_fmj]:mag_wpn_base,wg_wpn_sig220,ag_ammo_9x19_fmj
+inv_ui_sign					= 226_15
+visual							= w_att_huds\220_mag
+inv_name						= 226_mag
+inv_name_short			= 226_magS
+inv_grid_x         			= 24
+inv_grid_y         			= 61
+inv_weight					= 0.08
+cost								= 400
+max_mag_size				= 15
+mag_size						= small
+override_section			=	mag_wpn_sig220_9x19_fmj_attributes
+
+[mag_wpn_sig220_9x19_fmj_attributes]
+animation_prefix_mag = 17_
+
+[mag_wpn_sig220_32_9x19_fmj]:mag_wpn_sig220_9x19_fmj
+inv_ui_sign					= 226_32
+visual							= w_att_huds\220_mag8
+inv_name						= 226_mag32
+inv_name_short			= 226_mag32S
+inv_grid_height    		= 2
+inv_grid_x         			= 25
+inv_weight					= 0.28
+cost								= 800
+max_mag_size				= 32
+override_section			=	mag_wpn_sig220_32_9x19_fmj_attributes
+
+[mag_wpn_sig220_32_9x19_fmj_attributes]
+animation_prefix_mag = 33_
+
+[mag_wpn_sig220_50_9x19_fmj]:mag_wpn_sig220_32_9x19_fmj
+inv_ui_sign					= 226_32
+visual							= w_att_huds\220_mag20
+inv_name						= 226_mag50
+inv_name_short			= 226_mag50S
+inv_grid_x         			= 25
+inv_weight					= 0.65
+cost								= 1600
+max_mag_size				= 50
+mag_size						= medium
+override_section			=	mag_wpn_sig220_50_9x19_fmj_attributes
+
+[mag_wpn_sig220_50_9x19_fmj_attributes]
+animation_prefix_mag = 50_

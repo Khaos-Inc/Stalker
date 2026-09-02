@@ -1,0 +1,416 @@
+--\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ wpn_orsis \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+[orsis_barrel_660]:attachment_base
+kind  =  orsis
+inv_ui_sign				= orsis66cm
+visual						= w_att_huds\orsis_barrel_660
+inv_name					= orsis_barrel_660
+inv_name_short		= orsis_barrelS
+cost							= 4500
+inv_weight				= 1.45
+inv_grid_width			= 4
+inv_grid_x				= 6
+inv_grid_y				= 71
+1icon_layer = clean4_ico
+attachment_point	= orsis_barrel|0,0,0|0,0,0
+attachment_slots		= orsis_muzzle|muzzle|0,0,0|0,0,0#orsis_lower|wpn_body|0,0,0|0,0,0
+item_tags				= barrel
+override_section = orsis_barrel_660_attributes
+[orsis_barrel_660_attributes]:ar_barrel_17_att
+fire_point					= 0, 0, 0.04
+weapon_lenght				=	0.55
+bullet_speed	= 1.01
+fire_dispersion_base = 0.05
+impair_koeff = 0.9
+
+recoil_koeff = -0.07
+inertia_koeff = 1.7
+zoom_rotate_time = 0.11
+[orsis_barrel_700]:orsis_barrel_660
+kind  =  orsis
+inv_ui_sign				= orsis70cm
+visual						= w_att_huds\orsis_barrel_700_aics
+inv_name					= orsis_barrel_700_aics
+cost							= 4900
+inv_weight				= 1.67
+inv_grid_x				= 10
+attachment_slots		= orsis_muzzle|muzzle|0,0,0.0332|0,0,0#orsis_lower|wpn_body|0,0,0|0,0,0
+override_section = orsis_barrel_700_attributes
+[orsis_barrel_700_attributes]:ar_barrel_18_att
+fire_point					= 0, 0, 0.08
+weapon_lenght				=	0.6
+bullet_speed		= 1.03
+k_hit_koeff				= 1.05
+fire_dispersion_base = 0.04
+impair_koeff = 0.7
+
+recoil_koeff = -0.09
+[orsis_barrel_silencer]:orsis_barrel_660
+kind  =  orsis
+inv_ui_sign				= orsis55cm
+visual						= w_att_huds\orsis_barrel_silencer
+inv_name					= orsis_barrel_550_silencer
+cost							= 6000
+inv_weight				= 2.15
+inv_grid_width			= 3
+inv_grid_x				= 14
+attachment_slots		= orsis_lower_silencer|wpn_body|0,0,0|0,0,0
+override_section = orsis_barrel_silencer_attributes
+
+[orsis_barrel_silencer_attributes]
+silencer_status = 1
+silencer_name = wpn_addon_silencer
+silencer_x = 1
+silencer_y = 1
+fire_point = 0, 0, -0.085
+weapon_lenght = 0.5
+bullet_speed = 0.91
+fire_dispersion_base = 0.08
+k_hit_koeff = 0.9
+zoom_rotate_time = 0.13
+recoil_koeff = -0.11
+inertia_koeff = 1.9
+impair_koeff = 1.5
+[orsis_barrel_550_attributes]:silencer_base_attributes
+fire_point					= 0, 0, -0.085
+weapon_lenght				=	0.5	;48
+bullet_speed	= 0.91
+fire_dispersion_base = 0.08
+k_hit_koeff					= 0.9
+zoom_rotate_time = 0.13
+recoil_koeff             = -0.45
+inertia_koeff            = 1.9
+impair_koeff = 1.5
+
+[orsis_lower]:attachment_base
+kind  =  orsis
+inv_ui_sign					= orsis_t
+visual							= w_att_huds\orsis_lower	
+inv_name						= orsis_lower
+inv_name_short			= orsis_lowerS
+cost								= 4700
+inv_weight					= 1.35
+inv_grid_width				= 4
+inv_grid_x					= 6
+inv_grid_y					= 72
+attachment_point		= orsis_lower|0,0,0|0,0,0
+attachment_slots			= orsis_lower_grip|wpn_body|0,0,0|0,0,0#orsis_lower_rail|wpn_body|0,0,0|0,0,0#lock_bipods|wpn_body|0,0.044,0.44|0,0,0
+item_tags					= stock
+override_section			= orsis_lower_attributes
+
+[orsis_lower_attributes]
+animation_prefix = c_
+weapon_lenght = 0.3
+zoom_rotate_time = 0.02
+recoil_koeff = -0.25
+inertia_koeff = 0.6
+[orsis_lower_att]:c_attributes
+weapon_lenght = 0.3
+zoom_rotate_time = 0.02
+recoil_koeff            = -0.35
+inertia_koeff          = 0.6
+
+[orsis_lower_rail]:attachment_base
+kind  =  orsis
+inv_ui_sign					= orsis_front
+visual							= w_att_huds\orsis_lower_rail	
+description					= ar_hg_5
+inv_name						= orsis_lower_rail
+inv_name_short			= orsis_lower_railS
+cost								= 800
+inv_weight					= 0.08
+inv_grid_x					= 37
+inv_grid_y					= 72
+attachment_point		= orsis_lower_rail|0,0,0|0,0,0
+attachment_slots			= sight_front|wpn_body|0,0.0899,0.48|0,0,0#pica_3|wpn_body|0,0.02194,0.381|0,0,180#pica_5|wpn_body|0,0.0899,0.3868|0,0,0
+item_tags					= rail
+override_section = orsis_lower_rail_attributes
+
+[orsis_lower_rail_attributes]
+
+[orsis_lower_grip]:attachment_base
+kind  =  orsis
+inv_ui_sign					= orsis_down
+visual							= w_att_huds\orsis_lower_grip
+description					= pica_3_up
+inv_name						= orsis_lower_grip
+inv_name_short			= orsis_lower_gripS
+cost								= 800
+inv_weight					= 0.06
+inv_grid_x					= 26
+inv_grid_y					= 72
+attachment_point		= orsis_lower_grip|0,0,0|0,0,0
+attachment_slots			= pica_3|wpn_body|0,0.02194,0.34|0,0,180#picgrp|wpn_body|0,-0.0136,0.03|0,0,0
+item_tags					= rail
+override_section = orsis_lower_grip_attributes
+
+[orsis_lower_grip_attributes]
+
+[orsis_lower_m]:orsis_lower
+kind  =  orsis
+inv_ui_sign					= orsis_m
+visual							= w_att_huds\orsis_lower_m	
+inv_name						= orsis_lower_m
+inv_name_short			= orsis_lower_mS
+cost								= 5200
+inv_weight					= 1.6
+inv_grid_x					= 10
+attachment_slots			= orsis_lower_grip|wpn_body|0,0,0|0,0,0#pica_16|wpn_body|0,0.0899,0.283|0,0,0#sight_front|wpn_body|0,0.0899,0.45|0,0,0#mlok|wpn_body|-0.02432,0.063,0.42|0,0,-90#mlok|wpn_body|0.02432,0.063,0.42|0,0,90#mlok|wpn_body|0,0.0368,0.456|0,0,180#lock_bipods|wpn_body|0,0.0368,0.418|0,0,0
+override_section			= orsis_lower_m_attributes
+
+[orsis_lower_m_attributes]
+animation_prefix = c_
+weapon_lenght = 0.3
+zoom_rotate_time = 0.05
+recoil_koeff = -0.26
+inertia_koeff = 0.6
+[orsis_lower_m_att]:c_attributes
+weapon_lenght = 0.3
+zoom_rotate_time = 0.05
+recoil_koeff            = -0.45
+inertia_koeff          = 0.6
+
+[orsis_lower_silencer]:orsis_lower
+kind  =  orsis
+inv_ui_sign					= orsis_sil
+visual							= w_att_huds\orsis_lower_silencer	
+inv_name						= orsis_lower_silencer
+cost								= 3100
+inv_weight					= 0.9
+inv_grid_width				= 2
+inv_grid_x					= 22
+item_tags					= stock
+attachment_point		= orsis_lower_silencer|0,0,0|0,0,0
+override_section			= orsis_lower_silencer_attributes
+
+[orsis_lower_silencer_attributes]
+animation_prefix = cp_
+weapon_lenght = 0.3
+zoom_rotate_time = -0.02
+recoil_koeff = -0.2
+inertia_koeff = 0.7
+[orsis_lower_silencer_att]:cp_attributes
+weapon_lenght = 0.3
+zoom_rotate_time = -0.02
+recoil_koeff            = -0.2
+inertia_koeff          = 0.7
+
+[orsis_lower_aics]:orsis_lower
+kind  =  orsis
+inv_ui_sign					= orsis_aics
+visual							= w_att_huds\orsis_lower_aics	
+inv_name						= orsis_lower_aics
+inv_name_short			= orsis_lower_aicsS
+cost								= 5000
+inv_weight					= 1.7
+inv_grid_x					= 14
+attachment_slots			= orsis_bipods|wpn_body|0,0,0|0,0,0#pica_3|wpn_body|0,0.02194,0.35|0,0,180#picgrp|wpn_body|0,-0.0136,0.03|0,0,0
+override_section			= orsis_lower_aics_attributes
+
+[orsis_lower_aics_attributes]
+animation_prefix = cp_
+weapon_lenght = 0.3
+zoom_rotate_time = 0.06
+recoil_koeff = -0.24
+inertia_koeff = 0.5
+[orsis_lower_aics_att]:cp_attributes
+weapon_lenght = 0.3
+zoom_rotate_time = 0.06
+recoil_koeff            = -0.6
+inertia_koeff          = 0.5
+
+[orsis_bipods]:attachment_base
+kind  =  orsis
+inv_ui_sign				= orsis_b
+visual						= w_att_huds\orsis_bipods_varmint	
+inv_name					= orsis_bipods_varmint
+inv_name_short		= orsis_bipods
+cost							= 1300
+inv_weight				= 0.21
+inv_grid_width			= 2
+inv_grid_x				= 21
+inv_grid_y				= 71
+attachment_point = orsis_bipods|0,0,0|0,0,0
+item_tags =	rail
+override_section = orsis_bipods_attributes
+
+[orsis_bipods_attributes]
+zoom_rotate_time = 0.01
+recoil_koeff = -0.1
+inertia_koeff = 1.1
+
+[orsis_bipods_pica]:orsis_bipods
+kind  =  orsis
+inv_ui_sign				= orsis_bp
+visual						= w_att_huds\orsis_bipods_aics	
+inv_name					= orsis_bipods_aics
+inv_name_short		= orsis_bipods_aicsS
+cost							= 1800
+inv_weight				= 0.26
+inv_grid_x				= 23
+attachment_slots	= pica_3|wpn_body|-0.018,0.04,0.42|0,0,-90#pica_3|wpn_body|0.018,0.04,0.42|0,0,90
+override_section = orsis_bipods_pica_attributes
+
+[orsis_bipods_pica_attributes]
+zoom_rotate_time = 0.01
+recoil_koeff = -0.1
+inertia_koeff = 1.1
+
+[orsis_lower_varmint]:orsis_lower
+kind  =  orsis
+inv_ui_sign					= orsis_vm
+visual							= w_att_huds\orsis_lower_varmint	
+inv_name						= orsis_lower_varmint
+cost								= 4400
+inv_weight					= 1.25
+inv_grid_x					= 18
+attachment_slots			= orsis_bipods|wpn_body|0,0,0|0,0,0
+override_section			= orsis_lower_varmint_attributes
+
+[orsis_lower_varmint_attributes]
+animation_prefix = cp_
+weapon_lenght = 0.3
+zoom_rotate_time = -0.01
+recoil_koeff = -0.22
+inertia_koeff = 0.6
+[orsis_lower_varmint_att]:cp_attributes
+weapon_lenght = 0.3
+zoom_rotate_time = -0.01
+recoil_koeff            = -0.3
+inertia_koeff          = 0.6
+
+[orsis_muzzle]:attachment_base
+kind  =  orsis
+inv_ui_sign					= orsis_m3
+visual							= w_att_huds\orsis_muzzle	
+inv_name						= orsis_muzzle
+inv_name_short			= orsis_muzzleS
+cost								= 500
+inv_weight					= 0.1
+inv_grid_x					= 17
+inv_grid_y					= 71
+attachment_point		= orsis_muzzle|0,0,0|0,0,0
+item_tags =	muzzle_device
+override_section = orsis_muzzle_attributes
+
+[orsis_muzzle_attributes]
+recoil_koeff = -0.07
+zoom_rotate_time = 0.01
+weapon_lenght = 0.08
+[orsis_muzzle_att]:ar_muzzle_8_att,08_muzzle_lenght_attributes
+
+[orsis_muzzle_m]:orsis_muzzle
+kind  =  orsis
+inv_ui_sign					= orsis_m4
+visual							= w_att_huds\orsis_muzzle_m	
+inv_name						= orsis_muzzle_m
+cost								= 800
+inv_grid_x					= 18
+override_section = orsis_muzzle_m_attributes
+
+inv_weight = 0.1
+[orsis_muzzle_m_attributes]
+weapon_lenght = 0.08
+recoil_koeff = -0.08
+zoom_rotate_time = 0.01
+
+[orsis_silencer]:orsis_muzzle
+kind  =  orsis
+inv_ui_sign				= orsis_sil
+visual						= w_att_huds\orsis_silencer_aics
+inv_name					= orsis_silencer_aics
+inv_name_short		= orsis_silencerS
+cost							= 4000
+inv_weight				= 0.54
+inv_grid_width			= 2
+inv_grid_x				= 19
+override_section = orsis_silencer_attributes
+
+[orsis_silencer_attributes]
+silencer_status = 1
+silencer_name = wpn_addon_silencer
+silencer_x = 1
+silencer_y = 1
+weapon_lenght = 0.2
+zoom_rotate_time = 0.06
+recoil_koeff = -0.13
+inertia_koeff = 1.3
+
+[orsis_zatvor]:attachment_base
+kind  =  orsis
+inv_ui_sign					= orsis_bolt
+visual							= w_att_huds\orsis_zatvor	
+inv_name						= orsis_zatvor
+inv_name_short			= orsis_zatvorS
+cost								= 800
+inv_weight					= 0.11
+inv_grid_x					= 24
+inv_grid_y					= 72
+attachment_point		= orsis_zatvor|0,0,0|0,0,0
+item_tags =	zatvor
+override_section = orsis_zatvor_attributes
+[orsis_zatvor_attributes]
+rpm = 54
+impair_koeff = 1.1
+
+[orsis_zatvor_varmint]:orsis_zatvor
+kind  =  orsis
+inv_ui_sign					= orsis_bolt_v
+visual							= w_att_huds\orsis_zatvor_varmint	
+inv_name						= orsis_zatvor_varmint
+cost								= 650
+inv_weight					= 0.12
+inv_grid_x					= 25
+override_section = orsis_zatvor_varmint_attributes
+[orsis_zatvor_varmint_attributes]
+rpm = 45
+impair_koeff = 0.6
+fire_dispersion_base_koeff = -0.02
+zoom_rotate_time	= -0.01
+
+[mag_wpn_orsis_magnum_300]:mag_wpn_base,wg_wpn_orsis,ag_ammo_magnum_300
+inv_ui_sign						= orsis4
+visual								= w_att_huds\orsis_mag_4
+inv_name							= orsis_mag_4
+inv_name_short				= orsis_magS
+inv_grid_x						= 25
+inv_grid_y						= 71
+inv_weight						= 0.08
+cost									= 400
+max_mag_size					= 4
+mag_size							= small
+override_section				= mag_wpn_orsis_magnum_300_attributes
+
+[mag_wpn_orsis_magnum_300_attributes]
+animation_prefix_mag = 5_
+[orsis_mag_5_attributes]
+animation_prefix_mag	=	5_ 
+
+[mag_wpn_orsis_5_magnum_300]:mag_wpn_orsis_magnum_300
+inv_ui_sign						= orsis5
+visual								= w_att_huds\orsis_mag_5_aics
+inv_name							= orsis_mag_5_aics
+inv_grid_x						= 26
+cost									= 500
+max_mag_size					= 5
+override_section = mag_wpn_orsis_5_magnum_300_attributes
+
+[mag_wpn_orsis_5_magnum_300_attributes]
+animation_prefix_mag = 5_
+
+[mag_wpn_orsis_10_magnum_300]:mag_wpn_orsis_magnum_300
+inv_ui_sign						= orsis10
+visual								= w_att_huds\orsis_mag_10
+inv_name							= orsis_mag_10
+inv_grid_height				= 2
+inv_grid_x						= 27
+inv_weight						= 0.15
+cost									= 1000
+max_mag_size					= 10
+mag_size							= medium
+override_section				= mag_wpn_orsis_10_magnum_300_attributes
+
+[mag_wpn_orsis_10_magnum_300_attributes]
+animation_prefix_mag = 10_
+[orsis_mag_10_attributes]
+animation_prefix_mag	=	10_

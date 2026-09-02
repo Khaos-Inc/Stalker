@@ -443,6 +443,17 @@ local function eligible_squad(squad)
 	if not (squad_can_manage(squad) and is_plain_stalker_sim_squad(squad)) then
 		return false
 	end
+	local quests = rawget(_G, "zhopa2_npc_quests")
+	if not quests and require then
+		pcall(require, "zhopa2_npc_quests")
+		quests = rawget(_G, "zhopa2_npc_quests")
+	end
+	if quests and type(quests.is_active_squad) == "function" then
+		local ok, active = pcall(quests.is_active_squad, squad)
+		if ok and active == true then
+			return false
+		end
+	end
 	local faction = squad_faction(squad)
 	if not faction or EXCLUDED_FACTIONS[faction] == true then
 		return false
@@ -451,6 +462,19 @@ local function eligible_squad(squad)
 		return false
 	end
 	return true
+end
+
+local function npc_quest_active(squad)
+	local quests = rawget(_G, "zhopa2_npc_quests")
+	if not quests and require then
+		pcall(require, "zhopa2_npc_quests")
+		quests = rawget(_G, "zhopa2_npc_quests")
+	end
+	if quests and type(quests.is_active_squad) == "function" then
+		local ok, active = pcall(quests.is_active_squad, squad)
+		return ok and active == true
+	end
+	return false
 end
 
 local function smart_by_id(smart_id)
@@ -950,6 +974,10 @@ local function activate_selected_sid(sid, source, squad)
 		set_status(sid, "pending")
 		return false
 	end
+	if npc_quest_active(squad) then
+		set_status(sid, "pending")
+		return false
+	end
 	if not eligible_squad(squad) then
 		clear_story_task(squad, "story_north_no_longer_eligible")
 		set_status(sid, "dead_or_invalid")
@@ -1110,6 +1138,9 @@ function M.update_squad_tasks(squad, ctx)
 	if not sid then
 		return false
 	end
+	if npc_quest_active(squad) then
+		return false
+	end
 	if feature_enabled_now() ~= true then
 		clear_story_task(squad, "story_north_disabled")
 		return false
@@ -1209,6 +1240,9 @@ local function squad_on_after_level_change(squad)
 end
 
 function M.on_game_start()
+	if rawget(_G, "zhopa2_runtime_disabled") == true then
+		return M.on_master_disable()
+	end
 	if not RegisterScriptCallback then
 		callbacks_registered = false
 		debug_log("~ ZHOPA2 north migration error | init_error reason [missing_RegisterScriptCallback]")
@@ -1251,6 +1285,39 @@ function M.on_game_start()
 		debug_log("~ ZHOPA2 north migration error | init_error reason [callbacks_not_registered]")
 	end
 	return callbacks_registered
+end
+
+function M.on_master_disable()
+	if UnregisterScriptCallback then
+		pcall(UnregisterScriptCallback, "save_state", save_state)
+		pcall(UnregisterScriptCallback, "load_state", load_state)
+		pcall(UnregisterScriptCallback, "actor_on_first_update", actor_on_first_update)
+		pcall(UnregisterScriptCallback, "actor_on_update", actor_on_update)
+		pcall(UnregisterScriptCallback, "on_game_load", on_game_load)
+		pcall(UnregisterScriptCallback, "on_option_change", on_option_change)
+		pcall(UnregisterScriptCallback, "server_entity_on_unregister", server_entity_on_unregister)
+		pcall(UnregisterScriptCallback, "server_entity_on_register", server_entity_on_register)
+		pcall(UnregisterScriptCallback, "squad_on_after_level_change", squad_on_after_level_change)
+	end
+	state = {
+		fired = false,
+		legacy_skipped = false,
+		selected_by_sid = {},
+		status_by_sid = {},
+		retargeted_by_sid = {},
+	}
+	callbacks_registered = false
+	pending_reconcile = false
+	pending_source = nil
+	next_recheck_tg = 0
+	rollout_running = false
+	if alife_storage_manager and type(alife_storage_manager.get_state) == "function" then
+		local m_data = alife_storage_manager.get_state()
+		if type(m_data) == "table" then
+			m_data[STATE_KEY] = nil
+		end
+	end
+	return true
 end
 
 function on_game_start()

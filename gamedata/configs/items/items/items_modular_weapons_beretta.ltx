@@ -1,0 +1,430 @@
+--\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ wpn_beretta \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+[beretta_trigger]:attachment_base
+kind  =  beretta
+inv_ui_sign				= m9_trig
+visual						= w_att_huds\beretta_trigger	
+inv_name					= beretta_trigger
+inv_name_short			= beretta_triggerS
+cost							= 1950
+inv_weight					= 0.07
+inv_grid_x         = 4
+inv_grid_y         = 26
+1icon_layer = clean_lub1_ico
+attachment_point	=	beretta_trigger|0,0,0|0,0,0
+attachment_slots	=	beretta_spring|zatvor|0,0,0|0,0,0#beretta_upper|wpn_body|0,0,0|0,0,0#beretta_grips|wpn_body|0,0,0|0,0,0
+item_tags	=	trigger
+override_section = beretta_trigger_attributes
+
+[beretta_trigger_attributes]
+
+[beretta_trigger_m93r]:beretta_trigger
+kind  =  beretta
+inv_ui_sign				= m93r_trig3
+visual						= w_att_huds\beretta_trigger_m93r	
+inv_name					= beretta_trigger_m93r
+inv_name_short			= beretta_trigger_m93rS
+cost							= 2250
+inv_weight					= 0.08
+inv_grid_x         = 5
+override_section			=	beretta_trigger_m93r_attributes
+
+[beretta_trigger_m93r_attributes]
+fire_modes = 1, 3
+
+[beretta_trigger_up]:beretta_trigger
+kind  =  beretta
+inv_ui_sign				= m9_trig+
+visual						= w_att_huds\beretta_trigger_up	
+inv_name					= beretta_trigger_up
+inv_name_short			= beretta_trigger_upS
+cost							= 3400
+inv_grid_x         = 6
+inv_grid_y         = 28
+override_section = beretta_trigger_up_attributes
+
+inv_weight = 0.07
+[beretta_trigger_up_attributes]
+fire_modes = -1, 1
+
+[beretta_spring]:attachment_base
+kind  =  beretta
+inv_ui_sign				= m9_spr
+visual						= w_att_huds\beretta_spring
+inv_name					= beretta_spring
+inv_name_short			= beretta_springS
+cost							= 1250
+inv_weight					= 0.03
+inv_grid_x         = 3
+inv_grid_y         = 24
+1icon_layer = clean1_ico
+attachment_point = beretta_spring|0,0,0|0,0,0
+attachment_slots =	beretta_barrel|muzzle|0,0,0|0,0,0
+item_tags =	spring
+override_section = beretta_spring_attributes
+
+[beretta_spring_attributes]
+
+[beretta_barrel]:attachment_base
+kind  =  beretta
+inv_ui_sign				= m9_bar
+visual						= w_att_huds\beretta_barrel	
+inv_name					= beretta_barrel
+inv_name_short			= beretta_barrelS
+cost							= 1850
+inv_weight					= 0.1
+inv_grid_x         = 3
+inv_grid_y         = 26
+1icon_layer = clean1_ico
+attachment_point = beretta_barrel|0,0,0|0,0,0
+attachment_slots	=	beretta_zatvor|zatvor|0,0,0|0,0,0
+item_tags	=	barrel
+override_section = beretta_barrel_attributes
+
+[beretta_barrel_attributes]
+bullet_speed = 1
+fire_dispersion_base = 0.2
+zoom_rotate_time = 0.03
+recoil_koeff = -0.03
+[beretta_barrel_att]
+bullet_speed = 1
+fire_dispersion_base = 0.2
+zoom_rotate_time = 0.03
+recoil_koeff            = -0.12
+
+[beretta_barrel_up]:beretta_barrel
+kind  =  beretta
+inv_ui_sign				= m9_bar+
+visual						= w_att_huds\beretta_barrel_up	
+inv_name					= beretta_barrel_up
+inv_name_short			= beretta_barrel_up
+cost							= 3150
+inv_weight					= 0.1
+inv_grid_y         = 27
+attachment_slots	=	beretta_zatvor|zatvor|0,0,0|0,0,0#9mm_muzzle|muzzle|0,0,0|0,0,0
+override_section = beretta_barrel_up_attributes
+
+[beretta_barrel_up_attributes]
+bullet_speed = 1
+fire_dispersion_base = 0.2
+zoom_rotate_time = 0.03
+recoil_koeff = -0.04
+impair_koeff = 1.1
+[beretta_barrel_up_att]:beretta_barrel_att
+impair_koeff = 1.1
+
+[beretta_barrel_comp]:beretta_barrel
+kind  =  beretta
+inv_ui_sign				= m93r_bar
+visual						= w_att_huds\beretta_barrel_comp
+inv_name					= beretta_barrel_comp
+inv_name_short			= beretta_barrel_compS
+cost							= 2950
+inv_weight					= 0.11
+inv_grid_x         = 4
+inv_grid_y         = 27
+attachment_slots	=	beretta_zatvor|zatvor|0,0,0|0,0,0
+override_section = beretta_barrel_comp_attributes
+[beretta_barrel_comp_attributes]:beretta_barrel_att
+fire_point = 0, 0.015, 0.015
+weapon_lenght = 0.05
+zoom_rotate_time = 0.05
+recoil_koeff            = -0.05
+inertia_koeff            = 1.1
+
+[beretta_zatvor]:attachment_base
+kind  =  beretta
+inv_ui_sign				= m9_slide
+visual						= w_att_huds\beretta_zatvor
+inv_name					= beretta_zatvor
+inv_name_short			= beretta_zatvor
+cost							= 2000
+inv_weight					= 0.13
+inv_grid_width     = 2
+inv_grid_x         = 0
+inv_grid_y         = 28
+1icon_layer = clean_lub2_ico
+attachment_point = beretta_zatvor|0,0,0|0,0,0
+attachment_slots =	zatvor_side|zatvor|0,0.047392,-0.0117|0,0,0#beretta_muzzle|wpn_body|0,0,0|0,0,0
+item_tags =	zatvor
+override_section = beretta_zatvor_attributes
+[beretta_zatvor_attributes]
+zoom_rotate_time = 0.07
+rpm = 980
+impair_koeff = 0.9
+
+[beretta_zatvor_m93r]:beretta_zatvor
+kind  =  beretta
+inv_ui_sign				= m93r_slide
+visual						= w_att_huds\beretta_zatvor_m93r
+inv_name					= beretta_zatvor_m93r
+inv_name_short			= beretta_zatvor_m93rS
+cost							= 3050
+inv_weight					= 0.15
+inv_grid_x         = 2
+attachment_slots =	zatvor_side|zatvor|0,0.048 ,-0.0115|0,0,0
+override_section = beretta_zatvor_m93r_attributes
+[beretta_zatvor_m93r_attributes]
+zoom_rotate_time = 0.09
+rpm = 1100
+impair_koeff = 0.85
+
+[beretta_muzzle]:attachment_base
+kind  =  beretta
+inv_ui_sign				= m9_mb
+visual						= w_att_huds\beretta_muzzle
+inv_name					= beretta_muzzle
+inv_name_short			= beretta_muzzleS
+cost							= 2550
+inv_weight					= 0.06
+inv_grid_x         = 6
+inv_grid_y         = 26
+attachment_point		=	beretta_muzzle|0,0,0|0,0,0
+item_tags	=	muzzle_device
+override_section = beretta_muzzle_attributes
+
+[beretta_muzzle_attributes]
+weapon_lenght = 0.05
+zoom_rotate_time = 0.01
+recoil_koeff = -0.05
+[beretta_muzzle_att]
+weapon_lenght = 0.05
+zoom_rotate_time = 0.01
+
+[beretta_muzzle_pica]:beretta_muzzle
+kind  =  beretta
+inv_ui_sign				= m9_mbP
+visual						= w_att_huds\beretta_muzzle_pica
+description				= pistol_grip_mountD
+inv_name					= beretta_muzzle_pica
+inv_name_short			= beretta_muzzle_picaS
+cost							= 2700
+inv_weight					= 0.09
+inv_grid_y         = 27
+attachment_slots =	pica_3|wpn_body|0,0.006628,0.08|0,0,180#usmount|wpn_body|0,0.006663,0.08|0,0,0#picgrp|wpn_body|0,-0.0289,-0.09|0,0,0
+override_section = beretta_muzzle_pica_attributes
+
+[beretta_muzzle_pica_attributes]
+weapon_lenght = 0.05
+zoom_rotate_time = 0.02
+recoil_koeff = -0.04
+[beretta_muzzle_pica_att]:beretta_muzzle_att
+zoom_rotate_time = 0.02
+
+[sight_rear_pica]:attachment_base
+kind  =  beretta
+inv_ui_sign				= pica_4
+visual						= w_att_huds\beretta_sight_rear_pica
+description				= pica_4_up
+inv_name					= beretta_sight_rear_pica
+inv_name_short		= beretta_sight_rear_picaS
+cost							= 2750
+inv_weight				= 0.08
+inv_grid_x         		= 7
+inv_grid_y         		= 27
+attachment_point 	= zatvor_side|0,0,0|0,0,0
+attachment_slots 	= pica_4|zatvor|0,0,0|0,0,0
+item_tags = rail
+override_section = sight_rear_pica_attributes
+
+[sight_rear_pica_attributes]
+
+[sight_rear_romeo2]:sight_rear_pica
+kind  =  beretta
+inv_ui_sign				= romeo2
+visual						= w_att_huds\220_sight_romeo2
+description				= sight_rear_romeo2_descr
+inv_name					= sight_rear_romeo2
+inv_name_short		= sight_rear_romeo2S
+cost							= 11100
+inv_weight				= 0.09
+inv_grid_x         		= 22
+inv_grid_y         		= 61
+attachment_slots		= aim_dot|zatvor|0,0.01305,0|0,0,0
+is_holo						= true
+;holo_position_offset = 0,0,1
+override_section = sight_rear_romeo2_attributes
+
+[sight_rear_romeo2_attributes]
+
+[sight_rear_romeo2l]:sight_rear_romeo2
+kind  =  beretta
+visual						= w_att_huds\220_sight_romeo2l
+cost							= 12200
+inv_weight				= 0.08
+inv_grid_x         		= 23
+override_section = sight_rear_romeo2l_attributes
+
+[sight_rear_romeo2l_attributes]
+
+[beretta_grips]:attachment_base
+kind  =  beretta
+inv_ui_sign				= m9_pg
+visual						= w_att_huds\beretta_grips
+inv_name					= beretta_grips
+inv_name_short			= beretta_gripsS
+cost							= 1400
+inv_weight					= 0.07
+inv_grid_x         = 8
+inv_grid_y         = 27
+attachment_point	=	beretta_grips|0,0,0|0,0,0
+override_section = beretta_grips_attributes
+
+[beretta_grips_attributes]
+zoom_rotate_time = -0.02
+
+[beretta_grips_samurai_edge]:beretta_grips
+kind  =  beretta
+inv_ui_sign				= m9_pg+
+visual						= w_att_huds\beretta_grips_samurai_edge
+inv_name					= beretta_grips_samurai_edge
+inv_name_short			= beretta_grips_samurai_edgeS
+cost							= 2600
+inv_grid_x         = 9
+item_tags	=	pgrip
+override_section = beretta_grips_samurai_edge_attributes
+
+inv_weight = 0.07
+[beretta_grips_samurai_edge_attributes]
+zoom_rotate_time = -0.03
+recoil_koeff = -0.02
+
+[beretta_grips_m93r]:beretta_grips
+kind  =  beretta
+inv_ui_sign				= m93r_pg
+visual						= w_att_huds\beretta_grips_m93r
+inv_name					= beretta_grips_m93r
+inv_name_short			= beretta_grips_m93rS
+inv_grid_y         = 28
+override_section = beretta_grips_m93r_attributes
+
+cost = 2400
+inv_weight = 0.07
+[beretta_grips_m93r_attributes]
+zoom_rotate_time = -0.04
+recoil_koeff = -0.01
+
+[beretta_foregrip_m93r]:attachment_base
+kind  =  beretta
+inv_ui_sign				= m93r_fg
+visual						= w_att_huds\beretta_foregrip_m93r
+inv_name					= beretta_foregrip_m93r
+inv_name_short			= beretta_foregrip_m93rS
+cost							= 1800
+inv_weight					= 0.1
+inv_grid_x         = 5
+inv_grid_y         = 27
+attachment_point	=	beretta_guard|0,0,0|0,0,0
+item_tags	=	rail
+override_section =	beretta_foregrip_m93r_attributes
+[beretta_foregrip_m93r_attributes]:foregrip_roni_attributes
+animation_prefix	=	raf_			
+
+recoil_koeff = -0.02
+zoom_rotate_time = -0.04
+[beretta_stock_m93r]:attachment_base
+kind  =  beretta
+inv_ui_sign				= m93r_stk
+visual						= w_att_huds\beretta_stock_m93r
+inv_name					= beretta_stock_m93r
+inv_name_short			= beretta_stock_m93r
+cost							= 3750
+inv_weight					= 0.4
+inv_grid_width     = 2
+inv_grid_x         = 4
+inv_grid_y         = 28
+attachment_point	=	beretta_stock|0,0,0|0,0,0
+item_tags	=	stock
+override_section = beretta_stock_m93r_attributes
+
+[beretta_stock_m93r_attributes]
+weapon_lenght = 0.3
+zoom_rotate_time = 0.03
+recoil_koeff = -0.27
+inertia_koeff = 0.7
+
+[beretta_upper_rail]:attachment_base
+kind  =  beretta
+inv_ui_sign				= uprail
+visual						= w_att_huds\beretta_upper_rail
+description				= pica_8_up
+inv_name					= beretta_upper_rail
+inv_name_short			= beretta_upper_railS
+cost							= 3100
+inv_weight					= 0.08
+inv_grid_x         = 9
+inv_grid_y         = 26
+attachment_point = beretta_upper|0,0,0|0,0,0
+attachment_slots =	pica_9|wpn_body|0,0.055041,0.009626|0,0,0
+item_tags	=	upper
+override_section = beretta_upper_rail_attributes
+
+[beretta_upper_rail_attributes]
+zoom_rotate_time = 0.01
+additional_hud_offset = 0, 0, -0.17
+[beretta_upper_rail_att]:ak_hg_radom_up_att
+additional_hud_offset = 0, 0, -0.17
+
+[mag_wpn_beretta_9x19_fmj]:mag_wpn_base,wg_wpn_beretta,ag_ammo_9x19_fmj
+inv_ui_sign					= m9_15
+visual							= w_att_huds\beretta_mag
+inv_name						= beretta_mag
+inv_name_short				= beretta_mag
+inv_grid_x         = 10
+inv_grid_y         = 26
+inv_weight						= 0.08
+cost								= 350
+max_mag_size				= 15
+mag_size						= small
+override_section				=	mag_wpn_beretta_9x19_fmj_attributes
+
+[mag_wpn_beretta_9x19_fmj_attributes]
+animation_prefix_mag = 17_
+
+[mag_wpn_beretta_20_9x19_fmj]:mag_wpn_beretta_9x19_fmj
+inv_ui_sign					= m93r_20
+visual							= w_att_huds\beretta_mag20
+inv_name						= beretta_mag20
+inv_name_short				= beretta_mag20
+inv_grid_y         = 27
+inv_weight						= 0.11
+cost								= 400
+max_mag_size				= 20
+mag_size						= small
+override_section				=	mag_wpn_beretta_20_9x19_fmj_attributes
+
+[mag_wpn_beretta_20_9x19_fmj_attributes]
+animation_prefix_mag = 33_
+
+[mag_wpn_beretta_30_9x19_fmj]:mag_wpn_beretta_20_9x19_fmj
+inv_ui_sign					= mx4_30
+visual							= w_att_huds\beretta_mag30
+inv_name						= beretta_mag30
+inv_name_short				= beretta_mag30
+inv_grid_height    = 2
+inv_grid_x         = 11
+inv_grid_y         = 26
+inv_weight						= 0.14
+cost								= 800
+max_mag_size				= 30
+override_section = mag_wpn_beretta_30_9x19_fmj_attributes
+
+[mag_wpn_beretta_30_9x19_fmj_attributes]
+animation_prefix_mag = 33_
+
+[mag_wpn_beretta_50_9x19_fmj]:mag_wpn_beretta_9x19_fmj
+inv_ui_sign					= m9_50
+visual							= w_att_huds\beretta_mag50
+inv_name						= beretta_mag50
+inv_name_short				= beretta_mag50S
+inv_grid_height    = 2
+inv_grid_x         = 12
+inv_grid_y         = 26
+inv_weight						= 0.64
+cost								= 1650
+max_mag_size				= 50
+mag_size						= medium
+override_section				=	mag_wpn_beretta_50_9x19_fmj_attributes
+
+[mag_wpn_beretta_50_9x19_fmj_attributes]
+animation_prefix_mag = 50_

@@ -1,0 +1,18 @@
+; Desolation New Age - persistent world item spawns
+;
+; Section name = level name.
+; Each line contains ONLY:
+;     item_or_variant = x, y, z
+;
+; Coordinates should be the ground/location coordinates from the position recorder.
+; The script internally drops the item 1.0m above Y using the engine's normal
+; drop_item_and_teleport path so physics/collision initializes correctly.
+;
+; IMPORTANT: LTX keys must be unique inside a section. If you want the SAME item
+; more than once on one level, append #anything to the key. The script strips it:
+;     bandage#1 = 10, 2, 20
+;     bandage#2 = 15, 2, 25
+
+[l01_escape]
+colt1911_tac_ki = 27.718361, 20.418179, 684.701416
+mts255_tac		= 27.718361, 20.418179, 684.2

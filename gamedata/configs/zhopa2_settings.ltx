@@ -5,6 +5,12 @@ enabled = true
 stalker_movement_enabled = true
 mutant_movement_enabled = true
 debug_hud_enabled = false
+squad_dialogue_enabled = true
+squad_travel_minutes_per_100m = 10
+squad_travel_paid_enabled = true
+squad_travel_price_multiplier = 1
+faction_task_settings_enabled = false
+npc_quests_enabled = true
 
 explore_enabled = true
 populate_enabled = true
@@ -31,9 +37,17 @@ stalker_patrol_weight = 25
 stalker_hunt_weight = 15
 stalker_artefact_weight = 10
 stalker_trade_weight = 10
+stalker_quest_weight = 10
 mutant_hunt_weight = 35
 mutant_patrol_weight = 30
 mutant_explore_weight = 35
+
+; Task destination balancing. Numeric tuning stays in zhopa2_population_profiles.ltx.
+geographic_balance_enabled = true
+; Direct target mode: 1 = Soft, 2 = Balanced, 3 = Strict.
+geographic_balance_mode = 2
+faction_presence_balance_enabled = true
+faction_lore_preferences_enabled = true
 
 target_sync_enabled = true
 online_intent_enforce_enabled = true
@@ -48,7 +62,8 @@ rest_fallback_stay_max_sec = 1800
 ; Base ownership is a core world-state system. It is intentionally not exposed in MCM.
 base_ownership_enabled = true
 service_filler_enabled = true
-loot_enabled = true
+; Experimental online ground/corpse looting. Disabled by default; artifact task pickup remains independent.
+loot_enabled = false
 loot_corpse_detect_dist_m = 80
 loot_item_detect_dist_m = 50
 loot_event_ttl_sec = 900

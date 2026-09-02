@@ -1,0 +1,636 @@
+
+--\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ wpn_remington870 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+[870_zatvor]:attachment_base
+kind  =  870
+inv_ui_sign				= 870_bolt
+visual							= w_att_huds\870_zatvor	
+inv_name					= 870_zatvor
+inv_name_short		= 870_zatvorS
+cost							= 1150
+inv_weight				= 0.3
+inv_grid_width			= 2
+inv_grid_x					= 7
+inv_grid_y					= 50
+1icon_layer = clean_lub2_ico
+attachment_point	= 870_zatvor|0,0,0|0,0,0
+attachment_slots	= 870_hg|zatvor|0,0,0|0,0,0#870_barrel|wpn_body|0,0,0|0,0,0
+item_tags =	zatvor
+override_section = 870_zatvor_attributes
+
+[870_zatvor_attributes]
+zoom_rotate_time = 0.07
+rpm = 105
+impair_koeff = 0.9
+
+[870_barrel_370]:attachment_base
+kind  =  870
+inv_ui_sign				= 870_37cm
+visual							= w_att_huds\870_barrel_370	
+inv_name					= 870_barrel_370
+inv_name_short		= 870_barrel_370S
+cost							= 2100
+inv_weight				= 0.24
+inv_grid_width			= 2
+inv_grid_x					= 9
+inv_grid_y					= 50
+1icon_layer = clean2_ico
+attachment_point	= 870_barrel|0,0,0|0,0,0
+attachment_slots	= 870_mag|wpn_body|0,0,0|0,0,0#870_barrel_sight_front|wpn_body|0,0,0|0,0,0#870_barrel_sight_rear|wpn_body|0,0,0|0,0,0#choke|muzzle|0,0,0|0,0,0
+item_tags = barrel
+override_section = 870_barrel_370_attributes
+[870_barrel_370_attributes]:12_barrel_2_att,12_barrel_370_att
+weapon_lenght				= 0.04
+
+override_section = 12_barrel_2_att
+fire_dispersion_base = 3.9
+bullet_speed = 0.95
+recoil_koeff = -0.01
+inertia_koeff = 1.3
+zoom_rotate_time = 0.05
+[12_barrel_2_att]
+zoom_rotate_time = 0.05
+recoil_koeff             = -0.1
+inertia_koeff            = 1.3
+
+[870_barrel_520]:870_barrel_370
+kind  =  870
+inv_ui_sign				= 870_52cm
+visual							= w_att_huds\870_barrel_520	
+inv_name					= 870_barrel_520
+inv_name_short		= 870_barrel_520S
+cost							= 2750
+inv_weight				= 0.3
+inv_grid_width			= 3
+inv_grid_x					= 11
+1icon_layer = clean3_ico
+attachment_slots	= 870_mag|wpn_body|0,0,0|0,0,0#870_barrel_sight_front|wpn_body|0,0,0.13|0,0,0#870_barrel_sight_rear|wpn_body|0,0,0|0,0,0#choke|muzzle|0,0,0.1355|0,0,0
+override_section =	870_barrel_520_attributes
+[870_barrel_520_attributes]:12_barrel_6_att
+fire_point		= 0, 0, 0.16
+weapon_lenght			= 0.19
+bullet_speed				= 1.05
+fire_dispersion_base		= 3.5
+
+override_section = 12_barrel_6_att
+recoil_koeff = -0.06
+inertia_koeff = 1.4
+zoom_rotate_time = 0.08
+[12_barrel_6_att]
+zoom_rotate_time = 0.08
+recoil_koeff             = -0.16
+inertia_koeff            = 1.4
+
+[870_barrel_650ns]:870_barrel_370
+kind  =  870
+inv_ui_sign				= 870_65cm
+visual							= w_att_huds\870_barrel_650ns	
+inv_name					= 870_barrel_650ns
+inv_name_short		= 870_barrel_650nsS
+cost							= 3100
+inv_weight				= 0.36
+inv_grid_width     	= 4
+inv_grid_x         		= 21
+inv_grid_y         		= 49
+1icon_layer = clean4_ico
+attachment_slots	= 870_mag|wpn_body|0,0,0|0,0,0#870_barrel_sight_front|wpn_body|0,0,0.24|0,0,0#870_barrel_sight_rear|wpn_body|0,0,0|0,0,0#choke|muzzle|0,0,0.2525|0,0,0
+override_section = 870_barrel_650ns_attributes
+[870_barrel_650ns_attributes]:870_barrel_650_attributes
+impair_koeff					= 0.9
+
+[870_barrel_650]:870_barrel_650ns
+kind  =  870
+inv_ui_sign				= 870_65cm
+visual							= w_att_huds\870_barrel_650	
+inv_name					= 870_barrel_650
+inv_name_short		= 870_barrel_650S
+cost							= 3250
+inv_weight				= 0.39
+inv_grid_x         		= 14
+inv_grid_y         		= 50
+attachment_slots	= 870_mag|wpn_body|0,0,0|0,0,0#choke|muzzle|0,0,0.2525|0,0,0#sight_rail|wpn_body|0,-0.007,0.043|0,0,0
+override_section			=	870_barrel_650_attributes
+[870_barrel_650_attributes]:12_barrel_9_att,12_barrel_660_att
+fire_point					= 0, 0, 0.32
+weapon_lenght				= 0.3
+impair_koeff					= 0.8
+
+k_hit_koeff = 1.1
+recoil_koeff = -0.09
+bullet_speed = 1.15
+fire_dispersion_base = 3.2
+inertia_koeff = 1.7
+zoom_rotate_time = 0.11
+[870_barrel_710]:870_barrel_370
+kind  =  870
+inv_ui_sign				= 870_71cm
+visual							= w_att_huds\870_barrel_710	
+inv_name					= 870_barrel_710
+inv_name_short		= 870_barrel_710S
+cost							= 3500
+inv_weight				= 0.44
+inv_grid_width			= 4
+inv_grid_x					= 18
+1icon_layer = clean4_ico
+attachment_slots	= 870_mag|wpn_body|0,0,0|0,0,0#choke|muzzle|0,0,0.3085|0,0,0#sight_rail|wpn_body|0,-0.007,0.043|0,0,0
+override_section = 870_barrel_710_attributes
+
+[870_barrel_710_attributes]
+zoom_rotate_time = 0.12
+recoil_koeff = -0.10
+inertia_koeff = 1.8
+bullet_speed = 1.2
+k_hit_koeff = 1.15
+fire_dispersion_base = 3.1
+fire_point = 0, 0, 0.38
+weapon_lenght = 0.35
+impair_koeff = 0.75
+
+[870_barrel_sight_front]:attachment_base
+kind  =  870
+inv_ui_sign				= 870_isF
+visual							= w_att_huds\870_barrel_sight_front	
+inv_name					= 870_barrel_sight_front
+inv_name_short		= 870_barrel_sight_frontS
+cost							= 200
+inv_weight				= 0.01
+inv_grid_x					= 18
+inv_grid_y					= 51
+attachment_point	= 870_barrel_sight_front|0,0,0|0,0,0
+item_tags	=	sights
+override_section = 870_barrel_sight_front_attributes
+
+[870_barrel_sight_front_attributes]
+
+[870_barrel_sight_front_mcs]:870_barrel_sight_front
+kind  =  870
+inv_ui_sign				= 870_isF+
+visual							= w_att_huds\870_barrel_sight_front_mcs	
+inv_name					= 870_barrel_sight_front_mcs
+inv_name_short		= 870_barrel_sight_front_mcsS
+cost							= 350
+inv_weight				= 0.03
+inv_grid_x					= 19
+override_section = 870_barrel_sight_front_mcs_attributes
+
+[870_barrel_sight_front_mcs_attributes]
+
+[870_barrel_sight_rear_mcs]:attachment_base
+kind  =  870
+inv_ui_sign				= 870_isR+
+visual							= w_att_huds\870_barrel_sight_rear_mcs	
+description				= pica_3_up
+inv_name					= 870_barrel_sight_rear_mcs
+inv_name_short		= 870_barrel_sight_rear_mcsS
+cost							= 600
+inv_weight				= 0.04
+inv_grid_x					= 20
+inv_grid_y					= 51
+attachment_point	= 870_barrel_sight_rear|0,0,0|0,0,0
+attachment_slots	= pica_3|wpn_body|0.0183,0.057,0.27|0,0,90		
+item_tags =	sights
+override_section = 870_barrel_sight_rear_mcs_attributes
+
+[870_barrel_sight_rear_mcs_attributes]
+[870_barrel_sight_rear_mcs_att]
+
+[870_mag4]:attachment_base
+kind  =  870
+inv_ui_sign				= mag4
+visual							= w_att_huds\870_mag4	
+inv_name					= 870_mag4
+inv_name_short		= 870_mag4S
+cost							= 400
+inv_weight				= 0.06
+inv_grid_x					= 6
+inv_grid_y					= 51
+attachment_point	= 870_mag|0,0,0|0,0,0		
+item_tags	=	mag
+override_section 	= 870_mag4_attributes
+[870_mag4_attributes]
+ammo_mag_size	= +4
+
+[870_mag5]:870_mag4
+kind  =  870
+inv_ui_sign				= mag5
+visual							= w_att_huds\870_mag5	
+inv_name					= 870_mag5
+inv_name_short		= 870_mag5S
+cost							= 650
+inv_weight				= 0.09
+inv_grid_x					= 7
+attachment_slots	= tubemag|wpn_body|0,0.0245,0.479|0,0,0	
+override_section 	= 870_mag5_attributes
+[870_mag5_attributes]:12_mag_1_att
+ammo_mag_size	= +5
+
+[870_mag6]:870_mag5
+kind  =  870
+inv_ui_sign				= mag6
+visual							= w_att_huds\870_mag6	
+inv_name					= 870_mag6
+inv_name_short		= 870_mag6S
+cost							= 800
+inv_weight				= 0.11
+inv_grid_width			= 2
+inv_grid_x					= 8
+override_section 	= 870_mag6_attributes
+[870_mag6_attributes]:12_mag_2_att
+ammo_mag_size	= +6
+
+[870_mag7]:870_mag5
+kind  =  870
+inv_ui_sign				= mag7
+visual							= w_att_huds\870_mag7	
+inv_name					= 870_mag7
+inv_name_short		= 870_mag7S
+cost							= 950
+inv_weight				= 0.14
+inv_grid_width			= 2
+inv_grid_x					= 10
+override_section 	= 870_mag7_attributes
+[870_mag7_attributes]
+ammo_mag_size	= +7
+
+[870_mag8]:870_mag5
+kind  =  870
+inv_ui_sign				= mag8
+visual							= w_att_huds\870_mag8	
+inv_name					= 870_mag8
+inv_name_short		= 870_mag8S
+cost							= 1050
+inv_weight				= 0.17
+inv_grid_width			= 3
+inv_grid_x					= 12
+override_section 	= 870_mag8_attributes
+[870_mag8_attributes]
+ammo_mag_size	= +8
+
+[870_mag9]:870_mag5
+kind  =  870
+inv_ui_sign				= mag9
+visual							= w_att_huds\870_mag9	
+inv_name					= 870_mag9
+inv_name_short		= 870_mag9S
+cost							= 1150
+inv_weight				= 0.21
+inv_grid_width			= 3
+inv_grid_x					= 15
+override_section 	= 870_mag9_attributes
+
+[870_mag9_attributes]
+zoom_rotate_time = 0.04
+inertia_koeff = 1.5
+ammo_mag_size = +9
+weapon_lenght = 0.1
+
+[870_hg_mcs]:attachment_base
+kind  =  870
+inv_ui_sign				= 870_hg+
+visual							= w_att_huds\870_hg_mcs	
+inv_name					= 870_hg_mcs
+inv_name_short		= 870_hg_mcsS
+cost							= 900
+inv_weight				= 0.17
+inv_grid_x					= 23
+inv_grid_y					= 50
+attachment_point	= 870_hg|0,0,0|0,0,0
+item_tags	=	rail
+override_section = 870_hg_mcs_attributes
+[870_hg_mcs_attributes]:c_attributes
+zoom_rotate_time = -0.08
+inertia_koeff           = 0.9
+
+[870_hg_wood]:870_hg_mcs
+kind  =  870
+inv_ui_sign				= 870_hgW+
+visual							= w_att_huds\870_hg_wood	
+inv_name					= 870_hg_wood
+inv_name_short		= 870_hg_woodS
+cost							= 800
+inv_weight				= 0.26
+inv_grid_width			= 2
+inv_grid_x					= 24
+override_section = 870_hg_wood_attributes
+
+[870_hg_wood_attributes]
+animation_prefix = c_
+zoom_rotate_time = -0.01
+[870_hg_wood_att]:c_attributes
+zoom_rotate_time = -0.01
+recoil_koeff            = -0.2
+
+[870_hg_fieldmaster]:870_hg_wood
+kind  =  870
+inv_ui_sign				= 870_hgW
+visual							= w_att_huds\870_hg_fieldmaster	
+inv_name					= 870_hg_fieldmaster
+inv_name_short		= 870_hg_fieldmasterS
+inv_grid_x					= 26
+override_section = 870_hg_fieldmaster_attributes
+
+cost = 800
+inv_weight = 0.26
+[870_hg_fieldmaster_attributes]
+animation_prefix = c_
+zoom_rotate_time = 0.01
+inertia_koeff = 0.8
+[870_hg_fieldmaster_att]:c_attributes
+zoom_rotate_time = 0.01
+recoil_koeff            = -0.23
+inertia_koeff           = 0.8
+
+[870_hg_poly]:870_hg_wood
+kind  =  870
+inv_ui_sign				= 870_hg_p
+visual							= w_att_huds\870_hg_poly	
+inv_name					= 870_hg_poly
+inv_name_short		= 870_hg_polyS
+cost							= 850
+inv_weight				= 0.2
+inv_grid_x					= 28	
+override_section = 870_hg_poly_attributes
+[870_hg_poly_attributes]:c_attributes
+zoom_rotate_time = -0.04
+
+[870_hg_magpul]:870_hg_wood
+kind  =  870
+inv_ui_sign				= 870_mlok
+visual							= w_att_huds\870_hg_magpul	
+description				= pica_3_up3
+inv_name					= 870_hg_magpul
+inv_name_short		= 870_hg_magpulS
+cost							= 1050
+inv_weight				= 0.19
+inv_grid_x					= 30
+attachment_slots	= pica_3|zatvor|-0.0223,0.041,0.402|0,0,-90#pica_3|zatvor|0.0223,0.041,0.402|0,0,90#pica_3|zatvor|0,0.0036,0.403|0,0,180#picgrp|zatvor|0,-0.0319,0.095|0,0,0	
+override_section = 870_hg_magpul_attributes
+[870_hg_magpul_attributes]:c_attributes
+zoom_rotate_time = -0.04
+inertia_koeff           = 0.9
+
+[870_hg_tac]:870_hg_wood
+kind  =  870
+inv_ui_sign				= 870_hgP
+visual							= w_att_huds\870_hg_tac
+description				= pica_3_up2
+inv_name					= 870_hg_tac
+inv_name_short		= 870_hg_tacS
+cost							= 1300
+inv_weight				= 0.28
+inv_grid_x					= 32
+attachment_slots	= pica_3|zatvor|-0.0201,0.0246,0.402|0,0,-90#pica_3|zatvor|0.0201,0.0246,0.402|0,0,90#picgrp|zatvor|0,-0.0319,0.095|0,0,0				
+override_section = 870_hg_tac_attributes
+
+[870_hg_tac_attributes]
+animation_prefix = c_
+zoom_rotate_time = -0.06
+[870_hg_tac_att]:c_attributes
+zoom_rotate_time = -0.06
+recoil_koeff            = -0.12
+
+[870_sight_weaver]:attachment_base
+kind  =  870
+inv_ui_sign				= 870_rail
+visual							= w_att_huds\870_sight_weaver	
+description				= pica_10_up
+inv_name					= 870_sight_weaver
+inv_name_short		= 870_sight_weaverS
+cost							= 900
+inv_weight				= 0.08
+inv_grid_x					= 21
+inv_grid_y					= 51
+attachment_point	= 870_sight|0,0,0|0,0,0
+attachment_slots	= pica_10|wpn_body|0,0.06967,0.083|0,0,0
+item_tags	=	rail
+override_section = 870_sight_weaver_attributes
+
+[870_sight_weaver_attributes]
+
+[870_sight_mcs]:870_sight_weaver
+kind  =  870
+inv_ui_sign				= 870_rail+
+visual							= w_att_huds\870_sight_mcs	
+description				= pica_13_up
+inv_name					= 870_sight_mcs
+inv_name_short		= 870_sight_mcsS
+cost							= 1000
+inv_weight				= 0.1
+inv_grid_x					= 22
+attachment_slots	= pica_13|wpn_body|0,0.0697,0.061|0,0,0		
+override_section = 870_sight_mcs_attributes
+
+[870_sight_mcs_attributes]
+
+[870_stock_short]:attachment_base
+kind  =  870
+inv_ui_sign				= 870_stkW
+visual							= w_att_huds\870_stock_short	
+inv_name					= 870_stock_short
+inv_name_short		= 870_stock_shortS
+cost							= 450
+inv_weight				= 0.17
+inv_grid_x					= 23
+inv_grid_y					= 51
+item_tags	=	stock
+attachment_point	= 870_stock|0,0,0|0,0,0
+override_section 	= 870_stock_short_attributes
+
+[870_stock_short_attributes]
+weapon_lenght = 0.05
+zoom_rotate_time = 0.01
+recoil_koeff = 0.1
+
+[870_stock_wood]:870_stock_short
+kind  =  870
+inv_ui_sign				= 870_stkW
+visual							= w_att_huds\870_stock_wood	
+inv_name					= 870_stock_wood
+inv_name_short		= 870_stock_woodS
+cost							= 1200
+inv_weight				= 0.6
+inv_grid_width			= 2
+inv_grid_x					= 24
+override_section = 870_stock_wood_attributes
+
+[870_stock_wood_attributes]
+zoom_rotate_time = 0.04
+recoil_koeff = -0.24
+inertia_koeff = 0.6
+weapon_lenght = 0.3
+[870_stock_wood_att]:vintorez_stock_strap_att
+weapon_lenght = 0.3
+
+[870_stock_express]:870_stock_wood
+kind  =  870
+inv_ui_sign				= 870_stkW+
+visual							= w_att_huds\870_stock_express	
+inv_name					= 870_stock_express
+inv_name_short		= 870_stock_expressS
+cost							= 1350
+inv_weight				= 0.61
+inv_grid_x					= 26
+override_section 	= 870_stock_express_attributes
+
+[870_stock_express_attributes]
+weapon_lenght = 0.25
+zoom_rotate_time = 0.07
+recoil_koeff = -0.24
+inertia_koeff = 0.6
+
+[870_stock_magpul]:870_stock_wood
+kind  =  870
+inv_ui_sign				= 870_stkM
+visual							= w_att_huds\870_stock_magpul_sga	
+inv_name					= 870_stock_magpul_sga
+inv_name_short		= 870_stock_magpul_sga
+cost							= 1750
+inv_weight				= 0.64
+inv_grid_x					= 28
+override_section = 870_stock_magpul_attributes
+
+[870_stock_magpul_attributes]
+weapon_lenght = 0.26
+zoom_rotate_time = 0.01
+recoil_koeff = -0.3
+inertia_koeff = 0.6
+
+[870_stock_speedfeed]:870_stock_wood
+kind  =  870
+inv_ui_sign				= 870_stkG
+visual							= w_att_huds\870_stock_speedfeed	
+inv_name					= 870_stock_speedfeed
+inv_name_short		= 870_stock_speedfeedS
+cost							= 1500
+inv_weight				= 0.55
+inv_grid_x					= 30
+inv_grid_y					= 51
+override_section 	= 870_stock_speedfeed_attributes
+
+[870_stock_speedfeed_attributes]
+animation_prefix_base = cg_
+weapon_lenght = 0.3
+zoom_rotate_time = 0.02
+recoil_koeff = -0.25
+inertia_koeff = 0.6
+
+[870_stock_fab_defence]:870_stock_wood
+kind  =  870
+inv_ui_sign				= 870_stkFD
+visual							= w_att_huds\870_stock_fab_defence	
+inv_name					= 870_stock_fab_defence
+inv_name_short		= 870_stock_fab_defenceS
+cost							= 1700
+inv_weight				= 0.59
+inv_grid_x					= 32
+override_section			= 870_stock_fab_defence_attributes
+
+[870_stock_fab_defence_attributes]
+animation_prefix_base = cg_
+weapon_lenght = 0.25
+zoom_rotate_time = -0.01
+recoil_koeff = -0.22
+inertia_koeff = 0.7
+[870_stock_fab_defence_att]:cg_attributes
+weapon_lenght = 0.25
+zoom_rotate_time = -0.01
+recoil_koeff            = -0.27
+inertia_koeff          = 0.7
+
+[870_stock_buffer]:870_stock_fab_defence
+kind  =  870
+inv_ui_sign				= 870_buff
+visual							= w_att_huds\870_stock_fab_buffer	
+inv_name					= 870_stock_fab_buffer
+inv_name_short		= 870_stock_fab_bufferS
+cost							= 950
+inv_weight				= 0.21
+inv_grid_width			= 1
+inv_grid_x					= 34
+attachment_slots	= ar_buffer|wpn_body|0,-0.022447,0.002622|0,0,0
+override_section = 870_stock_buffer_attributes
+
+[870_stock_buffer_attributes]
+animation_prefix_base = cg_
+zoom_rotate_time = -0.03
+[870_stock_buffer_att]:cg_attributes,ak_grip_caa_att
+
+[tubemag_rails_mcs]:attachment_base
+kind  =  870
+inv_ui_sign				= tm_rails2
+visual							= w_att_huds\tubemag_rails_mcs	
+description				= pica_3_up2
+inv_name					= tubemag_rails_mcs
+inv_name_short		= tubemag_rails_mcsS
+cost							= 750
+inv_weight				= 0.07
+inv_grid_x					= 35
+inv_grid_y					= 51
+attachment_point	= tubemag|0,0,0|0,0,0		
+attachment_slots	= pica_3|wpn_body|-0.0152,0.0135,0.01|0,0,-90#pica_3|wpn_body|0.0152,0.0135,0.01|0,0,90
+item_tags	=	rail
+override_section = tubemag_rails_mcs_attributes
+
+[tubemag_rails_mcs_attributes]
+
+[tubemag_surefire660]:attachment_base
+kind  =  870
+inv_ui_sign				= tm_sf660
+visual							= w_att_huds\tubemag_surefire660	
+inv_name					= tubemag_surefire660
+inv_name_short		= tubemag_surefire660S
+cost							= 800
+inv_weight				= 0.09
+inv_grid_x					= 36
+inv_grid_y					= 51
+attachment_point	= tubemag|0,0,0|0,0,0
+is_torch                  = true
+is_torch_laser      = false
+light_section             = tactical_flashlight_default
+flashlight_bone           = laser
+flashlight_bone_axis      = y
+flashlight_bone_invert    = false
+1icon_layer = flashlight_ico
+item_tags				= rail
+override_section = tubemag_surefire660_attributes
+
+[tubemag_surefire660_attributes]
+
+[tubemag_flashlight]:tubemag_surefire660
+kind  =  870
+inv_ui_sign				= tm_FL
+visual							= w_att_huds\tubemag_zsm_flashlight	
+inv_name					= tubemag_zsm_flashlight
+inv_name_short		= tubemag_zsm_flashlightS
+inv_grid_x					= 37
+override_section = tubemag_flashlight_attributes
+
+[tubemag_flashlight_attributes]
+
+[tubemag_mount]:tubemag_rails_mcs
+kind  =  870
+inv_ui_sign				= tm_rail
+visual							= w_att_huds\tubemag_zsm_mount	
+description				= pica_3_up
+inv_name					= tubemag_zsm_mount
+inv_name_short		= tubemag_zsm_mountS
+cost							= 600
+inv_weight				= 0.08
+inv_grid_x					= 38
+attachment_slots	= pica_3|wpn_body|-0.0228,0.0171,0.005|0,0,-90				
+override_section = tubemag_mount_attributes
+
+[tubemag_mount_attributes]
+
+[tubemag_mount2]:tubemag_rails_mcs
+kind  =  870
+inv_ui_sign				= tm_rails2
+visual							= w_att_huds\tubemag_zsm_mount2	
+description				= pica_3_up2
+inv_name					= tubemag_zsm_mount2
+inv_name_short		= tubemag_zsm_mount2S
+inv_grid_x					= 39
+attachment_slots	= pica_3|wpn_body|-0.0228,0.017,0.003|0,0,-90#pica_3|wpn_body|0.0228,0.017,0.003|0,0,90		
+override_section = tubemag_mount2_attributes
+
+[tubemag_mount2_attributes]

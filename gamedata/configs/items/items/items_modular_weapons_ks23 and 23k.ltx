@@ -1,0 +1,427 @@
+--\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ wpn_ks23 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+[ks23_trigger]:attachment_base
+kind  =  ks23
+inv_ui_sign				= ks_trigger
+visual							= w_att_huds\ks23_trigger	
+inv_name					= ks23_trigger
+inv_name_short		= ks23_triggerS
+cost							= 1050
+inv_weight				= 0.1
+inv_grid_x         		= 28
+inv_grid_y         		= 59
+1icon_layer = clean_lub1_ico
+attachment_point = ks23_trigger|0,0,0|0,0,0
+attachment_slots	= ks23_zatvor|zatvor|0,0,0|0,0,0
+item_tags = trigger
+override_section = ks23_trigger_attributes
+
+[ks23_trigger_attributes]
+rpm = 88
+impair_koeff = 0.9
+[ks23_trigger_att]
+rpm = 88
+impair_koeff = 0.9
+
+[ks23_trigger_up]:ks23_trigger
+kind  =  ks23
+inv_ui_sign				= ks_trig+
+inv_name					= ks23_trigger_up
+inv_name_short		= ks23_trigger_upS
+cost							= 1200
+override_section = ks23_trigger_up_attributes
+
+[ks23_trigger_up_attributes]
+rpm = 100
+impair_koeff = 1.1
+[ks23_trigger_up_att]
+rpm = 100
+impair_koeff = 1.1
+
+[ks23_zatvor]:attachment_base
+kind  =  ks23
+inv_ui_sign				= ks_bolt
+visual							= w_att_huds\ks23_zatvor	
+inv_name					= ks23_zatvor
+inv_name_short		= ks23_zatvorS
+cost							= 1100
+inv_weight				= 0.4
+inv_grid_width			= 2
+inv_grid_x					= 29
+inv_grid_y					= 59
+1icon_layer = clean_lub2_ico
+attachment_point = ks23_zatvor|0,0,0|0,0,0
+attachment_slots	= ks23_barrel|wpn_body|0,0,0|0,0,0#ks23_hg|zatvor|0,0,0|0,0,0
+item_tags =	zatvor
+override_section = ks23_zatvor_attributes
+
+[ks23_zatvor_attributes]
+zoom_rotate_time = 0.08
+[ks23_zatvor_att]
+zoom_rotate_time = 0.08
+
+[ks23_barrel_350]:attachment_base
+kind  =  ks23
+inv_ui_sign				= ks_35cm
+visual							= w_att_huds\ks23_barrel_350	
+inv_name					= ks23_barrel_350
+inv_name_short		= ks23_barrel_350S
+cost							= 2050
+inv_weight				= 0.3
+inv_grid_width			= 2
+inv_grid_x					= 31
+inv_grid_y					= 59
+1icon_layer = clean2_ico
+attachment_point	= ks23_barrel|0,0,0|0,0,0
+attachment_slots	= ks23_mag|wpn_body|0,0,0|0,0,0#ks23_sight_front|wpn_body|0,0,0|0,0,0#ks23_muzzle|muzzle|0,0,0|0,0,0
+item_tags = barrel
+override_section = ks23_barrel_350_attributes
+
+[ks23_barrel_350_attributes]
+zoom_rotate_time = 0.06
+recoil_koeff = -0.02
+inertia_koeff = 1.3
+bullet_speed = 0.93
+fire_dispersion_base = 4
+weapon_lenght = 0.03
+[ks23_barrel_350_att]:12_barrel_3_att,12_barrel_350_att
+weapon_lenght				= 0.03
+
+[ks23_barrel_510]:ks23_barrel_350
+kind  =  ks23
+inv_ui_sign				= ks_51cm
+visual							= w_att_huds\ks23_barrel_510
+inv_name					= ks23_barrel_510
+inv_name_short		= ks23_barrel_510S
+cost							= 3000
+inv_weight				= 0.45
+inv_grid_width			= 3		
+inv_grid_x					= 33
+1icon_layer = clean3_ico
+attachment_slots	= ks23_mag|wpn_body|0,0,0|0,0,0#ks23_sight_front|wpn_body|0,0,0.1142|0,0,0#ks23_muzzle|muzzle|0,0,0.1413|0,0,0
+override_section			=	ks23_barrel_510_attributes
+[ks23_barrel_510_attributes]:12_barrel_6_att
+fire_point = 0, 0, 0.165
+weapon_lenght 		= 0.17
+bullet_speed				= 1
+fire_dispersion_base 		= 3.5
+
+recoil_koeff = -0.04
+[ks23_barrel_700]:ks23_barrel_510
+kind  =  ks23
+inv_ui_sign				= toz123_70cm
+visual						= w_att_huds\ks23_barrel_700
+inv_name					= ks23_barrel_700
+inv_name_short		= ks23_barrel_700S
+cost							= 4000
+inv_weight				= 0.6
+inv_grid_width     	= 4
+inv_grid_y         		= 58
+1icon_layer = clean4_ico
+attachment_slots	= ks23_mag|wpn_body|0,0,0|0,0,0#ks23_muzzle|muzzle|0,0,0.314|0,0,0
+override_section =	ks23_barrel_700_attributes
+[ks23_barrel_700_attributes]:12_barrel_10_att
+fire_point = 0, 0, 0.345
+weapon_lenght = 0.35
+bullet_speed				= 1.15
+k_hit_koeff					= 1.1
+fire_dispersion_base	= 3.1
+
+recoil_koeff = -0.08
+[ks23_silencer]:attachment_base
+kind  =  ks23
+inv_ui_sign				= ks_silencer
+visual						= w_att_huds\ks23_hexagon	
+inv_name					= ks23_hexagon
+inv_name_short		= ks23_hexagonS
+cost							= 2250
+inv_weight				= 0.5
+inv_grid_width     	= 2
+inv_grid_x         		= 28
+inv_grid_y        	 	= 58
+attachment_point	= ks23_muzzle|0,0,0|0,0,0
+item_tags =	muzzle_device
+override_section = ks23_silencer_attributes
+
+[ks23_silencer_attributes]
+silencer_status = 1
+silencer_name = wpn_addon_silencer
+silencer_x = 1
+silencer_y = 1
+weapon_lenght = 0.2
+fire_dispersion_base_koeff = -0.05
+zoom_rotate_time = 0.09
+recoil_koeff = -0.1
+inertia_koeff = 1.3
+
+[ks23_mag3]:attachment_base
+kind  =  ks23
+inv_ui_sign				= mag3
+visual							= w_att_huds\ks23_mag3	
+inv_name					= ks23_mag3
+inv_name_short		= ks23_mag3S
+cost							= 500
+inv_weight				= 0.07
+inv_grid_x					= 28
+inv_grid_y					= 60
+attachment_point	= ks23_mag|0,0,0|0,0,0
+item_tags	=	mag
+override_section 	= ks23_mag3_attributes
+[ks23_mag3_attributes]
+ammo_mag_size	= +3
+
+[ks23_mag4]:ks23_mag3
+kind  =  ks23
+inv_ui_sign				= mag4
+visual							= w_att_huds\ks23_mag4	
+inv_name					= ks23_mag4
+inv_name_short		= ks23_mag4S
+cost							= 750
+inv_weight				= 0.12
+inv_grid_x					= 29
+override_section 	= ks23_mag4_attributes
+[ks23_mag4_attributes]
+ammo_mag_size	= +4
+
+[ks23_mag5]:ks23_mag3
+kind  =  ks23
+inv_ui_sign				= mag5
+visual							= w_att_huds\ks23_mag5	
+inv_name					= ks23_mag5
+inv_name_short		= ks23_mag5S
+cost							= 900
+inv_weight				= 0.16
+inv_grid_width			= 2
+inv_grid_x					= 30
+override_section 	= ks23_mag5_attributes
+[ks23_mag5_attributes]:12_mag_2_att
+ammo_mag_size	= +5
+
+[ks23_hg]:attachment_base
+kind  =  ks23
+inv_ui_sign				= ks_hg
+visual							= w_att_huds\ks23_hg	
+inv_name					= ks23_hg
+inv_name_short		= ks23_hg
+cost							= 900
+inv_weight				= 0.3
+inv_grid_width			= 2
+inv_grid_x					= 32
+inv_grid_y					= 60
+attachment_point	= ks23_hg|0,0,0|0,0,0
+item_tags	=	hg
+override_section = ks23_hg_attributes
+[ks23_hg_attributes]:c_attributes
+zoom_rotate_time = -0.03
+inertia_koeff           = 0.9
+
+[ks23_hg_custom]:ks23_hg
+kind  =  ks23
+inv_ui_sign				= ks_hg+
+visual							= w_att_huds\ks23_hg_custom	
+description				= pica_3_up2
+inv_name					= ks23_hg_custom
+inv_name_short		= ks23_hg_customS
+cost							= 1200
+inv_weight				= 0.32
+inv_grid_x					= 13
+attachment_slots	= pica_3|zatvor|-0.0211,0.0156,0.371|0,0,-90#pica_3|zatvor|0.0211,0.0156,0.371|0,0,90#picgrp|zatvor|0,-0.0443,0.0396|0,0,0		
+override_section = ks23_hg_custom_attributes
+
+[ks23_hg_custom_attributes]
+animation_prefix = c_
+zoom_rotate_time = -0.03
+inertia_koeff = 0.9
+
+[ks23_stock_grip]:attachment_base
+kind  =  ks23
+inv_ui_sign				= ks_grip
+visual							= w_att_huds\ks23_stock_grip
+inv_name					= ks23_stock_grip
+inv_name_short		= ks23_stock_gripS
+cost							= 700
+inv_weight				= 0.22
+inv_grid_x					= 36
+inv_grid_y					= 60
+attachment_point	= ks23_stock|0,0,0|0,0,0
+item_tags =	stock
+attachment_slots	= ks23_stock_grip_frame|wpn_body|0,0,0|0,0,0
+override_section 	= ks23_stock_grip_attributes
+
+[ks23_stock_grip_attributes]
+weapon_lenght = 0.05
+zoom_rotate_time = 0.01
+
+[ks23_stock_grip_up]:ks23_stock_grip
+kind  =  ks23
+inv_ui_sign				= ks_grip+
+visual							= w_att_huds\ks23_stock_grip_up
+description				=	pica_3_up
+inv_name					= ks23_stock_grip_up
+inv_name_short		= ks23_stock_grip_upS
+cost							= 800
+inv_grid_x					= 37
+attachment_slots	= ks23_stock_grip_frame|wpn_body|0,0,0|0,0,0#pica_3|wpn_body|0.0268,0.04,-0.006|0,0,90		
+override_section = ks23_stock_grip_up_attributes
+
+inv_weight = 0.22
+[ks23_stock_grip_up_attributes]
+weapon_lenght = 0.05
+zoom_rotate_time = 0.01
+
+[ks23_stock_grip_frame]:attachment_base
+kind  =  ks23
+inv_ui_sign				= ks_stk-
+visual							= w_att_huds\ks23_stock_grip_frame	
+inv_name					= ks23_stock_grip_frame
+inv_name_short		= ks23_stock_grip_frameS
+cost							= 900
+inv_weight				= 0.13
+inv_grid_width			=	2
+inv_grid_x					= 38
+inv_grid_y					= 59
+attachment_point	= ks23_stock_grip_frame|0,0,0|0,0,0
+attachment_slots	= ak_stock_pad|wpn_body|0,-0.032,-0.063|0,3,0
+item_tags	=	stock
+override_section = ks23_stock_grip_frame_attributes
+
+[ks23_stock_grip_frame_attributes]
+zoom_rotate_time = 0.02
+recoil_koeff = -0.12
+inertia_koeff = 0.9
+weapon_lenght = 0.2
+
+[ks23_stock_wood]:ks23_stock_grip
+kind  =  ks23
+inv_ui_sign				= ks_stk
+visual							= w_att_huds\ks23_stock_wood	
+inv_name					= ks23_stock_wood
+inv_name_short		= ks23_stock_woodS
+cost							= 1200
+inv_weight				= 0.58
+inv_grid_width			= 2
+inv_grid_x					= 38
+override_section			=	ks23_stock_wood_attributes
+
+[ks23_stock_wood_attributes]
+zoom_rotate_time = 0.07
+recoil_koeff = -0.24
+inertia_koeff = 0.6
+weapon_lenght = 0.32
+[ks23_stock_wood_att]:ak_stock_sok_att
+weapon_lenght = 0.32
+
+--\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ wpn_ks23k \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+[ks23k_zatvor]:attachment_base
+kind  =  ks23k
+inv_ui_sign				= ksk_bolt
+visual							= w_att_huds\ks23k_zatvor	
+inv_name					= ks23k_zatvor
+inv_name_short		= ks23_zatvorS
+cost							= 1400
+inv_weight				= 0.5
+inv_grid_width			= 3
+inv_grid_x				= 18
+inv_grid_y				= 68
+1icon_layer = clean_lub3_ico
+attachment_point = ks23k_zatvor|0,0,0|0,0,0
+attachment_slots	= ks23k_barrel|wpn_body|0,0,0|0,0,0#ks23k_hg|zatvor|0,0,0|0,0,0
+item_tags =	zatvor
+override_section = ks23k_zatvor_attributes
+
+[ks23k_zatvor_attributes]
+zoom_rotate_time = 0.08
+animation_prefix = c_
+rpm = 92
+impair_koeff = 0.8
+[ks23k_zatvor_att]:ks23_zatvor_att
+animation_prefix	=	c_
+rpm = 92
+impair_koeff = 0.8
+
+[ks23k_barrel]:attachment_base
+kind  =  ks23k
+inv_ui_sign				= ksk_46cm
+visual							= w_att_huds\ks23k_barrel	
+inv_name					= ks23k_barrel
+inv_name_short		= ks23k_barrelS
+cost							= 2550
+inv_weight				= 0.4
+inv_grid_width			= 3
+inv_grid_x				= 18
+inv_grid_y				= 67
+1icon_layer = clean3_ico
+attachment_point = ks23k_barrel|0,0,0|0,0,0
+attachment_slots	= ks23_muzzle|muzzle|0,0,0|0,0,0
+item_tags = barrel
+override_section = ks23k_barrel_attributes
+
+[ks23k_barrel_attributes]
+zoom_rotate_time = 0.07
+recoil_koeff = -0.06
+inertia_koeff = 1.4
+bullet_speed = 0.97
+fire_point = 0, 0, 0.03
+weapon_lenght = 0.3
+fire_dispersion_base = 3.7
+[ks23_barrel_460_att]:12_barrel_4_att,12_barrel_430_att
+fire_point = 0, 0, 0.03
+weapon_lenght				= 0.3
+fire_dispersion_base 		= 3.7
+
+[ks23k_hg]:attachment_base
+kind  =  ks23k
+inv_ui_sign				= ksk_hg
+visual						= w_att_huds\ks23k_hg
+description				= pica_3_up2
+inv_name					= ks23k_hg
+inv_name_short		= ks23k_hgS
+cost							= 900
+inv_weight				= 0.3
+inv_grid_x				= 21
+inv_grid_y				= 67
+attachment_point	= ks23k_hg|0,0,0|0,0,0
+attachment_slots		= pica_3|zatvor|-0.0252,0.0594,0.26|0,0,-90#pica_3|zatvor|0.0252,0.0594,0.26|0,0,90#picgrp|zatvor|0,-0.0034,0.005|0,0,0
+item_tags	=	hg
+override_section = ks23k_hg_attributes
+[ks23k_hg_attributes]
+zoom_rotate_time = -0.01
+recoil_koeff            = -0.04
+
+[ks23k_hg_hm]:ks23k_hg
+kind  =  ks23k
+inv_ui_sign				= ks_hg+
+visual						= w_att_huds\ks23k_hg_hm	
+description				= pica_3_up3
+inv_name					= ks23k_hg_hm
+inv_weight				= 0.34	
+inv_grid_y				= 68
+attachment_slots		= pica_3|zatvor|-0.0233,0.0575,0.302|0,0,-90#pica_3|zatvor|0.0233,0.0575,0.302|0,0,90#pica_3|zatvor|0,0.0322,0.293|0,0,180#picgrp|zatvor|0,-0.0034,0.005|0,0,0
+override_section = ks23k_hg_hm_attributes
+
+[ks23k_hg_hm_attributes]
+zoom_rotate_time = 0.01
+recoil_koeff = -0.08
+[ks23k_hg2_attributes]
+zoom_rotate_time = 0.01
+recoil_koeff            = -0.08
+
+[mag_wpn_ks23k_23x75_shrapnel]:mag_wpn_base,wg_wpn_ks23k,ag_ammo_23x75
+inv_ui_sign					= ks23k
+visual							= w_att_huds\ks23k_mag
+inv_name						= ks23k_mag
+inv_name_short			= ks23k_magS
+inv_grid_height			= 2
+inv_grid_x					= 22
+inv_grid_y					= 67
+inv_weight					= 0.14
+cost								= 700
+max_mag_size				= 7
+mag_size						= medium
+override_section			= mag_wpn_ks23k_23x75_shrapnel_attributes
+
+[mag_wpn_ks23k_23x75_shrapnel_attributes]
+animation_prefix_mag = 7_
+[ks23k_mag_attributes]
+animation_prefix_mag	=	7_

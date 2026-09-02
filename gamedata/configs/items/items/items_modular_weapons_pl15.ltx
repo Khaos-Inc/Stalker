@@ -1,0 +1,162 @@
+--\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ wpn_pl15 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+[pl15_trigger]:attachment_base
+kind  =  pl15
+inv_ui_sign				= pl_trig
+visual						= w_att_huds\pl15_trigger	
+inv_name					= pl15_trigger
+inv_name_short			= pl15_triggerS
+cost							= 950
+inv_weight					= 0.07
+inv_grid_x         = 4
+inv_grid_y         = 33
+1icon_layer = clean_lub1_ico
+attachment_point	=	pl15_trigger|0,0,0|0,0,0
+attachment_slots	=	pl15_barrel|muzzle|0,0,0|0,0,0#hpsa_spring|zatvor|0,-0.0083,0.001|0,0,0
+item_tags	=	trigger
+override_section = pl15_trigger_attributes
+
+[pl15_trigger_attributes]
+
+[pl15_trigger_up]:pl15_trigger
+kind  =  pl15
+inv_ui_sign				= pl_trig+
+visual						= w_att_huds\pl15_trigger_up	
+inv_name					= pl15_trigger_up
+inv_name_short			= pl15_trigger_upS
+cost							= 1150
+inv_weight					= 0.08
+inv_grid_y         = 34
+override_section		=	pl15_trigger_up_attributes
+
+[pl15_trigger_up_attributes]
+fire_modes = -1, 1
+
+[pl15_barrel]:attachment_base
+kind  =  pl15
+inv_ui_sign				= pl_bar
+visual						= w_att_huds\pl15_barrel	
+inv_name					= pl15_barrel
+inv_name_short			= pl15_barrel
+cost							= 800
+inv_weight					= 0.09
+inv_grid_x         = 3
+inv_grid_y         = 33
+1icon_layer = clean1_ico
+attachment_point = pl15_barrel|0,0,0|0,0,0
+attachment_slots	= pl15_zatvor|zatvor|0,0,0|0,0,0
+item_tags =	barrel
+override_section = pl15_barrel_attributes
+
+[pl15_barrel_attributes]
+zoom_rotate_time = 0.02
+recoil_koeff = -0.1
+bullet_speed = 1.03
+k_hit_koeff = 1.05
+fire_dispersion_base = 0.2
+[pl15_barrel_att]:cz75_barrel_att
+bullet_speed = 1.03
+k_hit_koeff = 1.05
+fire_dispersion_base = 0.2
+
+[pl15_barrel_up]:pl15_barrel
+kind  =  pl15
+inv_ui_sign				= pl_bar+
+visual						= w_att_huds\pl15_barrel_up	
+inv_name					= pl15_barrel_up
+inv_name_short			= pl15_barrel_up
+cost							= 2950
+inv_weight					= 0.1
+inv_grid_y         = 34
+attachment_slots	=	pl15_zatvor|zatvor|0,0,0|0,0,0#9mm_muzzle|muzzle|0,0,0|0,0,0
+override_section = pl15_barrel_up_attributes
+
+[pl15_barrel_up_attributes]
+zoom_rotate_time = 0.02
+recoil_koeff = -0.11
+bullet_speed = 1.03
+k_hit_koeff = 1.05
+fire_dispersion_base = 0.2
+impair_koeff = 1.1
+[pl15_barrel_up_att]:pl15_barrel_att
+impair_koeff = 1.1
+
+[pl15_zatvor]:attachment_base
+kind  =  pl15
+inv_ui_sign				= pl_slide
+visual						= w_att_huds\pl15_zatvor
+inv_name					= pl15_zatvor
+inv_name_short			= pl15_zatvor
+cost							= 950
+inv_weight					= 0.11
+inv_grid_width     = 2
+inv_grid_x         = 6
+inv_grid_y         = 34
+1icon_layer = clean_lub2_ico
+attachment_point = pl15_zatvor|0,0,0|0,0,0
+attachment_slots =	zatvor_side|zatvor|0,0.0388,-0.0225|0,0,0
+item_tags =	zatvor
+override_section = pl15_zatvor_attributes
+
+[pl15_zatvor_attributes]
+zoom_rotate_time = 0.07
+rpm = 1100
+impair_koeff = 0.9
+[pl15_zatvor_att]
+zoom_rotate_time = 0.07
+recoil_koeff            = -0.14
+rpm = 1100
+impair_koeff = 0.9
+
+[9mm_silencer_pl15]:9mm_silencer_multimount
+kind  =  pl15
+visual						= w_att_huds\pl15_silencer
+inv_name					= pl15_silencer
+inv_name_short			= pl15_silencerS
+cost							= 1350
+inv_weight					= 0.37
+inv_grid_width			= 2
+inv_grid_x					= 8
+inv_grid_y					= 34
+override_section			= 9mm_silencer_pl15_attributes
+
+[9mm_silencer_pl15_attributes]
+silencer_status = 1
+silencer_name = wpn_addon_silencer
+silencer_x = 1
+silencer_y = 1
+weapon_lenght = 0.15
+impair_koeff = 1.2
+zoom_rotate_time = 0.04
+recoil_koeff = -0.16
+inertia_koeff = 1.2
+
+[mag_wpn_pl15_9x19_fmj]:mag_wpn_cz75_9x19_fmj
+inv_ui_sign					= pl_16
+visual							= w_att_huds\pl15_mag
+inv_name						= wpn_pl15
+inv_name_short				= wpn_pl15
+inv_grid_x         				= 5
+inv_grid_y         				= 34
+override_section = mag_wpn_pl15_9x19_fmj_attributes
+
+[mag_wpn_pl15_9x19_fmj_attributes]
+animation_prefix_mag = 17_
+
+[pl15_stock_bnt]:attachment_base
+kind  =  pl15
+inv_ui_sign				= pl_stk
+visual						= w_att_huds\pl15_stock_bnt
+inv_name					= pl15_stock_bnt
+inv_name_short			= pl15_stock_bntS
+cost							= 1700
+inv_weight					= 0.53
+inv_grid_width     		= 2
+inv_grid_x         			= 8
+inv_grid_y         			= 33
+attachment_point		=	pl15_stock|0,0,0|0,0,0
+item_tags	=	stock
+override_section			= pl15_stock_bnt_attributes
+[pl15_stock_bnt_attributes]:pernach_stock_att
+weapon_lenght	=	0.2
+recoil_koeff = -0.25

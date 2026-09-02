@@ -1,0 +1,43 @@
+[wpn_rex]:wpn_python,wpn_rex_sounds
+use_detachable_magazines = false
+GroupControlSection			= spawn_group
+inv_grid_y         					= 11
+inv_name                    			= wpn_rex
+inv_name_short              		= wpn_rexS
+description                 			= wpn_rex_descr
+inv_weight               			= 0.45
+cost                        				= 25000
+attachment_slots	=	slot_magazin|magazin|0,0,0|0,0,0#rex_barrel|wpn_body|0,0,0|0,0,0#rsh12_stock|trigger|0,-0.0015,-0.0033|0,0,0
+aimpoint_offset_y				= 0.055145
+ui_render_cam_offset			= 0.22, -0.12, 1.16
+npc_rpm  = 450
+visual                      				= w_att_huds\rex.ogf
+hud                         				= wpn_rex_hud
+
+inv_icon_padding  = 0.7
+inv_icon_offset_x = 0.0
+inv_icon_offset_y = 0.1
+
+positive X = move right
+negative X = move left
+positive Y = move up
+negative Y = move down
+
+[wpn_rex_hud]:wpn_python_hud
+
+weapon_recoil_vert         = 3.83
+weapon_recoil_vert_inc     = 0.383
+weapon_recoil_horz         = 2.80
+weapon_recoil_ret_speed    = 5.0
+
+
+item_visual                 			= w_att_huds\rex_hud.ogf
+aim_hud_offset_pos			= -0.0601, 0.028, -0.05
+aim_hud_offset_pos_16x9	= -0.0601, 0.028, -0.05
+aim_hud_offset_rot				= 0.01, 0.0055, 0
+aim_hud_offset_rot_16x9	= 0.01, 0.0055, 0
+anm_open							= rex_g_reload_open, open
+anm_open_empty				= rex_g_reload_open_empty, open_empty
+anm_add_cartridge				= rex_g_reload_add, add
+anm_close							= rex_g_reload_close, close
+anm_reload_misfire				= rex_g_unjam, unjam

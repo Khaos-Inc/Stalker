@@ -1,745 +1,735 @@
-[wpn_mk47]:identity_immunities,weapon_probability,default_weapon_params,wpn_mk47_sounds
-GroupControlSection                      = spawn_group
-$npc                                     = on
-$prefetch                                = 8
-$spawn                                   = "weapons\mk47"
-scheduled                                = off
-cform                                    = skeleton
-parent_section                           = wpn_mk47
-
-class                                    = WP_AK74
-slot                                     = 2
-animation_slot                           = 2
-ef_main_weapon_type                      = 2
-ef_weapon_type                           = 8
-hand_dependence                          = 1
-single_handed                            = 0
-
-default_to_ruck                          = false
-sprint_allowed                           = true
-
-icons_texture      						 = ui\ui_icon_mk47_tcwp
-inv_grid_height                          = 2
-inv_grid_width                           = 5
-inv_grid_x                               = 0
-inv_grid_y                               = 2
-
-inv_name                                 = st_wpn_mk47
-inv_name_short                           = st_wpn_mk47
-description                              = st_wpn_mk47_descr
-
-kind                                     = w_rifle
-inv_weight                               = 3.26
-cost                                     = 45000
-repair_type                              = rifle_7
-weapon_class                             = assault_rifle
-
-hud                                      = wpn_mk47_hud
-visual                                   = anomaly_weapons\wpn_mk47\wpn_mk47_world.ogf
-position                                 = -0.026, -0.020, -0.04
-orientation                              = 0.0, 0.0, 0.0
-fire_point                               = 0.0, 0.199, 0.575
-fire_point2                              = 0.0, 0.199, 0.575
-strap_bone0                              = bip01_spine2
-strap_bone1                              = bip01_spine1
-strap_position                           = -0.15, -0.37, 0.2
-strap_orientation                        = -10, -5, 10
-ph_mass                                  = 3
-
-flame_particles                          = weapons\generic_weapon05
-smoke_particles                          = weapons\generic_shoot_00
-grenade_flame_particles                  = weapons\generic_weapon01
-
-shell_point             	             = 0.12,0, 0.07
-shell_dir               	             = 0, 0, 0.4
-shell_particles         	             = weapons\556x45
-
-light_disabled                           = false
-light_color                              = 0.6, 0.5, 0.3
-light_range                              = 5
-light_time                               = 0.2
-light_var_color                          = 0.05
-light_var_range                          = 0.1
-
-upgrades                                 = up_gr_firstab_aek971, up_gr_seconab_aek971, up_gr_thirdab_aek971, up_gr_fourtab_aek971, up_gr_fifthab_aek971
-installed_upgrades                       =
-upgrade_scheme                           = upgrade_scheme_lr300
-
-upgr_icon_path     						 = ui\ui_icon_mk47_tcwp
-upgr_icon_x                              = 0
-upgr_icon_y                              = 200
-upgr_icon_width                          = 400
-upgr_icon_height                         = 200
-
-fire_modes                               = 1, -1
-ammo_class                               = ammo_7.62x39_fmj, ammo_7.62x39_fmj_bad, ammo_7.62x39_fmj_verybad, ammo_7.62x39_ap, ammo_7.62x39_ap_bad, ammo_7.62x39_ap_verybad
-ammo_elapsed                             = 30
-ammo_mag_size                            = 30
-startup_ammo                             = 90
-
-scopes                                   = exps3, hco, he510, p1x42, romeo4, acog, eot, gauss_sight, specter, spec_alt, c-more, 0kp2, ac10632, d0cter, deltapoint, leupold, aimpoint, pn23, e0t2, marchf, mark8_rmr, kemper, ekp8_18, triji, susat, rmr, t12, razorhd, echo1, e0t2_magd, uh1_magd, uh2, tac30, bossxe, mepro, sup
-
-scope_status                             = 0
-scope_zoom_factor                        = 0
-
-silencer_name                            = wpn_sil_aac762
-silencer_status                          = 2
-silencer_x                               = 193
-silencer_y                               = 6
-silencer_light_color                     = 0.6, 0.5, 0.3
-silencer_light_range                     = 0.01
-silencer_light_time                      = 0.2
-silencer_light_var_color                 = 0.05
-silencer_light_var_range                 = 0.5
-silencer_smoke_particles                 = weapons\generic_shoot_00
-
-grenade_class                            = ammo_m209, ammo_m209_bad, ammo_m209_verybad
-grenade_launcher_name                    = wpn_addon_grenade_launcher_m203
-grenade_launcher_status                  = 0
-grenade_launcher_x                       = 123
-grenade_launcher_y                       = 32
-grenade_vel                              = 76
-launch_speed                             = 0
-
-hit_impulse                              = 25
-hit_power                                = 0.49, 0.49, 0.49, 0.49
-hit_type                                 = fire_wound
-fire_distance                            = 1000
-bullet_speed                             = 880
-rpm                                      = 700
-rpm_empty_click                          = 200
-
-use_aim_bullet                           = false
-use_first_bullet                         = false
-time_to_aim                              = 0.0 ;  2.0
-zoom_dof                                 = 0.5, 1.0, 180
-zoom_enabled                             = true
-zoom_rotate_time                         = 0.25
-reload_dof                               = 0.0, 0.5, 5, 2
-control_inertion_factor                  = 1.0f
-crosshair_inertion                       = 4.8
-fire_dispersion_base                     = 0.31
-fire_dispersion_condition_factor         = 0.001
-
-misfire_probability                      = 0.004
-misfire_start_condition                  = 0.7 ;  0.88
-misfire_start_prob                       = 0.007
-misfire_end_condition                    = 0.12
-misfire_end_prob                         = 0.11
-
-condition_queue_shot_dec                 = 0.0008
-condition_shot_dec                       = 0.0008
-
-cam_return                               = 0
-cam_relax_speed                          = 10
-cam_dispersion                           = 0.556
-cam_dispersion_frac                      = 1.0
-cam_dispersion_inc                       = 0.0675
-cam_max_angle                            = 54.0
-cam_max_angle_horz                       = 54.0
-cam_step_angle_horz                      = 1.62
-zoom_cam_relax_speed                     = 10
-zoom_cam_dispersion                      = 0.466
-zoom_cam_dispersion_frac                 = 1.0
-zoom_cam_dispersion_inc                  = 0.0525
-zoom_cam_max_angle                       = 54.0
-zoom_cam_max_angle_horz                  = 54.0
-zoom_cam_step_angle_horz                 = 1.57
-
-PDM_disp_accel_factor                    = 1.745
-PDM_disp_base                            = 0.84
-PDM_disp_crouch                          = 1.0
-PDM_disp_crouch_no_acc                   = 1.0
-PDM_disp_vel_factor                      = 1.745
-
-hworner_fov_modifier                     = 1.0
-hworner_range_modifier                   = 1.0
-cam_relax_speed_ai                       = 360
-zoom_cam_relax_speed_ai                  = 360
-min_radius                               = 0
-max_radius                               = 500
-hit_probability_gd_novice                = 1.00
-hit_probability_gd_stalker               = 1.00
-hit_probability_gd_veteran               = 1.00
-hit_probability_gd_master                = 1.00
-
-kill_msg_x                               = 175
-kill_msg_y                               = 0
-kill_msg_width                           = 82
-kill_msg_height                          = 28
-		
-lens_hide_enabled       = true
-lens_hide_bone          = lens
-lens_hide_delays        = 0.1,0
-lens_hide_aim_mode      = true, false, false
-
+[wpn_mk47]:wpn_ak,wpn_mk47_sounds
+icons_texture					= ui\ui_icons_deso_ar
+inv_grid_x						= 0
+inv_grid_y						= 12						
+inv_name							= wpn_mk47						
+inv_name_short				= wpn_mk47						
+description						= wpn_mk47_descr			
+inv_weight						= 0.6
+weapon_lenght				=	0.21
+required_tags_shoot		= barrel,trigger,zatvor,buffer,charger
+required_tags_cycle			= gas,spring
+zoom_rotate_time 			= 0.2
+attachment_slots				= slot_magazin|magazin|0,0,0|0,0,0#ar_trigger|wpn_body|0,-0.0054,0|0,0,0#mk47_upper|wpn_body|0,0,0|0,0,0#ar_grip|wpn_body|0,-0.0035,0|0,0,0
+aimpoint_offset_y			= 0.11302
+ui_render_cam_offset		= 0.17, -0.07, 0.92
+visual                 				= w_att_huds\mk47.ogf
+hud									= wpn_mk47_hud
+cost                                            = 90000
+additional_sounds			= mk47_additional_sounds
+[mk47_additional_sounds]:ak_additional_sounds
+snd_bolt_release				= weapons\main\mk47_bolt_release
+snd_bolt_back					= weapons\main\mk47_bolt_back
+snd_selector					= weapons\main\selector2
 
 [wpn_mk47_hud]:hud_base
-item_visual                              = anomaly_weapons\wpn_mk47\wpn_mk47_hud.ogf
-attach_place_idx                         = 0
-zoom_hide_crosshair                      = true   
 
-        item_orientation                 = -0.774842, -0.766312, -2.159499
-        item_position                    = -0.001826, 0.004293, -0.00344
-
-        hands_orientation                = 0.82235, 0.758036, 0.584002
-        hands_orientation_16x9           = 0.82235, 0.758036, 0.584002
-        hands_position                   = 0.010947, -0.014019, -0.051509
-        hands_position_16x9              = 0.010947, -0.014019, -0.051509
-
-        aim_hud_offset_pos               = -0.061241, 0.013415, -0.045
-        aim_hud_offset_pos_16x9          = -0.061241, 0.013415, -0.045
-        aim_hud_offset_rot               = 0.000541, 8e-06, -0.025
-        aim_hud_offset_rot_16x9          = 0.000541, 8e-06, -0.025
-
-gl_hud_offset_pos                        = 0, 0, 0
-gl_hud_offset_pos_16x9                   = 0, 0, 0
-gl_hud_offset_rot                        = 0, 0, 0
-gl_hud_offset_rot_16x9                   = 0, 0, 0
-
-lowered_hud_offset_pos					= 0.06, -0.035, -0.02
-lowered_hud_offset_pos_16x9				= 0.06, -0.035, -0.02
-lowered_hud_offset_rot					= -0.1, -0.6, 0.4
-lowered_hud_offset_rot_16x9				= -0.1, -0.6, 0.4
-
-lean_hud_offset_pos                      = 0, 0, 0
-lean_hud_offset_rot                      = 0, 0, 0
-
-anm_hide                                 = mk47new_holster, hide
-anm_idle                                 = mk47new_idle, idle
-anm_idle_aim                             = mk47new_aim, idle
-anm_idle_aim_moving                      = mk47new_walk, idle, 0.5
-anm_idle_aim_moving_crouch               = mk47new_walk, idle, 0.25
-anm_idle_moving                          = mk47new_walk, idle, 
-anm_idle_moving_crouch                   = mk47new_walk, idle, 0.8
-anm_idle_sprint                          = mk47new_sprint, idle, 1.10
-anm_reload                               = mk47new_reload, reload
-anm_reload_empty                         = mk47new_reload_empty, reload_empty
-anm_reload_misfire                       = mk47new_unjam, unjam
-anm_reload_misfire_variant1              = mk47new_unjam_alt, unjam_alt
-anm_reload_misfire_variant2              = mk47new_unjam_alt, unjam_alt
-anm_reload_misfire_variant3              = mk47new_unjam_alt, unjam_alt
-anm_reload_misfire_variant4              = mk47new_unjam_alt, unjam_alt
-anm_reload_misfire_variant5              = mk47new_unjam, unjam
-anm_reload_misfire_variant6              = mk47new_unjam, unjam
-anm_shots                                = mk47new_shoot, shoot
-;anm_shots_variant1                       = mk47new_shoot1, shoot1
-;anm_shots_variant2                       = mk47new_shoot2, shoot2
-anm_show                                 = mk47new_draw, idle
-anm_bore                                 = mk47new_inspect, inspect
-anm_switch_mode                          = mk47new_fire_select, idle
-anm_switch_mode_variant1                 = mk47new_fire_select1, idle
-
-;anm_reload_misfire                       = mk47new_unjam, unjam
-;anm_reload_misfire_variant1              = mk47new_unjam_alt, unjam_alt
-
----Empty---
-anm_hide_empty                                 = mk47new_holster, idle_empty
-anm_idle_empty                                 = mk47new_idle, idle_empty
-anm_idle_aim_empty                             = mk47new_aim, idle_empty
-anm_idle_aim_moving_empty                      = mk47new_walk, idle_empty, 0.75
-anm_idle_aim_moving_crouch_empty               = mk47new_walk, idle_empty, 0.7
-anm_idle_moving_empty                          = mk47new_walk, idle_empty, 1.1 
-anm_idle_moving_crouch_empty                   = mk47new_walk, idle_empty, 0.9
-anm_idle_sprint_empty                          = mk47new_sprint, idle_empty, 1.05
-anm_show_empty                                 = mk47new_draw, idle_empty
-anm_bore_empty                                 = mk47new_inspect_empty, inspect_empty
-anm_switch_mode_empty                          = mk47new_fire_select, idle_empty
-anm_switch_mode_empty_variant1                 = mk47new_fire_select1, idle_empty
-
----Jammed---
-anm_hide_jammed                                 = mk47new_holster, idle_jammed
-anm_idle_jammed                                 = mk47new_idle, idle_jammed
-anm_idle_aim_jammed                             = mk47new_aim, idle_jammed
-anm_idle_aim_moving_jammed                      = mk47new_walk, idle_jammed, 0.75
-anm_idle_aim_moving_crouch_jammed               = mk47new_walk, idle_jammed, 0.7
-anm_idle_moving_jammed                          = mk47new_walk, idle_jammed, 1.1 
-anm_idle_moving_crouch_jammed                   = mk47new_walk, idle_jammed, 0.9
-anm_idle_sprint_jammed                          = mk47new_sprint, idle_jammed, 1.05
-anm_show_jammed                                 = mk47new_draw, idle_jammed
-anm_bore_jammed                                 = mk47new_inspect_jammed, inspect_jammed
-anm_switch_mode_jammed                          = mk47new_fire_select, idle_jammed
-anm_switch_mode_jammed_variant1                 = mk47new_fire_select1, idle_jammed
-
-;--- Переходы спринта---
-anm_sprint_end               	= mk47new_sprint_end, idle
-anm_sprint_end_variant1      	= mk47new_sprint_end, idle
-anm_sprint_end_variant2         = mk47new_sprint_end, idle
-anm_sprint_end_empty         	= mk47new_sprint_end, idle_empty
-anm_sprint_end_empty_variant1   = mk47new_sprint_end, idle_empty
-anm_sprint_end_empty_variant2   = mk47new_sprint_end, idle_empty
-anm_sprint_end_jammed        	= mk47new_sprint_end, idle_jammed
-anm_sprint_end_jammed_variant1  = mk47new_sprint_end, idle_jammed
-anm_sprint_end_jammed_variant2  = mk47new_sprint_end, idle_jammed
-
-;--- Паттерны спринта---
-ts_pattern_sprint_end        = anm_idle_sprint, ^anm_idle.*, anm_sprint_end
-
-
-;--- Ammo check---
-anm_ammo_check					= mk47new_inspect, inspect
-anm_ammo_check_empty			= mk47new_inspect_empty, inspect_empty
-anm_ammo_check_no_mag           = mk47new_inspect_empty, inspect_empty
-
-fire_bone                                = muzzle
-fire_bone2                               = wpn_body
-fire_point                               = 0, 0, 0
-fire_point2                              = 0.0, 0.0, 0.3
-
-shell_bone                               = wpn_body
-shell_dir                                = 0, 1, 0
-shell_point                              = 0,0,0.15
-
-freelook_z_offset_mul					 = 0.3
-	
-;--------------------------------------------------------------------SCOPES-------------------------------------------------------------------
-[wpn_mk47_acog]:wpn_mk47
-hud				= wpn_mk47_acog_hud
-
-1icon_layer			    = acog_x
-1icon_layer_x			= 84
-1icon_layer_y			= -14
-
-
-
-[wpn_mk47_acog_hud]:wpn_mk47_hud
-item_visual                	= anomaly_weapons\wpn_mk47\wpn_mk47_acog_hud.ogf
-
-;--------------------------------------------------------------------------------------------
-[wpn_mk47_triji]:wpn_mk47
-hud				= wpn_mk47_triji_hud
-
-1icon_layer			    = acog_x
-1icon_layer_x			= 84
-1icon_layer_y			= -14
-
-use_alt_aim_hud                   = true
-
-
-[wpn_mk47_triji_hud]:wpn_mk47_hud
-item_visual                	= anomaly_weapons\wpn_mk47\wpn_mk47_trijicon_rmr_hud.ogf
-
-;--------------------------------------------------------------------------------------------
-[wpn_mk47_specter]:wpn_mk47
-hud				= wpn_mk47_specter_hud
-
-1icon_layer			    = specter_x
-1icon_layer_x			= 65
-1icon_layer_y			= -18
-
-use_alt_aim_hud         = true
-
-
-[wpn_mk47_specter_hud]:wpn_mk47_hud
-item_visual                	= anomaly_weapons\wpn_mk47\wpn_mk47_specter_hud.ogf
-
-;--------------------------------------------------------------------------------------------
-[wpn_mk47_spec_alt]:wpn_mk47
-hud				= wpn_mk47_spec_alt_hud
-
-
-1icon_layer			    = specter_x
-1icon_layer_x			= 65
-1icon_layer_y			= -18
-
-
-use_alt_aim_hud                   = true
-
-[wpn_mk47_spec_alt_hud]:wpn_mk47_hud
-item_visual                	= anomaly_weapons\wpn_mk47\wpn_mk47_spec_alt_hud.ogf
-
-;--------------------------------------------------------------------------------------------
-[wpn_mk47_leupold]:wpn_mk47
-hud				= wpn_mk47_leupold_hud
-
-1icon_layer			    = leupold_x
-1icon_layer_x			= 70
-1icon_layer_y			= -16
-
-
-[wpn_mk47_leupold_hud]:wpn_mk47_hud
-item_visual                	= anomaly_weapons\wpn_mk47\wpn_mk47_leupold_hud.ogf
-
-;--------------------------------------------------------------------------------------------
-[wpn_mk47_mark8_rmr]:wpn_mk47
-hud				= wpn_mk47_mark8_rmr_hud
-
-1icon_layer			    = leupold_x
-1icon_layer_x			= 70
-1icon_layer_y			= -16
-
-[wpn_mk47_mark8_rmr_hud]:wpn_mk47_hud
-item_visual                	= anomaly_weapons\wpn_mk47\wpn_mk47_mark8_rmr_hud.ogf
-
-;--------------------------------------------------------------------------------------------
-[wpn_mk47_susat]:wpn_mk47
-hud				= wpn_mk47_susat_hud
-
-1icon_layer			    = susat_x
-1icon_layer_x			= 88
-1icon_layer_y			= -13	
-
-[wpn_mk47_susat_hud]:wpn_mk47_hud
-item_visual                	= anomaly_weapons\wpn_mk47\wpn_mk47_susat_hud.ogf
-
-;--------------------------------------------------------------------------------------------
-[wpn_mk47_razorhd]:wpn_mk47
-hud				= wpn_mk47_razorhd_hud
-
-1icon_layer			    = razorhd_x
-1icon_layer_x			= 59
-1icon_layer_y			= -19	
-
-
-[wpn_mk47_razorhd_hud]:wpn_mk47_hud
-item_visual                	= anomaly_weapons\wpn_mk47\wpn_mk47_razorhd_hud.ogf
-
-;--------------------------------------------------------------------------------------------
-[wpn_mk47_e0t2_magd]:wpn_mk47
-hud				= wpn_mk47_e0t2_magd_hud
-
-1icon_layer			    = e0t2_magd_x
-1icon_layer_x			= 63
-1icon_layer_y			= -15	
-
-
-[wpn_mk47_e0t2_magd_hud]:wpn_mk47_hud
-item_visual                	= anomaly_weapons\wpn_mk47\wpn_mk47_e0t2_magd_hud.ogf
-
-;--------------------------------------------------------------------------------------------
-[wpn_mk47_e0t2_magd_off]:wpn_mk47
-hud				= wpn_mk47_e0t2_magd_off_hud
-
-1icon_layer			    = e0t2_magd_x
-1icon_layer_x			= 63
-1icon_layer_y			= -15	
-
-[wpn_mk47_e0t2_magd_off_hud]:wpn_mk47_hud
-item_visual                	= anomaly_weapons\wpn_mk47\wpn_mk47_e0t2_magd_off_hud.ogf
-
-;--------------------------------------------------------------------------------------------
-[wpn_mk47_uh1_magd]:wpn_mk47
-hud				= wpn_mk47_uh1_magd_hud
-
-1icon_layer			    = uh1_magd_x
-1icon_layer_x			= 57
-1icon_layer_y			= -16	
-
-
-[wpn_mk47_uh1_magd_hud]:wpn_mk47_hud
-item_visual                	= anomaly_weapons\wpn_mk47\wpn_mk47_uh1_magd_hud.ogf
-
-;--------------------------------------------------------------------------------------------
-[wpn_mk47_uh1_magd_off]:wpn_mk47
-hud				= wpn_mk47_uh1_magd_off_hud
-
-1icon_layer			    = uh1_magd_x
-1icon_layer_x			= 57
-1icon_layer_y			= -16		
-
-[wpn_mk47_uh1_magd_off_hud]:wpn_mk47_hud
-item_visual                	= anomaly_weapons\wpn_mk47\wpn_mk47_uh1_magd_off_hud.ogf
-
-;---------------------------------------------------------------------------------------------
-[wpn_mk47_marchf]:wpn_mk47
-hud                                      = wpn_mk47_marchf_hud
-
-1icon_layer                              = marchf_x
-1icon_layer_x                            = 70
-1icon_layer_y                            = -11
-
-
-[wpn_mk47_marchf_hud]:wpn_mk47_hud
-item_visual                              = anomaly_weapons\wpn_mk47\wpn_mk47_marchf_hud.ogf
-
-;--------------------------------------------------------------------------------------------
-[wpn_mk47_pn23]:wpn_mk47
-hud				= wpn_mk47_pn23_hud
-
-1icon_layer			    = pn23f
-1icon_layer_x			= 58
-1icon_layer_y			= -13	
-
-
-[wpn_mk47_pn23_hud]:wpn_mk47_hud
-item_visual                	= anomaly_weapons\wpn_mk47\wpn_mk47_pn23_hud.ogf
-
-;--------------------------------------------------------------------------------------------
-[wpn_mk47_tac30]:wpn_mk47
-hud				= wpn_mk47_tac30_hud
-
-1icon_layer			    = tac30_x
-1icon_layer_x			= 68
-1icon_layer_y			= -14	
-
-
-[wpn_mk47_tac30_hud]:wpn_mk47_hud
-item_visual                	= anomaly_weapons\wpn_mk47\wpn_mk47_tac30_hud.ogf
-
-;---------------------------------------------------------------------------------------------
-[wpn_mk47_gauss_sight]:wpn_mk47
-hud                                      = wpn_mk47_gauss_sight_hud
-
-1icon_layer                              = gauss_sight_x
-1icon_layer_x                            = 51
-1icon_layer_y                            = -10
-
-
-[wpn_mk47_gauss_sight_hud]:wpn_mk47_hud
-item_visual                              = anomaly_weapons\wpn_mk47\wpn_mk47_gauss_hud.ogf
-
-;--------------------------------------------------------------------------------------------
-[wpn_mk47_echo1]:wpn_mk47
-hud				= wpn_mk47_echo1_hud
-
-1icon_layer			    = echo1_x
-1icon_layer_x			= 87
-1icon_layer_y			= -16
-
-use_alt_aim_hud         = true
-
-
-[wpn_mk47_echo1_hud]:wpn_mk47_hud
-item_visual                	= anomaly_weapons\wpn_mk47\wpn_mk47_echo1_hud.ogf
-
-;----------------------------------------------------------------Red_Dot_Sights----------------------------------------------------------------------------------
-;----------------------------------------------------------------Red_Dot_Sights----------------------------------------------------------------------------------		
-;----------------------------------------------------------------Red_Dot_Sights----------------------------------------------------------------------------------
-[wpn_mk47_eot]:wpn_mk47
-hud				= wpn_mk47_eot_hud
-
-1icon_layer			    = eot_x
-1icon_layer_x			= 88
-1icon_layer_y			= -11
-
-[wpn_mk47_eot_hud]:wpn_mk47_hud
-item_visual                	= anomaly_weapons\wpn_mk47\wpn_mk47_eot_hud.ogf
-
-;--------------------------------------------------------------------------------------------
-[wpn_mk47_ac10632]:wpn_mk47
-hud				= wpn_mk47_ac10632_hud
-
-1icon_layer			    = ac10632_x
-1icon_layer_x			= 91
-1icon_layer_y			= -13
-
-[wpn_mk47_ac10632_hud]:wpn_mk47_hud
-item_visual                	= anomaly_weapons\wpn_mk47\wpn_mk47_ac10632_hud.ogf
-
-;--------------------------------------------------------------------------------------------
-[wpn_mk47_rakurs]:wpn_mk47
-[wpn_mk47_rakurs_hud]:wpn_mk47_hud
-;--------------------------------------------------------------------------------------------
-[wpn_mk47_d0cter]:wpn_mk47
-hud				= wpn_mk47_d0cter_hud
-
-1icon_layer			    = d0cter_x
-1icon_layer_x			= 91
-1icon_layer_y			= -13
-
-[wpn_mk47_d0cter_hud]:wpn_mk47_hud
-item_visual                	= anomaly_weapons\wpn_mk47\wpn_mk47_d0cter_hud.ogf
-
-;--------------------------------------------------------------------------------------------
-[wpn_mk47_deltapoint]:wpn_mk47
-hud				= wpn_mk47_deltapoint_hud
-
-1icon_layer			    = deltapoint_x
-1icon_layer_x			= 88
-1icon_layer_y			= -9
-
-[wpn_mk47_deltapoint_hud]:wpn_mk47_hud
-item_visual                	= anomaly_weapons\wpn_mk47\wpn_mk47_deltapoint_hud.ogf
-
-;--------------------------------------------------------------------------------------------
-[wpn_mk47_rmr]:wpn_mk47
-hud				= wpn_mk47_rmr_hud
-
-1icon_layer			    = rmr_x
-1icon_layer_x			= 90
-1icon_layer_y			= -9
-
-[wpn_mk47_rmr_hud]:wpn_mk47_hud
-item_visual                	= anomaly_weapons\wpn_mk47\wpn_mk47_rmr_hud.ogf
-
-;--------------------------------------------------------------------------------------------
-[wpn_mk47_aim_low]:wpn_mk47
-[wpn_mk47_aim_low_hud]:wpn_mk47_hud
-
-;----------------------------------------------------------------------------------------
-[wpn_mk47_c-more]:wpn_mk47
-hud				= wpn_mk47_c-more_hud
-
-1icon_layer			    = c-more_x
-1icon_layer_x			= 92
-1icon_layer_y			= -10
-
-[wpn_mk47_c-more_hud]:wpn_mk47_hud
-item_visual                	= anomaly_weapons\wpn_mk47\wpn_mk47_c-more_hud.ogf
-
-
-;----------------------------------------------------------------------------------------
-[wpn_mk47_mepro]:wpn_mk47
-hud				= wpn_mk47_mepro_hud
-
-1icon_layer			    = mepro_x
-1icon_layer_x			= 92
-1icon_layer_y			= -10
-
-[wpn_mk47_mepro_hud]:wpn_mk47_hud
-item_visual                	= anomaly_weapons\wpn_mk47\wpn_mk47_mepro_hud.ogf
-
-
-;----------------------------------------------------------------------------------------
-[wpn_mk47_ekp8_18]:wpn_mk47
-hud				= wpn_mk47_ekp8_18_hud
-
-1icon_layer			    = ekp8_18_x
-1icon_layer_x			= 88
-1icon_layer_y			= -5
-
-[wpn_mk47_ekp8_18_hud]:wpn_mk47_hud
-item_visual                	= anomaly_weapons\wpn_mk47\wpn_mk47_ekp8_18_hud.ogf
-
-;----------------------------------------------------------------------------------------
-[wpn_mk47_aimpoint]:wpn_mk47
-hud				= wpn_mk47_aimpoint_hud
-
-1icon_layer			    = aimpoint_x
-1icon_layer_x			= 94
-1icon_layer_y			= -19
-
-[wpn_mk47_aimpoint_hud]:wpn_mk47_hud
-item_visual                	= anomaly_weapons\wpn_mk47\wpn_mk47_aimpoint_hud.ogf
-
-;----------------------------------------------------------------------------------------
-[wpn_mk47_point_aimpro]:wpn_mk47
-[wpn_mk47_point_aimpro_hud]:wpn_mk47_hud
-
-;----------------------------------------------------------------------------------------
-[wpn_mk47_0kp2]:wpn_mk47
-hud				= wpn_mk47_0kp2_hud
-
-1icon_layer			    = 0kp2_x
-1icon_layer_x			= 88
-1icon_layer_y			= -6
-
-[wpn_mk47_0kp2_hud]:wpn_mk47_hud
-item_visual                	= anomaly_weapons\wpn_mk47\wpn_mk47_0kp2_hud.ogf
-
-;----------------------------------------------------------------------------------------
-[wpn_mk47_e0t2]:wpn_mk47
-hud				= wpn_mk47_e0t2_hud
-
-1icon_layer			    = e0t2_x
-1icon_layer_x			= 90
-1icon_layer_y			= -15
-
-[wpn_mk47_e0t2_hud]:wpn_mk47_hud
-item_visual                	= anomaly_weapons\wpn_mk47\wpn_mk47_e0t2_hud.ogf
-
-;----------------------------------------------------------------------------------------
-[wpn_mk47_compm4s]:wpn_mk47
-[wpn_mk47_compm4s_hud]:wpn_mk47_hud
-
-;--------------------------------------------------------------------------------------------
-[wpn_mk47_kemper]:wpn_mk47
-hud				= wpn_mk47_kemper_hud
-
-1icon_layer			    = kemper_x
-1icon_layer_x			= 84
-1icon_layer_y			= -16
-
-[wpn_mk47_kemper_hud]:wpn_mk47_hud
-item_visual                	= anomaly_weapons\wpn_mk47\wpn_mk47_kemper_hud.ogf
-
-;--------------------------------------------------------------------------------------------
-[wpn_mk47_t12]:wpn_mk47
-hud				= wpn_mk47_t12_hud
-
-1icon_layer			    = t12_x
-1icon_layer_x			= 89
-1icon_layer_y			= -16
-
-[wpn_mk47_t12_hud]:wpn_mk47_hud
-item_visual                	= anomaly_weapons\wpn_mk47\wpn_mk47_t12_hud.ogf
-
-;--------------------------------------------------------------------------------------------
-[wpn_mk47_exps3]:wpn_mk47
-hud				= wpn_mk47_exps3_hud
-
-1icon_layer			    = exps3_x
-1icon_layer_x			= 93
-1icon_layer_y			= -16
-
-[wpn_mk47_exps3_hud]:wpn_mk47_hud
-item_visual                	= anomaly_weapons\wpn_mk47\wpn_mk47_exps3_hud.ogf
-
-;--------------------------------------------------------------------------------------------
-[wpn_mk47_hco]:wpn_mk47
-hud				= wpn_mk47_hco_hud
-
-1icon_layer			    = hco_x
-1icon_layer_x			= 92
-1icon_layer_y			= -21
-
-[wpn_mk47_hco_hud]:wpn_mk47_hud
-item_visual                	= anomaly_weapons\wpn_mk47\wpn_mk47_hco_hud.ogf
-
-;--------------------------------------------------------------------------------------------
-[wpn_mk47_he510]:wpn_mk47
-hud				= wpn_mk47_he510_hud
-
-1icon_layer			    = he510_x
-1icon_layer_x			= 89
-1icon_layer_y			= -15
-
-[wpn_mk47_he510_hud]:wpn_mk47_hud
-item_visual                	= anomaly_weapons\wpn_mk47\wpn_mk47_he510_hud.ogf
-
-;--------------------------------------------------------------------------------------------
-[wpn_mk47_p1x42]:wpn_mk47
-hud				= wpn_mk47_p1x42_hud
-
-1icon_layer			    = p1x42_x
-1icon_layer_x			= 90
-1icon_layer_y			= -20
-
-[wpn_mk47_p1x42_hud]:wpn_mk47_hud
-item_visual                	= anomaly_weapons\wpn_mk47\wpn_mk47_p1x42_hud.ogf
-
-;--------------------------------------------------------------------------------------------
-[wpn_mk47_romeo4]:wpn_mk47
-hud				= wpn_mk47_romeo4_hud
-
-1icon_layer			    = romeo4_x
-1icon_layer_x			= 86
-1icon_layer_y			= -23
-
-[wpn_mk47_romeo4_hud]:wpn_mk47_hud
-item_visual                	= anomaly_weapons\wpn_mk47\wpn_mk47_romeo4_hud.ogf
-
-;--------------------------------------------------------------------------------------------
-[wpn_mk47_uh2]:wpn_mk47
-hud				= wpn_mk47_uh2_hud
-
-1icon_layer			    = uh2_x
-1icon_layer_x			= 86
-1icon_layer_y			= -23
-
-[wpn_mk47_uh2_hud]:wpn_mk47_hud
-item_visual                	= anomaly_weapons\wpn_mk47\wpn_mk47_uh2_hud.ogf
-
-;--------------------------------------------------------------------------------------------
-[wpn_mk47_bossxe]:wpn_mk47
-hud				= wpn_mk47_bossxe_hud
-
-1icon_layer			    = bossxe_x
-1icon_layer_x			= 86
-1icon_layer_y			= -23
-
-laser_status			= true
-use_alt_aim_hud			= true
-
-[wpn_mk47_bossxe_hud]:wpn_mk47_hud
-item_visual                	= anomaly_weapons\wpn_mk47\wpn_mk47_bossxe_hud.ogf
+weapon_recoil_vert         = 1.36
+weapon_recoil_vert_inc     = 0.136
+weapon_recoil_horz         = 1.69
+weapon_recoil_ret_speed    = 2
+
+
+anm_reload_misfire_sounds					= 0,snd_move_unjam|10,snd_bolt_back|17,snd_bolt_release
+anm_switch_mode_sounds						= 0,snd_move_selector|8,snd_selector
+anm_reload_p1_sounds							= 0,snd_30_move_out|14,snd_30_mag_out
+anm_reload_p2_sounds		 					= 0,snd_30_move_in|16,snd_30_mag_in
+anm_reload_empty_p1_sounds				= 0,snd_30_move_out|14,snd_30_mag_out
+anm_reload_empty_p2_sounds 				= 0,snd_30_move_in_empty|16,snd_30_mag_in|46,snd_bolt_back|55,snd_bolt_release
+10_anm_reload_p1_sounds						= 0,snd_10_move_out|14,snd_10_mag_out
+10_anm_reload_p2_sounds		 				= 0,snd_10_move_in|16,snd_10_mag_in
+10_anm_reload_empty_p1_sounds			= 0,snd_10_move_out|14,snd_10_mag_out
+10_anm_reload_empty_p2_sounds 		= 0,snd_10_move_in_empty|16,snd_10_mag_in|46,snd_bolt_back|55,snd_bolt_release
+10_anm_mag_check_sounds					= 0,snd_move_long|14,snd_10_mag_out|65,snd_10_mag_in
+10_anm_mag_check_empty_sounds		= 0,snd_move_long|14,snd_10_mag_out|65,snd_10_mag_in
+30_anm_reload_p1_sounds						= 0,snd_30_move_out|14,snd_30_mag_out
+30_anm_reload_p2_sounds		 				= 0,snd_30_move_in|16,snd_30_mag_in
+30_anm_reload_empty_p1_sounds			= 0,snd_30_move_out|14,snd_30_mag_out
+30_anm_reload_empty_p2_sounds 		= 0,snd_30_move_in_empty|16,snd_30_mag_in|46,snd_bolt_back|55,snd_bolt_release
+30_anm_mag_check_sounds					= 0,snd_move_long|14,snd_30_mag_out|65,snd_30_mag_in
+30_anm_mag_check_empty_sounds		= 0,snd_move_long|14,snd_30_mag_out|65,snd_30_mag_in
+50_anm_reload_p1_sounds						= 0,snd_50_move_out|14,snd_50_mag_out
+50_anm_reload_p2_sounds		 				= 0,snd_50_move_in|16,snd_50_mag_in
+50_anm_reload_empty_p1_sounds			= 0,snd_50_move_out|14,snd_50_mag_out
+50_anm_reload_empty_p2_sounds 		= 0,snd_50_move_in_empty|16,snd_50_mag_in|46,snd_bolt_back|55,snd_bolt_release
+50_anm_mag_check_sounds					= 0,snd_move_long|14,snd_50_mag_out|65,snd_50_mag_in
+50_anm_mag_check_empty_sounds		= 0,snd_move_long|14,snd_50_mag_out|65,snd_50_mag_in
+75_anm_reload_misfire_sounds				= 0,snd_move_unjam|10,snd_bolt_back|17,snd_bolt_release
+75_anm_switch_mode_sounds				= 0,snd_move_selector|8,snd_selector
+75_anm_reload_p1_sounds						= 0,snd_75_move_out|14,snd_75_mag_out
+75_anm_reload_p2_sounds		 				= 0,snd_75_move_in|16,snd_75_mag_in
+75_anm_reload_empty_p1_sounds			= 0,snd_75_move_out|14,snd_75_mag_out
+75_anm_reload_empty_p2_sounds 		= 0,snd_75_move_in_empty|16,snd_75_mag_in|46,snd_bolt_back|55,snd_bolt_release
+75_anm_mag_check_sounds					= 0,snd_move_long|14,snd_75_mag_out|65,snd_75_mag_in
+75_anm_mag_check_empty_sounds		= 0,snd_move_long|14,snd_75_mag_out|65,snd_75_mag_in
+c_anm_reload_misfire_sounds						= 0,snd_move_unjam|10,snd_bolt_back|17,snd_bolt_release
+c_anm_switch_mode_sounds						= 0,snd_move_selector|8,snd_selector
+c_anm_reload_p1_sounds							= 0,snd_30_move_out|14,snd_30_mag_out
+c_anm_reload_p2_sounds		 					= 0,snd_30_move_in|16,snd_30_mag_in
+c_anm_reload_empty_p1_sounds				= 0,snd_30_move_out|14,snd_30_mag_out
+c_anm_reload_empty_p2_sounds 				= 0,snd_30_move_in_empty|16,snd_30_mag_in|46,snd_bolt_back|55,snd_bolt_release
+10_c_anm_reload_p1_sounds						= 0,snd_10_move_out|14,snd_10_mag_out
+10_c_anm_reload_p2_sounds		 				= 0,snd_10_move_in|16,snd_10_mag_in
+10_c_anm_reload_empty_p1_sounds			= 0,snd_10_move_out|14,snd_10_mag_out
+10_c_anm_reload_empty_p2_sounds 		= 0,snd_10_move_in_empty|16,snd_10_mag_in|46,snd_bolt_back|55,snd_bolt_release
+10_c_anm_mag_check_sounds					= 0,snd_move_long|14,snd_10_mag_out|65,snd_10_mag_in
+10_c_anm_mag_check_empty_sounds		= 0,snd_move_long|14,snd_10_mag_out|65,snd_10_mag_in
+30_c_anm_reload_p1_sounds						= 0,snd_30_move_out|14,snd_30_mag_out
+30_c_anm_reload_p2_sounds		 				= 0,snd_30_move_in|16,snd_30_mag_in
+30_c_anm_reload_empty_p1_sounds			= 0,snd_30_move_out|14,snd_30_mag_out
+30_c_anm_reload_empty_p2_sounds 		= 0,snd_30_move_in_empty|16,snd_30_mag_in|46,snd_bolt_back|55,snd_bolt_release
+30_c_anm_mag_check_sounds					= 0,snd_move_long|14,snd_30_mag_out|65,snd_30_mag_in
+30_c_anm_mag_check_empty_sounds		= 0,snd_move_long|14,snd_30_mag_out|65,snd_30_mag_in
+50_c_anm_reload_p1_sounds						= 0,snd_50_move_out|14,snd_50_mag_out
+50_c_anm_reload_p2_sounds		 				= 0,snd_50_move_in|16,snd_50_mag_in
+50_c_anm_reload_empty_p1_sounds			= 0,snd_50_move_out|14,snd_50_mag_out
+50_c_anm_reload_empty_p2_sounds 		= 0,snd_50_move_in_empty|16,snd_50_mag_in|46,snd_bolt_back|55,snd_bolt_release
+50_c_anm_mag_check_sounds					= 0,snd_move_long|14,snd_50_mag_out|65,snd_50_mag_in
+50_c_anm_mag_check_empty_sounds		= 0,snd_move_long|14,snd_50_mag_out|65,snd_50_mag_in
+75_c_anm_reload_misfire_sounds				= 0,snd_move_unjam|10,snd_bolt_back|17,snd_bolt_release
+75_c_anm_switch_mode_sounds				= 0,snd_move_selector|8,snd_selector
+75_c_anm_reload_p1_sounds						= 0,snd_75_move_out|14,snd_75_mag_out
+75_c_anm_reload_p2_sounds		 				= 0,snd_75_move_in|16,snd_75_mag_in
+75_c_anm_reload_empty_p1_sounds			= 0,snd_75_move_out|14,snd_75_mag_out
+75_c_anm_reload_empty_p2_sounds 		= 0,snd_75_move_in_empty|16,snd_75_mag_in|46,snd_bolt_back|55,snd_bolt_release
+75_c_anm_mag_check_sounds					= 0,snd_move_long|14,snd_75_mag_out|65,snd_75_mag_in
+75_c_anm_mag_check_empty_sounds		= 0,snd_move_long|14,snd_75_mag_out|65,snd_75_mag_in
+cp_anm_reload_misfire_sounds						= 0,snd_move_unjam|10,snd_bolt_back|17,snd_bolt_release
+cp_anm_switch_mode_sounds						= 0,snd_move_selector|8,snd_selector
+cp_anm_reload_p1_sounds							= 0,snd_30_move_out|14,snd_30_mag_out
+cp_anm_reload_p2_sounds		 					= 0,snd_30_move_in|16,snd_30_mag_in
+cp_anm_reload_empty_p1_sounds				= 0,snd_30_move_out|14,snd_30_mag_out
+cp_anm_reload_empty_p2_sounds 				= 0,snd_30_move_in_empty|16,snd_30_mag_in|46,snd_bolt_back|55,snd_bolt_release
+10_cp_anm_reload_p1_sounds						= 0,snd_10_move_out|14,snd_10_mag_out
+10_cp_anm_reload_p2_sounds		 				= 0,snd_10_move_in|16,snd_10_mag_in
+10_cp_anm_reload_empty_p1_sounds			= 0,snd_10_move_out|14,snd_10_mag_out
+10_cp_anm_reload_empty_p2_sounds 		= 0,snd_10_move_in_empty|16,snd_10_mag_in|46,snd_bolt_back|55,snd_bolt_release
+10_cp_anm_mag_check_sounds					= 0,snd_move_long|14,snd_10_mag_out|65,snd_10_mag_in
+10_cp_anm_mag_check_empty_sounds		= 0,snd_move_long|14,snd_10_mag_out|65,snd_10_mag_in
+30_cp_anm_reload_p1_sounds						= 0,snd_30_move_out|14,snd_30_mag_out
+30_cp_anm_reload_p2_sounds		 				= 0,snd_30_move_in|16,snd_30_mag_in
+30_cp_anm_reload_empty_p1_sounds			= 0,snd_30_move_out|14,snd_30_mag_out
+30_cp_anm_reload_empty_p2_sounds 		= 0,snd_30_move_in_empty|16,snd_30_mag_in|46,snd_bolt_back|55,snd_bolt_release
+30_cp_anm_mag_check_sounds					= 0,snd_move_long|14,snd_30_mag_out|65,snd_30_mag_in
+30_cp_anm_mag_check_empty_sounds		= 0,snd_move_long|14,snd_30_mag_out|65,snd_30_mag_in
+50_cp_anm_reload_p1_sounds						= 0,snd_50_move_out|14,snd_50_mag_out
+50_cp_anm_reload_p2_sounds		 				= 0,snd_50_move_in|16,snd_50_mag_in
+50_cp_anm_reload_empty_p1_sounds			= 0,snd_50_move_out|14,snd_50_mag_out
+50_cp_anm_reload_empty_p2_sounds 		= 0,snd_50_move_in_empty|16,snd_50_mag_in|46,snd_bolt_back|55,snd_bolt_release
+50_cp_anm_mag_check_sounds					= 0,snd_move_long|14,snd_50_mag_out|65,snd_50_mag_in
+50_cp_anm_mag_check_empty_sounds		= 0,snd_move_long|14,snd_50_mag_out|65,snd_50_mag_in
+75_cp_anm_reload_misfire_sounds				= 0,snd_move_unjam|10,snd_bolt_back|17,snd_bolt_release
+75_cp_anm_switch_mode_sounds				= 0,snd_move_selector|8,snd_selector
+75_cp_anm_reload_p1_sounds						= 0,snd_75_move_out|14,snd_75_mag_out
+75_cp_anm_reload_p2_sounds		 				= 0,snd_75_move_in|16,snd_75_mag_in
+75_cp_anm_reload_empty_p1_sounds			= 0,snd_75_move_out|14,snd_75_mag_out
+75_cp_anm_reload_empty_p2_sounds 		= 0,snd_75_move_in_empty|16,snd_75_mag_in|46,snd_bolt_back|55,snd_bolt_release
+75_cp_anm_mag_check_sounds					= 0,snd_move_long|14,snd_75_mag_out|65,snd_75_mag_in
+75_cp_anm_mag_check_empty_sounds		= 0,snd_move_long|14,snd_75_mag_out|65,snd_75_mag_in
+h_anm_reload_misfire_sounds						= 0,snd_move_unjam|10,snd_bolt_back|17,snd_bolt_release
+h_anm_switch_mode_sounds						= 0,snd_move_selector|8,snd_selector
+h_anm_reload_p1_sounds							= 0,snd_30_move_out|14,snd_30_mag_out
+h_anm_reload_p2_sounds		 					= 0,snd_30_move_in|16,snd_30_mag_in
+h_anm_reload_empty_p1_sounds				= 0,snd_30_move_out|14,snd_30_mag_out
+h_anm_reload_empty_p2_sounds 				= 0,snd_30_move_in_empty|16,snd_30_mag_in|46,snd_bolt_back|55,snd_bolt_release
+10_h_anm_reload_p1_sounds						= 0,snd_10_move_out|14,snd_10_mag_out
+10_h_anm_reload_p2_sounds		 				= 0,snd_10_move_in|16,snd_10_mag_in
+10_h_anm_reload_empty_p1_sounds			= 0,snd_10_move_out|14,snd_10_mag_out
+10_h_anm_reload_empty_p2_sounds 		= 0,snd_10_move_in_empty|16,snd_10_mag_in|46,snd_bolt_back|55,snd_bolt_release
+10_h_anm_mag_check_sounds					= 0,snd_move_long|14,snd_10_mag_out|65,snd_10_mag_in
+10_h_anm_mag_check_empty_sounds		= 0,snd_move_long|14,snd_10_mag_out|65,snd_10_mag_in
+30_h_anm_reload_p1_sounds						= 0,snd_30_move_out|14,snd_30_mag_out
+30_h_anm_reload_p2_sounds		 				= 0,snd_30_move_in|16,snd_30_mag_in
+30_h_anm_reload_empty_p1_sounds			= 0,snd_30_move_out|14,snd_30_mag_out
+30_h_anm_reload_empty_p2_sounds 		= 0,snd_30_move_in_empty|16,snd_30_mag_in|46,snd_bolt_back|55,snd_bolt_release
+30_h_anm_mag_check_sounds					= 0,snd_move_long|14,snd_30_mag_out|65,snd_30_mag_in
+30_h_anm_mag_check_empty_sounds		= 0,snd_move_long|14,snd_30_mag_out|65,snd_30_mag_in
+50_h_anm_reload_p1_sounds						= 0,snd_50_move_out|14,snd_50_mag_out
+50_h_anm_reload_p2_sounds		 				= 0,snd_50_move_in|16,snd_50_mag_in
+50_h_anm_reload_empty_p1_sounds			= 0,snd_50_move_out|14,snd_50_mag_out
+50_h_anm_reload_empty_p2_sounds 		= 0,snd_50_move_in_empty|16,snd_50_mag_in|46,snd_bolt_back|55,snd_bolt_release
+50_h_anm_mag_check_sounds					= 0,snd_move_long|14,snd_50_mag_out|65,snd_50_mag_in
+50_h_anm_mag_check_empty_sounds		= 0,snd_move_long|14,snd_50_mag_out|65,snd_50_mag_in
+75_h_anm_reload_misfire_sounds				= 0,snd_move_unjam|10,snd_bolt_back|17,snd_bolt_release
+75_h_anm_switch_mode_sounds				= 0,snd_move_selector|8,snd_selector
+75_h_anm_reload_p1_sounds						= 0,snd_75_move_out|14,snd_75_mag_out
+75_h_anm_reload_p2_sounds		 				= 0,snd_75_move_in|16,snd_75_mag_in
+75_h_anm_reload_empty_p1_sounds			= 0,snd_75_move_out|14,snd_75_mag_out
+75_h_anm_reload_empty_p2_sounds 		= 0,snd_75_move_in_empty|16,snd_75_mag_in|46,snd_bolt_back|55,snd_bolt_release
+75_h_anm_mag_check_sounds					= 0,snd_move_long|14,snd_75_mag_out|65,snd_75_mag_in
+75_h_anm_mag_check_empty_sounds		= 0,snd_move_long|14,snd_75_mag_out|65,snd_75_mag_in
+r_anm_reload_misfire_sounds						= 0,snd_move_unjam|10,snd_bolt_back|17,snd_bolt_release
+r_anm_switch_mode_sounds						= 0,snd_move_selector|8,snd_selector
+r_anm_reload_p1_sounds							= 0,snd_30_move_out|14,snd_30_mag_out
+r_anm_reload_p2_sounds		 					= 0,snd_30_move_in|16,snd_30_mag_in
+r_anm_reload_empty_p1_sounds				= 0,snd_30_move_out|14,snd_30_mag_out
+r_anm_reload_empty_p2_sounds 				= 0,snd_30_move_in_empty|16,snd_30_mag_in|46,snd_bolt_back|55,snd_bolt_release
+10_r_anm_reload_p1_sounds						= 0,snd_10_move_out|14,snd_10_mag_out
+10_r_anm_reload_p2_sounds		 				= 0,snd_10_move_in|16,snd_10_mag_in
+10_r_anm_reload_empty_p1_sounds			= 0,snd_10_move_out|14,snd_10_mag_out
+10_r_anm_reload_empty_p2_sounds 		= 0,snd_10_move_in_empty|16,snd_10_mag_in|46,snd_bolt_back|55,snd_bolt_release
+10_r_anm_mag_check_sounds					= 0,snd_move_long|14,snd_10_mag_out|65,snd_10_mag_in
+10_r_anm_mag_check_empty_sounds		= 0,snd_move_long|14,snd_10_mag_out|65,snd_10_mag_in
+30_r_anm_reload_p1_sounds						= 0,snd_30_move_out|14,snd_30_mag_out
+30_r_anm_reload_p2_sounds		 				= 0,snd_30_move_in|16,snd_30_mag_in
+30_r_anm_reload_empty_p1_sounds			= 0,snd_30_move_out|14,snd_30_mag_out
+30_r_anm_reload_empty_p2_sounds 		= 0,snd_30_move_in_empty|16,snd_30_mag_in|46,snd_bolt_back|55,snd_bolt_release
+30_r_anm_mag_check_sounds					= 0,snd_move_long|14,snd_30_mag_out|65,snd_30_mag_in
+30_r_anm_mag_check_empty_sounds		= 0,snd_move_long|14,snd_30_mag_out|65,snd_30_mag_in
+50_r_anm_reload_p1_sounds						= 0,snd_50_move_out|14,snd_50_mag_out
+50_r_anm_reload_p2_sounds		 				= 0,snd_50_move_in|16,snd_50_mag_in
+50_r_anm_reload_empty_p1_sounds			= 0,snd_50_move_out|14,snd_50_mag_out
+50_r_anm_reload_empty_p2_sounds 		= 0,snd_50_move_in_empty|16,snd_50_mag_in|46,snd_bolt_back|55,snd_bolt_release
+50_r_anm_mag_check_sounds					= 0,snd_move_long|14,snd_50_mag_out|65,snd_50_mag_in
+50_r_anm_mag_check_empty_sounds		= 0,snd_move_long|14,snd_50_mag_out|65,snd_50_mag_in
+75_r_anm_reload_misfire_sounds				= 0,snd_move_unjam|10,snd_bolt_back|17,snd_bolt_release
+75_r_anm_switch_mode_sounds				= 0,snd_move_selector|8,snd_selector
+75_r_anm_reload_p1_sounds						= 0,snd_75_move_out|14,snd_75_mag_out
+75_r_anm_reload_p2_sounds		 				= 0,snd_75_move_in|16,snd_75_mag_in
+75_r_anm_reload_empty_p1_sounds			= 0,snd_75_move_out|14,snd_75_mag_out
+75_r_anm_reload_empty_p2_sounds 		= 0,snd_75_move_in_empty|16,snd_75_mag_in|46,snd_bolt_back|55,snd_bolt_release
+75_r_anm_mag_check_sounds					= 0,snd_move_long|14,snd_75_mag_out|65,snd_75_mag_in
+75_r_anm_mag_check_empty_sounds		= 0,snd_move_long|14,snd_75_mag_out|65,snd_75_mag_in
+t_anm_reload_misfire_sounds						= 0,snd_move_unjam|10,snd_bolt_back|17,snd_bolt_release
+t_anm_switch_mode_sounds						= 0,snd_move_selector|8,snd_selector
+t_anm_reload_p1_sounds							= 0,snd_30_move_out|14,snd_30_mag_out
+t_anm_reload_p2_sounds		 					= 0,snd_30_move_in|16,snd_30_mag_in
+t_anm_reload_empty_p1_sounds				= 0,snd_30_move_out|14,snd_30_mag_out
+t_anm_reload_empty_p2_sounds 				= 0,snd_30_move_in_empty|16,snd_30_mag_in|46,snd_bolt_back|55,snd_bolt_release
+10_t_anm_reload_p1_sounds						= 0,snd_10_move_out|14,snd_10_mag_out
+10_t_anm_reload_p2_sounds		 				= 0,snd_10_move_in|16,snd_10_mag_in
+10_t_anm_reload_empty_p1_sounds			= 0,snd_10_move_out|14,snd_10_mag_out
+10_t_anm_reload_empty_p2_sounds 		= 0,snd_10_move_in_empty|16,snd_10_mag_in|46,snd_bolt_back|55,snd_bolt_release
+10_t_anm_mag_check_sounds					= 0,snd_move_long|14,snd_10_mag_out|65,snd_10_mag_in
+10_t_anm_mag_check_empty_sounds		= 0,snd_move_long|14,snd_10_mag_out|65,snd_10_mag_in
+30_t_anm_reload_p1_sounds						= 0,snd_30_move_out|14,snd_30_mag_out
+30_t_anm_reload_p2_sounds		 				= 0,snd_30_move_in|16,snd_30_mag_in
+30_t_anm_reload_empty_p1_sounds			= 0,snd_30_move_out|14,snd_30_mag_out
+30_t_anm_reload_empty_p2_sounds 		= 0,snd_30_move_in_empty|16,snd_30_mag_in|46,snd_bolt_back|55,snd_bolt_release
+30_t_anm_mag_check_sounds					= 0,snd_move_long|14,snd_30_mag_out|65,snd_30_mag_in
+30_t_anm_mag_check_empty_sounds		= 0,snd_move_long|14,snd_30_mag_out|65,snd_30_mag_in
+50_t_anm_reload_p1_sounds						= 0,snd_50_move_out|14,snd_50_mag_out
+50_t_anm_reload_p2_sounds		 				= 0,snd_50_move_in|16,snd_50_mag_in
+50_t_anm_reload_empty_p1_sounds			= 0,snd_50_move_out|14,snd_50_mag_out
+50_t_anm_reload_empty_p2_sounds 		= 0,snd_50_move_in_empty|16,snd_50_mag_in|46,snd_bolt_back|55,snd_bolt_release
+50_t_anm_mag_check_sounds					= 0,snd_move_long|14,snd_50_mag_out|65,snd_50_mag_in
+50_t_anm_mag_check_empty_sounds		= 0,snd_move_long|14,snd_50_mag_out|65,snd_50_mag_in
+75_t_anm_reload_misfire_sounds				= 0,snd_move_unjam|10,snd_bolt_back|17,snd_bolt_release
+75_t_anm_switch_mode_sounds				= 0,snd_move_selector|8,snd_selector
+75_t_anm_reload_p1_sounds						= 0,snd_75_move_out|14,snd_75_mag_out
+75_t_anm_reload_p2_sounds		 				= 0,snd_75_move_in|16,snd_75_mag_in
+75_t_anm_reload_empty_p1_sounds			= 0,snd_75_move_out|14,snd_75_mag_out
+75_t_anm_reload_empty_p2_sounds 		= 0,snd_75_move_in_empty|16,snd_75_mag_in|46,snd_bolt_back|55,snd_bolt_release
+75_t_anm_mag_check_sounds					= 0,snd_move_long|14,snd_75_mag_out|65,snd_75_mag_in
+75_t_anm_mag_check_empty_sounds		= 0,snd_move_long|14,snd_75_mag_out|65,snd_75_mag_in
+v_anm_reload_misfire_sounds						= 0,snd_move_unjam|10,snd_bolt_back|17,snd_bolt_release
+v_anm_switch_mode_sounds						= 0,snd_move_selector|8,snd_selector
+v_anm_reload_p1_sounds							= 0,snd_30_move_out|14,snd_30_mag_out
+v_anm_reload_p2_sounds		 					= 0,snd_30_move_in|16,snd_30_mag_in
+v_anm_reload_empty_p1_sounds				= 0,snd_30_move_out|14,snd_30_mag_out
+v_anm_reload_empty_p2_sounds 				= 0,snd_30_move_in_empty|16,snd_30_mag_in|46,snd_bolt_back|55,snd_bolt_release
+10_v_anm_reload_p1_sounds						= 0,snd_10_move_out|14,snd_10_mag_out
+10_v_anm_reload_p2_sounds		 				= 0,snd_10_move_in|16,snd_10_mag_in
+10_v_anm_reload_empty_p1_sounds			= 0,snd_10_move_out|14,snd_10_mag_out
+10_v_anm_reload_empty_p2_sounds 		= 0,snd_10_move_in_empty|16,snd_10_mag_in|46,snd_bolt_back|55,snd_bolt_release
+10_v_anm_mag_check_sounds					= 0,snd_move_long|14,snd_10_mag_out|65,snd_10_mag_in
+10_v_anm_mag_check_empty_sounds		= 0,snd_move_long|14,snd_10_mag_out|65,snd_10_mag_in
+30_v_anm_reload_p1_sounds						= 0,snd_30_move_out|14,snd_30_mag_out
+30_v_anm_reload_p2_sounds		 				= 0,snd_30_move_in|16,snd_30_mag_in
+30_v_anm_reload_empty_p1_sounds			= 0,snd_30_move_out|14,snd_30_mag_out
+30_v_anm_reload_empty_p2_sounds 		= 0,snd_30_move_in_empty|16,snd_30_mag_in|46,snd_bolt_back|55,snd_bolt_release
+30_v_anm_mag_check_sounds					= 0,snd_move_long|14,snd_30_mag_out|65,snd_30_mag_in
+30_v_anm_mag_check_empty_sounds		= 0,snd_move_long|14,snd_30_mag_out|65,snd_30_mag_in
+50_v_anm_reload_p1_sounds						= 0,snd_50_move_out|14,snd_50_mag_out
+50_v_anm_reload_p2_sounds		 				= 0,snd_50_move_in|16,snd_50_mag_in
+50_v_anm_reload_empty_p1_sounds			= 0,snd_50_move_out|14,snd_50_mag_out
+50_v_anm_reload_empty_p2_sounds 		= 0,snd_50_move_in_empty|16,snd_50_mag_in|46,snd_bolt_back|55,snd_bolt_release
+50_v_anm_mag_check_sounds					= 0,snd_move_long|14,snd_50_mag_out|65,snd_50_mag_in
+50_v_anm_mag_check_empty_sounds		= 0,snd_move_long|14,snd_50_mag_out|65,snd_50_mag_in
+75_v_anm_reload_misfire_sounds				= 0,snd_move_unjam|10,snd_bolt_back|17,snd_bolt_release
+75_v_anm_switch_mode_sounds				= 0,snd_move_selector|8,snd_selector
+75_v_anm_reload_p1_sounds						= 0,snd_75_move_out|14,snd_75_mag_out
+75_v_anm_reload_p2_sounds		 				= 0,snd_75_move_in|16,snd_75_mag_in
+75_v_anm_reload_empty_p1_sounds			= 0,snd_75_move_out|14,snd_75_mag_out
+75_v_anm_reload_empty_p2_sounds 		= 0,snd_75_move_in_empty|16,snd_75_mag_in|46,snd_bolt_back|55,snd_bolt_release
+75_v_anm_mag_check_sounds					= 0,snd_move_long|14,snd_75_mag_out|65,snd_75_mag_in
+75_v_anm_mag_check_empty_sounds		= 0,snd_move_long|14,snd_75_mag_out|65,snd_75_mag_in
+
+item_visual                 			= w_att_huds\mk47_hud.ogf
+hands_position					= 0.08, -0.06, -0.17
+hands_position_16x9			= 0.08, -0.06, -0.17
+hands_orientation				= 0.2, 0.3, 0
+hands_orientation_16x9		= 0.2, 0.3, 0
+aim_hud_offset_pos			= -0.08, 0.0222, -0.1
+aim_hud_offset_pos_16x9	= -0.08, 0.0222, -0.1
+aim_hud_offset_rot				= 0.011, 0.004, 0
+aim_hud_offset_rot_16x9	= 0.011, 0.004, 0
+
+anm_bore                          								= mk47_m_bore, idle
+anm_hide															= mk47_m_holster_e, idle
+anm_show														= mk47_m_show_e, idle
+anm_idle															= mk47_m_idle, idle
+anm_idle_aim													= mk47_m_idle_aim, idle
+anm_idle_aim_moving									= mk47_m_walk_aim, idle
+anm_idle_aim_moving_crouch					= mk47_m_walk_aim, idle
+anm_idle_moving											= mk47_m_walk, idle
+anm_idle_moving_crouch							= mk47_m_walk, idle
+anm_shots														= mk47_m_shoot, shoot
+anm_reload_misfire										= mk47_m_unjam, unjam
+anm_switch_mode										= mk47_m_firemode, firemode
+anm_reload														= mk47_m_reload_30_p1, reload_p1, 1.15
+anm_reload_p1												= mk47_m_reload_30_p1, reload_p1, 1.15
+anm_reload_p2												= mk47_m_reload_30_p2, reload_p2, 1.15
+anm_reload_empty										= mk47_m_reload_30_p1, reload_empty_p1, 1.15
+anm_reload_empty_p1									= mk47_m_reload_30_p1, reload_empty_p1, 1.15
+anm_reload_empty_p2									= mk47_m_reload_30e_p2, reload_empty_p2, 1.15
+anm_mag_check											= mk47_m_check_30, check, 1.4
+anm_mag_check_empty								= mk47_m_check_30, check_empty, 1.4
+anm_idle_sprint												= mk47_m_idle_sprint, idle
+10_anm_reload												= mk47_m_reload_10_p1, reload_p1, 1.15
+10_anm_reload_p1										= mk47_m_reload_10_p1, reload_p1, 1.15
+10_anm_reload_p2										= mk47_m_reload_10_p2, reload_p2, 1.15
+10_anm_reload_empty									= mk47_m_reload_10_p1, reload_empty_p1, 1.15
+10_anm_reload_empty_p1							= mk47_m_reload_10_p1, reload_empty_p1, 1.15
+10_anm_reload_empty_p2							= mk47_m_reload_10e_p2, reload_empty_p2, 1.15
+10_anm_mag_check									= mk47_m_check_10, check, 1.4
+10_anm_mag_check_empty						= mk47_m_check_10, check_empty, 1.4
+30_anm_reload												= mk47_m_reload_30_p1, reload_p1, 1.15
+30_anm_reload_p1										= mk47_m_reload_30_p1, reload_p1, 1.15
+30_anm_reload_p2										= mk47_m_reload_30_p2, reload_p2, 1.15
+30_anm_reload_empty									= mk47_m_reload_30_p1, reload_empty_p1, 1.15
+30_anm_reload_empty_p1							= mk47_m_reload_30_p1, reload_empty_p1, 1.15
+30_anm_reload_empty_p2							= mk47_m_reload_30e_p2, reload_empty_p2, 1.15
+30_anm_mag_check									= mk47_m_check_30, check, 1.4
+30_anm_mag_check_empty						= mk47_m_check_30, check_empty, 1.4
+50_anm_reload												= mk47_m_reload_50_p1, reload_p1, 1.15
+50_anm_reload_p1										= mk47_m_reload_50_p1, reload_p1, 1.15
+50_anm_reload_p2										= mk47_m_reload_50_p2, reload_p2, 1.15
+50_anm_reload_empty									= mk47_m_reload_50_p1, reload_empty_p1, 1.15
+50_anm_reload_empty_p1							= mk47_m_reload_50_p1, reload_empty_p1, 1.15
+50_anm_reload_empty_p2							= mk47_m_reload_50e_p2, reload_empty_p2, 1.15
+50_anm_mag_check									= mk47_m_check_50, check, 1.4
+50_anm_mag_check_empty						= mk47_m_check_50, check_empty, 1.4
+75_anm_bore                          						= mk47_m_bore_75, idle
+75_anm_hide													= mk47_m_holster_75e, idle
+75_anm_show												= mk47_m_show_75e, idle
+75_anm_idle													= mk47_m_idle_75, idle
+75_anm_idle_aim											= mk47_m_idle_aim_75, idle
+75_anm_idle_aim_moving							= mk47_m_walk_aim_75, idle
+75_anm_idle_aim_moving_crouch			= mk47_m_walk_aim_75, idle
+75_anm_idle_moving									= mk47_m_walk_75, idle
+75_anm_idle_moving_crouch						= mk47_m_walk_75, idle
+75_anm_shots												= mk47_m_shoot_75, shoot
+75_anm_reload_misfire								= mk47_m_unjam_75, unjam
+75_anm_switch_mode									= mk47_m_firemode_75, idle
+75_anm_idle_sprint												= mk47_m_idle_sprint_75, idle
+75_anm_reload												= mk47_m_reload_75_p1, reload_p1, 1.15
+75_anm_reload_p1										= mk47_m_reload_75_p1, reload_p1, 1.15
+75_anm_reload_p2										= mk47_m_reload_75_p2, reload_p2, 1.15
+75_anm_reload_empty									= mk47_m_reload_75_p1, reload_empty_p1, 1.15
+75_anm_reload_empty_p1							= mk47_m_reload_75_p1, reload_empty_p1, 1.15
+75_anm_reload_empty_p2							= mk47_m_reload_75e_p2, reload_empty_p2, 1.15
+75_anm_mag_check									= mk47_m_check_75, check, 1.4
+75_anm_mag_check_empty						= mk47_m_check_75, check_empty, 1.4
+
+cp_anm_bore                          						= ar15_cp_bore, idle
+cp_anm_hide												= ar15_cp_holster_e, idle
+cp_anm_show												= ar15_cp_show_e, idle
+cp_anm_idle												= ar15_cp_idle, idle
+cp_anm_idle_aim											= ar15_cp_idle_aim, idle
+cp_anm_idle_aim_moving							= ar15_cp_walk_aim, idle
+cp_anm_idle_aim_moving_crouch				= ar15_cp_walk_aim, idle
+cp_anm_idle_moving									= ar15_cp_walk, idle
+cp_anm_idle_moving_crouch						= ar15_cp_walk, idle
+cp_anm_shots												= ar15_cp_shoot, shoot
+cp_anm_reload_misfire								= ar15_cp_unjam, unjam
+cp_anm_switch_mode									= ar15_cp_firemode, firemode
+cp_anm_idle_sprint										= ar15_cp_idle_sprint, idle
+cp_anm_reload											= mk47_cp_reload_30_p1, reload_p1, 1.15
+cp_anm_reload_p1										= mk47_cp_reload_30_p1, reload_p1, 1.15
+cp_anm_reload_p2										= mk47_cp_reload_30_p2, reload_p2, 1.15
+cp_anm_reload_empty								= mk47_cp_reload_30_p1, reload_empty_p1, 1.15
+cp_anm_reload_empty_p1							= mk47_cp_reload_30_p1, reload_empty_p1, 1.15
+cp_anm_reload_empty_p2							= mk47_cp_reload_30e_p2, reload_empty_p2, 1.15
+cp_anm_mag_check									= mk47_cp_check_30, check, 1.4
+cp_anm_mag_check_empty						= mk47_cp_check_30, check_empty, 1.4
+10_cp_anm_reload										= mk47_cp_reload_10_p1, reload_p1, 1.15
+10_cp_anm_reload_p1									= mk47_cp_reload_10_p1, reload_p1, 1.15
+10_cp_anm_reload_p2									= mk47_cp_reload_10_p2, reload_p2, 1.15
+10_cp_anm_reload_empty							= mk47_cp_reload_10_p1, reload_empty_p1, 1.15
+10_cp_anm_reload_empty_p1						= mk47_cp_reload_10_p1, reload_empty_p1, 1.15
+10_cp_anm_reload_empty_p2						= mk47_cp_reload_10e_p2, reload_empty_p2, 1.15
+10_cp_anm_mag_check								= mk47_cp_check_10, check, 1.4
+10_cp_anm_mag_check_empty					= mk47_cp_check_10, check_empty, 1.4
+30_cp_anm_reload										= mk47_cp_reload_30_p1, reload_p1, 1.15
+30_cp_anm_reload_p1									= mk47_cp_reload_30_p1, reload_p1, 1.15
+30_cp_anm_reload_p2									= mk47_cp_reload_30_p2, reload_p2, 1.15
+30_cp_anm_reload_empty							= mk47_cp_reload_30_p1, reload_empty_p1, 1.15
+30_cp_anm_reload_empty_p1						= mk47_cp_reload_30_p1, reload_empty_p1, 1.15
+30_cp_anm_reload_empty_p2						= mk47_cp_reload_30e_p2, reload_empty_p2, 1.15
+30_cp_anm_mag_check								= mk47_cp_check_30, check, 1.4
+30_cp_anm_mag_check_empty					= mk47_cp_check_30, check_empty, 1.4
+50_cp_anm_reload										= mk47_cp_reload_50_p1, reload_p1, 1.15
+50_cp_anm_reload_p1									= mk47_cp_reload_50_p1, reload_p1, 1.15
+50_cp_anm_reload_p2									= mk47_cp_reload_50_p2, reload_p2, 1.15
+50_cp_anm_reload_empty							= mk47_cp_reload_50_p1, reload_empty_p1, 1.15
+50_cp_anm_reload_empty_p1						= mk47_cp_reload_50_p1, reload_empty_p1, 1.15
+50_cp_anm_reload_empty_p2						= mk47_cp_reload_50e_p2, reload_empty_p2, 1.15
+50_cp_anm_mag_check								= mk47_cp_check_50, check, 1.4
+50_cp_anm_mag_check_empty					= mk47_cp_check_50, check_empty, 1.4
+75_cp_anm_bore                          				= ar15_cp_bore, idle
+75_cp_anm_hide											= ar15_cp_holster_e, idle
+75_cp_anm_show										= ar15_cp_show_e, idle
+75_cp_anm_idle											= ar15_cp_idle, idle
+75_cp_anm_idle_aim									= ar15_cp_idle_aim, idle
+75_cp_anm_idle_aim_moving						= ar15_cp_walk_aim, idle
+75_cp_anm_idle_aim_moving_crouch			= ar15_cp_walk_aim, idle
+75_cp_anm_idle_moving								= ar15_cp_walk, idle
+75_cp_anm_idle_moving_crouch					= ar15_cp_walk, idle
+75_cp_anm_shots										= ar15_cp_shoot, shoot
+75_cp_anm_reload_misfire							= ar15_cp_unjam, unjam
+75_cp_anm_switch_mode							= ar15_cp_firemode, firemode
+75_cp_anm_reload										= mk47_cp_reload_75_p1, reload_p1, 1.15
+75_cp_anm_reload_p1									= mk47_cp_reload_75_p1, reload_p1, 1.15
+75_cp_anm_reload_p2									= mk47_cp_reload_75_p2, reload_p2, 1.15
+75_cp_anm_reload_empty							= mk47_cp_reload_75_p1, reload_empty_p1, 1.15
+75_cp_anm_reload_empty_p1						= mk47_cp_reload_75_p1, reload_empty_p1, 1.15
+75_cp_anm_reload_empty_p2						= mk47_cp_reload_75e_p2, reload_empty_p2, 1.15
+75_cp_anm_mag_check								= mk47_cp_check_75, check, 1.4
+75_cp_anm_mag_check_empty					= mk47_cp_check_75, check_empty, 1.4
+75_cp_anm_idle_sprint								= ar15_cp_idle_sprint, idle
+
+c_anm_bore                          						= ar15_c_bore, idle
+c_anm_hide													= ar15_c_holster_e, idle
+c_anm_show												= ar15_c_show_e, idle
+c_anm_idle													= ar15_c_idle, idle
+c_anm_idle_aim											= ar15_c_idle_aim, idle
+c_anm_idle_aim_moving								= ar15_c_walk_aim, idle
+c_anm_idle_aim_moving_crouch					= ar15_c_walk_aim, idle
+c_anm_idle_moving										= ar15_c_walk, idle
+c_anm_idle_moving_crouch						= ar15_c_walk, idle
+c_anm_shots												= ar15_c_shoot, shoot
+c_anm_reload_misfire									= ar15_c_unjam, unjam
+c_anm_switch_mode									= ar15_c_firemode, firemode
+c_anm_idle_sprint										= ar15_c_idle_sprint, idle
+c_anm_reload												= mk47_c_reload_30_p1, reload_p1, 1.15
+c_anm_reload_p1										= mk47_c_reload_30_p1, reload_p1, 1.15
+c_anm_reload_p2										= mk47_c_reload_30_p2, reload_p2, 1.15
+c_anm_reload_empty									= mk47_c_reload_30_p1, reload_empty_p1, 1.15
+c_anm_reload_empty_p1								= mk47_c_reload_30_p1, reload_empty_p1, 1.15
+c_anm_reload_empty_p2								= mk47_c_reload_30e_p2, reload_empty_p2, 1.15
+c_anm_mag_check										= mk47_c_check_30, check, 1.4
+c_anm_mag_check_empty							= mk47_c_check_30, check_empty, 1.4
+10_c_anm_reload											= mk47_c_reload_10_p1, reload_p1, 1.15
+10_c_anm_reload_p1									= mk47_c_reload_10_p1, reload_p1, 1.15
+10_c_anm_reload_p2									= mk47_c_reload_10_p2, reload_p2, 1.15
+10_c_anm_reload_empty								= mk47_c_reload_10_p1, reload_empty_p1, 1.15
+10_c_anm_reload_empty_p1						= mk47_c_reload_10_p1, reload_empty_p1, 1.15
+10_c_anm_reload_empty_p2						= mk47_c_reload_10e_p2, reload_empty_p2, 1.15
+10_c_anm_mag_check									= mk47_c_check_10, check, 1.4
+10_c_anm_mag_check_empty						= mk47_c_check_10, check_empty, 1.4
+30_c_anm_reload											= mk47_c_reload_30_p1, reload_p1, 1.15
+30_c_anm_reload_p1									= mk47_c_reload_30_p1, reload_p1, 1.15
+30_c_anm_reload_p2									= mk47_c_reload_30_p2, reload_p2, 1.15
+30_c_anm_reload_empty								= mk47_c_reload_30_p1, reload_empty_p1, 1.15
+30_c_anm_reload_empty_p1						= mk47_c_reload_30_p1, reload_empty_p1, 1.15
+30_c_anm_reload_empty_p2						= mk47_c_reload_30e_p2, reload_empty_p2, 1.15
+30_c_anm_mag_check									= mk47_c_check_30, check, 1.4
+30_c_anm_mag_check_empty						= mk47_c_check_30, check_empty, 1.4
+50_c_anm_reload											= mk47_c_reload_50_p1, reload_p1, 1.15
+50_c_anm_reload_p1									= mk47_c_reload_50_p1, reload_p1, 1.15
+50_c_anm_reload_p2									= mk47_c_reload_50_p2, reload_p2, 1.15
+50_c_anm_reload_empty								= mk47_c_reload_50_p1, reload_empty_p1, 1.15
+50_c_anm_reload_empty_p1						= mk47_c_reload_50_p1, reload_empty_p1, 1.15
+50_c_anm_reload_empty_p2						= mk47_c_reload_50e_p2, reload_empty_p2, 1.15
+50_c_anm_mag_check									= mk47_c_check_50, check, 1.4
+50_c_anm_mag_check_empty						= mk47_c_check_50, check_empty, 1.4
+75_c_anm_bore                          					= ar15_c_bore, idle
+75_c_anm_hide											= ar15_c_holster_e, idle
+75_c_anm_show											= ar15_c_show_e, idle
+75_c_anm_idle												= ar15_c_idle, idle
+75_c_anm_idle_aim										= ar15_c_idle_aim, idle
+75_c_anm_idle_aim_moving						= ar15_c_walk_aim, idle
+75_c_anm_idle_aim_moving_crouch			= ar15_c_walk_aim, idle
+75_c_anm_idle_moving								= ar15_c_walk, idle
+75_c_anm_idle_moving_crouch					= ar15_c_walk, idle
+75_c_anm_shots											= ar15_c_shoot, shoot
+75_c_anm_reload_misfire							= ar15_c_unjam, unjam
+75_c_anm_switch_mode								= ar15_c_firemode, firemode
+75_c_anm_reload											= mk47_c_reload_75_p1, reload_p1, 1.15
+75_c_anm_reload_p1									= mk47_c_reload_75_p1, reload_p1, 1.15
+75_c_anm_reload_p2									= mk47_c_reload_75_p2, reload_p2, 1.15
+75_c_anm_reload_empty								= mk47_c_reload_75_p1, reload_empty_p1, 1.15
+75_c_anm_reload_empty_p1						= mk47_c_reload_75_p1, reload_empty_p1, 1.15
+75_c_anm_reload_empty_p2						= mk47_c_reload_75e_p2, reload_empty_p2, 1.15
+75_c_anm_mag_check									= mk47_c_check_75, check, 1.4
+75_c_anm_mag_check_empty						= mk47_c_check_75, check_empty, 1.4
+75_c_anm_idle_sprint									= ar15_c_idle_sprint, idle
+
+h_anm_bore                          							= ar10_h_bore, idle
+h_anm_hide													= ar10_h_holster_e, idle
+h_anm_show													= ar10_h_show_e, idle
+h_anm_idle														= ar10_h_idle, idle
+h_anm_idle_aim											= ar10_h_idle_aim, idle
+h_anm_idle_aim_moving								= ar10_h_walk_aim, idle
+h_anm_idle_aim_moving_crouch				= ar10_h_walk_aim, idle
+h_anm_idle_moving										= ar10_h_walk, idle
+h_anm_idle_moving_crouch						= ar10_h_walk, idle
+h_anm_shots													= ar10_h_shoot, shoot
+h_anm_switch_mode									= ar10_h_firemode, firemode
+h_anm_reload_misfire									= mk47_h_unjam, unjam
+h_anm_idle_sprint												= ar10_h_idle_sprint, idle
+h_anm_reload													= mk47_h_reload_30_p1, reload_p1, 1.15
+h_anm_reload_p1											= mk47_h_reload_30_p1, reload_p1, 1.15
+h_anm_reload_p2											= mk47_h_reload_30_p2, reload_p2, 1.15
+h_anm_reload_empty									= mk47_h_reload_30_p1, reload_empty_p1, 1.15
+h_anm_reload_empty_p1							= mk47_h_reload_30_p1, reload_empty_p1, 1.15
+h_anm_reload_empty_p2							= mk47_h_reload_30e_p2, reload_empty_p2, 1.15
+h_anm_mag_check										= mk47_h_check_30, check, 1.4
+h_anm_mag_check_empty							= mk47_h_check_30, check_empty, 1.4
+10_h_anm_reload											= mk47_h_reload_10_p1, reload_p1, 1.15
+10_h_anm_reload_p1									= mk47_h_reload_10_p1, reload_p1, 1.15
+10_h_anm_reload_p2									= mk47_h_reload_10_p2, reload_p2, 1.15
+10_h_anm_reload_empty							= mk47_h_reload_10_p1, reload_empty_p1, 1.15
+10_h_anm_reload_empty_p1						= mk47_h_reload_10_p1, reload_empty_p1, 1.15
+10_h_anm_reload_empty_p2						= mk47_h_reload_10e_p2, reload_empty_p2, 1.15
+10_h_anm_mag_check								= mk47_h_check_10, check, 1.4
+10_h_anm_mag_check_empty						= mk47_h_check_10, check_empty, 1.4
+30_h_anm_reload											= mk47_h_reload_30_p1, reload_p1, 1.15
+30_h_anm_reload_p1									= mk47_h_reload_30_p1, reload_p1, 1.15
+30_h_anm_reload_p2									= mk47_h_reload_30_p2, reload_p2, 1.15
+30_h_anm_reload_empty							= mk47_h_reload_30_p1, reload_empty_p1, 1.15
+30_h_anm_reload_empty_p1						= mk47_h_reload_30_p1, reload_empty_p1, 1.15
+30_h_anm_reload_empty_p2						= mk47_h_reload_30e_p2, reload_empty_p2, 1.15
+30_h_anm_mag_check								= mk47_h_check_30, check, 1.4
+30_h_anm_mag_check_empty						= mk47_h_check_30, check_empty, 1.4
+50_h_anm_reload											= mk47_h_reload_50_p1, reload_p1, 1.15
+50_h_anm_reload_p1									= mk47_h_reload_50_p1, reload_p1, 1.15
+50_h_anm_reload_p2									= mk47_h_reload_50_p2, reload_p2, 1.15
+50_h_anm_reload_empty							= mk47_h_reload_50_p1, reload_empty_p1, 1.15
+50_h_anm_reload_empty_p1						= mk47_h_reload_50_p1, reload_empty_p1, 1.15
+50_h_anm_reload_empty_p2						= mk47_h_reload_50e_p2, reload_empty_p2, 1.15
+50_h_anm_mag_check								= mk47_h_check_50, check, 1.4
+50_h_anm_mag_check_empty						= mk47_h_check_50, check_empty, 1.4
+75_h_anm_bore                          					= ar10_h_bore, idle
+75_h_anm_hide												= ar10_h_holster_e, idle
+75_h_anm_show											= ar10_h_show_e, idle
+75_h_anm_idle												= ar10_h_idle, idle
+75_h_anm_idle_aim										= ar10_h_idle_aim, idle
+75_h_anm_idle_aim_moving						= ar10_h_walk_aim, idle
+75_h_anm_idle_aim_moving_crouch		= ar10_h_walk_aim, idle
+75_h_anm_idle_moving								= ar10_h_walk, idle
+75_h_anm_idle_moving_crouch				= ar10_h_walk, idle
+75_h_anm_shots											= ar10_h_shoot, shoot
+75_h_anm_reload_misfire							= mk47_h_unjam, unjam
+75_h_anm_switch_mode								= ar10_h_firemode, firemode
+75_h_anm_reload											= mk47_h_reload_75_p1, reload_p1, 1.15
+75_h_anm_reload_p1									= mk47_h_reload_75_p1, reload_p1, 1.15
+75_h_anm_reload_p2									= mk47_h_reload_75_p2, reload_p2, 1.15
+75_h_anm_reload_empty							= mk47_h_reload_75_p1, reload_empty_p1, 1.15
+75_h_anm_reload_empty_p1						= mk47_h_reload_75_p1, reload_empty_p1, 1.15
+75_h_anm_reload_empty_p2						= mk47_h_reload_75e_p2, reload_empty_p2, 1.15
+75_h_anm_mag_check								= mk47_h_check_75, check, 1.4
+75_h_anm_mag_check_empty						= mk47_h_check_75, check_empty, 1.4
+75_h_anm_idle_sprint									= nk47_h_idle_sprint, idle
+
+r_anm_bore                          							= ar10_r_bore, idle
+r_anm_hide														= ar10_r_holster_e, idle
+r_anm_show													= ar10_r_show_e, idle
+r_anm_idle														= ar10_r_idle, idle
+r_anm_idle_aim												= ar10_r_idle_aim, idle
+r_anm_idle_aim_moving								= ar10_r_walk_aim, idle
+r_anm_idle_aim_moving_crouch				= ar10_r_walk_aim, idle
+r_anm_idle_moving										= ar10_r_walk, idle
+r_anm_idle_moving_crouch						= ar10_r_walk, idle
+r_anm_shots													= ar10_r_shoot, shoot
+r_anm_switch_mode										= ar10_r_firemode, firemode
+r_anm_reload_misfire									= mk47_r_unjam, unjam
+r_anm_idle_sprint												= ar10_r_idle_sprint, idle
+r_anm_reload													= mk47_r_reload_30_p1, reload_p1, 1.15
+r_anm_reload_p1											= mk47_r_reload_30_p1, reload_p1, 1.15
+r_anm_reload_p2											= mk47_r_reload_30_p2, reload_p2, 1.15
+r_anm_reload_empty									= mk47_r_reload_30_p1, reload_empty_p1, 1.15
+r_anm_reload_empty_p1								= mk47_r_reload_30_p1, reload_empty_p1, 1.15
+r_anm_reload_empty_p2								= mk47_r_reload_30e_p2, reload_empty_p2, 1.15
+r_anm_mag_check										= mk47_r_check_30, check, 1.4
+r_anm_mag_check_empty							= mk47_r_check_30, check_empty, 1.4
+10_r_anm_reload											= mk47_r_reload_10_p1, reload_p1, 1.15
+10_r_anm_reload_p1									= mk47_r_reload_10_p1, reload_p1, 1.15
+10_r_anm_reload_p2									= mk47_r_reload_10_p2, reload_p2, 1.15
+10_r_anm_reload_empty								= mk47_r_reload_10_p1, reload_empty_p1, 1.15
+10_r_anm_reload_empty_p1						= mk47_r_reload_10_p1, reload_empty_p1, 1.15
+10_r_anm_reload_empty_p2						= mk47_r_reload_10e_p2, reload_empty_p2, 1.15
+10_r_anm_mag_check									= mk47_r_check_10, check, 1.4
+10_r_anm_mag_check_empty						= mk47_r_check_10, check_empty, 1.4
+30_r_anm_reload											= mk47_r_reload_30_p1, reload_p1, 1.15
+30_r_anm_reload_p1									= mk47_r_reload_30_p1, reload_p1, 1.15
+30_r_anm_reload_p2									= mk47_r_reload_30_p2, reload_p2, 1.15
+30_r_anm_reload_empty								= mk47_r_reload_30_p1, reload_empty_p1, 1.15
+30_r_anm_reload_empty_p1						= mk47_r_reload_30_p1, reload_empty_p1, 1.15
+30_r_anm_reload_empty_p2						= mk47_r_reload_30e_p2, reload_empty_p2, 1.15
+30_r_anm_mag_check									= mk47_r_check_30, check, 1.4
+30_r_anm_mag_check_empty						= mk47_r_check_30, check_empty, 1.4
+50_r_anm_reload											= mk47_r_reload_50_p1, reload_p1, 1.15
+50_r_anm_reload_p1									= mk47_r_reload_50_p1, reload_p1, 1.15
+50_r_anm_reload_p2									= mk47_r_reload_50_p2, reload_p2, 1.15
+50_r_anm_reload_empty								= mk47_r_reload_50_p1, reload_empty_p1, 1.15
+50_r_anm_reload_empty_p1						= mk47_r_reload_50_p1, reload_empty_p1, 1.15
+50_r_anm_reload_empty_p2						= mk47_r_reload_50e_p2, reload_empty_p2, 1.15
+50_r_anm_mag_check									= mk47_r_check_50, check, 1.4
+50_r_anm_mag_check_empty						= mk47_r_check_50, check_empty, 1.4
+75_r_anm_bore                          					= ar10_r_bore, idle
+75_r_anm_hide												= ar10_r_holster_e, idle
+75_r_anm_show											= ar10_r_show_e, idle
+75_r_anm_idle												= ar10_r_idle, idle
+75_r_anm_idle_aim										= ar10_r_idle_aim, idle
+75_r_anm_idle_aim_moving						= ar10_r_walk_aim, idle
+75_r_anm_idle_aim_moving_crouch		= ar10_r_walk_aim, idle
+75_r_anm_idle_moving								= ar10_r_walk, idle
+75_r_anm_idle_moving_crouch					= ar10_r_walk, idle
+75_r_anm_shots											= ar10_r_shoot, shoot
+75_r_anm_reload_misfire							= mk47_r_unjam, unjam
+75_r_anm_switch_mode								= ar10_r_firemode, firemode
+75_r_anm_reload											= mk47_r_reload_75_p1, reload_p1, 1.15
+75_r_anm_reload_p1									= mk47_r_reload_75_p1, reload_p1, 1.15
+75_r_anm_reload_p2									= mk47_r_reload_75_p2, reload_p2, 1.15
+75_r_anm_reload_empty								= mk47_r_reload_75_p1, reload_empty_p1, 1.15
+75_r_anm_reload_empty_p1						= mk47_r_reload_75_p1, reload_empty_p1, 1.15
+75_r_anm_reload_empty_p2						= mk47_r_reload_75e_p2, reload_empty_p2, 1.15
+75_r_anm_mag_check									= mk47_r_check_75, check, 1.4
+75_r_anm_mag_check_empty						= mk47_r_check_75, check_empty, 1.4
+75_r_anm_idle_sprint										= ar10_r_idle_sprint, idle
+
+t_anm_bore                          							= ar10_t_bore, idle
+t_anm_hide														= ar10_t_holster_e, idle
+t_anm_show													= ar10_t_show_e, idle
+t_anm_idle														= ar10_t_idle, idle
+t_anm_idle_aim												= ar10_t_idle_aim, idle
+t_anm_idle_aim_moving								= ar10_t_walk_aim, idle
+t_anm_idle_aim_moving_crouch				= ar10_t_walk_aim, idle
+t_anm_idle_moving										= ar10_t_walk, idle
+t_anm_idle_moving_crouch							= ar10_t_walk, idle
+t_anm_shots													= ar10_t_shoot, shoot
+t_anm_switch_mode										= ar10_t_firemode, firemode
+t_anm_reload_misfire									= mk47_t_unjam, unjam
+t_anm_idle_sprint												= ar10_t_idle_sprint, idle
+t_anm_reload													= mk47_t_reload_30_p1, reload_p1, 1.15
+t_anm_reload_p1											= mk47_t_reload_30_p1, reload_p1, 1.15
+t_anm_reload_p2											= mk47_t_reload_30_p2, reload_p2, 1.15
+t_anm_reload_empty										= mk47_t_reload_30_p1, reload_empty_p1, 1.15
+t_anm_reload_empty_p1								= mk47_t_reload_30_p1, reload_empty_p1, 1.15
+t_anm_reload_empty_p2								= mk47_t_reload_30e_p2, reload_empty_p2, 1.15
+t_anm_mag_check										= mk47_t_check_30, check, 1.4
+t_anm_mag_check_empty							= mk47_t_check_30, check_empty, 1.4
+10_t_anm_reload											= mk47_t_reload_10_p1, reload_p1, 1.15
+10_t_anm_reload_p1									= mk47_t_reload_10_p1, reload_p1, 1.15
+10_t_anm_reload_p2									= mk47_t_reload_10_p2, reload_p2, 1.15
+10_t_anm_reload_empty								= mk47_t_reload_10_p1, reload_empty_p1, 1.15
+10_t_anm_reload_empty_p1						= mk47_t_reload_10_p1, reload_empty_p1, 1.15
+10_t_anm_reload_empty_p2						= mk47_t_reload_10e_p2, reload_empty_p2, 1.15
+10_t_anm_mag_check									= mk47_t_check_10, check, 1.4
+10_t_anm_mag_check_empty						= mk47_t_check_10, check_empty, 1.4
+30_t_anm_reload											= mk47_t_reload_30_p1, reload_p1, 1.15
+30_t_anm_reload_p1									= mk47_t_reload_30_p1, reload_p1, 1.15
+30_t_anm_reload_p2									= mk47_t_reload_30_p2, reload_p2, 1.15
+30_t_anm_reload_empty								= mk47_t_reload_30_p1, reload_empty_p1, 1.15
+30_t_anm_reload_empty_p1						= mk47_t_reload_30_p1, reload_empty_p1, 1.15
+30_t_anm_reload_empty_p2						= mk47_t_reload_30e_p2, reload_empty_p2, 1.15
+30_t_anm_mag_check									= mk47_t_check_30, check, 1.4
+30_t_anm_mag_check_empty						= mk47_t_check_30, check_empty, 1.4
+50_t_anm_reload											= mk47_t_reload_50_p1, reload_p1, 1.15
+50_t_anm_reload_p1									= mk47_t_reload_50_p1, reload_p1, 1.15
+50_t_anm_reload_p2									= mk47_t_reload_50_p2, reload_p2, 1.15
+50_t_anm_reload_empty								= mk47_t_reload_50_p1, reload_empty_p1, 1.15
+50_t_anm_reload_empty_p1						= mk47_t_reload_50_p1, reload_empty_p1, 1.15
+50_t_anm_reload_empty_p2						= mk47_t_reload_50e_p2, reload_empty_p2, 1.15
+50_t_anm_mag_check									= mk47_t_check_50, check, 1.4
+50_t_anm_mag_check_empty						= mk47_t_check_50, check_empty, 1.4
+75_t_anm_bore                          					= ar10_t_bore, idle
+75_t_anm_hide												= ar10_t_holster_e, idle
+75_t_anm_show												= ar10_t_show_e, idle
+75_t_anm_idle												= ar10_t_idle, idle
+75_t_anm_idle_aim										= ar10_t_idle_aim, idle
+75_t_anm_idle_aim_moving						= ar10_t_walk_aim, idle
+75_t_anm_idle_aim_moving_crouch		= ar10_t_walk_aim, idle
+75_t_anm_idle_moving								= ar10_t_walk, idle
+75_t_anm_idle_moving_crouch					= ar10_t_walk, idle
+75_t_anm_shots											= ar10_t_shoot, shoot
+75_t_anm_reload_misfire							= mk47_t_unjam, unjam
+75_t_anm_switch_mode								= ar10_t_firemode, firemode
+75_t_anm_reload											= mk47_t_reload_75_p1, reload_p1, 1.15
+75_t_anm_reload_p1									= mk47_t_reload_75_p1, reload_p1, 1.15
+75_t_anm_reload_p2									= mk47_t_reload_75_p2, reload_p2, 1.15
+75_t_anm_reload_empty								= mk47_t_reload_75_p1, reload_empty_p1, 1.15
+75_t_anm_reload_empty_p1						= mk47_t_reload_75_p1, reload_empty_p1, 1.15
+75_t_anm_reload_empty_p2						= mk47_t_reload_75e_p2, reload_empty_p2, 1.15
+75_t_anm_mag_check									= mk47_t_check_75, check, 1.4
+75_t_anm_mag_check_empty						= mk47_t_check_75, check_empty, 1.4
+75_t_anm_idle_sprint										= ar10_t_idle_sprint, idle
+
+v_anm_bore                          							= ar10_v_bore, idle
+v_anm_hide														= ar10_v_holster_e, idle
+v_anm_show													= ar10_v_show_e, idle
+v_anm_idle														= ar10_v_idle, idle
+v_anm_idle_aim												= ar10_v_idle_aim, idle
+v_anm_idle_aim_moving								= ar10_v_walk_aim, idle
+v_anm_idle_aim_moving_crouch				= ar10_v_walk_aim, idle
+v_anm_idle_moving										= ar10_v_walk, idle
+v_anm_idle_moving_crouch						= ar10_v_walk, idle
+v_anm_shots													= ar10_v_shoot, shoot
+v_anm_switch_mode									= ar10_v_firemode, firemode
+v_anm_reload_misfire									= mk47_v_unjam, unjam
+v_anm_idle_sprint												= ar10_v_idle_sprint, idle
+v_anm_reload													= mk47_v_reload_30_p1, reload_p1, 1.15
+v_anm_reload_p1											= mk47_v_reload_30_p1, reload_p1, 1.15
+v_anm_reload_p2											= mk47_v_reload_30_p2, reload_p2, 1.15
+v_anm_reload_empty									= mk47_v_reload_30_p1, reload_empty_p1, 1.15
+v_anm_reload_empty_p1								= mk47_v_reload_30_p1, reload_empty_p1, 1.15
+v_anm_reload_empty_p2								= mk47_v_reload_30e_p2, reload_empty_p2, 1.15
+v_anm_mag_check									= mk47_v_check_30, check, 1.4
+v_anm_mag_check_empty						= mk47_v_check_30, check_empty, 1.4
+10_v_anm_reload											= mk47_v_reload_10_p1, reload_p1, 1.15
+10_v_anm_reload_p1									= mk47_v_reload_10_p1, reload_p1, 1.15
+10_v_anm_reload_p2									= mk47_v_reload_10_p2, reload_p2, 1.15
+10_v_anm_reload_empty								= mk47_v_reload_10_p1, reload_empty_p1, 1.15
+10_v_anm_reload_empty_p1						= mk47_v_reload_10_p1, reload_empty_p1, 1.15
+10_v_anm_reload_empty_p2						= mk47_v_reload_10e_p2, reload_empty_p2, 1.15
+10_v_anm_mag_check									= mk47_v_check_10, check, 1.4
+10_v_anm_mag_check_empty						= mk47_v_check_10, check_empty, 1.4
+30_v_anm_reload											= mk47_v_reload_30_p1, reload_p1, 1.15
+30_v_anm_reload_p1									= mk47_v_reload_30_p1, reload_p1, 1.15
+30_v_anm_reload_p2									= mk47_v_reload_30_p2, reload_p2, 1.15
+30_v_anm_reload_empty								= mk47_v_reload_30_p1, reload_empty_p1, 1.15
+30_v_anm_reload_empty_p1						= mk47_v_reload_30_p1, reload_empty_p1, 1.15
+30_v_anm_reload_empty_p2						= mk47_v_reload_30e_p2, reload_empty_p2, 1.15
+30_v_anm_mag_check									= mk47_v_check_30, check, 1.4
+30_v_anm_mag_check_empty						= mk47_v_check_30, check_empty, 1.4
+50_v_anm_reload											= mk47_v_reload_50_p1, reload_p1, 1.15
+50_v_anm_reload_p1									= mk47_v_reload_50_p1, reload_p1, 1.15
+50_v_anm_reload_p2									= mk47_v_reload_50_p2, reload_p2, 1.15
+50_v_anm_reload_empty								= mk47_v_reload_50_p1, reload_empty_p1, 1.15
+50_v_anm_reload_empty_p1						= mk47_v_reload_50_p1, reload_empty_p1, 1.15
+50_v_anm_reload_empty_p2						= mk47_v_reload_50e_p2, reload_empty_p2, 1.15
+50_v_anm_mag_check									= mk47_v_check_50, check, 1.4
+50_v_anm_mag_check_empty						= mk47_v_check_50, check_empty, 1.4
+75_v_anm_bore                          					= ar10_v_bore, idle
+75_v_anm_hide												= ar10_v_holster_e, idle
+75_v_anm_show											= ar10_v_show_e, idle
+75_v_anm_idle												= ar10_v_idle, idle
+75_v_anm_idle_aim										= ar10_v_idle_aim, idle
+75_v_anm_idle_aim_moving						= ar10_v_walk_aim, idle
+75_v_anm_idle_aim_moving_crouch		= ar10_v_walk_aim, idle
+75_v_anm_idle_moving								= ar10_v_walk, idle
+75_v_anm_idle_moving_crouch					= ar10_v_walk, idle
+75_v_anm_shots											= ar10_v_shoot, shoot
+75_v_anm_reload_misfire							= mk47_v_unjam, unjam
+75_v_anm_switch_mode								= ar10_v_firemode, firemode
+75_v_anm_reload											= mk47_v_reload_75_p1, reload_p1, 1.15
+75_v_anm_reload_p1									= mk47_v_reload_75_p1, reload_p1, 1.15
+75_v_anm_reload_p2									= mk47_v_reload_75_p2, reload_p2, 1.15
+75_v_anm_reload_empty								= mk47_v_reload_75_p1, reload_empty_p1, 1.15
+75_v_anm_reload_empty_p1						= mk47_v_reload_75_p1, reload_empty_p1, 1.15
+75_v_anm_reload_empty_p2						= mk47_v_reload_75e_p2, reload_empty_p2, 1.15
+75_v_anm_mag_check									= mk47_v_check_75, check, 1.4
+75_v_anm_mag_check_empty						= mk47_v_check_75, check_empty, 1.4
+75_v_anm_idle_sprint										= ar10_t_idle_sprint, idle

@@ -254,7 +254,7 @@ function try_spawn_world_item(ignore)
 			world_itm_off[_name] = nil
 			
 			local box_size = ini_sys:r_u32(section, "box_size")
-			world_itm_num[_name] = math.random( math.ceil(box_size * 0.15) , math.ceil(box_size * 0.50) )
+			world_itm_num[_name] = math.random( math.ceil(box_size * 0.25) , math.ceil(box_size * 0.75) )
 			
 			print_debug("/ Game Setup | created ammo [%s](%s) - place: %s - size = %s", section, se_obj.id, _name, world_itm_num[_name])
 		else
@@ -281,7 +281,7 @@ function try_spawn_world_item(ignore)
 				
 					-- Parts
 					if IsItem("part",section) then
-						world_itm_num[_name] = (math.random(35,75)/100)
+						world_itm_num[_name] = random_choice(0.5,0.75,1)
 						print_debug("/ Game Setup | created degraded item [%s](%s) - place: %s - con = %s", section, se_obj.id, _name, world_itm_num[_name])
 						
 					-- Degradable items
@@ -436,11 +436,6 @@ local function actor_on_first_update()
 	
 	-- Setup items
 	local multi = game_difficulties.get_eco_factor("random_items") or 0.5
-  -- ZCP
-  if smr_amain_mcm.get_config("smr_enabled") then
-    multi = smr_loot_mcm.get_config("random_items")
-  end
-  -- ZCP END
 	multi = (multi < 1) and multi or 1
 	
 	local num = math.ceil(size_table(world_itm_off) * multi)
@@ -531,9 +526,7 @@ local function actor_on_item_take(obj)
 		-- Send message
 		itms_manager.send_itm_msg(section)
 		
-		if info then
-			remove_marker(id, info.typ)
-		end
+		remove_marker(id, info.typ)
 	end
 	
 	-- Ammo aggregation (it's important to start ammo aggregation after sorting taken world ammo size first, to prevent issues)

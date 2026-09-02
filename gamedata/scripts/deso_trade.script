@@ -1,0 +1,930 @@
+-- Desolation modular trader stock injector.
+--
+-- Reads:
+--   items\settings\deso_trader_presets.ltx
+--     [deso_trader_config]
+--     [deso_trader_weapons]
+--
+-- Reads from system.ltx/includes:
+--     [weapon_default_attachments]
+--     [weapon_debug_variants]
+--
+-- Entry format:
+--     pm_tac = m|1,s|2
+--
+-- The number is the minimum actor goodwill divided by 100.
+-- Therefore s|2 means stalker goodwill >= 200.
+
+local PRESET_FILE = "items\\settings\\deso_trader_presets.ltx"
+local PRESET_SECTION = "deso_trader_weapons"
+local CONFIG_SECTION = "deso_trader_config"
+local ATTACHMENTS_SECTION = "weapon_default_attachments"
+local SUBSTITUTES_SECTION = "attachment_substitutes"
+local TEST_ATTACHMENTS_SECTION = "test_attachments_list"
+local VARIANTS_SECTION = "weapon_debug_variants"
+
+local preset_ini = nil
+local faction_db = {}
+local variant_to_base = {}
+local attachment_db = {}
+local substitute_db = {}
+local scope_db = {}
+local loaded = false
+
+local pending_weapon_presets = {}
+
+local function strip_spawned_weapon_modules(weapon)
+    if not weapon or
+       not weapon.module_count or
+       not weapon.module_get_section or
+       not weapon.module_remove_index
+    then
+        return
+    end
+
+    local index = weapon:module_count() - 1
+    local guard = 0
+
+    while index >= 0 and guard < 128 do
+        guard = guard + 1
+
+        local removable = true
+        if weapon.module_can_remove_index then
+            removable = weapon:module_can_remove_index(index)
+        end
+
+        if removable then
+            local removed = weapon:module_remove_index(index)
+
+            if removed then
+                index = weapon:module_count() - 1
+            else
+                index = index - 1
+            end
+        else
+            index = index - 1
+        end
+    end
+end
+
+local function install_module_section(weapon, module_section)
+    module_section = trim(module_section)
+
+    if module_section == "" then
+        return false
+    end
+
+    if not ini_sys:section_exist(module_section) then
+        printf("! DESO_TRADE: missing module section=[%s]", module_section)
+        return false
+    end
+
+    if not weapon.module_install then
+        printf(
+            "! DESO_TRADE: module_install API missing weapon=[%s]",
+            tostring(weapon:section()))
+        return false
+    end
+
+    if weapon.module_can_install and
+       not weapon:module_can_install(module_section)
+    then
+        printf(
+            "! DESO_TRADE: module not installable module=[%s] weapon=[%s]",
+            tostring(module_section),
+            tostring(weapon:section()))
+        return false
+    end
+
+    local installed = weapon:module_install(module_section)
+
+    printf(
+        "DESO_TRADE: module install module=[%s] weapon=[%s] result=[%s]",
+        tostring(module_section),
+        tostring(weapon:section()),
+        installed and "installed" or "failed")
+
+    return installed and true or false
+end
+
+local function refresh_spawned_weapon(weapon)
+    if not weapon then
+        return
+    end
+
+    if weapon.UpdateAddonsVisibility then
+        pcall(function() weapon:UpdateAddonsVisibility() end)
+    end
+
+    if weapon.update_addons_visibility then
+        pcall(function() weapon:update_addons_visibility() end)
+    end
+
+    if weapon.UpdateHUDAddonsVisibility then
+        pcall(function() weapon:UpdateHUDAddonsVisibility() end)
+    end
+
+    if weapon.update_hud_addons_visibility then
+        pcall(function() weapon:update_hud_addons_visibility() end)
+    end
+
+    if weapon.NSynch then
+        pcall(function() weapon:NSynch() end)
+    end
+end
+
+local function apply_preset_to_weapon(weapon, preset_id)
+    local modules = attachment_db[preset_id]
+
+    if not modules then
+        printf(
+            "! DESO_TRADE: no [%s] entry preset=[%s]",
+            ATTACHMENTS_SECTION,
+            tostring(preset_id))
+        return false
+    end
+
+    -- Remove factory/default removable modules so the selected trader preset
+    -- can replace them cleanly.
+    strip_spawned_weapon_modules(weapon)
+
+    local attached = 0
+
+    for index = 1, #modules do
+        if install_module_section(weapon, modules[index]) then
+            attached = attached + 1
+        end
+    end
+
+    refresh_spawned_weapon(weapon)
+
+    printf(
+        "DESO_TRADE: applied preset=[%s] weapon=[%s] id=[%s] attached=[%s]/[%s]",
+        tostring(preset_id),
+        weapon:section(),
+        tostring(weapon:id()),
+        tostring(attached),
+        tostring(#modules))
+
+    return true
+end
+
+local function process_pending_weapon_presets()
+    local completed = {}
+
+    for weapon_id, data in pairs(pending_weapon_presets) do
+        local weapon = level.object_by_id(weapon_id)
+
+        if weapon and weapon.parent then
+            -- This engine build does not expose GetPostSpawnInit/
+            -- SetPostSpawnInit to Lua. The queue itself guarantees that each
+            -- spawned trader weapon is processed only once.
+            apply_preset_to_weapon(weapon, data.preset_id)
+            completed[weapon_id] = true
+        else
+            data.attempts = data.attempts + 1
+
+            if data.attempts > 300 then
+                printf(
+                    "! DESO_TRADE: timed out waiting for weapon id=[%s] preset=[%s]",
+                    tostring(weapon_id),
+                    tostring(data.preset_id))
+                completed[weapon_id] = true
+            end
+        end
+    end
+
+    for weapon_id in pairs(completed) do
+        pending_weapon_presets[weapon_id] = nil
+    end
+end
+
+function queue_weapon_preset(weapon_id, preset_id)
+    if not weapon_id or not preset_id then
+        return
+    end
+
+    pending_weapon_presets[weapon_id] = {
+        preset_id = preset_id,
+        attempts = 0,
+    }
+
+    printf(
+        "DESO_TRADE: queued weapon id=[%s] preset=[%s]",
+        tostring(weapon_id),
+        tostring(preset_id))
+end
+
+
+local function count_table(tbl)
+    local count = 0
+
+    if not tbl then
+        return count
+    end
+
+    for _ in pairs(tbl) do
+        count = count + 1
+    end
+
+    return count
+end
+
+local faction_to_letter = {
+    army = "a",
+    bandit = "b",
+    csky = "c",
+    dolg = "d",
+    ecolog = "e",
+    freedom = "f",
+    greh = "g",
+    isg = "i",
+    killer = "k",
+    monolith = "m",
+    renegade = "r",
+    stalker = "s",
+}
+
+local function split_csv(value)
+    local out = {}
+    if not value then
+        return out
+    end
+
+    for token in string.gmatch(value, "([^,]+)") do
+        token = trim(token)
+        if token and token ~= "" then
+            out[#out + 1] = token
+        end
+    end
+
+    return out
+end
+
+local function parse_variant_index()
+    variant_to_base = {}
+
+    if not ini_sys:section_exist(VARIANTS_SECTION) then
+        printf("! DESO_TRADE: missing [%s]", VARIANTS_SECTION)
+        return
+    end
+
+    local count = ini_sys:line_count(VARIANTS_SECTION)
+
+    for i = 0, count - 1 do
+        local ok, base_section, value =
+            ini_sys:r_line_ex(VARIANTS_SECTION, i, "", "")
+
+        if ok and base_section and base_section ~= "" then
+            -- Base entries resolve to themselves.
+            variant_to_base[base_section] = base_section
+
+            local variants = split_csv(value)
+            for j = 1, #variants do
+                variant_to_base[variants[j]] = base_section
+            end
+        end
+    end
+end
+
+local function parse_attachment_presets()
+    attachment_db = {}
+
+    if not ini_sys:section_exist(ATTACHMENTS_SECTION) then
+        printf("! DESO_TRADE: missing [%s]", ATTACHMENTS_SECTION)
+        return
+    end
+
+    local count = ini_sys:line_count(ATTACHMENTS_SECTION)
+
+    for i = 0, count - 1 do
+        local ok, preset_id, value =
+            ini_sys:r_line_ex(ATTACHMENTS_SECTION, i, "", "")
+
+        if ok and preset_id and preset_id ~= "" then
+            attachment_db[preset_id] = split_csv(value)
+        end
+    end
+end
+
+local function parse_trader_presets()
+    faction_db = {}
+    preset_ini = ini_file(PRESET_FILE)
+
+    if not preset_ini then
+        printf("! DESO_TRADE: failed to load [%s]", PRESET_FILE)
+        return false
+    end
+
+    if not preset_ini:section_exist(PRESET_SECTION) then
+        printf("! DESO_TRADE: missing [%s] in [%s]", PRESET_SECTION, PRESET_FILE)
+        return false
+    end
+
+    local count = preset_ini:line_count(PRESET_SECTION)
+
+    for i = 0, count - 1 do
+        local ok, preset_id, value =
+            preset_ini:r_line_ex(PRESET_SECTION, i, "", "")
+
+        if ok and preset_id and preset_id ~= "" then
+            for _, rule in ipairs(split_csv(value)) do
+                local parts = str_explode(rule, "|")
+                local faction_letters = parts[1] and trim(parts[1]) or ""
+                local standing_step = tonumber(parts[2])
+
+                if standing_step then
+                    local minimum_standing = standing_step * 100
+
+                    for index = 1, #faction_letters do
+                        local letter = faction_letters:sub(index, index)
+
+                        faction_db[letter] = faction_db[letter] or {}
+                        faction_db[letter][preset_id] = minimum_standing
+                    end
+                else
+                    printf(
+                        "! DESO_TRADE: invalid rule preset=[%s] rule=[%s]",
+                        preset_id,
+                        tostring(rule))
+                end
+            end
+        end
+    end
+
+    return true
+end
+
+
+local function parse_substitute_value(value)
+    local result = {}
+    if not value then return result end
+
+    value = string.gsub(value, "%(", "")
+    value = string.gsub(value, "%)", "")
+
+    local comma_parts = str_explode(value, ",")
+    for i = 1, #comma_parts do
+        local entry = trim(comma_parts[i])
+        if entry ~= "" then
+            local pipe_parts = str_explode(entry, "|")
+            for j = 1, #pipe_parts do
+                local section = trim(pipe_parts[j])
+                if section ~= "" then
+                    result[#result + 1] = section
+                end
+            end
+        end
+    end
+
+    return result
+end
+
+local function load_substitute_database()
+    substitute_db = {}
+
+    if not ini_sys:section_exist(SUBSTITUTES_SECTION) then
+        printf("! DESO_TRADE: missing section=[%s]", SUBSTITUTES_SECTION)
+        return
+    end
+
+    local line_count = ini_sys:line_count(SUBSTITUTES_SECTION)
+    for index = 0, line_count - 1 do
+        local ok, key, value =
+            ini_sys:r_line(SUBSTITUTES_SECTION, index, "", "")
+
+        if ok and type(key) == "string" then
+            key = trim(key)
+
+            if key ~= "" then
+                substitute_db[key] = parse_substitute_value(value)
+            end
+        end
+    end
+
+    printf("DESO_TRADE: substitute groups=[%s]", tostring(count_table(substitute_db)))
+end
+
+local function module_attachment_group(module_section)
+    if not module_section or
+       not ini_sys:section_exist(module_section) or
+       not ini_sys:line_exist(module_section, "attachment_point")
+    then
+        return nil
+    end
+
+    local value = ini_sys:r_string_ex(module_section, "attachment_point")
+    local parts = value and str_explode(value, "|")
+    return parts and trim(parts[1]) or nil
+end
+
+-- Automatically discover scopes from [test_attachments_list].
+-- This section is the authoritative flat list of attachment sections in the
+-- Desolation attachment config. Each listed section is checked for both zoom
+-- fields so non-optic attachments in the same list are ignored.
+--
+-- X-Ray zoom factors use 100 as the 1x reference:
+--     magnification = 100 / zoom_factor
+-- Example: scope_zoom_factor=16.66 -> ~6x maximum magnification.
+local function try_add_scope_candidate(section)
+    if not section then
+        return
+    end
+
+    section = trim(section)
+
+    if section == "" or scope_db[section] or
+       not ini_sys:section_exist(section) or
+       not ini_sys:line_exist(section, "scope_zoom_factor") or
+       not ini_sys:line_exist(section, "min_scope_zoom_factor")
+    then
+        return
+    end
+
+    local strongest_zoom = ini_sys:r_float_ex(section, "scope_zoom_factor")
+    local weakest_zoom = ini_sys:r_float_ex(section, "min_scope_zoom_factor")
+
+    if not strongest_zoom or strongest_zoom <= 0 or
+       not weakest_zoom or weakest_zoom <= 0
+    then
+        return
+    end
+
+    local is_nightvision = false
+    if ini_sys:line_exist(section, "1icon_layer") then
+        local icon_layer = ini_sys:r_string_ex(section, "1icon_layer")
+        if icon_layer and trim(icon_layer) == "nightvision_ico" then
+            is_nightvision = true
+        end
+    end
+
+    scope_db[section] = {
+        min_magnification = 100 / weakest_zoom,
+        max_magnification = 100 / strongest_zoom,
+        nightvision = is_nightvision,
+    }
+end
+
+local function load_scope_database()
+    scope_db = {}
+
+    if not ini_sys:section_exist(TEST_ATTACHMENTS_SECTION) then
+        printf("! DESO_TRADE: missing section=[%s]", TEST_ATTACHMENTS_SECTION)
+        return
+    end
+
+    local count = ini_sys:line_count(TEST_ATTACHMENTS_SECTION)
+
+    for i = 0, count - 1 do
+        local ok, key, value =
+            ini_sys:r_line_ex(TEST_ATTACHMENTS_SECTION, i, "", "")
+
+        if ok then
+            -- [test_attachments_list] uses bare entries with no '='. Depending
+            -- on the INI wrapper build, the entry can be returned as the key
+            -- or as the value, so accept either representation.
+            local section = key
+            if (not section or trim(section) == "") and value then
+                section = value
+            end
+
+            try_add_scope_candidate(section)
+        end
+    end
+end
+
+-- Maximum scope magnification available at each goodwill bracket.
+-- Maximum goodwill in the relation system is 2000.
+local function allowed_scope_magnification(current_standing)
+    if current_standing < 400 then
+        return 3
+    elseif current_standing < 800 then
+        return 4
+    elseif current_standing < 1200 then
+        return 6
+    elseif current_standing < 1600 then
+        return 8
+    elseif current_standing < 1900 then
+        return 12
+    end
+
+    -- 1900-2000: unrestricted.
+    return math.huge
+end
+
+local function load_databases()
+    parse_variant_index()
+    parse_attachment_presets()
+    load_substitute_database()
+    load_scope_database()
+    loaded = parse_trader_presets()
+
+    local weapon_count = 0
+    for _, entries in pairs(faction_db) do
+        for _ in pairs(entries) do
+            weapon_count = weapon_count + 1
+        end
+    end
+
+    printf(
+        "DESO_TRADE: loaded=[%s] faction_entries=[%s] variants=[%s] attachment_presets=[%s]",
+        tostring(loaded),
+        tostring(weapon_count),
+        tostring(count_table(variant_to_base)),
+        tostring(count_table(attachment_db)))
+
+end
+
+function on_game_start()
+    load_databases()
+    AddUniqueCall(process_pending_weapon_presets)
+end
+
+local function read_number(key, fallback)
+    if not preset_ini or
+       not preset_ini:section_exist(CONFIG_SECTION) or
+       not preset_ini:line_exist(CONFIG_SECTION, key)
+    then
+        return fallback
+    end
+
+    return preset_ini:r_float(CONFIG_SECTION, key)
+end
+
+local function weapon_stock_roll(current_standing)
+    return true -- TEST: 100%
+end
+
+local function module_stock_roll(current_standing)
+    return true -- TEST: 100%
+end
+
+local function faction_from_buy_supplies(buy_supplies_string)
+    if not buy_supplies_string then
+        return nil
+    end
+
+    for value in string.gmatch(
+        buy_supplies_string,
+        "actor_goodwill_ge%((.-):")
+    do
+        value = trim(value)
+
+        if value and value ~= "" then
+            return value
+        end
+    end
+
+    return nil
+end
+
+local function resolve_faction(npc, buy_supplies_string)
+    local faction = faction_from_buy_supplies(buy_supplies_string)
+
+    if not faction and npc then
+        faction = npc:character_community()
+    end
+
+    return faction
+end
+
+local function spawn_item_to_trader(npc, section)
+    if not npc or not section or section == "" then
+        return nil
+    end
+
+    if not ini_sys:section_exist(section) then
+        printf("! DESO_TRADE: missing item section=[%s]", section)
+        return nil
+    end
+
+    return alife():create(
+        section,
+        npc:position(),
+        npc:level_vertex_id(),
+        npc:game_vertex_id(),
+        npc:id())
+end
+
+local function inject_scopes(npc, current_standing, spawned_modules)
+    local max_allowed = allowed_scope_magnification(current_standing)
+    local spawned = 0
+    local considered = 0
+
+    for section, data in pairs(scope_db) do
+        -- Small tolerance avoids rejecting a nominal 3x/6x/etc. scope because
+        -- of rounded config values such as 33.33 or 16.66.
+        local nightvision_allowed = (not data.nightvision) or current_standing >= 1200
+
+        if nightvision_allowed and data.max_magnification <= (max_allowed + 0.05) then
+            considered = considered + 1
+
+            if not spawned_modules[section] and module_stock_roll(current_standing) then
+                local item = spawn_item_to_trader(npc, section)
+
+                if item then
+                    spawned_modules[section] = true
+                    spawned = spawned + 1
+
+                    printf(
+                        "DESO_TRADE: spawned scope=[%s] zoom=[%.2fx-%.2fx] standing=[%s] trader=[%s]",
+                        section,
+                        data.min_magnification,
+                        data.max_magnification,
+                        tostring(current_standing),
+                        npc:name())
+                end
+            end
+        end
+    end
+
+    return spawned, considered, max_allowed
+end
+
+
+local function resolve_weapon_base_section(preset_id)
+    local base_section = variant_to_base[preset_id]
+
+    if not base_section then
+        -- A real weapon section may not be listed in [weapon_debug_variants].
+        if ini_sys:section_exist(preset_id) then
+            base_section = preset_id
+        else
+            return nil
+        end
+    end
+
+    return base_section
+end
+
+local function module_list_signature(modules)
+    if not modules or #modules == 0 then
+        return ""
+    end
+
+    local copy = {}
+    for i = 1, #modules do
+        local section = trim(modules[i])
+        if section ~= "" then
+            copy[#copy + 1] = section
+        end
+    end
+
+    table.sort(copy)
+    return table.concat(copy, "|")
+end
+
+local function preset_signature(preset_id)
+    local base_section = resolve_weapon_base_section(preset_id)
+    if not base_section then
+        return nil
+    end
+
+    return base_section .. "::" .. module_list_signature(attachment_db[preset_id] or {})
+end
+
+local function weapon_inventory_signature(item)
+    if not item or not item.section then
+        return nil
+    end
+
+    local base_section = item:section()
+    if not base_section then
+        return nil
+    end
+
+    local modules = {}
+
+    if item.module_count and item.module_get_section then
+        local count = item:module_count()
+        for index = 0, count - 1 do
+            local section = item:module_get_section(index)
+            if section and section ~= "" then
+                modules[#modules + 1] = section
+            end
+        end
+    end
+
+    return base_section .. "::" .. module_list_signature(modules)
+end
+
+local function collect_trader_weapon_signatures(npc)
+    local signatures = {}
+
+    npc:iterate_inventory(function(_, item)
+        if item then
+            local signature = weapon_inventory_signature(item)
+            if signature then
+                signatures[signature] = true
+            end
+        end
+    end)
+
+    return signatures
+end
+
+local function spawn_weapon_preset(npc, preset_id, inventory_signatures)
+    local base_section = resolve_weapon_base_section(preset_id)
+
+    if not base_section then
+        printf(
+            "! DESO_TRADE: cannot resolve preset=[%s] to a base weapon",
+            preset_id)
+        return nil
+    end
+
+    -- Guard by the complete preset signature (base weapon + installed modules),
+    -- not merely the base weapon section. This preserves different variants of
+    -- the same weapon while preventing the exact same variant from accumulating
+    -- across trader restocks.
+    local signature = preset_signature(preset_id)
+    if signature and inventory_signatures and inventory_signatures[signature] then
+        return nil
+    end
+
+    -- Always pass the preset ID. Base weapon presets also have a module list
+    -- in [weapon_default_attachments] and must be assembled.
+    local variant_id = preset_id
+
+    local id = xrs_rnd_npc_loadout.Spawn_WeaponVariantOnNPC(
+        base_section,
+        variant_id,
+        npc:position(),
+        npc:level_vertex_id(),
+        npc:game_vertex_id(),
+        npc:id())
+
+    if id and signature and inventory_signatures then
+        -- Protect against the same preset being encountered again during this
+        -- very same restock pass.
+        inventory_signatures[signature] = true
+    end
+
+    printf(
+        "DESO_TRADE: spawned weapon preset=[%s] base=[%s] variant=[%s] id=[%s] trader=[%s]",
+        preset_id,
+        base_section,
+        tostring(variant_id),
+        tostring(id),
+        npc:name())
+
+    return id
+end
+
+local function try_spawn_loose_module(
+    npc,
+    module_section,
+    preset_id,
+    group_name,
+    current_standing,
+    spawned_modules)
+
+    module_section = trim(module_section)
+
+    if module_section == "" or spawned_modules[module_section] then
+        return
+    end
+
+    if not module_stock_roll(current_standing) then
+        return
+    end
+
+    local item = spawn_item_to_trader(npc, module_section)
+    if item then
+        spawned_modules[module_section] = true
+
+        printf(
+            "DESO_TRADE: spawned loose module=[%s] group=[%s] source_preset=[%s] trader=[%s]",
+            module_section,
+            tostring(group_name),
+            preset_id,
+            npc:name())
+    end
+end
+
+local function add_modules_for_preset(
+    npc,
+    preset_id,
+    current_standing,
+    spawned_modules)
+
+    local preset_modules = attachment_db[preset_id]
+
+    if not preset_modules then
+        printf("! DESO_TRADE: no [%s] entry for preset=[%s]", ATTACHMENTS_SECTION, preset_id)
+        return
+    end
+
+    local processed_groups = {}
+
+    for i = 1, #preset_modules do
+        local installed_module = preset_modules[i]
+        local group_name = module_attachment_group(installed_module)
+
+        try_spawn_loose_module(
+            npc,
+            installed_module,
+            preset_id,
+            group_name or "exact",
+            current_standing,
+            spawned_modules)
+
+        if group_name and
+           not processed_groups[group_name] and
+           substitute_db[group_name]
+        then
+            processed_groups[group_name] = true
+
+            local substitutes = substitute_db[group_name]
+            for j = 1, #substitutes do
+                try_spawn_loose_module(
+                    npc,
+                    substitutes[j],
+                    preset_id,
+                    group_name,
+                    current_standing,
+                    spawned_modules)
+            end
+        end
+    end
+end
+
+function inject(npc, buy_supplies_string)
+    if not loaded then
+        load_databases()
+    end
+
+    if not loaded or not npc or not db.actor then
+        return
+    end
+
+    local faction = resolve_faction(npc, buy_supplies_string)
+    local letter = faction and faction_to_letter[faction]
+
+    if not letter then
+        printf(
+            "! DESO_TRADE: unsupported trader faction=[%s] trader=[%s]",
+            tostring(faction),
+            npc:name())
+        return
+    end
+
+    local current_standing =
+        relation_registry.community_goodwill(
+            faction,
+            AC_ID) or 0
+
+    local eligible = faction_db[letter]
+
+    if not eligible then
+        printf(
+            "DESO_TRADE: no presets faction=[%s] letter=[%s]",
+            faction,
+            letter)
+        return
+    end
+
+    local spawned_weapons = 0
+    local spawned_modules = {}
+    local considered = 0
+    local inventory_signatures = collect_trader_weapon_signatures(npc)
+
+    for preset_id, minimum_standing in pairs(eligible) do
+        if current_standing >= minimum_standing then
+            considered = considered + 1
+
+            if weapon_stock_roll(current_standing) then
+                local id = spawn_weapon_preset(npc, preset_id, inventory_signatures)
+
+                if id then
+                    spawned_weapons = spawned_weapons + 1
+
+                    add_modules_for_preset(
+                        npc,
+                        preset_id,
+                        current_standing,
+                        spawned_modules)
+                end
+            end
+        end
+    end
+
+    local spawned_scopes, considered_scopes, max_scope_magnification =
+        inject_scopes(npc, current_standing, spawned_modules)
+
+    local scope_limit_text = max_scope_magnification == math.huge
+        and "unlimited"
+        or string.format("%.0fx", max_scope_magnification)
+
+    printf(
+        "DESO_TRADE: restock trader=[%s] faction=[%s] standing=[%s] eligible=[%s] weapons=[%s] loose_items=[%s] scopes=[%s]/[%s] scope_limit=[%s]",
+        npc:name(),
+        faction,
+        tostring(current_standing),
+        tostring(considered),
+        tostring(spawned_weapons),
+        tostring(count_table(spawned_modules)),
+        tostring(spawned_scopes),
+        tostring(considered_scopes),
+        scope_limit_text)
+end

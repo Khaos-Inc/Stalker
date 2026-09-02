@@ -1,0 +1,311 @@
+--\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ wpn_toz34 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+[toz34_barrel_90]:attachment_base
+kind  =  toz34
+inv_ui_sign				= tz33_9cm
+visual						= w_att_huds\toz34_barrel_90	
+inv_name					= toz34_barrel_90
+inv_name_short			= toz34_barrel_90S
+cost							= 550
+inv_weight					= 0.25
+inv_grid_x         			= 24
+inv_grid_y         			= 46
+1icon_layer = clean1_ico
+attachment_point = toz34_barrel|0,0,0|0,0,0
+item_tags = barrel
+override_section = toz34_barrel_90_attributes
+[toz34_barrel_90_attributes]
+fire_point = 0, 0, 0.02
+bullet_speed				= 0.58
+k_hit_koeff						= 0.75
+fire_dispersion_base		= 5.5
+zoom_rotate_time = 0.04
+recoil_koeff             = 0.05
+inertia_koeff            = 0.8
+
+[toz34_silencer]:attachment_base
+kind  =  toz34
+inv_ui_sign				= osprey-12
+visual						= w_att_huds\toz34_silencer_osprey
+inv_name					= toz34_silencer_osprey
+inv_name_short		= toz34_silencer_ospreyS
+cost							= 2000
+inv_weight				= 0.65
+inv_grid_width			= 2
+inv_grid_x				= 34
+inv_grid_y				= 46
+attachment_point	= db_muzzle|0,0,0|0,0,0
+item_tags				=	muzzle_device
+override_section 		= toz34_silencer_attributes
+
+[toz34_silencer_attributes]
+silencer_status = 1
+silencer_name = wpn_addon_silencer
+silencer_x = 1
+silencer_y = 1
+weapon_lenght = 0.2
+fire_dispersion_base_koeff = -0.05
+zoom_rotate_time = 0.09
+recoil_koeff = -0.12
+inertia_koeff = 1.3
+
+[toz34_barrel_330]:toz34_barrel_90
+kind  =  toz34
+inv_ui_sign				= tz33_33cm
+visual						= w_att_huds\toz34_barrel_330	
+inv_name					= toz34_barrel_330
+inv_name_short			= toz34_barrel_330S
+cost							= 2000
+inv_weight					= 0.67
+inv_grid_width			= 2
+inv_grid_x					= 25
+inv_grid_y					= 46
+1icon_layer = clean2_ico
+attachment_slots		= sight_rail|wpn_body|0,0,0|0,0,0#db_muzzle|muzzle|0,0,0.2282|0,0,0
+override_section			= toz34_barrel_330_attributes
+
+[toz34_barrel_330_attributes]
+animation_prefix = c_
+bullet_speed = 0.9
+k_hit_koeff = 0.95
+fire_dispersion_base = 4.1
+fire_point = 0, 0, 0.25
+weapon_lenght = 0.25
+zoom_rotate_time = 0.05
+recoil_koeff = -0.03
+inertia_koeff = 1.4
+[toz34_hg_attributes]:c_attributes,12_barrel_330_att
+fire_point						= 0, 0, 0.25
+weapon_lenght				=	0.25
+zoom_rotate_time = 0.05
+recoil_koeff             = -0.23
+inertia_koeff            = 1.4
+
+[toz34_barrel_500]:toz34_barrel_330
+kind  =  toz34
+inv_ui_sign				= tz33_50cm
+visual						= w_att_huds\toz34_barrel_500	
+inv_name					= toz34_barrel_500
+inv_name_short			= toz34_barrel_500S
+cost							= 2900
+inv_weight					= 1.2
+inv_grid_width			= 3
+inv_grid_x					= 27
+1icon_layer = clean3_ico
+attachment_slots		= sight_rail|wpn_body|0,0,0|0,0,0#toz34_front|wpn_body|0,0,0|0,0,0#barrel_side|wpn_body|0,0,0|0,0,0#db_muzzle|muzzle|0,0,0.3834|0,0,0#pica_3|wpn_body|-0.0202,0.0333,0.337|0,0,-90#pica_3|wpn_body|0,0.0165,0.337|0,0,180#pica_3|wpn_body|0.0202,0.0333,0.337|0,0,90	
+override_section			=	toz34_barrel_500_attributes
+[toz34_barrel_500_attributes]:c_attributes,12_barrel_500_att
+fire_point						= 0, 0, 0.42
+weapon_lenght				= 0.45
+zoom_rotate_time = 0.08
+recoil_koeff            = -0.04
+inertia_koeff           = 1.7
+
+[toz34_barrel_710]:toz34_barrel_330
+kind  =  toz34
+inv_ui_sign				= tz33_71cm
+visual						= w_att_huds\toz34_barrel_710	
+inv_name					= toz34_barrel_710
+inv_name_short			= toz34_barrel_710S
+cost							= 3150
+inv_weight					= 1.5
+inv_grid_width			= 4
+inv_grid_x					= 30
+1icon_layer = clean4_ico
+attachment_slots = sight_rail|wpn_body|0,0,0|0,0,0#toz34_front|wpn_body|0,0,0|0,0,0#barrel_side|wpn_body|0,0,0|0,0,0#db_muzzle|muzzle|0,0,0.571|0,0,0
+override_section = toz34_barrel_710_attributes
+[toz34_barrel_710_attributes]:c_attributes,12_barrel_700_att
+fire_point						= 0, 0, 0.63
+weapon_lenght				= 0.65
+impair_koeff					= 0.85
+zoom_rotate_time = 0.13
+recoil_koeff            = -0.1
+inertia_koeff           = 2.1
+
+[toz34_patriot_m]:attachment_base
+kind  =  toz34
+inv_ui_sign				= tz34_b12
+visual						= w_att_huds\toz34_patriot_m_b12	
+description				= ar_hg_7
+inv_name					= toz34_patriot_m_b12
+inv_name_short			= toz34_patriot_m_b12S
+cost							= 1350
+inv_weight					= 0.22
+inv_grid_x					= 28
+inv_grid_y					= 47
+attachment_point = toz34_front|0,0,0|0,0,0
+attachment_slots = pica_7|wpn_body|0,0.0791,0.316|0,0,0#pica_3|wpn_body|0,0.0145,0.3926|0,0,180
+item_tags =	rail
+override_section = toz34_patriot_m_attributes
+
+[toz34_patriot_m_attributes]
+zoom_rotate_time = 0.01
+
+[toz34_patriot_mx]:toz34_patriot_m
+kind  =  toz34
+inv_ui_sign				= tz34_b12x
+visual						= w_att_huds\toz34_patriot_m_b12x	
+description				= ar_hg_8
+inv_name					= toz34_patriot_m_b12x
+cost							= 1500
+inv_weight					= 0.26
+inv_grid_width			= 2
+inv_grid_x					= 29
+attachment_slots		= pica_8|wpn_body|0,0.0791,0.201|0,0,0#pica_3|wpn_body|0,0.0145,0.3926|0,0,180	
+override_section = toz34_patriot_mx_attributes
+
+[toz34_patriot_mx_attributes]
+zoom_rotate_time = 0.01
+	
+[toz34_sight_weaver]:attachment_base
+kind  =  toz34
+inv_ui_sign				= tz34_Sw
+visual						= w_att_huds\toz34_sight_weaver	
+description				= pica_13_up
+inv_name					= toz34_sight_weaver
+inv_name_short			= toz34_sight_weaverS
+cost							= 650
+inv_weight					= 0.06
+inv_grid_x					= 37
+inv_grid_y					= 46
+attachment_point = sight_rail|0,0,0|0,0,0
+attachment_slots = pica_13|wpn_body|0,0.0741,0.153|0,0,0
+item_tags =	rail
+override_section = toz34_sight_weaver_attributes
+
+[toz34_sight_weaver_attributes]
+
+[toz34_sight_weaver_bomz]:toz34_sight_weaver
+kind  =  toz34
+inv_ui_sign				= tz34_Sws
+visual						= w_att_huds\toz34_sight_weaver_bomz	
+description				= pica_14_up
+inv_name					= toz34_sight_weaver_bomz
+inv_name_short			= toz34_sight_weaver_bomzS
+inv_weight					= 0.09
+cost							= 750
+inv_grid_width			= 2
+inv_grid_y					= 47
+attachment_slots		= pica_14|wpn_body|0,0.0791,0.153|0,0,0
+override_section = toz34_sight_weaver_bomz_attributes
+
+[toz34_sight_weaver_bomz_attributes]
+
+[toz34_ubw3]:attachment_base
+kind  =  toz34
+inv_ui_sign				= barP3
+visual						= w_att_huds\toz34_barrel_est_weaver-34	
+description				= pica_3_up3
+inv_name					= toz34_barrel_est_weaver-34
+inv_name_short		= toz34_barrel_est_weaver-34S
+cost							= 700
+inv_weight					= 0.1
+inv_grid_x					= 25
+inv_grid_y					= 47
+attachment_point		= barrel_side|0,0,0|0,0,0
+attachment_slots		= pica_3|wpn_body|-0.0154,0.0368,0.44|0,0,-90#pica_3|wpn_body|0,0.0207,0.44|0,0,180#pica_3|wpn_body|0.0154,0.0368,0.44|0,0,90
+item_tags	=	rail
+override_section = toz34_ubw3_attributes
+
+[toz34_ubw3_attributes]
+
+[toz34_ubw2]:toz34_ubw3
+kind  =  toz34
+inv_ui_sign				= barP2
+visual						= w_att_huds\toz34_barrel_est_weaver_prim
+description				= pica_3_up2
+inv_name					= toz34_barrel_est_weaver_prim
+inv_name_short			= toz34_barrel_est_weaver_primS
+cost							= 650
+inv_grid_x					= 26
+attachment_slots		= pica_3|wpn_body|0.0028,0.0117,0.44|0,0,180#pica_3|wpn_body|0.0163,0.0257,0.44|0,0,90		
+override_section = toz34_ubw2_attributes
+
+[toz34_ubw2_attributes]
+
+[toz34_ubw]:toz34_ubw3
+kind  =  toz34
+inv_ui_sign				= barP
+visual						= w_att_huds\toz34_barrel_weaver
+description				= pica_3_up
+inv_name					= toz34_barrel_weaver
+inv_name_short			= toz34_barrel_weaverS
+cost							= 600
+inv_grid_x					= 27
+attachment_slots		= pica_3|wpn_body|0,0.01,0.44|0,0,180		
+override_section = toz34_ubw_attributes
+
+[toz34_ubw_attributes]
+
+[toz34_stock]:attachment_base
+kind  =  toz34
+inv_ui_sign				= tz34_stock
+visual						= w_att_huds\toz34_stock	
+inv_name					= toz34_stock
+inv_name_short			= toz34_stock
+cost							= 1200
+inv_weight					= 0.67
+inv_grid_width			= 2
+inv_grid_x					= 31
+inv_grid_y					= 47
+attachment_point		= toz34_stock|0,0,0|0,0,0
+item_tags =	stock
+override_section			=	toz34_stock_attributes
+
+[toz34_stock_attributes]
+zoom_rotate_time = 0.07
+recoil_koeff = -0.23
+inertia_koeff = 0.6
+weapon_lenght = 0.32
+
+[toz34_stock_magpul]:toz34_stock
+kind  =  toz34
+inv_ui_sign				= tz34_stock+
+visual						= w_att_huds\toz34_stock_magpul_sga	
+inv_name					= toz34_stock_magpul_sga
+inv_name_short			= toz34_stock_magpul_sgaS
+cost							= 1750
+inv_weight					= 0.64
+inv_grid_x					= 33
+override_section = toz34_stock_magpul_attributes
+
+[toz34_stock_magpul_attributes]
+weapon_lenght = 0.33
+zoom_rotate_time = 0.01
+recoil_koeff = -0.24
+inertia_koeff = 0.6
+
+[toz34_stock_short]:toz34_stock
+kind  =  toz34
+inv_ui_sign				= tz34_grp
+visual						= w_att_huds\toz34_stock_short	
+inv_name					= toz34_stock_short
+inv_name_short			= toz34_stock_shortS
+cost							= 450
+inv_weight					= 0.17
+inv_grid_width			= 1
+inv_grid_x					= 35
+attachment_slots = toz34_stock_short_cut|stock|0,0,0|0,0,0
+override_section = toz34_stock_short_attributes
+
+[toz34_stock_short_attributes]
+weapon_lenght = 0.05
+zoom_rotate_time = 0.02
+recoil_koeff = 0.15
+[toz34_stock_short_att]
+weapon_lenght		= 0.05
+zoom_rotate_time = 0.02
+recoil_koeff            = -0.15
+
+;[toz34_stock_short_cut]:attachment_base
+;kind  =  toz34
+;inv_ui_sign				= tz34_cut
+;visual						= w_att_huds\toz34_stock_short_cut	
+;inv_name					= toz34_stock_short_cut
+;inv_name_short			= toz34_stock_short_cutS
+;cost							= 400
+;inv_weight					= 0.5
+;inv_grid_x					= 36
+;inv_grid_y					= 47
+;attachment_point		= toz34_stock_short_cut|0,0,0|0,0,0
+;override_section			= izh43_stock_short_cut_att

@@ -1,5 +1,5 @@
-;------------------------------------------------------------------------------------------------
 [wpn_m79]:zero_immunities,weapon_probability,default_weapon_params,wpn_m79_sounds
+modular_attachments = false
 		kind = w_explosive
         GroupControlSection         = spawn_group
         discovery_dependency        =
@@ -28,7 +28,7 @@
         description                 = st_wpn_m79_descr
         
         inv_weight                  = 2.7
-        cost                        = 26840
+        cost                        = 175000
         weapon_class                = heavy_weapon
         
         hud                         = wpn_m79_hud
@@ -79,7 +79,7 @@
         hit_power                   = 0.8, 0.8, 0.8, 0.8
         hit_type                    = fire_wound
         fire_distance               = 500
-        bullet_speed                = 295
+        bullet_speed = 1;                = 295
         rpm                         = 200
         rpm_empty_click             = 200
         
@@ -128,7 +128,113 @@ control_inertion_factor = 1.0f
         kill_msg_y                  = 172
         kill_msg_width              = 68
         kill_msg_height             = 30
- 
+;-------------------------------------------------------------------------------------------------------------------------------
+[ammo_m209]:ammo_base
+GroupControlSection	= spawn_group
+discovery_dependency =
+$spawn			= "weapons\ammo\ammo_m209" ; option for Level Editor
+class			= S_M209
+cform           = skeleton
+visual          = dynamics\weapons\wpn_ammo\ammo_m209.ogf
+description		= ammo-m209_descr
+$prefetch 		= 64
+cost			= 2264
+box_size		= 1
+inv_name		= ammo-m209
+inv_name_short	= ammo-m209_s
+inv_weight		= 0.2 ;.08
+inv_grid_width		= 1
+inv_grid_height		= 1
+inv_grid_x			= 55
+inv_grid_y			= 40
+kill_msg_x			= 61
+kill_msg_y			= 232
+kill_msg_width		= 19
+kill_msg_height		= 22
+k_disp			= 0.66
+k_hit			= 1.0 ;  2.1
+k_impulse		= 1.35
+k_ap			= 0.35
+buck_shot		= 0
+tracer			= off
+wm_size         = 0.05
+fake_grenade_name = wpn_fake_missile2
+tier                                     = 5
+snd_on_take								 = other
+grenade_ammo							 = true
+
+[ammo_m209_bad]:ammo_m209
+GroupControlSection	= spawn_group
+discovery_dependency =
+$spawn			= "weapons\ammo\ammo_m209" ; option for Level Editor
+class			= S_M209
+cform           = skeleton
+visual          = dynamics\weapons\wpn_ammo\ammo_m209.ogf
+description		= ammo-m209_descr
+slot = -1
+$prefetch 		= 64
+cost			= 665
+box_size		= 1
+inv_name_short	= ammo-m209_s
+inv_weight		= 0.2 ;.08
+inv_grid_width		= 1
+inv_grid_height		= 1
+inv_grid_x			= 56
+inv_grid_y			= 40
+kill_msg_x			= 61
+kill_msg_y			= 232
+kill_msg_width		= 73
+kill_msg_height		= 18
+k_disp			= 0.66
+k_hit			= 1.0 ;  1.78
+k_impulse		= 1.30
+k_ap			= 0.305
+impair			= 1.1
+buck_shot		= 0
+tracer			= off
+wm_size         = 0.05
+fake_grenade_name = wpn_fake_missile2
+tier                                     = 5
+snd_on_take								 = other
+grenade_ammo							 = true
+
+[ammo_m209_verybad]:ammo_m209
+GroupControlSection	= spawn_group
+discovery_dependency =
+$spawn			= "weapons\ammo\ammo_m209" ; option for Level Editor
+class			= S_M209
+cform           = skeleton
+visual          = dynamics\weapons\wpn_ammo\ammo_m209.ogf
+description		= ammo-m209_descr
+slot = -1
+$prefetch 		= 64
+cost			= 300
+box_size		= 1
+;inv_name		= ammo-m209_verybad
+inv_name_short	= ammo-m209_s
+inv_weight		= 0.2 ;.08
+inv_grid_width		= 1
+inv_grid_height		= 1
+inv_grid_x			= 57
+inv_grid_y			= 40
+kill_msg_x			= 61
+kill_msg_y			= 232
+kill_msg_width		= 73
+kill_msg_height		= 25
+k_disp			= 0.66
+k_hit			= 1.0 ;  1.38
+k_impulse		= 1.26
+k_ap			= 0.301
+impair			= 1.3
+buck_shot		= 0
+tracer			= off
+wm_size         = 0.05
+fake_grenade_name = wpn_fake_missile2
+tier                                     = 5
+snd_on_take								 = other
+grenade_ammo							 = true
+;-------------------------------------------------------------------------------------------------------------------------------		
+
 
 [wpn_m79_hud]:hud_base
         item_visual                 = anomaly_weapons\wpn_m79\wpn_m79_hud.ogf
@@ -138,21 +244,16 @@ control_inertion_factor = 1.0f
         item_position               = 0, 0, 0
         item_orientation            = 0, 0, 0
         
-        hands_position              = -0.06, -0.17, -0.08
-        hands_position_16x9         = -0.06, -0.17, -0.08
-        hands_orientation           = 2.0, 2.0, 0.15
-        hands_orientation_16x9      = 2.0, 2.0, 0.15
+        hands_position              = -0.044, -0.192, 0.1355
+        hands_position_16x9         = -0.044, -0.192, 0.1355
+        hands_orientation           = 0.55, 2.4, 0.15
+        hands_orientation_16x9      = 0.55, 2.4, 0.15
         
-        aim_hud_offset_pos          = -0.0897, -0.0575, -0.1
-        aim_hud_offset_pos_16x9     = -0.0897, -0.0575, -0.1
-        aim_hud_offset_rot          = -0.1245, 0.0341, -0.017
-        aim_hud_offset_rot_16x9     = -0.1245, 0.0341, -0.017
+        aim_hud_offset_pos          = -0.109297, -0.0611, -0.32
+        aim_hud_offset_pos_16x9     = -0.109297, -0.0611, -0.32
+        aim_hud_offset_rot          = -0.117, 0.00889, -0.0071
+        aim_hud_offset_rot_16x9     = -0.117, 0.00889, -0.0071
         
-		lowered_hud_offset_pos			= 0.13, -0.01, -0.025
-		lowered_hud_offset_pos_16x9		= 0.13, -0.01, -0.025
-		lowered_hud_offset_rot			= -0.04, -0.7, 0.4
-		lowered_hud_offset_rot_16x9		= -0.04, -0.7, 0.4
-
         gl_hud_offset_pos           = 0, 0, 0
         gl_hud_offset_rot           = 0, 0, 0
         

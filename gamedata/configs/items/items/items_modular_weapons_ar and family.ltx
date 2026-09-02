@@ -1,0 +1,6564 @@
+---\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ AR-PARTS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+[ar_trigger]:attachment_base_ar
+kind = ar_misc
+inv_ui_sign			= ar_trig
+visual					= w_att_huds\ar_trigger	
+inv_name					= ar_trigger
+inv_name_short		= ar_triggerS
+cost						= 1200
+inv_weight				= 0.1
+inv_grid_x         = 27
+inv_grid_y         = 0
+1icon_layer = clean_lub1_ico
+attachment_point	= ar_trigger|0,0,0|0,0,0
+item_tags = trigger
+override_section = ar_trigger_attributes
+
+[ar_trigger_attributes]
+fire_modes = -1, 1
+
+[ar_trigger_semi]:ar_trigger
+kind = ar_misc
+inv_ui_sign			= ar_trigS
+visual					= w_att_huds\ar_trigger_semi	
+inv_name				= ar_trigger_semi
+inv_name_short		= ar_trigger_semiS
+cost						= 900
+inv_grid_x         		= 28
+override_section =	ar_trigger_semi_attributes
+
+[ar_trigger_semi_attributes]
+zoom_rotate_time = -0.01
+
+[ar_trigger_burst]:ar_trigger
+kind = ar_misc
+inv_ui_sign			= ar_burst
+inv_name				= ar_trigger_burst
+inv_name_short		= ar_trigger_burstS
+cost						= 900
+inv_grid_x         		= 28
+override_section		=	ar_trigger_burst_attributes
+[ar_trigger_burst_attributes]:semi_auto_trigger_att
+rpm_koeff = 0.2
+fire_modes = 3, 1
+
+[ar15_zatvor]:attachment_base_ar
+kind = ar_misc
+inv_ui_sign				= ar-5_bolt
+visual							= w_att_huds\ar15_zatvor_ar74	
+inv_name					= ar15_zatvor_ar74
+inv_name_short		= ar15_zatvor_ar74S
+cost							= 1150
+inv_weight					= 0.33
+inv_grid_x         = 9
+inv_grid_y         = 0
+1icon_layer = clean_lub1_ico
+attachment_point = ar15_zatvor|0,0,0|0,0,0
+attachment_slots = ar15_charger|stock|0,0,0|0,0,0#ar_buffer_spring|wpn_body|0,0,0|0,0,0#ar_buffer|wpn_body|0,0,0|0,0,0
+item_tags =	zatvor
+override_section = ar15_zatvor_attributes
+
+[ar15_zatvor_attributes]
+rpm = 800
+zoom_rotate_time = 0.04
+[ar15_zatvor_att]:rpm_800_zatvor_att
+zoom_rotate_time = 0.04
+
+override_section = rpm_800_zatvor_att
+[rpm_800_zatvor_att]
+rpm = 800
+
+[lr300_zatvor]:attachment_base_ar
+kind = ar_misc
+inv_ui_sign				= lr300_blt
+visual							= w_att_huds\lr300_zatvor	
+inv_name					= lr300_zatvor
+inv_name_short		= lr300_zatvor
+cost							= 1250
+inv_weight				= 0.27
+inv_grid_width			= 2
+inv_grid_x					= 15
+inv_grid_y					= 0
+1icon_layer = clean_lub2_ico
+attachment_point		= lr300_zatvor|0,0,0|0,0,0
+attachment_slots		= ar15_charger|stock|0,0.004,0|0,0,0#ar_buffer|wpn_body|0,0,0|0,0,0
+item_tags =	zatvor
+override_section = lr300_zatvor_attributes
+
+[lr300_zatvor_attributes]
+zoom_rotate_time = 0.03
+rpm = 950
+impair_koeff = 0.9
+[lr300_zatvor_att]
+zoom_rotate_time = 0.03
+rpm = 950 
+impair_koeff = 0.9
+
+[ar15_zatvor_416]:ar15_zatvor
+kind = ar_misc
+inv_ui_sign				= 416_bolt
+visual							= w_att_huds\ar15_zatvor_416	
+inv_name					= ar15_zatvor_416
+inv_name_short		= ar15_zatvor_416
+cost							= 1200
+inv_weight					= 0.31
+inv_grid_x         = 10
+attachment_point = 416_zatvor|0,0,0|0,0,0
+override_section = ar15_zatvor_416_attributes
+
+[ar15_zatvor_416_attributes]
+rpm = 800
+zoom_rotate_time = 0.03
+impair_koeff = 0.8
+[ar15_zatvor_416_att]:rpm_800_zatvor_att
+zoom_rotate_time = 0.03
+impair_koeff = 0.8
+
+[mk47_zatvor]:attachment_base_ar
+kind = ar_misc
+inv_ui_sign				= mk47_blt
+visual							= w_att_huds\mk47_zatvor	
+inv_name					= mk47_zatvor
+inv_name_short		= mk47_zatvor
+cost							= 1400
+inv_weight					= 0.47
+inv_grid_x         = 17
+inv_grid_y         = 0
+1icon_layer = clean_lub1_ico
+attachment_point		= mk47_zatvor|0,0,0|0,0,0
+attachment_slots		= ar15_charger|stock|0,0,0|0,0,0#ar_buffer_spring|wpn_body|0,0,0|0,0,0#ar_buffer|wpn_body|0,0,0|0,0,0
+item_tags =	zatvor
+override_section = mk47_zatvor_attributes
+
+[mk47_zatvor_attributes]
+rpm = 650
+zoom_rotate_time = 0.05
+[mk47_zatvor_att]:rpm_650_zatvor_att
+zoom_rotate_time = 0.05
+
+[brn180_zatvor]:attachment_base_ar
+kind = ar_misc
+inv_ui_sign				= brn_bolt
+visual							= w_att_huds\brn180_zatvor	
+inv_name					= brn180_zatvor
+inv_name_short		= brn180_zatvor
+cost							= 850
+inv_weight					= 0.3
+inv_grid_x         = 13
+inv_grid_y         = 0
+1icon_layer = clean_lub1_ico
+attachment_point = brn180_zatvor|0,0,0|0,0,0
+item_tags	=	zatvor,charger
+override_section = brn180_zatvor_attributes
+
+[brn180_zatvor_attributes]
+rpm = 800
+zoom_rotate_time = 0.03
+impair_koeff = 0.7
+[brn180_zatvor_att]:rpm_800_zatvor_att
+zoom_rotate_time = 0.03
+impair_koeff = 0.7
+
+[derya_zatvor]:attachment_base_ar
+kind  =  derya
+inv_ui_sign				= mk12_blt
+visual							= w_att_huds\derya_zatvor	
+inv_name					= derya_zatvor
+inv_name_short		= derya_zatvor
+cost							= 1550
+inv_weight					= 0.3
+inv_grid_x         = 14
+inv_grid_y         = 0
+1icon_layer = clean_lub1_ico
+attachment_point = derya_zatvor|0,0,0|0,0,0
+attachment_slots = ar_buffer_spring|wpn_body|0,0,0|0,0,0#ar_buffer|wpn_body|0,0,0|0,0,0
+item_tags =	zatvor
+override_section = derya_zatvor_attributes
+
+[derya_zatvor_attributes]
+rpm = 600
+zoom_rotate_time = 0.06
+[derya_zatvor_att]:rpm_600_zatvor_att
+zoom_rotate_time = 0.06
+
+[omen_zatvor]:attachment_base_ar
+kind  =  omen
+inv_ui_sign				= mk12_blt
+visual							= w_att_huds\omen_zatvor	
+inv_name					= omen_zatvor
+inv_name_short		= omen_zatvorS
+cost							= 2150
+inv_weight				= 0.7
+inv_grid_width			= 2
+inv_grid_x					= 18
+inv_grid_y					= 0
+1icon_layer = clean_lub2_ico
+attachment_point		= omen_zatvor|0,0,0|0,0,0
+attachment_slots		= ar_buffer_spring|wpn_body|0,0,-0.01655|0,0,0#ar_buffer|wpn_body|0,0,-0.0165|0,0,0
+item_tags =	zatvor
+override_section = omen_zatvor_attributes
+
+[omen_zatvor_attributes]
+rpm = 600
+zoom_rotate_time = 0.08
+[omen_zatvor_att]:rpm_600_zatvor_att
+zoom_rotate_time = 0.08
+
+[ar15_zatvor_lw]:ar15_zatvor
+kind = ar_misc
+inv_ui_sign				= ar-5_bolt+
+visual							= w_att_huds\ar15_zatvor_lw	
+inv_name					= ar15_zatvor_lw
+inv_name_short		= ar15_zatvor_lwS
+cost							= 1400
+inv_weight					= 0.28
+inv_grid_x         = 11
+override_section = ar15_zatvor_lw_attributes
+
+[ar15_zatvor_lw_attributes]
+rpm = 850
+zoom_rotate_time = 0.02
+impair_koeff = 0.9
+[ar15_zatvor_low]:rpm_850_zatvor_att
+zoom_rotate_time = 0.02
+impair_koeff = 0.9
+
+[ar57_zatvor]:attachment_base_ar
+kind  =  ar57
+inv_ui_sign				= ar57_bolt
+visual							= w_att_huds\ar57_zatvor	
+inv_name					= ar57_zatvor
+inv_name_short		= ar57_zatvorS
+cost							= 900
+inv_weight					= 0.31
+inv_grid_x         = 12
+inv_grid_y         = 0
+1icon_layer = clean_lub1_ico
+attachment_point		= ar57_zatvor|0,0,0|0,0,0
+attachment_slots		= ar_buffer_spring|wpn_body|0,0,0|0,0,0#ar_buffer|wpn_body|0,0,0|0,0,0
+item_tags =	zatvor
+override_section = ar57_zatvor_attributes
+
+[ar57_zatvor_attributes]
+rpm = 900
+zoom_rotate_time = 0.02
+[ar57_zatvor_att]:rpm_900_zatvor_att
+zoom_rotate_time = 0.02
+recoil_koeff = -0.1
+
+[ar9_zatvor]:attachment_base_ar
+kind  =  ar9
+inv_ui_sign				= ar-9_bolt
+visual							= w_att_huds\ar9_zatvor	
+inv_name					= ar9_zatvor
+inv_name_short		= ar9_zatvor
+cost							= 950
+inv_weight					= 0.3
+inv_grid_x         = 6
+inv_grid_y         = 0
+1icon_layer = clean_lub1_ico
+attachment_point = ar9_zatvor|0,0,0|0,0,0
+attachment_slots = ar15_charger|stock|0,0,0|0,0,0#ar_buffer_spring|wpn_body|0,0,0|0,0,0#ar_buffer|wpn_body|0,0,0|0,0,0
+item_tags =	zatvor
+override_section = ar9_zatvor_attributes
+
+[ar9_zatvor_attributes]
+rpm = 900
+zoom_rotate_time = 0.03
+[ar9_zatvor_att]:rpm_900_zatvor_att
+zoom_rotate_time = 0.03
+recoil_koeff = -0.1
+
+[rpm_900_zatvor_att]
+rpm = 900
+
+[ar10_zatvor]:attachment_base_ar
+kind = ar10
+inv_ui_sign				= ar10_bolt
+visual							= w_att_huds\ar10_zatvor	
+inv_name					= ar10_zatvor
+inv_name_short		= ar10_zatvor
+cost							= 1450
+inv_weight					= 0.57
+inv_grid_x         = 7
+inv_grid_y         = 0
+1icon_layer = clean_lub1_ico
+attachment_point = ar10_zatvor|0,0,0|0,0,0
+attachment_slots = ar10_charger|stock|0,0,0|0,0,0#ar_buffer_spring|wpn_body|0,0,-0.01575|0,0,0#ar_buffer|wpn_body|0,0,-0.01573|0,0,0
+item_tags	=	zatvor
+override_section = ar10_zatvor_attributes
+
+[ar10_zatvor_attributes]
+rpm = 700
+zoom_rotate_time = 0.05
+[ar10_zatvor_att]:rpm_700_zatvor_att
+zoom_rotate_time = 0.05
+
+[ar10_zatvor_l129a1]:ar10_zatvor
+kind = ar10
+inv_ui_sign				= l129a1_bolt
+visual							= w_att_huds\ar10_zatvor_l129a1	
+inv_name					= ar10_zatvor_l129a1
+cost							= 1550
+inv_weight					= 0.6
+inv_grid_x         = 8
+override_section = ar10_zatvor_l129a1_attributes
+
+[ar10_zatvor_l129a1_attributes]
+rpm = 650
+zoom_rotate_time = 0.07
+[ar10_zatvor_up_att]:rpm_650_zatvor_att
+zoom_rotate_time = 0.07
+
+[ar15_ch]:attachment_base_ar
+kind = ar_misc
+inv_ui_sign				= ar15_ch
+visual							= w_att_huds\ar15_charger	
+inv_name					= ar15_charger
+inv_name_short		= ar15_chargerS
+cost							= 550
+inv_weight					= 0.05
+inv_grid_x         = 22
+inv_grid_y         = 0
+attachment_point		= ar15_charger|0,0,0|0,0,0
+item_tags =	charger
+override_section = ar15_ch_attributes
+
+[ar15_ch_attributes]
+impair_koeff = 0.9
+[ar15_ch_att]
+impair_koeff = 0.9
+
+[ar15_ch_416]:ar15_ch
+kind = ar_misc
+inv_ui_sign				= 416_ch
+visual							= w_att_huds\ar15_charger_416	
+inv_name					= ar15_charger_416
+inv_name_short		= ar15_charger_416S
+cost							= 600
+inv_grid_x         = 23
+override_section = ar15_ch_416_attributes
+
+[ar15_ch_416_attributes]
+impair_koeff = 0.9
+
+[ar15_ch_blackhawk]:ar15_ch
+kind = ar_misc
+visual							= w_att_huds\ar15_charger_blackhawk	
+inv_name					= ar15_charger_blackhawk
+inv_name_short		= ar15_charger_blackhawkS		
+cost							= 600
+inv_grid_x         = 40
+override_section = ar15_ch_blackhawk_attributes
+
+[ar15_ch_blackhawk_attributes]
+impair_koeff = 0.8
+[ar15_ch_up_att]
+impair_koeff = 0.8
+
+[ar15_ch_geissele]:ar15_ch_blackhawk
+kind = ar_misc
+inv_ui_sign				= 416_ch+
+visual							= w_att_huds\ar15_charger_geissele_416	
+inv_name					= ar15_charger_geissele_416
+inv_name_short		= ar15_charger_geissele_416S
+cost							= 1150
+inv_grid_x         = 24
+override_section = ar15_ch_geissele_attributes
+
+[ar15_ch_geissele_attributes]
+impair_koeff = 0.8
+
+[ar15_ch_lwrc]:ar15_ch_blackhawk
+kind = ar_misc
+inv_ui_sign				= lwrc_ch+
+visual							= w_att_huds\ar15_charger_lwrc	
+inv_name					= ar15_charger_lwrc
+inv_name_short		= ar15_charger_lwrcS
+cost							= 700
+inv_grid_x         = 25
+override_section = ar15_ch_lwrc_attributes
+
+[ar15_ch_lwrc_attributes]
+impair_koeff = 0.8
+
+[ar15_ch_raptor]:ar15_ch_blackhawk
+kind = ar_misc
+inv_ui_sign				= ar_ch+r
+visual							= w_att_huds\ar15_charger_raptor	
+inv_name					= ar15_charger_raptor
+inv_name_short		= ar15_charger_raptorS
+cost							= 1100
+inv_grid_x         = 26
+override_section = ar15_ch_raptor_attributes
+
+[ar15_ch_raptor_attributes]
+impair_koeff = 0.8
+
+[ar10_ch]:attachment_base_ar
+kind = ar10
+inv_ui_sign				= ar10_ch
+visual							= w_att_huds\ar10_charger	
+inv_name					= ar10_charger
+inv_name_short		= ar10_chargerS
+cost							= 600
+inv_weight				= 0.05
+inv_grid_x         = 20
+inv_grid_y         = 0
+attachment_point		= ar10_charger|0,0,0|0,0,0
+item_tags	=	charger
+override_section = ar10_ch_attributes
+
+[ar10_ch_attributes]
+impair_koeff = 0.9
+
+[ar10_ch_l129a1]:ar10_ch
+kind = ar10
+inv_ui_sign				= l129a1_ch
+visual							= w_att_huds\ar10_charger_l129a1	
+inv_name					= ar10_charger_l129a1
+inv_name_short		= ar10_charger_l129a1S
+cost							= 700
+inv_grid_x         = 21
+override_section = ar10_ch_l129a1_attributes
+
+---\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ AR-GAS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+[ar10_ch_l129a1_attributes]
+impair_koeff = 0.8
+
+[ar_gas_front_sight]:attachment_base_ar
+kind = ar_misc
+inv_ui_sign				= a2
+visual							= w_att_huds\ar_gas_front_sight	
+description				= ar_gas
+inv_name					= ar_gas_front_sight
+inv_name_short		= ar_gas_front_sightS
+cost							= 500
+inv_weight				= 0.08
+inv_grid_x					= 29
+inv_grid_y					= 0
+1icon_layer = clean1_ico
+attachment_point	= ar_gas|0,0,0|0,0,0
+item_tags =	gas
+override_section = ar_gas_front_sight_attributes
+
+[ar_gas_front_sight_attributes]
+zoom_rotate_time = 0.01
+impair_koeff = 0.9
+[ar_gas_front_sight_att]
+zoom_rotate_time = 0.01
+recoil_koeff            = -0.04
+impair_koeff          = 0.9
+
+[ar_gas_kac]:ar_gas_front_sight
+kind = ar_misc
+inv_ui_sign				= kac
+visual							= w_att_huds\ar_gas_kac	
+inv_name					= ar_gas_kac
+inv_name_short		= ar_gas_kacS
+cost							= 900
+inv_weight				= 0.09
+inv_grid_x					= 30
+attachment_slots	= pica_3|wpn_body|0,0.035538,0.296|0,0,180#sight_front|wpn_body|0,0.081063,0.2956|0,0,0
+item_tags		=	gas, gtube
+override_section = ar_gas_kac_attributes
+
+[ar_gas_kac_attributes]
+zoom_rotate_time = 0.01
+impair_koeff = 0.8
+[ar_gas_kac_att]
+zoom_rotate_time = 0.01
+recoil_koeff            = -0.02
+impair_koeff          = 0.8
+
+[ar_gas_dd]:ar_gas_front_sight
+kind = ar_misc
+inv_ui_sign				= gdd
+visual							= w_att_huds\ar_gas_dd	
+inv_name					= ar_gas_dd
+inv_name_short		= ar_gas_ddS
+cost							= 550
+inv_weight				= 0.06
+inv_grid_x					= 31
+item_tags		=	gas, gtube
+override_section = ar_gas_dd_attributes
+
+[ar_gas_dd_attributes]
+zoom_rotate_time = -0.02
+impair_koeff = 0.9
+[ar_gas_dd_att]
+zoom_rotate_time = -0.02
+impair_koeff = 0.9
+
+[ar_gas_low]:ar_gas_dd
+kind = ar_misc
+inv_ui_sign				= gas
+visual							= w_att_huds\ar_gas_low	
+inv_name					= ar_gas_low
+inv_grid_x					= 32
+override_section = ar_gas_low_attributes
+
+cost = 550
+inv_weight = 0.06
+[ar_gas_low_attributes]
+zoom_rotate_time = -0.02
+impair_koeff = 0.9
+
+recoil_koeff = -0.02
+[ar_gas_jp]:ar_gas_dd
+kind = ar_misc
+inv_ui_sign				= jp5b
+visual							= w_att_huds\ar_gas_low_jp_enterprises-5B	
+inv_name					= ar_gas_low_jp_enterprises-5b
+inv_grid_x					= 33
+override_section = ar_gas_jp_attributes
+
+cost = 550
+inv_weight = 0.06
+[ar_gas_jp_attributes]
+zoom_rotate_time = -0.01
+impair_koeff = 0.8
+recoil_koeff = -0.01
+[ar_gas_jp_att]
+zoom_rotate_time = -0.01
+impair_koeff = 0.8
+
+[ar_gas_ww]:ar_gas_dd
+kind = ar_misc
+inv_ui_sign				= lgw
+visual							= w_att_huds\ar_gas_windham_weaponry	
+inv_name					= ar_gas_windham_weaponry
+inv_name_short		= ar_gas_windham_weaponryS
+inv_grid_x					= 34
+attachment_slots	= sight_front|wpn_body|0,0.081063,0.2956|0,0,0
+override_section = ar_gas_ww_attributes
+
+[ar_gas_ww_attributes]
+zoom_rotate_time = 0.01
+impair_koeff = 0.9
+[ar_gas_ww_att]
+zoom_rotate_time = 0.01
+impair_koeff = 0.9
+
+[lr300_gas_low]:attachment_base_ar
+kind = ar_misc
+inv_ui_sign				= lr_gl
+visual							= w_att_huds\lr300_gas_low	
+inv_name					= lr300_gas_low
+inv_name_short		= lr300_gas
+cost							= 600
+inv_weight				= 0.07
+inv_grid_x					= 36
+inv_grid_y					= 0
+1icon_layer = clean1_ico
+attachment_point = lr300_gas|0,0,0|0,0,0
+item_tags		=	gas, gtube, spring
+override_section = lr300_gas_low_attributes
+
+[lr300_gas_low_attributes]
+zoom_rotate_time = -0.01
+impair_koeff = 0.8
+
+[lr300_gas]:lr300_gas_low
+kind = ar_misc
+inv_ui_sign				= lr_g
+visual							= w_att_huds\lr300_gas	
+inv_name					= lr300_gas
+cost							= 550
+inv_weight				= 0.1
+inv_grid_x					= 35
+attachment_slots	= sight_front|wpn_body|0,0.085933,0.32144|0,0,0#416_barrel_sight|wpn_body|0,0,0.006|0,0,0
+override_section = lr300_gas_attributes
+
+[lr300_gas_attributes]
+zoom_rotate_time = 0.01
+recoil_koeff = -0.01
+impair_koeff = 0.8
+
+[lr300_gas_tri]:lr300_gas_low
+kind = ar_misc
+inv_ui_sign				= lr_3r
+visual						= w_att_huds\lr300_gas_tri
+description				= pica_3_up2
+inv_name					= lr300_gas_tri
+inv_name_short		= lr300_gas_triS
+inv_weight				= 0.12
+inv_grid_x					= 39
+attachment_slots	= sight_front|wpn_body|0,0.085933,0.32144|0,0,0#416_barrel_sight|wpn_body|0,0,0.006|0,0,0#pica_3|wpn_body|-0.015773,0.0589,0.305|0,0,-90#pica_3|wpn_body|0.015773,0.0589,0.305|0,0,90
+override_section = lr300_gas_tri_attributes
+
+cost = 600
+[lr300_gas_tri_attributes]
+zoom_rotate_time = 0.01
+recoil_koeff = -0.01
+impair_koeff = 0.8
+[lr300_gas_tri_att]
+zoom_rotate_time = 0.01
+recoil_koeff            = -0.03
+impair_koeff          = 0.8
+
+[lr300_barrel_cover]:attachment_base_ar
+kind = ar_misc
+inv_ui_sign				= lr_cov
+visual							= w_att_huds\lr300_barrel_cover	
+description				= lr300_barrel_cover_descr
+inv_name					= lr300_barrel_cover
+inv_name_short		= lr300_barrel_coverS
+cost							= 350
+inv_weight				= 0.07
+inv_grid_x					= 37
+inv_grid_y					= 0
+attachment_point	= lr300_barrel_cover|0,0,0|0,0,0
+item_tags	=	cover
+override_section = lr300_barrel_cover_attributes
+
+[lr300_barrel_cover_attributes]
+zoom_rotate_time = -0.03
+impair_koeff = 0.8
+
+[416_barrel_sight]:attachment_base_ar
+kind = ar_misc
+inv_ui_sign				= 416s
+visual							= w_att_huds\416_barrel_sight	
+description				= no_attributes_descr
+inv_name					= 416_barrel_sight
+inv_name_short		= 416_barrel_sightS
+cost							= 300
+inv_weight				= 0.04
+inv_grid_x					= 38
+inv_grid_y					= 0
+attachment_point	= 416_barrel_sight|0,0,0|0,0,0
+override_section = 416_barrel_sight_attributes
+
+[416_barrel_sight_attributes]
+[416_barrel_sight_att]
+
+---\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ AR-UPPER \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+[ar9_upper_a1]:attachment_base_ar
+kind  =  ar9
+inv_ui_sign				= ar9_up
+visual							= w_att_huds\ar9_upper_a1	
+description				= sight_rear_carry_descr
+inv_name					= ar9_upper_a1
+inv_name_short		= ar9_upper_a1S
+cost							= 1850
+inv_weight				= 0.32
+inv_grid_width			= 2
+inv_grid_x					= 6
+inv_grid_y					= 1
+attachment_point	= ar9_upper|0,0,0|0,0,0
+attachment_slots	= ar9_zatvor|zatvor|0,0,0|0,0,0#ar9_barrel|wpn_body|0,0,0|0,0,0#ar_hg|wpn_body|0,0,0|0,0,0#carry|wpn_body|0,0.081063,0|0,0,0
+item_tags =	upper
+override_section = ar9_upper_a1_attributes
+
+[ar9_upper_a1_attributes]
+zoom_rotate_time = -0.04
+impair_koeff = 0.8
+[ar9_upper_a1_att]
+zoom_rotate_time = -0.04
+recoil_koeff            = -0.1
+impair_koeff              = 0.8
+
+[ar9_upper]:ar9_upper_a1
+kind  =  ar9
+inv_ui_sign				= ar9_up+
+visual							= w_att_huds\ar9_upper_b	
+description				= pica_12_up
+inv_name					= ar9_upper
+inv_name_short		= ar9_upperS
+cost							= 2400
+inv_weight				= 0.24
+inv_grid_x					= 8
+attachment_slots	= ar9_zatvor|zatvor|0,0,0|0,0,0#ar9_barrel|wpn_body|0,0,0|0,0,0#ar_hg|wpn_body|0,0,0|0,0,0#sight_rear|wpn_body|0,0.081063,0|0,0,0#pica_12|wpn_body|0,0.081063,-0.0052|0,0,0
+override_section = ar9_upper_attributes
+
+[ar9_upper_attributes]
+zoom_rotate_time = 0.01
+[ar9_upper_att]
+zoom_rotate_time = 0.01
+recoil_koeff            = -0.1
+
+[ar9b_upper]:ar9_upper
+kind  =  ar9
+inv_ui_sign				= ar9b_up
+inv_name					= ar9b_upper
+inv_name_short		= ar9b_upperS
+cost							= 2100
+inv_weight				= 0.23
+inv_grid_x					= 10
+attachment_point	= ar9b_upper|0,0,0|0,0,0
+attachment_slots	= ar9_zatvor|zatvor|0,0,0|0,0,0#ar9b_barrel|wpn_body|0,0,0|0,0,0#ar_hg|wpn_body|0,0,0|0,0,0#sight_rear|wpn_body|0,0.081063,0|0,0,0#pica_12|wpn_body|0,0.081063,-0.0052|0,0,0
+override_section = ar9b_upper_attributes
+
+[ar9b_upper_attributes]
+zoom_rotate_time = 0.01
+
+[ar10_upper]:attachment_base_ar
+kind = ar10
+inv_ui_sign				= ar10_up
+visual						= w_att_huds\ar10_upper	
+description				= pica_17_up
+inv_name					= ar10_upper
+inv_name_short			= ar10_upperS
+cost							= 2800
+inv_weight					= 0.65
+inv_grid_width			= 2
+inv_grid_x					= 12
+inv_grid_y					= 1
+attachment_point	= ar10_upper|0,0,0|0,0,0
+attachment_slots	= ar10_zatvor|zatvor|0,0,0|0,0,0#ar10_barrel|wpn_body|0,0,0|0,0,0#ar_hg|wpn_body|0,0,0.0119|0,0,0#sight_rear|wpn_body|0,0.081063,-0.0244|0,0,0#pica_17|wpn_body|0,0.081063,-0.026|0,0,0
+item_tags =	upper
+override_section = ar10_upper_attributes
+
+[ar10_upper_attributes]
+zoom_rotate_time = 0.01
+impair_koeff = 0.8
+
+[ar10_upper_l129a1]:ar10_upper
+kind = ar10
+inv_ui_sign				= L129a1_up
+visual							= w_att_huds\ar10_upper_l129a1	
+description				= ar10_upper_l129a1_descr
+inv_name					= ar10_upper_l129a1
+inv_name_short		= ar10_upper_l129a1S
+cost							= 7600
+inv_weight				= 1.35
+inv_grid_width			= 3
+inv_grid_x					= 14
+attachment_slots	= ar10_zatvor|zatvor|0,0,0|0,0,0#ar10_barrel|wpn_body|0,0,0|0,0,0#sight_front|wpn_body|0,0.081063,0.384|0,0,0#sight_rear|wpn_body|0,0.081063,-0.0244|0,0,0#picgrp|wpn_body|0,-0.0032,0|0,0,0#pica_17|wpn_body|0,0.081063,-0.0326|0,0,0#pica_8|wpn_body|0,0.081063,0.17|0,0,0#pica_3|wpn_body|-0.022249,0.054362,0.37|0,0,-90#pica_3|wpn_body|0.022249,0.054362,0.37|0,0,90#pica_3|wpn_body|0,0.032366,0.37|0,0,180#bipods|wpn_body|0,0.032366,0.368|0,0,0
+override_section 	= ar10_upper_l129a1_attributes
+[ar10_upper_l129a1_attributes]:cp_attributes
+zoom_rotate_time = 0.04
+inertia_koeff           = 1.1
+impair_koeff = 0.8
+
+[ar15_upper_a1]:attachment_base_ar
+kind = ar_upper
+inv_ui_sign				= m16_up1
+visual							= w_att_huds\ar15_upper_a1
+description				= sight_rear_carry_descr
+inv_name					= ar15_upper_a1
+inv_name_short		= ar15_upper_a1S
+cost							= 1900
+inv_weight				= 0.33
+inv_grid_width			= 2
+inv_grid_x					= 19
+inv_grid_y					= 1
+attachment_point	= ar15_upper|0,0,0|0,0,0
+attachment_slots	= ar15_zatvor|zatvor|0,0,0|0,0,0#ar15_barrel|wpn_body|0,0,0|0,0,0#ar_hg|wpn_body|0,0,0|0,0,0#carry|wpn_body|0,0.081063,0|0,0,0
+override_section = ar15_upper_a1_attributes
+
+[ar15_upper_a1_attributes]
+zoom_rotate_time = -0.04
+recoil_koeff = -0.02
+impair_koeff = 0.8
+
+[ar15_upper_a2]:ar15_upper_a1
+kind = ar_upper
+inv_ui_sign				= m16_up2
+visual							= w_att_huds\ar15_upper_a2	
+inv_name					= ar15_upper_a2
+inv_name_short		= ar15_upper_a2S
+cost							= 1950
+inv_weight				= 0.35
+inv_grid_x					= 21
+attachment_slots	= ar15_zatvor|zatvor|0,0,0|0,0,0#ar15_barrel|wpn_body|0,0,0|0,0,0#ar_hg|wpn_body|0,0,0|0,0,0#carry|wpn_body|0,0.081063,0|0,0,0
+override_section = ar15_upper_a2_attributes
+
+[ar15_upper_a2_attributes]
+zoom_rotate_time = -0.04
+recoil_koeff = -0.02
+impair_koeff = 0.8
+
+[ar15_upper]:ar15_upper_a1
+kind = ar_upper
+inv_ui_sign				= m4_up+
+visual							= w_att_huds\ar15_upper_ar74	
+description				= pica_14_up
+inv_name					= ar15_upper
+inv_name_short		= ar15_upperS
+cost							= 2450
+inv_weight				= 0.25
+inv_grid_x					= 23
+attachment_slots	= ar15_zatvor|zatvor|0,0,0|0,0,0#ar15_barrel|wpn_body|0,0,0|0,0,0#ar_hg|wpn_body|0,0,0|0,0,0#sight_rear|wpn_body|0,0.081063,0|0,0,0#pica_14|wpn_body|0,0.081063,-0.0052|0,0,0
+item_tags	=	upper
+override_section 	= ar15_upper_attributes
+
+[ar15_upper_attributes]
+zoom_rotate_time = 0.01
+recoil_koeff = -0.01
+
+[ar15_upper_mur]:ar15_upper
+kind = ar_upper
+inv_ui_sign				= m4_up+
+visual							= w_att_huds\ar15_upper_vltor_mur_1s
+inv_name					= ar15_upper_vltor_mur_1s	
+inv_name_short		= ar15_upper_vltor_mur_1s	S
+cost							= 4000
+inv_weight				= 0.145
+inv_grid_x         		= 12
+inv_grid_y         		= 2
+override_section 	= ar15_upper_mur_attributes
+[ar15_upper_mur_attributes]
+zoom_rotate_time = -0.02
+recoil_koeff            = -0.04
+impair_koeff              = 0.8
+
+[ar15_upper_lr300]:ar15_upper_a1
+kind = ar_upper
+inv_ui_sign				= lr300_up
+visual							= w_att_huds\ar15_upper_lr300	
+description				= pica_14_up
+inv_name					= ar15_upper_lr300
+inv_name_short		= ar15_upper_lr300S
+cost							= 2550
+inv_weight				= 0.28
+inv_grid_x					= 17
+attachment_slots	= lr300_zatvor|zatvor|0,0,0|0,0,0#lr300_barrel|wpn_body|0,0,0|0,0,0#sight_rear|wpn_body|0,0.085933,0|0,0,0#pica_14|wpn_body|0,0.085933,-0.0052|0,0,0
+item_tags	=	upper
+override_section 	= ar15_upper_lr300_attributes
+
+[ar15_upper_lr300_attributes]
+aim_hud_offset_pos = -0.08, 0.0174, -0.1
+aim_hud_offset_pos_16x9 = -0.08, 0.0174, -0.1
+aimpoint_offset_y = 0.1171
+zoom_rotate_time = -0.01
+impair_koeff = 0.8
+[ar15_upper_lr300_att]
+;aim_hud_offset_pos			= -0.0599, 0.016, -0.07
+;aim_hud_offset_pos_16x9	= -0.0599, 0.016, -0.07
+;aim_hud_offset_rot				= 0.005, 0.004, 0
+;aim_hud_offset_rot_16x9	= 0.005, 0.004, 0
+aim_hud_offset_pos			= -0.08, 0.0174, -0.1
+aim_hud_offset_pos_16x9	= -0.08, 0.0174, -0.1
+aimpoint_offset_y = 0.1171
+zoom_rotate_time = -0.01
+recoil_koeff            = -0.1
+impair_koeff              = 0.8
+
+[ar74_upper]:ar15_upper
+kind = ar74
+inv_ui_sign				= ar74_up
+inv_name					= ar74_upper
+inv_name_short		= ar74_upperS
+cost							= 2500
+inv_weight				= 0.25
+inv_grid_x					= 25
+attachment_point	= ar74_upper|0,0,0|0,0,0
+attachment_slots	= ar15_zatvor|zatvor|0,0,0|0,0,0#ar74_barrel|wpn_body|0,0,0|0,0,0#ar_hg|wpn_body|0,0,0|0,0,0#sight_rear|wpn_body|0,0.081063,0|0,0,0#pica_14|wpn_body|0,0.081063,-0.0052|0,0,0
+override_section = ar74_upper_attributes
+
+[ar74_upper_attributes]
+zoom_rotate_time = 0.01
+
+[ar15_upper_416]:ar15_upper_a1
+kind = ar_upper
+inv_ui_sign				= 416_up
+visual							= w_att_huds\ar15_upper_416	
+description				= pica_13_up
+inv_name					= ar15_upper_416
+inv_name_short		= ar15_upper_416S
+cost							= 2600
+inv_weight				= 0.27
+inv_grid_x					= 27
+attachment_slots	= 416_zatvor|zatvor|0,0,0|0,0,0#416_barrel|wpn_body|0,0,0|0,0,0#416_hg|wpn_body|0,0,0|0,0,0#sight_rear|wpn_body|0,0.085933,0.0032|0,0,0#pica_13|wpn_body|0,0.085933,0.00193|0,0,0
+item_tags	=	upper
+override_section 	= ar15_upper_416_attributes
+
+[ar15_upper_416_attributes]
+aim_hud_offset_pos = -0.08, 0.0174, -0.1
+aim_hud_offset_pos_16x9 = -0.08, 0.0174, -0.1
+aimpoint_offset_y = 0.1171
+zoom_rotate_time = -0.01
+recoil_koeff = -0.02
+impair_koeff = 0.8
+
+[ar15_upper_brn180]:attachment_base_ar	
+kind = ar_upper
+inv_ui_sign				= brn180_up
+visual							= w_att_huds\ar15_upper_brn180	
+description				= ar15_upper_brn180_descr
+inv_name					= ar15_upper_brn180
+inv_name_short		= ar15_upper_brn180S
+cost							= 6000
+inv_weight				= 0.95
+inv_grid_width			= 3
+inv_grid_x					= 29
+inv_grid_y					= 1
+1icon_layer = clean3_ico
+attachment_point	= ar15_upper|0,0,0|0,0,0
+attachment_slots	= brn180_zatvor|zatvor|0,0,0|0,0,0#brn180_barrel|wpn_body|0,0,0|0,0,0#sight_rear|wpn_body|0,0.081063,0.0032|0,0,0#sight_front|wpn_body|0,0.081063,0.415|0,0,0#pica_18|wpn_body|0,0.081063,-0.015|0,0,0#pica_8|wpn_body|0,0.081063,0.18|0,0,0#ar_buffer|wpn_body|0,0,0|0,0,0#mlok_rail_grip|wpn_body|0,0,0|0,0,0#mlok|wpn_body|-0.01888,0.05712,0.395|0,0,-90#mlok|wpn_body|0.01888,0.05712,0.395|0,0,90#mlok|wpn_body|0,0.0359,0.389|0,0,180#lock_bipods|wpn_body|0,0.0359,0.389|0,0,0
+item_tags =	upper,spring
+override_section 	= ar15_upper_brn180_attributes
+
+[ar15_upper_brn180_attributes]
+animation_prefix = c_
+anm_reload_misfire = ar15_c_unjam_brn180, unjam
+weapon_lenght = 0.1
+zoom_rotate_time = 0.022
+recoil_koeff = -0.05
+inertia_koeff = 1.1
+impair_koeff = 0.9
+[brn180_right_bolt_attributes]:c_attributes
+anm_reload_misfire = ar15_c_unjam_brn180, unjam
+weapon_lenght = 0.1
+zoom_rotate_time = 0.022
+recoil_koeff            = -0.35
+inertia_koeff           = 1.1
+impair_koeff = 0.9
+
+[ar15_upper_lmt]:ar15_upper_a1
+kind = ar_upper
+inv_ui_sign				= Lmt_up
+visual							= w_att_huds\ar15_upper_lmt	
+description				= ar15_upper_lmt_descr
+inv_name					= ar15_upper_lmt
+inv_name_short		= ar15_upper_lmtS
+cost							= 4400
+inv_weight				= 0.65
+inv_grid_width			= 3
+inv_grid_x					= 32
+attachment_slots	= ar15_zatvor|zatvor|0,0,0|0,0,0#ar15_barrel|wpn_body|0,0,0|0,0,0#sight_rear|wpn_body|0,0.081063,0|0,0,0#sight_front|wpn_body|0,0.081063,0.313|0,0,0#pica_15|wpn_body|0,0.081063,-0.0083|0,0,0#pica_8|wpn_body|0,0.081063,0.15|0,0,0#picgrp|wpn_body|0,0,0|0,0,0#pica_3|wpn_body|-0.02,0.0569,0.309|0,0,-90#pica_3|wpn_body|0.02,0.0569,0.309|0,0,90#pica_3|wpn_body|0,0.03565,0.309|0,0,180#bipods|wpn_body|0,0.03565,0.298|0,0,0
+item_tags	=	upper
+override_section		= ar15_upper_lmt_attributes
+[ar15_upper_lmt_attributes]:cp_attributes
+zoom_rotate_time = 0.04
+recoil_koeff            = -0.06
+inertia_koeff           = 1.2
+impair_koeff = 0.9
+
+[ar15_upper_lwrc]:ar15_upper_a1
+kind = ar_upper
+inv_ui_sign				= lwrc_up
+visual							= w_att_huds\ar15_upper_lwrc_m6ic	
+description				= ar15_upper_lwrc_m6ic_descr
+inv_name					= ar15_upper_lwrc_m6ic
+inv_name_short		= ar15_upper_lwrc_m6icS
+cost							= 4600
+inv_weight				= 0.63
+inv_grid_width			= 3
+inv_grid_x					= 35
+attachment_slots	= 416_zatvor|zatvor|0,0,0|0,0,0#416_barrel|wpn_body|0,0,0|0,0,0#sight_rear|wpn_body|0,0.081063,0|0,0,0#sight_front|wpn_body|0,0.081063,0.3288|0,0,0#pica_15|wpn_body|0,0.081063,0.0036|0,0,0#pica_8|wpn_body|0,0.081063,0.155|0,0,0#picgrp|wpn_body|0,0,0|0,0,0#pica_3|wpn_body|-0.020957,0.056067,0.29|0,0,-90#pica_3|wpn_body|0.020957,0.056067,0.29|0,0,90#pica_3|wpn_body|0,0.03545,0.252|0,0,180
+item_tags	=	upper
+override_section		= ar15_upper_lwrc_attributes
+[ar15_upper_lwrc_attributes]:c_attributes
+zoom_rotate_time = 0.03
+recoil_koeff            = -0.05
+inertia_koeff           = 1.2
+impair_koeff           = 0.8
+
+[ar15_upper_steyr]:ar15_upper_a1
+kind = ar_upper
+inv_ui_sign				= steyr_up
+visual							= w_att_huds\ar15_upper_steyr_rs	
+description				= ar15_upper_steyr_rs_descr
+inv_name					= ar15_upper_steyr_rs
+inv_name_short		= ar15_upper_steyr_rsS
+cost							= 5250
+inv_weight				= 0.8
+inv_grid_width			= 3
+inv_grid_x					= 38
+1icon_layer = clean3_ico
+attachment_slots	= ar15_zatvor|zatvor|0,0,0|0,0,0#steyr_barrel|wpn_body|0,0,0|0,0,0#sight_rear|wpn_body|0,0.081063,0|0,0,0#pica_15|wpn_body|0,0.081063,0.0024|0,0,0#pica_8|wpn_body|0,0.081063,0.15|0,0,0#picgrp|wpn_body|0,-0.00091,0|0,0,0#pica_3|wpn_body|0.019095,0.05727,0.27|0,0,90#pica_3|wpn_body|0,0.034645,0.27|0,0,180#bipods|wpn_body|0,0.034645,0.277|0,0,0
+item_tags	= gas, upper
+override_section		= ar15_upper_steyr_attributes
+[ar15_upper_steyr_attributes]:c_attributes
+weapon_lenght	=	0.2
+zoom_rotate_time = 0.03
+recoil_koeff            = -0.03
+inertia_koeff           = 1.1
+impair_koeff           = 0.7
+
+[derya_upper]:attachment_base_ar
+kind  =  derya
+inv_ui_sign				= mk12_up
+visual							= w_att_huds\derya_upper
+description				= pica_18_up
+inv_name					= derya_upper
+inv_name_short		= derya_upperS
+cost							= 3000
+inv_weight				= 0.34
+inv_grid_width			= 2
+inv_grid_x					= 6
+inv_grid_y					= 2
+attachment_point	= derya_upper|0,0,0|0,0,0
+attachment_slots	= derya_zatvor|zatvor|0,0,0|0,0,0#derya_barrel|wpn_body|0,0,0|0,0,0#sight_rear|wpn_body|0,0.085933,0|0,0,0#pica_18|wpn_body|0,0.085933,-0.0167|0,0,0
+override_section = derya_upper_attributes
+
+[derya_upper_attributes]
+zoom_rotate_time = 0.01
+impair_koeff = 0.8
+[derya_upper_att]
+zoom_rotate_time = 0.01
+recoil_koeff            = -0.12
+impair_koeff              = 0.8
+
+[omen_upper]:attachment_base_ar
+kind  =  omen
+inv_ui_sign				= omen_up
+visual							= w_att_huds\omen_upper
+description				= pica_19_up
+inv_name					= omen_upper
+inv_name_short		= omen_upperS
+cost							= 5000
+inv_weight				= 0.5
+inv_grid_width			= 2
+inv_grid_x					= 10
+inv_grid_y					= 2
+attachment_point	= omen_upper|0,0,0|0,0,0
+attachment_slots	= omen_zatvor|zatvor|0,0,0|0,0,0#omen_barrel|wpn_body|0,0,0|0,0,0#omen_hg|wpn_body|0,0,0|0,0,0#sight_rear|wpn_body|0,0.085933,-0.0167|0,0,0#pica_19|wpn_body|0,0.085933,-0.028|0,0,0
+override_section = omen_upper_attributes
+
+[omen_upper_attributes]
+zoom_rotate_time = 0.01
+impair_koeff = 0.8
+
+[mk47_upper]:attachment_base_ar
+kind = mk47
+inv_ui_sign				= mk47_up
+visual							= w_att_huds\mk47_upper
+description				= pica_14_up
+inv_name					= mk47_upper
+inv_name_short		= mk47_upperS
+cost							= 2600
+inv_weight				= 0.35
+inv_grid_width			= 2
+inv_grid_x					= 8
+inv_grid_y					= 2
+attachment_point	= mk47_upper|0,0,0|0,0,0
+attachment_slots	= mk47_zatvor|zatvor|0,0,0|0,0,0#mk47_barrel|wpn_body|0,0,0|0,0,0#ar_hg|wpn_body|0,0,0.0119|0,0,0#sight_rear|wpn_body|0,0.081063,0|0,0,0#pica_14|wpn_body|0,0.081063,-0.003|0,0,0
+override_section = mk47_upper_attributes
+
+---\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ AR-BARREL \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+[mk47_upper_attributes]
+zoom_rotate_time = 0.01
+impair_koeff = 0.8
+
+[416_barrel_190]:attachment_base_ar
+kind = ar_barrels
+inv_ui_sign				= 416bs
+visual							= w_att_huds\416_barrel_190
+inv_name					= 416_barrel_190
+inv_name_short		= 416_barrelS
+cost							= 1150
+inv_weight				= 0.11
+inv_grid_x					= 6
+inv_grid_y					= 3
+1icon_layer = clean_lub1_ico
+attachment_point = 416_barrel|0,0,0|0,0,0
+attachment_slots	= ar_muzzle|muzzle|0,0,-0.0715|0,0,0#416_barrel_sight|wpn_body|0,0,-0.068|0,0,0
+item_tags	= barrel,gas
+override_section			=	416_barrel_190_attributes
+[416_barrel_190_attributes]:ar_barrel_1_att
+fire_point		= 0, 0, -0.03
+weapon_lenght				=	0.15
+rpm_koeff						= 0.125
+bullet_speed				= 0.83
+k_hit_koeff						= 0.85
+fire_dispersion_base		= 0.16
+impair_koeff					= 0.9
+
+recoil_koeff = -0.03
+inertia_koeff = 1.1
+zoom_rotate_time = 0.01
+[416_barrel_228]:416_barrel_190
+kind = ar_barrels
+inv_ui_sign				= 416bs+
+visual							= w_att_huds\416_barrel_228
+inv_name					= 416_barrel_228
+cost							= 1300
+inv_weight				= 0.13
+inv_grid_x					= 7
+attachment_slots	= ar_muzzle|muzzle|0,0,-0.0294|0,0,0#416_barrel_sight|wpn_body|0,0,-0.0397|0,0,0
+override_section	=	416_barrel_228_attributes
+[416_barrel_228_attributes]:ar_barrel_2_att
+fire_point						= 0, 0, 0.02
+weapon_lenght				=	0.2
+rpm_koeff						= 0.0625
+bullet_speed				= 0.86
+k_hit_koeff						= 0.86
+fire_dispersion_base		= 0.14
+impair_koeff					= 0.9
+
+override_section	=	ar_barrel_2_att
+recoil_koeff = -0.04
+inertia_koeff = 1.1
+zoom_rotate_time = 0.02
+[ar_barrel_2_att]
+zoom_rotate_time = 0.02
+recoil_koeff             = -0.18
+inertia_koeff            = 1.1
+
+[416_barrel_279]:416_barrel_190
+kind = ar_barrels
+inv_ui_sign				= 416bm
+visual							= w_att_huds\416_barrel_279
+inv_name					= 416_barrel_279
+cost							= 1500
+inv_weight				= 0.18
+inv_grid_width			= 2
+inv_grid_x					= 8
+1icon_layer = clean_lub2_ico
+attachment_slots	= ar_muzzle|muzzle|0,0,0.0101|0,0,0#416_barrel_sight|wpn_body|0,0,0|0,0,0
+override_section			=	416_barrel_279_attributes
+[416_barrel_279_attributes]:ar_barrel_4_att
+fire_point		= 0, 0, 0.055
+weapon_lenght				=	0.24
+rpm_koeff						= 0.025
+bullet_speed				= 0.9
+k_hit_koeff						= 0.88
+fire_dispersion_base		= 0.16
+impair_koeff					= 0.85
+
+recoil_koeff = -0.05
+inertia_koeff = 1.2
+zoom_rotate_time = 0.03
+[416_barrel_317_lwrc]:416_barrel_279
+kind = ar_barrels
+inv_ui_sign				= lwrc_b
+visual							= w_att_huds\416_barrel_317_lwrc
+inv_name					= 416_barrel_317_lwrc
+inv_name_short		= 416_barrel_317_lwrcS
+cost							= 1750
+inv_weight				= 0.26
+inv_grid_x					= 10
+attachment_slots	= ar_muzzle|muzzle|0,0,0.0415|0,0,0#416_barrel_sight|wpn_body|0,0,0.0151|0,0,0
+override_section = 416_barrel_317_lwrc_attributes
+[416_barrel_317_lwrc_attributes]:ar_barrel_6_att
+fire_point						= 0, 0, 0.085
+weapon_lenght						=	0.27
+rpm_koeff						= 0.02
+bullet_speed				= 0.94
+k_hit_koeff						= 0.9
+fire_dispersion_base		= 0.12
+impair_koeff					= 0.85
+
+override_section = ar_barrel_6_att
+recoil_koeff = -0.06
+inertia_koeff = 1.2
+zoom_rotate_time = 0.03
+[ar_barrel_6_att]
+zoom_rotate_time = 0.03
+recoil_koeff             = -0.21
+inertia_koeff            = 1.2
+
+[416_barrel_368]:416_barrel_279
+kind = ar_barrels
+inv_ui_sign				= 416bm+
+visual							= w_att_huds\416_barrel_368
+inv_name					= 416_barrel_368
+cost							= 2150
+inv_weight				= 0.3
+inv_grid_x					= 12
+attachment_slots	= ar_muzzle|muzzle|0,0,0.084|0,0,0#416_barrel_sight|wpn_body|0,0,0|0,0,0
+override_section			=	416_barrel_368_attributes
+[416_barrel_368_attributes]:ar_barrel_10_att
+fire_point						= 0, 0, 0.13
+weapon_lenght				=	0.32
+bullet_speed				= 0.98
+k_hit_koeff						= 0.95
+fire_dispersion_base		= 0.1
+impair_koeff					= 0.75
+
+recoil_koeff = -0.07
+inertia_koeff = 1.4
+zoom_rotate_time = 0.06
+[416_barrel_406]:416_barrel_190
+kind = ar_barrels
+inv_ui_sign				= 416bh
+visual							= w_att_huds\416_barrel_406
+inv_name					= 416_barrel_406
+cost							= 2300
+inv_weight				= 0.35
+inv_grid_width			= 3
+inv_grid_x					= 14
+1icon_layer = clean_lub3_ico
+attachment_slots	= ar_muzzle|muzzle|0,0,0.1156|0,0,0#416_barrel_sight|wpn_body|0,0,0|0,0,0
+override_section = 416_barrel_406_attributes
+[416_barrel_406_attributes]:ar_barrel_11_att
+fire_point						= 0, 0, 0.16
+weapon_lenght				=	0.35
+rpm_koeff						= -0.025
+bullet_speed				= 1
+fire_dispersion_base		= 0.09
+impair_koeff					= 0.7
+
+override_section = ar_barrel_11_att
+recoil_koeff = -0.08
+inertia_koeff = 1.4
+zoom_rotate_time = 0.06
+[ar_barrel_11_att]
+zoom_rotate_time = 0.06
+recoil_koeff             = -0.27
+inertia_koeff            = 1.4
+
+[416_barrel_508]:416_barrel_406
+kind = ar_barrels
+inv_ui_sign				= 416bl
+visual							= w_att_huds\416_barrel_508
+inv_name					= 416_barrel_508
+cost							= 2800
+inv_weight				= 0.44
+inv_grid_x					= 17
+attachment_slots	= ar_muzzle|muzzle|0,0,0.2142|0,0,0#416_barrel_sight|wpn_body|0,0,0.1252|0,0,0
+override_section = 416_barrel_508_attributes
+[416_barrel_508_attributes]:ar_barrel_14_att
+fire_point						= 0, 0, 0.26
+weapon_lenght				=	0.45
+rpm_koeff						= -0.0625
+bullet_speed				= 1.1
+k_hit_koeff						= 1.1
+fire_dispersion_base		= 0.07
+impair_koeff					= 0.6
+
+override_section = ar_barrel_14_att
+recoil_koeff = -0.1
+inertia_koeff = 1.5
+zoom_rotate_time = 0.09
+[ar_barrel_14_att]
+zoom_rotate_time = 0.09
+recoil_koeff             = -0.32
+inertia_koeff            = 1.5
+
+[ar15_barrel_203]:attachment_base_ar
+kind = ar_barrels
+inv_ui_sign				= hera
+visual							= w_att_huds\ar15_barrel_203
+inv_name					= ar15_barrel_203
+inv_name_short		= ar15_barrelS
+cost							= 1200
+inv_weight				= 0.13
+inv_grid_x					= 39
+inv_grid_y					= 4
+1icon_layer = clean1_ico
+attachment_point	= ar15_barrel|0,0,0|0,0,0
+attachment_slots	= ar_muzzle|muzzle|0,0,-0.0589|0,0,0
+item_tags = barrel,gas
+override_section =	ar15_barrel_203_attributes
+[ar15_barrel_203_attributes]:ar_barrel_1_att
+fire_point = 0, 0, -0.015
+weapon_lenght				=	0.15
+rpm_koeff						= 0.2
+bullet_speed				= 0.84
+k_hit_koeff						= 0.85
+fire_dispersion_base		= 0.15
+
+recoil_koeff = -0.04
+inertia_koeff = 1.1
+zoom_rotate_time = 0.01
+[ar15_barrel_267]:attachment_base_ar
+kind = ar_barrels
+inv_ui_sign				= m4bs
+visual							= w_att_huds\ar15_barrel_267
+inv_name					= ar15_barrel_267
+inv_name_short		= ar15_barrelS
+cost							= 1200
+inv_weight				= 0.13
+inv_grid_width			= 2
+inv_grid_x					= 6
+inv_grid_y					= 4
+1icon_layer = clean2_ico
+attachment_point	= ar15_barrel|0,0,0|0,0,0
+attachment_slots	= ar_muzzle|muzzle|0,0,0|0,0,0#ar_gas|wpn_body|0,0,0|0,0,0
+item_tags	= barrel
+override_section			=	ar15_barrel_267_attributes
+[ar15_barrel_267_attributes]:ar_barrel_3_att
+fire_point					= 0, 0, 0.035
+weapon_lenght				=	0.23
+rpm_koeff						= 0.125
+bullet_speed				= 0.9
+k_hit_koeff						= 0.88
+fire_dispersion_base		= 0.13
+
+recoil_koeff = -0.05
+inertia_koeff = 1.1
+zoom_rotate_time = 0.02
+[ar15_barrel_317]:ar15_barrel_267
+kind = ar_barrels
+inv_ui_sign				= m4bs+
+visual							= w_att_huds\ar15_barrel_317
+inv_name					= ar15_barrel_317
+cost							= 1450
+inv_weight				= 0.18
+inv_grid_x					= 8
+attachment_slots	= ar_muzzle|muzzle|0,0,0.0415|0,0,0#ar_gas|wpn_body|0,0,0|0,0,0
+override_section			=	ar15_barrel_317_attributes
+[ar15_barrel_317_attributes]:ar_barrel_5_att
+fire_point						= 0, 0, 0.085
+weapon_lenght				=	0.27
+rpm_koeff						= 0.075
+bullet_speed				= 0.94
+k_hit_koeff						= 0.9
+fire_dispersion_base		= 0.12
+
+override_section = ar_barrel_5_att
+recoil_koeff = -0.06
+inertia_koeff = 1.2
+zoom_rotate_time = 0.04
+[ar_barrel_5_att]
+zoom_rotate_time = 0.04
+recoil_koeff             = -0.21
+inertia_koeff            = 1.2
+
+[ar15_barrel_368]:ar15_barrel_267
+kind = ar_barrels
+inv_ui_sign				= m4bm
+visual							= w_att_huds\ar15_barrel_368
+inv_name					= ar15_barrel_368
+cost							= 1900
+inv_weight				= 0.26
+inv_grid_x					= 10
+attachment_slots	= ar_muzzle|muzzle|0,0,0.084|0,0,0#ar_gas|wpn_body|0,0,0|0,0,0
+override_section			=	ar15_barrel_368_attributes
+[ar15_barrel_368_attributes]:ar_barrel_8_att
+fire_point						= 0, 0, 0.13
+weapon_lenght				=	0.32
+bullet_speed				= 0.98
+k_hit_koeff						= 0.95
+fire_dispersion_base		= 0.1
+impair_koeff					= 0.9
+
+recoil_koeff = -0.07
+inertia_koeff = 1.3
+zoom_rotate_time = 0.05
+[ar15_barrel_368_sai]:ar15_barrel_267							;!!!! конфликт с любыми цевьями (комплект цевье+ствол+дульник)
+kind = ar_barrels
+inv_ui_sign				= m4bm
+visual							= w_att_huds\ar15_barrel_368_sai
+inv_name					= ar15_barrel_368_sai
+inv_name_short		= ar15_barrel_368_saiS
+cost							= 6500
+inv_weight				= 0.65
+inv_grid_x         = 12
+inv_grid_y         = 15
+attachment_slots	= mlok|wpn_body|-0.021,0.056881,0.297|0,0,-90#mlok|wpn_body|0.021,0.056881,0.297|0,0,90#pica_28|wpn_body|0,0.081063,0.132|0,0,0#sight_front|wpn_body|0,0.081063,0.422|0,0,0#pica_3|wpn_body|-0.02116,0.05675,0.37|0,0,-90#pica_3|wpn_body|0.02116,0.05675,0.37|0,0,90#pica_3|wpn_body|0,0.034854,0.426|0,0,180#mlok_rail_grip|wpn_body|0,-0.00028,0|0,0,0#bipods|wpn_body|0,0.034834,0.367|0,0,0
+item_tags	= barrel,gas
+override_section	=	ar15_barrel_368_sai_attributes
+[ar15_barrel_368_sai_attributes]:c_attributes
+fire_point					= 0, 0, 0.185
+weapon_lenght				=	0.36
+bullet_speed				= 0.98
+k_hit_koeff						= 0.95
+fire_dispersion_base		= 0.1
+zoom_rotate_time = 0.11
+recoil_koeff            = -0.07
+inertia_koeff           = 1.6
+impair_koeff					= 0.9
+
+[ar15_barrel_406]:ar15_barrel_267
+kind = ar_barrels
+inv_ui_sign				= m4bm+
+visual							= w_att_huds\ar15_barrel_406
+inv_name					= ar15_barrel_406
+cost							= 2150
+inv_weight				= 0.32
+inv_grid_width			= 3
+inv_grid_x					= 12
+1icon_layer = clean3_ico
+attachment_slots	= ar_muzzle|muzzle|0,0,0.1156|0,0,0#ar_gas|wpn_body|0,0,0|0,0,0
+override_section			=	ar15_barrel_406_attributes
+[ar15_barrel_406_attributes]:ar_barrel_10_att
+fire_point				= 0, 0, 0.16
+weapon_lenght				=	0.35
+rpm_koeff						= -0.0625
+bullet_speed				= 1
+fire_dispersion_base		= 0.09
+impair_koeff					= 0.9
+
+recoil_koeff = -0.08
+inertia_koeff = 1.4
+zoom_rotate_time = 0.06
+[ar15_barrel_508]:ar15_barrel_406
+kind = ar_barrels
+inv_ui_sign				= m16_bar
+visual							= w_att_huds\ar15_barrel_508
+inv_name					= ar15_barrel_508
+cost							= 2450
+inv_weight				= 0.41
+inv_grid_x					= 15
+attachment_slots	= ar_muzzle|muzzle|0,0,0.2142|0,0,0#ar_gas|wpn_body|0,0,0.1123|0,0,0
+override_section = ar15_barrel_508_attributes
+[ar15_barrel_508_attributes]:ar_barrel_13_att
+fire_point						= 0, 0, 0.26
+weapon_lenght				=	0.45
+rpm_koeff						= -0.125
+bullet_speed				= 1.1
+k_hit_koeff						= 1.1
+fire_dispersion_base		= 0.07
+impair_koeff					= 0.8
+
+override_section = ar_barrel_13_att
+recoil_koeff = -0.1
+inertia_koeff = 1.5
+zoom_rotate_time = 0.08
+[ar_barrel_13_att]
+zoom_rotate_time = 0.08
+recoil_koeff             = -0.31
+inertia_koeff            = 1.5
+
+[ar9_barrel_190]:attachment_base_ar
+kind  =  ar9
+inv_ui_sign				= ar9bs
+visual							= w_att_huds\ar9_barrel_190
+inv_name					= ar9_barrel_190
+inv_name_short		= ar9_barrelS
+cost							= 750
+inv_weight				= 0.11
+inv_grid_x					= 20
+inv_grid_y					= 3
+1icon_layer = clean1_ico
+attachment_point	= ar9_barrel|0,0,0|0,0,0
+attachment_slots	= ar_muzzle|muzzle|0,0,0|0,0,0
+item_tags	= barrel
+override_section			=	ar9_barrel_190_attributes
+[ar9_barrel_190_attributes]:ar_barrel_1_att
+fire_point = 0, 0, 0.035
+weapon_lenght				=	0.15
+rpm_koeff						= 0.11
+bullet_speed				= 1.14
+k_hit_koeff						= 1.1
+fire_dispersion_base		= 0.16
+
+override_section = ar_barrel_1_att
+recoil_koeff = -0.01
+inertia_koeff = 1.1
+zoom_rotate_time = 0.01
+[ar_barrel_1_att]
+zoom_rotate_time = 0.01
+recoil_koeff             = -0.17
+inertia_koeff            = 1.1
+
+[ar9_barrel_267]:ar9_barrel_190
+kind  =  ar9
+inv_ui_sign				= ar9bs+
+visual							= w_att_huds\ar9_barrel_267
+inv_name					= ar9_barrel_267
+cost							= 900
+inv_weight				= 0.13
+inv_grid_width			= 2
+inv_grid_x					= 21
+1icon_layer = clean2_ico
+attachment_slots	= ar_muzzle|muzzle|0,0,0.0716|0,0,0#ar_gas|wpn_body|0,0,0|0,0,0
+override_section			=	ar9_barrel_267_attributes
+[ar9_barrel_267_attributes]:ar_barrel_3_att
+fire_point = 0, 0, 0.1
+weapon_lenght				=	0.23
+bullet_speed				= 1.31
+k_hit_koeff						= 1.15
+fire_dispersion_base		= 0.13
+impair_koeff					= 0.95
+
+recoil_koeff = -0.02
+inertia_koeff = 1.1
+zoom_rotate_time = 0.02
+[ar9_barrel_368]:ar9_barrel_267
+kind  =  ar9
+inv_ui_sign				= ar9bm
+visual							= w_att_huds\ar9_barrel_368
+inv_name					= ar9_barrel_368
+cost							= 1050
+inv_weight				= 0.23
+inv_grid_x					= 23
+attachment_slots	= ar_muzzle|muzzle|0,0,0.1556|0,0,0#ar_gas|wpn_body|0,0,0|0,0,0
+override_section			=	ar9_barrel_368_attributes
+[ar9_barrel_368_attributes]:ar_barrel_8_att
+fire_point	= 0, 0, 0.19
+weapon_lenght				= 0.32
+rpm_koeff						= -0.11
+bullet_speed				= 1.51
+k_hit_koeff						= 1.25
+fire_dispersion_base		= 0.1
+impair_koeff					= 0.85
+
+recoil_koeff = -0.03
+inertia_koeff = 1.3
+zoom_rotate_time = 0.05
+[ar9_barrel_406]:ar9_barrel_190
+kind  =  ar9
+inv_ui_sign				= ar9bm+
+visual							= w_att_huds\ar9_barrel_406
+inv_name					= ar9_barrel_406
+cost							= 1200
+inv_weight				= 0.23
+inv_grid_width			= 3
+inv_grid_x         		= 25
+1icon_layer = clean3_ico
+attachment_slots	= ar_muzzle|muzzle|0,0,0.1872|0,0,0#ar_gas|wpn_body|0,0,0|0,0,0
+override_section			=	ar9_barrel_406_attributes
+[ar9_barrel_406_attributes]:ar_barrel_10_att
+fire_point = 0, 0, 0.22
+weapon_lenght				=	0.35
+rpm_koeff						= -0.22
+bullet_speed				= 1.6
+k_hit_koeff						= 1.3
+fire_dispersion_base		= 0.09
+impair_koeff					= 0.8
+
+recoil_koeff = -0.04
+inertia_koeff = 1.4
+zoom_rotate_time = 0.06
+[ar9b_barrel_203]:attachment_base_ar
+kind  =  ar9
+inv_ui_sign				= ar9b
+visual							= w_att_huds\ar9b_barrel_203
+inv_name					= ar9b_barrel_203
+inv_name_short		= ar9b_barrelS
+cost							= 700
+inv_weight				= 0.12
+inv_grid_x					= 28
+inv_grid_y					= 3
+1icon_layer = clean1_ico
+attachment_point	= ar9b_barrel|0,0,0|0,0,0
+attachment_slots	= ar_muzzle|muzzle|0,0,-0.0588|0,0,0
+item_tags	= barrel
+override_section =	ar9b_barrel_203_attributes
+[ar9b_barrel_203_attributes]:ar_barrel_1_att
+fire_point = 0, 0, -0.02
+weapon_lenght = 0.05 
+rpm_koeff						= -0.11
+bullet_speed		=	1
+k_hit_koeff						= 1.1
+fire_dispersion_base 		= 0.15
+
+recoil_koeff = -0.01
+inertia_koeff = 1.1
+zoom_rotate_time = 0.01
+[ar9b_barrel_279]:ar9b_barrel_203
+kind  =  ar9
+visual							= w_att_huds\ar9b_barrel_279
+inv_name					= ar9b_barrel_279
+cost							= 800
+inv_weight				= 0.14
+inv_grid_width			= 2
+inv_grid_x					= 29
+1icon_layer = clean2_ico
+attachment_slots	= ar_muzzle|muzzle|0,0,0.01|0,0,0#ar_gas|wpn_body|0,0,0|0,0,0
+override_section			=	ar9b_barrel_279_attributes
+[ar9b_barrel_279_attributes]:ar_barrel_4_att
+fire_point = 0, 0, 0.045
+weapon_lenght =	0.14
+rpm_koeff						= -0.22
+bullet_speed		= 1.09
+k_hit_koeff						= 1.15
+fire_dispersion_base 		= 0.12
+impair_koeff					= 0.9
+
+recoil_koeff = -0.02
+inertia_koeff = 1.2
+zoom_rotate_time = 0.03
+[ar9b_barrel_350]:ar9b_barrel_279
+kind  =  ar9
+visual							= w_att_huds\ar9b_barrel_350
+inv_name					= ar9b_barrel_350
+cost							= 900
+inv_weight				= 0.17
+inv_grid_x					= 31
+attachment_slots	= ar_muzzle|muzzle|0,0,0.0729|0,0,0#ar_gas|wpn_body|0,0,0|0,0,0
+override_section			=	ar9b_barrel_350_attributes
+[ar9b_barrel_350_attributes]:ar_barrel_7_att
+fire_point				= 0, 0, 0.11
+weapon_lenght	=	0.23
+rpm_koeff						= -0.28
+bullet_speed				= 1.14
+k_hit_koeff						= 1.25
+fire_dispersion_base 		= 0.1
+impair_koeff					= 0.9
+
+recoil_koeff = -0.04
+inertia_koeff = 1.3
+zoom_rotate_time = 0.05
+[ar57_barrel_215]:attachment_base_ar
+kind  =  ar57
+inv_ui_sign				= ar57
+visual							= w_att_huds\ar57_barrel_215
+inv_name					= ar57_barrel_215
+inv_name_short		= ar57_barrelS
+cost							= 800
+inv_weight				= 0.12
+inv_grid_x					= 33
+inv_grid_y					= 3
+1icon_layer = clean1_ico
+attachment_point	= ar57_barrel|0,0,0|0,0,0
+attachment_slots	= ar_muzzle|muzzle|0,0,0|0,0,0
+item_tags = barrel
+override_section = ar57_barrel_215_attributes
+
+[ar57_barrel_215_attributes]
+zoom_rotate_time = 0.01
+inertia_koeff = 1.1
+fire_point = 0, 0, 0.03
+bullet_speed = 1
+fire_dispersion_base = 0.14
+[ar57_215_att]:ar_barrel_1_att
+fire_point = 0, 0, 0.03
+bullet_speed              	= 1
+fire_dispersion_base		= 0.14
+
+[ar57_barrel_215_silenced]:ar57_barrel_215
+kind  =  ar57
+visual							= w_att_huds\ar57_barrel_215_silenced
+inv_name					= ar57_barrel_215_silenced
+inv_name_short		= ar57_barrel_215_silencedS
+cost							= 1900
+inv_weight				= 0.5
+inv_grid_width			= 2
+inv_grid_x					= 34
+1icon_layer = clean2_ico
+attachment_slots	= b3|muzzle|0,-0.02125,0.045|0,0,0
+override_section			=	ar57_barrel_215_silenced_attributes
+[ar57_barrel_215_silenced_attributes]:silencer_base_attributes,ar_barrel_11_att
+fire_point = 0, 0, 0.14
+weapon_lenght				=	0.1
+bullet_speed              	= 0.97
+fire_dispersion_base		= 0.15
+impair_koeff					= 1.2
+
+silencer_x = 1
+silencer_status = 1
+silencer_y = 1
+silencer_name = wpn_addon_silencer
+recoil_koeff = -0.03
+inertia_koeff = 1.4
+zoom_rotate_time = 0.06
+[ar57_barrel_317]:ar57_barrel_215
+kind  =  ar57
+visual							= w_att_huds\ar57_barrel_317
+inv_name					= ar57_barrel_317
+cost							= 1000
+inv_weight				= 0.24
+inv_grid_width			= 2
+inv_grid_x					= 36
+1icon_layer = clean2_ico
+attachment_slots	= ar_muzzle|muzzle|0,0,0.0768|0,0,0
+override_section			=	ar57_barrel_317_attributes
+[ar57_barrel_317_attributes]:ar_barrel_5_att
+fire_point = 0, 0, 0.11
+weapon_lenght				=	0.05
+rpm_koeff						= -0.11
+bullet_speed              	= 1.18
+k_hit_koeff						= 1.3
+fire_dispersion_base		= 0.12
+impair_koeff					= 0.9
+
+inertia_koeff = 1.2
+zoom_rotate_time = 0.04
+recoil_koeff = -0.01
+[ar57_barrel_406]:ar57_barrel_215
+kind  =  ar57
+visual							= w_att_huds\ar57_barrel_406
+inv_name					= ar57_barrel_406
+cost							= 1200
+inv_weight				= 0.31
+inv_grid_width			= 3
+inv_grid_x					= 38
+1icon_layer = clean3_ico
+attachment_slots	= ar_muzzle|muzzle|0,0,0.1508|0,0,0
+override_section			=	ar57_barrel_406_attributes
+[ar57_barrel_406_attributes]:ar_barrel_10_att
+fire_point = 0, 0, 0.185
+weapon_lenght				=	0.12
+rpm_koeff						= -0.22
+bullet_speed              	= 1.32
+k_hit_koeff						= 1.4
+fire_dispersion_base		= 0.09
+impair_koeff					= 0.9
+
+recoil_koeff = -0.02
+inertia_koeff = 1.4
+zoom_rotate_time = 0.06
+[ar10_barrel_368]:attachment_base_ar
+kind = ar10
+inv_ui_sign				= ar10
+visual							= w_att_huds\ar10_barrel_368
+inv_name					= ar10_barrel_368
+inv_name_short		= ar10_barrelS
+cost							= 2000
+inv_weight				= 0.31
+inv_grid_width     = 2
+inv_grid_x         = 18
+inv_grid_y         = 4
+1icon_layer = clean2_ico
+attachment_point = ar10_barrel|0,0,0|0,0,0
+attachment_slots	= ar10_muzzle|muzzle|0,0,0|0,0,0#ar_gas|wpn_body|0,0,0.0186|0,0,0
+item_tags = barrel
+override_section = ar10_barrel_368_attributes
+[ar10_barrel_368_attributes]:ar_barrel_9_att
+fire_point = 0, 0, 0.05
+weapon_lenght				=	0.32
+bullet_speed				= 0.87
+k_hit_koeff						= 0.85
+fire_dispersion_base		= 0.1
+impair_koeff					= 1.05
+
+recoil_koeff = -0.10
+inertia_koeff = 1.3
+zoom_rotate_time = 0.05
+[ar10_barrel_368_l129a1]:ar10_barrel_368 
+kind = ar10
+inv_ui_sign				= l129a1
+visual							= w_att_huds\ar10_barrel_368_l129a1
+inv_name					= ar10_barrel_368_l129a1
+inv_name_short		= ar10_barrel_368_l129a1S
+cost							= 2100
+inv_weight				= 0.36
+inv_grid_x					= 20
+attachment_slots	= ar10_muzzle|muzzle|0,0,0|0,0,0
+item_tags	= barrel, gas
+altrep_needs_lubrication = true
+override_section = ar10_barrel_368_l129a1_attributes
+[ar10_barrel_368_l129a1_attributes]:ar10_barrel_368_attributes
+rpm_koeff						= 0.07
+bullet_speed				= 0.88
+impair_koeff					= 0.9
+fire_dispersion_base		= 0.09
+
+k_hit_koeff = 0.85
+fire_point = 0, 0, 0.05
+zoom_rotate_time = 0.05
+recoil_koeff = -0.10
+inertia_koeff = 1.3
+weapon_lenght = 0.32
+[ar10_barrel_406]:ar10_barrel_368
+kind = ar10
+visual							= w_att_huds\ar10_barrel_406
+inv_name					= ar10_barrel_406
+cost							= 2400
+inv_weight				= 0.36
+inv_grid_width			= 3
+inv_grid_x					= 22
+1icon_layer = clean3_ico
+attachment_slots	= ar10_muzzle|muzzle|0,0,0.0316|0,0,0#ar_gas|wpn_body|0,0,0.124|0,0,0
+item_tags	=	barrel
+override_section			=	ar10_barrel_406_attributes
+[ar10_barrel_406_attributes]:ar_barrel_11_att
+fire_point						= 0, 0, 0.08
+weapon_lenght				=	0.35
+rpm_koeff						= -0.1
+bullet_speed				= 0.89
+k_hit_koeff						= 0.9
+fire_dispersion_base		= 0.09
+impair_koeff					= 0.95
+
+recoil_koeff = -0.11
+inertia_koeff = 1.4
+zoom_rotate_time = 0.06
+[ar10_barrel_457]:ar10_barrel_406
+kind = ar10
+visual							= w_att_huds\ar10_barrel_457
+inv_name					= ar10_barrel_457
+cost							= 2800
+inv_weight				= 0.43
+inv_grid_x					= 25
+attachment_slots	= ar10_muzzle|muzzle|0,0,0.0842|0,0,0#ar_gas|wpn_body|0,0,0.124|0,0,0
+item_tags =	barrel
+override_section =	ar10_barrel_457_attributes
+[ar10_barrel_457_attributes]:ar_barrel_12_1_att
+fire_point						= 0, 0, 0.13
+weapon_lenght				=	0.4
+rpm_koeff						= -0.2
+bullet_speed				= 0.92
+k_hit_koeff						= 0.95
+fire_dispersion_base		= 0.08
+impair_koeff					= 0.95
+
+recoil_koeff = -0.10
+inertia_koeff = 1.4
+zoom_rotate_time = 0.07
+[ar10_barrel_508]:ar10_barrel_406
+kind = ar10
+visual							= w_att_huds\ar10_barrel_508
+inv_name					= ar10_barrel_508
+cost							= 3200
+inv_weight				= 0.5
+inv_grid_x					= 28
+attachment_slots	= ar10_muzzle|muzzle|0,0,0.1304|0,0,0#ar_gas|wpn_body|0,0,0.124|0,0,0
+override_section =	ar10_barrel_508_attributes
+[ar10_barrel_508_attributes]:ar_barrel_14_att
+fire_point						= 0, 0, 0.18
+weapon_lenght				=	0.43
+rpm_koeff						= -0.25
+bullet_speed				= 0.89
+fire_dispersion_base		= 0.07
+impair_koeff					= 0.9
+
+recoil_koeff = -0.12
+inertia_koeff = 1.5
+zoom_rotate_time = 0.09
+[ar10_barrel_508_sr]:ar10_barrel_508
+kind = ar10
+visual					= w_att_huds\ar10_barrel_508_sr
+inv_name				= ar10_barrel_508_sr
+inv_grid_x			= 32
+inv_grid_y			= 5
+cost						= 4650
+attachment_slots	= sr_muzzle|muzzle|0,0,0|0,0,0#pica_3|wpn_body|0,0.039255,0.419013|0,0,180#pica_3|wpn_body|0,0.075199,0.419013|0,0,0
+item_tags			=	barrel,gas
+altrep_needs_lubrication = true
+override_section	= ar10_barrel_508_sr_attributes
+inv_weight = 0.5
+[ar10_barrel_508_sr_attributes]:ar10_barrel_508_attributes
+impair_koeff					= 0.7
+
+fire_point = 0, 0, 0.18
+recoil_koeff = -0.12
+inertia_koeff = 1.5
+weapon_lenght = 0.43
+rpm_koeff = -0.25
+fire_dispersion_base = 0.07
+bullet_speed = 0.89
+zoom_rotate_time = 0.09
+[cs5_barrel_317]:cs5_barrel_610
+kind  =  cs5
+inv_ui_sign				= cs5_12
+visual						= w_att_huds\cs5_barrel_317
+inv_name					= cs5_barrel_317
+cost							= 2500
+inv_weight				= 0.3
+inv_grid_width     	= 2
+inv_grid_x         		= 6
+1icon_layer = clean2_ico
+attachment_slots	= ar10_muzzle|muzzle|0,0,0|0,0,0
+override_section = cs5_barrel_317_attributes
+[cs5_barrel_317_attributes]:ar_barrel_6_att
+fire_point = 0, 0, 0.05
+weapon_lenght				=	0.22
+bullet_speed					= 1.79
+fire_dispersion_base		= 0.1
+
+recoil_koeff = -0.02
+inertia_koeff = 1.2
+zoom_rotate_time = 0.03
+[cs5_barrel_470]:cs5_barrel_610
+kind  =  cs5
+inv_ui_sign				= cs5_18
+visual						= w_att_huds\cs5_barrel_470
+inv_name					= cs5_barrel_470
+cost							= 4000
+inv_weight				= 0.42
+inv_grid_x         		= 8
+attachment_slots	= ar10_muzzle|muzzle|0,0,0.14|0,0,0
+override_section = cs5_barrel_470_attributes
+[cs5_barrel_470_attributes]:ar_barrel_13_att
+fire_point = 0, 0, 0.185
+weapon_lenght				=	0.36
+bullet_speed					= 2.05
+k_hit_koeff						= 1.15
+fire_dispersion_base		= 0.07
+impair_koeff					= 0.95
+
+recoil_koeff = -0.03
+inertia_koeff = 1.5
+zoom_rotate_time = 0.08
+[cs5_barrel_610]:attachment_base_ar
+kind  =  cs5
+inv_ui_sign				= cs5_24
+visual						= w_att_huds\cs5_barrel_610
+inv_name					= cs5_barrel_610
+inv_name_short		= cs5_barrelS
+cost							= 6000
+inv_weight				= 0.6
+inv_grid_width			= 3
+inv_grid_x				= 11
+inv_grid_y				= 20
+1icon_layer = clean3_ico
+attachment_point = cs5_barrel|0,0,0|0,0,0
+item_tags = barrel
+override_section = cs5_barrel_610_attributes
+[cs5_barrel_610_attributes]:ar_barrel_15_att
+fire_point = 0, 0, 0.32
+weapon_lenght				=	0.5
+bullet_speed					= 2.18
+k_hit_koeff						= 1.35
+fire_dispersion_base		= 0.04
+impair_koeff					= 0.8
+
+recoil_koeff = -0.04
+inertia_koeff = 1.7
+zoom_rotate_time = 0.1
+[ar10_muzzle_cs5]:attachment_base_ar
+kind = cs5
+inv_ui_sign				= cs5_mb
+visual						= w_att_huds\cs5_muzzle
+description				= no_attributes_descr
+inv_name					= cs5_muzzle
+inv_name_short		= cs5_muzzleS
+cost							= 800
+inv_weight				= 0.09
+inv_grid_x				= 19
+inv_grid_y				= 20
+attachment_point = ar10_muzzle|0,0,0|0,0,0
+item_tags = muzzle_device
+override_section = ar10_muzzle_cs5_attributes
+[ar10_muzzle_cs5_attributes]:ar_muzzle_9_att,05_muzzle_lenght_attributes
+impair_koeff = 0.8
+
+recoil_koeff = -0.07
+weapon_lenght = 0.05
+[ar10_silencer_cs5]:ar10_muzzle_cs5
+kind = cs5
+inv_ui_sign				= cs5_sd
+visual						= w_att_huds\cs5_silencer
+inv_name					= cs5_silencer
+inv_name_short		= cs5_silencerS
+cost							= 4200
+inv_weight				= 0.52
+inv_grid_width			= 2
+inv_grid_x				= 20
+override_section = ar10_silencer_cs5_attributes
+
+[ar10_silencer_cs5_attributes]
+silencer_status = 1
+silencer_name = wpn_addon_silencer
+silencer_x = 1
+silencer_y = 1
+weapon_lenght = 0.2
+zoom_rotate_time = 0.06
+recoil_koeff = -0.11
+inertia_koeff = 1.3
+
+[cs5_zatvor]:attachment_base_ar
+kind  =  cs5
+inv_ui_sign				= cs5_bolt
+visual							= w_att_huds\cs5_zatvor	
+inv_name					= cs5_zatvor
+inv_name_short		= cs5_zatvorS
+cost							= 1300
+inv_weight					= 0.3
+inv_grid_x         			= 18
+inv_grid_y         			= 20
+1icon_layer = clean_lub1_ico
+attachment_point = cs5_zatvor|0,0,0|0,0,0
+attachment_slots = cs5_stock|wpn_body|0,0,0|0,0,0
+item_tags =	zatvor
+override_section = cs5_zatvor_attributes
+
+[cs5_zatvor_attributes]
+rpm = 64
+[cs5_bolt_att]
+rpm = 64
+
+[cs5_stock]:attachment_base_ar
+kind  =  cs5
+inv_ui_sign 						= cs5_stk
+visual 								= w_att_huds\cs5_stock	
+inv_name 						= cs5_stock
+inv_name_short 				= cs5_stockS
+cost 								= 2000
+inv_weight 						= 0.35
+inv_grid_width					= 2
+inv_grid_x						= 22
+inv_grid_y						= 20
+attachment_point			= cs5_stock|0,0,0|0,0,0
+item_tags 						=	stock
+override_section 				= cs5_stock_attributes
+
+[cs5_stock_attributes]
+weapon_lenght = 0.2
+zoom_rotate_time = -0.04
+recoil_koeff = -0.18
+inertia_koeff = 0.8
+[cs5_stock_att]
+weapon_lenght = 0.2
+zoom_rotate_time = -0.04
+recoil_koeff             = -0.18
+inertia_koeff           = 0.8
+
+[sr25_silencer]:attachment_base_ar
+kind = ar10
+inv_ui_sign				= sr25_sil
+visual							= w_att_huds\sr25_silencer
+inv_name					= sr25_silencer
+inv_name_short		= sr25_silencer
+cost							= 3350
+inv_weight				= 0.5
+inv_grid_width     = 2
+inv_grid_x         = 35
+inv_grid_y         = 5
+attachment_point	= sr_muzzle|0,0,0|0,0,0
+override_section =	sr25_silencer_attributes
+[sr25_silencer_attributes]:silencer_base_attributes,pp2k_silencer_att
+weapon_lenght = 0.3
+impair_koeff = 1.4
+
+silencer_x = 1
+silencer_status = 1
+silencer_y = 1
+silencer_name = wpn_addon_silencer
+recoil_koeff = -0.06
+inertia_koeff = 1.3
+zoom_rotate_time = 0.06
+[mk47_barrel_203]:attachment_base_ar
+kind = mk47
+inv_ui_sign				= mk47
+visual							= w_att_huds\mk47_barrel_203
+inv_name					= mk47_barrel_203
+inv_name_short		= mk47_barrelS
+cost							= 1000
+inv_weight				= 0.15
+inv_grid_x					= 31
+inv_grid_y					= 4
+attachment_point	= mk47_barrel|0,0,0|0,0,0
+attachment_slots	= ar10_muzzle|muzzle|0,0,0|0,0,0#ar_gas|wpn_body|0,0,-0.0404|0,0,0
+item_tags = barrel
+override_section =	mk47_barrel_203_attributes
+[mk47_barrel_203_attributes]:ar_barrel_1_att
+fire_point = 0, 0, 0.04
+weapon_lenght				=	0.15
+rpm_koeff						= 0.154
+bullet_speed				= 0.76
+k_hit_koeff						= 0.9
+fire_dispersion_base		= 0.15
+
+recoil_koeff = -0.05
+inertia_koeff = 1.1
+zoom_rotate_time = 0.01
+[mk47_barrel_267]:mk47_barrel_203
+kind = mk47
+visual							= w_att_huds\mk47_barrel_267
+inv_name					= mk47_barrel_267
+cost							= 1450
+inv_weight				= 0.19
+inv_grid_width			= 2
+inv_grid_x					= 32
+1icon_layer = clean2_ico
+attachment_slots	= ar10_muzzle|muzzle|0,0,0.0686|0,0,0#ar_gas|wpn_body|0,0,0|0,0,0
+override_section			=	mk47_barrel_267_attributes
+[mk47_barrel_267_attributes]:ar_barrel_4_att
+fire_point						= 0, 0, 0.11
+weapon_lenght				=	0.23
+rpm_koeff						= 0.077
+bullet_speed				= 0.8
+k_hit_koeff						= 0.95
+fire_dispersion_base		= 0.13
+impair_koeff					= 1.1
+
+recoil_koeff = -0.06
+inertia_koeff = 1.2
+zoom_rotate_time = 0.03
+[mk47_barrel_317]:mk47_barrel_267
+kind = mk47
+visual							= w_att_huds\mk47_barrel_317
+inv_name					=	mk47_barrel_317
+cost							= 1900
+inv_weight				= 0.24
+inv_grid_x					= 34
+attachment_slots	= ar10_muzzle|muzzle|0,0,0.11|0,0,0#ar_gas|wpn_body|0,0,0|0,0,0
+override_section			=	mk47_barrel_317_attributes
+[mk47_barrel_317_attributes]:ar_barrel_6_att
+fire_point						= 0, 0, 0.15
+weapon_lenght				=	0.27
+bullet_speed				= 0.89
+k_hit_koeff						= 0.97
+fire_dispersion_base		= 0.12
+impair_koeff					= 0.95
+
+recoil_koeff = -0.07
+inertia_koeff = 1.2
+zoom_rotate_time = 0.03
+[mk47_barrel_406]:mk47_barrel_267
+kind = mk47
+visual							= w_att_huds\mk47_barrel_406
+inv_name					= mk47_barrel_406
+cost							= 2350
+inv_weight				= 0.34
+inv_grid_width			= 3
+inv_grid_x					= 36
+1icon_layer = clean3_ico
+attachment_slots	= ar10_muzzle|muzzle|0,0,0.1842|0,0,0#ar_gas|wpn_body|0,0,0|0,0,0
+override_section			=	mk47_barrel_406_attributes
+[mk47_barrel_406_attributes]:ar_barrel_10_att
+fire_point						= 0, 0, 0.23
+weapon_lenght				=	0.34
+rpm_koeff						= -0.04
+bullet_speed				= 0.95
+fire_dispersion_base		= 0.09
+impair_koeff					= 0.9
+
+recoil_koeff = -0.08
+inertia_koeff = 1.4
+zoom_rotate_time = 0.06
+[ar74_barrel_292]:attachment_base_ar
+kind = ar74
+inv_ui_sign				= ar74
+visual							= w_att_huds\ar74_barrel_292
+inv_name					= ar74_barrel_292
+inv_name_short		= ar74_barrelS
+cost							= 1000
+inv_weight				= 0.17
+inv_grid_width			= 2
+inv_grid_x					= 6
+inv_grid_y					= 5
+1icon_layer = clean2_ico
+attachment_point	= ar74_barrel|0,0,0|0,0,0
+attachment_slots	= ar_muzzle|muzzle|0,0,0|0,0,0#ar_gas|wpn_body|0,0,0|0,0,0
+item_tags = barrel
+override_section =	ar74_barrel_292_attributes
+[ar74_barrel_292_attributes]:ar_barrel_4_att
+fire_point = 0, 0, 0.045
+weapon_lenght				=	0.24
+bullet_speed				= 0.91
+k_hit_koeff						= 0.88
+fire_dispersion_base		= 0.12
+
+override_section = ar_barrel_4_att
+recoil_koeff = -0.01
+inertia_koeff = 1.2
+zoom_rotate_time = 0.03
+[ar_barrel_4_att]
+zoom_rotate_time = 0.03
+recoil_koeff             = -0.2
+inertia_koeff            = 1.2
+
+[ar74_barrel_350]:ar74_barrel_292
+kind = ar74
+visual							= w_att_huds\ar74_barrel_350
+inv_name					= ar74_barrel_350
+cost							= 1100
+inv_weight				= 0.25
+inv_grid_x					= 8
+attachment_slots	= ar_muzzle|muzzle|0,0,0.0524|0,0,0#ar_gas|wpn_body|0,0,0|0,0,0
+override_section			=	ar74_barrel_350_attributes
+[ar74_barrel_350_attributes]:ar_barrel_7_att
+fire_point			= 0, 0, 0.095
+weapon_lenght				=	0.3
+rpm_koeff						= -0.06
+bullet_speed				= 0.93
+k_hit_koeff						= 0.95
+fire_dispersion_base		= 0.1
+impair_koeff					= 0.9
+
+override_section = ar_barrel_7_att
+recoil_koeff = -0.02
+inertia_koeff = 1.3
+zoom_rotate_time = 0.05
+[ar_barrel_7_att]
+zoom_rotate_time = 0.05
+recoil_koeff             = -0.22
+inertia_koeff            = 1.3
+
+[ar74_barrel_406]:ar74_barrel_292
+kind = ar74
+visual							= w_att_huds\ar74_barrel_406
+inv_name					= ar74_barrel_406
+cost							= 1200
+inv_weight				= 0.32
+inv_grid_width			= 3
+inv_grid_x					= 10
+1icon_layer = clean3_ico
+attachment_slots	= ar_muzzle|muzzle|0,0,0.095|0,0,0#ar_gas|wpn_body|0,0,0.1123|0,0,0
+override_section = ar74_barrel_406_attributes
+[ar74_barrel_406_attributes]:ar_barrel_10_att
+fire_point 		= 0, 0, 0.14
+weapon_lenght				=	0.34
+bullet_speed				= 0.98
+rpm_koeff						= -0.125
+fire_dispersion_base		= 0.09
+impair_koeff					= 0.9
+
+override_section = ar_barrel_10_att
+recoil_koeff = -0.04
+inertia_koeff = 1.4
+zoom_rotate_time = 0.06
+[ar_barrel_10_att]
+zoom_rotate_time = 0.06
+recoil_koeff             = -0.24
+inertia_koeff            = 1.4
+
+[brn180_barrel_267]:attachment_base_ar
+kind = ar_barrels
+inv_ui_sign				= brn180
+visual							= w_att_huds\brn180_barrel_267
+inv_name					= brn180_barrel_267
+inv_name_short		= brn180_barrelS
+cost							= 900
+inv_weight				= 0.18
+inv_grid_width			= 2
+inv_grid_x					= 13
+inv_grid_y					= 5
+1icon_layer = clean_lub2_ico
+attachment_point	= brn180_barrel|0,0,0|0,0,0
+attachment_slots	= ar_muzzle|muzzle|0,0,0|0,0,0
+item_tags	= barrel,gas
+override_section = brn180_barrel_267_attributes
+[brn180_barrel_267_attributes]:ar_barrel_3_att
+fire_point						= 0, 0, 0.04
+bullet_speed				= 1
+k_hit_koeff						= 0.88
+fire_dispersion_base		= 0.13
+impair_koeff					= 0.9
+
+override_section = ar_barrel_3_att
+recoil_koeff = -0.05
+inertia_koeff = 1.1
+zoom_rotate_time = 0.02
+[ar_barrel_3_att]
+zoom_rotate_time = 0.02
+recoil_koeff             = -0.19
+inertia_koeff            = 1.1
+
+[brn180_barrel_353]:brn180_barrel_267
+kind = ar_barrels
+visual							= w_att_huds\brn180_barrel_353
+inv_name					= brn180_barrel_353
+cost							= 1100
+inv_weight				= 0.28
+inv_grid_x					= 15
+attachment_slots	= ar_muzzle|muzzle|0,0,0.07595|0,0,0
+override_section			=	brn180_barrel_353_attributes
+[brn180_barrel_353_attributes]:ar_barrel_7_att
+fire_point						= 0, 0, 0.115
+weapon_lenght				=	0.2
+rpm_koeff						= -0.05
+bullet_speed				= 1.09
+k_hit_koeff						= 0.95
+fire_dispersion_base		= 0.1
+impair_koeff					= 0.9
+
+recoil_koeff = -0.07
+inertia_koeff = 1.3
+zoom_rotate_time = 0.05
+[brn180_barrel_406]:brn180_barrel_267
+kind = ar_barrels
+visual							= w_att_huds\brn180_barrel_406
+inv_name					= brn180_barrel_406
+cost							= 1300
+inv_weight				= 0.34
+inv_grid_width			= 3
+inv_grid_x					= 17
+1icon_layer = clean_lub3_ico
+attachment_slots	= ar_muzzle|muzzle|0,0,0.1156|0,0,0
+override_section			=	brn180_barrel_406_attributes
+[brn180_barrel_406_attributes]:ar15_barrel_406_attributes
+fire_point				= 0, 0, 0.155
+weapon_lenght				=	0.3
+rpm_koeff						= -0.125
+bullet_speed				= 1.13
+fire_dispersion_base		= 0.09
+impair_koeff					= 0.85
+
+[lr300_barrel_292]:attachment_base_ar
+kind = ar_barrels
+inv_ui_sign				= lr300
+visual							= w_att_huds\lr300_barrel_292
+inv_name					= lr300_barrel_292
+inv_name_short		= lr300_barrelS
+cost							= 1150
+inv_weight				= 0.14
+inv_grid_width			= 2
+inv_grid_x					= 20
+inv_grid_y					= 5
+1icon_layer = clean2_ico
+attachment_point	= lr300_barrel|0,0,0|0,0,0
+attachment_slots	= ar_muzzle|muzzle|0,0,0.021|0,0,0#lr300_gas|wpn_body|0,0,0|0,0,0#lr300_hg|wpn_body|0,0,0|0,0,0
+item_tags	= barrel
+override_section			=	lr300_barrel_292_attributes
+[lr300_barrel_292_attributes]:ar_barrel_4_att
+fire_point = 0, 0, 0.06
+weapon_lenght				=	0.24
+bullet_speed				= 0.84
+k_hit_koeff						= 0.9
+fire_dispersion_base		= 0.12
+
+recoil_koeff = -0.05
+inertia_koeff = 1.2
+zoom_rotate_time = 0.03
+[lr300_barrel_368]:lr300_barrel_292
+kind = ar_barrels
+visual							= w_att_huds\lr300_barrel_368
+inv_name					= lr300_barrel_368
+cost							= 1250
+inv_weight				= 0.24
+inv_grid_x					= 22
+attachment_slots	= ar_muzzle|muzzle|0,0,0.084|0,0,0#lr300_gas|wpn_body|0,0,0|0,0,0#lr300_hg|wpn_body|0,0,0|0,0,0
+override_section = lr300_barrel_368_attributes
+[lr300_barrel_368_attributes]:ar_barrel_8_att
+fire_point						= 0, 0, 0.13
+weapon_lenght				=	0.32
+rpm_koeff						= -0.065
+bullet_speed				= 0.89
+k_hit_koeff						= 0.95
+fire_dispersion_base		= 0.1
+impair_koeff					= 0.95
+
+override_section = ar_barrel_8_att
+recoil_koeff = -0.06
+inertia_koeff = 1.3
+zoom_rotate_time = 0.05
+[ar_barrel_8_att]
+zoom_rotate_time = 0.05
+recoil_koeff             = -0.23
+inertia_koeff            = 1.3
+
+[lr300_barrel_419]:lr300_barrel_368
+kind = ar_barrels
+visual							= w_att_huds\lr300_barrel_419
+inv_name					= lr300_barrel_419
+cost							= 1350
+inv_weight				= 0.32
+inv_grid_width			= 3
+inv_grid_x					= 24
+1icon_layer = clean3_ico
+attachment_slots	= ar_muzzle|muzzle|0,0,0.135|0,0,0#lr300_gas|wpn_body|0,0,0|0,0,0#lr300_hg|wpn_body|0,0,0|0,0,0
+override_section			=	lr300_barrel_419_attributes
+[lr300_barrel_419_attributes]:ar_barrel_11_att
+fire_point						= 0, 0, 0.175
+weapon_lenght				=	0.36
+rpm_koeff						= -0.12
+bullet_speed				= 0.95
+fire_dispersion_base		= 0.09
+impair_koeff					= 0.9
+
+recoil_koeff = -0.07
+inertia_koeff = 1.4
+zoom_rotate_time = 0.06
+[steyr_rs_barrel_368]:attachment_base_ar
+kind = ar_barrels
+inv_ui_sign				= rs-14
+visual							= w_att_huds\steyr_rs_barrel_368
+inv_name					= steyr_rs_barrel_368
+inv_name_short		= steyr_rs_barrelS
+cost							= 1250
+inv_weight				= 0.3
+inv_grid_width			= 2
+inv_grid_x					= 27
+inv_grid_y					= 5
+1icon_layer = clean_lub2_ico
+attachment_point	= steyr_barrel|0,0,0|0,0,0
+attachment_slots	= ar_muzzle|muzzle|0,0,0.084|0,0,0#sight_front|wpn_body|0,0.081063,0.328|0,0,0
+item_tags = barrel
+override_section = steyr_rs_barrel_368_attributes
+[steyr_rs_barrel_368_attributes]:ar_barrel_9_att
+fire_point					 = 0, 0, 0.13
+weapon_lenght				=	0.25
+rpm_koeff						= 0.063
+bullet_speed				= 0.98
+k_hit_koeff						= 0.95
+fire_dispersion_base		= 0.09
+impair_koeff					= 0.85
+
+override_section = ar_barrel_9_att
+recoil_koeff = -0.07
+inertia_koeff = 1.3
+zoom_rotate_time = 0.05
+[ar_barrel_9_att]
+zoom_rotate_time = 0.05
+recoil_koeff             = -0.24
+inertia_koeff            = 1.3
+
+[steyr_rs_barrel_457]:steyr_rs_barrel_368 
+kind = ar_barrels
+inv_ui_sign				= rs-18
+visual							= w_att_huds\steyr_rs_barrel_457
+inv_name					= steyr_rs_barrel_457
+cost							= 1600
+inv_weight				= 0.4
+inv_grid_width			= 3
+inv_grid_x					= 29
+1icon_layer = clean_lub3_ico
+attachment_slots	= ar_muzzle|muzzle|0,0,0.1762|0,0,0#sight_front|wpn_body|0,0.081063,0.328|0,0,0
+override_section			=	steyr_rs_barrel_457_attributes
+[steyr_rs_barrel_457_attributes]:ar_barrel_12_1_att
+fire_point		= 0, 0, 0.21
+weapon_lenght				=	0.3
+rpm_koeff						= -0.05
+bullet_speed				= 1.08
+k_hit_koeff						= 1.05
+fire_dispersion_base		= 0.08
+impair_koeff					= 0.75
+
+override_section = ar_barrel_12_1_att
+recoil_koeff = -0.08
+inertia_koeff = 1.4
+zoom_rotate_time = 0.07
+[ar_barrel_12_1_att]
+zoom_rotate_time = 0.07
+recoil_koeff             = -0.29
+inertia_koeff            = 1.4
+
+[derya_barrel_241]:attachment_base_ar
+kind  =  derya
+inv_ui_sign				= mk12_9
+visual						= w_att_huds\derya_barrel_241
+inv_name					= derya_barrel_241
+inv_name_short		= derya_barrelS
+cost							= 1050
+inv_weight				= 0.27
+inv_grid_width			= 2
+inv_grid_x					= 6
+inv_grid_y					= 6
+1icon_layer = clean_lub2_ico
+attachment_point = derya_barrel|0,0,0|0,0,0
+attachment_slots = derya_hg|wpn_body|0,0,0|0,0,0#derya_muzzle_s|wpn_body|0,0,0|0,0,0#choke|muzzle|0,0,-0.236|0,0,0
+item_tags = barrel
+override_section =	derya_barrel_241_attributes
+[derya_barrel_241_attributes]:ar_barrel_3_att
+fire_point					= 0, 0, -0.21
+weapon_lenght				=	0.2
+bullet_speed					= 0.83
+k_hit_koeff						= 0.9
+fire_dispersion_base		= 4.5
+
+[derya_barrel_355]:derya_barrel_241
+kind  =  derya
+inv_ui_sign				= mk12_14
+visual						= w_att_huds\derya_barrel_355
+inv_name					= derya_barrel_355
+cost							= 1300
+inv_weight				= 0.4
+inv_grid_x					= 8
+attachment_slots = derya_hg|wpn_body|0,0,0|0,0,0#choke|muzzle|0,0,-0.1373|0,0,0
+override_section = derya_barrel_355_attributes
+[derya_barrel_355_attributes]:12_barrel_350_att
+fire_point					= 0, 0, -0.11
+weapon_lenght				=	0.3
+rpm_koeff						= -0.2
+
+[12_barrel_350_att]
+bullet_speed = 0.93
+fire_dispersion_base = 4
+
+[derya_barrel_508]:derya_barrel_355
+kind  =  derya
+inv_ui_sign				= mk12_20
+visual						= w_att_huds\derya_barrel_508
+inv_name					= derya_barrel_508
+cost							= 4900
+inv_weight				= 0.5
+inv_grid_width			= 3
+inv_grid_x					= 10
+1icon_layer = clean_lub3_ico
+attachment_slots		= derya_hg|wpn_body|0,0,0|0,0,0#derya_muzzle|wpn_body|0,0,0|0,0,0#choke|muzzle|0,0,0|0,0,0
+override_section			=	derya_barrel_508_attributes
+[derya_barrel_508_attributes]:ar_barrel_14_att,12_barrel_500_att
+fire_point				= 0, 0, 0.0305
+weapon_lenght				=	0.44
+rpm_koeff						= -0.3
+impair_koeff					= 0.9
+
+[derya_barrel_610]:derya_barrel_508
+kind  =  derya
+inv_ui_sign				= mk12_24
+visual						= w_att_huds\derya_barrel_610
+inv_name					= derya_barrel_610
+cost							= 5500
+inv_weight				= 0.75
+inv_grid_x					= 19
+attachment_slots		= derya_hg|wpn_body|0,0,0|0,0,0#derya_muzzle|wpn_body|0,0,0.0924|0,0,0#choke|muzzle|0,0,0.0924|0,0,0
+override_section			=	derya_barrel_610_attributes
+[derya_barrel_610_attributes]:ar_barrel_15_att,12_barrel_610_att
+fire_point					= 0, 0, 0.12
+weapon_lenght				=	0.53
+rpm_koeff						= -0.35
+impair_koeff					= 0.8
+
+[12_barrel_610_att]
+bullet_speed = 1.13
+k_hit_koeff = 1.07
+fire_dispersion_base = 3.3
+
+override_section = ar_barrel_15_att
+[ar_barrel_15_att]
+zoom_rotate_time = 0.1
+recoil_koeff             = -0.35
+inertia_koeff            = 1.7
+
+[omen_barrel_203]:attachment_base_ar
+kind  =  omen
+inv_ui_sign				= omn-8in
+visual						= w_att_huds\omen_barrel_203
+inv_name					= omen_barrel_203
+inv_name_short		= omen_barrelS
+cost							= 1250
+inv_weight				= 0.26
+inv_grid_width     	= 2
+inv_grid_x         		= 30
+inv_grid_y         		= 6
+1icon_layer = clean2_ico
+attachment_point	= omen_barrel|0,0,0|0,0,0
+attachment_slots		= ar10_muzzle|muzzle|0,0,-0.22825|0,0,0
+item_tags				= barrel
+override_section		=	omen_barrel_203_attributes
+[omen_barrel_203_attributes]:ar_barrel_8_att
+fire_point				= 0, 0, -0.15
+weapon_lenght				=	0.15
+bullet_speed					= 0.68
+k_hit_koeff						= 0.65
+fire_dispersion_base		= 0.15
+
+recoil_koeff = -0.1
+inertia_koeff = 1.3
+zoom_rotate_time = 0.05
+[omen_barrel_457]:omen_barrel_203
+kind  =  omen
+inv_ui_sign				= omn-18in
+visual						= w_att_huds\omen_barrel_457
+inv_name					= omen_barrel_457
+inv_name_short		= omen_barrelS
+cost							= 3000
+inv_weight				= 0.53
+inv_grid_width			= 3
+inv_grid_x				= 13
+1icon_layer = clean3_ico
+attachment_slots		= ar10_muzzle|muzzle|0,0,0|0,0,0
+override_section		=	omen_barrel_457_attributes
+[omen_barrel_457_attributes]:ar_barrel_13_att
+fire_point					= 0, 0, 0.15
+weapon_lenght				=	0.38
+rpm_koeff						= -0.15
+bullet_speed					= 1
+k_hit_koeff						= 0.85
+fire_dispersion_base		= 0.08
+impair_koeff					= 0.95
+recoil_koeff             = -0.14
+
+inertia_koeff = 1.5
+zoom_rotate_time = 0.08
+[omen_barrel_610]:omen_barrel_457
+kind  =  omen
+inv_ui_sign				= omn-24in
+visual						= w_att_huds\omen_barrel_610
+inv_name					= omen_barrel_610
+cost							= 4750
+inv_weight				= 0.8
+inv_grid_x					= 16
+attachment_slots	= ar10_muzzle|muzzle|0,0,0.135|0,0,0
+override_section = omen_barrel_610_attributes
+[omen_barrel_610_attributes]:ar_barrel_16_att
+fire_point					= 0, 0, 0.19
+weapon_lenght				=	0.51
+rpm_koeff						= -0.25
+bullet_speed					= 1.16
+fire_dispersion_base		= 0.06
+impair_koeff					= 0.9
+recoil_koeff             = -0.16
+
+override_section = ar_barrel_16_att
+inertia_koeff = 1.7
+zoom_rotate_time = 0.11
+[ar_barrel_16_att]
+zoom_rotate_time = 0.11
+recoil_koeff             = -0.36
+inertia_koeff            = 1.7
+
+---\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ AR-MUZZLES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+override_section = 05_muzzle_lenght_attributes
+[05_muzzle_lenght_attributes]
+weapon_lenght = 0.05
+
+[ar10_muzzle_cmmg]:attachment_base_ar
+kind = ar10
+inv_ui_sign				= sv
+visual							= w_att_huds\ar_muz_cmmg_sv
+description				= no_attributes_descr
+inv_name					= ar10_muz_cmmg_sv
+inv_name_short		= ar10_muz_cmmg_svS
+inv_grid_x					= 11
+inv_grid_y					= 7
+cost							= 900
+inv_weight 				= 0.09
+attachment_point = ar10_muzzle|0,0,0|0,0,0
+item_tags =	muzzle_device
+override_section = ar10_muzzle_cmmg_attributes
+
+[ar10_muzzle_cmmg_attributes]
+weapon_lenght = 0.05
+recoil_koeff = -0.09
+[ar_muzzle_5_att]:05_muzzle_lenght_attributes
+recoil_koeff = -0.09
+
+[ar_muzzle_a1]:ar10_muzzle_cmmg
+kind = ar_muzzle
+inv_ui_sign				= a1
+visual							= w_att_huds\ar_muz_a1
+;description				= ar_muz_a1_descr
+inv_name					= ar_muz_a1
+inv_name_short		= ar_muz_a1S
+inv_grid_x					= 9
+cost							= 600
+inv_weight 				= 0.07
+attachment_point = ar_muzzle|0,0,0|0,0,0
+;attachment_slots	= ar_muz_bayonet|muzzle|0,0,0|0,0,0
+override_section = ar_muzzle_a1_attributes
+
+[ar_muzzle_a1_attributes]
+weapon_lenght = 0.05
+recoil_koeff = -0.04
+
+[ar_muzzle_a2]:ar_muzzle_a1
+kind = ar_muzzle
+inv_ui_sign				= a2
+visual							= w_att_huds\ar_muz_a2
+description				= ar_muzzle_qd
+inv_name					= ar_muz_a2
+inv_name_short		= ar_muz_a2S
+inv_grid_x					= 6
+cost							= 650
+inv_weight 				= 0.06
+attachment_slots	= ar_muzzle_qd|muzzle|0,0,0|0,0,0
+override_section = ar_muzzle_a2_attributes
+
+[ar_muzzle_a2_attributes]
+weapon_lenght = 0.05
+recoil_koeff = -0.05
+[ar_muzzle_2_att]:05_muzzle_lenght_attributes
+recoil_koeff = -0.05
+
+[ar10_muzzle_a2]:ar_muzzle_a2
+kind = ar10
+visual							= w_att_huds\ar10_muz_a2
+inv_name					= ar10_muz_a2
+attachment_point = ar10_muzzle|0,0,0|0,0,0
+override_section = ar10_muzzle_a2_attributes
+
+[ar10_muzzle_a2_attributes]
+weapon_lenght = 0.05
+recoil_koeff = -0.05
+
+[ar_muzzle_alientech]:ar_muzzle_a1
+kind = ar_muzzle
+inv_ui_sign				= at
+visual						= w_att_huds\ar_muz_alientech
+inv_name					= ar_muz_alientech
+inv_name_short		= ar_muz_alientechS
+inv_grid_x         		= 28
+inv_grid_y         		= 6
+cost							= 1450
+inv_weight 				= 0.12
+override_section = ar_muzzle_alientech_attributes
+
+[ar_muzzle_alientech_attributes]
+weapon_lenght = 0.08
+recoil_koeff = -0.05
+zoom_rotate_time = 0.01
+
+[ar_muzzle_57]:ar_muzzle_a1
+kind = ar_muzzle
+inv_ui_sign				= ar57
+visual							= w_att_huds\ar_muz_57
+inv_name					= ar_muz_57
+inv_name_short		= ar_muz_57S
+inv_grid_x					= 7
+cost							= 450
+inv_weight 				= 0.07
+override_section = ar_muzzle_57_attributes
+
+[ar_muzzle_57_attributes]
+weapon_lenght = 0.05
+recoil_koeff = -0.04
+
+[ar_muzzle_416]:ar_muzzle_a2
+kind = ar_muzzle
+inv_ui_sign				= 416
+visual							= w_att_huds\ar_muz_416
+inv_name					= ar_muz_416
+inv_name_short		= ar_muz_416S
+inv_grid_x					= 8
+cost							= 600
+override_section = ar_muzzle_416_attributes
+
+[ar_muzzle_416_attributes]
+weapon_lenght = 0.05
+recoil_koeff = -0.04
+
+[ar_muzzle_brn180]:ar_muzzle_a1
+kind = ar_muzzle
+inv_ui_sign				= brn
+visual							= w_att_huds\ar_muz_brn180
+inv_name					= ar_muz_brn180
+inv_name_short		= ar_muz_brn180S
+inv_grid_x					= 10
+cost							= 700
+inv_weight 				= 0.07
+override_section = ar_muzzle_brn180_attributes
+
+[ar_muzzle_brn180_attributes]
+weapon_lenght = 0.05
+recoil_koeff = -0.03
+[ar_muzzle_1_att]:05_muzzle_lenght_attributes
+recoil_koeff = -0.04
+
+[ar10_muzzle_da]:ar10_muzzle_cmmg
+kind = ar10
+inv_ui_sign				= da
+visual							= w_att_huds\ar_muz_dead_air
+inv_name					= ar10_muz_dead_air
+inv_name_short		= ar10_muz_dead_airS
+inv_grid_x					= 12
+cost							= 1200
+inv_weight 				= 0.11
+attachment_slots	= ar_muzzle_dead_air_qd|muzzle|0,0,0|0,0,0
+override_section = ar10_muzzle_da_attributes
+
+[ar10_muzzle_da_attributes]
+weapon_lenght = 0.05
+zoom_rotate_time = 0.01
+recoil_koeff = -0.07
+inertia_koeff = 1.1
+
+[ar10_muzzle_da_pyro]:ar10_muzzle_da
+kind = ar10
+inv_ui_sign				= da+
+visual							= w_att_huds\ar_muz_dead_air_pyro
+inv_name					= ar10_muz_dead_air_pyro
+inv_name_short		= ar10_muz_dead_air_pyroS
+inv_grid_x         		= 29
+inv_grid_y         		= 6
+cost							= 900
+inv_weight 				= 0.12
+attachment_point	=	ar_muzzle_dead_air_qd|0,0,0|0,0,0
+override_section = ar10_muzzle_da_pyro_attributes
+
+[ar10_muzzle_da_pyro_attributes]
+zoom_rotate_time = 0.02
+recoil_koeff = -0.10
+inertia_koeff = 1.2
+impair_koeff = 0.8
+[ar10_muzzle_da_pyro_att]
+zoom_rotate_time = 0.02
+recoil_koeff            = -0.12
+inertia_koeff          = 1.2
+impair_koeff = 0.8
+
+[ar_muzzle_jcomp]:ar_muzzle_a1
+kind = ar_muzzle
+inv_ui_sign				= jcm
+visual						= w_att_huds\ar_muzzle_si_jcomp_gen2
+inv_name					= ar_muzzle_si_jcomp_gen2
+inv_name_short		= ar_muzzle_si_jcomp_gen2S
+inv_grid_x				= 28
+inv_grid_y				= 19
+cost							= 1100
+inv_weight 				= 0.1
+attachment_slots	= ar_muzzle_jcomp|muzzle|0,0,0|0,0,0
+override_section = ar_muzzle_jcomp_attributes
+
+[ar_muzzle_jcomp_attributes]
+weapon_lenght = 0.05
+recoil_koeff = -0.1
+[ar_muzzle_6_att]:05_muzzle_lenght_attributes
+recoil_koeff = -0.1
+
+[ar10_muzzle_jcomp]:ar_muzzle_jcomp
+kind = ar10
+inv_name				= ar10_muzzle_si_jcomp_gen2
+attachment_point = ar10_muzzle|0,0,0|0,0,0
+override_section = ar10_muzzle_jcomp_attributes
+
+[ar10_muzzle_jcomp_attributes]
+weapon_lenght = 0.05
+recoil_koeff = -0.1
+
+[ar_muzzle_jcomp_shield]:ar_muzzle_jcomp
+kind = ar_muzzle
+inv_ui_sign				= jcm+
+visual						= w_att_huds\ar_muzzle_si_oppressor_blast_shield
+inv_name					= ar_muzzle_si_oppressor_blast_shield
+inv_name_short		= ar_muzzle_si_oppressor_blast_shieldS
+inv_grid_x         		= 29
+cost							= 900
+inv_weight 				= 0.12
+attachment_point	=	ar_muzzle_jcomp|0,0,0|0,0,0
+override_section = ar_muzzle_jcomp_shield_attributes
+
+[ar_muzzle_jcomp_shield_attributes]
+zoom_rotate_time = 0.01
+recoil_koeff = -0.11
+inertia_koeff = 1.1
+impair_koeff = 0.8
+[ar_muzzle_jcomp_shield_att]
+zoom_rotate_time = 0.01
+recoil_koeff            = -0.11
+inertia_koeff          = 1.1
+impair_koeff = 0.8
+
+[ar_muzzle_hera]:ar_muzzle_a1
+kind = ar_muzzle
+inv_ui_sign				= hera
+visual							= w_att_huds\ar_muz_hera_arms_dc_comp
+inv_name					= ar_muz_hera_arms_dc_comp
+inv_name_short		= ar_muz_hera_arms_dc_compS
+inv_grid_x					= 13
+cost							= 800
+inv_weight 				= 0.08
+override_section = ar_muzzle_hera_attributes
+
+[ar_muzzle_hera_attributes]
+weapon_lenght = 0.05
+recoil_koeff = -0.11
+
+[ar_muzzle_kac]:ar_muzzle_a1
+kind = ar_muzzle
+inv_ui_sign				= kac
+visual							= w_att_huds\ar_muz_kac_qdc
+description				= ar_muz_kac_qd
+inv_name					= ar_muz_kac_qdc
+inv_name_short		= ar_muz_kac_qdcS
+inv_grid_x					= 14
+cost							= 900
+inv_weight 				= 0.07
+attachment_slots	= ar_muz_kac_qd|muzzle|0,0,0|0,0,0
+override_section = ar_muzzle_kac_attributes
+
+[ar_muzzle_kac_attributes]
+weapon_lenght = 0.05
+recoil_koeff = -0.04
+
+[ar_muzzle_kac_qdc]:ar_muzzle_a1
+kind = ar_muzzle
+inv_ui_sign				= kac_qd
+visual							= w_att_huds\ar_muz_kac_qdc_silencer
+description				= ar_muz_kac_qdc_silencer_descr
+inv_name					= ar_muz_kac_qdc_silencer
+inv_name_short		= ar_muz_kac_qdc_silencerS
+inv_grid_width			= 2
+inv_grid_x					= 15
+cost							= 2200
+inv_weight 				= 0.53
+attachment_point = ar_muz_kac_qd|0,0,0|0,0,0
+override_section = ar_muzzle_kac_qdc_attributes
+[ar_muzzle_kac_qdc_attributes]:silencer_base_attributes
+weapon_lenght = 0.15
+impair_koeff = 1.2
+zoom_rotate_time = 0.04
+recoil_koeff            = -0.11
+inertia_koeff            = 1.2
+
+silencer_x = 1
+silencer_y = 1
+silencer_name = wpn_addon_silencer
+silencer_status = 1
+[ar_muzzle_kvp]:ar_muzzle_a1
+kind = ar_muzzle
+inv_ui_sign				= kvp
+visual							= w_att_huds\ar_muz_kvp
+inv_name					= ar_muz_kvp
+inv_name_short		= ar_muz_kvpS
+inv_grid_x					= 17
+cost							= 1000
+inv_weight 				= 0.1
+override_section = ar_muzzle_kvp_attributes
+
+[ar_muzzle_kvp_attributes]
+weapon_lenght = 0.05
+recoil_koeff = -0.08
+impair_koeff = 0.9
+[ar_muzzle_4_att]:05_muzzle_lenght_attributes
+recoil_koeff = -0.08
+impair_koeff = 0.9
+
+[ar10_muzzle_kvp]:ar_muzzle_kvp
+kind = ar10
+visual						= w_att_huds\ar10_muz_kvp
+inv_name					= ar10_muz_kvp
+inv_grid_x				= 26
+inv_grid_y				= 19
+inv_weight 				= 0.12
+override_section = ar10_muzzle_kvp_attributes
+
+[ar10_muzzle_kvp_attributes]
+weapon_lenght = 0.05
+recoil_koeff = -0.08
+impair_koeff = 0.9
+
+[ar_muzzle_kx3]:ar_muzzle_a1
+kind = ar_muzzle
+inv_ui_sign				= kx3
+visual							= w_att_huds\ar_muz_kx3
+inv_name					= ar_muz_kx3
+inv_name_short		= ar_muz_kx3S
+inv_grid_x					= 18
+cost							= 1200
+inv_weight 				= 0.12
+override_section = ar_muzzle_kx3_attributes
+
+[ar_muzzle_kx3_attributes]
+weapon_lenght = 0.08
+zoom_rotate_time = 0.01
+recoil_koeff = -0.13
+inertia_koeff = 1.1
+impair_koeff = 0.7
+[ar_muz_kx3_att]:08_muzzle_lenght_attributes
+zoom_rotate_time = 0.01
+recoil_koeff            = -0.16
+inertia_koeff          = 1.1
+impair_koeff = 0.7
+
+override_section = 08_muzzle_lenght_attributes
+[08_muzzle_lenght_attributes]
+weapon_lenght = 0.08
+
+[ar10_muzzle_kx3]:ar_muzzle_kx3
+kind = ar10
+visual						= w_att_huds\ar10_muz_kx3
+inv_name					= ar10_muz_kx3
+inv_grid_x				= 25
+inv_grid_y				= 19
+inv_weight 				= 0.13
+attachment_point	= ar10_muzzle|0,0,0|0,0,0
+override_section = ar10_muzzle_kx3_attributes
+
+cost = 1200
+[ar10_muzzle_kx3_attributes]
+weapon_lenght = 0.08
+zoom_rotate_time = 0.01
+recoil_koeff = -0.12
+inertia_koeff = 1.1
+impair_koeff = 0.7
+
+[ar_muzzle_sf]:ar_muzzle_a1
+kind = ar_muzzle
+inv_ui_sign				= sf
+visual						= w_att_huds\ar_muz_sf_warcomp
+description				= ar_muz_sf_warcomp_descr
+inv_name					= ar_muz_sf_warcomp
+inv_name_short		= ar_muz_sf_warcompS
+inv_grid_x				= 20
+cost							= 800
+inv_weight 				= 0.07
+attachment_slots		= ar_muz_sf_qd|muzzle|0,0,0|0,0,0
+override_section		= ar_muzzle_sf_attributes
+
+[ar_muzzle_sf_attributes]
+weapon_lenght = 0.05
+recoil_koeff = -0.07
+
+[ar10_muzzle_sf]:ar_muzzle_sf
+kind = ar10
+inv_name					= ar10_muz_sf_warcomp
+attachment_point	= ar10_muzzle|0,0,0|0,0,0
+override_section = ar10_muzzle_sf_attributes
+
+[ar10_muzzle_sf_attributes]
+weapon_lenght = 0.05
+recoil_koeff = -0.07
+
+[ar10_muzzle_sf4p]:ar10_muzzle_sf
+kind = ar10
+inv_ui_sign				= sf4p
+visual							= w_att_huds\ar_muz_l129a1
+inv_name					= ar10_muz_l129a1
+inv_name_short		= ar10_muz_l129a1S
+inv_grid_x					= 19
+inv_weight 				= 0.08
+override_section = ar10_muzzle_sf4p_attributes
+
+[ar10_muzzle_sf4p_attributes]
+weapon_lenght = 0.05
+recoil_koeff = -0.07
+
+[ar_muzzle_sf_socom]:ar_muzzle_a1
+kind = ar_muzzle
+inv_ui_sign				= sf_rc2
+visual						= w_att_huds\ar_muz_sf_socom556_rc2
+description				= ar_muz_sf_socom556_rc2_descr
+inv_name					= ar_muz_sf_socom556_rc2
+inv_name_short		= ar_muz_sf_socom556_rc2S
+inv_grid_width			= 2
+inv_grid_x				= 22
+inv_grid_y				= 6
+cost							= 4000
+inv_weight 				= 0.46
+attachment_point	= ar_muz_sf_qd|0,0,0|0,0,0
+override_section = ar_muzzle_sf_socom_attributes
+
+[ar_muzzle_sf_socom_attributes]
+silencer_status = 1
+silencer_name = wpn_addon_silencer
+silencer_x = 1
+silencer_y = 1
+weapon_lenght = 0.16
+impair_koeff = 1.4
+zoom_rotate_time = 0.05
+recoil_koeff = -0.08
+inertia_koeff = 1.2
+
+[ar_muzzle_sf_mini]:ar_muzzle_sf_socom
+kind = ar_muzzle
+inv_ui_sign				= sf_mm
+visual						= w_att_huds\ar_muz_sf_mini_monster
+inv_name					= ar_muz_sf_mini_monster
+inv_name_short		= ar_muz_sf_mini_monsterS
+inv_grid_x				= 24
+cost							= 4100
+inv_weight 				= 0.3
+override_section = ar_muzzle_sf_mini_attributes
+
+[ar_muzzle_sf_mini_attributes]
+silencer_status = 1
+silencer_name = wpn_addon_silencer
+silencer_x = 1
+silencer_y = 1
+weapon_lenght = 0.12
+impair_koeff = 1.4
+zoom_rotate_time = 0.04
+recoil_koeff = -0.11
+inertia_koeff = 1.1
+[ar_muz_sf_mini_monster_attributes]:silencer_base_attributes
+weapon_lenght = 0.12
+impair_koeff = 1.4
+zoom_rotate_time = 0.04
+recoil_koeff            = -0.15
+inertia_koeff            = 1.1
+
+[ar_muzzle_aac]:ar_muzzle_a1
+kind = ar_muzzle
+inv_ui_sign				= aac_15
+visual						= w_att_huds\ar_muz_aac_blackout_51t
+description				= aac_blackout_51t_descr
+inv_name					= aac_blackout_51t
+inv_name_short		= aac_blackout_51tS
+inv_grid_x				= 32
+cost							= 900
+inv_weight 				= 0.1
+attachment_slots		= ar_muz_aac_qd|muzzle|0,0,0|0,0,0
+override_section = ar_muzzle_aac_attributes
+
+[ar_muzzle_aac_attributes]
+weapon_lenght = 0.05
+recoil_koeff = -0.04
+
+[ar10_muzzle_aac]:ar_muzzle_aac
+kind = ar10
+inv_ui_sign				= aac_10
+inv_name					= ar10_aac_blackout_51
+attachment_point	= ar10_muzzle|0,0,0|0,0,0
+override_section = ar10_muzzle_aac_attributes
+
+[ar10_muzzle_aac_attributes]
+weapon_lenght = 0.05
+recoil_koeff = -0.04
+
+[ar_muzzle_aac_2k]:ar_muzzle_sf_mini
+kind = ar_muzzle
+inv_ui_sign				= aac_m4
+visual						= w_att_huds\ar_muz_aac_m4_2k
+description				= aac_m4_2k_descr
+inv_name					= aac_m4_2k
+inv_name_short		= aac_m4_2kS
+inv_grid_x         		= 26
+cost							= 4000
+inv_weight 				= 0.55
+attachment_point	= ar_muz_aac_qd|0,0,0|0,0,0
+override_section = ar_muzzle_aac_2k_attributes
+
+[ar_muzzle_aac_2k_attributes]
+silencer_status = 1
+silencer_name = wpn_addon_silencer
+silencer_x = 1
+silencer_y = 1
+weapon_lenght = 0.15
+impair_koeff = 1.4
+zoom_rotate_time = 0.02
+recoil_koeff = -0.09
+inertia_koeff = 1.2
+
+[ar_muzzle_lr300]:ar_muzzle_a2
+kind = ar_muzzle
+inv_ui_sign				= 416
+visual							= w_att_huds\ar_muz_lr300
+inv_name					= ar_muz_lr300
+inv_name_short		= ar_muz_lr300S
+inv_grid_x					= 21
+cost							= 550
+override_section = ar_muzzle_lr300_attributes
+
+[ar_muzzle_lr300_attributes]
+weapon_lenght = 0.05
+recoil_koeff = -0.05
+
+[ar10_muzzle_m110]:ar10_muzzle_cmmg
+kind = ar10
+inv_ui_sign				= m110
+visual							= w_att_huds\ar_muz_m110
+inv_name					= ar10_muz_m110
+inv_name_short		= ar10_muz_m110S
+inv_grid_x				= 22
+cost							= 800
+inv_weight 				= 0.09
+override_section = ar10_muzzle_m110_attributes
+
+[ar10_muzzle_m110_attributes]
+weapon_lenght = 0.05
+recoil_koeff = -0.04
+
+[ar_muzzle_oct]:ar_muzzle_a1
+kind = ar_muzzle
+inv_ui_sign				= oct
+visual							= w_att_huds\ar_muz_oct
+inv_name					= ar_muz_oct
+inv_name_short		= ar_muz_octS
+inv_grid_x					= 23
+cost							= 850
+inv_weight 				= 0.05
+override_section = ar_muzzle_oct_attributes
+
+[ar_muzzle_oct_attributes]
+weapon_lenght = 0.05
+recoil_koeff = -0.06
+[ar_muzzle_oct_att]:05_muzzle_lenght_attributes,ak_muzzle_m_att
+
+[ar_muzzle_pws]:ar_muzzle_a1
+kind = ar_muzzle
+inv_ui_sign				= pws
+visual							= w_att_huds\ar_muz_pws_cqb
+inv_name					= ar_muz_pws_cqb
+inv_name_short		= ar_muz_pws_cqbS
+inv_grid_x					= 24
+cost							= 1200
+inv_weight 				= 0.17
+override_section = ar_muzzle_pws_attributes
+
+[ar_muzzle_pws_attributes]
+weapon_lenght = 0.05
+zoom_rotate_time = 0.02
+recoil_koeff = -0.11
+inertia_koeff = 1.1
+impair_koeff = 0.8
+[muzzle_pws_cqb_att]:05_muzzle_lenght_attributes
+zoom_rotate_time = 0.02
+recoil_koeff            = -0.2
+inertia_koeff          = 1.1
+impair_koeff = 0.8
+
+[ar_muzzle_sco_asr]:ar_muzzle_a1
+kind = ar_muzzle
+inv_ui_sign				= sco_m
+visual						= w_att_huds\ar_muz_sco_asr
+description				= ar_muz_sco_asr_descr
+inv_name					= ar_muz_sco_asr
+inv_name_short		= ar_muz_sco_asrS
+inv_grid_x         		= 31
+cost							= 900
+inv_weight 				= 0.08
+attachment_slots		= ar_muz_sco_qd|muzzle|0,0,0|0,0,0
+override_section = ar_muzzle_sco_asr_attributes
+
+[ar_muzzle_sco_asr_attributes]
+weapon_lenght = 0.05
+recoil_koeff = -0.04
+
+[ar_muzzle_sco_saker]:ar_muzzle_a1
+kind = ar_muzzle
+inv_ui_sign				= sco_s
+visual							= w_att_huds\ar_muz_sco_saker
+description				= silencerco_saker_k556_descr
+inv_name					= silencerco_saker_k556
+inv_name_short		= silencerco_saker_k556S
+inv_grid_width			= 2
+inv_grid_x					= 25
+cost							= 3500
+inv_weight 				= 0.5
+attachment_point	= ar_muz_sco_qd|0,0,0|0,0,0
+override_section = ar_muzzle_sco_saker_attributes
+
+[ar_muzzle_sco_saker_attributes]
+silencer_status = 1
+silencer_name = wpn_addon_silencer
+silencer_x = 1
+silencer_y = 1
+weapon_lenght = 0.15
+impair_koeff = 1.4
+zoom_rotate_time = 0.02
+recoil_koeff = -0.11
+inertia_koeff = 1.2
+[ar_muz_sco_saker_attributes]:silencer_base_attributes
+weapon_lenght = 0.15
+impair_koeff = 1.4
+zoom_rotate_time = 0.02
+recoil_koeff            = -0.12
+inertia_koeff            = 1.2
+
+[ar_muzzle_pa]:ar_muzzle_a1
+kind = ar_muzzle
+inv_ui_sign				= pa15
+visual							= w_att_huds\ar_muz_slr
+inv_name					= ar_muz_pa_m472
+inv_name_short		= ar_muz_pa_m472S
+inv_grid_x					= 27
+cost							= 900
+inv_weight 				= 0.1
+override_section = ar_muzzle_pa_attributes
+
+[ar_muzzle_pa_attributes]
+weapon_lenght = 0.05
+recoil_koeff = -0.1
+
+[ar10_muzzle_pa]:ar_muzzle_pa
+kind = ar10
+inv_ui_sign				= pa10
+visual							= w_att_huds\ar10_muz_pa_m472
+inv_name					= ar10_muz_pa_m472
+inv_grid_y         		= 19
+inv_weight 				= 0.12
+attachment_point	= ar10_muzzle|0,0,0|0,0,0
+override_section = ar10_muzzle_pa_attributes
+
+cost = 900
+[ar10_muzzle_pa_attributes]
+weapon_lenght = 0.05
+recoil_koeff = -0.11
+zoom_rotate_time = 0.01
+[ar_muzzle_8_att]:05_muzzle_lenght_attributes
+recoil_koeff = -0.12
+zoom_rotate_time = 0.01
+
+[ar_muzzle_steyr]:ar_muzzle_a1
+kind = ar_muzzle
+inv_ui_sign				= rs
+visual							= w_att_huds\ar_muz_steyr_rs
+inv_name					= ar_muz_steyr_rs
+inv_name_short		= ar_muz_steyr_rsS
+inv_grid_x					= 28
+cost							= 750
+inv_weight 				= 0.07
+override_section = ar_muzzle_steyr_attributes
+
+[ar_muzzle_steyr_attributes]
+weapon_lenght = 0.05
+recoil_koeff = -0.05
+
+[ar_muzzle_nt4]:ar_muzzle_a1
+kind = ar_muzzle
+inv_ui_sign				= nt4
+visual						= w_att_huds\ar_muz_supp_qdss_nt4
+description				= ar_muz_supp_qdss_nt4_descr
+inv_name					= ar_muz_supp_qdss_nt4
+inv_name_short		= ar_muz_supp_qdss_nt4
+inv_grid_width			= 2
+inv_grid_x				= 29
+cost							= 3000
+inv_weight 				= 0.56
+attachment_point	=	ar_muzzle_qd|0,0,0|0,0,0
+override_section = ar_muzzle_nt4_attributes
+
+[ar_muzzle_nt4_attributes]
+silencer_status = 1
+silencer_name = wpn_addon_silencer
+silencer_x = 1
+silencer_y = 1
+weapon_lenght = 0.15
+impair_koeff = 1.2
+zoom_rotate_time = 0.04
+recoil_koeff = -0.10
+inertia_koeff = 1.2
+
+[ar_muzzle_rotex]:ar_muzzle_nt4		
+kind = ar_muzzle
+inv_ui_sign				= rotex
+visual						= w_att_huds\ar_muz_supp_rotex_iiic
+inv_name					= ar_muz_supp_rotex_iiic
+inv_name_short		= ar_muz_supp_rotex_iiicS
+inv_grid_x         		= 32
+inv_grid_y         		= 6
+cost							= 4200
+override_section = ar_muzzle_rotex_attributes
+
+inv_weight = 0.56
+[ar_muzzle_rotex_attributes]
+silencer_status = 1
+silencer_name = wpn_addon_silencer
+silencer_x = 1
+silencer_y = 1
+weapon_lenght = 0.16
+impair_koeff = 1.4
+zoom_rotate_time = 0.05
+recoil_koeff = -0.09
+inertia_koeff = 1.2
+[ar_muz_supp_rotex_iiic_attributes]:silencer_base_attributes
+weapon_lenght = 0.16
+impair_koeff = 1.4
+zoom_rotate_time = 0.05
+recoil_koeff            = -0.18
+inertia_koeff            = 1.2
+
+[ar_muzzle_rotex_d]:ar_muz_supp_rotex_iiic
+kind = ar_muzzle
+visual			= w_att_huds\ar_muz_supp_rotex_iiic_d
+inv_grid_x	= 34
+
+[ar_muzzle_fatman]:ar_muzzle_a1				;могут быть проблемы с колизией \цевья\стволы
+kind = ar_muzzle
+inv_ui_sign				= fm
+visual							= w_att_huds\ar_muzzle_p5_fatman
+inv_name					= ar_muzzle_p5_fatman
+inv_name_short		= ar_muzzle_p5_fatmanS
+inv_grid_x         		= 24
+inv_grid_y         		= 19
+cost							= 1300
+inv_weight 				= 0.1
+override_section = ar_muzzle_9_att
+[ar_muzzle_9_att]:05_muzzle_lenght_attributes
+recoil_koeff = -0.12
+
+[ar_muzzle_tr_compact]:ar_muzzle_a1
+kind = ar_muzzle
+inv_ui_sign				= trc
+visual							= w_att_huds\ar_muzzle_tr_compact
+inv_name					= ar_muzzle_tr_compact
+inv_name_short		= ar_muzzle_tr_compactS
+inv_grid_x         		= 30
+inv_grid_y         		= 19
+cost							= 1100
+inv_weight 				= 0.09
+override_section = ar_muzzle_tr_compact_attributes
+
+[ar_muzzle_tr_compact_attributes]
+weapon_lenght = 0.05
+recoil_koeff = -0.11
+[ar_muzzle_7_att]:05_muzzle_lenght_attributes
+recoil_koeff = -0.11
+
+[ar_muzzle_tr_custom]:ar_muzzle_tr_compact
+kind = ar_muzzle
+inv_ui_sign				= trc+
+visual							= w_att_huds\ar_muzzle_tr_custom
+inv_name					= ar_muzzle_tr_custom
+inv_name_short		= ar_muzzle_tr_customS
+inv_grid_x         		= 31
+cost							= 1200
+inv_weight 				= 0.1
+override_section = ar_muzzle_tr_custom_attributes
+
+[ar_muzzle_tr_custom_attributes]
+weapon_lenght = 0.05
+recoil_koeff = -0.07
+
+[ar_muzzle_hex]:ar_muzzle_tr_compact
+kind = ar_muzzle
+inv_ui_sign				= h3p
+visual							= w_att_huds\ar_muzzle_hex_tri-port
+inv_name					= ar_muzzle_hex_tri-port
+inv_name_short		= ar_muzzle_hex_tri-portS
+inv_grid_x         		= 32
+cost							= 1300
+inv_weight 				= 0.08
+override_section = ar_muzzle_hex_attributes
+
+[ar_muzzle_hex_attributes]
+recoil_koeff = -0.12
+zoom_rotate_time = 0.01
+weapon_lenght = 0.08
+impair_koeff = 0.9
+[ar_muzzle_tr_hex_tri]:ar_muzzle_10_att,08_muzzle_lenght_attributes
+impair_koeff = 0.9
+
+[ar10_muzzle_hex]:ar_muzzle_hex
+kind = ar10
+inv_ui_sign				= h3p
+visual							= w_att_huds\ar10_muzzle_hex_tri-port
+inv_name					= ar10_muzzle_hex_tri-port
+inv_grid_x         		= 33
+inv_weight 				= 0.1
+attachment_point	= ar10_muzzle|0,0,0|0,0,0
+override_section = ar10_muzzle_hex_attributes
+
+cost = 1300
+[ar10_muzzle_hex_attributes]
+recoil_koeff = -0.11
+zoom_rotate_time = 0.01
+weapon_lenght = 0.08
+impair_koeff = 0.9
+
+[ar_muzzle_tr_lite_comp]:ar_muzzle_tr_compact
+kind = ar_muzzle
+inv_ui_sign				= lic
+visual							= w_att_huds\ar_muzzle_tr_lite_compensator
+inv_name					= ar_muzzle_tr_lite_compensator
+inv_name_short		= ar_muzzle_tr_lite_compensatorS
+inv_grid_x         		= 34
+cost							= 1350
+inv_weight 				= 0.07
+override_section = ar_muzzle_tr_lite_comp_attributes
+
+[ar_muzzle_tr_lite_comp_attributes]
+weapon_lenght = 0.08
+recoil_koeff = -0.13
+zoom_rotate_time = 0.01
+[ar_muzzle_11_att]:08_muzzle_lenght_attributes
+recoil_koeff = -0.15
+zoom_rotate_time = 0.01
+
+[ar_muzzle_tr_low_con]:ar_muzzle_tr_compact
+kind = ar_muzzle
+inv_ui_sign				= loc
+visual						= w_att_huds\ar_muzzle_tr_low_concussion
+inv_name					= ar_muzzle_tr_low_concussion
+inv_name_short		= ar_muzzle_tr_low_concussionS
+inv_grid_x         		= 35
+cost							= 950
+inv_weight 				= 0.07
+override_section = ar_muzzle_tr_low_con_attributes
+
+[ar_muzzle_tr_low_con_attributes]
+weapon_lenght = 0.05
+recoil_koeff = -0.08
+impair_koeff = 0.9
+
+[ar_muzzle_tr_pineapple]:ar_muzzle_tr_compact
+kind = ar_muzzle
+inv_ui_sign				= piap
+visual							= w_att_huds\ar_muzzle_tr_pineapple
+inv_name					= ar_muzzle_tr_pineapple
+inv_name_short		= ar_muzzle_tr_pineappleS
+inv_grid_x         		= 36
+cost							= 800
+inv_weight 				= 0.06
+override_section = ar_muzzle_tr_pineapple_attributes
+
+[ar_muzzle_tr_pineapple_attributes]
+weapon_lenght = 0.05
+recoil_koeff = -0.07
+[ar_muzzle_3_att]:05_muzzle_lenght_attributes
+recoil_koeff = -0.07
+
+[ar_muzzle_tr_pro_comp]:ar_muzzle_tr_compact
+kind = ar_muzzle
+inv_ui_sign				= prc
+visual							= w_att_huds\ar_muzzle_tr_pro_compensator
+inv_name					= ar_muzzle_tr_pro_compensator
+inv_name_short		= ar_muzzle_tr_pro_compensatorS
+inv_grid_x         		= 37
+cost							= 1100
+inv_weight 				= 0.09
+override_section = ar_muzzle_tr_pro_comp_attributes
+
+[ar_muzzle_tr_pro_comp_attributes]
+weapon_lenght = 0.05
+recoil_koeff = -0.1
+
+[ar_muzzle_tr_tanker]:ar_muzzle_tr_compact
+kind = ar_muzzle
+inv_ui_sign				= tank
+visual							= w_att_huds\ar_muzzle_tr_tanker_extended
+inv_name					= ar_muzzle_tr_tanker_extended
+inv_name_short		= ar_muzzle_tr_tanker_extendedS
+inv_grid_x         		= 38
+cost							= 2000
+inv_weight 				= 0.14
+override_section = ar_muzzle_tr_tanker_attributes
+
+[ar_muzzle_tr_tanker_attributes]
+weapon_lenght = 0.08
+zoom_rotate_time = 0.02
+recoil_koeff = -0.15
+inertia_koeff = 1.2
+[ar_muzzle_tr_tanker_extended_att]:08_muzzle_lenght_attributes
+zoom_rotate_time = 0.02
+recoil_koeff            = -0.23
+inertia_koeff          = 1.2
+
+[12ga_muzzle_derya_mb]:ar10_muzzle_cmmg
+kind  =  12gamuzz
+inv_ui_sign				= mb
+visual						= w_att_huds\12ga_muzzle_derya_mb
+inv_name					= 12ga_muzzle_derya_mb
+inv_name_short		= 12ga_muzzle_derya_mbS
+inv_grid_x				= 33
+cost							= 1200
+inv_weight 				= 0.33
+attachment_point = 12ga_muzzle|0,0,0|0,0,0
+override_section = 12ga_muzzle_derya_mb_attributes
+
+[12ga_muzzle_derya_mb_attributes]
+weapon_lenght = 0.05
+recoil_koeff = -0.12
+inertia_koeff = 1.1
+zoom_rotate_time = 0.02
+
+[12ga_muzzle_derya]:12ga_muzzle_derya_mb
+kind  =  12gamuzz
+inv_ui_sign				= dm
+visual							= w_att_huds\12ga_muzzle_derya
+inv_name					= 12ga_muzzle_derya
+inv_name_short		= 12ga_muzzle_deryaS
+inv_grid_x					= 34
+cost							= 650
+inv_weight 				= 0.1
+override_section		= 12ga_muzzle_derya_attributes
+
+[12ga_muzzle_derya_attributes]
+weapon_lenght = 0.05
+zoom_rotate_time = 0.01
+rpm = 150
+recoil_koeff = -0.09
+
+[derya_barrel_241_muzzle]:ar10_muzzle_cmmg
+kind  =  derya
+inv_ui_sign				= dms
+visual							= w_att_huds\derya_barrel_241_muzzle
+description				= derya_barrel_241_muzzle_descr
+inv_name					= derya_barrel_241_muzzle
+inv_name_short		= derya_barrel_muzzle
+inv_grid_x					= 35
+cost							= 2500
+inv_weight 				= 0.1
+attachment_point	=	derya_muzzle_s|0,0,0|0,0,0
+override_section		= derya_barrel_241_muzzle_attributes
+
+[derya_barrel_241_muzzle_attributes]
+recoil_koeff = -0.06
+inertia_koeff = 0.9
+[derya_barrel_241_muzzle_att]
+recoil_koeff = -0.04
+inertia_koeff = 0.9
+
+[derya_barrel_508_muzzle]:ar10_muzzle_cmmg
+kind  =  derya
+inv_ui_sign				= dms
+visual							= w_att_huds\derya_barrel_508_muzzle
+description				= derya_barrel_508_muzzle_descr
+inv_name					= derya_barrel_508_muzzle
+inv_name_short		= derya_barrel_muzzle
+inv_grid_x					= 36
+cost							= 850
+inv_weight 				= 0.1
+attachment_point	=	derya_muzzle|0,0,0|0,0,0
+override_section		= derya_barrel_508_muzzle_attributes
+
+[derya_barrel_508_muzzle_attributes]
+recoil_koeff = -0.04
+inertia_koeff = 0.8
+[derya_barrel_508_muzzle_att]:derya_barrel_241_muzzle_att
+inertia_koeff = 0.8
+
+[derya_barrel_508_muzzle_up]:derya_barrel_508_muzzle
+kind  =  derya
+inv_ui_sign				= dms+
+visual							= w_att_huds\derya_barrel_508_muzzle_up
+inv_name					= derya_barrel_508_muzzle_up
+inv_grid_x					= 37
+cost							= 1000
+inv_weight 				= 0.11
+override_section		= derya_barrel_508_muzzle_up_attributes
+
+[derya_barrel_508_muzzle_up_attributes]
+recoil_koeff = -0.06
+inertia_koeff = 0.9
+[derya_barrel_508_muzzle_up_att]
+recoil_koeff = -0.06
+inertia_koeff = 0.9
+inertia_koeff = 0.9
+
+[ar10_muzzle_omen]:attachment_base_ar
+kind = ar10
+inv_ui_sign				= omen
+visual							= w_att_huds\omen_muzzle
+description				= no_attributes_descr
+inv_name					= omen_muzzle
+inv_name_short		= omen_muzzleS
+inv_grid_x					= 40
+inv_grid_y					= 7
+cost							= 900
+inv_weight 				= 0.11
+attachment_point	=	ar10_muzzle|0,0,0|0,0,0
+item_tags	=	muzzle_device
+override_section = ar10_muzzle_omen_attributes
+
+[ar10_muzzle_omen_attributes]
+weapon_lenght = 0.05
+recoil_koeff = -0.08
+
+[ar10_silencer_omen]:ar10_muzzle_omen
+kind  =  ar10
+visual							= w_att_huds\omen_silencer
+inv_name					= omen_silencer
+inv_name_short		= omen_silencer
+inv_grid_width			= 2
+inv_grid_x					= 38
+inv_grid_y					= 7
+cost							= 5600
+inv_weight 				= 0.82
+attachment_point	=	ar10_muzzle|0,0,0|0,0,0
+override_section		= ar10_silencer_omen_attributes
+
+[ar10_silencer_omen_attributes]
+silencer_status = 1
+silencer_name = wpn_addon_silencer
+silencer_x = 1
+silencer_y = 1
+weapon_lenght = 0.3
+impair_koeff = 1.4
+zoom_rotate_time = 0.08
+recoil_koeff = -0.05
+inertia_koeff = 1.5
+[omen_silencer_attributes]:silencer_base_attributes
+weapon_lenght = 0.3
+impair_koeff = 1.4
+zoom_rotate_time = 0.08
+recoil_koeff            = -0.25
+inertia_koeff            = 1.5
+
+---\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ AR-STOCK \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+[ar_buffer]:attachment_base_ar
+kind = ar_stock
+inv_ui_sign				= buff
+visual						= w_att_huds\ar_buffer	
+description				= ar_works
+inv_name					= ar_buffer
+inv_name_short		= ar_bufferS
+cost							= 500
+inv_weight				= 0.09
+inv_grid_x				= 6
+inv_grid_y				= 8
+attachment_point	= ar_buffer|0,0,0|0,0,0
+attachment_slots		= ar_stock|wpn_body|0,0,0|0,0,0
+item_tags				=	buffer
+override_section		= ar_buffer_attributes
+
+[ar_buffer_attributes]
+weapon_lenght = 0.15
+zoom_rotate_time = 0.03
+[ar_buffer_att]
+weapon_lenght = 0.15
+zoom_rotate_time = 0.03
+recoil_koeff            = -0.09
+
+[ar_buffer_are]:ar_buffer
+kind = ar_stock
+inv_ui_sign				= buff+
+visual						= w_att_huds\ar_buffer_are
+inv_name					= ar_buffer_are
+inv_name_short		= ar_buffer_areS
+cost							= 750
+inv_weight				= 0.06
+inv_grid_x				= 24
+inv_grid_y				= 9
+override_section 		= ar_buffer_are_attributes
+
+[ar_buffer_are_attributes]
+weapon_lenght = 0.15
+zoom_rotate_time = 0.01
+recoil_koeff = -0.01
+[ar_buffer_are_att]
+weapon_lenght = 0.15
+zoom_rotate_time = 0.01
+recoil_koeff            = -0.05
+
+[ar_buffer_416]:ar_buffer
+kind = ar_stock
+inv_ui_sign				= buff+
+visual							= w_att_huds\ar_buffer_416	
+inv_name					= ar_buffer_416
+inv_name_short		= ar_buffer_416S
+cost							= 550
+inv_weight				= 0.08
+inv_grid_x					= 7
+override_section = ar_buffer_416_attributes
+
+[ar_buffer_416_attributes]
+weapon_lenght = 0.15
+zoom_rotate_time = 0.02
+[ar_buffer_416_att]
+weapon_lenght = 0.15
+zoom_rotate_time = 0.02
+recoil_koeff            = -0.08
+
+[ar_buffer_spring]:attachment_base_ar				;не совемстим с ar_buffer_brm180_stock, ar_buffer_lr300_stock, ar_buffer_lr300_stock_dmg
+kind = ar_stock
+inv_ui_sign				= ar_spr
+visual							= w_att_huds\ar_buffer_spring	
+description				= ar_works
+inv_name					= ar_buffer_spring
+inv_name_short		= ar_buffer_springS
+cost							= 650
+inv_weight				= 0.1
+inv_grid_x         = 18
+inv_grid_y         = 9
+1icon_layer = clean1_ico
+attachment_point = ar_buffer_spring|0,0,0|0,0,0
+item_tags =	spring
+override_section = ar_spring_at
+[ar_spring_at]
+
+[ar_buffer_spring_416]:ar_buffer_spring
+kind = ar_stock
+inv_ui_sign				= ar_spr+
+visual							= w_att_huds\ar_buffer_spring_416	
+inv_name					= ar_buffer_spring_416
+inv_name_short		= ar_buffer_spring_416S
+cost							= 700
+inv_grid_x         = 19
+override_section = ar_buffer_spring_416_at
+[ar_buffer_spring_416_at]
+
+[ar_buffer_brm180_stock]:attachment_base_ar				;не совместим с ar_buffer_spring, ar_buffer_spring_416
+kind = ar_stock
+inv_ui_sign				= brm180
+visual							= w_att_huds\ar_buffer_brm180_stock	
+inv_name					= ar_buffer_brm180_stock
+inv_name_short		= ar_buffer_brm180_stock
+cost							= 1500
+inv_weight				= 0.4
+inv_grid_width			= 2
+inv_grid_x					= 8
+inv_grid_y				= 8
+attachment_point	= ar_buffer|0,0,0|0,0,0
+item_tags				=	buffer
+override_section = ar_buffer_brm180_stock_att
+[ar_buffer_brm180_stock_att]:ar_buffer_troy_pdw_stock_att
+weapon_lenght = 0.25
+
+recoil_koeff = -0.2
+inertia_koeff = 0.8
+zoom_rotate_time = 0.01
+[ar_buffer_lr300_stock]:ar_buffer_brm180_stock
+kind = ar_stock
+inv_ui_sign				= lr300
+visual							= w_att_huds\ar_buffer_lr300_stock	
+inv_name					= ar_buffer_lr300_stock
+inv_name_short		= ar_buffer_lr300_stock
+cost							= 1350
+inv_weight				= 0.35
+inv_grid_x         = 10
+override_section = ar_buffer_lr300_stock_att
+[ar_buffer_lr300_stock_att]:ar_buffer_troy_pdw_stock_att
+weapon_lenght	=	0.25
+
+recoil_koeff = -0.2
+inertia_koeff = 0.8
+zoom_rotate_time = 0.01
+[ar_buffer_lr300_stock0]:ar_buffer_lr300_stock
+kind = ar_stock
+visual							= w_att_huds\ar_buffer_lr300_stock0
+cost							= 1300
+inv_weight				= 0.36
+inv_grid_x         = 22
+inv_grid_y         = 9
+override_section = ar_buffer_troy_pdw_stock_att
+
+[ar_buffer_lr300_stock_dmg]:ar_buffer_lr300_stock
+kind = ar_stock
+visual							= w_att_huds\ar_buffer_lr300_stock_dmg	
+inv_name					= ar_buffer_lr300_stock_dmg
+inv_name_short		= ar_buffer_lr300_stock_dmgS
+cost							= 200
+inv_weight				= 0.1
+inv_grid_width			= 1
+inv_grid_x					= 21
+inv_grid_y					= 9
+override_section = ar_buffer_lr300_stock_dmg_att
+[ar_buffer_lr300_stock_dmg_att]
+weapon_lenght	=	0.05
+
+[ar_buffer_troy]:ar_buffer_brm180_stock
+kind = ar_stock
+inv_ui_sign				= pdw
+visual							= w_att_huds\ar_buffer_troy_pdw_stock	
+inv_name					= ar_buffer_troy_pdw_stock
+inv_name_short		= ar_buffer_troy_pdw_stockS
+cost							= 2200
+inv_weight				= 0.23
+inv_grid_width			= 2
+inv_grid_x					= 12
+override_section = ar_buffer_troy_pdw_stock_att
+[ar_buffer_troy_pdw_stock_att]
+weapon_lenght = 0.2
+zoom_rotate_time = 0.01
+recoil_koeff            = -0.20
+inertia_koeff          = 0.8
+
+[ar_buffer_barsak]:ar_buffer_troy
+kind = ar_stock
+inv_ui_sign				= barsak
+visual							= w_att_huds\ar_buffer_barsak	
+inv_name					= ar_buffer_barsak
+inv_name_short		= ar_buffer_barsakS
+cost							= 1550
+inv_weight				= 0.21
+inv_grid_x					= 14
+attachment_slots		= cheek|wpn_body|0,0.015,0.045|0,0,0
+override_section = ar_buffer_barsak_att
+[ar_buffer_barsak_att]:stock_low_att
+weapon_lenght	=	0.18
+
+recoil_koeff = -0.18
+inertia_koeff = 0.9
+zoom_rotate_time = 0.02
+[ar_buffer_stock_m16]:attachment_base_ar
+kind = ar_stock
+inv_ui_sign				= a1-bf
+visual							= w_att_huds\ar_stock_a1	
+inv_name					= ar_stock_a1
+inv_name_short		= ar_stock_a1S
+cost							= 1600
+inv_weight				= 0.52
+inv_grid_width			= 2
+inv_grid_x					= 37
+inv_grid_y				= 8
+attachment_point	= ar_buffer|0,0,0|0,0,0
+item_tags				=	buffer				 				 
+override_section = ar_buffer_stock_m16_attributes
+
+[ar_buffer_stock_m16_attributes]
+weapon_lenght = 0.25
+zoom_rotate_time = 0.06
+recoil_koeff = -0.23
+inertia_koeff = 0.7
+impair_koeff = 0.8
+[ar_buffer_stock_m16_att]
+weapon_lenght = 0.25
+zoom_rotate_time = 0.06
+recoil_koeff            = -0.3
+inertia_koeff          = 0.7
+impair_koeff = 0.8
+
+[ar_buffer_stock_sass]:ar_buffer_stock_m16
+kind = ar_stock
+inv_ui_sign				= sass
+visual							= w_att_huds\ar_stock_sass	
+inv_name					= ar_stock_sass
+inv_name_short		= ar_stock_sassS
+cost							= 1750
+inv_weight				= 0.55
+inv_grid_x					= 39
+override_section = ar_buffer_stock_sass_attributes
+
+[ar_buffer_stock_sass_attributes]
+weapon_lenght = 0.25
+zoom_rotate_time = 0.06
+recoil_koeff = -0.23
+inertia_koeff = 0.7
+impair_koeff = 0.8
+
+[ar_buffer_stock_ubr]:ar_stock_pdw
+kind = ar_stock
+inv_ui_sign				= ubr
+visual							= w_att_huds\ar_stock_mp_ubr
+description				= ar_works
+inv_name					= ar_buffer_stock_ubr
+inv_name_short		= ar_buffer_stock_ubrS
+cost							= 1950
+inv_weight				= 0.58
+inv_grid_x					= 8
+attachment_point	= ar_buffer|0,0,0|0,0,0
+item_tags				=	buffer
+override_section = ar_buffer_stock_ubr_attributes
+
+[ar_buffer_stock_ubr_attributes]
+weapon_lenght = 0.2
+zoom_rotate_time = 0.05
+recoil_koeff = -0.22
+inertia_koeff = 0.7
+
+[ar_stock_416]:attachment_base_ar
+kind = ar_stock
+inv_ui_sign				= 416s
+visual							= w_att_huds\ar_stock_416	
+inv_name					= ar_stock_416
+inv_name_short		= ar_stock_416
+cost							= 1500
+inv_weight				= 0.33
+inv_grid_x					= 16
+inv_grid_y					= 8
+attachment_point	= ar_stock|0,0,0|0,0,0
+item_tags	=	stock
+override_section = ar_stock_416_attributes
+
+[ar_stock_416_attributes]
+weapon_lenght = 0.05
+zoom_rotate_time = 0.03
+recoil_koeff = -0.22
+inertia_koeff = 0.7
+[ar_stock_416_att]
+weapon_lenght = 0.05
+zoom_rotate_time = 0.03
+recoil_koeff            = -0.22
+inertia_koeff          = 0.7
+
+[ar_stock_417]:ar_stock_416
+kind = ar_stock
+inv_ui_sign				= 416s
+visual							= w_att_huds\ar_stock_417	
+inv_name					= ar_stock_417
+inv_name_short		= ar_stock_417
+cost							= 1600
+inv_weight				= 0.35
+inv_grid_x					= 17
+override_section = ar_stock_417_attributes
+
+[ar_stock_417_attributes]
+weapon_lenght = 0.05
+zoom_rotate_time = 0.01
+recoil_koeff = -0.22
+inertia_koeff = 0.7
+
+[ar_stock_727]:ar_stock_416
+kind = ar_stock
+inv_ui_sign				= 727
+visual							= w_att_huds\ar_stock_727	
+inv_name					= ar_stock_colt_727
+inv_name_short		= ar_stock_colt_727S
+cost							= 1400
+inv_weight				= 0.22
+inv_grid_x					= 18
+override_section = ar_stock_727_attributes
+
+[ar_stock_727_attributes]
+weapon_lenght = 0.05
+zoom_rotate_time = -0.02
+recoil_koeff = -0.21
+inertia_koeff = 0.8
+
+[ar_stock_knoxx]:ar_stock_416
+kind = ar_stock
+inv_ui_sign				= knoxx
+visual							= w_att_huds\ar_stock_blackhawk_knoxx	
+inv_name					= ar_stock_blackhawk_knoxx
+inv_name_short		= ar_stock_blackhawk_knoxxS
+cost							= 1750
+inv_weight				= 0.33
+inv_grid_x					= 19
+override_section = ar_stock_knoxx_attributes
+
+[ar_stock_knoxx_attributes]
+weapon_lenght = 0.05
+zoom_rotate_time = -0.03
+recoil_koeff = -0.16
+inertia_koeff = 0.8
+
+[ar_stock_cmmg]:ar_stock_416
+kind = ar_stock
+inv_ui_sign				= cmmg
+visual							= w_att_huds\ar_stock_cmmg	
+inv_name					= ar_stock_cmmg
+inv_name_short		= ar_stock_cmmgS
+cost							= 1450
+inv_weight				= 0.25
+inv_grid_x					= 20
+override_section = ar_stock_cmmg_attributes
+
+[ar_stock_cmmg_attributes]
+weapon_lenght = 0.05
+zoom_rotate_time = -0.02
+recoil_koeff = -0.21
+inertia_koeff = 0.8
+[ar_stock_cmmg_att]
+weapon_lenght = 0.05
+zoom_rotate_time = -0.02
+recoil_koeff             = -0.12
+inertia_koeff           = 0.8
+
+[ar_stock_ecb]:ar_stock_416
+kind = ar_stock
+inv_ui_sign				= ecb
+visual							= w_att_huds\ar_stock_dd_ecb	
+inv_name					= ar_stock_dd_ecb
+inv_name_short		= ar_stock_dd_ecbS
+cost							= 1850
+inv_weight				= 0.25
+inv_grid_x					= 21
+override_section = ar_stock_ecb_attributes
+
+[ar_stock_ecb_attributes]
+weapon_lenght = 0.05
+zoom_rotate_time = 0.01
+recoil_koeff = -0.21
+inertia_koeff = 0.8
+[ar_stock_dd_ecb_att]
+weapon_lenght = 0.05
+zoom_rotate_time = 0.01
+recoil_koeff             = -0.19
+inertia_koeff           = 0.8
+
+[ar_stock_derya]:ar_stock_416
+kind = ar_stock
+inv_ui_sign				= mk12
+visual							= w_att_huds\ar_stock_derya	
+inv_name					= ar_stock_derya
+inv_name_short		= ar_stock_deryaS
+cost							= 1700
+inv_weight				= 0.3
+inv_grid_x					= 22
+override_section = ar_stock_derya_attributes
+
+[ar_stock_derya_attributes]
+weapon_lenght = 0.05
+zoom_rotate_time = -0.03
+recoil_koeff = -0.22
+inertia_koeff = 0.8
+
+[ar_stock_gl]:ar_stock_416
+kind = ar_stock
+inv_ui_sign				= glc
+visual							= w_att_huds\ar_stock_gl-core	
+inv_name					= ar_stock_gl-core
+inv_name_short		= ar_stock_gl-coreS
+cost							= 1650
+inv_weight				= 0.32
+inv_grid_x					= 23
+override_section = ar_stock_gl_attributes
+
+[ar_stock_gl_attributes]
+weapon_lenght = 0.05
+zoom_rotate_time = 0.01
+recoil_koeff = -0.22
+inertia_koeff = 0.7
+
+[ar_stock_battlelink]:ar_stock_416
+kind = ar_stock
+inv_ui_sign				= mft
+visual							= w_att_huds\ar_stock_mft_battlelink	
+inv_name					= ar_stock_mft_battlelink
+inv_name_short		= ar_stock_mft_battlelinkS
+cost							= 1700
+inv_weight				= 0.34
+inv_grid_x					= 24
+override_section = ar_stock_battlelink_attributes
+
+[ar_stock_battlelink_attributes]
+weapon_lenght = 0.05
+zoom_rotate_time = -0.01
+recoil_koeff = -0.23
+inertia_koeff = 0.8
+[ar_stock_mft_battlelink_att]
+weapon_lenght = 0.05
+zoom_rotate_time = -0.01
+recoil_koeff             = -0.16
+inertia_koeff           = 0.8
+
+[ar_stock_ops]:ar_stock_416
+kind = ar_stock
+inv_ui_sign				= ops
+visual							= w_att_huds\ar_stock_mft_ops	
+inv_name					= ar_stock_mft_ops
+inv_name_short		= ar_stock_mft_opsS
+cost							= 1750
+inv_weight				= 0.32
+inv_grid_x					= 25
+override_section = ar_stock_ops_attributes
+
+[ar_stock_ops_attributes]
+weapon_lenght = 0.05
+zoom_rotate_time = -0.03
+recoil_koeff = -0.16
+inertia_koeff = 0.8
+[ar_stock_mft_ops_att]
+weapon_lenght = 0.05
+zoom_rotate_time = -0.03
+recoil_koeff             = -0.16
+inertia_koeff           = 0.8
+
+[ar_stock_brownells]:ar_stock_416
+kind = ar_stock
+inv_ui_sign				= m4
+visual							= w_att_huds\ar_stock_brownells
+inv_name					= ar_stock_brownells_m4 
+inv_name_short		= ar_stock_brownells_m4S
+cost							= 1450
+inv_weight				= 0.24
+inv_grid_x					= 26
+override_section 		= ar_stock_brownells_attributes
+
+[ar_stock_brownells_attributes]
+weapon_lenght = 0.05
+zoom_rotate_time = -0.03
+recoil_koeff = -0.21
+inertia_koeff = 0.8
+
+[ar_stock_modular]:ar_stock_416
+kind = ar_stock
+inv_ui_sign				= mdlr
+visual							= w_att_huds\ar_stock_modular
+inv_name					= ar_stock_modular
+inv_name_short		= ar_stock_modularS
+cost							= 2150
+inv_weight				= 0.3
+inv_grid_x					= 27
+override_section = ar_stock_modular_attributes
+
+[ar_stock_modular_attributes]
+zoom_rotate_time = -0.04
+recoil_koeff = -0.18
+inertia_koeff = 0.8
+weapon_lenght = 0.05
+[ar_stock_modular_att]:cs5_stock_att
+weapon_lenght = 0.05
+
+[ar_stock_acs]:ar_stock_416
+kind = ar_stock
+inv_ui_sign				= acs
+visual							= w_att_huds\ar_stock_mp_acs
+inv_name					= ar_stock_mp_acs
+inv_name_short		= ar_stock_mp_acsS
+cost							= 1650
+inv_weight				= 0.33
+inv_grid_x					= 28
+override_section = ar_stock_acs_attributes
+
+[ar_stock_acs_attributes]
+weapon_lenght = 0.05
+zoom_rotate_time = 0.03
+recoil_koeff = -0.22
+inertia_koeff = 0.7
+
+[ar_stock_bsl]:ar_stock_416
+kind = ar_stock
+inv_ui_sign				= bsl
+visual							= w_att_huds\ar_stock_mp_bsl_arm_brace	
+inv_name					= ar_stock_mp_bsl_arm_brace
+inv_name_short		= ar_stock_mp_bsl_arm_braceS
+cost							= 1400
+inv_weight				= 0.21
+inv_grid_x					= 29
+override_section = ar_stock_bsl_attributes
+
+[ar_stock_bsl_attributes]
+weapon_lenght = 0.05
+zoom_rotate_time = -0.02
+recoil_koeff = -0.21
+inertia_koeff = 0.8
+
+[ar_stock_moe]:ar_stock_416
+kind = ar_stock
+inv_ui_sign				= moe
+visual							= w_att_huds\ar_stock_mp_moe	
+inv_name					= ar_stock_mp_moe
+inv_name_short		= ar_stock_mp_moeS
+cost							= 1700
+inv_weight				= 0.25
+inv_grid_x					= 30
+override_section = ar_stock_moe_attributes
+
+[ar_stock_moe_attributes]
+weapon_lenght = 0.05
+zoom_rotate_time = -0.01
+recoil_koeff = -0.17
+inertia_koeff = 0.8
+[ar_stock_moe_att]
+weapon_lenght = 0.05
+zoom_rotate_time = -0.01
+recoil_koeff             = -0.17
+inertia_koeff           = 0.8
+
+[ar_stock_moesl]:ar_stock_416
+kind = ar_stock
+inv_ui_sign				= moe
+visual							= w_att_huds\ar_stock_mp_moesl	
+inv_name					= ar_stock_mp_moesl
+inv_name_short		= ar_stock_mp_moeslS
+cost							= 1700
+inv_weight				= 0.27
+inv_grid_x					= 31
+override_section = ar_stock_moesl_attributes
+
+[ar_stock_moesl_attributes]
+weapon_lenght = 0.05
+zoom_rotate_time = 0.01
+recoil_koeff = -0.2
+inertia_koeff = 0.7
+[ar_stock_moe_sl_att]
+weapon_lenght = 0.05
+zoom_rotate_time = 0.01
+recoil_koeff             = -0.2
+inertia_koeff           = 0.7
+
+[ar_stock_rs]:ar_stock_416
+kind = ar_stock
+inv_ui_sign				= steyr
+visual							= w_att_huds\ar_stock_rs	
+inv_name					= ar_stock_rs
+inv_name_short		= ar_stock_rsS
+cost							= 1750
+inv_weight				= 0.34
+inv_grid_x					= 32
+override_section = ar_stock_rs_attributes
+
+[ar_stock_rs_attributes]
+weapon_lenght = 0.05
+zoom_rotate_time = 0.05
+recoil_koeff = -0.22
+inertia_koeff = 0.7
+[ar_stock_rs_att]
+weapon_lenght = 0.05
+zoom_rotate_time = 0.05
+recoil_koeff            = -0.24
+inertia_koeff          = 0.7
+
+[ar_stock_sopmod]:ar_stock_416
+kind = ar_stock
+inv_ui_sign				= spmd
+visual							= w_att_huds\ar_stock_sopmod	
+inv_name					= ar_stock_sopmod
+inv_name_short		= ar_stock_sopmodS
+cost							= 1650
+inv_weight				= 0.26
+inv_grid_x					= 33
+override_section = ar_stock_sopmod_attributes
+
+[ar_stock_sopmod_attributes]
+weapon_lenght = 0.05
+zoom_rotate_time = 0.03
+recoil_koeff = -0.22
+inertia_koeff = 0.7
+
+[ar_stock_utg]:ar_stock_416
+kind = ar_stock
+inv_ui_sign				= utg
+visual							= w_att_huds\ar_stock_utg	
+inv_name					= ar_stock_utg
+inv_name_short		= ar_stock_utgS
+cost							= 1700
+inv_weight				= 0.28
+inv_grid_x					= 34
+override_section = ar_stock_utg_attributes
+
+[ar_stock_utg_attributes]
+weapon_lenght = 0.05
+zoom_rotate_time = 0.01
+recoil_koeff = -0.21
+inertia_koeff = 0.7
+
+[ar_stock_viper]:ar_stock_416
+kind = ar_stock
+inv_ui_sign				= viper
+visual							= w_att_huds\ar_stock_viper_si	
+inv_name					= ar_stock_viper_si
+inv_name_short		= ar_stock_viper_siS
+cost							= 1800
+inv_weight				= 0.18
+inv_grid_x					= 35
+override_section 		= ar_stock_viper_attributes
+
+[ar_stock_viper_attributes]
+weapon_lenght = 0.05
+zoom_rotate_time = -0.03
+recoil_koeff = -0.14
+inertia_koeff = 0.8
+
+[ar_stock_vltor]:ar_stock_416
+kind = ar_stock
+inv_ui_sign				= vltor
+visual							= w_att_huds\ar_stock_vitor	
+inv_name					= ar_stock_vltor_emod
+inv_name_short		= ar_stock_vltor_emodS
+cost							= 1650
+inv_weight				= 0.27
+inv_grid_x					= 36
+override_section = ar_stock_vltor_attributes
+
+[ar_stock_vltor_attributes]
+weapon_lenght = 0.05
+zoom_rotate_time = 0.03
+recoil_koeff = -0.22
+inertia_koeff = 0.7
+
+[ar_stock_pdw]:ar_stock_416
+kind = ar_stock
+inv_ui_sign				= pdw+
+visual							= w_att_huds\ar_stock_pdw	
+inv_name					= ar_stock_pdw
+inv_name_short		= ar_stock_pdwS
+cost							= 1600
+inv_weight				= 0.3
+inv_grid_width			= 2
+inv_grid_x					= 6
+inv_grid_y					= 9
+override_section 		= ar_stock_pdw_attributes
+
+[ar_stock_pdw_attributes]
+weapon_lenght = 0.05
+zoom_rotate_time = -0.03
+recoil_koeff = -0.14
+inertia_koeff = 0.8
+
+[ar_stock_prs]:ar_stock_pdw
+kind = ar_stock
+inv_ui_sign				= prs
+visual							= w_att_huds\ar_stock_mp_prs_omen	
+inv_name					= ar_stock_mp_prs
+inv_name_short		= ar_stock_mp_prsS
+cost							= 2300
+inv_weight				= 0.8
+inv_grid_x					= 12
+override_section = ar_stock_prs_attributes
+
+[ar_stock_prs_attributes]
+weapon_lenght = 0.1
+zoom_rotate_time = 0.06
+recoil_koeff = -0.24
+inertia_koeff = 0.6
+[ar_stock_prs_att]
+weapon_lenght = 0.1
+zoom_rotate_time = 0.06
+recoil_koeff            = -0.27
+inertia_koeff          = 0.6
+
+[ar_stock_raps]:ar_stock_prs
+kind = ar_stock
+inv_ui_sign				= raps
+visual						= w_att_huds\ar_stock_fd_raps	
+inv_name					= ar_stock_fd_raps
+inv_name_short		= ar_stock_fd_rapsS
+cost							= 2500
+inv_weight				= 0.75
+inv_grid_x				= 10
+override_section 		= ar_stock_raps_attributes
+
+[ar_stock_raps_attributes]
+weapon_lenght = 0.1
+recoil_koeff = -0.24
+inertia_koeff = 0.6
+zoom_rotate_time = 0.05
+[ar_stock_fd_raps_att]:ar_stock_prs_att
+zoom_rotate_time = 0.05
+
+[ar_stock_cqr]:ar_stock_pdw
+kind = ar_stock
+inv_ui_sign				= prs+
+visual							= w_att_huds\ar_stock_cqr	
+inv_name					= ar_stock_cqr
+inv_name_short		= ar_stock_cqrS
+cost							= 3300
+inv_weight				= 0.5
+inv_grid_x					= 14
+override_section = ar_stock_cqr_attributes
+
+[ar_stock_cqr_attributes]
+weapon_lenght = 0.08
+zoom_rotate_time = 0.01
+recoil_koeff = -0.23
+inertia_koeff = 0.6
+[ar_stock_cqr_att]
+weapon_lenght = 0.08
+zoom_rotate_time = 0.01
+recoil_koeff            = -0.29
+inertia_koeff          = 0.6
+
+[ar_stock_cbs]:ar_stock_416
+kind = ar_stock
+inv_ui_sign				= cbs
+visual							= w_att_huds\ar_stock_cca_cbs	
+inv_name					= ar_stock_cca_cbs
+inv_name_short		= ar_stock_cca_cbsS
+cost							= 1450
+inv_weight				= 0.29
+inv_grid_x					= 20
+inv_grid_y					= 9
+override_section = ar_stock_cbs_attributes
+
+[ar_stock_cbs_attributes]
+weapon_lenght = 0.05
+recoil_koeff = -0.19
+zoom_rotate_time = -0.02
+[ar_stock_cbs_att]
+weapon_lenght = 0.05
+
+[ar_stock_brace]:ar_stock_pdw		
+kind = ar_stock
+inv_ui_sign				= ar_br
+visual						= w_att_huds\ar_stock_brace	
+inv_name					= ar_stock_brace
+inv_name_short		= ar_stock_braceS
+cost							= 1250
+inv_weight				= 0.25
+inv_grid_width     	= 1
+inv_grid_x         		= 25
+override_section 		= ar_stock_brace_attributes
+
+[ar_stock_brace_attributes]
+weapon_lenght = 0.05
+zoom_rotate_time = -0.03
+recoil_koeff = -0.20
+inertia_koeff = 0.8
+[ar_stock_brace_att]
+weapon_lenght = 0.05
+zoom_rotate_time = -0.03
+recoil_koeff             = -0.14
+inertia_koeff           = 0.8
+
+[ar_stock_ak200]:ar_stock_brace		
+kind = ar_stock
+inv_ui_sign				= ar_ak200
+visual						= w_att_huds\ar_stock_ak200	
+inv_name					= ar_stock_ak200
+inv_name_short		= ar_stock_ak200S
+cost							= 1400
+inv_weight				= 0.22
+inv_grid_x         		= 26
+override_section = ar_stock_ak200_attributes
+
+---\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ AR-MAGS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+[ar_stock_ak200_attributes]
+weapon_lenght = 0.05
+zoom_rotate_time = -0.01
+recoil_koeff = -0.23
+inertia_koeff = 0.8
+
+[mag_wpn_ar9_50_9x19_fmj]:mag_wpn_base_ar,wg_wpn_ar9,ag_ammo_9x19_fmj
+inv_ui_sign					= ar9_50
+visual								= w_att_huds\ar9_mag_x_products_x-9_50
+inv_name						= ar9_mag_x_products_x-9_50
+inv_name_short			= ar9_mag_x_products_x-9_50S
+inv_grid_height    = 2
+inv_grid_x         = 27
+inv_grid_y         = 10
+inv_weight					= 0.55
+cost								= 1450
+max_mag_size			= 50
+mag_size						= medium
+override_section			= mag_wpn_ar9_50_9x19_fmj_attributes
+
+[mag_wpn_ar9_50_9x19_fmj_attributes]
+animation_prefix_mag = 50_
+
+[mag_wpn_ar9_100_9x19_fmj]:mag_wpn_ar9_50_9x19_fmj
+inv_ui_sign					= ar9_50
+visual								= w_att_huds\ar9_mag_100_beta_c
+inv_name						= ar9_mag_100_beta_c
+inv_name_short			= ar9_mag_100_beta_cS
+inv_grid_width     = 2
+inv_grid_height    = 1
+inv_grid_x         = 25
+inv_grid_y         = 11
+inv_weight					= 1.05
+cost								= 2150
+max_mag_size			= 100
+mag_size						= large
+override_section			= mag_wpn_ar9_100_9x19_fmj_attributes
+
+[mag_wpn_ar9_100_9x19_fmj_attributes]
+animation_prefix_mag = 100_
+
+[mag_wpn_lr300_5.56x45_fmj]:mag_wpn_base_ar,wg_wpn_ar15,ag_ammo_5.56x45
+inv_ui_sign						= ar_30
+visual									= w_att_huds\ar15_mag
+inv_name							= ar15_mag
+inv_name_short				= ar15_magS
+inv_grid_height				= 2
+inv_grid_x         				= 10
+inv_grid_y         				= 10
+inv_weight						= 0.12
+cost									= 700
+max_mag_size				= 30
+mag_size							= medium
+override_section				= mag_wpn_lr300_5.56x45_fmj_attributes
+override_section_hud 			= mag_ar15_30_override
+
+[mag_wpn_lr300_5.56x45_fmj_attributes]
+animation_prefix_mag = 30_
+[mag_ar15_30_override]
+snd_mag_in_30					= weapons\main\ar15_mag_in_30
+snd_mag_out_30					= weapons\main\ar15_mag_out_30
+[ar_30_attributes]
+animation_prefix_mag	=	30_
+[mag_wpn_l85_5.56x45_fmj]:mag_wpn_lr300_5.56x45_fmj
+[mag_wpn_g36_5.56x45_fmj]:mag_wpn_lr300_5.56x45_fmj
+[mag_wpn_sig550_5.56x45_fmj]:mag_wpn_lr300_5.56x45_fmj
+
+[mag_wpn_fn2000_5.56x45_fmj]:mag_wpn_lr300_5.56x45_fmj
+visual								= w_att_huds\ar15_mag_416
+inv_name							= ar15_mag_416
+inv_grid_x         				= 9
+cost									= 750
+override_section = mag_wpn_fn2000_5.56x45_fmj_attributes
+
+[mag_wpn_fn2000_5.56x45_fmj_attributes]
+animation_prefix_mag = 30_
+
+[mag_ar15_20_5.56x45_fmj]:mag_wpn_lr300_5.56x45_fmj
+inv_ui_sign						= ar_20
+visual									= w_att_huds\ar15_mag20
+inv_name							= ar15_mag20
+inv_grid_height				= 1
+inv_grid_x         				= 6
+inv_grid_y         				= 10
+inv_weight						= 0.09
+cost									= 300
+max_mag_size				= 20
+mag_size							= small
+override_section				= mag_ar15_20_5.56x45_fmj_attributes
+override_section_hud 			= mag_ar15_20_override
+
+[mag_ar15_20_5.56x45_fmj_attributes]
+animation_prefix_mag = 20_
+[mag_ar15_20_override]
+snd_mag_in_20					= weapons\main\ar15_mag_in_20
+snd_mag_out_20					= weapons\main\ar15_mag_out_20
+[ar_20_attributes]
+animation_prefix_mag	=	20_
+
+[mag_ar15_pm20_5.56x45_fmj]:mag_ar15_20_5.56x45_fmj
+visual									= w_att_huds\ar15_pmag20
+inv_name							= ar15_pmag20
+inv_name_short				= ar15_pmag20S
+inv_grid_x         				= 7
+inv_weight						= 0.11
+cost									= 350
+override_section_hud 			= mag_ar15_pm20_override
+override_section = mag_ar15_pm20_5.56x45_fmj_attributes
+
+[mag_ar15_pm20_5.56x45_fmj_attributes]
+animation_prefix_mag = 20_
+[mag_ar15_pm20_override]
+snd_mag_in_20					= weapons\main\ar15_mag_in_20p
+snd_mag_out_20					= weapons\main\ar15_mag_out_20p
+
+[mag_ar15_25_5.56x45_fmj]:mag_ar15_20_5.56x45_fmj
+inv_ui_sign						= ar_25
+visual									= w_att_huds\ar15_mag25
+inv_name							= ar15_mag25
+inv_grid_x     				    = 8
+inv_weight						= 0.1
+cost									= 400
+max_mag_size				= 25
+override_section_hud 			= mag_ar15_20_override
+override_section = mag_ar15_25_5.56x45_fmj_attributes
+
+[mag_ar15_25_5.56x45_fmj_attributes]
+animation_prefix_mag = 20_
+
+[mag_ar15_l5_5.56x45_fmj]:mag_ar15_pm30_5.56x45_fmj
+visual									= w_att_huds\ar15_mag_30_l5
+inv_name							= ar15_lancer_l5
+inv_name_short				= ar15_lancer_l5S
+inv_grid_x         				= 11
+inv_weight						= 0.13
+cost									= 800
+override_section = mag_ar15_l5_5.56x45_fmj_attributes
+
+[mag_ar15_l5_5.56x45_fmj_attributes]
+animation_prefix_mag = 30_
+
+[mag_ar15_100_5.56x45_fmj]:mag_wpn_lr300_5.56x45_fmj
+inv_ui_sign						= ar_50
+visual									= w_att_huds\ar15_mag_beta_c
+inv_name							= ar15_mag_beta_c
+inv_name_short				= ar15_mag_beta_cS
+inv_grid_width					= 2
+inv_grid_height				= 1
+inv_grid_x							= 6
+inv_grid_y							= 11
+inv_weight						= 1.0
+cost									= 2750
+max_mag_size				= 100
+mag_size						= large
+override_section				= mag_ar15_100_5.56x45_fmj_attributes
+
+[mag_ar15_100_5.56x45_fmj_attributes]
+animation_prefix_mag = 100_
+[ar_100_attributes]
+animation_prefix_mag	=	100_
+
+[mag_ar15_pm30_5.56x45_fmj]:mag_wpn_lr300_5.56x45_fmj		
+visual									= w_att_huds\ar15_pmag
+inv_name							= ar15_pmag
+inv_name_short				= ar15_pmagS
+inv_grid_x         				= 13
+inv_weight						= 0.14
+cost									= 800
+override_section_hud 			= mag_ar15_pm30_override
+override_section = mag_ar15_pm30_5.56x45_fmj_attributes
+
+[mag_ar15_pm30_5.56x45_fmj_attributes]
+animation_prefix_mag = 30_
+[mag_ar15_pm30_override]
+snd_mag_in_30					= weapons\main\ar15_mag_in_30p
+snd_mag_out_30					= weapons\main\ar15_mag_out_30p
+
+[mag_ar15_pm40_5.56x45_fmj]:mag_ar15_pm30_5.56x45_fmj
+inv_ui_sign						= ar_40
+visual									= w_att_huds\ar15_pmag40
+inv_name							= ar15_pmag40
+inv_name_short				= ar15_pmag40S
+inv_grid_x         				= 14
+inv_weight						= 0.19
+cost									= 950
+max_mag_size					= 40
+override_section_hud 			= mag_ar15_pm30_override
+override_section = mag_ar15_pm40_5.56x45_fmj_attributes
+
+[mag_ar15_pm40_5.56x45_fmj_attributes]
+animation_prefix_mag = 30_
+
+[mag_ar15_pm60_5.56x45_fmj]:mag_wpn_lr300_5.56x45_fmj
+inv_ui_sign						= ar_60
+visual									= w_att_huds\ar15_pmag60
+inv_name							= ar15_pmag_d60
+inv_name_short				= ar15_pmag_d60
+inv_grid_x         				= 15
+inv_weight						= 0.58
+cost									= 1900
+max_mag_size				= 60
+override_section				= mag_ar15_pm60_5.56x45_fmj_attributes
+
+[mag_ar15_pm60_5.56x45_fmj_attributes]
+animation_prefix_mag = 60_
+[ar_60_attributes]
+animation_prefix_mag	=	60_
+
+[mag_ar15_50_5.56x45_fmj]:mag_wpn_lr300_5.56x45_fmj
+inv_ui_sign						= ar_50
+visual									= w_att_huds\ar15_mag_warrior_systems
+inv_name							= ar15_mag_warrior_systems
+inv_name_short				= ar15_mag_warrior_systemsS
+inv_grid_x         				= 12
+inv_weight						= 0.46
+cost									= 1500
+max_mag_size				= 50
+override_section				= mag_ar15_50_5.56x45_fmj_attributes
+
+[mag_ar15_50_5.56x45_fmj_attributes]
+animation_prefix_mag = 50_
+[ar_50_attributes]
+animation_prefix_mag	=	50_
+
+[mag_ar15_60_5.56x45_fmj]:mag_wpn_lr300_5.56x45_fmj		
+inv_ui_sign						= ar_60
+visual									= w_att_huds\ar15_mag_surefire
+inv_name							= ar15_mag_surefire
+inv_name_short				= ar15_mag_surefireS
+inv_grid_x         				= 16
+inv_weight						= 0.2
+cost									= 1750
+max_mag_size				= 60
+override_section_hud 			= mag_ar15_60_override
+override_section = mag_ar15_60_5.56x45_fmj_attributes
+
+[mag_ar15_60_5.56x45_fmj_attributes]
+animation_prefix_mag = 30_
+[mag_ar15_60_override]
+snd_mag_in_30					= weapons\main\ar15_mag_in_60
+snd_mag_out_30					= weapons\main\ar15_mag_out_60
+
+[mag_wpn_sig550_sniper_7.62x51_fmj]:mag_wpn_ar10_7.62x51_fmj
+
+[mag_wpn_ar10_7.62x51_fmj]:mag_wpn_base_ar,wg_wpn_ar10,ag_ammo_7.62x51
+inv_ui_sign						= ar10_20
+visual								= w_att_huds\ar10_mag
+inv_name							= ar10_mag
+inv_name_short				= ar10_magS
+inv_grid_height				= 2
+inv_grid_x         				= 17
+inv_grid_y         				= 10
+inv_weight						= 0.12
+cost									= 700
+max_mag_size					= 20
+mag_size							= medium
+override_section				= mag_wpn_ar10_7.62x51_fmj_attributes
+
+[mag_wpn_ar10_7.62x51_fmj_attributes]
+animation_prefix_mag = 20_
+[ar10_20_attributes]
+animation_prefix_mag		= 20_
+
+[mag_wpn_cs5_7.62x51_fmj]:mag_wpn_ar10_7.62x51_fmj
+inv_ui_sign						= ar10_10
+visual								= w_att_huds\ar10_mag10
+inv_grid_height				= 1
+inv_grid_x						= 25
+inv_weight						= 0.07
+cost									= 450
+max_mag_size					= 10
+mag_size							= small
+override_section				= mag_wpn_cs5_7.62x51_fmj_attributes
+
+[mag_wpn_cs5_7.62x51_fmj_attributes]
+animation_prefix_mag = 10_
+[ar10_10_attributes]
+animation_prefix_mag		= 10_
+
+[mag_wpn_ar10_pmag_7.62x51_fmj]:mag_wpn_ar10_7.62x51_fmj
+visual								= w_att_huds\ar10_pmag20
+inv_name							= ar10_pmag20
+inv_name_short				= ar10_pmag20S
+inv_grid_x         				= 33
+inv_weight						= 0.14
+cost									= 850
+override_section = mag_wpn_ar10_pmag_7.62x51_fmj_attributes
+
+[mag_wpn_ar10_pmag_7.62x51_fmj_attributes]
+animation_prefix_mag = 20_
+
+[mag_wpn_ar10_l7_7.62x51_fmj]:mag_wpn_ar10_7.62x51_fmj
+visual								= w_att_huds\ar10_mag20_L7
+inv_name							= ar10_mag20_lancer_l7awm
+inv_grid_x         				= 29
+inv_weight						= 0.15
+cost									= 900
+override_section = mag_wpn_ar10_l7_7.62x51_fmj_attributes
+
+[mag_wpn_ar10_l7_7.62x51_fmj_attributes]
+animation_prefix_mag = 20_
+
+[mag_wpn_ar10_l7b_7.62x51_fmj]:mag_wpn_ar10_l7_7.62x51_fmj
+visual								= w_att_huds\ar10_mag20_L7B
+inv_grid_x         				= 30
+override_section = mag_wpn_ar10_l7b_7.62x51_fmj_attributes
+
+[mag_wpn_ar10_l7b_7.62x51_fmj_attributes]
+animation_prefix_mag = 20_
+
+[mag_wpn_ar10_25_pmag_7.62x51_fmj]:mag_wpn_ar10_7.62x51_fmj
+inv_ui_sign						= ar10_25
+visual									= w_att_huds\ar10_pmag25
+inv_name							= ar10_pmag25
+inv_name_short				= ar10_pmag25
+inv_grid_x         				= 18
+inv_weight						= 0.18
+cost									= 950
+max_mag_size				= 25
+override_section				= mag_wpn_ar10_25_pmag_7.62x51_fmj_attributes
+
+[mag_wpn_ar10_25_pmag_7.62x51_fmj_attributes]
+animation_prefix_mag = 25_
+[ar10_25_attributes]
+animation_prefix_mag	=	25_
+
+[mag_wpn_ar10_25_l7_7.62x51_fmj]:mag_wpn_ar10_25_pmag_7.62x51_fmj
+visual								= w_att_huds\ar10_mag25_L7
+inv_name							= ar10_mag25_lancer_l7awm
+inv_name_short				= ar10_mag25_lancer_l7awmS
+inv_grid_x         				= 32
+inv_weight						= 0.2
+override_section = mag_wpn_ar10_25_l7_7.62x51_fmj_attributes
+
+[mag_wpn_ar10_25_l7_7.62x51_fmj_attributes]
+animation_prefix_mag = 25_
+
+[mag_wpn_ar10_25_l7b_7.62x51_fmj]:mag_wpn_ar10_25_l7_7.62x51_fmj
+visual								= w_att_huds\ar10_mag25_L7B
+inv_grid_x         				= 31
+override_section = mag_wpn_ar10_25_l7b_7.62x51_fmj_attributes
+
+[mag_wpn_ar10_25_l7b_7.62x51_fmj_attributes]
+animation_prefix_mag = 25_
+
+[mag_wpn_ar10_50_7.62x51_fmj]:mag_wpn_ar10_7.62x51_fmj
+inv_ui_sign						= ar10_50
+visual									= w_att_huds\ar10_pmag50
+inv_name							= ar10_pmag_d50
+inv_name_short				= ar10_pmag_d50
+inv_grid_x         				= 19
+inv_weight						= 0.8
+cost									= 2500
+max_mag_size				= 50
+mag_size					= large
+override_section				= mag_wpn_ar10_50_7.62x51_fmj_attributes
+
+[mag_wpn_ar10_50_7.62x51_fmj_attributes]
+animation_prefix_mag = 50_
+[ar10_50_attributes]
+animation_prefix_mag	=	50_
+
+[mag_wpn_omen_magnum_300]:mag_wpn_base_ar,wg_wpn_omen,ag_ammo_magnum_300
+inv_ui_sign						= omen_10
+visual									= w_att_huds\omen_mag_10
+inv_name							= omen_mag_10
+inv_name_short				= omen_magS
+inv_grid_height				= 2
+inv_grid_x         				= 20
+inv_grid_y         				= 10
+inv_weight						= 0.24
+cost									= 1450
+max_mag_size				= 10
+mag_size							= medium
+override_section				= mag_wpn_omen_magnum_300_attributes
+
+[mag_wpn_omen_magnum_300_attributes]
+animation_prefix_mag = 10_
+[omen_10_attributes]
+animation_prefix_mag	=	10_
+
+[mag_wpn_omen_14_magnum_300]:mag_wpn_omen_magnum_300
+inv_ui_sign						= omen_10
+visual									= w_att_huds\omen_mag_14
+inv_name							= omen_mag_14
+inv_grid_x         				= 21
+inv_weight						= 0.3
+cost									= 1800
+max_mag_size				= 14
+override_section				= mag_wpn_omen_14_magnum_300_attributes
+
+[mag_wpn_omen_14_magnum_300_attributes]
+animation_prefix_mag = 14_
+[omen_14_attributes]
+animation_prefix_mag	=	14_
+
+[mag_wpn_derya_12x70_buck]:mag_wpn_base_ar,wg_wpn_derya,ag_ammo_12x70
+inv_ui_sign						= mk12_5
+visual									= w_att_huds\derya_mag_5
+inv_name							= derya_mag_5
+inv_name_short				= derya_magS
+inv_grid_height				= 2
+inv_grid_x         				= 22
+inv_grid_y         				= 10
+inv_weight						= 0.3
+cost									= 700
+max_mag_size				= 5
+mag_size							= medium
+override_section				= mag_wpn_derya_12x70_buck_attributes
+
+[mag_wpn_derya_12x70_buck_attributes]
+animation_prefix_mag = 5_
+[derya_5_attributes]
+animation_prefix_mag	=	5_
+
+[mag_wpn_derya_10_12x70_buck]:mag_wpn_derya_12x70_buck
+inv_ui_sign						= mk12_10
+visual									= w_att_huds\derya_mag_10
+inv_name							= derya_mag_10
+inv_grid_x         				= 23
+inv_weight						= 0.4
+cost									= 1300
+max_mag_size				= 10
+override_section				= mag_wpn_derya_10_12x70_buck_attributes
+
+[mag_wpn_derya_10_12x70_buck_attributes]
+animation_prefix_mag = 10_
+[derya_10_attributes]
+animation_prefix_mag	=	10_
+
+[mag_wpn_derya_19_12x70_buck]:mag_wpn_derya_10_12x70_buck
+inv_ui_sign						= mk12_19
+visual									= w_att_huds\derya_mag_19
+inv_name							= derya_mag_19
+inv_weight						= 0.9
+cost									= 2400
+inv_grid_height				= 3
+inv_grid_x						= 28
+inv_grid_y						= 9
+max_mag_size				= 19
+mag_size							= large
+override_section = mag_wpn_derya_19_12x70_buck_attributes
+
+[mag_wpn_derya_19_12x70_buck_attributes]
+animation_prefix_mag = 10_
+
+[mag_wpn_derya_20_12x70_buck]:mag_wpn_derya_12x70_buck
+inv_ui_sign						= mk12_20
+visual									= w_att_huds\derya_mag_20
+inv_name							= derya_mag_20
+inv_name_short				= derya_mag_20S
+inv_grid_x         				= 24
+inv_weight						= 1.4
+cost									= 2500
+max_mag_size				= 21
+mag_size							= large
+override_section				= mag_wpn_derya_20_12x70_buck_attributes
+
+---\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ AR-HG \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+[mag_wpn_derya_20_12x70_buck_attributes]
+animation_prefix_mag = 20_
+
+[ar_hg_9mm_165]:attachment_base_ar			;только короткий ствол
+kind = ar9
+inv_ui_sign				= ar9
+visual							= w_att_huds\ar_hg_9mm_165
+description				= ar_hg_9mm_165_descr
+inv_name					= ar_hg_9mm_165
+inv_name_short		= ar_hg_9mm_165S
+cost							= 1100
+inv_grid_width			= 2
+inv_grid_x					= 6
+inv_grid_y					= 13
+attachment_point	= ar_hg|0,0,0|0,0,0
+attachment_slots	= lr300_hg_190_fg|wpn_body|0,-0.0027,0|0,0,0
+item_tags	=	hg
+override_section = ar_hg_9mm_165_attributes
+[ar_hg_9mm_165_attributes]:cp_attributes,hg_11_att
+impair_koeff = 0.9
+
+[ar_hg_car_178]:attachment_base_ar			
+kind = ar_hg
+inv_ui_sign				= car15
+visual							= w_att_huds\ar_hg_car_178
+description				= ar_hg_9mm_165_descr
+inv_name					= ar_hg_car_178
+inv_name_short		= ar_hg_car_178S
+cost							= 1200
+inv_grid_width			= 2
+inv_grid_x					= 8
+inv_grid_y					= 13
+attachment_point	= ar_hg|0,0,0|0,0,0
+attachment_slots	= lr300_hg_190_fg|wpn_body|0,-0.0027,0|0,0,0
+item_tags	=	hg
+override_section = ar_hg_car_178_attributes
+
+[ar_hg_car_178_attributes]
+animation_prefix = cp_
+impair_koeff = 0.9
+
+[ar_hg_a1_305]:ar_hg_car_178					;	совместим только с длинным стволом 16-18 (AR-10\AR-15), из-за заглушки цевья
+kind = ar_hg
+inv_ui_sign				= m16a1
+visual							= w_att_huds\ar_hg_a1_305
+inv_name					= ar_hg_a1_305
+inv_name_short		= ar_hg_a1_305S
+cost							= 1500
+inv_grid_x					= 10
+override_section		= ar_hg_a1_305_attributes
+attachment_slots	= foregrip_hg_rail|wpn_body|0,0,0|0,0,0
+[ar_hg_a1_305_attributes]:cp_attributes, hg_18_att
+impair_koeff = 0.9
+
+[ar_hg_a2_305]:ar_hg_car_178					;	совместим только с длинным стволом 16-18 (AR-10\AR-15), из-за заглушки цевья
+inv_ui_sign				= m16a2
+visual							= w_att_huds\ar_hg_a2_305
+inv_name					= ar_hg_a2_305
+inv_name_short		= ar_hg_a2_305S
+inv_grid_x					= 12
+cost							= 1650
+override_section		= ar_hg_a2_305_attributes
+attachment_slots	= foregrip_hg_rail|wpn_body|0,-0.0018,0|0,0,0
+[ar_hg_a2_305_attributes]:cp_attributes,hg_18_att
+impair_koeff = 0.9
+
+[foregrip_hg_rail]:attachment_base_ar
+kind = ar_hg
+inv_ui_sign				= ar-hg
+visual						= w_att_huds\foregrip_hg_rail
+description				= foregrip_hg_railD
+inv_name					= foregrip_hg_rail
+inv_name_short		= foregrip_hg_railS
+cost							= 650
+inv_grid_x				= 32
+inv_grid_y				= 14
+attachment_point	= foregrip_hg_rail|0,0,0|0,0,0
+attachment_slots		= picgrp|wpn_body|0,-0.003,0|0,0,0#pica_3|wpn_body|0,0.03265,0.31|0,0,0
+item_tags =	rail
+override_section = foregrip_hg_rail_attributes
+
+[foregrip_hg_rail_attributes]
+
+[lr300_hg_190]:attachment_base_ar
+kind = ar_hg
+inv_ui_sign				= lr300
+visual							= w_att_huds\lr300_hg_190
+description				= lr300_hg_190_descr
+inv_name					= lr300_hg_190
+inv_name_short		= lr300_hg_190S
+cost							= 1200
+inv_grid_width			= 2
+inv_grid_x					= 28
+inv_grid_y					= 12
+attachment_point	= lr300_hg|0,0,0|0,0,0
+attachment_slots	= lr300_barrel_cover|wpn_body|0,0,0|0,0,0#lr300_hg_190_fg|wpn_body|0,0,0|0,0,0
+item_tags	=	hg
+override_section = lr300_hg_190_attributes
+
+[lr300_hg_190_attributes]
+animation_prefix = cp_
+impair_koeff = 0.9
+
+[lr300_hg_fg]:attachment_base_ar
+kind = ar_hg
+inv_ui_sign				= lr300
+visual						= w_att_huds\lr300_hg_190_fg
+description				= lr300_hg_190_fg_descr
+inv_name					= lr300_hg_190_fg
+inv_name_short			= lr300_hg_190_fgS
+cost							= 750
+inv_grid_x					= 35
+inv_grid_y					= 12
+attachment_point	= lr300_hg_190_fg|0,0,-0.047|0,0,0
+item_tags	=	hg
+override_section	=	lr300_hg_fg_attributes
+
+inv_weight = 0.1
+[lr300_hg_fg_attributes]
+animation_prefix = t_
+zoom_rotate_time = 0.01
+inertia_koeff = 0.8
+
+[lr300_hg_254]:lr300_hg_190
+kind = ar_hg
+visual							= w_att_huds\lr300_hg_254
+description				= ar_hg_20
+description				= ar_hg_20
+inv_name					= lr300_hg_254
+inv_name_short		= lr300_hg_254S
+cost							= 3650
+inv_grid_x					= 30
+attachment_slots	= pica_20|wpn_body|0,0.085933,0.132426|0,0,0#pica_3|wpn_body|-0.021214,0.05666,0.3|0,0,-90#pica_3|wpn_body|0.021214,0.05666,0.3|0,0,90#pica_3|wpn_body|0,0.0357,0.3|0,0,180#sight_front|wpn_body|0,0.085888,0.31|0,0,0#picgrp|wpn_body|0,0,0|0,0,0
+override_section		= lr300_hg_254_attributes
+[lr300_hg_254_attributes]:cp_attributes,hg_16_att
+impair_koeff = 0.9
+
+[ar_hg_tr_229]:ar_hg_mlok_317
+kind = ar_hg
+inv_ui_sign				= ar9b
+visual							= w_att_huds\ar_hg_tiger_rock_229
+description				= ar_hg_tiger_rock_229_descr
+inv_name					= ar_hg_tiger_rock_229
+inv_name_short		= ar_hg_tiger_rock_229S
+inv_grid_x         			= 21
+inv_grid_y         			= 15
+cost							= 2550
+attachment_slots	= sight_front|wpn_body|0,0.081063,0.315|0,0,0#keymod|wpn_body|-0.0204,0.0372,0.3|0,0,-90#keymod|wpn_body|0.0204,0.0372,0.3|0,0,90#pica_3|wpn_body|0,0.0372,0.304|0,0,180								;#keymod_front|wpn_body|0,0.08194,0.14|0,0,0
+override_section	= ar_hg_tr_229_attributes
+
+inv_weight = 0.1
+[ar_hg_tr_229_attributes]
+zoom_rotate_time = -0.02
+inertia_koeff = 0.9
+
+[ar_hg_bcm_kmr_178]:ar_hg_car_178			
+kind = ar_hg	
+inv_ui_sign				= bcm_km
+visual							= w_att_huds\ar_hg_bcm-kmr_178
+description				= ar_hg_13_keymod
+inv_name					= ar_hg_bcm-kmr_178
+inv_name_short		= ar_hg_bcm-kmrS
+inv_grid_x					= 25
+inv_grid_y					= 15
+cost							= 3400
+attachment_slots	= pica_13|wpn_body|0,0.081063,0.132|0,0,0#sight_front|wpn_body|0,0.081063,0.27|0,0,0#keymod|wpn_body|0.02,0.0544,0.259|0,0,90#keymod_rail_grip|wpn_body|0,-0.00039,0|0,0,0
+override_section		= ar_hg_bcm_kmr_178_attributes
+
+inv_weight = 0.1
+[ar_hg_bcm_kmr_178_attributes]
+animation_prefix = c_
+zoom_rotate_time = -0.02
+inertia_koeff = 0.9
+[ar_hg_bcm_178_att]:c_attributes,hg_10_att
+
+[ar_hg_cmmg_rkm_241]:ar_hg_car_178			
+kind = ar_hg	
+inv_ui_sign				= cmmg_km
+visual							= w_att_huds\ar_hg_cmmg_rkm_241
+description				= ar_hg_20_keymod
+inv_name					= ar_hg_cmmg_rkm_241
+inv_name_short		= ar_hg_cmmg_rkm_241S
+inv_grid_x					= 26
+cost							= 3600
+attachment_slots	= pica_20|wpn_body|0,0.081063,0.132|0,0,0#sight_front|wpn_body|0,0.081063,0.331|0,0,0#keymod|wpn_body|-0.0202,0.0558,0.313|0,0,-90#keymod|wpn_body|0.0202,0.0558,0.313|0,0,90#keymod|wpn_body|0,0.0357,0.313|0,0,180#keymod_rail_grip|wpn_body|0,0,0|0,0,0
+override_section = ar_hg_cmmg_rkm_241_attributes
+inv_weight = 0.1
+[ar_hg_cmmg_rkm_241_attributes]:c_attributes,hg_14_att
+
+recoil_koeff = -0.01
+inertia_koeff = 1.1
+zoom_rotate_time = -0.01
+[ar_hg_aerolknox_267]:ar_hg_car_178			
+kind = ar_hg		
+inv_ui_sign				= knox_ml
+visual							= w_att_huds\ar_hg_aerolknox_267
+description				= ar_hg_10_mlok
+inv_name					= ar_hg_aerolknox_267
+inv_name_short		= ar_hg_aerolknox_267S
+inv_grid_x					= 19
+cost							= 2800
+attachment_slots	= pica_10|wpn_body|0,0.081063,0.132|0,0,0#sight_front|wpn_body|0,0.081063,0.328|0,0,0#mlok|wpn_body|-0.01972,0.058143,0.31|0,0,-90#mlok|wpn_body|0.01972,0.058143,0.31|0,0,90#mlok|wpn_body|0,0.0363,0.293|0,0,180#mlok_rail_grip|wpn_body|0,0.00066,0|0,0,0
+override_section	= ar_hg_aerolknox_267_attributes
+
+[ar_hg_aerolknox_267_attributes]
+animation_prefix = c_
+
+[ar_hg_slr_267]:ar_hg_mlok_317
+kind = ar_hg
+inv_ui_sign				= slr
+visual							= w_att_huds\ar_hg_slr_267
+description				= ar_hg_4
+inv_name					= ar_hg_slr_267
+inv_name_short		= ar_hg_slr_267S
+inv_grid_x					= 14
+inv_grid_y         = 15
+cost							= 2950
+attachment_slots	= pica_4|wpn_body|0,0.081063,0.302|0,0,0#mlok_front|wpn_body|0,0.0827,0.166|0,0,0#sight_front|wpn_body|0,0.081063,0.351|0,0,0#pica_3|wpn_body|-0.02267,0.05583,0.324|0,0,-90#pica_3|wpn_body|0.02267,0.05583,0.324|0,0,90#mlok|wpn_body|0,0.0355,0.323|0,0,180#mlok_rail_grip|wpn_body|0,-0.00017,0|0,0,0
+override_section = ar_hg_slr_267_attributes
+
+inv_weight = 0.1
+[ar_hg_slr_267_attributes]
+animation_prefix = c_
+zoom_rotate_time = -0.01
+inertia_koeff = 1.1
+
+[ar_hg_bcm_kmr_330]:ar_hg_car_178			
+kind = ar_hg		
+inv_ui_sign				= bcm_km
+visual							= w_att_huds\ar_hg_bcm-kmr_330
+description				= ar_hg_28_keymod
+inv_name					= ar_hg_bcm-kmr_330
+inv_grid_x					= 24
+cost							= 4150
+attachment_slots	= pica_30|wpn_body|0,0.081063,0.132|0,0,0#sight_front|wpn_body|0,0.081063,0.402|0,0,0#keymod|wpn_body|-0.02,0.0544,0.386|0,0,-90#keymod|wpn_body|0.02,0.0544,0.386|0,0,90#keymod|wpn_body|0,0.0353,0.386|0,0,180#keymod_rail_grip|wpn_body|0,-0.00039,0|0,0,0#lock_bipods|wpn_body|0,0.0353,0.33|0,0,0
+override_section		= ar_hg_bcm_kmr_330_attributes
+
+[ar_hg_bcm_kmr_330_attributes]
+animation_prefix = c_
+weapon_lenght = 0.1
+[ar_hg_330_att]:c_attributes,hg_17_att
+weapon_lenght = 0.1
+
+[ar_hg_noveske_343]:ar_hg_mlok_317
+kind = ar_hg
+inv_ui_sign				= nsr_km
+visual							= w_att_huds\ar_hg_noveske_nsr_343
+description				= ar_hg_28_keymod
+inv_name					= ar_hg_noveske_nsr_343
+inv_name_short		= ar_hg_noveske_nsr_343S
+inv_grid_width			= 2
+inv_grid_x					= 10
+inv_grid_y         			= 15
+cost							= 4300
+attachment_slots	= pica_28|wpn_body|0,0.081063,0.132|0,0,0#sight_front|wpn_body|0,0.081063,0.418|0,0,0#keymod|wpn_body|-0.02,0.0557,0.4|0,0,-90#keymod|wpn_body|-0.02,0.0557,0.4|0,0,90#keymod|wpn_body|0,0.0353,0.4|0,0,180#keymod_rail_grip|wpn_body|0,0,0|0,0,0#lock_bipods|wpn_body|0,0.0353,0.347|0,0,0
+override_section		= ar_hg_noveske_343_attributes
+
+[ar_hg_noveske_343_attributes]
+animation_prefix = c_
+weapon_lenght = 0.1
+
+[ar_hg_cmmg_rkm_381]:ar_hg_cmmg_rkm_241			
+kind = ar_hg		
+inv_ui_sign				= cmmg_km
+visual							= w_att_huds\ar_hg_cmmg_rkm_381
+description				= ar_hg_28_keymod
+inv_name					= ar_hg_cmmg_rkm_381
+inv_grid_width			= 3
+inv_grid_x					= 28
+cost							= 4500
+attachment_slots	= pica_28|wpn_body|0,0.081063,0.132|0,0,0#sight_front|wpn_body|0,0.081063,0.451|0,0,0#keymod|wpn_body|-0.0202,0.0558,0.45|0,0,-90#keymod|wpn_body|0.0202,0.0558,0.45|0,0,90#keymod|wpn_body|0,0.0357,0.45|0,0,180#keymod_rail_grip|wpn_body|0,0,0|0,0,0#lock_bipods|wpn_body|0,0.0357,0.395|0,0,0
+override_section		= ar_hg_cmmg_rkm_381_attributes
+
+[ar_hg_cmmg_rkm_381_attributes]
+animation_prefix = c_
+weapon_lenght = 0.15
+
+[ar_hg_at3_381]:ar_hg_car_178			
+kind = ar_hg
+inv_ui_sign				= at3_ml
+visual							= w_att_huds\ar_hg_at3_381
+description				= ar_hg_30_mlok
+inv_name					= ar_hg_at3_381
+inv_name_short		= ar_hg_at3_381S
+inv_grid_width			= 3
+inv_grid_x					= 21
+cost							= 4500
+attachment_slots	= pica_30|wpn_body|0,0.081063,0.132|0,0,0#sight_front|wpn_body|0,0.081063,0.451|0,0,0#mlok|wpn_body|-0.02,0.0552,0.432|0,0,-90#mlok|wpn_body|0.02,0.0552,0.432|0,0,90#mlok|wpn_body|0,0.0353,0.432|0,0,180#mlok_rail_grip|wpn_body|0,-0.00039,0|0,0,0#lock_bipods|wpn_body|0,0.0353,0.395|0,0,0#mlok_front|wpn_body|0.01555,0.07,0.26|0,0,50
+override_section		= ar_hg_at3_381_attributes
+[ar_hg_at3_381_attributes]:c_attributes,hg_20_att
+weapon_lenght		=	0.15
+
+[ar_hg_mi_432]:ar_hg_mi_383			
+kind = ar_hg	
+inv_ui_sign				= mi_ml17
+visual						= w_att_huds\ar_hg_mi_432
+description				= ar_hg_36_mlok
+inv_name					= ar_hg_mi_432
+inv_name_short		= ar_hg_mi_432S
+inv_grid_x         		= 9
+cost							= 5000
+attachment_slots	= pica_36|wpn_body|0,0.081063,0.132|0,0,0#sight_front|wpn_body|0,0.081063,0.5|0,0,0#mlok|wpn_body|-0.02,0.0552,0.464|0,0,-90#mlok|wpn_body|0.02,0.0552,0.464|0,0,90#mlok|wpn_body|0,0.0353,0.464|0,0,180#mlok_rail_grip|wpn_body|0,-0.00039,0|0,0,0#lock_bipods|wpn_body|0,0.0353,0.43|0,0,0#pica_5|wpn_body|0.017526,0.065882,0.1562|0,0,45
+override_section		= ar_hg_mi_432_attributes
+[ar_hg_mi_432_attributes]:c_attributes,hg_21_att
+weapon_lenght = 0.2
+
+[ar_hg_mi_383]:ar_hg_at3_381			
+kind = ar_hg
+inv_ui_sign				= mi_ml15
+visual						= w_att_huds\ar_hg_mi_383
+inv_name					= ar_hg_mi_383
+inv_name_short		= ar_hg_mi_383S
+inv_grid_x         		= 6
+inv_grid_y         		= 19
+cost							= 4650
+attachment_slots	= pica_30|wpn_body|0,0.081063,0.132|0,0,0#sight_front|wpn_body|0,0.081063,0.451|0,0,0#mlok|wpn_body|-0.02,0.0552,0.416|0,0,-90#mlok|wpn_body|0.02,0.0552,0.416|0,0,90#mlok|wpn_body|0,0.0353,0.416|0,0,180#mlok_rail_grip|wpn_body|0,-0.00039,0|0,0,0#lock_bipods|wpn_body|0,0.0353,0.382|0,0,0#mlok_front|wpn_body|0.01555,0.07,0.26|0,0,50
+override_section		= ar_hg_mi_383_attributes
+
+[ar_hg_mi_383_attributes]
+animation_prefix = c_
+weapon_lenght = 0.15
+
+[ar_hg_bdl_383]:ar_hg_mi_383			
+kind = ar_hg	
+inv_ui_sign				= big_drg_km
+visual						= w_att_huds\ar_hg_big_dragon_lms_383
+description				= ar_hg_30_keymod
+inv_name					= ar_hg_big_dragon_lms_383
+inv_name_short		= ar_hg_big_dragon_lms_383S
+inv_grid_x         		= 17
+inv_grid_y         		= 19
+cost							= 4750
+attachment_slots		= pica_30|wpn_body|0,0.081063,0.132|0,0,0#pica_3|wpn_body|0,0.036,0.43|0,0,180#sight_front|wpn_body|0,0.081063,0.451|0,0,0#keymod|wpn_body|-0.02,0.056,0.412|0,0,-90#keymod|wpn_body|0.02,0.056,0.412|0,0,90#keymod_rail_grip|wpn_body|0,-0.0007,0|0,0,0#bipods|wpn_body|0,0.0359,0.357|0,0,0
+override_section		= ar_hg_bdl_383_attributes
+
+[ar_hg_bdl_383_attributes]
+animation_prefix = c_
+weapon_lenght = 0.15
+
+[ar_hg_mi_320]:ar_hg_mi_383			
+kind = ar_hg
+inv_ui_sign				= mi_ml12
+visual						= w_att_huds\ar_hg_mi_320
+description				= ar_hg_23_mlok
+inv_name					= ar_hg_mi_320
+inv_name_short		= ar_hg_mi_320S
+inv_grid_width			= 2
+inv_grid_x         		= 12
+cost							= 4300
+attachment_slots	= pica_22|wpn_body|0,0.081063,0.132|0,0,0#sight_front|wpn_body|0,0.081063,0.4|0,0,0#mlok|wpn_body|-0.02,0.0552,0.381|0,0,-90#mlok|wpn_body|0.02,0.0552,0.381|0,0,90#mlok|wpn_body|0,0.0353,0.381|0,0,180#mlok_rail_grip|wpn_body|0,-0.00039,0|0,0,0#lock_bipods|wpn_body|0,0.0353,0.346|0,0,0#pica_5|wpn_body|0.017526,0.065882,0.1562|0,0,45
+override_section		= ar_hg_mi_320_attributes
+
+[ar_hg_mi_320_attributes]
+animation_prefix = c_
+weapon_lenght = 0.1
+
+[ar_hg_mi_235]:ar_hg_mi_320
+kind = ar_hg
+inv_ui_sign				= mi_ml9
+visual						= w_att_huds\ar_hg_mi_320
+description				= ar_hg_18_mlok
+inv_name					= ar_hg_mi_235
+inv_name_short		= ar_hg_mi_235S
+inv_grid_x         		= 12
+cost							= 4300
+attachment_slots		= pica_18|wpn_body|0,0.081063,0.132|0,0,0#sight_front|wpn_body|0,0.081063,0.32|0,0,0#mlok|wpn_body|-0.02,0.0552,0.303|0,0,-90#mlok|wpn_body|0.02,0.0552,0.303|0,0,90#mlok|wpn_body|0,0.0353,0.303|0,0,180#mlok_rail_grip|wpn_body|0,-0.00039,0|0,0,0#pica_5|wpn_body|0.017526,0.065882,0.1562|0,0,45
+override_section		= ar_hg_mi_235_attributes
+
+[ar_hg_mi_235_attributes]
+animation_prefix = c_
+
+[416_hg_geissele_smr_229]:416_hg_178
+kind = ar_hg
+visual							= w_att_huds\416_hg_geissele_smr_229
+description				= ar_hg_16_mlok
+inv_name					= 416_hg_geissele_smr_229
+inv_name_short		= 416_hg_geissele_smr_229S
+cost							= 3400
+inv_grid_x					= 16
+attachment_slots	= pica_16|wpn_body|0,0.085933,0.132426|0,0,0#mlok|wpn_body|-0.0211,0.0572,0.29|0,0,-90#mlok|wpn_body|0.0211,0.0572,0.29|0,0,90#mlok|wpn_body|0,0.0357,0.29|0,0,180#sight_front|wpn_body|0,0.085933,0.31|0,0,0#mlok_rail_grip|wpn_body|0,0,0|0,0,0
+override_section		= 416_hg_geissele_smr_229_attributes
+[416_hg_geissele_smr_229_attributes]:c_attributes,hg_12_att
+
+[416_hg_rem_def_229]:416_hg_geissele_smr_229
+kind = ar_hg
+visual							= w_att_huds\416_hg_rem_def_229
+inv_name					= 416_hg_rem_def_229
+inv_name_short		= 416_hg_rem_def_229S
+cost							= 3500
+inv_grid_x					= 22
+attachment_slots	= pica_16|wpn_body|0,0.085933,0.132426|0,0,0#mlok|wpn_body|-0.0211,0.0586,0.297|0,0,-90#mlok|wpn_body|0.0211,0.0586,0.297|0,0,90#mlok|wpn_body|0,0.0357,0.297|0,0,180#sight_front|wpn_body|0,0.085933,0.31|0,0,0#mlok_rail_grip|wpn_body|0,0,0|0,0,0			;#mlok_front|wpn_body|-0.0147,0.0755,0.194|0,0,-46#mlok_front|wpn_body|0.0147,0.0755,0.194|0,0,46
+override_section = 416_hg_rem_def_229_attributes
+
+[416_hg_rem_def_229_attributes]
+animation_prefix = c_
+
+[416_hg_lancer_229]:416_hg_geissele_smr_229
+kind = ar_hg
+visual							= w_att_huds\416_hg_lancer_carbon_229
+inv_name					= 416_hg_lancer_carbon_229
+inv_name_short		= 416_hg_lancer_carbon_229S
+cost							= 4000
+inv_grid_x					= 18
+attachment_slots	= pica_16|wpn_body|0,0.085933,0.132426|0,0,0#mlok|wpn_body|-0.0207,0.0586,0.297|0,0,-90#mlok|wpn_body|0.0207,0.0586,0.297|0,0,90#mlok|wpn_body|0,0.0357,0.297|0,0,180#sight_front|wpn_body|0,0.085933,0.31|0,0,0#mlok_rail_grip|wpn_body|0,0,0|0,0,0			;#mlok_front|wpn_body|-0.0147,0.0755,0.194|0,0,-46#mlok_front|wpn_body|0.0147,0.0755,0.194|0,0,46
+override_section		= 416_hg_lancer_229_attributes
+
+inv_weight = 0.1
+[416_hg_lancer_229_attributes]
+animation_prefix = c_
+zoom_rotate_time = -0.02
+inertia_koeff = 0.9
+
+[416_hg_lancer_305]:416_hg_178
+kind = ar_hg
+visual							= w_att_huds\416_hg_lancer_carbon_305
+description				= ar_hg_24_mlok
+inv_name					= 416_hg_lancer_carbon_305
+cost							= 3300
+inv_grid_x					= 20
+attachment_slots	= pica_24|wpn_body|0,0.085933,0.132426|0,0,0#mlok|wpn_body|-0.0207,0.0572,0.361|0,0,-90#mlok|wpn_body|0.0207,0.0572,0.361|0,0,90#mlok|wpn_body|0,0.0357,0.361|0,0,180#sight_front|wpn_body|0,0.085933,0.383|0,0,0#mlok_rail_grip|wpn_body|0,0,0|0,0,0
+override_section		= 416_hg_lancer_305_attributes
+
+[416_hg_lancer_305_attributes]
+animation_prefix = c_
+weapon_lenght = 0.1
+
+[derya_hg_152]:attachment_base_ar
+kind  =  derya
+inv_ui_sign				= mk12
+visual							= w_att_huds\derya_hg_152
+description				= ar_hg_11_mlok
+inv_name					= derya_hg_152
+inv_name_short		= derya_hgS
+cost							= 3000
+inv_grid_width			= 2
+inv_grid_x					= 24
+inv_grid_y					= 12
+attachment_point	= derya_hg|0,0,0|0,0,0
+attachment_slots	= pica_11|wpn_body|0,0.085933,0.163|0,0,0#pica_3|wpn_body|-0.0192,0.0642,0.175|0,0,-90#pica_3|wpn_body|0.0192,0.0642,0.175|0,0,90#mlok|wpn_body|-0.0195,0.064,0.243|0,0,-90#mlok|wpn_body|0.0195,0.064,0.243|0,0,90#sight_front|wpn_body|0,0.085933,0.284|0,0,0
+override_section = derya_hg_152_attributes
+
+inv_weight = 0.1
+[derya_hg_152_attributes]
+zoom_rotate_time = -0.02
+inertia_koeff = 0.9
+[derya_hg_152_att]:hg_10_att
+
+[derya_hg_317]:derya_hg_152
+kind  =  derya
+visual							= w_att_huds\derya_hg_317
+description				= ar_hg_6n5
+inv_name					= derya_hg_317
+cost							= 4500
+inv_grid_x					= 26
+attachment_slots	= pica_3|wpn_body|-0.0192,0.06407,0.382|0,0,-90#pica_3|wpn_body|0.0192,0.06407,0.382|0,0,90#pica_3|wpn_body|0,0.039,0.413|0,0,180#pica_5|wpn_body|0,0.085933,0.1626|0,0,0#pica_6|wpn_body|,0.085933,0.358|0,0,0#picgrp|wpn_body|0,0.0035,0.01|0,0,0#sight_front|wpn_body|0,0.0858,0.427|0,0,0
+override_section		= derya_hg_317_attributes
+
+inv_weight = 0.1
+[derya_hg_317_attributes]
+animation_prefix = c_
+weapon_lenght = 0.1
+
+[derya_hg_305]:derya_hg_317
+kind  =  derya
+visual							= w_att_huds\derya_hg_305_gen
+description				= ar_hg_27
+inv_name					= derya_hg_305_gen
+cost							= 3850
+inv_grid_x         		= 38
+attachment_slots	= pica_3|wpn_body|-0.0192,0.06407,0.382|0,0,-90#pica_3|wpn_body|0.0192,0.06407,0.382|0,0,90#pica_3|wpn_body|0,0.039,0.413|0,0,180#pica_27|wpn_body|0,0.085933,0.1626|0,0,0#picgrp|wpn_body|0,0.0035,0.01|0,0,0#sight_front|wpn_body|0,0.0858,0.412|0,0,0
+override_section = derya_hg_305_attributes
+
+[derya_hg_305_attributes]
+animation_prefix = c_
+weapon_lenght = 0.1
+
+[ar_hg_cmmg_rml_178]:ar_hg_car_178			
+kind = ar_hg		
+inv_ui_sign				= cmmg_ml
+visual							= w_att_huds\ar_hg_cmmg_rml_178
+description				= ar_hg_13_mlok
+inv_name					= ar_hg_cmmg_rml_178
+inv_name_short		= ar_hg_cmmg_rmlS
+inv_grid_x					= 31
+cost							= 3550
+attachment_slots	= pica_13|wpn_body|0,0.081063,0.132|0,0,0#sight_front|wpn_body|0,0.081063,0.27|0,0,0#mlok|wpn_body|0.0202,0.0558,0.253|0,0,90#mlok_rail_grip|wpn_body|0,0,0|0,0,0
+override_section		= ar_hg_cmmg_rml_178_attributes
+
+inv_weight = 0.1
+[ar_hg_cmmg_rml_178_attributes]
+animation_prefix = c_
+zoom_rotate_time = -0.02
+inertia_koeff = 0.9
+
+[ar_hg_geissele_178]:ar_hg_dd_305			
+kind = ar_hg		
+inv_ui_sign				= geiss
+visual							= w_att_huds\ar_hg_geissele_178
+description				= ar_hg_13_mlok
+inv_name					= ar_hg_geissele_178
+inv_name_short		= ar_hg_geisseleS
+inv_grid_x					= 19
+cost							= 3600
+attachment_slots	= pica_13|wpn_body|0,0.081063,0.132|0,0,0#sight_front|wpn_body|0,0.081063,0.27|0,0,0#mlok|wpn_body|0.0198,0.0553,0.252|0,0,90#mlok_rail_grip|wpn_body|0,0,0|0,0,0
+override_section		= ar_hg_geissele_178_attributes
+
+inv_weight = 0.1
+[ar_hg_geissele_178_attributes]
+animation_prefix = c_
+zoom_rotate_time = -0.02
+inertia_koeff = 0.9
+
+[ar_hg_kac_216]:ar_hg_dd_305			
+kind = ar_hg	
+inv_ui_sign				= urx
+visual							= w_att_huds\ar_hg_kac_urx_216
+description				= ar_hg_16_mlok
+inv_name					= ar_hg_kac_urx_216
+inv_name_short		= ar_hg_kac_urx_216S
+inv_grid_x					= 35
+cost							= 2800
+attachment_slots	= pica_16|wpn_body|0,0.081063,0.132|0,0,0#sight_front|wpn_body|0,0.081063,0.304|0,0,0#mlok|wpn_body|-0.02,0.0565,0.285|0,0,-90#mlok|wpn_body|0.02,0.0565,0.285|0,0,90#mlok|wpn_body|0,0.0348,0.285|0,0,180#mlok_rail_grip|wpn_body|0,-0.00082,0|0,0,0
+override_section		= ar_hg_kac_216_attributes
+
+[ar_hg_kac_216_attributes]
+animation_prefix = c_
+
+[ar_hg_emg_216]:ar_hg_kac_216			
+kind = ar_hg		
+inv_ui_sign				= urx
+visual							= w_att_huds\ar_hg_emg_pri_216
+inv_name					= ar_hg_emg_pri_216
+inv_name_short		= ar_hg_emg_pri_216S
+inv_grid_x					= 35
+cost							= 4000
+attachment_slots	= pica_16|wpn_body|0,0.081063,0.142|0,0,0#sight_front|wpn_body|0,0.081063,0.304|0,0,0#pica_3|wpn_body|-0.0213,0.05666,0.29|0,0,-90#pica_3|wpn_body|0.0213,0.05666,0.29|0,0,90#pica_3|wpn_body|0,0.0357,0.29|0,0,180#picgrp|wpn_body|0,0,0|0,0,0
+override_section		= ar_hg_emg_216_attributes
+
+[ar_hg_emg_216_attributes]
+animation_prefix = cp_
+[ar_hg_emg_pri_216_att]:cp_attributes,hg_13_att
+
+[ar_hg_cmmg_229]:ar_hg_cmmg_rml_178			
+kind = ar_hg		
+inv_ui_sign				= cmmg_ml
+visual							= w_att_huds\ar_hg_cmmg_rml_229
+description				= ar_hg_16_mlok
+inv_name					= ar_hg_cmmg_rml_229
+inv_grid_x					= 33
+cost							= 4000
+attachment_slots	= pica_16|wpn_body|0,0.081063,0.132|0,0,0#sight_front|wpn_body|0,0.081063,0.315|0,0,0#mlok|wpn_body|-0.0202,0.0558,0.3|0,0,-90#mlok|wpn_body|0.0202,0.0558,0.3|0,0,90#mlok|wpn_body|0,0.0357,0.3|0,0,180#mlok_rail_grip|wpn_body|0,0,0|0,0,0
+override_section		= ar_hg_cmmg_229_attributes
+
+[ar_hg_cmmg_229_attributes]
+animation_prefix = c_
+
+[ar_hg_geissele_254]:ar_hg_geissele_178			
+kind = ar_hg		
+visual							= w_att_huds\ar_hg_geissele_254
+description				= ar_hg_20_mlok
+inv_name					= ar_hg_geissele_254
+inv_grid_x					= 21
+cost							= 4200
+attachment_slots	= pica_20|wpn_body|0,0.081063,0.132|0,0,0#sight_front|wpn_body|0,0.081063,0.339|0,0,0#mlok|wpn_body|-0.0198,0.0553,0.322|0,0,-90#mlok|wpn_body|0.0198,0.0553,0.322|0,0,90#mlok|wpn_body|0,0.0357,0.322|0,0,180#mlok_rail_grip|wpn_body|0,0,0|0,0,0
+override_section = ar_hg_geissele_254_attributes
+
+inv_weight = 0.1
+[ar_hg_geissele_254_attributes]
+animation_prefix = c_
+zoom_rotate_time = -0.01
+inertia_koeff = 1.1
+
+[ar_hg_stngr_267]:ar_hg_mlok_317			; не совместим с foregrip_surefire_m900, foregrip_cqr
+kind = ar_hg
+inv_ui_sign				= stngr_ml
+visual							= w_att_huds\ar_hg_stngr_mlok_267
+description				= ar_hg_20_mlok
+inv_name					= ar_hg_stngr_mlok_267
+inv_name_short		= ar_hg_stngr_mlok_267S
+inv_grid_x					= 19
+inv_grid_y         = 15
+cost							= 4300
+attachment_slots	= pica_20|wpn_body|0,0.081063,0.132|0,0,0#sight_front|wpn_body|0,0.081063,0.338|0,0,0#mlok|wpn_body|0.0208,0.05563,0.276|0,0,90#mlok|wpn_body|-0.0208,0.05563,0.276|0,0,-90#pica_3|wpn_body|0,0.0323,0.324|0,0,180#mlok_rail_grip|wpn_body|0,0,0|0,0,0
+override_section = ar_hg_stngr_267_attributes
+
+inv_weight = 0.1
+[ar_hg_stngr_267_attributes]
+animation_prefix = c_
+zoom_rotate_time = -0.01
+inertia_koeff = 1.1
+
+[ar_hg_cmmg_280]:ar_hg_cmmg_rml_178			
+kind = ar_hg
+inv_ui_sign				= cmmg_ml
+visual							= w_att_huds\ar_hg_cmmg_rml_280
+description				= ar_hg_22_mlok
+inv_name					= ar_hg_cmmg_rml_280
+inv_grid_x					= 35
+cost							= 4400
+attachment_slots	= pica_22|wpn_body|0,0.081063,0.132|0,0,0#sight_front|wpn_body|0,0.081063,0.362|0,0,0#mlok|wpn_body|-0.0202,0.0558,0.342|0,0,-90#mlok|wpn_body|0.0202,0.0558,0.342|0,0,90#mlok|wpn_body|0,0.0357,0.342|0,0,180#mlok_rail_grip|wpn_body|0,0,0|0,0,0#lock_bipods|wpn_body|0,0.0357,0.346|0,0,0
+override_section = ar_hg_cmmg_280_attributes
+
+inv_weight = 0.1
+[ar_hg_cmmg_280_attributes]
+animation_prefix = c_
+zoom_rotate_time = -0.01
+inertia_koeff = 1.1
+
+[ar_hg_mlok_317]:ar_hg_dd_305			
+kind = ar_hg
+inv_ui_sign				= ml_12
+visual							= w_att_huds\ar_hg_mlok_317
+description				= ar_hg_26_mlok
+inv_name					= ar_hg_mlok_317
+inv_name_short		= ar_hg_mlok_317S
+inv_grid_x					= 6
+inv_grid_y					= 15
+cost							= 4500
+attachment_slots	= pica_26|wpn_body|0,0.081063,0.132|0,0,0#sight_front|wpn_body|0,0.081063,0.397|0,0,0#mlok|wpn_body|-0.02,0.056,0.378|0,0,-90#mlok|wpn_body|0.02,0.056,0.378|0,0,90#mlok|wpn_body|0,0.0357,0.378|0,0,180#mlok_rail_grip|wpn_body|0,0,0|0,0,0#lock_bipods|wpn_body|0,0.0357,0.382|0,0,0
+item_tags	=	hg
+override_section		= ar_hg_mlok_317_attributes
+
+[ar_hg_mlok_317_attributes]
+animation_prefix = c_
+weapon_lenght = 0.1
+[ar_hg_mlok_317_att]:c_attributes
+weapon_lenght = 0.1
+
+[ar_hg_geissele_330]:ar_hg_geissele_178			
+kind = ar_hg
+visual							= w_att_huds\ar_hg_geissele_330
+description				= ar_hg_30_mlok
+inv_name					= ar_hg_geissele_330
+inv_grid_x					= 23
+cost							= 4600
+attachment_slots	= pica_30|wpn_body|0,0.081063,0.132|0,0,0#sight_front|wpn_body|0,0.081063,0.408|0,0,0#mlok|wpn_body|-0.0198,0.0553,0.39|0,0,-90#mlok|wpn_body|0.0198,0.0553,0.39|0,0,90#mlok|wpn_body|0,0.0357,0.39|0,0,180#mlok_rail_grip|wpn_body|0,0,0|0,0,0#lock_bipods|wpn_body|0,0.0357,0.393|0,0,0#mlok_front|wpn_body|0.0148,0.069,0.26|0,0,47
+override_section		= ar_hg_geissele_330_attributes
+
+[ar_hg_geissele_330_attributes]
+animation_prefix = c_
+weapon_lenght = 0.1
+
+[ar_hg_cmmg_355]:ar_hg_cmmg_rml_178	
+kind = ar_hg
+inv_ui_sign				= cmmg_ml
+visual							= w_att_huds\ar_hg_cmmg_rml_355
+description				= ar_hg_28_mlok
+inv_name					= ar_hg_cmmg_rml_355
+inv_grid_width			= 3
+inv_grid_x					= 37
+cost							= 4700
+attachment_slots	= pica_28|wpn_body|0,0.081063,0.132|0,0,0#sight_front|wpn_body|0,0.081063,0.43|0,0,0#mlok|wpn_body|-0.0202,0.0558,0.412|0,0,-90#mlok|wpn_body|0.0202,0.0558,0.412|0,0,90#mlok|wpn_body|0,0.0357,0.412|0,0,180#mlok_rail_grip|wpn_body|0,0,0|0,0,0#lock_bipods|wpn_body|0,0.0357,0.415|0,0,0
+override_section		= ar_hg_cmmg_355_attributes
+
+[ar_hg_cmmg_355_attributes]
+animation_prefix = c_
+weapon_lenght = 0.1
+[ar_hg_cmmg_rml_355_att]:c_attributes,hg_18_att
+weapon_lenght		=	0.1
+
+[ar_hg_slr_381]:ar_hg_mlok_317
+kind = ar_hg
+inv_ui_sign				= slr_ml
+visual							= w_att_huds\ar_hg_slr_381
+description				= ar_hg_30_mlok
+inv_name					= ar_hg_slr_381
+inv_name_short		= ar_hg_slr_381S
+inv_grid_width			= 3
+inv_grid_x					= 16
+cost							= 4850
+attachment_slots	= pica_30|wpn_body|0,0.081063,0.132|0,0,0#sight_front|wpn_body|0,0.081063,0.454|0,0,0#mlok|wpn_body|-0.0209,0.0555,0.417|0,0,-90#mlok|wpn_body|-0.0209,0.0555,0.417|0,0,90#mlok|wpn_body|0,0.0359,0.417|0,0,180#mlok_rail_grip|wpn_body|0,0.00021,0|0,0,0#lock_bipods|wpn_body|0,0.0359,0.418|0,0,0
+override_section		= ar_hg_slr_381_attributes
+
+[ar_hg_slr_381_attributes]
+animation_prefix = c_
+weapon_lenght = 0.15
+
+[ar_hg_fs_381]:ar_hg_dd_305			
+kind = ar_hg
+inv_ui_sign				= fortis+
+visual							= w_att_huds\ar_hg_fortis_switch_381
+description				= ar_hg_30_mlok
+inv_name					= ar_hg_fortis_switch_381
+inv_name_short		= ar_hg_fortis_switch_381S
+inv_grid_width			= 3
+inv_grid_x					= 16
+cost							= 5000
+attachment_slots	= pica_30|wpn_body|0,0.081063,0.132|0,0,0#sight_front|wpn_body|0,0.081063,0.449|0,0,0#mlok|wpn_body|-0.02,0.0553,0.393|0,0,-90#mlok|wpn_body|0.02,0.0553,0.393|0,0,90#pica_3|wpn_body|0,0.0316,0.445|0,0,180#mlok_rail_grip|wpn_body|0,0,0|0,0,0#bipods|wpn_body|0,0.0316,0.43|0,0,0
+override_section		= ar_hg_fs_381_attributes
+
+[ar_hg_fs_381_attributes]
+animation_prefix = c_
+weapon_lenght = 0.15
+
+[416_hg_178]:attachment_base_ar
+kind = ar_hg
+inv_ui_sign				= 416
+visual							= w_att_huds\416_hg_178
+description				= ar_hg_13
+inv_name					= 416_hg_178
+inv_name_short		= 416_hgS
+cost							= 1200
+inv_grid_width			=	2
+inv_grid_x					= 7
+inv_grid_y					= 12
+attachment_point	= 416_hg|0,0,0|0,0,0
+attachment_slots	= pica_13|wpn_body|0,0.085933,0.132426|0,0,0#pica_3|wpn_body|0.021214,0.05666,0.26|0,0,90#sight_front|wpn_body|0,0.085933,0.264|0,0,0#picgrp|wpn_body|0,0,0|0,0,0
+item_tags =	hg
+override_section = 416_hg_178_attributes
+
+inv_weight = 0.1
+[416_hg_178_attributes]
+animation_prefix = cp_
+zoom_rotate_time = 0.01
+inertia_koeff = 0.9
+
+[416_hg_229]:416_hg_178
+kind = ar_hg
+visual							= w_att_huds\416_hg_229
+description				= ar_hg_16
+inv_name					= 416_hg_229
+cost							= 4000
+inv_grid_x					= 9
+attachment_slots	= pica_16|wpn_body|0,0.085933,0.132426|0,0,0#pica_3|wpn_body|-0.021214,0.05666,0.3|0,0,-90#pica_3|wpn_body|0.021214,0.05666,0.3|0,0,90#pica_3|wpn_body|0,0.0357,0.3|0,0,180#sight_front|wpn_body|0,0.085933,0.31|0,0,0#picgrp|wpn_body|0,0,0|0,0,0
+override_section = 416_hg_229_attributes
+
+[416_hg_229_attributes]
+animation_prefix = cp_
+
+[416_hg_280]:416_hg_178
+kind = ar_hg
+visual							= w_att_huds\416_hg_280
+description				= ar_hg_21
+inv_name					= 416_hg_280
+cost							= 4400
+inv_grid_x					= 11
+attachment_slots	= pica_21|wpn_body|0,0.085933,0.132426|0,0,0#pica_3|wpn_body|-0.021214,0.05666,0.34|0,0,-90#pica_3|wpn_body|0.021214,0.05666,0.34|0,0,90#pica_3|wpn_body|0,0.0357,0.34|0,0,180#sight_front|wpn_body|0,0.08587,0.351|0,0,0#picgrp|wpn_body|0,0,0|0,0,0#bipods|wpn_body|0,0.0357,0.34|0,0,0
+override_section		= 416_hg_280_attributes
+[416_hg_280_attributes]:cp_attributes,hg_16_att
+weapon_lenght = 0.1
+impair_koeff = 0.9
+
+[416_hg_381]:416_hg_178
+kind = ar_hg
+visual							= w_att_huds\416_hg_mr308_381
+description				= ar_hg_30
+inv_name					= 416_hg_mr308_381
+inv_name_short		= 416_hg_mr308_381S
+cost							= 5100
+inv_grid_width			=	3
+inv_grid_x					= 13
+attachment_slots	= pica_30|wpn_body|0,0.085933,0.132426|0,0,0#pica_3|wpn_body|-0.021214,0.05666,0.32|0,0,-90#pica_3|wpn_body|0.021214,0.05666,0.32|0,0,90#pica_3|wpn_body|0,0.0357,0.32|0,0,180#sight_front|wpn_body|0,0.0858,0.451|0,0,0#picgrp|wpn_body|0,0,0|0,0,0#bipods|wpn_body|0,0.0357,0.32|0,0,0
+override_section		= 416_hg_381_attributes
+inv_weight = 0.1
+[416_hg_381_attributes]:cp_attributes
+weapon_lenght = 0.15
+zoom_rotate_time = 0.05
+inertia_koeff           = 1.4
+impair_koeff = 0.9
+
+[ar_hg_kac_178]:ar_hg_dd_305
+kind = ar_hg
+inv_ui_sign				= kac_up
+visual							= w_att_huds\ar_hg_kac_ris_178
+description				= ar_hg_11
+inv_name					= ar_hg_kac_ris_178
+inv_name_short		= ar_hg_kac_risS 
+inv_grid_x					= 29
+cost							= 3300
+attachment_slots	= pica_11|wpn_body|0,0.081063,0.154|0,0,0#sight_front|wpn_body|0,0.081063,0.268|0,0,0#pica_3|wpn_body|0.02114,0.0567,0.266|0,0,90#ar_hg_kac_178d|wpn_body|0,0,0|0,0,0
+override_section = ar_hg_kac_178_attributes
+
+inv_weight = 0.1
+[ar_hg_kac_178_attributes]
+zoom_rotate_time = -0.02
+inertia_koeff = 0.9
+[hg_10_att]
+zoom_rotate_time = -0.02
+recoil_koeff            = -0.15
+inertia_koeff           = 0.9
+
+[ar_hg_kac_178d]:ar_hg_kac_178
+kind = ar_hg
+inv_ui_sign				= kac_dn
+visual						= w_att_huds\ar_hg_kac_ris_178b
+inv_name					= ar_hg_kac_ris_178d
+inv_name_short		= ar_hg_kac_ris_178dS
+inv_grid_width				= 1
+inv_grid_x					= 31
+cost							= 500
+attachment_point = ar_hg_kac_178d|0,0,0|0,0,0
+attachment_slots	= picgrp|wpn_body|0,0,0|0,0,0
+override_section = ar_hg_kac_178d_attributes
+
+[ar_hg_kac_178d_attributes]
+animation_prefix = cp_
+recoil_koeff = -0.01
+zoom_rotate_time = -0.02
+[ar_hg_kac_178d_att]:cp_attributes
+recoil_koeff = -0.01
+zoom_rotate_time = -0.02
+
+[ar_hg_noveske_178]:ar_hg_mlok_317
+kind = ar_hg
+inv_ui_sign				= novsk
+visual							= w_att_huds\ar_hg_noveske_178
+description				= ar_hg_13
+inv_name					= ar_hg_noveske_178
+inv_name_short		= ar_hg_noveske_178S
+inv_grid_x         = 8
+inv_grid_y         = 15
+cost							= 4000
+attachment_slots	= pica_13|wpn_body|0,0.081063,0.132|0,0,0#sight_front|wpn_body|0,0.081063,0.274|0,0,0#pica_3|wpn_body|0.02114,0.0567,0.272|0,0,90#picgrp|wpn_body|0,0,0|0,0,0
+override_section = ar_hg_noveske_178_attributes
+
+inv_weight = 0.1
+[ar_hg_noveske_178_attributes]
+animation_prefix = cp_
+zoom_rotate_time = 0.01
+inertia_koeff = 0.9
+[ar_hg_noveske_178_att]:cp_attributes
+zoom_rotate_time = 0.01
+recoil_koeff            = -0.16
+inertia_koeff           = 0.9
+
+[ar_hg_hera_178]:ar_hg_dd_305			
+kind = ar_hg
+visual							= w_att_huds\ar_hg_hera_arms_178
+description				= ar_hg_13
+inv_name					= ar_hg_hera_arms_178
+inv_name_short		= ar_hg_hera_armsS
+inv_grid_x					= 25
+cost							= 4100
+attachment_slots	= pica_13|wpn_body|0,0.081063,0.132|0,0,0#sight_front|wpn_body|0,0.081063,0.268|0,0,0#pica_3|wpn_body|0.0197,0.0556,0.266|0,0,90#picgrp|wpn_body|0,0,0|0,0,0
+override_section = ar_hg_hera_178_attributes
+
+inv_weight = 0.1
+[ar_hg_hera_178_attributes]
+animation_prefix = cp_
+zoom_rotate_time = 0.01
+inertia_koeff = 0.9
+
+[ar_hg_dd_241]:ar_hg_dd_305			
+kind = ar_hg
+inv_ui_sign				= fsp_up
+visual							= w_att_huds\ar_hg_dd_fsp_241
+description				= ar_hg_13
+inv_name					= ar_hg_dd_fsp_241
+inv_name_short		= ar_hg_dd_fsp_241S
+inv_grid_x					= 12
+cost							= 4200
+attachment_slots	= ar_hg_dd_241d|wpn_body|0,0,0|0,0,0#pica_13|wpn_body|0,0.081063,0.132|0,0,0#sight_front|wpn_body|0,0.081063,0.274|0,0,0#pica_3|wpn_body|-0.0212,0.0565,0.318|0,0,-90#pica_3|wpn_body|0.0212,0.0565,0.318|0,0,90
+override_section = ar_hg_dd_241_attributes
+
+inv_weight = 0.1
+[ar_hg_dd_241_attributes]
+zoom_rotate_time = -0.01
+inertia_koeff = 1.1
+[hg_14_att]
+zoom_rotate_time = -0.01
+recoil_koeff            = -0.17
+inertia_koeff           = 1.1
+
+[ar_hg_dd_241d]:ar_hg_dd_305			
+kind = ar_hg		
+inv_ui_sign				= fsp_dwn
+visual							= w_att_huds\ar_hg_dd_fsp_241d
+description				= ar_hg_dd_305d_descr
+inv_name					= ar_hg_dd_fsp_241d
+inv_name_short		= ar_hg_dd_fsp_241dS
+inv_grid_x					= 14
+cost							= 800
+attachment_point	= ar_hg_dd_241d|0,0,0|0,0,0
+attachment_slots	= pica_3|wpn_body|0,0.0356,0.315|0,0,180#picgrp|wpn_body|0,0,0|0,0,0
+override_section = ar_hg_dd_241d_attributes
+
+[ar_hg_dd_241d_attributes]
+animation_prefix = cp_
+recoil_koeff = -0.01
+zoom_rotate_time = -0.02
+
+[ar_hg_dd_mk18_241]:ar_hg_dd_305
+kind = ar_hg
+inv_ui_sign				= mk18
+visual							= w_att_huds\ar_hg_mk18_241
+description				= ar_hg_18
+inv_name					= ar_hg_mk18_241
+inv_name_short		= ar_hg_mk18_241S
+inv_grid_x					= 37
+cost							= 4400
+attachment_slots	= pica_18|wpn_body|0,0.081063,0.132|0,0,0#sight_front|wpn_body|0,0.081063,0.328|0,0,0#pica_3|wpn_body|-0.0212,0.0565,0.325|0,0,-90#pica_3|wpn_body|0.0212,0.0565,0.325|0,0,90#pica_3|wpn_body|0,0.0356,0.325|0,0,180#picgrp|wpn_body|0,0,0|0,0,0
+override_section	= ar_hg_dd_mk18_241_attributes
+
+[ar_hg_dd_mk18_241_attributes]
+animation_prefix = cp_
+[ar_hg_mk18_241_att]:cp_attributes,hg_16_att
+
+[ar_hg_dd_fsp_305]:ar_hg_dd_305			
+kind = ar_hg
+inv_ui_sign				= fsp_up
+visual							= w_att_huds\ar_hg_ddsm_305
+description				= ar_hg_16
+inv_name					= ar_hg_dd_fsp_305
+inv_name_short		= ar_hg_dd_fsp_305S
+inv_grid_x					= 10
+cost							= 3450
+attachment_slots	= ar_hg_dd_305d|wpn_body|0,0,0|0,0,0#pica_16|wpn_body|0,0.081063,0.132|0,0,0#pica_5|wpn_body|0,0.081063,0.338|0,0,0#sight_front|wpn_body|0,0.081063,0.387|0,0,0#pica_3|wpn_body|-0.0212,0.0565,0.38|0,0,-90#pica_3|wpn_body|0.0212,0.0565,0.38|0,0,90
+override_section = ar_hg_dd_fsp_305_attributes
+
+[ar_hg_dd_fsp_305_attributes]
+weapon_lenght = 0.1
+[ar_hg_dd_305_att]:hg_19_att
+weapon_lenght = 0.1
+
+[ar_hg_dd_305]:ar_hg_car_178			
+kind = ar_hg
+inv_ui_sign				= dd_up
+visual							= w_att_huds\ar_hg_dd_305
+description				= ar_hg_22
+inv_name					= ar_hg_dd_305
+inv_name_short		= ar_hg_dd_305S
+inv_grid_x					= 6
+inv_grid_y					= 14
+cost							= 3700
+attachment_slots	= ar_hg_dd_305d|wpn_body|0,0,0|0,0,0#pica_22|wpn_body|0,0.081063,0.132|0,0,0#sight_front|wpn_body|0,0.081063,0.387|0,0,0#pica_3|wpn_body|-0.0212,0.0565,0.38|0,0,-90#pica_3|wpn_body|0.0212,0.0565,0.38|0,0,90
+override_section = ar_hg_dd_305_attributes
+
+[ar_hg_dd_305_attributes]
+weapon_lenght = 0.1
+
+[ar_hg_dd_305d]:ar_hg_dd_305			
+kind = ar_hg
+inv_ui_sign				= dd_dwn
+visual							= w_att_huds\ar_hg_dd_305d
+description				= ar_hg_dd_305d_descr
+inv_name					= ar_hg_dd_305d
+inv_name_short		= ar_hg_dd_305dS
+inv_grid_x					= 8
+cost							= 1100
+attachment_point	= ar_hg_dd_305d|0,0,0|0,0,0
+attachment_slots	= pica_3|wpn_body|0,0.0356,0.377|0,0,180#picgrp|wpn_body|0,0,0|0,0,0#bipods|wpn_body|0,0.0356,0.363|0,0,0
+override_section = ar_hg_dd_305d_attributes
+
+[ar_hg_dd_305d_attributes]
+animation_prefix = cp_
+recoil_koeff = -0.01
+zoom_rotate_time = -0.01
+[ar_hg_dd_305d_att]:cp_attributes
+recoil_koeff = -0.01
+zoom_rotate_time = -0.01
+
+[ar_hg_a4_305]:ar_hg_car_178				;	совместим только с длинным стволом 16-18 (AR-10\AR-15), из-за заглушки цевья	
+kind = ar_hg
+inv_ui_sign				= m16a4
+visual							= w_att_huds\ar_hg_a4_305
+description				= ar_hg_22
+inv_name					= ar_hg_a4_305
+inv_name_short		= ar_hg_a4_305S
+inv_grid_x					= 17
+cost							= 5000
+attachment_slots	= pica_22|wpn_body|0,0.081063,0.153|0,0,0#sight_front|wpn_body|0,0.081063,0.381|0,0,0#pica_3|wpn_body|-0.0213,0.0567,0.33|0,0,-90#pica_3|wpn_body|0.0213,0.0567,0.33|0,0,90#pica_3|wpn_body|0,0.0357,0.38|0,0,180#picgrp|wpn_body|0,0,0|0,0,0#bipods|wpn_body|0,0.0357,0.367|0,0,0
+override_section		= ar_hg_a4_305_attributes
+[ar_hg_a4_305_attributes]:cp_attributes,hg_19_att
+weapon_lenght = 0.1
+
+[ar_hg_kac_305]:ar_hg_kac_178			
+kind = ar_hg
+visual							= w_att_huds\ar_hg_kac_ris_305
+description				= ar_hg_20
+inv_name					= ar_hg_kac_ris_305
+inv_grid_x					= 33
+cost							= 5200
+attachment_slots	= pica_20|wpn_body|0,0.081063,0.17|0,0,0#sight_front|wpn_body|0,0.081063,0.38|0,0,0#pica_3|wpn_body|-0.02125,0.0567,0.394|0,0,-90#pica_3|wpn_body|0.02125,0.0567,0.394|0,0,90#pica_3|wpn_body|0,0.03563,0.394|0,0,180#picgrp|wpn_body|0,0,0|0,0,0#bipods|wpn_body|0,0.03563,0.37|0,0,0
+override_section = ar_hg_kac_305_attributes
+
+[ar_hg_kac_305_attributes]
+animation_prefix = cp_
+weapon_lenght = 0.1
+
+[ar_hg_hera_305]:ar_hg_hera_178			
+kind = ar_hg
+visual							= w_att_huds\ar_hg_hera_arms_305
+description				= ar_hg_25
+inv_name					= ar_hg_hera_arms_305
+inv_grid_x					= 27
+cost							= 5400
+attachment_slots	= pica_25|wpn_body|0,0.081063,0.132|0,0,0#sight_front|wpn_body|0,0.081063,0.387|0,0,0#pica_3|wpn_body|-0.0197,0.0556,0.384|0,0,-90#pica_3|wpn_body|0.0197,0.0556,0.384|0,0,90#pica_3|wpn_body|0,0.03563,0.384|0,0,180#picgrp|wpn_body|0,0,0|0,0,0#bipods|wpn_body|0,0.03563,0.37|0,0,0
+override_section		= ar_hg_hera_305_attributes
+
+[ar_hg_hera_305_attributes]
+animation_prefix = cp_
+weapon_lenght = 0.1
+
+[ar_hg_kac_urx_305]:ar_hg_mlok_317
+kind = ar_hg
+inv_ui_sign				= urx+
+visual							= w_att_huds\ar_hg_kac_urx_305
+description				= ar_hg_24
+inv_name					= ar_hg_kac_urx_305
+inv_name_short		= ar_hg_kac_urx_305S
+inv_grid_x				= 23
+inv_grid_y        		= 15
+cost							= 5200
+attachment_slots	= pica_24|wpn_body|0,0.081063,0.132|0,0,0#sight_front|wpn_body|0,0.081063,0.378|0,0,0#pica_3|wpn_body|-0.02115,0.0565,0.384|0,0,-90#pica_3|wpn_body|-0.02115,0.0565,0.384|0,0,90#pica_3|wpn_body|0,0.03563,0.363|0,0,180#picgrp|wpn_body|0,0,0|0,0,0#bipods|wpn_body|0,0.03563,0.35|0,0,0
+override_section	= ar_hg_kac_urx_305_attributes
+
+[ar_hg_kac_urx_305_attributes]
+animation_prefix = cp_
+weapon_lenght = 0.1
+
+[omen_hg_381]:attachment_base_ar
+kind  =  omen
+inv_ui_sign				= omen_15
+visual							= w_att_huds\omen_hg_381
+description				= ar_hg_30_mlok
+inv_name					= omen_hg_381
+inv_name_short		= omen_hg_381S
+cost							= 5800
+inv_grid_width			= 3
+inv_grid_x					= 32
+inv_grid_y					= 12
+attachment_point	= omen_hg|0,0,0|0,0,0
+attachment_slots	= pica_30|wpn_body|0,0.085933,0.171|0,0,0#mlok|wpn_body|-0.0262,0.056,0.465|0,0,-90#mlok|wpn_body|0.0262,0.056,0.465|0,0,90#pica_3|wpn_body|0,0.0277,0.471|0,0,180#bipods|wpn_body|0,0.0277,0.469|0,0,0#sight_front|wpn_body|0,0.0858,0.489|0,0,0#mlok_rail_grip|wpn_body|0,-0.0054,0.017|0,0,0
+override_section	= omen_hg_381_attributes
+inv_weight = 0.1
+[omen_hg_381_attributes]:cp_attributes,hg_21_att
+weapon_lenght = 0.1
+
+zoom_rotate_time = 0.01
+[omen_hg_165]:omen_hg_381
+kind  =  omen
+inv_ui_sign				= omen_6
+visual						= w_att_huds\omen_hg_165
+description				= pica_12_up
+inv_name					= omen_hg_165
+cost							= 1850
+inv_grid_width			= 2
+inv_grid_x         		= 36
+attachment_slots	= pica_12|wpn_body|0,0.085933,0.171|0,0,0#pica_3|wpn_body|-0.02153,0.056,0.28|0,0,-90#pica_3|wpn_body|0.02153,0.056,0.28|0,0,90#sight_front|wpn_body|0,0.0858,0.29|0,0,0#picgrp|wpn_body|0,-0.0054,0.017|0,0,0	
+override_section = omen_hg_165_attributes
+
+inv_weight = 0.1
+[omen_hg_165_attributes]
+animation_prefix = cp_
+zoom_rotate_time = 0.01
+inertia_koeff = 0.9
+
+[cs5_hg]:attachment_base_ar
+kind  =  cs5
+inv_ui_sign				= cs5_hg
+visual						= w_att_huds\cs5_hg
+inv_name					= cs5_hg
+inv_name_short		= cs5_hgS
+cost							= 2000
+inv_grid_width			= 2
+inv_grid_x				= 14
+inv_grid_y				= 20
+attachment_point = cs5_hg|0,0,0|0,0,0
+attachment_slots	= sight_front|wpn_body|0,0.085933,0.363|0,0,0#pica_3|wpn_body|0,0.085933,0.314|0,0,0#lock_bipods|wpn_body|0,0.0325,0.3544|0,0,0
+override_section = cs5_hg_attributes
+inv_weight = 0.1
+[cs5_hg_attributes]:ar_hg_cmmg_rkm_241_attributes,cp_attributes
+
+recoil_koeff = -0.01
+inertia_koeff = 1.1
+zoom_rotate_time = -0.01
+[cs5_hg_pica]:cs5_hg						;pica_17
+kind  =  cs5
+inv_ui_sign				= cs5_hg_rail
+visual						= w_att_huds\cs5_hg_pica
+description				= ar_hg_16_mlok
+inv_name					= cs5_hg_pica
+inv_name_short		= cs5_hg_picaS
+cost							= 4500
+inv_grid_x				= 16
+attachment_slots	= sight_front|wpn_body|0,0.085933,0.376|0,0,0#pica_16|wpn_body|0,0.085933,0.2|0,0,0#pica_3|wpn_body|0,0.03208,0.38|0,0,-180#bipods|wpn_body|0,0.03211,0.32|0,0,0#mlok|wpn_body|-0.0208,0.055,0.355|0,0,-90#mlok|wpn_body|0.0208,0.055,0.355|0,0,90#picgrp|wpn_body|0,-0.0035,0.0119|0,0,0
+override_section = cs5_hg_pica_att
+[cs5_hg_pica_att]:c_attributes,hg_16_att
+
+
+---\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ AR-SIGHTS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+[sight_front_lr300]:ar_sight
+inv_ui_sign				= lr_f
+visual						= w_att_huds\sight_front_lr300
+description				= no_attributes_descr
+inv_name					= sight_front_lr300
+inv_name_short			= sight_front_lr300
+inv_grid_x					= 6
+inv_grid_y					= 16
+cost							= 650
+inv_weight 				= 0.05
+attachment_point = sight_front|0,0,0|0,0,0
+override_section = sight_front_lr300_attributes
+
+[sight_front_lr300_attributes]
+
+[sight_front_416]:sight_front_lr300
+inv_ui_sign				= 416_f
+visual						= w_att_huds\sight_front_416
+inv_name					= sight_front_416
+inv_name_short			= sight_front_416
+inv_grid_x					= 7
+cost							= 500
+override_section = sight_front_416_attributes
+
+[sight_front_416_attributes]
+
+[sight_front_mbus]:sight_front_lr300
+inv_ui_sign				= mb_f
+visual						= w_att_huds\sight_front_mbus
+inv_name					= sight_front_mbus
+inv_name_short			= sight_front_mbus
+inv_grid_x					= 9
+cost							= 900
+override_section = sight_front_mbus_attributes
+
+[sight_front_mbus_attributes]
+
+[sight_front_mbus_d]:sight_front_mbus
+visual						= w_att_huds\sight_front_mbus_d
+inv_grid_x         			= 10
+cost							= 850
+override_section = sight_front_mbus_d_attributes
+
+[sight_front_mbus_d_attributes]
+
+[sight_front_fab]:sight_front_mbus
+inv_ui_sign				= fb_f
+visual						= w_att_huds\sight_front_fab
+inv_name					= sight_front_fab
+inv_name_short			= sight_front_fab
+inv_grid_x         			= 8
+cost							= 950
+inv_weight 				= 0.06
+override_section = sight_front_fab_attributes
+
+[sight_front_fab_attributes]
+
+[sight_front_mbus_pro]:sight_front_mbus
+inv_ui_sign				= mbp_f
+visual						= w_att_huds\sight_front_mbus_pro
+inv_name					= sight_front_mbus_pro
+inv_name_short			= sight_front_mbus_pro
+inv_grid_x         			= 13
+cost							= 850
+inv_weight 				= 0.05
+override_section = sight_front_mbus_pro_attributes
+
+[sight_front_mbus_pro_attributes]
+
+[sight_front_dd]:sight_front_lr300
+inv_ui_sign				= dd_f
+visual						= w_att_huds\sight_front_dd
+inv_name					= sight_front_dd
+inv_name_short			= sight_front_dd
+inv_grid_x         			= 12
+cost							= 800
+inv_weight 				= 0.04
+override_section = sight_front_dd_attributes
+
+[sight_front_dd_attributes]
+
+[sight_front_kac]:sight_front_mbus
+inv_ui_sign				= kc_f
+visual						= w_att_huds\sight_front_kac
+inv_name					= sight_front_kac
+inv_name_short			= sight_front_kac
+inv_grid_x         			= 11
+cost							= 700
+inv_weight 				= 0.05
+override_section = sight_front_kac_attributes
+
+[sight_front_kac_attributes]
+
+[sight_rear_mbus]:ar_sight
+inv_ui_sign				= mb_r
+visual						= w_att_huds\sight_rear_mbus
+description				= no_attributes_descr
+inv_name					= sight_rear_mbus
+inv_name_short			= sight_rear_mbus
+inv_grid_x					= 22
+inv_grid_y         			= 16
+cost							= 800
+inv_weight 				= 0.05
+attachment_point		=	sight_rear|0,0,0|0,0,0
+override_section = sight_rear_mbus_attributes
+
+[sight_rear_mbus_attributes]
+zoom_rotate_time = -0.01
+fire_dispersion_base_koeff = -0.05
+
+[sight_rear_mbus_d]:sight_rear_mbus
+visual						= w_att_huds\sight_rear_mbus_d
+inv_grid_x         			= 23
+cost							= 750
+override_section = sight_rear_mbus_d_attributes
+
+[sight_rear_mbus_d_attributes]
+zoom_rotate_time = -0.01
+fire_dispersion_base_koeff = -0.05
+
+[sight_rear_fab]:sight_rear_mbus
+inv_ui_sign				= fb_r
+visual						= w_att_huds\sight_rear_fab
+inv_name					= sight_rear_fab
+inv_name_short			= sight_rear_fab
+inv_grid_x        			= 18
+cost							= 850
+inv_weight 				= 0.06
+override_section = sight_rear_fab_attributes
+
+[sight_rear_fab_attributes]
+zoom_rotate_time = -0.01
+fire_dispersion_base_koeff = -0.05
+
+[sight_rear_mbus_pro]:sight_rear_mbus
+inv_ui_sign				= mbp_r
+visual						= w_att_huds\sight_rear_mbus_pro
+inv_name					= sight_rear_mbus_pro
+inv_name_short			= sight_rear_mbus_pro
+inv_grid_x        			= 24
+cost							= 800
+inv_weight 				= 0.05
+override_section = sight_rear_mbus_pro_attributes
+
+[sight_rear_mbus_pro_attributes]
+zoom_rotate_time = -0.01
+fire_dispersion_base_koeff = -0.05
+
+[sight_rear_dd]:sight_rear_mbus
+inv_ui_sign				= dd_r
+visual						= w_att_huds\sight_rear_dd
+inv_name					= sight_rear_dd
+inv_name_short			= sight_rear_dd
+inv_grid_x         			= 25
+cost							= 750
+inv_weight 				= 0.05
+override_section = sight_rear_dd_attributes
+
+[sight_rear_dd_attributes]
+zoom_rotate_time = -0.01
+fire_dispersion_base_koeff = -0.05
+
+[sight_rear_kac]:sight_rear_mbus
+inv_ui_sign				= kc_r
+visual						= w_att_huds\sight_rear_kac
+inv_name					= sight_rear_kac
+inv_name_short			= sight_rear_kac
+inv_grid_x         			= 19
+cost							= 650
+inv_weight 				= 0.05
+override_section = sight_rear_kac_attributes
+
+[sight_rear_kac_attributes]
+zoom_rotate_time = -0.01
+fire_dispersion_base_koeff = -0.05
+
+[sight_rear_a2]:sight_rear_mbus
+inv_ui_sign				= a2_r
+visual						= w_att_huds\sight_rear_a2
+inv_name					= sight_rear_a2
+inv_name_short			= sight_rear_a2
+inv_grid_x         			= 15
+cost							= 450
+inv_weight 				= 0.09
+override_section = sight_rear_a2_attributes
+
+[sight_rear_a2_attributes]
+zoom_rotate_time = -0.01
+recoil_koeff = -0.04
+fire_dispersion_base_koeff = -0.05
+[sight_rear_att]
+zoom_rotate_time     = -0.01
+recoil_koeff                 = -0.04
+fire_dispersion_base_koeff = -0.05
+
+[sight_rear_lr300]:sight_rear_a2
+inv_ui_sign				= lr_r
+visual						= w_att_huds\sight_rear_lr300
+inv_name					= sight_rear_lr300
+inv_name_short			= sight_rear_lr300
+inv_grid_x         			= 20
+cost							= 400
+inv_weight 				= 0.08
+override_section = sight_rear_lr300_attributes
+
+[sight_rear_lr300_attributes]
+zoom_rotate_time = -0.01
+fire_dispersion_base_koeff = -0.05
+
+[sight_rear_416]:sight_rear_lr300
+inv_ui_sign				= 416_r
+visual						= w_att_huds\sight_rear_416
+inv_name					= sight_rear_416
+inv_name_short			= sight_rear_416
+inv_grid_x         			= 14
+cost							= 400
+inv_weight 				= 0.07
+override_section = sight_rear_416_attributes
+
+[sight_rear_416_attributes]
+zoom_rotate_time = -0.01
+fire_dispersion_base_koeff = -0.05
+
+[sight_rear_mbis]:sight_rear_mbus
+inv_ui_sign				= mbis
+visual						= w_att_huds\sight_rear_mbis
+inv_name					= sight_rear_mbis
+inv_name_short			= sight_rear_mbis
+inv_grid_x         			= 21
+cost							= 450
+inv_weight 				= 0.07
+override_section = sight_rear_mbis_attributes
+
+[sight_rear_mbis_attributes]
+zoom_rotate_time = -0.01
+fire_dispersion_base_koeff = -0.05
+
+[sight_rear_ap]:sight_rear_lr300
+inv_ui_sign				= ap
+visual						= w_att_huds\sight_rear_aero_precision
+inv_name					= sight_rear_aero_precision
+inv_name_short			= sight_rear_aero_precisionS
+inv_grid_x         			= 31
+cost							= 400
+inv_weight 				= 0.08
+override_section = sight_rear_ap_attributes
+
+[sight_rear_ap_attributes]
+zoom_rotate_time = -0.01
+fire_dispersion_base_koeff = -0.05
+[sight_rear_ap_att]
+zoom_rotate_time = -0.01
+fire_dispersion_base_koeff = -0.05
+
+[sight_rear_carry]:sight_rear_mbus
+inv_ui_sign				= carry
+visual						= w_att_huds\sight_rear_carry
+description				= sight_rear_carry_descr
+inv_name					= sight_rear_carry
+inv_name_short			= sight_rear_carryS
+inv_grid_width				=	2
+inv_grid_x         			= 16
+cost							= 850
+inv_weight 				= 0.11
+attachment_slots	= carry|wpn_body|0,0,0|0,0,0		;0,0,0.081063,0
+item_tags =	sights
+override_section	=	sight_rear_carry_attributes
+
+[sight_rear_carry_attributes]
+zoom_rotate_time = -0.01
+recoil_koeff = -0.07
+fire_dispersion_base_koeff = -0.05
+[sight_rear_carry_att]
+zoom_rotate_time     = -0.01
+recoil_koeff                 = -0.07
+fire_dispersion_base_koeff = -0.05
+
+[sight_rear_carry_pica]:attachment_base_ar
+inv_ui_sign				= rail
+visual						= w_att_huds\sight_rear_carry_pica
+description				= pica_13_up
+inv_name					= sight_rear_carry_pica
+inv_name_short			= sight_rear_carry_picaS
+inv_grid_x        			= 26
+inv_grid_y        			= 16
+cost							= 800
+inv_weight 				= 0.09
+attachment_point	=	carry|0,0,0|0,0,0
+attachment_slots	= pica_13|wpn_body|0,0.04096,0.004|0,0,0
+item_tags	=	rail
+override_section = sight_rear_carry_pica_attributes
+
+[sight_rear_carry_pica_attributes]
+zoom_rotate_time = 0.01
+recoil_koeff = -0.03
+[rail_1_att]
+zoom_rotate_time = 0.01
+recoil_koeff            = -0.03
+
+[sight_rear_carry_trirail]:sight_rear_carry_pica
+inv_ui_sign				= 3rail
+visual						= w_att_huds\sight_rear_carry_tri-rail
+description				= sight_rear_carry_tri-rail_descr
+inv_name					= sight_rear_carry_tri-rail
+inv_name_short			= sight_rear_carry_tri-railS
+inv_grid_x        				 = 27
+cost							= 1200
+inv_weight 				= 0.11
+attachment_slots	= pica_9|wpn_body|0,0.040862,0.04|0,0,0#pica_3|wpn_body|-0.01368,0.028543,0.1|0,0,-90#pica_3|wpn_body|0.01368,0.028543,0.1|0,0,90
+override_section = sight_rear_carry_trirail_attributes
+
+[sight_rear_carry_trirail_attributes]
+zoom_rotate_time = 0.01
+recoil_koeff = -0.03
+
+[sight_rear_carry_gus]:sight_rear_carry_pica
+inv_ui_sign				= rail+
+visual						= w_att_huds\sight_rear_carry_gus_rail
+description				= ar_hg_9n4_descr
+inv_name					= sight_rear_carry_gus_rail
+inv_name_short			= sight_rear_carry_gus_railS
+inv_grid_x        				 = 28
+cost							= 1600
+inv_weight 				= 0.15
+attachment_slots	= pica_9|wpn_body|0,0.035475,0.048|0,0,0#pica_6|wpn_body|0,0.018242,0.16|0,0,0#pica_3|wpn_body|-0.015134,0.012085,0.145|0,0,-90#pica_3|wpn_body|0.015134,0.012085,0.181|0,0,90
+override_section = sight_rear_carry_gus_attributes
+
+[sight_rear_carry_gus_attributes]
+zoom_rotate_time = 0.01
+recoil_koeff = -0.05
+[rail_2_att]
+zoom_rotate_time = 0.01
+recoil_koeff            = -0.05
+
+[sight_rear_carry_sp1]:scope_base_pip		; 3x
+inv_ui_sign				= ar-3x
+visual							= w_att_huds\sight_rear_carry_sp1	
+icons_texture			= ui\ui_icons_deso_ar
+description				= scope_sp1_carry_descr
+inv_name					= sight_rear_carry_sp1
+inv_name_short		= sight_rear_carry_sp1S
+inv_grid_x					= 29
+inv_grid_y					= 16
+cost							= 5000
+inv_weight 				= 0.32
+attachment_point	= carry|0,0,0|0,0,0
+attachment_slots	= aim_lens_pip|wpn_body|0,0.050445,0.061905|0,0,0#scope_sight|wpn_body|0,0.051611,-0.0027|0,0,0
+
+scope_texture          =
+scope_zoom_factor      = 33.33       ; strongest zoom / max magnification
+min_scope_zoom_factor  = 33.33  ; weakest zoom / low magnification
+scope_dynamic_zoom     = false
+zoom_step_count        = 5
+
+s3ds_reticle_size      = 2
+s3ds_eye_relief        = 1
+s3ds_exit_pupil        = 0.3
+s3ds_ffp               = 0
+s3ds_min_zoom_1x       = 1
+s3ds_image_type        = 0
+s3ds_reticle_type      = 0
+s3ds_dirt_intensity    = 0
+s3ds_chroma_power      = 0
+s3ds_lens_color        = lens_clear
+
+item_tags =	sights
+override_section =	sight_mid_att	
+
+[sight_rear_carry_acog]:sight_rear_carry_sp1		; 3.5x
+inv_ui_sign				= ar-3.5x
+visual							= w_att_huds\sight_rear_carry_acog_ta31 
+description				= scope_acog_ta31_carry_descr 
+inv_name					= sight_rear_carry_acog_ta31
+inv_name_short		= sight_rear_carry_acog_ta31S
+inv_grid_x					= 30
+cost							= 6000
+inv_weight 				= 0.45
+attachment_slots	= aim_lens_pip|wpn_body|0,0.052695,0.049455|0,0,0			
+
+scope_texture          =
+scope_zoom_factor      = 28.5      ; strongest zoom / max magnification
+min_scope_zoom_factor  = 28.5  ; weakest zoom / low magnification
+scope_dynamic_zoom     = false
+zoom_step_count        = 5
+
+s3ds_reticle_size      = 1.5
+s3ds_eye_relief        = 2
+s3ds_exit_pupil        = 0.8
+s3ds_ffp               = 0
+s3ds_min_zoom_1x       = 1
+s3ds_image_type        = 0
+s3ds_reticle_type      = 3
+s3ds_dirt_intensity    = 0.2
+s3ds_chroma_power      = 0
+s3ds_lens_color        = lens_clear
+
+ms_count  = 1
+ms_colors =  red
+
+--\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\	AR-GRIPS	\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\--
+
+[ar_grip_a1]:attachment_base_ar
+kind= ar_grip
+inv_ui_sign				= a1
+visual							= w_att_huds\ar_grip_a1	
+description				= no_attributes_descr
+inv_name					= ar_grip_a1
+inv_name_short		= ar_grip_a1S
+cost							= 600
+inv_weight				= 0.09
+inv_grid_x					= 6
+inv_grid_y					= 17
+attachment_point	= ar_grip|0,0,0|0,0,0
+override_section = ar_grip_a1_attributes
+
+[ar_grip_a1_attributes]
+zoom_rotate_time = -0.03
+[ar_grip_a1_att]
+zoom_rotate_time = -0.03
+recoil_koeff            = -0.03
+
+[ar_grip_a2]:ar_grip_a1
+kind= ar_grip
+inv_ui_sign				= a2
+visual							= w_att_huds\ar_grip_a2	
+inv_name					= ar_grip_a2
+inv_name_short		= ar_grip_a2S
+cost							= 650
+inv_weight				= 0.08
+inv_grid_x					= 7
+override_section = ar_grip_a2_attributes
+
+[ar_grip_a2_attributes]
+zoom_rotate_time = -0.03
+
+[ar_grip_416]:ar_grip_a1
+kind= ar_grip
+inv_ui_sign				= 416
+visual							= w_att_huds\ar_grip_416	
+inv_name					= ar_grip_416
+inv_name_short		= ar_grip_416S
+cost							= 700
+inv_weight				= 0.09
+inv_grid_x					= 8
+override_section = ar_grip_416_attributes
+
+[ar_grip_416_attributes]
+zoom_rotate_time = -0.04
+
+[ar_grip_caa]:ar_grip_a1
+kind= ar_grip
+inv_ui_sign				= caa
+visual							= w_att_huds\ar_grip_caa	
+inv_name					= ar_grip_caa
+inv_name_short		= ar_grip_caaS
+cost							= 1000
+inv_weight				= 0.11
+inv_grid_x					= 9
+override_section = ar_grip_caa_attributes
+
+[ar_grip_caa_attributes]
+zoom_rotate_time = -0.04
+[ar_grip_caa_att]
+zoom_rotate_time = -0.04
+recoil_koeff            = -0.04
+
+[ar_grip_derya]:ar_grip_a1
+kind= ar_grip
+inv_ui_sign				= mk12
+visual							= w_att_huds\ar_grip_derya	
+inv_name					= ar_grip_derya
+inv_name_short		= ar_grip_deryaS
+cost							= 650
+inv_weight				= 0.09
+inv_grid_x					= 10
+override_section = ar_grip_derya_attributes
+
+[ar_grip_derya_attributes]
+zoom_rotate_time = -0.03
+
+[ar_grip_derya_perf]:ar_grip_derya
+kind= ar_grip
+visual							= w_att_huds\ar_grip_derya_perforated	
+inv_name					= ar_grip_derya_perforated
+inv_name_short		= ar_grip_derya_perforatedS
+cost							= 900
+inv_weight				= 0.06
+inv_grid_x					= 11
+override_section = ar_grip_derya_perf_attributes
+
+[ar_grip_derya_perf_attributes]
+zoom_rotate_time = -0.06
+recoil_koeff = -0.02
+
+[ar_grip_gunfighter]:ar_grip_a1
+kind= ar_grip
+inv_ui_sign				= gf
+visual							= w_att_huds\ar_grip_gunfighter	
+inv_name					= ar_grip_gunfighter
+inv_name_short		= ar_grip_gunfighterS
+cost							= 750
+inv_weight				= 0.1
+inv_grid_x					= 12
+override_section = ar_grip_gunfighter_attributes
+
+[ar_grip_gunfighter_attributes]
+zoom_rotate_time = -0.05
+recoil_koeff = -0.01
+
+[ar_grip_hogue]:ar_grip_a1
+kind= ar_grip
+inv_ui_sign				= hoe
+visual							= w_att_huds\ar_grip_hogue	
+inv_name					= ar_grip_hogue
+inv_name_short		= ar_grip_hogueS
+cost							= 900
+inv_weight				= 0.07
+inv_grid_x					= 13
+override_section = ar_grip_hogue_attributes
+
+[ar_grip_hogue_attributes]
+zoom_rotate_time = -0.02
+recoil_koeff = -0.01
+
+[ar_grip_l129]:ar_grip_a1
+kind= ar_grip
+inv_ui_sign				= l129
+visual							= w_att_huds\ar_grip_l129	
+inv_name					= ar_grip_L129A1
+inv_name_short		= ar_grip_L129A1S
+cost							= 950
+inv_weight				= 0.11
+inv_grid_x					= 14
+override_section = ar_grip_l129_attributes
+
+[ar_grip_l129_attributes]
+zoom_rotate_time = -0.05
+
+[ar_grip_lr300]:ar_grip_a1
+kind= ar_grip
+inv_ui_sign				= lr
+visual							= w_att_huds\ar_grip_lr300	
+inv_name					= ar_grip_lr300
+inv_name_short		= ar_grip_lr300S
+cost							= 750
+inv_weight				= 0.09
+inv_grid_x					= 15
+override_section = ar_grip_lr300_attributes
+
+[ar_grip_lr300_attributes]
+zoom_rotate_time = -0.02
+[ar_grip_lr_att]
+zoom_rotate_time = -0.02
+recoil_koeff            = -0.07
+
+[ar_grip_moe]:ar_grip_a1
+kind= ar_grip
+inv_ui_sign				= moe
+visual							= w_att_huds\ar_grip_moe	
+inv_name					= ar_grip_moe
+inv_name_short		= ar_grip_moeS
+cost							= 950
+inv_weight				= 0.08
+inv_grid_x					= 16
+override_section = ar_grip_moe_attributes
+
+[ar_grip_moe_attributes]
+zoom_rotate_time = -0.05
+recoil_koeff = -0.02
+[ar_grip_moe_att]
+zoom_rotate_time = -0.05
+recoil_koeff            = -0.06
+
+[ar_grip_miad]:ar_grip_416
+kind= ar_grip
+inv_ui_sign				= miad
+visual							= w_att_huds\ar_grip_omen
+inv_name					= ar_grip_mp_miad
+inv_name_short		= ar_grip_mp_miadS
+cost						= 800
+inv_weight			= 0.08
+inv_grid_x					= 17
+override_section = ar_grip_miad_attributes
+
+[ar_grip_miad_attributes]
+zoom_rotate_time = -0.02
+recoil_koeff = -0.01
+
+[ar_grip_rs]:ar_grip_moe
+kind= ar_grip
+inv_ui_sign				= rs
+visual							= w_att_huds\ar_grip_rs	
+inv_name					= ar_grip_rs
+inv_name_short		= ar_grip_rsS
+inv_grid_x					= 18
+override_section = ar_grip_rs_attributes
+
+cost = 950
+inv_weight = 0.08
+[ar_grip_rs_attributes]
+zoom_rotate_time = -0.05
+recoil_koeff = -0.01
+
+[ar_grip_skel]:ar_grip_a1
+kind= ar_grip
+inv_ui_sign				= skl
+visual							= w_att_huds\ar_grip_skel	
+inv_name					= ar_grip_skel
+inv_name_short		= ar_grip_skelS
+cost							= 1100
+inv_weight				= 0.08
+inv_grid_x					= 19
+override_section = ar_grip_skel_attributes
+
+[ar_grip_skel_attributes]
+zoom_rotate_time = -0.06
+recoil_koeff = -0.03
+[ar_grip_skel_att]
+zoom_rotate_time = -0.06
+recoil_koeff            = -0.03
+
+[ar_grip_grals]:ar_grip_skel
+kind= ar_grip
+inv_ui_sign				= skl
+visual							= w_att_huds\ar_grip_grals	
+inv_name					= ar_grip_naroh_arms_gral
+inv_name_short		= ar_grip_naroh_arms_gralS
+cost							= 1050
+inv_weight				= 0.09
+inv_grid_x					= 20
+override_section = ar_grip_grals_attributes
+
+[ar_grip_grals_attributes]
+zoom_rotate_time = -0.06
+recoil_koeff = -0.02

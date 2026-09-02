@@ -1,0 +1,741 @@
+-- Desolation detachable-magazine check script
+-- Uses engine-exposed:
+--   weapon:GetAnimationPrefixMag()
+--   weapon:play_hud_motion(anim, mix_in, state, speed, end)
+--
+-- Uses the configurable CUSTOM23 keybind only.
+
+local floor, max, min = math.floor, math.max, math.min
+local find = string.find
+local pcall = pcall
+
+local dik_to_bind = dik_to_bind
+local key_bindings = key_bindings
+local db = db
+local game = game
+local actor_menu = actor_menu
+local ActorMenu = ActorMenu
+local ui_mcm = ui_mcm
+local GetARGB = GetARGB
+local IsWeapon = IsWeapon
+local IsItem = IsItem
+local CreateTimeEvent = CreateTimeEvent
+local disable_info = disable_info
+local SYS_GetParam = SYS_GetParam
+local system_ini = system_ini
+
+local CUSTOM_KEY = key_bindings and key_bindings.kCUSTOM23
+
+
+local is_animation_playing = false
+local is_mag_check_enabled = true
+local hide_counter = false
+local hide_ammo_icon = true
+
+local use_clr = false
+
+local clr_critical = GetARGB and GetARGB(0xff, 0xff, 0x00, 0x00) or nil
+local clr_warning = GetARGB and GetARGB(0xff, 0xff, 0x40, 0x00) or nil
+local clr_caution = GetARGB and GetARGB(0xff, 0xff, 0x80, 0x00) or nil
+local clr_mid = GetARGB and GetARGB(0xff, 0xff, 0xc0, 0x00) or nil
+local clr_high = GetARGB and GetARGB(0xff, 0xff, 0xff, 0x00) or nil
+local clr_near_full = GetARGB and GetARGB(0xff, 0xff, 0xff, 0x80) or nil
+local clr_full = GetARGB and GetARGB(0xff, 0xff, 0xff, 0xff) or nil
+
+local messages = {
+	{m = "st_ac_near_empty", c = clr_critical},
+	{m = "st_ac_near_empty", c = clr_warning},
+	{m = "st_ac_less_half", c = clr_warning},
+	{m = "st_ac_less_half", c = clr_caution},
+	{m = "st_ac_about_half", c = clr_caution},
+	{m = "st_ac_about_half", c = clr_mid},
+	{m = "st_ac_more_half", c = clr_mid},
+	{m = "st_ac_more_half", c = clr_high},
+	{m = "st_ac_nearly_full", c = clr_high},
+	{m = "st_ac_nearly_full", c = clr_near_full},
+	{m = "st_ac_full", c = clr_full}
+}
+
+-- Weapons where the old/general check should still be allowed without magazine-prefix animation.
+local excluded_sections = {
+	wpn_benelli = true,
+	wpn_bm16 = true,
+	wpn_fort500 = true,
+	wpn_higgins = true,
+	wpn_ks23 = true,
+	wpn_mossberg590 = true,
+	wpn_mp133 = true,
+	wpn_mp153 = true,
+	wpn_protecta = true,
+	wpn_remington870 = true,
+	wpn_spas12 = true,
+	wpn_toz194 = true,
+	wpn_toz34 = true,
+	wpn_toz34_mark4 = true,
+	wpn_wincheaster1300 = true,
+	wpn_mosin = true,
+	wpn_python = true,
+	wpn_rex = true,
+	wpn_rsh12 = true,
+	wpn_kobalt = true
+}
+
+local function gc(str)
+	if game and game.translate_string then
+		return game.translate_string(str)
+	end
+	return str
+end
+
+local function dbg(fmt, ...)
+	-- Uncomment if needed.
+	-- printf("DESO MAGCHECK: " .. fmt, ...)
+end
+
+function on_game_start()
+	RegisterScriptCallback("actor_on_first_update", actor_on_first_update)
+	RegisterScriptCallback("on_option_change", on_option_change)
+	RegisterScriptCallback("on_key_press", handle_key_input)
+end
+
+function on_mcm_load()
+	return {
+		id = "deso_magcheck",
+		sh = true,
+		gr = {
+			{id = "mag_check", type = "slide", link = "ui_options_slider_player", text = "ui_mm_title_ammo_inspector", size = {512, 50}, spacing = 20},
+			{id = "enable_mag_check", type = "check", val = 1, def = true, text = "ui_mcm_enable_mag_check"},
+			{id = "hide_counter", type = "check", val = 1, def = false, text = "ui_mcm_hide_ammo_counter"},
+		}
+	}
+end
+
+function actor_on_first_update()
+	on_option_change()
+end
+
+function on_option_change()
+	if ui_mcm then
+		local enabled = ui_mcm.get("deso_magcheck/enable_mag_check")
+		if enabled ~= nil then
+			is_mag_check_enabled = enabled
+		end
+
+		local hide = ui_mcm.get("deso_magcheck/hide_counter")
+		if hide ~= nil then
+			hide_counter = hide
+		end
+	end
+
+	local hud_states = ActorMenu and ActorMenu.get_maingame() and ActorMenu.get_maingame().m_ui_hud_states
+	if not hud_states then return end
+
+	if hud_states.m_ui_weapon_cur_ammo then
+		local pos_ammo = hud_states.m_ui_weapon_cur_ammo:GetWndPos()
+		pos_ammo.x = ((hide_counter and pos_ammo.x > 0) or (not hide_counter and pos_ammo.x < 0)) and (-pos_ammo.x) or pos_ammo.x
+		hud_states.m_ui_weapon_cur_ammo:SetWndPos(pos_ammo)
+	end
+
+	if hud_states.m_ui_weapon_icon then
+		local pos_icon = hud_states.m_ui_weapon_icon:GetWndPos()
+		pos_icon.x = ((hide_ammo_icon and pos_icon.x > 0) or (not hide_ammo_icon and pos_icon.x < 0)) and (-pos_icon.x) or pos_icon.x
+		hud_states.m_ui_weapon_icon:SetWndPos(pos_icon)
+	end
+end
+
+
+function handle_key_input(key)
+	if CUSTOM_KEY and dik_to_bind and dik_to_bind(key) == CUSTOM_KEY then
+		pcall(check_ammo)
+	end
+end
+
+local function is_weapon_item(obj)
+	if not obj then return false end
+
+	if IsWeapon then
+		return IsWeapon(obj)
+	end
+
+	return obj.get_ammo_in_magazine ~= nil
+end
+
+local function weapon_state(weapon)
+	if weapon.get_state then
+		return weapon:get_state()
+	elseif weapon.GetState then
+		return weapon:GetState()
+	end
+	return 0
+end
+
+local function weapon_current_anim(weapon)
+	if weapon.GetCurrentAnimation then
+		return weapon:GetCurrentAnimation() or ""
+	end
+	return ""
+end
+
+local function weapon_is_jammed(weapon)
+	if weapon.GetJamStatus then
+		local ok, result = pcall(function() return weapon:GetJamStatus() end)
+		return ok and result
+	end
+	return false
+end
+
+local function current_ammo(weapon)
+	if weapon.get_ammo_in_magazine then
+		return weapon:get_ammo_in_magazine() or 0
+	end
+	return 0
+end
+
+local function active_mag_prefix(weapon)
+	if weapon.GetAnimationPrefixMag then
+		local ok, prefix = pcall(function() return weapon:GetAnimationPrefixMag() end)
+		if ok and prefix then
+			return prefix
+		end
+	end
+	return ""
+end
+
+-- Returns true only when a detachable magazine is physically inserted into
+-- the weapon's magazine slot. Mirrors the module-based check used in
+-- module_items.script (is_magazine_module + module_get_section iteration),
+-- with GetInsertedMagSection as the primary fast path since the engine
+-- already tracks that directly on CWeaponMagazined.
+local function is_magazine_module_section(section)
+	if not section or section == "" then return false end
+	if not system_ini or not system_ini():section_exist(section) then return false end
+
+	local ini = system_ini()
+
+	if ini:line_exist(section, "module_type") then
+		local module_type = ini:r_string(section, "module_type")
+		if module_type == "magazine" or module_type == "mag" then
+			return true
+		end
+	end
+
+	local class_id = SYS_GetParam and SYS_GetParam(0, section, "class") or nil
+	if class_id == "II_MAG" then
+		return true
+	end
+
+	if ini:line_exist(section, "max_mag_size") then
+		return true
+	end
+
+	if ini:line_exist(section, "mag_ammo_class") then
+		return true
+	end
+
+	if ini:line_exist(section, "magazine_group") then
+		return true
+	end
+
+	return false
+end
+
+local function has_magazine_installed(weapon)
+	if not weapon then return false end
+
+	-- Primary: direct engine query, mirrors CWeaponMagazined::GetInsertedMagSection.
+	if weapon.GetInsertedMagSection then
+		local ok, mag_section = pcall(function()
+			return weapon:GetInsertedMagSection()
+		end)
+
+		if ok then
+			return mag_section ~= nil and mag_section ~= ""
+		end
+	end
+
+	-- Fallback: walk installed modules the same way module_items.script does
+	-- (get_dynamic_removable_modules / is_magazine_module).
+	if weapon.module_count and weapon.module_get_section then
+		local count = weapon:module_count() or 0
+
+		for i = 0, count - 1 do
+			local section = weapon:module_get_section(i)
+			if section and is_magazine_module_section(section) then
+				return true
+			end
+		end
+	end
+
+	return false
+end
+
+local function active_mag_capacity_from_prefix(prefix)
+	if not prefix or prefix == "" then return 0 end
+
+	-- Common Desolation setup:
+	-- animation_prefix_mag = 17_
+	-- This lets us get max ammo even from Lua without exposing another engine method.
+	local number = string.match(prefix, "^(%d+)_$")
+	if number then
+		return tonumber(number) or 0
+	end
+
+	return 0
+end
+
+local function weapon_config_capacity(section)
+	if not section then return 0 end
+
+	local size = 0
+	if SYS_GetParam then
+		size = SYS_GetParam(2, section, "ammo_mag_size") or 0
+	end
+
+	if size <= 0 and system_ini and system_ini():line_exist(section, "ammo_mag_size") then
+		size = system_ini():r_u32(section, "ammo_mag_size") or 0
+	end
+
+	return size
+end
+
+local function play_magcheck_animation(weapon, is_excluded)
+	if is_excluded then
+		return true
+	end
+
+	local mag_ammo = 0
+
+	if weapon.GetInsertedMagAmmo then
+		local ok, value = pcall(function()
+			return weapon:GetInsertedMagAmmo()
+		end)
+
+		if ok and value ~= nil then
+			mag_ammo = tonumber(value) or 0
+		else
+			mag_ammo = current_ammo(weapon)
+		end
+	else
+		mag_ammo = current_ammo(weapon)
+	end
+
+	local total_ammo = current_ammo(weapon)
+	local anim_name = "anm_mag_check"
+
+	-- For detachable-magazine weapons, GetInsertedMagAmmo() returns magazine-only rounds.
+	-- A weapon can have 0 rounds in the mag but still have 1 chambered round.
+	-- Only use the empty check animation when the whole weapon is empty.
+	if total_ammo <= 0 then
+		anim_name = "anm_mag_check_empty"
+	end
+
+	if find(
+		weapon_current_anim(weapon),
+		"anm_mag_check",
+		1,
+		true)
+	then
+		printf(
+			"DESO MAGCHECK ANIM: already playing current=%s",
+			tostring(weapon_current_anim(weapon)))
+		return false
+	end
+
+	-- Pass the base alias only. The engine's magazine/module prefix resolver
+	-- selects 30_anm_mag_check, 75_anm_mag_check, etc.
+	local ok, result = pcall(function()
+		return weapon:play_hud_motion(
+			anim_name,
+			true,
+			11,
+			1,
+			0)
+	end)
+
+	printf(
+		"DESO MAGCHECK ANIM: alias=%s ok=%s result=%s prefix=%s",
+		tostring(anim_name),
+		tostring(ok),
+		tostring(result),
+		tostring(active_mag_prefix(weapon)))
+
+	-- This binding can return zero even when the motion was accepted.
+	-- Only an actual Lua error means the call failed.
+	if not ok then
+		return false
+	end
+
+	return true
+end
+
+local function get_ammo_type_name(weapon, weapon_section)
+	local ammo_type = nil
+
+	-- Only direct calls; each is protected independently.
+	if weapon.get_ammo_type then
+		local ok, value = pcall(function()
+			return weapon:get_ammo_type()
+		end)
+
+		if ok then
+			ammo_type = tonumber(value)
+		end
+	end
+
+	if ammo_type == nil and weapon.GetAmmoType then
+		local ok, value = pcall(function()
+			return weapon:GetAmmoType()
+		end)
+
+		if ok then
+			ammo_type = tonumber(value)
+		end
+	end
+
+	if ammo_type == nil then
+		return "UNKNOWN AMMO"
+	end
+
+	local ammo_class = nil
+
+	if SYS_GetParam then
+		ammo_class =
+			SYS_GetParam(
+				0,
+				weapon_section,
+				"ammo_class")
+	end
+
+	if (not ammo_class or ammo_class == "") and
+		system_ini and
+		system_ini():line_exist(
+			weapon_section,
+			"ammo_class")
+	then
+		ammo_class =
+			system_ini():r_string(
+				weapon_section,
+				"ammo_class")
+	end
+
+	if not ammo_class or ammo_class == "" then
+		return "UNKNOWN AMMO"
+	end
+
+	local wanted = ammo_type + 1
+	local index = 0
+	local ammo_section = nil
+
+	for entry in string.gmatch(
+		ammo_class,
+		"[^,%s]+")
+	do
+		index = index + 1
+
+		if index == wanted then
+			ammo_section = entry
+			break
+		end
+	end
+
+	if not ammo_section then
+		return "UNKNOWN AMMO"
+	end
+
+	local name_key = nil
+
+	if SYS_GetParam then
+		name_key =
+			SYS_GetParam(
+				0,
+				ammo_section,
+				"inv_name_short")
+
+		if not name_key or name_key == "" then
+			name_key =
+				SYS_GetParam(
+					0,
+					ammo_section,
+					"inv_name")
+		end
+	end
+
+	if not name_key or name_key == "" then
+		return ammo_section
+	end
+
+	return gc(name_key)
+end
+
+
+local function get_magazine_config_capacity(weapon, mag_section)
+	local capacity = 0
+
+	if weapon.GetInsertedMagCapacity then
+		local ok, value = pcall(function()
+			return weapon:GetInsertedMagCapacity()
+		end)
+
+		if ok and value ~= nil then
+			capacity = tonumber(value) or 0
+		end
+	end
+
+	if capacity <= 0 and
+		mag_section and
+		mag_section ~= "" and
+		SYS_GetParam
+	then
+		local ok, value = pcall(function()
+			return SYS_GetParam(
+				2,
+				mag_section,
+				"max_mag_size")
+		end)
+
+		if ok and value ~= nil then
+			capacity = tonumber(value) or 0
+		end
+	end
+
+	printf(
+		"DESO MAGCHECK REAL MAG: section=%s capacity=%s",
+		tostring(mag_section),
+		tostring(capacity))
+
+	return capacity
+end
+
+local function get_ammo_check_info(weapon, section, is_excluded)
+	if weapon_is_jammed(weapon) then
+		return gc("st_ac_jammed"),
+			(use_clr and clr_critical or nil)
+	end
+
+	-- Keep every detachable-magazine call protected. If any newer engine
+	-- method is missing, fall back without stopping the T-key handler.
+	if weapon.GetInsertedMagSection then
+		local ok_section, mag_section =
+			pcall(function()
+				return weapon:GetInsertedMagSection()
+			end)
+
+		if ok_section then
+			local total =
+				current_ammo(weapon)
+
+			-- Read physical capacity directly from the inserted magazine's
+			-- own config section.
+			local max_ammo =
+				get_magazine_config_capacity(
+					weapon,
+					mag_section)
+
+			if max_ammo <= 0 then
+				printf(
+					"DESO MAGCHECK CONFIG: failed for section=%s; using weapon fallback",
+					tostring(mag_section))
+
+				max_ammo =
+					weapon_config_capacity(section)
+			end
+
+			if max_ammo <= 0 then
+				max_ammo = 1
+			end
+
+			local mag_ammo = 0
+
+			if weapon.GetInsertedMagAmmo then
+				local ok, value = pcall(function()
+					return weapon:GetInsertedMagAmmo()
+				end)
+
+				if ok and value ~= nil then
+					mag_ammo = tonumber(value) or 0
+				end
+			end
+
+			if mag_ammo < 0 then
+				mag_ammo = 0
+			end
+
+			if mag_ammo > max_ammo then
+				mag_ammo = max_ammo
+			end
+
+			local chamber =
+				max(0, total - mag_ammo)
+
+			if chamber > 1 then
+				chamber = 1
+			end
+
+			local ammo_name =
+				get_ammo_type_name(
+					weapon,
+					section)
+
+			local message = nil
+
+			if not mag_section or
+				mag_section == ""
+			then
+				if total > 0 then
+					message =
+						string.format(
+							"NO MAG | %d CHAMBERED | %s",
+							total,
+							ammo_name)
+				else
+					message = "NO MAG"
+				end
+			elseif chamber > 0 then
+				message =
+					string.format(
+						"%d / %d | %s",
+						mag_ammo,
+						max_ammo,
+						ammo_name)
+			else
+				message =
+					string.format(
+						"%d / %d | %s",
+						mag_ammo,
+						max_ammo,
+						ammo_name)
+			end
+
+			printf(
+				"DESO MAGCHECK RESULT: total=%s mag=%s cap=%s chamber=%s ammo=%s message=%s",
+				tostring(total),
+				tostring(mag_ammo),
+				tostring(max_ammo),
+				tostring(chamber),
+				tostring(ammo_name),
+				tostring(message))
+
+			return message,
+				(use_clr and clr_full or nil)
+		end
+
+		printf(
+			"DESO MAGCHECK: GetInsertedMagSection failed; using fallback")
+	end
+
+	-- Original non-detachable fallback.
+	local ammo = current_ammo(weapon)
+
+	if ammo <= 0 then
+		return gc("st_ac_empty"),
+			(use_clr and clr_critical or nil)
+	end
+
+	local prefix = active_mag_prefix(weapon)
+	local max_ammo =
+		active_mag_capacity_from_prefix(prefix)
+
+	if max_ammo <= 0 then
+		max_ammo =
+			weapon_config_capacity(section)
+	end
+
+	if max_ammo <= 0 then
+		max_ammo = 1
+	end
+
+	return string.format(
+		"%d / %d",
+		ammo,
+		max_ammo),
+		(use_clr and clr_full or nil)
+end
+
+local MAGCHECK_ANIM_LOCK = 2.5
+
+local function show_check_result(message, clr, is_excluded)
+	is_animation_playing = true
+
+	local msg_delay = is_excluded and 0.1 or 1.0
+	local lock_delay = is_excluded and 0.1 or MAGCHECK_ANIM_LOCK
+
+	if disable_info then
+		disable_info("sleep_active")
+	end
+
+	if CreateTimeEvent then
+		CreateTimeEvent("deso_mag_check_msg", "restore_display", msg_delay, function()
+			if actor_menu then
+				actor_menu.set_msg(1, message, 3, clr)
+			end
+			return true
+		end)
+
+		CreateTimeEvent("deso_mag_check_lock", "release_lock", lock_delay, function()
+			is_animation_playing = false
+			return true
+		end)
+	else
+		if actor_menu then
+			actor_menu.set_msg(1, message, 3, clr)
+		end
+		is_animation_playing = false
+	end
+end
+
+local function can_check_ammo(weapon)
+	if not is_mag_check_enabled then return false end
+	if is_animation_playing then return false end
+	if db.actor and db.actor.active_detector and db.actor:active_detector() then return false end
+	if not is_weapon_item(weapon) then return false end
+	if IsItem and IsItem("fake_ammo_wpn", nil, weapon) then return false end
+	if weapon_state(weapon) ~= 0 then return false end
+
+	local section = weapon.section and weapon:section() or nil
+	local is_excluded = section and excluded_sections[section] == true
+
+	if not is_excluded and not has_magazine_installed(weapon) then
+		printf("DESO MAGCHECK: blocked, no magazine inserted in weapon slot; showing message instead")
+		show_check_result(gc("st_ac_no_mag") or "NO MAGAZINE", (use_clr and clr_critical or nil), false)
+		return false
+	end
+
+	return true
+end
+
+function check_ammo()
+	printf("DESO MAGCHECK: check_ammo called")
+	if not db or not db.actor then return end
+
+	local weapon = db.actor:active_item()
+	if not can_check_ammo(weapon) then
+		printf("DESO MAGCHECK: blocked by can_check_ammo")
+		return
+	end
+
+	is_animation_playing = true
+
+	local section = weapon.section and weapon:section() or nil
+	if not section then
+		is_animation_playing = false
+		return
+	end
+
+	local is_excluded = excluded_sections[section] == true
+
+	local message, clr = get_ammo_check_info(weapon, section, is_excluded)
+	if not message then
+		is_animation_playing = false
+		return
+	end
+
+	if not play_magcheck_animation(weapon, is_excluded) then
+		printf("DESO MAGCHECK: animation failed or unavailable")
+		is_animation_playing = false
+		return
+	end
+
+	printf("DESO MAGCHECK: animation started")
+
+	show_check_result(message, clr, is_excluded)
+end

@@ -1,0 +1,358 @@
+--\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ wpn_cz75 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+[cz75_trigger]:attachment_base
+kind  =  cz75
+inv_ui_sign				= cz75_trg
+visual						= w_att_huds\cz75_trigger	
+inv_name					= cz75_trigger
+inv_name_short			= cz75_triggerS
+cost							= 1050
+inv_weight					= 0.08
+inv_grid_x         = 6
+inv_grid_y         = 17
+1icon_layer = clean_lub1_ico
+attachment_point	=	cz75_trigger|0,0,0|0,0,0
+attachment_slots	=	cz75_barrel|muzzle|0,0,0|0,0,0#hpsa_spring|zatvor|0,0,0|0,0,0
+item_tags =	trigger
+override_section =	cz75_trigger_attributes
+[cz75_trigger_attributes]
+
+[cz75_trigger_auto]:cz75_trigger
+kind  =  cz75
+inv_ui_sign				= cz75a_trg
+visual						= w_att_huds\cz75_trigger_auto	
+inv_name					= cz75_trigger_auto
+inv_name_short			= cz75_trigger_autoS
+cost							= 2450
+inv_weight					= 0.09
+inv_grid_x         = 7
+override_section = cz75_trigger_auto_attributes
+
+[cz75_trigger_auto_attributes]
+fire_modes = -1, 1
+
+[cz75_grips]:attachment_base
+kind  =  cz75
+inv_ui_sign				= cz75_pg
+visual						= w_att_huds\cz75_grips	
+inv_name					= cz75_grips
+inv_name_short			= cz75_gripsS
+cost							= 350
+inv_weight					= 0.07
+inv_grid_x         = 3
+inv_grid_y         = 18
+attachment_point	=	cz75_grips|0,0,0|0,0,0
+override_section = cz75_grips_attributes
+
+[cz75_grips_attributes]
+zoom_rotate_time = -0.02
+
+[cz75_grips_up]:cz75_grips
+kind  =  cz75
+inv_ui_sign				= cz75_pgP
+visual						= w_att_huds\cz75_grips_up	
+inv_name					= cz75_grips_toni_system
+inv_name_short			= cz75_grips_toni_systemS
+cost							= 2500
+inv_weight					= 0.1
+inv_grid_x         = 4
+item_tags	=	pgrip
+override_section = cz75_grips_up_attributes
+
+[cz75_grips_up_attributes]
+zoom_rotate_time = -0.04
+
+[cz75_barrel]:attachment_base
+kind  =  cz75
+inv_ui_sign				= cz75_bar
+visual						= w_att_huds\cz75_barrel	
+inv_name					= cz75_barrel
+inv_name_short			= cz75_barrel
+cost							= 1700
+inv_weight					= 0.09
+inv_grid_x         = 3
+inv_grid_y         = 17
+1icon_layer = clean1_ico
+attachment_point	=	cz75_barrel|0,0,0|0,0,0
+attachment_slots	=	cz75_zatvor|zatvor|0,0,0|0,0,0
+item_tags =	barrel
+override_section = cz75_barrel_attributes
+
+[cz75_barrel_attributes]
+bullet_speed = 1
+fire_dispersion_base = 0.21
+zoom_rotate_time = 0.02
+recoil_koeff = -0.03
+[cz75_barrel_att]
+bullet_speed				= 1
+fire_dispersion_base 		= 0.21
+zoom_rotate_time = 0.02
+recoil_koeff            = -0.1
+
+[cz75_barrel_up]:cz75_barrel
+kind  =  cz75
+inv_ui_sign				= cz75_bar+
+visual						= w_att_huds\cz75_barrel_up
+inv_name					= cz75_barrel_up
+inv_name_short			= cz75_barrel_up
+cost							= 3100
+inv_weight					= 0.1
+inv_grid_x         = 4
+attachment_slots	=	cz75_zatvor|zatvor|0,0,0|0,0,0#9mm_muzzle|muzzle|0,0,0|0,0,0
+override_section = cz75_barrel_up_attributes
+
+[cz75_barrel_up_attributes]
+bullet_speed = 1
+fire_dispersion_base = 0.21
+zoom_rotate_time = 0.02
+recoil_koeff = -0.03
+impair_koeff = 1.1
+[cz75_barrel_up_att]:cz75_barrel_att
+impair_koeff = 1.1
+
+[cz75_barrel_comp]:attachment_base
+kind  =  cz75
+inv_ui_sign				= cz75_barC
+visual						= w_att_huds\cz75_barrel_comp	
+inv_name					= cz75_barrel_comp
+inv_name_short			= cz75_barrel_compS
+cost							= 2200
+inv_weight					= 0.11
+inv_grid_x         = 5
+inv_grid_y         = 17
+1icon_layer = clean1_ico
+attachment_point	=	cz75_barrel|0,0,0|0,0,0
+attachment_slots	=	cz75_zatvor|zatvor|0,0,0|0,0,0
+item_tags	=	barrel
+override_section =	cz75_barrel_comp_attributes
+[cz75_barrel_comp_attributes]:cz75_barrel_att
+fire_point						= 0, 0, 0.03
+zoom_rotate_time = 0.05
+recoil_koeff            = -0.04
+inertia_koeff            = 1.1
+
+[cz75_zatvor]:attachment_base
+kind  =  cz75
+inv_ui_sign				= cz75_sli
+visual						= w_att_huds\cz75_zatvor
+inv_name					= cz75_zatvor
+inv_name_short			= cz75_zatvor
+cost							= 850
+inv_weight					= 0.13
+inv_grid_width     = 2
+inv_grid_x         = 6
+inv_grid_y         = 19
+1icon_layer = clean_lub2_ico
+attachment_point = cz75_zatvor|0,0,0|0,0,0
+attachment_slots =	cz75_sights|zatvor|0,0,0|0,0,0#cz75_muzzle|zatvor|0,0,0|0,0,0
+item_tags =	zatvor
+override_section = cz75_zatvor_attributes
+
+[cz75_zatvor_attributes]
+zoom_rotate_time = 0.08
+rpm = 1000
+impair_koeff = 0.85
+[rpm_1000_zatvor_att]
+zoom_rotate_time = 0.08
+recoil_koeff = -0.2
+rpm = 1000
+impair_koeff = 0.85
+
+[cz75_muzzle]:attachment_base
+kind  =  cz75
+inv_ui_sign				= cz75_mb
+visual						= w_att_huds\cz75_muzzle
+inv_name					= cz75_muzzle
+inv_name_short			= cz75_muzzleS
+cost							= 2600
+inv_weight					= 0.08
+inv_grid_x         = 6
+inv_grid_y         = 18
+attachment_point		=	cz75_muzzle|0,0,0|0,0,0
+item_tags = muzzle_device
+override_section = cz75_muzzle_attributes
+
+[cz75_muzzle_attributes]
+weapon_lenght = 0.05
+zoom_rotate_time = 0.01
+recoil_koeff = -0.05
+[cz75_muzzle_att]:05_muzzle_lenght_attributes
+zoom_rotate_time = 0.01
+recoil_koeff = -0.1
+
+[cz75_sights]:attachment_base
+kind  =  cz75
+inv_ui_sign				= cz75_sig
+visual						= w_att_huds\cz75_sights
+inv_name					= cz75_sights
+inv_name_short			= cz75_sightsS
+cost							= 200
+inv_weight					= 0.03
+inv_grid_x         = 7
+inv_grid_y         = 18
+attachment_point = cz75_sights|0,0,0|0,0,0
+attachment_slots =	cz75_helper|zatvor|0,0,0|0,0,0
+override_section = cz75_sights_attributes
+
+[cz75_sights_attributes]
+
+[cz75_fd_upper_helper]:attachment_base
+kind  =  cz75
+inv_ui_sign				= cz75_fdh
+visual						= w_att_huds\cz75_fd_upper_helper
+description				= cz75_fd_upper_helper_descr
+inv_name					= cz75_fd_upper_helper
+inv_name_short			= cz75_fd_upper_helperS
+cost							= 1300
+inv_weight					= 0.07
+inv_grid_x         = 5
+inv_grid_y         = 18
+attachment_point		=	cz75_helper|0,0,0|0,0,0
+attachment_slots		=	cz75_fd_upper|wpn_body|0,0,0|0,0,0
+item_tags	=	upper
+override_section = cz75_fd_upper_helper_attributes
+
+[cz75_fd_upper_helper_attributes]
+
+[cz75_sights_up]:attachment_base
+kind  =  cz75
+inv_ui_sign				= cz75_sig+
+visual						= w_att_huds\cz75_sights_up
+inv_name					= cz75_sights_up
+inv_name_short			= cz75_sights_upS
+cost							= 1350
+inv_weight					= 0.04
+inv_grid_x         = 8
+inv_grid_y         = 17
+attachment_point =	cz75_sights|0,0,0|0,0,0
+item_tags	=	rail
+override_section = cz75_sights_up_attributes
+
+[cz75_sights_up_attributes]
+
+[cz75_sights_pica]:cz75_sights
+kind  =  cz75
+inv_ui_sign				= cz75_sigP
+visual						= w_att_huds\cz75_sights_pica
+description				= pica_5_up
+inv_name					= cz75_sights_pica
+inv_name_short			= cz75_sights_picaS
+cost							= 1600
+inv_weight					= 0.05
+inv_grid_x         = 8
+attachment_slots =	pica_5|zatvor|0,0.0466,-0.013|0,0,0		
+item_tags	=	rail
+override_section = cz75_sights_pica_attributes
+
+[cz75_sights_pica_attributes]
+
+[cz75_fd_upper]:attachment_base
+kind  =  cz75
+inv_ui_sign				= cz75_fd_base
+visual						= w_att_huds\cz75_fd_upper
+description				= cz75_fd_upper_descr
+inv_name					= cz75_fd_upper
+inv_name_short			= cz75_fd_upperS
+cost							= 5150
+inv_weight					= 0.64
+inv_grid_width     = 3
+inv_grid_x         = 0
+inv_grid_y         = 19
+attachment_point = cz75_fd_upper|0,0,0|0,0,0			
+attachment_slots =	pica_3|wpn_body|-0.0186,0.0346,0.11|0,0,-90#pica_3|wpn_body|0.0184,0.0346,0.11|0,0,90#pica_15|wpn_body|0,0.0561,-0.045|0,0,0#picgrp|wpn_body|0,-0.03035,-0.118|0,0,0#sight_front|wpn_body|0,0.0561,0.109|0,0,0#sight_rear|wpn_body|0,0.0561,-0.0675|0,0,0	
+item_tags =	upper
+override_section =	cz75_fd_upper_attributes
+[cz75_fd_upper_attributes]:c_attributes
+aimpoint_offset_y = 0.08642
+fire_point = 0, 0, 0.04
+;hands_position							= 0.06, -0.08, -0.14
+;hands_position_16x9					= 0.06, -0.08, -0.14
+;aim_hud_offset_pos					= -0.05995, 0.0166, -0.07
+;aim_hud_offset_pos_16x9			= -0.05995, 0.0166, -0.07
+;aim_hud_offset_rot						= 0.006, 0.0056, 0
+;aim_hud_offset_rot_16x9			= 0.006, 0.0056, 0
+hands_position							= 0.08, -0.08, -0.11
+hands_position_16x9					= 0.08, -0.08, -0.11
+aim_hud_offset_pos					= -0.08008, 0.0166, -0.1
+aim_hud_offset_pos_16x9			= -0.08008, 0.0166, -0.1
+aim_hud_offset_rot						= 0.006, 0.0056, 0
+aim_hud_offset_rot_16x9			= 0.006, 0.0056, 0
+additional_hud_offset = 0, 0, -0.06
+weapon_lenght = 0.3
+zoom_rotate_time = 0.05
+recoil_koeff            = -0.65
+inertia_koeff          = 0.8
+
+[cz75_fd_upper_short]:cz75_fd_upper
+kind  =  cz75
+inv_ui_sign				= cz75_fd_mod
+visual						= w_att_huds\cz75_fd_upper_short
+inv_name					= cz75_fd_upper_short
+inv_name_short			= cz75_fd_upper_shortS
+cost							= 3200
+inv_weight					= 0.59
+inv_grid_x         = 3
+override_section =	cz75_fd_upper_short_attributes
+[cz75_fd_upper_short_attributes]:cz75_fd_upper_attributes
+fire_point = 0, 0, 0.005
+
+[mag_wpn_cz75_9x19_fmj]:mag_wpn_base,wg_wpn_cz75,ag_ammo_9x19_fmj
+inv_ui_sign					= cz75_16
+visual							= w_att_huds\cz75_mag
+inv_name						= cz75_mag
+inv_name_short				= cz75_mag
+inv_grid_x         = 8
+inv_grid_y         = 19
+inv_weight						= 0.06
+cost								= 400
+max_mag_size				= 16
+mag_size						= small
+override_section				=	mag_wpn_cz75_9x19_fmj_attributes
+
+[mag_wpn_cz75_9x19_fmj_attributes]
+animation_prefix_mag = 17_
+
+[mag_wpn_walther_9x19_fmj]:mag_wpn_cz75_9x19_fmj
+visual							= w_att_huds\walther_mag_pdp
+inv_name						= walther_mag_pdp
+inv_name_short				= walther_mag_pdpS
+max_mag_size				= 18
+inv_grid_x         = 9
+inv_grid_y         = 17
+override_section = mag_wpn_walther_9x19_fmj_attributes
+
+[mag_wpn_walther_9x19_fmj_attributes]
+animation_prefix_mag = 17_
+
+[mag_wpn_cz75_32_9x19_fmj]:mag_wpn_cz75_9x19_fmj
+inv_ui_sign					= cz75_32
+visual							= w_att_huds\cz75_mag32
+inv_name						= cz75_mag32
+inv_name_short				= cz75_mag32
+inv_grid_height    = 2
+inv_grid_x         = 9
+inv_grid_y         = 18
+inv_weight						= 0.1
+cost								= 750
+max_mag_size				= 32
+override_section				=	mag_wpn_cz75_32_9x19_fmj_attributes
+
+[mag_wpn_cz75_32_9x19_fmj_attributes]
+animation_prefix_mag = 33_
+
+[mag_wpn_cz75_50_9x19_fmj]:mag_wpn_cz75_9x19_fmj
+inv_ui_sign					= cz75_50
+visual							= w_att_huds\cz75_mag50
+inv_name						= cz75_mag50
+inv_name_short				= cz75_mag50S
+inv_grid_height    = 2
+inv_grid_x         = 10
+inv_grid_y         = 18
+inv_weight						= 0.6
+cost								= 1550
+max_mag_size				= 50
+mag_size						= medium
+override_section				=	mag_wpn_cz75_50_9x19_fmj_attributes
+
+[mag_wpn_cz75_50_9x19_fmj_attributes]
+animation_prefix_mag = 50_

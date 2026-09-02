@@ -272,14 +272,169 @@ function prepare_stats_table()
 --]]
 	if is_not_empty(stats_table) then return end
 	
+	-- Weapon tooltip uses readable effective values instead of the old
+	-- normalized progress bars. Magazine capacity is intentionally omitted.
 	stats_table["weapon"] = {
-		["accuracy"]       			   = { index= 1, typ= "float",   name= "ui_inv_accuracy", 		icon_p= "ui_wp_prop_tochnost", 			icon_n= "", track= true, 	magnitude= 1,   	unit= "", compare= false, sign= false, show_always= true, value_functor= {"utils_ui","prop_accuracry"} },
-		["handling"]                   = { index= 2, typ= "float",   name= "ui_inv_handling", 		icon_p= "ui_wp_prop_ergonomics", 		icon_n= "", track= true, 	magnitude= 1,      	unit= "", compare= false, sign= true, show_always= true, value_functor= {"utils_ui","prop_handling"} },
-		["damage"]                     = { index= 3, typ= "float",   name= "ui_inv_damage", 		icon_p= "ui_wp_prop_damage", 			icon_n= "", track= true, 	magnitude= 1,      	unit= "", compare= false, sign= true, show_always= true , value_functor= {"utils_ui","prop_damage"} },
-		["fire_rate"]                  = { index= 4, typ= "float",   name= "ui_inv_rate_of_fire", 	icon_p= "ui_wp_prop_skorostrelnost", 	icon_n= "", track= true, 	magnitude= 1, 		unit= "", compare= false, sign= false, show_always= true, value_functor= {"utils_ui","prop_rpm"} },
-		["ammo_mag_size"]              = { index= 5, typ= "float",   name= "ui_ammo_count", 		icon_p= "ui_wp_propery_07", 			icon_n= "", track= false, 	magnitude= 1,      	unit= "", compare= false, sign= false ,show_always= true },
+		["accuracy"] = {
+			index=1, typ="float", label="Accuracy", icon_p="ui_wp_prop_tochnost",
+			icon_n="", track=false, magnitude=1, unit="°", literal_unit=true, decimals=2,
+			compare=false, sign=false, show_always=true,
+			value_functor={"utils_ui","prop_accuracy_value"}
+		},
+		["inertia"] = {
+			index=2, typ="float", label="Inertia", icon_p="ui_wp_prop_ergonomics",
+			icon_n="", track=false, magnitude=1, unit="", decimals=2,
+			compare=false, sign=false, show_always=true,
+			value_functor={"utils_ui","prop_inertia"}
+		},
+		["damage"] = {
+			index=3, typ="float", label="Damage", icon_p="ui_wp_prop_damage",
+			icon_n="", track=false, magnitude=1, unit="", decimals=2,
+			compare=false, sign=false, show_always=true,
+			value_functor={"utils_ui","prop_damage_value"}
+		},
+		["fire_rate"] = {
+			index=4, typ="float", label="Rate of fire", icon_p="ui_wp_prop_skorostrelnost",
+			icon_n="", track=false, magnitude=1, unit="RPM", literal_unit=true, decimals=0,
+			compare=false, sign=false, show_always=true,
+			value_functor={"utils_ui","prop_rpm_value"}
+		},
+		["bullet_speed"] = {
+			index=5, typ="float", label="Bullet velocity", icon_p="ui_wp_prop_skorostrelnost",
+			icon_n="", track=false, magnitude=1, unit="m/s", literal_unit=true, decimals=0,
+			compare=false, sign=false, show_always=true,
+			value_functor={"utils_ui","prop_bullet_speed"}
+		},
+		["zoom_rotate_time"] = {
+			index=15, typ="float", label="ADS time", icon_p="ui_wp_prop_ergonomics",
+			icon_n="", track=false, magnitude=1, unit="s", literal_unit=true, decimals=2,
+			compare=false, sign=false, show_always=true,
+			value_functor={"utils_ui","prop_ads_time"}
+		},
+		["weapon_length"] = {
+			index=7, typ="float", label="Weapon length", icon_p="ui_wp_prop_ergonomics",
+			icon_n="", track=false, magnitude=1, unit="m", literal_unit=true, decimals=2,
+			compare=false, sign=false, show_always=true,
+			value_functor={"utils_ui","prop_weapon_length"}
+		},
+		["weapon_recoil_vert"] = {
+			index=8, typ="float", label="Vertical recoil", icon_p="ui_wp_prop_ergonomics",
+			icon_n="", track=false, magnitude=100, unit="", decimals=0,
+			compare=false, sign=false, show_always=true,
+			value_functor={"utils_ui","prop_hud_recoil_vert"}
+		},
+		["weapon_recoil_horz"] = {
+			index=9, typ="float", label="Horizontal recoil", icon_p="ui_wp_prop_ergonomics",
+			icon_n="", track=false, magnitude=100, unit="", decimals=0,
+			compare=false, sign=false, show_always=true,
+			value_functor={"utils_ui","prop_hud_recoil_horz"}
+		},
+		["weapon_recoil_ret_speed"] = {
+			index=10, typ="float", label="Recoil recovery", icon_p="ui_wp_prop_ergonomics",
+			icon_n="", track=false, magnitude=1, unit="", decimals=2,
+			compare=false, sign=false, show_always=true,
+			value_functor={"utils_ui","prop_hud_recoil_return"}
+		},
 	}
 	
+
+	stats_table["module"] = {
+		["zoom_rotate_time"] = {
+			index=1, typ="float", label="ADS time", icon_p="ui_wp_prop_ergonomics",
+			icon_n="", track=false, magnitude=1, unit="s", literal_unit=true, decimals=3,
+			compare=false, sign=true, show_always=false, section="override_section"
+		},
+		["rpm"] = {
+			index=2, typ="float", label="Rate of fire", icon_p="ui_wp_prop_skorostrelnost",
+			icon_n="", track=false, magnitude=1, unit="RPM", literal_unit=true, decimals=0,
+			compare=false, sign=true, show_always=false, section="override_section"
+		},
+		["bullet_speed"] = {
+			index=3, typ="float", label="Bullet velocity", icon_p="ui_wp_prop_skorostrelnost",
+			icon_n="", track=false, magnitude=1, unit="m/s", literal_unit=true, decimals=0,
+			compare=false, sign=true, show_always=false, section="override_section"
+		},
+		["weapon_length"] = {
+			index=4, typ="float", label="Weapon length", icon_p="ui_wp_prop_ergonomics",
+			icon_n="", track=false, magnitude=1, unit="m", literal_unit=true, decimals=3,
+			compare=false, sign=true, show_always=false,
+			value_functor={"utils_ui","prop_module_weapon_length"}
+		},
+		["recoil_koeff"] = {
+			index=6, typ="float", label="Recoil", icon_p="ui_wp_prop_ergonomics",
+			icon_n="", track=false, magnitude=100, unit="%", literal_unit=true, decimals=0,
+			compare=false, sign=true, show_always=false,
+			value_functor={"utils_ui","prop_module_recoil_delta"}
+		},
+		["rpm_koeff"] = {
+			index=7, typ="float", label="Rate of fire", icon_p="ui_wp_prop_skorostrelnost",
+			icon_n="", track=false, magnitude=100, unit="%", literal_unit=true, decimals=1,
+			compare=false, sign=true, show_always=false,
+			value_functor={"utils_ui","prop_module_rpm_delta"}
+		},
+		["k_hit_koeff"] = {
+			index=9, typ="float", label="Damage", icon_p="ui_wp_prop_damage",
+			icon_n="", track=false, magnitude=100, unit="%", literal_unit=true, decimals=0,
+			compare=false, sign=true, show_always=false,
+			value_functor={"utils_ui","prop_module_k_hit_delta"}
+		},
+		["weapon_recoil_vert"] = {
+			index=9, typ="float", label="Vertical recoil", icon_p="ui_wp_prop_ergonomics",
+			icon_n="", track=false, magnitude=1, unit="°", literal_unit=true, decimals=3,
+			compare=false, sign=true, show_always=false, section="override_section"
+		},
+		["weapon_recoil_horz"] = {
+			index=10, typ="float", label="Horizontal recoil", icon_p="ui_wp_prop_ergonomics",
+			icon_n="", track=false, magnitude=1, unit="°", literal_unit=true, decimals=3,
+			compare=false, sign=true, show_always=false, section="override_section"
+		},
+		["weapon_recoil_vert_inc"] = {
+			index=11, typ="float", label="Recoil growth", icon_p="ui_wp_prop_ergonomics",
+			icon_n="", track=false, magnitude=1, unit="°", literal_unit=true, decimals=3,
+			compare=false, sign=true, show_always=false, section="override_section"
+		},
+		["weapon_recoil_ret_speed"] = {
+			index=12, typ="float", label="Recoil recovery", icon_p="ui_wp_prop_ergonomics",
+			icon_n="", track=false, magnitude=1, unit="", decimals=3,
+			compare=false, sign=true, show_always=false, section="override_section"
+		},
+		["PDM_disp_base"] = {
+			index=13, typ="float", label="Movement dispersion", icon_p="ui_wp_prop_tochnost",
+			icon_n="", track=false, magnitude=1, unit="", decimals=3,
+			compare=false, sign=true, show_always=false, section="override_section"
+		},
+		["cam_dispersion"] = {
+			index=14, typ="float", label="Camera recoil", icon_p="ui_wp_prop_ergonomics",
+			icon_n="", track=false, magnitude=1, unit="°", literal_unit=true, decimals=3,
+			compare=false, sign=true, show_always=false, section="override_section"
+		},
+		["cam_dispersion_inc"] = {
+			index=15, typ="float", label="Camera recoil growth", icon_p="ui_wp_prop_ergonomics",
+			icon_n="", track=false, magnitude=1, unit="°", literal_unit=true, decimals=3,
+			compare=false, sign=true, show_always=false, section="override_section"
+		},
+		["hit_power"] = {
+			index=16, typ="float", label="Damage", icon_p="ui_wp_prop_damage",
+			icon_n="", track=false, magnitude=1, unit="", decimals=3,
+			compare=false, sign=true, show_always=false, section="override_section"
+		},
+		["fire_dispersion_base"] = {
+			index=17, typ="float", label="Accuracy dispersion", icon_p="ui_wp_prop_tochnost",
+			icon_n="", track=false, magnitude=1, unit="°", literal_unit=true, decimals=3,
+			compare=false, sign=true, show_always=false, section="override_section"
+		},
+		["condition_shot_dec"] = {
+			index=18, typ="float", label="Wear per shot", icon_p="ui_wp_prop_ergonomics",
+			icon_n="", track=false, magnitude=1, unit="", decimals=5,
+			compare=false, sign=true, show_always=false, section="override_section"
+		},
+		["ammo_mag_size"] = {
+			index=19, typ="float", label="Magazine capacity", icon_p="ui_wp_prop_ergonomics",
+			icon_n="", track=false, magnitude=1, unit="", decimals=0,
+			compare=false, sign=true, show_always=false, section="override_section"
+		},
+	}
+
 	stats_table["outfit"] = {
 		["fire_wound_protection"]      = { index= 1, typ= "float",   name= "ui_inv_outfit_fire_wound_protection",    icon_p= "ui_am_propery_01",   icon_n= "", track= true, magnitude= (1/SYS_GetParam(2,"actor_condition","max_fire_wound_protection")), 	unit= "", condition= true,	compare= false, sign= true, show_always= true , value_functor= {"utils_item","get_outfit_protection", "FireWound"}},
 		["burn_protection"]            = { index= 2, typ= "float",   name= "ui_inv_outfit_burn_protection",          icon_p= "ui_am_prop_thermo",  icon_n= "", track= true, magnitude= (1/SYS_GetParam(2,"actor_condition","fire_zone_max_power")), 		unit= "", condition= true,	compare= false, sign= true, show_always= true , value_functor= {"utils_item","get_outfit_protection", "Burn"} },
@@ -382,20 +537,10 @@ function get_stats_value(obj, sec, gr, stat)
 	end
 	
 	if obj and value and gr.condition then
-		if ui_inventory.show_full_stats then
-			if stat == "radiation_protection" then
-				value = value * 1/obj:condition()
-			else
-				value = value * 1
-			end
-		elseif stat == "radiation_protection" then
-			value = value
-		else
-			value = value * obj:condition()
-		end
+		value = value * obj:condition()
 	end
 	
-	return (value ~= 0) and value
+	return (value ~= 0 or gr.show_always) and value
 end
 
 function get_stats_func_value(obj, sec, file, func, ...)
@@ -472,9 +617,14 @@ function get_stats_xml(handler, obj, sec, gr, stat)
 	end
 	st_icon:InitTexture( icon )
 	
-	-- Set up name
+	-- Set up name. Custom weapon rows can provide a literal label,
+	-- while all existing item stats continue using translated string IDs.
 	local st_cap   = XMLP:InitTextWnd("item_info:stats_box:cap", st)
-	st_cap:SetText( game.translate_string(gr.name) )
+	if gr.label then
+		st_cap:SetText( gr.label )
+	else
+		st_cap:SetText( game.translate_string(gr.name) )
+	end
 
 	-- Set up bar
 	if gr.track then
@@ -547,70 +697,185 @@ function UICellItem:InitControls(path, st)
 	sync_element(self.hl, self.cell)
 end
 
-function UICellItem:UseMeatSortingLogic()
-	if meat_spoiling and meat_spoiling.expiration_table and meat_spoiling.expiration_time and meat_spoiling.meats then
-		local current_obj = self.ID and level.object_by_id(self.ID)
-		if current_obj then
-			local sec = current_obj:section()
-			return meat_spoiling.meats[sec] and true
+-- Short-lived queue cache used when opening inventory.
+-- It lets us queue shader-rendered weapon icons before the UI becomes visible,
+-- then prevents UICellItem:Set() from immediately queueing the same render again.
+runtime_weapon_icon_prewarm = runtime_weapon_icon_prewarm or {}
+
+function prewarm_runtime_weapon_icon(obj, force)
+	if not obj then
+		return nil
+	end
+
+	local clsid = obj:clsid()
+	if not (IsWeapon(nil, clsid) and obj.ui_update_inventory_icon) then
+		return nil
+	end
+
+	local sec = obj:section()
+	local id = obj:id()
+	local texture_id = "wuiren_" .. id .. "_" .. sec
+	local now = time_global()
+	local cached = runtime_weapon_icon_prewarm[id]
+
+	if (not force)
+		and cached
+		and cached.texture == texture_id
+		and (now - cached.time) < 250
+	then
+		return texture_id
+	end
+
+	local ok, result = pcall(function()
+		return obj:ui_update_inventory_icon(texture_id)
+	end)
+
+	if ok and result then
+		runtime_weapon_icon_prewarm[id] = {
+			texture = texture_id,
+			time = now
+		}
+		return texture_id
+	end
+
+	if not ok then
+		printf("[INVICON_LUA] prewarm failed for [%s]: %s", sec, tostring(result))
+	end
+
+	return nil
+end
+
+function UICellItem:Refresh_Runtime_Icon(obj, sec, clsid, is_obj)
+	self.use_runtime_icon = false
+
+	if not (is_obj and IsWeapon(nil, clsid) and obj.ui_update_inventory_icon and self.ico.InitTextureCustom) then
+		return nil
+	end
+
+	local texture_id = prewarm_runtime_weapon_icon(obj, false)
+
+	if texture_id then
+		self.use_runtime_icon = true
+		return texture_id
+	end
+
+	return nil
+end
+
+-- Final-authority application path for runtime-rendered weapon icons.
+-- This deliberately bypasses Add_Icon(), Add_Shadow(), utils_xml.get_item_axis(),
+-- utils_xml.get_icons_texture() and other common icon hooks used by compatibility mods.
+function UICellItem:ApplyRuntimeIconPriority(obj, regenerate)
+	if (self.showcase ~= 0) or (not obj) then
+		return false
+	end
+
+	local clsid = obj:clsid()
+	if not (IsWeapon(nil, clsid) and obj.ui_update_inventory_icon and self.ico and self.ico.InitTextureCustom) then
+		return false
+	end
+
+	local sec = obj:section()
+	local object_id = obj:id()
+	local texture_id = "wuiren_" .. object_id .. "_" .. sec
+	local needs_render = regenerate
+		or (self._runtime_priority_object_id ~= object_id)
+		or (self._runtime_priority_texture ~= texture_id)
+		or (not self._runtime_priority_ready)
+
+	if needs_render then
+		local rendered = prewarm_runtime_weapon_icon(obj, regenerate and true or false)
+		if not rendered then
+			return false
 		end
 
-		if self.childs then
-			for id, cnt in pairs(self.childs) do
-				local obj = level.object_by_id(id)
-        if obj then
-          local sec = obj:section()
-          return meat_spoiling.meats[sec] and true
-        end
+		texture_id = rendered
+		self._runtime_priority_object_id = object_id
+		self._runtime_priority_texture = texture_id
+		self._runtime_priority_ready = true
+	end
+
+	local w = self.W
+	local h = self.H
+	if (not w) or (not h) then
+		local grid_size = self.grid_size or 50
+		w = SYS_GetParam(2, sec, "inv_grid_width", 1) * grid_size
+		h = SYS_GetParam(2, sec, "inv_grid_height", 1) * grid_size
+	end
+
+	-- Weapon runtime icon is authoritative: apply directly to the final UI statics.
+	self.ico:InitTextureCustom(texture_id)
+	self.ico:SetTextureRect(Frect():set(0, 0, w * 4, h * 4))
+	self.ico:SetStretchTexture(true)
+
+	local rot = self.ico:GetHeading() > 0
+	local ratio = utils_xml.screen_ratio()
+	self.ico:SetWndSize(vector2():set(w * (rot and 1 or ratio), h))
+	self.ico:Show(true)
+	utils_xml.align_to_center(self.ico, self.cell)
+
+	if self.shadow and self.shadow.InitTextureCustom then
+		self.shadow:InitTextureCustom(texture_id)
+		self.shadow:SetTextureRect(Frect():set(0, 0, w * 4, h * 4))
+		self.shadow:SetStretchTexture(true)
+
+		local srot = self.shadow:GetHeading() > 0
+		self.shadow:SetWndSize(vector2():set(w * (srot and 1 or ratio), h))
+		self.shadow:Show(true)
+		utils_xml.align_to_center(self.shadow, self.cell)
+
+		local pos = self.ico:GetWndPos()
+		self.shadow:SetWndPos(vector2():set(pos.x + 1, pos.y + 2))
+	end
+
+	-- The rendered texture already contains the assembled weapon and modules.
+	-- Hide every static overlay another icon mod may have created.
+	self.use_runtime_icon = true
+
+	if self.layer then
+		for i = 1, #self.layer do
+			if self.layer[i] then
+				self.layer[i]:Show(false)
 			end
 		end
 	end
-	return false
+
+	if self.ico_scope then self.ico_scope:Show(false) end
+	if self.ico_sil then self.ico_sil:Show(false) end
+	if self.ico_gl then self.ico_gl:Show(false) end
+
+	return true
 end
 
-function UICellItem:GetMeatExpirationDuration(id) 
-  return meat_spoiling.expiration_table[id] and meat_spoiling.expiration_table[id].duration or meat_spoiling.expiration_time.cooked
-end
-
-function UICellItem:FindChildIdByBestCondition()
-	if self.childs then
-    local use_meat_sorting_logic = self:UseMeatSortingLogic()
-
-    local id_child
-    if use_meat_sorting_logic then
-      -- find by soonest to expire
-      local min_expiration_so_far = meat_spoiling.expiration_time.cooked
-      for id, cnt in pairs(self.childs) do
-        local expires_in = self:GetMeatExpirationDuration(id)
-  
-        if min_expiration_so_far > expires_in then
-          id_child = id
-          min_expiration_so_far = expires_in
-        end
-
-        -- if this save never had meat expiration mod then some meats might not appear in the expiration table, pick random meat as stack top in this case
-        if id_child == nil then
-          id_child = id
-        end
-      end
-    else
-      -- find by best condition
-      local max_condition_so_far = -1
-      for id, cnt in pairs(self.childs) do
-        local obj = level.object_by_id(id)
-        local condition = (obj and obj:condition()) or 0
-  
-        if max_condition_so_far < condition then
-          id_child = id
-          max_condition_so_far = condition
-        end
-      end
-    end
-
-    return id_child
-	else
-		return nil
+function UICellItem:ReleaseRuntimeIconPriority(hide_icon)
+	if not self._runtime_priority_ready then
+		return
 	end
+
+	self._runtime_priority_object_id = nil
+	self._runtime_priority_texture = nil
+	self._runtime_priority_ready = nil
+	self.use_runtime_icon = false
+
+	-- Empty/released manual slots can retain the previous custom texture inside
+	-- the UI static even after their ID is gone. Hide it explicitly.
+	if hide_icon then
+		if self.ico then self.ico:Show(false) end
+		if self.shadow then self.shadow:Show(false) end
+	end
+end
+
+function UICellItem:ForceRuntimeIconRefresh()
+	if (self.showcase ~= 0) or (not self.ID) then
+		return
+	end
+
+	local obj = level.object_by_id(self.ID)
+	if not obj then
+		return
+	end
+
+	self:ApplyRuntimeIconPriority(obj, true)
 end
 
 function UICellItem:Set(obj, area)
@@ -631,6 +896,16 @@ function UICellItem:Set(obj, area)
 		return false
 	end
 	
+	-- In showcase mode the reserved grid area may be smaller than the item's
+	-- normal inventory dimensions. Scale the rendered icon proportionally so
+	-- large weapons fit the starter-loadout panel without changing their LTX
+	-- inv_grid_width/inv_grid_height values or affecting the normal inventory.
+	if self.showcase ~= 0 and area and area.w and area.h then
+		local fit_scale = math.min(area.w / w, area.h / h, 1)
+		w = w * fit_scale
+		h = h * fit_scale
+	end
+
 	x = x * grid_size
 	y = y * grid_size
 	w = w * grid_size
@@ -671,9 +946,13 @@ function UICellItem:Set(obj, area)
 		self:Print(nil, "Set for [%s]  in free cell", sec)
 	end
 	
+	-- Runtime 3D-rendered weapon icon. This is still a normal flat 2D UI texture,
+	-- but the pixels are generated from the assembled world weapon model.
+	local runtime_icon = self:Refresh_Runtime_Icon(obj, sec, clsid, is_obj)
+
 	-- Icon
-	self:Add_Icon(sec, w, h)
-	self:Add_Shadow(sec, w, h)
+	self:Add_Icon(sec, w, h, runtime_icon)
+	self:Add_Shadow(sec, w, h, runtime_icon)
 	
 	-- Icon layers
 	self:Add_Layers(xml, obj, sec, clsid)
@@ -685,6 +964,7 @@ function UICellItem:Set(obj, area)
 		self:Reset()
 		return false
 	end
+
 	
 	self.cell:Show(true)
 	return true
@@ -696,10 +976,11 @@ function UICellItem:Update(obj)
 		self:ResetToChild()
 		return false
 	end
-	self:Print(nil, "Update for [%s]", sec)
 	
 	local sec = self.section
+	self:Print(nil, "Update for [%s]", sec)
 	local xml = self:GetXML()
+	
 	
 	if obj then
 		local clsid = obj:clsid()
@@ -722,32 +1003,45 @@ function UICellItem:Update(obj)
 		return false
 	end
 	
-	-- Update color
+		-- Update color
 	self:Colorize( self.flags.no_trade and "red" or "def" )
+
 	
 	return true
 end
 
-function UICellItem:Add_Icon(sec, w, h)
+function UICellItem:Add_Icon(sec, w, h, runtime_icon)
 	local rot = self.ico:GetHeading() > 0
 
-	self.ico:InitTexture( utils_xml.get_icons_texture(sec) )
-	self.ico:SetTextureRect(Frect():set( get_item_axis(sec, nil, true) ))
+	if runtime_icon and self.ico.InitTextureCustom then
+		self.ico:InitTextureCustom(runtime_icon)
+		self.ico:SetTextureRect(Frect():set(0, 0, w * 4, h * 4))
+	else
+		self.ico:InitTexture( utils_xml.get_icons_texture(sec) )
+		self.ico:SetTextureRect(Frect():set( get_item_axis(sec, nil, true) ))
+	end
+
 	self.ico:SetStretchTexture(true)
-	self.ico:SetWndSize(vector2():set( w * (rot and 1 or ratio) , h * (rot and ratio or 1) ))
+	self.ico:SetWndSize(vector2():set( w * (rot and 1 or ratio) , h ))
 	self.ico:Show(true)
 	utils_xml.align_to_center(self.ico, self.cell)
 	
-	self:Print(nil, "Show icon")
+	self:Print(nil, runtime_icon and "Show runtime 3D icon" or "Show icon")
 end
 
-function UICellItem:Add_Shadow(sec, w, h)
+function UICellItem:Add_Shadow(sec, w, h, runtime_icon)
 	local rot = self.shadow:GetHeading() > 0
 
-	self.shadow:InitTexture( utils_xml.get_icons_texture(sec) )
-	self.shadow:SetTextureRect(Frect():set( get_item_axis(sec, nil, true) ))
+	if runtime_icon and self.shadow.InitTextureCustom then
+		self.shadow:InitTextureCustom(runtime_icon)
+		self.shadow:SetTextureRect(Frect():set(0, 0, w * 4, h * 4))
+	else
+		self.shadow:InitTexture( utils_xml.get_icons_texture(sec) )
+		self.shadow:SetTextureRect(Frect():set( get_item_axis(sec, nil, true) ))
+	end
+
 	self.shadow:SetStretchTexture(true)
-	self.shadow:SetWndSize(vector2():set( w * (rot and 1 or ratio) , h * (rot and ratio or 1) ))
+	self.shadow:SetWndSize(vector2():set( w * (rot and 1 or ratio) , h ))
 	self.shadow:Show(true)
 	self.shadow:Show(true)
 	utils_xml.align_to_center(self.shadow, self.cell)
@@ -756,7 +1050,7 @@ function UICellItem:Add_Shadow(sec, w, h)
 	self.shadow:SetWndPos( vector2():set( pos.x + 1 , pos.y + 2 ) )
 	self.shadow:SetTextureColor( clr_list["shadow"] )
 	
-	self:Print(nil, "Show shadow")
+	self:Print(nil, runtime_icon and "Show runtime 3D shadow" or "Show shadow")
 end
 
 function UICellItem:Add_Layers(xml, obj, sec, clsid)
@@ -766,6 +1060,11 @@ function UICellItem:Add_Layers(xml, obj, sec, clsid)
 		for i=1,#self.layer do
 			self.layer[i]:Show(false)
 		end
+	end
+
+	-- Runtime rendered weapon icons already include installed modules.
+	if self.use_runtime_icon then
+		return
 	end
 	
 	-- Add all possible layers
@@ -791,70 +1090,102 @@ function UICellItem:Add_Layers(xml, obj, sec, clsid)
 end
 
 function UICellItem:Add_ProgressBar(xml, obj, sec, clsid)
-	
 	-- Hide all bars
 	if self.bar then
 		self.bar:Show(false)
 	end
-	
+
 	-- On full stacking, hide bar
 	if self.container.stack_all and (self.childs and is_not_empty(self.childs)) then
 		return
 	end
-	
+
 	-- No bar on showcase cells
 	if (self.showcase ~= 0) or self.disable_bar then
 		return
 	end
-	
-	-- Bar is applied only to classes that support conditon
-	local has_cond = SYS_GetParam(1,sec, "use_condition") or IsWeapon(nil,clsid) or IsOutfit(nil,clsid) or IsHeadgear(nil,clsid)
-	if (not has_cond) then
+
+	-- Standalone detachable magazines already display an exact rounds/capacity
+	-- counter. Do not also draw the redundant fill bar underneath them.
+	if obj and obj.is_inventory_magazine and obj:is_inventory_magazine() then
 		return
 	end
 
-	-- Get bar type
-	local str = SYS_GetParam(0,sec, "condition_bar","condition_progess_bar")
-	
+	-- Dedicated detachable-magazine fill bar.
+	local is_magazine = false
+	if sec and ini_sys:line_exist(sec, "module_type") then
+		local module_type = ini_sys:r_string(sec, "module_type")
+		is_magazine = (module_type == "magazine") or (module_type == "mag")
+	end
+	if (not is_magazine) and sec and ini_sys:line_exist(sec, "max_mag_size") then
+		is_magazine = true
+	end
+
+	-- Bar is applied to condition-bearing items and detachable magazines.
+	local has_cond = SYS_GetParam(1,sec, "use_condition") or IsWeapon(nil,clsid) or IsOutfit(nil,clsid) or IsHeadgear(nil,clsid)
+	if (not has_cond) and (not is_magazine) then
+		return
+	end
+
+	-- Magazines use the old power-bar profile by default. Other items keep their condition bar.
+	local str = is_magazine
+		and SYS_GetParam(0, sec, "magazine_bar", "power_progess_bar")
+		or SYS_GetParam(0, sec, "condition_bar", "condition_progess_bar")
+
 	-- Init if it doesn't exist
 	if (not self.bar) then
-		if (not xml) then 
+		if (not xml) then
 			xml = self:GetXML()
 		end
 		self.bar = xml:InitProgressBar(self.path .. ":" .. self.cx .. ":bar", self.cell)
-		--self.bar:UseColor( true )
 	end
 
 	-- Not manual -> bar is set at the left-bottom corner
 	if (not self.manual) then
 		local h_bar = self.bar:GetHeight()
-		self.bar:SetWndPos(vector2():set( 0 , (self.H - h_bar)))
-	end
-	
-	-- Set progress
-	local cond = obj:condition()
-	if IsItem("multiuse",sec) then
-		cond = (obj:get_remaining_uses()/10)
-	else
-		cond = round_idp(cond,1)
+		self.bar:SetWndPos(vector2():set(0, self.H - h_bar))
 	end
 
-	if IsWeapon(obj) and not IsMelee(item) then
-		cond = 0
+	local cond = 0
+
+	if is_magazine then
+		local max_size = 0
+		if ini_sys:line_exist(sec, "max_mag_size") then
+			max_size = tonumber(ini_sys:r_string(sec, "max_mag_size")) or 0
+		end
+
+		local ammo_count = 0
+		if module_items and module_items.get_mag_ammo_count then
+			ammo_count = module_items.get_mag_ammo_count(obj) or 0
+		elseif obj and obj.get_ammo_in_magazine then
+			ammo_count = obj:get_ammo_in_magazine() or 0
+		end
+
+		if max_size > 0 then
+			cond = ammo_count / max_size
+		end
+	else
+		cond = obj:condition()
+		if IsItem("multiuse", sec) then
+			cond = obj:get_remaining_uses() / 10
+		else
+			cond = round_idp(cond, 1)
+		end
 	end
-	self.bar:SetProgressPos( clamp(cond,0,1) )
-	
-	-- Bar properties
-	local props = bar_list[str]
-	local color = props.def or lerp_color( cond , props.min , props.mid , props.max )
+
+	cond = clamp(cond, 0, 1)
+	self.bar:SetProgressPos(cond)
+
+	local props = bar_list[str] or bar_list["condition_progess_bar"]
+	local color = props.def or lerp_color(cond, props.min, props.mid, props.max)
 	if color then
-		self.bar:SetColor( color )
+		self.bar:SetColor(color)
 	end
-	
-	self.bar:ShowBackground( props.background )
+
+	self.bar:ShowBackground(props.background)
 	self.bar:Show(true)
-	
-	self:Print(nil, "Show progress bar: %s - cond: %s", str, cond)
+
+	self:Print(nil, "Show progress bar: %s - value: %s", str, cond)
 end
 
 function UICellItem:Add_Counter(xml, obj, sec)
@@ -869,10 +1200,11 @@ function UICellItem:Add_Counter(xml, obj, sec)
 		return
 	end
 	
-	-- Bar is applied only to ammo or stacked items
+	-- Counter is shown for ammo, detachable magazines, or stacked items.
 	local is_ammo = IsItem("ammo",sec) and (not IsItem("grenade_ammo",sec))
+	local is_magazine = obj and obj.is_inventory_magazine and obj:is_inventory_magazine()
 	local has_childs = self:HasChild()
-	if not (is_ammo or has_childs) then
+	if not (is_ammo or is_magazine or has_childs) then
 		return
 	end
 	
@@ -884,8 +1216,15 @@ function UICellItem:Add_Counter(xml, obj, sec)
 		self.cnt = xml:InitStatic(self.path .. ":" .. self.cx .. ":cnt", self.cell)
 	end
 	
+	-- Detachable magazine count
+	if is_magazine then
+		local count = obj.magazine_ammo_count and obj:magazine_ammo_count() or 0
+		local capacity = obj.magazine_capacity and obj:magazine_capacity() or 0
+		self.cnt:TextControl():SetText(tostring(count) .. "/" .. tostring(capacity))
+		self.cnt:Show(true)
+
 	-- Ammo count
-	if is_ammo then
+	elseif is_ammo then
 		local cnt = 0
 		if self.childs then
 			for id,c in pairs(self.childs) do
@@ -955,6 +1294,11 @@ function UICellItem:Add_Attachements(xml, obj, sec, clsid)
 	if self.ico_scope then self.ico_scope:Show(false) end
 	if self.ico_sil then self.ico_sil:Show(false) end
 	if self.ico_gl then self.ico_gl:Show(false) end
+	
+	-- Runtime rendered weapon icons already include installed modules.
+	if self.use_runtime_icon then
+		return
+	end
 	
 	-- On full stacking, hide counter
 	if self.container.stack_all and (self.childs and is_not_empty(self.childs)) then
@@ -1082,15 +1426,16 @@ function UICellItem:Create_Layer(ele, base, sec_m, sec_l, str_x, str_y, str_scal
 		-- despite rotation, movement for x and y stays normal! 
 		-- Move start pos to match the one for rotated base icon
 		local w_b, h_b = base:GetWidth(), base:GetHeight()
-		local x_st = (w_b/2) - (h_b/2)
-		local y_st = h_b + x_st
+		local x_st = (w_b/2) - (h_b/2)*ratio
+		local y_st = (w_b/2) + (h_b/2)
 		
+		--printf("w:%s,h:%s, y:%s,x:%s",w_b, h_b, y_st,x_st)
 		-- On 90 rotation, x and y are inverted, y axis goes negative simulate normal x movement
 		x_s = x_st + (y * ratio * scale_pos)
 		y_s = y_st - (x * scale_pos) 
 		w_s = w * scale
-		h_s = h * ratio * scale
-		w_off = (h_s * (1/ratio))/2
+		h_s = h * scale
+		w_off = (h_s* ratio/2)
 		h_off = -w_s/2
 	end
 	
@@ -1188,24 +1533,6 @@ function UICellItem:AddChild(obj)
 	if (not self.childs) then
 		self.childs = {}
 	end
-
-	local current_obj = self.ID and level.object_by_id(self.ID)
-  if current_obj then
-    local use_meat_sorting_logic = self:UseMeatSortingLogic()
-    if use_meat_sorting_logic then
-      local current_obj_expires_in = self:GetMeatExpirationDuration(current_obj:id())
-      local obj_expires_in = self:GetMeatExpirationDuration(obj:id())
-      if current_obj_expires_in > obj_expires_in then
-        self:Set(obj)               -- whatever we set here is visible as the icon in the main invetory section, we make sure to always show item with best condition
-        return self:AddChild(current_obj) -- we need to make sure that previously "top of the stack" is preserved so we insert it as the new UICellItem.childs instead
-      end
-    else
-      if current_obj:condition() < obj:condition() then
-        self:Set(obj)               -- whatever we set here is visible as the icon in the main invetory section, we make sure to always show item with best condition
-        return self:AddChild(current_obj) -- we need to make sure that previously "top of the stack" is preserved so we insert it as the new UICellItem.childs instead
-      end
-    end
-  end
 	
 	-- Real
 	local sec = obj:section()
@@ -1268,7 +1595,10 @@ end
 function UICellItem:ResetToChild()
 	local id_child
 	if self.childs then
-	id_child = self:FindChildIdByBestCondition()
+		for id,cnt in pairs(self.childs) do
+			id_child = id
+			break
+		end
 	end
 	
 	if id_child then
@@ -1296,6 +1626,7 @@ function UICellItem:ResetToChild()
 end
 
 function UICellItem:Reset()
+	self:ReleaseRuntimeIconPriority(true)
 	self.ID = nil
 	self.section = nil
 	if self.childs then
@@ -1315,12 +1646,12 @@ function UICellItem:Reset()
 		if self.ctxts then self.ctxts:Show(false) end
 	else
 		if (self.showcase ~= 2) and self.container["FreeRoom"] then
-			-- Freeing cell area
+			-- Freeing cell area. A cell can be reset after Set() failed
+			-- before an inventory area was assigned (for example, when an
+			-- item section is missing inv_grid_* parameters).
 			local a = self.area
 			if a then
 				self.container:FreeRoom(a.y, a.x, a.w, a.h)
-			else
-				self:Show(false)
 			end
 		end
 		
@@ -1822,9 +2153,19 @@ function UICellContainer:FindFreeCell(obj, sec)
 	local w = SYS_GetParam(2,sec, "inv_grid_width",1)
 	local h = SYS_GetParam(2,sec, "inv_grid_height",1)
 
-	-- Avoid icons that don't fit
+	-- Showcase containers, such as the new-game starter loadout, must not
+	-- silently discard weapons whose normal inventory icon is wider than the
+	-- showcase panel. Reserve the full available row and let UICellItem:Set()
+	-- scale only the displayed icon to fit. Normal inventory containers keep
+	-- the original strict behavior.
 	if w > self.cols then
-		return false
+		if self.showcase then
+			local scale = self.cols / w
+			w = self.cols
+			h = math.max(1, math.ceil(h * scale))
+		else
+			return false
+		end
 	end
 
 	-- Sorting by kind: when sorting a new kind, always start from last row taken by previous kind
@@ -2230,11 +2571,7 @@ function UICellContainer:On_Scroll()
 	if (not self.scroll_tg) then
 		self.scroll_tg = get_time()
 	end
-	-- get_time() may unreliable , try reset delay
-	if get_time() - self.scroll_tg < 0 then
-		self.scroll_tg = get_time()
-	end
-	if self.scroll_tg > (get_time() - 25) then
+	if self.scroll_tg > (get_time() + 25) then
 		return
 	end
 	self.scroll_tg = get_time()
@@ -2717,12 +3054,12 @@ function UIInfoItem:Update(obj, sec, flags)
 	sync_cursor(self.dialog, self.frame, 0, 0)
 	
 	-- no need to process if it's same item
-	if obj and not ui_inventory.show_full_stats then
+	if obj then
 		if obj:id() == self.id then
 			self:Show(true)
 			return
 		end
-	elseif sec and not ui_inventory.show_full_stats then
+	elseif sec then
 		if sec == self.section then
 			self:Show(true)
 			return
@@ -2763,6 +3100,157 @@ function UIInfoItem:Update(obj, sec, flags)
 	
 	-- Description
 	local desc = obj and ui_item.get_obj_desc(obj) or ui_item.get_sec_desc(sec)
+
+	-- Detached magazine mixed-ammo tooltip.
+	if obj then
+		local is_magazine = false
+		if ini_sys:line_exist(sec, "module_type") then
+			local module_type = ini_sys:r_string(sec, "module_type")
+			is_magazine = (module_type == "magazine") or (module_type == "mag")
+		end
+		if (not is_magazine) and ini_sys:line_exist(sec, "max_mag_size") then
+			is_magazine = true
+		end
+
+		if is_magazine then
+			local max_size = 0
+			if ini_sys:line_exist(sec, "max_mag_size") then
+				max_size = tonumber(ini_sys:r_string(sec, "max_mag_size")) or 0
+			end
+
+			local ammo_count = 0
+
+			-- Standalone detachable-magazine API.
+			if obj.magazine_ammo_count then
+				local ok, count = pcall(function()
+					return obj:magazine_ammo_count()
+				end)
+
+				if ok and count ~= nil then
+					ammo_count = tonumber(count) or 0
+				end
+			elseif module_items and module_items.get_mag_ammo_count then
+				ammo_count =
+					module_items.get_mag_ammo_count(obj) or 0
+			elseif obj.get_ammo_in_magazine then
+				ammo_count =
+					obj:get_ammo_in_magazine() or 0
+			end
+
+			-- Prefer runtime magazine capacity over config when available.
+			if obj.magazine_capacity then
+				local ok, capacity = pcall(function()
+					return obj:magazine_capacity()
+				end)
+
+				if ok and capacity ~= nil and tonumber(capacity) then
+					max_size = tonumber(capacity)
+				end
+			end
+
+			local lines = {}
+			table.insert(
+				lines,
+				"Loaded ammo: " ..
+				tostring(ammo_count) ..
+				"/" ..
+				tostring(max_size))
+
+			-- Mixed-ammo support: show every ammo type on its own line.
+			if ammo_count > 0 and obj.magazine_get_round then
+				local grouped = {}
+				local order = {}
+
+				for round_index = 0, ammo_count - 1 do
+					local ok, ammo_section = pcall(function()
+						return obj:magazine_get_round(round_index)
+					end)
+
+					if ok and ammo_section and ammo_section ~= "" then
+						if not grouped[ammo_section] then
+							grouped[ammo_section] = 0
+							table.insert(order, ammo_section)
+						end
+						grouped[ammo_section] = grouped[ammo_section] + 1
+					end
+				end
+
+				for _, ammo_section in ipairs(order) do
+					local ammo_name = ammo_section
+
+					if ini_sys:section_exist(ammo_section) and ini_sys:line_exist(ammo_section, "inv_name_short") then
+						ammo_name = ini_sys:r_string(ammo_section, "inv_name_short")
+					end
+
+					ammo_name = game.translate_string(ammo_name)
+					table.insert(lines, ammo_name .. ": " .. tostring(grouped[ammo_section]))
+				end
+
+				-- Top round / next round to be fired
+				local ok_next, next_round = pcall(function()
+					return obj:magazine_get_round(ammo_count - 1)
+				end)
+
+				if ok_next and next_round and next_round ~= "" then
+					local next_name = next_round
+
+					if ini_sys:section_exist(next_round) and ini_sys:line_exist(next_round, "inv_name_short") then
+						next_name = ini_sys:r_string(next_round, "inv_name_short")
+					end
+
+					next_name = game.translate_string(next_name)
+					table.insert(lines, "Next round: " .. next_name)
+				end
+			end
+
+			-- When exact per-round inspection is unavailable, show the first
+			-- compatible configured ammo type as a fallback.
+			if ammo_count > 0 and
+				(not obj.magazine_get_round) and
+				ini_sys:line_exist(sec, "mag_ammo_class")
+			then
+				local ammo_list =
+					ini_sys:r_string(
+						sec,
+						"mag_ammo_class")
+
+				local ammo_section =
+					string.match(
+						ammo_list or "",
+						"^%s*([^,%s]+)")
+
+				if ammo_section and ammo_section ~= "" then
+					local ammo_name = ammo_section
+
+					if ini_sys:section_exist(ammo_section) and
+						ini_sys:line_exist(
+							ammo_section,
+							"inv_name_short")
+					then
+						ammo_name =
+							ini_sys:r_string(
+								ammo_section,
+								"inv_name_short")
+					end
+
+					ammo_name =
+						game.translate_string(ammo_name)
+
+					table.insert(
+						lines,
+						"Ammo type: " .. ammo_name)
+				end
+			end
+
+			-- X-Ray UI description text expects the escaped newline marker "\\n",
+			-- not a raw Lua newline character.
+			desc = desc .. "\\n\\n" .. table.concat(lines, "\\n")
+		end
+	end
+
+
+	-- Module attributes are rendered in the icon stat panel below.
+
 	self.desc:SetText( desc )
 	self.desc:AdjustHeightToText()
 	
@@ -2807,8 +3295,13 @@ function UIInfoItem:Update(obj, sec, flags)
 				end
 				ele.icon:InitTexture( icon )
 				
-				-- Set up name
-				ele.cap:SetText( game.translate_string(gr.name) )
+				-- Set up name. Custom weapon rows can provide a literal label,
+				-- while all existing item stats continue using translated string IDs.
+				if gr.label then
+					ele.cap:SetText(gr.label)
+				else
+					ele.cap:SetText(game.translate_string(gr.name))
+				end
 				
 				-- Reset
 				ele.bar2:Show(false)
@@ -2864,22 +3357,14 @@ function UIInfoItem:Update(obj, sec, flags)
 				-- Text
 				elseif ele.txt then
 					local valbar_a = val_a * gr.magnitude
-					local unit = gr.unit and gr.unit ~= "" and game.translate_string(gr.unit) or ""
+					local unit = gr.unit or ""
+					if unit ~= "" and not gr.literal_unit then
+						unit = game.translate_string(unit)
+					end
 					local clr = valbar_a >= 0 and clr_list["p1"] or clr_list["n1"]
-					
-					if stat == "additional_inventory_weight" or stat == "boost_max_weight" then
-						valbar_a = valbar_a*10
-					end
-
-					if valbar_a >= 0 then
-						valbar_a = math.ceil(valbar_a)
-					else
-						valbar_a = math.floor(valbar_a)
-					end
-
-					if stat == "additional_inventory_weight" or stat == "boost_max_weight" then
-						valbar_a = valbar_a/10
-					end
+					local decimals = gr.decimals or 0
+					local scale = 10 ^ decimals
+					valbar_a = math.floor(valbar_a * scale + 0.5) / scale
 					
 					if gr.sign_inverse then
 						clr = valbar_a < 0 and clr_list["p1"] or clr_list["n1"]
@@ -2890,8 +3375,11 @@ function UIInfoItem:Update(obj, sec, flags)
 					-- Comparison item
 					local val_b = obj_b and get_stats_value(obj_b, obj_b:section(), gr, stat)
 					local valbar_b = val_b and val_b * gr.magnitude
+					if valbar_b then
+						valbar_b = math.floor(valbar_b * scale + 0.5) / scale
+					end
 					if valbar_b and (valbar_a ~= valbar_b) then
-						local diff_val = math.ceil(valbar_a - valbar_b)
+						local diff_val = math.floor((valbar_a - valbar_b) * scale + ((valbar_a - valbar_b) >= 0 and 0.5 or -0.5)) / scale
 						ele.comp:SetText( "(" .. (diff_val > 0 and "+" or "") .. diff_val .. ")" )
 						ele.comp:Show(true)
 						clr = (valbar_a > valbar_b) and clr_list["info_p_txt"] or clr_list["info_n_txt"]
@@ -2906,7 +3394,13 @@ function UIInfoItem:Update(obj, sec, flags)
 						end
 					end
 					
-					ele.txt:SetText( sign .. valbar_a .. " " .. unit )
+					local value_text
+					if decimals > 0 then
+						value_text = string.format("%." .. decimals .. "f", valbar_a)
+					else
+						value_text = tostring(math.floor(valbar_a + 0.5))
+					end
+					ele.txt:SetText(sign .. value_text .. (unit ~= "" and (" " .. unit) or ""))
 					ele.txt:SetTextColor( clr )
 					ele.txt:Show(true)
 				end
@@ -3010,7 +3504,9 @@ function UIInfoItem:Pass(obj, sec)
 end
 
 function UIInfoItem:GetType(sec)
-	if ini_sys:r_string_ex(sec, "ammo_class") and (not IsItem("fake_ammo_wpn", sec)) then
+	if ini_sys:line_exist(sec, "override_section") then
+		return "module"
+	elseif ini_sys:r_string_ex(sec, "ammo_class") and (not IsItem("fake_ammo_wpn", sec)) then
 		return "weapon"
 	elseif IsItem("outfit", sec) or IsItem("helmet", sec) then 
 		return "outfit"
@@ -3356,21 +3852,22 @@ function UICellProperties:Update()
 	end
 	
 	self.highlight:Show(false)
-	-- self:AllowMovement(ui_inventory.GUI.mode == "inventory")
+	self:AllowMovement(ui_inventory.GUI and ui_inventory.GUI.mode == "inventory")
 end
 
-function UICellProperties:Reset(pos_override, action_list, name_list, params_list)
+function UICellProperties:Reset(pos_override, action_list, name_list, params_list, section_list)
 
 	self.H = 0
 	self.W = 0
 	
-	-- Reset list
-	self:FillList(action_list, name_list, params_list)
+	-- Reset list. section_list is optional and contains the inventory
+	-- section whose icon should be shown beside each property row.
+	self:FillList(action_list, name_list, params_list, section_list)
 	self.action_moment = false
 	
 	-- Cursor
 	local pos = GetCursorPosition() -- because ShowDialog moves mouse cursor to center
-	self:ShowDialog()
+	self:ShowDialog(true)
 	SetCursorPosition(pos)
 	
 	sync_cursor(self.form)
@@ -3386,11 +3883,16 @@ function UICellProperties:Reset(pos_override, action_list, name_list, params_lis
 	--]]
 end
 
-function UICellProperties:FillList(action_list, name_list, params_list)
+function UICellProperties:FillList(action_list, name_list, params_list, section_list)
 	self.list_box:RemoveAll()
 	
 	for i,str_id in pairs(name_list) do
-		self:AddItemToList(i, str_id, action_list[i], params_list[i])
+		self:AddItemToList(
+			i,
+			str_id,
+			action_list[i],
+			params_list[i],
+			section_list and section_list[i] or nil)
 	end
 	
 	if self.H < self.H_L then self.H = self.H_L end
@@ -3420,6 +3922,16 @@ function UICellProperties:OnListItemDbClicked()
 	if not (item) then
 		return
 	end
+
+	-- Close the current menu before executing its action.
+	-- Some actions (such as modular attachment provider selection) immediately
+	-- open a second context menu. Closing after the callback would also close
+	-- that newly opened menu.
+	if (self:IsShown()) then
+		self:OnHide()
+	end
+	
+	self.action_moment = time_global()
 	
 	if self.owner and (item.func) then 
 		if item.params then
@@ -3427,12 +3939,6 @@ function UICellProperties:OnListItemDbClicked()
 		else
 			self.owner[item.func](self.owner)
 		end
-		
-		self.action_moment = get_time()
-	end
-	
-	if (self:IsShown()) then
-		self:OnHide()
 	end
 end
 
@@ -3442,29 +3948,61 @@ function UICellProperties:InitCallBacks()
 	--self:AddCallback("UICellProperties_list_view",ui_events.WINDOW_LBUTTON_DB_CLICK,self.OnListItemDbClicked,self)
 end
 
-function UICellProperties:AddItemToList(index, str_id, func, params)
+function UICellProperties:AddItemToList(index, str_id, func, params, section)
 	local _itm = UICellProperties_item()
 	_itm:SetWndSize(self.file_item_main_sz)
-	
-	_itm.textControl:SetWndPos(vector2():set(0,0))
-	_itm.textControl:SetWndSize(self.file_item_fn_sz)
+
+	local has_icon = section and section ~= "" and ini_sys and ini_sys:section_exist(section)
+	local icon_space = has_icon and 36 or 0
+
+	_itm.textControl:SetWndPos(vector2():set(icon_space, 0))
+	_itm.textControl:SetWndSize(
+		vector2():set(
+			math.max(1, self.file_item_fn_sz.x - icon_space),
+			self.file_item_fn_sz.y))
 	_itm.textControl:SetText(game.translate_string(str_id))
-	
+
 	_itm.textControl:AdjustWidthToText()
 	local h = self.file_item_fn_sz.y
-	local w = math.ceil(_itm.textControl:GetWidth())
-	w = w + self.PDW
-	local sz = vector2():set( w , h )
-	_itm.textControl:SetWndSize(sz)
+	local text_w = math.ceil(_itm.textControl:GetWidth())
+	local row_w = text_w + icon_space + self.PDW
+	local sz = vector2():set(row_w, h)
+
+	_itm.textControl:SetWndSize(
+		vector2():set(text_w + self.PDW, h))
 	_itm:SetWndSize(sz)
-	
-	if w > self.W then self.W = w + self.PDW end
-	if self.H == 0 then self.H = h end
+
+	if row_w > self.W then
+		self.W = row_w + self.PDW
+	end
+
+	if self.H == 0 then
+		self.H = h
+	end
 	self.H = self.H + h
-	
+
 	_itm.func = func
 	_itm.params = params
-	
+
+	-- Optional inventory icon for this property row. This is based on the
+	-- old Desolation context-menu implementation, but the icon is positioned
+	-- first and the text is moved right so they never overlap.
+	if has_icon and ini_sys and ini_sys:section_exist(section) then
+		local icon = XMLP:InitStatic("container:cell:pic", _itm)
+
+		icon:InitTexture(utils_xml.get_icons_texture(section))
+		icon:SetTextureRect(Frect():set(get_item_axis(section, nil, true)))
+		icon:SetStretchTexture(true)
+
+		local icon_w = 28
+		local icon_h = math.max(16, h - 4)
+		icon:SetWndPos(vector2():set(4, 2))
+		icon:SetWndSize(vector2():set(icon_w, icon_h))
+		icon:Show(true)
+
+		_itm.module_icon = icon
+	end
+
 	self.list_box:AddExistingItem(_itm)
 end
 
@@ -3603,11 +4141,405 @@ function prop_accuracry(obj,sec)
 	return normalize(fire_dispersion_base, 1.5, 0)
 end
 
-function prop_handling(obj,sec)
-	local id = obj and obj:id()
-	local PDM_disp_base = utils_item.get_wpn_param(obj, sec, "PDM_disp_base", 0)
-	local control_inertion_factor = utils_item.get_wpn_param(obj, sec, "control_inertion_factor", 0)
-	return (normalize(PDM_disp_base, 2.1, 0) + normalize(control_inertion_factor, 3, 1))/2
+local function read_weapon_inertia_weight_length_koeff(sec)
+	if not sec or
+		sec == "" or
+		not ini_sys:section_exist(sec) or
+		not ini_sys:line_exist(sec, "inertion_weight_length_koeff")
+	then
+		return 1
+	end
+
+	local value =
+		tonumber(
+			ini_sys:r_float_ex(
+				sec,
+				"inertion_weight_length_koeff"))
+
+	if value == nil then
+		return 1
+	end
+
+	-- Match Weapon.cpp: negative values are forced to zero.
+	return math.max(value, 0)
+end
+
+
+local function read_global_inertia_weight_length_koeff()
+	if z_3d_scopes_mcm and z_3d_scopes_mcm.get_config then
+		local value =
+			tonumber(
+				z_3d_scopes_mcm.get_config(
+					"inertia_weight_length_koeff"))
+
+		if value ~= nil then
+			return math.max(value, 0)
+		end
+	end
+
+	return 1
+end
+
+function prop_inertia(obj, sec)
+	-- Match Weapon.cpp v12 exactly:
+	-- physical inertia = assembled weight [kg]
+	--                  * assembled weapon length [m]
+	--                  * per-weapon tuning coefficient.
+	--
+	-- Weight() includes installed attachments/modules and magazine ammo.
+	-- prop_weapon_length() mirrors the engine's total base + HUD + module
+	-- weapon_length calculation.
+	local fallback_weight_kg = 3.5
+	local fallback_length_m = 0.80
+
+	local weight_kg = 0
+	if obj then
+		local ok, value =
+			pcall(function()
+				return obj:weight()
+			end)
+
+		if ok then
+			weight_kg = tonumber(value) or 0
+		end
+	end
+
+	if weight_kg <= 0 then
+		weight_kg = fallback_weight_kg
+	end
+
+	local length_m =
+		tonumber(
+			prop_weapon_length(
+				obj,
+				sec)) or 0
+
+	if length_m <= 0 then
+		length_m = fallback_length_m
+	end
+
+	local weapon_coefficient =
+		read_weapon_inertia_weight_length_koeff(sec)
+	local global_coefficient =
+		read_global_inertia_weight_length_koeff()
+
+	return weight_kg * length_m *
+		weapon_coefficient * global_coefficient
+end
+
+
+function prop_module_weapon_length(obj, sec)
+	if not sec or
+		sec == "" or
+		not ini_sys:section_exist(sec)
+	then
+		return nil
+	end
+
+	local function read_length(section)
+		if not section or
+			section == "" or
+			not ini_sys:section_exist(section)
+		then
+			return nil
+		end
+
+		if ini_sys:line_exist(section, "weapon_length") then
+			return tonumber(
+				ini_sys:r_float_ex(
+					section,
+					"weapon_length"))
+		end
+
+		if ini_sys:line_exist(section, "weapon_lenght") then
+			return tonumber(
+				ini_sys:r_float_ex(
+					section,
+					"weapon_lenght"))
+		end
+
+		return nil
+	end
+
+	-- Match the engine lookup: attributes/override section first.
+	if ini_sys:line_exist(sec, "override_section") then
+		local override_section =
+			ini_sys:r_string(
+				sec,
+				"override_section")
+
+		local override_length =
+			read_length(
+				override_section)
+
+		if override_length ~= nil then
+			return override_length
+		end
+	end
+
+	return read_length(sec)
+end
+
+local function read_module_recoil_koeff(module_section)
+	if not module_section or
+		module_section == "" or
+		not ini_sys:section_exist(module_section)
+	then
+		return 0
+	end
+
+	if ini_sys:line_exist(module_section, "override_section") then
+		local override_section =
+			ini_sys:r_string(
+				module_section,
+				"override_section")
+
+		if override_section and
+			override_section ~= "" and
+			ini_sys:section_exist(override_section) and
+			ini_sys:line_exist(override_section, "recoil_koeff")
+		then
+			return tonumber(
+				ini_sys:r_float_ex(
+					override_section,
+					"recoil_koeff")) or 0
+		end
+	end
+
+	if ini_sys:line_exist(module_section, "recoil_koeff") then
+		return tonumber(
+			ini_sys:r_float_ex(
+				module_section,
+				"recoil_koeff")) or 0
+	end
+
+	return 0
+end
+
+local function weapon_module_recoil_multiplier(obj)
+	local total_koeff = 0
+
+	if obj then
+		local ok_count, module_count =
+			pcall(function()
+				return obj:module_count()
+			end)
+
+		module_count =
+			ok_count and
+			tonumber(module_count) or 0
+
+		for index = 0, module_count - 1 do
+			local ok_section, module_section =
+				pcall(function()
+					return obj:module_get_section(index)
+				end)
+
+			if ok_section and
+				module_section and
+				module_section ~= ""
+			then
+				total_koeff =
+					total_koeff +
+					read_module_recoil_koeff(
+						module_section)
+			end
+		end
+	end
+
+	return math.max(
+		0.1,
+		math.min(
+			3.0,
+			1 + total_koeff))
+end
+
+function prop_module_recoil_delta(obj, sec)
+	if not sec or
+		sec == "" or
+		not ini_sys:section_exist(sec)
+	then
+		return nil
+	end
+
+	if ini_sys:line_exist(sec, "override_section") then
+		local override_section =
+			ini_sys:r_string(
+				sec,
+				"override_section")
+
+		if override_section and
+			override_section ~= "" and
+			ini_sys:section_exist(override_section) and
+			ini_sys:line_exist(override_section, "recoil_koeff")
+		then
+			return tonumber(
+				ini_sys:r_float_ex(
+					override_section,
+					"recoil_koeff"))
+		end
+	end
+
+	if ini_sys:line_exist(sec, "recoil_koeff") then
+		return tonumber(
+			ini_sys:r_float_ex(
+				sec,
+				"recoil_koeff"))
+	end
+
+	return nil
+end
+
+function prop_module_rpm_delta(obj, sec)
+	if not sec or
+		sec == "" or
+		not ini_sys:section_exist(sec)
+	then
+		return nil
+	end
+
+	-- Match the engine lookup order: override/attributes section first.
+	if ini_sys:line_exist(sec, "override_section") then
+		local override_section =
+			ini_sys:r_string(
+				sec,
+				"override_section")
+
+		if override_section and
+			override_section ~= "" and
+			ini_sys:section_exist(override_section) and
+			ini_sys:line_exist(override_section, "rpm_koeff")
+		then
+			return tonumber(
+				ini_sys:r_float_ex(
+					override_section,
+					"rpm_koeff"))
+		end
+	end
+
+	-- Fallback for modules that define the coefficient directly.
+	if ini_sys:line_exist(sec, "rpm_koeff") then
+		return tonumber(
+			ini_sys:r_float_ex(
+				sec,
+				"rpm_koeff"))
+	end
+
+	return nil
+end
+
+local function read_module_k_hit_koeff(module_section)
+	if not module_section or
+		module_section == "" or
+		not ini_sys:section_exist(module_section)
+	then
+		return 1
+	end
+
+	if ini_sys:line_exist(module_section, "override_section") then
+		local override_section =
+			ini_sys:r_string(
+				module_section,
+				"override_section")
+
+		if override_section and
+			override_section ~= "" and
+			ini_sys:section_exist(override_section) and
+			ini_sys:line_exist(override_section, "k_hit_koeff")
+		then
+			local value =
+				tonumber(
+					ini_sys:r_float_ex(
+						override_section,
+						"k_hit_koeff"))
+
+			return value and value > 0 and value or 1
+		end
+	end
+
+	if ini_sys:line_exist(module_section, "k_hit_koeff") then
+		local value =
+			tonumber(
+				ini_sys:r_float_ex(
+					module_section,
+					"k_hit_koeff"))
+
+		return value and value > 0 and value or 1
+	end
+
+	return 1
+end
+
+function prop_module_k_hit_delta(obj, sec)
+	if not sec or
+		sec == "" or
+		not ini_sys:section_exist(sec)
+	then
+		return nil
+	end
+
+	local value =
+		read_module_k_hit_koeff(sec)
+
+	-- Hide the row when the property does not exist at all.
+	local has_value = ini_sys:line_exist(sec, "k_hit_koeff")
+
+	if ini_sys:line_exist(sec, "override_section") then
+		local override_section =
+			ini_sys:r_string(
+				sec,
+				"override_section")
+
+		has_value =
+			has_value or
+			(override_section and
+			 override_section ~= "" and
+			 ini_sys:section_exist(override_section) and
+			 ini_sys:line_exist(override_section, "k_hit_koeff"))
+	end
+
+	if not has_value then
+		return nil
+	end
+
+	-- Direct multiplier converted to a tooltip percentage:
+	-- 1.2 -> +20%, 0.9 -> -10%.
+	return value - 1
+end
+
+local function weapon_module_k_hit_multiplier(obj)
+	local total = 1
+
+	if obj then
+		local ok_count, module_count =
+			pcall(function()
+				return obj:module_count()
+			end)
+
+		module_count =
+			ok_count and
+			tonumber(module_count) or 0
+
+		for index = 0, module_count - 1 do
+			local ok_section, module_section =
+				pcall(function()
+					return obj:module_get_section(index)
+				end)
+
+			if ok_section and
+				module_section and
+				module_section ~= ""
+			then
+				total =
+					total *
+					read_module_k_hit_koeff(
+						module_section)
+			end
+		end
+	end
+
+	-- Match the engine-side combined multiplier clamp.
+	return math.max(0.1, math.min(5.0, total))
 end
 
 function prop_damage(obj,sec)
@@ -3623,8 +4555,287 @@ function prop_damage(obj,sec)
 end
 
 function prop_rpm(obj,sec)
-	local rpm = utils_item.get_wpn_param(obj, sec, "rpm", 0)
+	local ok, rpm = pcall(function()
+		return obj:effective_rpm()
+	end)
+
+	rpm = ok and tonumber(rpm) or 0
 	return normalize(rpm, 0, 1000)
+end
+
+
+local function get_weapon_hud_section(sec)
+	if not sec or not ini_sys:section_exist(sec) then
+		return nil
+	end
+
+	if ini_sys:line_exist(sec, "hud") then
+		local hud = ini_sys:r_string(sec, "hud")
+		if hud and hud ~= "" and ini_sys:section_exist(hud) then
+			return hud
+		end
+	end
+
+	return nil
+end
+
+local function read_hud_float(sec, key, default)
+	local hud = get_weapon_hud_section(sec)
+	if hud and ini_sys:line_exist(hud, key) then
+		return ini_sys:r_float_ex(hud, key) or default or 0
+	end
+	return default or 0
+end
+
+function prop_accuracy_value(obj, sec)
+	return utils_item.get_wpn_param(obj, sec, "fire_dispersion_base", 0)
+end
+
+local function call_weapon_method(obj, method_name)
+	if not obj then
+		return nil
+	end
+
+	local ok_member, member = pcall(function()
+		return obj[method_name]
+	end)
+	if not ok_member or not member then
+		return nil
+	end
+
+	local ok, value = pcall(function()
+		return member(obj)
+	end)
+	if ok then
+		return value
+	end
+
+	return nil
+end
+
+local function get_loaded_weapon_ammo_section(obj)
+	if not obj then
+		return nil
+	end
+
+	local ok, ammo_section = pcall(function()
+		return obj:loaded_ammo_section()
+	end)
+
+	if not ok or not ammo_section or ammo_section == "" then
+		return nil
+	end
+
+	if not ini_sys:section_exist(ammo_section) then
+		return nil
+	end
+
+	return ammo_section
+end
+
+
+function prop_damage_value(obj, sec)
+	local ammo_section = get_loaded_weapon_ammo_section(obj)
+	if not ammo_section then
+		return 0
+	end
+
+	local ammo_k_hit =
+		ini_sys:r_float_ex(
+			ammo_section,
+			"k_hit") or 0
+
+	return
+		ammo_k_hit *
+		weapon_module_k_hit_multiplier(obj)
+end
+
+function prop_rpm_value(obj, sec)
+	local ok, rpm = pcall(function()
+		return obj:effective_rpm()
+	end)
+
+	return ok and tonumber(rpm) or 0
+end
+
+function prop_bullet_speed(obj, sec)
+	local ammo_section = get_loaded_weapon_ammo_section(obj)
+	if not ammo_section then
+		return 0
+	end
+
+	-- Runtime value after all installed module overrides have been applied.
+	local ok, weapon_speed = pcall(function()
+		return obj:effective_bullet_speed()
+	end)
+
+	if not ok or not weapon_speed then
+		return 0
+	end
+
+	-- Anomaly ammo sections use k_bullet_speed. Keep k_speed only as a
+	-- compatibility fallback for any custom ammo configs that still use it.
+	local ammo_speed_multiplier =
+		ini_sys:r_float_ex(ammo_section, "k_bullet_speed") or
+		ini_sys:r_float_ex(ammo_section, "k_speed") or
+		1
+
+	return weapon_speed * ammo_speed_multiplier
+end
+
+function prop_ads_time(obj, sec)
+	local ok, ads_time = pcall(function()
+		return obj:effective_ads_time()
+	end)
+
+	return ok and tonumber(ads_time) or 0
+end
+
+local function read_weapon_length_from_section(section)
+	if not section or
+		section == "" or
+		not ini_sys:section_exist(section)
+	then
+		return 0
+	end
+
+	local value = 0
+
+	if ini_sys:line_exist(section, "weapon_length") then
+		value =
+			tonumber(
+				ini_sys:r_float_ex(
+					section,
+					"weapon_length")) or 0
+	elseif ini_sys:line_exist(section, "weapon_lenght") then
+		-- Compatibility with the common misspelling accepted by Weapon.cpp.
+		value =
+			tonumber(
+				ini_sys:r_float_ex(
+					section,
+					"weapon_lenght")) or 0
+	end
+
+	-- Negative length is ignored by the engine obstruction calculation too.
+	return math.max(value, 0)
+end
+
+local function read_module_weapon_length(module_section)
+	local value =
+		read_weapon_length_from_section(
+			module_section)
+
+	if module_section and
+		module_section ~= "" and
+		ini_sys:section_exist(module_section) and
+		ini_sys:line_exist(
+			module_section,
+			"override_section")
+	then
+		local override_section =
+			ini_sys:r_string(
+				module_section,
+				"override_section")
+
+		value =
+			value +
+			read_weapon_length_from_section(
+				override_section)
+	end
+
+	return value
+end
+
+function prop_weapon_length(obj, sec)
+	-- Use a native engine export when one exists.
+	if obj then
+		local ok_member, member =
+			pcall(function()
+				return obj.module_weapon_length
+			end)
+
+		if ok_member and member then
+			local ok, value =
+				pcall(function()
+					return obj:module_weapon_length()
+				end)
+
+			if ok and value ~= nil then
+				return math.max(
+					tonumber(value) or 0,
+					0)
+			end
+		end
+	end
+
+	-- Match Weapon.cpp exactly:
+	-- weapon section + HUD section + every installed module and its
+	-- override_section.
+	local total =
+		read_weapon_length_from_section(sec)
+
+	local hud_section =
+		get_weapon_hud_section(sec)
+
+	total =
+		total +
+		read_weapon_length_from_section(
+			hud_section)
+
+	if obj then
+		local ok_count, module_count =
+			pcall(function()
+				return obj:module_count()
+			end)
+
+		module_count =
+			ok_count and
+			tonumber(module_count) or 0
+
+		for index = 0, module_count - 1 do
+			local ok_section, module_section =
+				pcall(function()
+					return obj:module_get_section(index)
+				end)
+
+			if ok_section and
+				module_section and
+				module_section ~= ""
+			then
+				total =
+					total +
+					read_module_weapon_length(
+						module_section)
+			end
+		end
+	end
+
+	return math.max(total, 0)
+end
+
+function prop_hud_recoil_vert(obj, sec)
+	return
+		read_hud_float(
+			sec,
+			"weapon_recoil_vert",
+			0) *
+		weapon_module_recoil_multiplier(obj)
+end
+
+function prop_hud_recoil_horz(obj, sec)
+	-- Tooltip presentation only: horizontal recoil is shown at double scale.
+	-- This does not change the recoil used by the engine.
+	return
+		read_hud_float(
+			sec,
+			"weapon_recoil_horz",
+			0) *
+		weapon_module_recoil_multiplier(obj) *
+		2
+end
+
+function prop_hud_recoil_return(obj, sec)
+	return read_hud_float(sec, "weapon_recoil_ret_speed", 0)
 end
 
 function prop_condition(obj,sec)

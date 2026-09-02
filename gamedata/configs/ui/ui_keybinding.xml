@@ -44,6 +44,7 @@
 	<group name="kb_grp_inventory">
 		<command id="kb_inventory"						exe="inventory"/>
 		<command id="kb_torch"							exe="torch"/>
+		<command id="kb_tactical_laser"				exe="tactical_laser"/>
 		<command id="kb_detector"						exe="show_detector"/>
 		<command id="kb_night_vision"					exe="night_vision"/>
 		<command id="kb_geiger"							exe="custom14"/>
@@ -92,22 +93,16 @@
 		
 		<!-- More custom keybinds you can use
 		<command id="kb_custom_20"						exe="custom20"/>
-		<command id="kb_custom_21"						exe="custom21"/>
-		<command id="kb_custom_22"						exe="custom22"/>
 		<command id="kb_custom_23"						exe="custom23"/>
 		<command id="kb_custom_24"						exe="custom24"/>
 		<command id="kb_custom_25"						exe="custom25"/>
 		-->
 	</group>
-	
-	<!-- 
-		I'm currently looking for ways to make this conflict free but haven't found one yet.
-		I've included two mods i'm using for compatibility but even if you don't use them you can leave the entries.
-		Loading my mod after the two from below ensures compatibility.
-	-->
-	<group name="kb_grp_mods">
-		<command id="kb_unjam"							exe="custom22"/>
-		<command id="kb_quickmeele"						exe="custom24"/> <!-- Quick Meele Keybinding -->
-		<command id="kb_tp_companion"					exe="custom23"/> <!-- Teleport Companions Keybinding -->
-	</group>
+	<group name="kb_grp_attachments">
+		<command id="kb_mod_horizontal_key"				exe="custom21"/>
+		<command id="kb_mod_depth_key"						exe="custom22"/>
+		<command id="kb_modular_aim_toggle"				exe="custom24"/>
+		<command id="kb_mag_check" exe="custom23"/>
+		<command id="kb_thermal_palette_toggle" exe="custom25"/>
+</group>
 </keybingidg>

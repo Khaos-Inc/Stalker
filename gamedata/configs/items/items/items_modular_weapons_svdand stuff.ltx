@@ -1,0 +1,1160 @@
+--\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ wpn_svd \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+[svd_trigger]:attachment_base_ak
+kind  =  svd
+inv_ui_sign				= svd_SA
+visual						= w_att_huds\svd_trigger	
+inv_name					= svd_trigger
+inv_name_short		= svd_triggerS
+cost							= 900
+inv_weight				= 0.15
+inv_grid_x				= 0
+inv_grid_y				= 24
+1icon_layer = clean_lub1_ico
+attachment_point	= svd_trigger|0,0,0|0,0,0
+item_tags = trigger
+override_section = svd_trigger_attributes
+
+[svd_trigger_attributes]
+animation_prefix = m_
+
+[svd_trigger_auto]:svd_trigger
+kind  =  svd
+inv_ui_sign				= svd_auto
+visual						= w_att_huds\svd_trigger_auto	
+inv_name					= svd_trigger_auto
+inv_name_short		= svd_trigger_autoS
+cost							= 1400
+inv_weight				= 0.12
+inv_grid_x				= 1
+override_section = svd_trigger_auto_attributes
+
+[svd_trigger_auto_attributes]
+fire_modes = -1
+
+[svu_trigger]:svd_trigger
+kind  =  svu
+inv_ui_sign				= svu_SA
+visual						= w_att_huds\svu_trigger	
+inv_name					= svu_trigger
+inv_name_short		= svu_triggerS
+cost							= 1200
+inv_weight				= 0.18
+inv_grid_width			= 2
+inv_grid_x				= 2
+1icon_layer = clean_lub2_ico
+attachment_point	= svu_trigger|0,0,0|0,0,0
+override_section = svu_trigger_attributes
+
+[svu_trigger_attributes]
+animation_prefix = m_
+
+[svu_trigger_auto]:svu_trigger
+kind  =  svu
+inv_ui_sign				= svd_auto
+inv_name					= svu_trigger_auto
+inv_name_short		= svu_trigger_autoS
+cost							= 1400
+inv_grid_x				= 4
+override_section = svu_trigger_auto_attributes
+
+[svu_trigger_auto_attributes]
+fire_modes = -1, 1
+
+[svd_zatvor]:attachment_base_ak
+kind  =  svd
+inv_ui_sign				= svd_bolt
+visual						= w_att_huds\svd_zatvor	
+inv_name					= svd_zatvor
+inv_name_short		= svd_zatvorS
+cost							= 1200
+inv_weight				= 0.33
+inv_grid_x				= 6
+inv_grid_y				= 24
+1icon_layer 	= clean_lub1_ico
+attachment_point	= svd_zatvor|0,0,0|0,0,0
+attachment_slots		= ak_zatvor_rh|zatvor|0.00136,-0.0035,0.0518|0,0,0#svd_spring|wpn_body|0,0,0|0,0,0
+item_tags =	zatvor
+override_section = svd_zatvor_attributes
+
+[svd_zatvor_attributes]
+rpm = 700
+
+[svd_rear]:attachment_base_ak
+kind  =  svd
+inv_ui_sign				= svd_rear
+visual						= w_att_huds\svd_rear	
+inv_name					= svd_rear
+inv_name_short		= svd_rear
+cost							= 700
+inv_weight				= 0.1
+inv_grid_x				= 7
+inv_grid_y				= 24
+attachment_point	= svd_rear|0,0,0|0,0,0
+attachment_slots		= svd_barrel|muzzle|0,0,0|0,0,0#svd_hg|wpn_body|0,0,0|0,0,0#svd_cover|wpn_body|0,0,0|0,0,0#svd_rear_sight|wpn_body|0,0,0|0,0,0
+item_tags = rail
+override_section = svd_rear_attributes
+
+[svd_rear_attributes]
+
+[svd_rear_m]:svd_rear
+kind  =  svd
+inv_ui_sign				= svdm_rear
+visual						= w_att_huds\svd_rear_m	
+inv_name					= svd_rear_m
+inv_name_short		= svd_rear_mS
+cost							= 1150
+inv_weight				= 0.2
+inv_grid_width			= 2
+inv_grid_x         		= 8
+attachment_slots		= svd_barrel|muzzle|0,0,0|0,0,0#svd_hg|wpn_body|0,0,0|0,0,0#svd_rear_m_bipods|wpn_body|0,0,0|0,0,0#svd_cover_m|wpn_body|0,0,0|0,0,0
+override_section = svd_rear_m_attributes
+
+[svd_rear_m_attributes]
+zoom_rotate_time = 0.01
+impair_koeff = 0.8
+inertia_koeff = 0.9
+[svdm_rear_att]
+zoom_rotate_time	= 0.01
+recoil_koeff				= -0.08
+impair_koeff			= 0.8
+inertia_koeff			= 0.9
+
+[svd_rear_m_bipods]:attachment_base_ak
+kind  =  svd
+inv_ui_sign				= svdm_bipod
+visual						= w_att_huds\svd_rear_m_bipods
+inv_name					= svd_rear_m_bipods
+inv_name_short		= svd_rear_m_bipodsS
+cost							= 900
+inv_weight				= 0.17
+inv_grid_width			= 2
+inv_grid_x				= 8
+inv_grid_y				= 23
+attachment_point	= svd_rear_m_bipods|0,0,0|0,0,0
+override_section = svd_rear_m_bipods_attributes
+
+[svd_rear_m_bipods_attributes]
+zoom_rotate_time = 0.01
+recoil_koeff = -0.1
+inertia_koeff = 1.1
+
+[svd_rear_sight]:attachment_base_ak
+kind  =  svd
+inv_ui_sign				= svd_rs
+visual						= w_att_huds\svd_rear_sight	
+inv_name					= svd_rear_sight
+inv_name_short		= svd_rear_sight
+cost							= 300
+inv_weight				= 0.05
+inv_grid_x			= 36
+inv_grid_y			= 23
+attachment_point	= svd_rear_sight|0,0,0|0,0,0
+override_section = svd_rear_sight_attributes
+
+[svd_rear_sight_attributes]
+zoom_rotate_time = -0.01
+fire_dispersion_base_koeff = -0.05
+[svd_rear_sight0]:svd_rear_sight
+visual						= w_att_huds\svd_rear_sight0	
+inv_grid_x			= 35
+inv_grid_y			= 25
+override_section = svd_rear_sight0_attributes
+
+[svd_rear_sight0_attributes]
+zoom_rotate_time = -0.01
+fire_dispersion_base_koeff = -0.05
+
+[svd_rear_sight_pica]:svd_rear_sight
+kind  =  svd
+inv_ui_sign				= svd_rsP
+visual						= w_att_huds\svd_rear_sight_pica
+description				= pica_8_up
+inv_name					= svd_rear_sight_pica
+inv_name_short		= svd_rear_sight_picaS
+cost							= 1100
+inv_grid_x				= 37
+inv_weight				= 0.12
+attachment_slots		= pica_8|wpn_body|0,0.08425,0.16|0,0,0	
+item_tags	=	rail
+override_section = svd_rear_sight_pica_attributes
+
+[svd_rear_sight_pica_attributes]
+zoom_rotate_time = 0.01
+fire_dispersion_base_koeff = -0.02
+
+[svd_spring]:attachment_base_ak
+kind  =  svd
+inv_ui_sign				= svd_spring
+visual						= w_att_huds\svd_spring	
+inv_name					= svd_spring
+inv_name_short		= svd_springS
+cost							= 400
+inv_weight				= 0.09
+inv_grid_x				= 7
+inv_grid_y				= 23
+1icon_layer = clean1_ico
+attachment_point	= svd_spring|0,0,0|0,0,0
+item_tags	=	spring
+override_section = svd_spring_attributes
+
+[svd_spring_attributes]
+
+[svd_barrel_420]:attachment_base_ak
+kind  =  svd
+inv_ui_sign				= svd_42cm
+visual						= w_att_huds\svd_barrel_420s	
+inv_name					= svd_barrel_420s
+inv_name_short		= svd_barrel_420sS
+cost							= 1500
+inv_weight				= 0.5
+inv_grid_width			= 2
+inv_grid_x				= 0
+inv_grid_y				= 25
+1icon_layer = clean_lub2_ico
+attachment_point	= svd_barrel|0,0,0|0,0,0
+attachment_slots		= tac_mount|muzzle|0,0,-0.3|0,0,0#ak_muzzle|muzzle|0,0,-0.219|0,0,0#svd_front_sight|muzzle|0,0,-0.18045|0,0,0
+item_tags = barrel
+override_section = svd_barrel_420_attributes
+
+[svd_barrel_420_attributes]
+zoom_rotate_time = 0.08
+recoil_koeff = -0.11
+inertia_koeff = 1.5
+fire_point = 0, 0, -0.17
+weapon_lenght = 0.35
+bullet_speed = 0.92
+k_hit_koeff = 0.85
+fire_dispersion_base = 0.12
+impair_koeff = 1.2
+[svd_420_att]:ar_barrel_13_att
+fire_point	= 0, 0, -0.17
+weapon_lenght = 0.35
+bullet_speed				= 0.92
+k_hit_koeff						= 0.85
+fire_dispersion_base		= 0.12
+impair_koeff					= 1.2
+
+[svd_barrel_520]:svd_barrel_420
+kind  =  svd
+inv_ui_sign				= svd_52cm
+visual						= w_att_huds\svd_barrel_520u	
+inv_name					= svd_barrel_520u
+inv_name_short		= svd_barrel_520S
+cost							= 1800
+inv_weight				= 0.65
+inv_grid_width			= 3
+inv_grid_x				= 2
+1icon_layer = clean_lub3_ico
+attachment_slots		= tac_mount|muzzle|0,0,-0.3|0,0,0#svd_muzzle|muzzle|0,0,-0.0902|0,0,0
+override_section = svd_barrel_520_attributes
+
+[svd_barrel_520_attributes]
+zoom_rotate_time = 0.11
+recoil_koeff = -0.12
+inertia_koeff = 1.7
+fire_point = 0, 0, -0.07
+weapon_lenght = 0.45
+rpm_koeff = -0.07
+bullet_speed = 0.95
+k_hit_koeff = 0.95
+fire_dispersion_base = 0.09
+[svd_520_att]:ar_barrel_16_att
+fire_point					= 0, 0, -0.07
+weapon_lenght				=	0.45
+rpm_koeff						= -0.07
+bullet_speed					= 0.95
+k_hit_koeff						= 0.95
+fire_dispersion_base		= 0.09
+
+[svd_barrel_550]:svd_barrel_520
+kind  =  svd
+inv_ui_sign				= svd_55cm
+visual						= w_att_huds\svd_barrel_550m	
+inv_name					= svd_barrel_550m
+inv_name_short		= svd_barrel_550S
+cost							= 2000
+inv_weight				= 0.72
+inv_grid_x				= 5
+attachment_point	= svd_barrel|0,0,0|0,0,0
+attachment_slots		= tac_mount|muzzle|0,0,-0.3|0,0,0#svd_front_sight|muzzle|0,0,-0.18045|0,0,0#svd_muzzle|muzzle|0,0,-0.0652|0,0,0
+override_section = svd_barrel_550_attributes
+
+[svd_barrel_550_attributes]
+fire_point = 0, 0, -0.05
+weapon_lenght = 0.47
+rpm_koeff = -0.1
+bullet_speed = 0.97
+fire_dispersion_base = 0.05
+zoom_rotate_time = 0.11
+recoil_koeff = -0.13
+inertia_koeff = 1.7
+impair_koeff = 0.7
+[svd_550_att]
+fire_point					= 0, 0, -0.05
+weapon_lenght				=	0.47
+rpm_koeff						= -0.1
+bullet_speed					= 0.97
+fire_dispersion_base		= 0.05
+zoom_rotate_time = 0.11
+recoil_koeff             = -0.36
+inertia_koeff            = 1.7
+impair_koeff					= 0.7
+
+[svd_barrel_565]:svd_barrel_550
+kind  =  svd
+inv_ui_sign				= svd_57cm
+visual						= w_att_huds\svd_barrel_565s	
+inv_name					= svd_barrel_565s
+inv_name_short		= svd_barrel_565sS
+cost							= 2100
+inv_weight				= 0.75
+inv_grid_x				= 8
+attachment_slots		= tac_mount|muzzle|0,0,-0.3|0,0,0#svd_muzzle|muzzle|0,0,-0.0495|0,0,0
+override_section = svd_barrel_565_attributes
+
+[svd_barrel_565_attributes]
+fire_point = 0, 0, -0.03
+weapon_lenght = 0.49
+rpm_koeff = -0.12
+bullet_speed = 0.98
+fire_dispersion_base = 0.06
+zoom_rotate_time = 0.12
+recoil_koeff = -0.14
+inertia_koeff = 1.7
+[svd_565_att]
+fire_point					= 0, 0, -0.03
+weapon_lenght			=	0.49
+rpm_koeff					= -0.12
+bullet_speed				= 0.98
+fire_dispersion_base	= 0.06
+zoom_rotate_time	= 0.12
+recoil_koeff             = -0.37
+inertia_koeff            = 1.7
+
+[svd_barrel_620]:svd_barrel_550
+kind  =  svd
+inv_ui_sign				= svd_62cm
+visual						= w_att_huds\svd_barrel_620	
+inv_name					= svd_barrel_620
+inv_name_short		= svd_barrel_620S
+cost							= 2400
+inv_weight				= 0.9
+inv_grid_x				= 11
+attachment_slots		=tac_mount|muzzle|0,0,-0.3|0,0,0#svd_muzzle|muzzle|0,0,0|0,0,0
+override_section		=	svd_barrel_620_attributes
+
+[svd_barrel_620_attributes]
+fire_point = 0, 0, 0.02
+weapon_lenght = 0.55
+rpm_koeff = -0.14
+bullet_speed = 1
+k_hit_koeff = 1.05
+fire_dispersion_base = 0.05
+impair_koeff = 0.8
+zoom_rotate_time = 0.13
+recoil_koeff = -0.15
+inertia_koeff = 1.8
+[svd_620_att]
+fire_point						= 0, 0, 0.02
+weapon_lenght			=	0.55
+rpm_koeff					= -0.14
+bullet_speed				= 1
+k_hit_koeff					= 1.05
+fire_dispersion_base	= 0.05
+impair_koeff				= 0.8
+zoom_rotate_time	= 0.13
+recoil_koeff             = -0.42
+inertia_koeff            = 1.8
+
+[svd_muzzle_m]:attachment_base_ak
+kind  =  svd
+inv_ui_sign				= svdm_mb
+visual						= w_att_huds\svd_muzzle_m	
+inv_name					= svd_muzzle_m
+inv_name_short		= svd_muzzle_mS
+cost							= 600
+inv_weight				= 0.07
+inv_grid_x				= 31
+inv_grid_y				= 24
+attachment_point	= svd_muzzle|0,0,0|0,0,0
+override_section = svd_muzzle_m_attributes
+item_tags =	muzzle_device
+
+[svd_muzzle_m_attributes]
+weapon_lenght = 0.05
+recoil_koeff = -0.04
+
+[svd_muzzle_t]:svd_muzzle_m
+kind  =  svd
+inv_ui_sign				= svd_mt
+visual						= w_att_huds\svd_muzzle_tiger	
+inv_name					= svd_muzzle_tiger
+inv_name_short		= svd_muzzle_tigerS
+cost							= 600
+inv_weight				= 0.09
+inv_grid_x				= 33
+attachment_slots		= svd_front_sight|muzzle|0,0,0|0,0,0#svd_silencer|muzzle|0,0,0|0,0,0
+override_section = svd_muzzle_t_attributes
+
+[svd_muzzle_t_attributes]
+
+[svd_muzzle_up]:svd_muzzle_t
+kind  =  svd
+inv_ui_sign				= svd_308
+visual						= w_att_huds\svd_muzzle_up	
+inv_name					= svd_muzzle_up
+inv_name_short		= svd_muzzle_upS
+cost							= 800
+inv_weight				= 0.05
+inv_grid_x				= 34
+attachment_slots		= ar10_muzzle|muzzle|0,0,-0.02374|0,0,0
+override_section = svd_muzzle_up_attributes
+
+[svd_muzzle_up_attributes]
+
+[svd_muzzle_s]:svd_muzzle_m
+kind  =  svd
+inv_ui_sign				= svds_mb
+visual						= w_att_huds\svd_muzzle_s	
+inv_name					= svd_muzzle_s
+inv_name_short		= svd_muzzle_sS
+cost							= 800
+inv_weight				= 0.08
+inv_grid_x				= 32
+attachment_slots		= svd_front_sight|muzzle|0,0,0.01306|0,0,0#svd_silencer|muzzle|0,0,0.013|0,0,0
+override_section = svd_muzzle_s_attributes
+
+[svd_muzzle_s_attributes]
+weapon_lenght = 0.05
+recoil_koeff = -0.05
+
+[svd_muzzle]:svd_muzzle_t
+kind  =  svd
+inv_ui_sign				= svd_mb
+visual						= w_att_huds\svd_muzzle	
+inv_name					= svd_muzzle
+inv_name_short		= svd_muzzleS
+cost							= 850
+inv_weight				= 0.1
+inv_grid_x				= 30
+override_section = svd_muzzle_attributes
+
+[svd_muzzle_attributes]
+recoil_koeff = -0.1
+impair_koeff = 0.9
+weapon_lenght = 0.08
+[svd_muzzle_att]:ar_muzzle_4_att,08_muzzle_lenght_attributes
+
+[svd_muzzle_u]:svd_muzzle_t
+kind  =  svd
+inv_ui_sign				= svu_mb
+visual						= w_att_huds\svd_muzzle_u	
+inv_name					= svd_muzzle_u
+inv_name_short		= svd_muzzle_uS
+cost							= 2000
+inv_weight				= 0.33
+inv_grid_width			= 2
+inv_grid_x				= 35
+attachment_slots		= svd_muzzle_u_front|muzzle|0,0,0|0,0,0
+override_section = svd_muzzle_u_attributes
+
+[svd_muzzle_u_attributes]
+silencer_status = 1
+silencer_name = wpn_addon_silencer
+silencer_x = 1
+silencer_y = 1
+impair_koeff = 1.4
+zoom_rotate_time = 0.05
+recoil_koeff = -0.07
+inertia_koeff = 1.2
+weapon_lenght = 0.1
+[svum_attributes]:ar_muz_supp_rotex_iiic_attributes
+weapon_lenght = 0.1
+
+[svd_muzzle_u_front]:attachment_base_ak
+kind  =  svd
+inv_ui_sign				= svu_fs
+visual						= w_att_huds\svd_muzzle_u_front	
+inv_name					= svd_muzzle_u_front
+inv_name_short		= svd_muzzle_u_frontS
+cost							= 250
+inv_weight				= 0.05
+inv_grid_x				= 12
+inv_grid_y				= 23
+attachment_point	= svd_muzzle_u_front|0,0,0|0,0,0
+override_section = svd_muzzle_u_front_attributes
+
+[svd_muzzle_u_front_attributes]
+
+[svu_rear_sight]:attachment_base_ak
+kind  =  svu
+inv_ui_sign				= svu_rs
+visual						= w_att_huds\svu_rear_sight	
+inv_name					= svu_rear_sight
+cost							= 350
+inv_weight				= 0.05
+inv_grid_x				= 13
+inv_grid_y				= 23
+attachment_point	= svu_rear_sight|0,0,0|0,0,0
+override_section = svu_rear_sight_attributes
+
+[svu_rear_sight_attributes]
+zoom_rotate_time = -0.01
+fire_dispersion_base_koeff = -0.05
+
+[svd_front_sight]:attachment_base_ak
+kind  =  svd
+inv_ui_sign				= svd_fs
+visual						= w_att_huds\svd_front_sight	
+inv_name					= svd_front_sight
+inv_name_short		= svd_front_sightS
+cost							= 200
+inv_weight				= 0.05
+inv_grid_x				= 38
+inv_grid_y				= 23
+attachment_point	= svd_front_sight|0,0,0|0,0,0
+override_section = svd_front_sight_attributes
+
+[svd_front_sight_attributes]
+
+[svd_front_sight_tiger]:svd_front_sight
+kind  =  svd
+inv_ui_sign				= tiger_fs
+visual						= w_att_huds\svd_front_sight_tiger	
+inv_name					= svd_front_sight_tiger
+inv_name					= svd_front_sight_tigerS
+cost							= 400
+inv_grid_x				= 39
+override_section = svd_front_sight_tiger_attributes
+
+[svd_front_sight_tiger_attributes]
+
+[svd_silencer]:attachment_base_ak
+kind  =  svd
+inv_ui_sign				= tgp-v
+visual						= w_att_huds\svd_muzzle_tgpv	
+inv_name					= svd_muzzle_tgpv
+inv_name_short		= svd_muzzle_tgpvS
+cost							= 3330
+inv_weight				= 1.1
+inv_grid_width			= 2
+inv_grid_x				= 32
+inv_grid_y				= 25
+attachment_point	= svd_silencer|0,0,0|0,0,0
+item_tags =	muzzle_device
+override_section		= svd_silencer_attributes
+[svd_silencer_attributes]:silencer_base_attributes
+weapon_lenght = 0.25
+impair_koeff = 1.3
+zoom_rotate_time = 0.09
+recoil_koeff            = -0.07
+inertia_koeff            = 1.4
+
+[svd_hg]:attachment_base_ak
+kind  =  svd
+inv_ui_sign				= svd_hg
+visual						= w_att_huds\svd_hg	
+inv_name					= svd_hg
+inv_name_short		= svd_hgS
+cost							= 900
+inv_weight				= 0.27
+inv_grid_width			= 2
+inv_grid_x				= 10
+inv_grid_y				= 24
+attachment_point	= svd_hg|0,0,0|0,0,0
+attachment_slots		= veresk_hg_rails|wpn_body|0,0.02,0.316|0,0,0#orsis_lower_grip|wpn_body|0,0.005,0.05|0,0,0
+override_section		= svd_hg_attributes
+
+[svd_hg_attributes]
+animation_prefix = c_
+
+[svd_hg_laser]:svd_hg
+kind  =  svd
+visual						= w_att_huds\svd_hg_laser
+description				= tac_laserD
+inv_name					= svd_hg_laser
+inv_name_short		= svd_hg_laserS
+cost							= 1400
+inv_weight				= 0.35
+inv_grid_y				= 26
+attachment_slots		= veresk_hg_rails|wpn_body|0,0.02,0.269|0,0,0#orsis_lower_grip|wpn_body|0,0.005,0.05|0,0,0#tac_aim|wpn_body|0.05,0.12,-0.05|0,0,40	
+is_torch_laser                  = true
+is_torch                  = false
+laser_section             = tactical_laser_red
+laser_bone         = laser
+laser_bone_axis    = y
+laser_bone_invert  = false
+1icon_layer = red_laser_ico
+override_section = svd_hg_laser_attributes
+
+[svd_hg_laser_attributes]
+animation_prefix = c_
+
+[svd_hg_p]:svd_hg
+kind  =  svd
+inv_ui_sign				= svds_hg
+visual						= w_att_huds\svd_hg_p	
+inv_name					= svd_hg_p
+cost							= 1100
+inv_weight				= 0.21
+inv_grid_x				= 12
+attachment_slots		= veresk_hg_rails|wpn_body|0,0.0233,0.335|0,0,0#orsis_lower_grip|wpn_body|0,0.005,0.05|0,0,0#svd_hg_laser|wpn_body|0,0,0|0,0,0
+override_section		= svd_hg_p_attributes
+item_tags = hg
+
+[svd_hg_p_attributes]
+animation_prefix = c_
+zoom_rotate_time = -0.02
+inertia_koeff = 0.9
+
+[svd_hg_wrap]:svd_hg
+kind  =  svd
+inv_ui_sign				= svds_hg
+visual						= w_att_huds\svd_hg_wrap	
+cost							= 850
+inv_weight				= 0.3
+inv_grid_x				= 16
+attachment_slots		= veresk_hg_rails|wpn_body|0,0.0203,0.335|0,0,0#orsis_lower_grip|wpn_body|0,0.005,0.05|0,0,0
+override_section = svd_hg_wrap_attributes
+
+[svd_hg_wrap_attributes]
+animation_prefix = c_
+
+[svd_hg_pica]:svd_hg
+kind  =  svd
+inv_ui_sign				= svd_hgP+
+visual						= w_att_huds\svd_hg_pica	
+description				= ar_hg_20
+inv_name					= svd_hg_pica
+inv_name_short		= svd_hg_picaS
+cost							= 1400
+inv_weight				= 0.28
+inv_grid_x				= 14
+attachment_slots		= veresk_hg_rails|wpn_body|0,0.0243,0.335|0,0,0#pica_20|wpn_body|0,0.08095,0.28|0,0,0#picgrp|wpn_body|0,-0.0086,0.08|0,0,0#pica_3|wpn_body|0,0.0268,0.43|0,0,180
+item_tags = hg
+override_section = svd_hg_pica_attributes
+
+[svd_hg_pica_attributes]
+animation_prefix = c_
+
+[svu_hg]:attachment_base_ak
+kind  =  svd
+inv_ui_sign				= svu_hg
+visual						= w_att_huds\svu_hg	
+inv_name					= svu_hg
+inv_name_short		= svu_hg
+cost							= 700
+inv_weight				= 0.23
+inv_grid_width			= 2
+inv_grid_x				= 18
+inv_grid_y				= 24
+attachment_point	= svu_hg|0,0,0|0,0,0
+attachment_slots		= veresk_hg_rails|wpn_body|0,0.022,0.057|0,0,0
+override_section = svu_hg_attributes
+
+[svu_hg_attributes]
+animation_prefix = c_
+zoom_rotate_time = -0.02
+inertia_koeff = 0.9
+
+[svu_hg_pica]:svu_hg
+kind  =  svu
+inv_ui_sign				= svu_hgP+
+visual						= w_att_huds\svu_hg_pica
+description				= ar_hg_20
+inv_name					= svu_hg_pica
+inv_name_short		= svu_hg_picaS
+cost							= 1000
+inv_weight				= 0.29
+inv_grid_x				= 20
+attachment_slots		= pica_20|wpn_body|0,0.07354,0|0,0,0#picgrp|wpn_body|0,-0.0122,-0.082|0,0,0  
+item_tags = hg
+override_section = svu_hg_pica_attributes
+
+[svu_hg_pica_attributes]
+animation_prefix = c_
+zoom_rotate_time = -0.02
+inertia_koeff = 0.9
+
+[svd_cover]:attachment_base_ak
+kind  =  svd
+inv_ui_sign				= svd_dc
+visual						= w_att_huds\svd_cover	
+inv_name					= svd_cover
+inv_name_short		= svd_coverS
+cost							= 700
+inv_weight				= 0.17
+inv_grid_width			= 2
+inv_grid_x				= 22
+inv_grid_y				= 24
+attachment_point	= svd_cover|0,0,0|0,0,0
+override_section = svd_cover_attributes
+
+[svd_cover_attributes]
+zoom_rotate_time = -0.01
+impair_koeff = 0.8
+[svd_cover0]:svd_cover
+visual						= w_att_huds\svd_cover0	
+inv_grid_y				= 26
+override_section = svd_cover0_attributes
+
+cost = 700
+inv_weight = 0.17
+[svd_cover0_attributes]
+zoom_rotate_time = -0.01
+impair_koeff = 0.8
+
+[svd_cover_s]:svd_cover
+kind  =  svd
+inv_ui_sign				= svds_dc
+visual						= w_att_huds\svd_cover_s	
+inv_name					= svd_cover_s
+inv_name_short		= svd_cover_sS
+cost							= 800
+inv_weight				= 0.15
+inv_grid_x				= 24
+override_section = svd_cover_s_attributes
+
+[svd_cover_s_attributes]
+zoom_rotate_time = -0.01
+impair_koeff = 0.8
+
+[svd_cover_m]:attachment_base_ak
+kind  =  svd
+inv_ui_sign				= svdm_dc
+visual						= w_att_huds\svd_cover_m	
+description				= pica_24_up
+inv_name					= svd_cover_m
+inv_name_short		= svd_cover_mS
+cost							= 1050
+inv_weight				= 0.26
+inv_grid_width			= 2
+inv_grid_x				= 28
+inv_grid_y				= 24
+attachment_point	= svd_cover_m|0,0,0|0,0,0
+attachment_slots		= pica_24|wpn_body|0,0.08095,-0.0292|0,0,0
+item_tags =	cover
+override_section = svd_cover_m_attributes
+
+[svd_cover_m_attributes]
+zoom_rotate_time = 0.01
+
+[svd_cover_pica]:svd_cover
+kind  =  svd
+inv_ui_sign				= svu_dc+
+visual						= w_att_huds\svd_cover_pica	
+description				= pica_7_up
+inv_name					= svd_cover_pica
+inv_name_short		= svd_cover_picaS
+cost							= 1400
+inv_weight				= 0.23
+inv_grid_x				= 26
+attachment_slots		= pica_7|wpn_body|0,0.077,0.15|0,0,0
+item_tags =	cover
+override_section = svd_cover_pica_attributes
+
+[svd_cover_pica_attributes]
+zoom_rotate_time = -0.01
+impair_koeff = 0.8
+
+[svd_stock_short]:attachment_base_ak
+kind  =  svd
+inv_ui_sign				= svd_stk-
+visual						= w_att_huds\svd_stock_short	
+inv_name					= svd_stock_short
+inv_name_short		= svd_stock_short
+cost							= 600
+inv_weight				= 0.15
+inv_grid_x         		= 25
+inv_grid_y         		= 25
+attachment_point	= svd_stock|0,0,0|0,0,0
+override_section 	= svd_stock_short_attributes
+[svd_stock_short_attributes]
+zoom_rotate_time = -0.01
+recoil_koeff            = 0.11
+
+[svd_stock_wrap]:svd_stock_short
+kind  =  svd
+inv_ui_sign				= svd_stk
+visual						= w_att_huds\svd_stock_wrap	
+inv_name					= svd_stock_wrap
+inv_name_short		= svd_stock_wrapS
+cost							= 2700
+inv_weight				= 0.73
+inv_grid_width			= 2
+inv_grid_x				= 28
+override_section = svd_stock_wrap_attributes
+
+[svd_stock_wrap_attributes]
+weapon_lenght = 0.25
+zoom_rotate_time = 0.01
+recoil_koeff = -0.20
+impair_koeff = 1.1
+inertia_koeff = 0.6
+[svd_stock_wrap_att]
+weapon_lenght = 0.25
+zoom_rotate_time = 0.01
+recoil_koeff            = -0.33
+impair_koeff		= 1.1
+inertia_koeff          = 0.6
+
+[svd_stock]:svd_stock_wrap
+kind  =  svd
+inv_ui_sign				= svd_stk
+visual						= w_att_huds\svd_stock	
+inv_name					= svd_stock
+inv_name_short		= svd_stockS
+cost							= 1900
+inv_weight				= 0.6
+inv_grid_x				= 26
+attachment_slots		= cheek|wpn_body|0,-0.0125,0.0111|0,0,0
+item_tags =	stock
+override_section		= svd_stock_attributes
+
+[svd_stock_attributes]
+weapon_lenght = 0.25
+zoom_rotate_time = 0.04
+recoil_koeff = -0.22
+inertia_koeff = 0.6
+[svd_stock0]:svd_stock
+visual						= w_att_huds\svd_stock0	
+inv_grid_x				= 26
+override_section = svd_stock0_attributes
+
+cost = 1900
+inv_weight = 0.6
+[svd_stock0_attributes]
+weapon_lenght = 0.25
+zoom_rotate_time = 0.04
+recoil_koeff = -0.22
+inertia_koeff = 0.6
+
+[svd_stock_p]:svd_stock
+kind  =  svd
+inv_ui_sign				= svd_stk+
+visual						= w_att_huds\svd_stock_p	
+inv_name					= svd_stock_p
+cost							= 2750
+inv_weight				= 0.5
+inv_grid_x         		= 30
+override_section = svd_stock_p_attributes
+
+[svd_stock_p_attributes]
+weapon_lenght = 0.25
+zoom_rotate_time = -0.02
+recoil_koeff = -0.22
+inertia_koeff = 0.7
+[svd_stock_p_att]
+weapon_lenght = 0.25
+zoom_rotate_time = -0.02
+recoil_koeff            = -0.23
+inertia_koeff          = 0.7
+
+[svds_grip]:attachment_base_ak
+kind  =  svd
+inv_ui_sign				= svds_pg
+visual						= w_att_huds\svds_grip	
+inv_name					= svds_grip
+inv_name_short		= svds_gripS
+cost							= 600
+inv_weight				= 0.09
+inv_grid_x         		= 14
+inv_grid_y         		= 25
+attachment_point	= svds_grip|0,0,0|0,0,0
+override_section = svds_grip_attributes
+item_tags =	pgrip
+
+[svds_grip_attributes]
+zoom_rotate_time = -0.03
+
+[svds_grip_m]:svds_grip
+kind  =  svd
+inv_ui_sign				= svdm_pg
+visual						= w_att_huds\svds_grip_m	
+inv_name					= svds_grip_m
+inv_name_short		= svds_grip_mS
+cost							= 900
+inv_weight				= 0.14
+inv_grid_x         		= 15
+override_section = svds_grip_m_attributes
+
+[svds_grip_m_attributes]
+zoom_rotate_time = -0.02
+
+[svds_grip_ak_mount]:svds_grip
+kind  =  svd
+inv_ui_sign				= svds2ak
+visual						= w_att_huds\svds_grip_ak_mount	
+inv_name					= svds_grip_ak_mount
+inv_name_short		= svds_grip_ak_mountS
+cost							= 750
+inv_weight				= 0.05
+inv_grid_x         		= 16
+attachment_slots		= ak_grip|wpn_body|0,0,-0.007|0,0,0
+override_section = svds_grip_ak_mount_attributes
+
+[svds_grip_ak_mount_attributes]
+zoom_rotate_time = -0.03
+
+[svds_stock]:attachment_base_ak
+kind  =  svd
+inv_ui_sign				= svds_stk
+visual						= w_att_huds\svds_stock	
+inv_name					= svds_stock
+inv_name_short		= svds_stockS
+cost							= 2100
+inv_weight				= 0.65
+inv_grid_width			= 2
+inv_grid_x				= 17
+inv_grid_y				= 25
+attachment_point	= svds_stock|0,0,0|0,0,0
+item_tags =	stock
+override_section 		= svds_stock_attributes
+
+[svds_stock_attributes]
+weapon_lenght = 0.25
+zoom_rotate_time = 0.01
+recoil_koeff = -0.22
+inertia_koeff = 0.7
+[svds_stock_att]
+weapon_lenght		= 0.25
+zoom_rotate_time	= 0.01
+recoil_koeff            	= -0.3
+inertia_koeff         	= 0.7
+
+[svds_stock_m]:svds_stock
+kind  =  svd
+inv_ui_sign				= svdm_stk
+visual						= w_att_huds\svds_stock_m	
+inv_name					= svds_stock_m
+inv_name_short		= svds_stock_mS
+cost							= 2350
+inv_weight				= 0.68
+inv_grid_x				= 19
+override_section = svds_stock_m_attributes
+
+[svds_stock_m_attributes]
+weapon_lenght = 0.25
+zoom_rotate_time = 0.03
+recoil_koeff = -0.22
+inertia_koeff = 0.6
+[svds_stock_m_att]
+weapon_lenght = 0.25
+zoom_rotate_time = 0.03
+recoil_koeff            = -0.36
+inertia_koeff          = 0.6
+
+[svds_stock_pt1]:svds_stock
+kind  =  svd
+inv_ui_sign				= svds_pt1
+visual						= w_att_huds\svds_stock_pt1	
+inv_name					= svds_stock_pt1
+inv_name_short		= svds_stock_pt1S
+cost							= 3100
+inv_weight				= 0.5
+inv_grid_x				= 21
+attachment_slots		= ak_stock_pad|wpn_body|0,0.0015,-0.0105|0,0,0
+override_section = svds_stock_pt1_attributes
+
+[svds_stock_pt1_attributes]
+weapon_lenght = 0.25
+zoom_rotate_time = -0.01
+recoil_koeff = -0.25
+inertia_koeff = 0.8
+
+[svds_stock_pt3]:svds_stock
+kind  =  svd
+inv_ui_sign				= svds_pt3
+visual						= w_att_huds\svds_stock_pt3	
+inv_name					= svds_stock_pt3
+inv_name_short		= svds_stock_pt3S
+cost							= 3200
+inv_weight				= 0.56
+inv_grid_x			= 23
+override_section = svds_stock_pt3_attributes
+
+[svds_stock_pt3_attributes]
+weapon_lenght = 0.2
+zoom_rotate_time = -0.01
+recoil_koeff = -0.26
+inertia_koeff = 0.7
+
+[svds_stock_buffer_ad]:svds_stock
+kind  =  svd
+inv_ui_sign				= svds_buf_ad
+visual						= w_att_huds\svds_stock_ba	
+inv_name					= svds_stock_ba
+inv_name_short		= svds_stock_baS
+cost							= 700
+inv_weight				= 0.1
+inv_grid_width			= 1
+inv_grid_x				= 34
+attachment_slots		= ar_buffer|wpn_body|0,-0.0255,-0.028|0,0,0
+override_section = svds_stock_buffer_ad_attributes
+
+[svds_stock_buffer_ad_attributes]
+impair_koeff = 1.1
+[svds_stock_buffer_ad_att]
+impair_koeff = 1.1
+
+[svu_stock]:attachment_base_ak
+kind  =  svu
+inv_ui_sign				= svu_stck
+visual						= w_att_huds\svu_stock	
+inv_name					= svu_stock
+inv_name_short		= svu_stock
+cost							= 900
+inv_weight				= 0.12
+inv_grid_x				= 10
+inv_grid_y				= 23
+attachment_point	= svu_stock|0,0,0|0,0,0
+item_tags =	stock
+override_section = svu_stock_attributes
+
+[svu_stock_attributes]
+zoom_rotate_time = -0.02
+recoil_koeff = -0.11
+inertia_koeff = 0.9
+[svu_stock_att]
+zoom_rotate_time = -0.02
+recoil_koeff            = -0.23
+inertia_koeff          = 0.9
+
+[svu_stock_tac]:svu_stock
+kind  =  svu
+inv_ui_sign				= svu_stck+
+visual						= w_att_huds\svu_stock_tac	
+inv_name					= svu_stock_tac
+cost							= 1300
+inv_weight				= 0.12
+inv_grid_x				= 11
+override_section = svu_stock_tac_attributes
+
+[svu_stock_tac_attributes]
+zoom_rotate_time = -0.04
+recoil_koeff = -0.14
+[svu_stock_tac_att]
+zoom_rotate_time = -0.04
+recoil_koeff            = -0.17
+
+[cheek_svd]:cheek_vpo123
+kind  =  svd
+visual					= w_att_huds\svd_cheek	
+inv_name				= svd_cheek
+cost						= 600
+inv_grid_x			= 39
+inv_grid_y         	= 22
+override_section = cheek_svd_attributes
+
+[cheek_svd_attributes]
+zoom_rotate_time = -0.04
+
+[svu_cheek]:attachment_base_ak
+kind  =  svu
+inv_ui_sign				= svu_chk
+visual						= w_att_huds\svu_cheek	
+inv_name					= svu_cheek
+inv_name_short		= svu_cheekS
+cost							= 450
+inv_weight				= 0.11
+inv_grid_x				= 36
+inv_grid_y				= 22
+attachment_point	= svu_cheek|0,0,0|0,0,0
+override_section = svu_cheek_attributes
+
+[svu_cheek_attributes]
+zoom_rotate_time = -0.01
+inertia_koeff = 0.8
+[svu_cheek_att]
+zoom_rotate_time = -0.01
+inertia_koeff          = 0.8
+
+[svu_cheek_pad]:svu_cheek
+kind  =  svu
+inv_ui_sign				= svu_chkp
+visual						= w_att_huds\svu_cheek_pad	
+inv_name					= svu_cheek_pad
+inv_name_short		= svu_cheek_padS
+inv_weight				= 0.13
+cost							= 600
+inv_grid_x				= 37
+item_tags =	stock
+override_section = svu_cheek_pad_attributes
+
+[svu_cheek_pad_attributes]
+zoom_rotate_time = -0.03
+
+[svu_cheek_tac]:svu_cheek_pad
+kind  =  svu
+inv_ui_sign				= svu_chk+
+visual						= w_att_huds\svu_cheek_tac	
+inv_name					= svu_cheek_tac
+inv_name_short		= svu_cheek_tacS
+inv_weight				= 0.2
+cost							= 800
+inv_grid_x				= 38
+override_section = svu_cheek_tac_attributes
+
+[svu_cheek_tac_attributes]
+inertia_koeff = 0.8
+recoil_koeff = -0.05
+[svu_cheek_tac_att]
+inertia_koeff          = 0.8
+recoil_koeff			= -0.15
+
+[mag_wpn_svd_7.62x54_7h1]:mag_wpn_base_ak,wg_wpn_svd,ag_ammo_7.62x54
+inv_ui_sign					= svd10
+visual							= w_att_huds\svd_mag10
+inv_name						= svd_mag
+inv_name_short			= svd_mag
+inv_grid_x					= 37
+inv_grid_y					= 25
+inv_weight					= 0.17
+cost								= 800
+max_mag_size				= 10
+mag_size						= medium
+[mag_wpn_svds_7.62x54_7h1]:mag_wpn_svd_7.62x54_7h1
+visual							= w_att_huds\svd_mag_s
+inv_grid_y					= 24
+[mag_wpn_svu_7.62x54_7h1]:mag_wpn_svd_7.62x54_7h1
+
+[mag_wpn_svd_5_7.62x54_7h1]:mag_wpn_svd_7.62x54_7h1
+inv_ui_sign					= svd5
+visual							= w_att_huds\svd_mag5
+inv_name						= svd_mag5
+inv_grid_height			= 1
+inv_grid_x					= 36
+inv_grid_y					= 25
+inv_weight					= 0.1
+cost								= 300
+max_mag_size				= 5
+mag_size						= small
+override_section			= mag_wpn_svd_5_7.62x54_7h1_attributes
+
+[mag_wpn_svd_5_7.62x54_7h1_attributes]
+animation_prefix_mag = 5_
+zoom_rotate_time = -0.01
+[svd_5_attributes]
+animation_prefix_mag	=	5_
+zoom_rotate_time = -0.01
+
+[mag_wpn_svd_20_7.62x54_7h1]:mag_wpn_svd_7.62x54_7h1
+inv_ui_sign					= svd20
+visual							= w_att_huds\svd_mag20
+inv_name						= svd_mag20
+inv_grid_height			= 2
+inv_grid_x					= 38
+inv_grid_y					= 24
+inv_weight					= 0.28
+cost								= 1400
+max_mag_size				= 20
+
+[mag_wpn_svd_30_7.62x54_7h1]:mag_wpn_svd_20_7.62x54_7h1
+inv_ui_sign					= svd30
+visual							= w_att_huds\svd_mag30
+inv_name						= svd_mag30
+inv_grid_x					= 39
+inv_weight					= 0.4
+cost								= 1700
+max_mag_size				= 32

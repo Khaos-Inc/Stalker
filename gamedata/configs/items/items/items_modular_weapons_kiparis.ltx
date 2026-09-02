@@ -1,0 +1,336 @@
+--\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ wpn_kiparis \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+[kiparis_spring]:attachment_base
+kind  =  kiparis
+inv_ui_sign				= kipa_spr
+visual						= w_att_huds\kiparis_spring	
+inv_name					= kiparis_spring
+inv_name_short			= kiparis_springS
+cost							= 400
+inv_weight					= 0.06
+inv_grid_x         			= 17
+inv_grid_y         			= 16
+1icon_layer = clean1_ico
+attachment_point		=	kiparis_spring|0,0,0|0,0,0
+attachment_slots		=	kiparis_zatvor|zatvor|0,0,0|0,0,0
+item_tags	=	spring
+override_section = kiparis_spring_attributes
+
+[kiparis_spring_attributes]
+
+[kiparis_zatvor]:attachment_base
+kind  =  kiparis
+inv_ui_sign				= kipa_bolt
+visual						= w_att_huds\kiparis_zatvor	
+inv_name					= kiparis_zatvor
+inv_name_short			= kiparis_zatvorS
+cost							= 600
+inv_weight					= 0.135
+inv_grid_x         			= 18
+inv_grid_y         			= 16
+1icon_layer = clean_lub1_ico
+attachment_point		=	kiparis_zatvor|0,0,0|0,0,0
+attachment_slots		=	kiparis_barrel|wpn_body|0,0,0|0,0,0#ak_zatvor_rh|zatvor|-0.001,-0.00166,-0.063|0,0,0
+item_tags	=	zatvor
+override_section = kiparis_zatvor_attributes
+
+[kiparis_zatvor_attributes]
+rpm = 900
+zoom_rotate_time = 0.02
+[kiparis_zatvor_att]:rpm_900_zatvor_att
+zoom_rotate_time = 0.02
+recoil_koeff = -0.1
+
+[kiparis_barrel]:attachment_base
+kind  =  kiparis
+inv_ui_sign				= kipa_bar
+visual						= w_att_huds\kiparis_barrel	
+inv_name					= kiparis_barrel
+inv_name_short			= kiparis_barrelS
+cost							= 700
+inv_weight					= 0.09
+inv_grid_x         			= 16
+inv_grid_y         			= 15
+1icon_layer = clean1_ico
+attachment_point		=	kiparis_barrel|0,0,0|0,0,0
+attachment_slots		=	kiparis_cover|wpn_body|0,0,0|0,0,0#kiparis_silencer|wpn_body|0,0,0|0,0,0
+item_tags =	barrel
+override_section = kiparis_barrel_attributes
+
+[kiparis_barrel_attributes]
+zoom_rotate_time = 0.03
+recoil_koeff = -0.03
+weapon_lenght = 0.05
+bullet_speed = 0.97
+k_hit_koeff = 1.05
+fire_dispersion_base = 0.18
+[kiparis_barrel_att]:beretta_barrel_att
+weapon_lenght				= 0.05
+bullet_speed = 0.97
+k_hit_koeff						= 1.05
+fire_dispersion_base 		= 0.18
+
+[kiparis_barrel_up]:kiparis_barrel
+kind  =  kiparis
+inv_ui_sign				= kipa_bar+
+visual						= w_att_huds\kiparis_barrel_up	
+inv_name					= kiparis_barrel_up
+inv_name_short			= kiparis_barrel_upS
+cost							= 850
+inv_grid_x         			= 17
+attachment_slots		=	kiparis_cover|wpn_body|0,0,0|0,0,0#9mm_muzzle|muzzle|0,0,0|0,0,0#tac_mount|muzzle|0,0,-0.036|0,0,0
+override_section = kiparis_barrel_up_attributes
+
+inv_weight = 0.09
+[kiparis_barrel_up_attributes]
+zoom_rotate_time = 0.03
+recoil_koeff = -0.05
+weapon_lenght = 0.05
+bullet_speed = 0.97
+k_hit_koeff = 1.05
+fire_dispersion_base = 0.18
+impair_koeff = 1.1
+[kiparis_barrel_up_att]:kiparis_barrel_att
+impair_koeff = 1.1
+
+[kiparis_cover]:attachment_base
+kind  =  kiparis
+inv_ui_sign				= kipa_cover
+visual						= w_att_huds\kiparis_cover	
+inv_name					= kiparis_cover
+inv_name_short			= kiparis_coverS
+cost							= 600
+inv_weight					= 0.1
+inv_grid_width			= 2
+inv_grid_x					= 19
+inv_grid_y					= 16
+attachment_point		=	kiparis_cover|0,0,0|0,0,0
+attachment_slots		=	kiparis_front_rail|wpn_body|0,0,0|0,0,0
+item_tags	=	cover
+override_section = kiparis_cover_attributes
+
+[kiparis_cover_attributes]
+zoom_rotate_time = -0.03
+impair_koeff = 0.8
+
+[kiparis_cover_up]:kiparis_cover
+kind  =  kiparis
+inv_ui_sign				= kipa_cover+
+visual						= w_att_huds\kiparis_cover_up	
+description				= ar_hg_9
+inv_name					= kiparis_cover_up
+inv_name_short			= kiparis_cover_upS
+cost							= 1150
+inv_weight					= 0.11
+inv_grid_x					= 21
+attachment_slots		=	kiparis_front_rail|wpn_body|0,0,0|0,0,0#pica_3|wpn_body|-0.0186,0.0613,-0.015|0,0,-90#pica_9|wpn_body|0,0.0749,-0.039|0,0,0#pica_3|wpn_body|0.0186,0.0613,-0.015|0,0,90
+override_section = kiparis_cover_up_attributes
+
+[kiparis_cover_up_attributes]
+zoom_rotate_time = -0.02
+impair_koeff = 0.9
+
+[kiparis_front_pica]:attachment_base		;pica_7
+kind  =  kiparis
+inv_ui_sign				= kipa_railP
+visual						= w_att_huds\kiparis_front_pica	
+description				= pica_6_up
+inv_name					= kiparis_front_pica
+inv_name_short			= kiparis_front_picaS
+cost							= 500
+inv_weight					= 0.05
+inv_grid_x					= 21
+inv_grid_y					= 15
+attachment_point = kiparis_front_rail|0,0,0|0,0,0
+attachment_slots =	pica_6|wpn_body|0,0.0749,0.104|0,0,0
+item_tags =	rail		
+
+[kiparis_hg_mount]:attachment_base
+kind  =  kiparis
+inv_ui_sign				= kipa_rail
+visual						= w_att_huds\kiparis_hg_mount	
+description				= pistol_gripD
+inv_name					= kiparis_hg_mount
+inv_name_short			= kiparis_hg_mountS
+cost							= 550
+inv_weight					= 0.07
+inv_grid_x					= 22
+inv_grid_y					= 15
+attachment_point = kiparis_hg|0,0,0|0,0,0
+attachment_slots = pica_3|wpn_body|0,0.0249,0.15|0,0,180#picgrp|wpn_body|0,-0.0107,-0.049|0,0,0	
+item_tags =	rail
+override_section = kiparis_hg_mount_attributes
+
+[kiparis_hg_mount_attributes]
+fire_dispersion_base_koeff = -0.1
+
+[kiparis_hg_pica]:kiparis_hg_mount 
+kind  =  kiparis
+inv_ui_sign				= kipa_hg
+visual						= w_att_huds\kiparis_hg_mlok	
+description				= pica_3_up2
+inv_name					= kiparis_hg_pica
+inv_name_short		= kiparis_hg_picaS		
+cost							= 1300
+inv_weight				= 0.12
+inv_grid_x				= 23
+attachment_slots =	picgrp|wpn_body|0,-0.0107,-0.049|0,0,0#pica_3|wpn_body|-0.018174,0.05135,0.1627|0,0,-90#pica_3|wpn_body|0.018174,0.05135,0.1627|0,0,90					;picgrp|wpn_body|0,-0.0107,-0.049|0,0,0#mlok|wpn_body|-0.0162,0.05,0.147|0,0,-90#mlok|wpn_body|0.0162,0.05,0.147|0,0,90			;pica_3|wpn_body|0,0.0249,0.15|0,0,180#
+override_section = kiparis_hg_pica_attributes
+
+[kiparis_hg_pica_attributes]
+inertia_koeff = 1.1
+
+[kiparis_hg_laser]:kiparis_hg_mount
+kind  =  kiparis
+inv_ui_sign				= kipa_las
+visual						= w_att_huds\kiparis_hg_laser	
+description				= tac_laserD
+inv_name					= kiparis_hg_laser
+inv_name_short			= kiparis_hg_laserS
+cost							= 800
+inv_weight					= 0.05
+inv_grid_x					= 24
+is_torch 					= true
+is_torch_laser 			= true
+1icon_layer = red_laser_ico
+attachment_slots 	= tac_aim|wpn_body|0.035,0.1,-0.058|0,0,30		
+is_torch_laser                  = true
+laser_section             = tactical_laser_red
+laser_bone         = laser
+laser_bone_axis    = y
+laser_bone_invert  = false
+1icon_layer = red_laser_ico
+override_section = kiparis_hg_laser_attributes
+
+[kiparis_hg_laser_attributes]
+fire_dispersion_base_koeff = -0.1
+[kiparis_hg_laser_att]
+fire_dispersion_base_koeff = -0.1
+
+[kiparis_silencer]:attachment_base
+kind  =  kiparis
+inv_ui_sign				= kipa_sil
+visual						= w_att_huds\kiparis_silencer	
+inv_name					= kiparis_silencer
+inv_name_short			= kiparis_silencerS
+cost							= 1300
+inv_weight					= 0.32
+inv_grid_width			= 2
+inv_grid_x					= 23
+inv_grid_y					= 16
+attachment_point		= kiparis_silencer|0,0,0|0,0,0
+attachment_slots		=	b3|muzzle|0,-0.02125,-0.015|0,0,0	
+item_tags	=	muzzle_device
+override_section = kiparis_silencer_attributes
+
+[kiparis_silencer_attributes]
+silencer_status = 1
+silencer_name = wpn_addon_silencer
+silencer_x = 1
+silencer_y = 1
+weapon_lenght = 0.2
+zoom_rotate_time = 0.06
+recoil_koeff = -0.06
+inertia_koeff = 1.3
+
+[kiparis_stock_dmg]:attachment_base
+kind  =  kiparis
+inv_ui_sign				= kipa_stk-
+visual						= w_att_huds\kiparis_stock_dmg	
+inv_name					= kiparis_stock_dmg
+inv_name_short			= kiparis_stock_dmgS
+cost							= 500
+inv_weight					= 0.11
+inv_grid_width			= 2
+inv_grid_x					= 25
+inv_grid_y					= 15
+attachment_point		=	kiparis_stock|0,0,0|0,0,0
+override_section = kiparis_stock_dmg_attributes
+
+[kiparis_stock_dmg_attributes]
+
+[kiparis_stock]:kiparis_stock_dmg
+kind  =  kiparis
+inv_ui_sign				= kipa_stk+
+visual						= w_att_huds\kiparis_stock
+inv_name					= kiparis_stock
+inv_name_short			= kiparis_stockS
+cost							= 1100
+inv_grid_y					= 16
+item_tags	=	stock
+override_section = kiparis_stock_attributes
+
+inv_weight = 0.11
+[kiparis_stock_attributes]
+zoom_rotate_time = 0.02
+recoil_koeff = -0.13
+inertia_koeff = 0.9
+weapon_lenght = 0.25
+[kiparis_stock_att]:stock_low_att
+weapon_lenght = 0.25
+
+[kiparis_stock_wood]:kiparis_stock_dmg
+kind  =  kiparis
+inv_ui_sign				= kipa_stk_w
+visual						= w_att_huds\kiparis_stock_wood	
+inv_name					= kiparis_stock_wood
+inv_name_short			= kiparis_stock_woodS
+cost							= 1850
+inv_weight					= 0.65
+inv_grid_x         			= 27
+inv_grid_y         			= 16
+attachment_slots		=	cheek|wpn_body|0,0,0|0,0,0
+item_tags	=	stock
+override_section = kiparis_stock_wood_attributes
+
+[kiparis_stock_wood_attributes]
+weapon_lenght = 0.25
+zoom_rotate_time = 0.06
+recoil_koeff = -0.23
+inertia_koeff = 0.7
+
+[cheek]:attachment_base
+kind  =  kiparis
+inv_ui_sign				= cheek
+visual						= w_att_huds\cheek	
+inv_name					= cheek
+inv_name_short			= cheekS
+cost							= 500
+inv_weight					= 0.1
+inv_grid_x					= 27
+inv_grid_y					= 15
+attachment_point		=	cheek|0,0,0|0,0,0
+item_tags =	stock
+override_section = cheek_attributes
+
+[cheek_attributes]
+zoom_rotate_time = -0.03
+[cheek_att]
+zoom_rotate_time = -0.03
+
+[cheek_black]:cheek
+kind  =  kiparis
+visual						= w_att_huds\cheek_black	
+inv_name					= cheek_black
+inv_grid_x					= 28
+override_section = cheek_black_attributes
+
+[cheek_black_attributes]
+zoom_rotate_time = -0.03
+
+[cheek_vpo123]:attachment_base_ak
+kind  =  kiparis
+inv_ui_sign				= cheek
+visual						= w_att_huds\cheek_vpo123	
+inv_name					= cheek_vpo123
+inv_name_short			= cheekS
+cost							= 650
+inv_grid_x			= 28
+inv_grid_y         	= 20
+attachment_point		=	cheek|0,0,0|0,0,0
+override_section = cheek_vpo123_attributes
+
+[cheek_vpo123_attributes]
+zoom_rotate_time = -0.04
+[cheek_vpo123_att]:cheek_att
+zoom_rotate_time = -0.04

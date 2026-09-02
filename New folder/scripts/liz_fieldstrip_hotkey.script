@@ -1,0 +1,70 @@
+--[[
+    Mod Name: Middle Mouse to Fieldstrip
+    Author:	liz (creator), YesMan (tweaks)
+    Created:	31-03-2026 (dd-mm-yyyy)
+    Last Edit:	31-03-2026 (dd-mm-yyyy)
+    Version:	v1.0
+]]
+
+local ui_mcm = ui_mcm
+
+--- button to bring up menu
+K_M3 = DIK_keys.MOUSE_3
+-- modifier to field strip all
+MODIFIER = "MOD_ALT"
+
+function ui_inventory.UIInventory.On_CC_Mouse3(self, bag, idx)
+    self:Picker_Toggle(bag, idx)
+    local obj = self.CC[bag]:GetObj(idx)
+    if not obj then
+        self:Print(nil, "Callback On_CC_Mouse3 | no object recieved!", bag, idx)
+        return
+    end
+    bag, idx = self:Picker_Ownership(bag, idx, obj)
+    if not self.CC[bag].showcase then
+        if zzzz_arti_jamming_repairs.has_parts_fieldstrip(obj, bag, self.mode) then
+            zzzz_arti_jamming_repairs.init_fieldstrip_menu(obj)
+        end
+    end
+end
+
+
+
+---Shift click to field-strip all
+---@param bag object
+---@param idx object
+function ui_inventory.UIInventory.On_CC_MOD_Mouse3(self, bag, idx)
+    self:Picker_Toggle(bag, idx)
+    local obj = self.CC[bag]:GetObj(idx)
+    if not obj then
+        self:Print(nil, "Callback On_CC_Mouse3 | no object recieved!", bag, idx)
+        return
+    end
+    bag, idx = self:Picker_Ownership(bag, idx, obj)
+    if not self.CC[bag].showcase then
+        if zzzz_arti_jamming_repairs.has_parts_fieldstrip(obj, bag, self.mode) then
+            -- Field strip ALL
+            zzzz_arti_jamming_repairs.act_fieldstrip(obj:id())
+        end
+    end
+end
+
+
+local originalUtilsUIOnKeyyboard = utils_ui.UICellContainer.OnKeyboard
+utils_ui.UICellContainer.OnKeyboard = function (self, dik, keyboard_action)
+    originalUtilsUIOnKeyyboard(self, dik, keyboard_action)
+    local idx = self.hover.idx
+    if idx then
+        if dik == K_M3 then
+            -- if holding modifier key as well
+            if ui_mcm[MODIFIER] then
+                self:On_Select(idx)
+                self:Callback("On_CC_MOD_Mouse3", self.ID, idx)
+            -- normal hotkey click
+            else
+                self:On_Select(idx)
+                self:Callback("On_CC_Mouse3", self.ID, idx)
+            end
+        end
+    end
+end

@@ -1,11 +1,14 @@
 ;------------------------------------------------------------------------------------------------
 [bolt]:identity_immunities,weapon_probability,default_weapon_params
+modular_attachments = false
         GroupControlSection         = spawn_group
         discovery_dependency        =
         $prefetch                   = 16
         cform                       = skeleton
+		
+		dont_stack                    = false
         
-        class                       = II_BOLT
+		class                       = II_BOLT
         slot                        = 5
         animation_slot              = 6
         ef_weapon_type              = 1
@@ -49,8 +52,8 @@
         PDM_disp_crouch_no_acc      = 1.0
         PDM_disp_vel_factor         = 1.0
         
-        snd_on_take                 = bolt 
- 
+        snd_on_take                 = bolt
+		
 
 [bolt_hud]:hud_base
         item_visual                 = dynamics\devices\dev_bolt\dev_bolt_hud
@@ -59,20 +62,20 @@
         item_position               = 0, 0, 0
         item_orientation            = 0, 0, 0
         
-        hands_position              = 0, -0.06, -0.07
-        hands_position_16x9         = 0, -0.06, -0.07
-        hands_orientation           = 0, 0, 0
-        hands_orientation_16x9      = 0, 0, 0
+        hands_position              = 0.033, -0.25, -0.1
+        hands_position_16x9         = 0.033, -0.25, -0.1
+        hands_orientation           = 0, 5, -6
+        hands_orientation_16x9      = 0, 5, -6
         
-        anm_bore                    = bolt_sh_bore, idle
-        anm_hide                    = bolt_sh_hide, idle
-        anm_idle                    = bolt_sh_idle, idle
-        anm_idle_moving             = bolt_sh_walk, idle
-        anm_idle_sprint             = bolt_sh_sprint, idle, 1.1
-        anm_show                    = bolt_sh_show, idle
-        anm_throw                   = bolt_sh_throw_end, throw
-        anm_throw_begin             = bolt_sh_throw_start
-        anm_throw_idle              = bolt_sh_throw_idle, idle
+        anm_bore                    = dev_bolt_idle_bore
+        anm_hide                    = dev_bolt_holster
+        anm_idle                    = dev_bolt_idle
+        anm_idle_moving             = dev_bolt_idle_moving
+        anm_idle_sprint             = dev_bolt_idle_sprint
+        anm_show                    = dev_bolt_draw
+        anm_throw                   = dev_bolt_shoot_end
+        anm_throw_begin             = dev_bolt_shoot_start
+        anm_throw_idle              = dev_bolt_shoot_idle
         
         fire_bone                   = wpn_body
         fire_point                  = 0, 0, 0

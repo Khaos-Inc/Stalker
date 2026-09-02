@@ -25,6 +25,11 @@ local sound_rank_enabled    = stealth_mcm.get_config("sound_rank_enabled")
 local sound_rank_mult       = stealth_mcm.get_config("sound_rank_mult")
 local sound_weather_enabled = stealth_mcm.get_config("sound_weather_enabled")
 local sound_weather_mult    = stealth_mcm.get_config("sound_weather_mult")
+--------------------------------------
+local ACTOR_SPEED_SAMPLE_MS = 200
+local last_actor_pos = nil
+local last_actor_speed_update = 0
+local cached_actor_speed = 0
 
 DEBUG = false
 -------------------------------------------------------------------------------
@@ -198,13 +203,8 @@ function get_npc_detection_values(npc)
         local rank_mult = npc_detection_rank[key] or 1.0
         local final_rank_mult = rank_mult * mcm_mult
 
-        local scaled_base_dist_vals = {}
-        for k, v in pairs(base_dist_vals) do
-                scaled_base_dist_vals[k] = (type(v) == "number") and (v * mcm_mult) or v
-        end
-
         if DEBUG then utils_data.debug_write(string.format("[DET] %.2f", final_rank_mult)) end
-        return final_rank_mult, scaled_base_dist_vals
+        return final_rank_mult, base_dist_vals
 end
 
 local function is_valid_detection_npc(npc)
@@ -287,23 +287,34 @@ function get_actor_speed()
         if not db.actor then return 0 end
 
         local pos = db.actor:position()
-        local time = time_global()
-        if not last_actor_pos or not last_update_time then
+        local now = time_global()
+
+        if not last_actor_pos then
                 last_actor_pos = pos
-                last_update_time = time
+                last_actor_speed_update = now
+                cached_actor_speed = 0
                 return 0
         end
 
+        local elapsed = now - last_actor_speed_update
+        if elapsed < ACTOR_SPEED_SAMPLE_MS then
+                return cached_actor_speed
+        end
+
         local dist = pos:distance_to(last_actor_pos)
-        local delta = (time - last_update_time) / 200
+        local delta = elapsed / ACTOR_SPEED_SAMPLE_MS
 
         last_actor_pos = pos
-        last_update_time = time
+        last_actor_speed_update = now
 
-        if delta <= 0 then return 0 end
+        if delta <= 0 then
+                cached_actor_speed = 0
+                return 0
+        end
 
         local speed = dist / delta
-        if speed < 0.1 then return 0 end
+        if speed < 0.1 then speed = 0 end
+        cached_actor_speed = speed
 
         if DEBUG then utils_data.debug_write(string.format("[SPD] %.2f", speed)) end
         return speed
@@ -415,9 +426,9 @@ local function npc_on_update(npc)
         local tg = current_time
         if tg < (npc_next_detection_time[id] or 0) then return end
         local cooldown = 1200
-        if speed > 0.24 then
+        if speed > 0.36 then
                 cooldown = 800
-        elseif speed > 0.36 then
+        elseif speed > 0.24 then
                 cooldown = 1000
         else
                 cooldown = 1500

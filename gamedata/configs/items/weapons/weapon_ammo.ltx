@@ -1,34 +1,1288 @@
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; BASE AMUNITION
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 [ammo_base]:identity_immunities,default_weapon_params
-;belt				                     = true;
-icons_texture 							 = ui\grok_bo_ammo_icons.dds
-slot				                     = -1
-cform                                    = skeleton
-class                                    = AMMO
-kind			       				 	 = w_ammo
-tier                                     = 1
-box_size		                         = 1
-4to1_tracer                              = false
-buck_shot                                = 1
-explosive                                = false
-impair                                   = 0.40
-k_bullet_speed                           = 1
-k_cam_dispersion                         = 0.7
-k_dist                                   = 1
-k_disp                                   = 1
-k_hit                                    = 1
-k_impulse                                = 1
-tracer_color_ID                          = 0
-tracer                                   = on
-wm_size                                  = 0.05
-k_air_resistance                         = 1
-disassemble_parts				 		 = prt_i_ammo,prt_i_ammo
-snd_on_take								 = ammo
+slot								= -1
+cost							= 600
+cform							= skeleton
+class							= AMMO
+kind			       				= w_ammo
+inv_grid_width				= 1
+inv_grid_height			= 1
+tier								= 1
+box_size						= 1
+4to1_tracer					= false
+buck_shot					= 1
+explosive						= false
+impair							= 1
+k_bullet_speed			= 1
+k_cam_dispersion		= 1
+k_dist							= 1
+k_disp							= 1
+k_hit							= 1
+k_impulse					= 0
+tracer_color_ID			= 0	;color_0  yellow	;color_1  white	;color_2  red	;color_3  green	;color_4  blue
+tracer							= off
+tracer_width =              1.0
+wm_size						= 0.05
+k_air_resistance			= 1
+disassemble_parts		= prt_i_ammo,prt_i_ammo
+snd_on_take				= ammo
+can_stack = true
+dont_stack = false
+[ammo_deso]:ammo_base
+$spawn						= "weapons\ammo\ammo_9x19_fmj"
+discovery_dependency =
+class							= AMMO_S
+$prefetch 					= 64
+icons_texture				= ui\ui_icons_ammo
 
-;;;;;;;;;;;;;;;;;;;;;;;KNIFE AMMO;;;;;;;;;;;;;;;;;;;;;;;
+[ammo_9x18_fmj]:ammo_deso
+GroupControlSection	= spawn_group
+$spawn						= "weapons\ammo\ammo_9x18_fmj"
+visual          					= w_att_huds\ammo_9x18.ogf
+inv_name						= ammo_9x18_pst
+inv_name_short			= ammo_9x18S
+description					= ammo_9x18_pstD
+inv_weight					= 0.2
+inv_grid_x					= 0
+inv_grid_y					= 0
+1icon_layer = fmj_ico
+k_ap							= 0.35
+k_hit							= 33
+k_bullet_speed			        = 320
+tier							= 1
+cost							= 600
+box_size						= 20
+[ammo_9x18_fmj_bad]:ammo_9x18_fmj
+inv_grid_y					= 1
+inv_name						= ammo_9x18_pst_bad
+description					= ammo_9x18_pstD_bad
+k_ap							= 0.30
+k_hit							= 45
+k_bullet_speed			        = 250
+tier							= 1
+cost							= 670
+box_size						= 20
+[ammo_9x18_fmj_verybad]:ammo_9x18_fmj_bad
+
+[ammo_9x18_pmm]:ammo_9x18_fmj
+description					= ammo_9x18_ppe_descr
+inv_name						= ammo_9x18_ppe
+inv_grid_y					= 4
+1icon_layer = ep_ico
+k_ap							= 0.40
+k_hit							= 30
+k_bullet_speed			        = 430
+tier							= 1
+cost							= 780
+box_size						= 20
+[ammo_9x18_pmm_bad]:ammo_9x18_pmm
+description					= ammo_9x18_ppe_descr_bad
+inv_name					= ammo_9x18_ppe_bad
+inv_grid_y					= 5
+k_ap							= 0.37
+k_hit							= 42
+k_bullet_speed			        = 330
+tier							= 1
+cost							= 720
+box_size						= 20
+[ammo_9x18_pmm_verybad]:ammo_9x18_pmm_bad
+
+[ammo_9x18_ap]:ammo_9x18_fmj
+description					= ammo_9x18_pbmD
+inv_name						= ammo_9x18_pbm
+inv_grid_y         			= 2
+1icon_layer = ap_ico
+k_ap							= 0.45
+k_hit							= 25
+k_bullet_speed			        = 480
+tier							= 1
+cost							= 1020
+box_size						= 20
+[ammo_9x18_ap_bad]:ammo_9x18_ap
+description					= ammo_9x18_pbmD_bad
+inv_name						= ammo_9x18_pbm_bad
+inv_grid_y         			= 3
+k_ap							= 0.32
+k_hit							= 35
+k_bullet_speed			        = 470
+tier							= 1
+cost							= 960
+box_size						= 20
+[ammo_9x18_ap_verybad]:ammo_9x18_ap_bad
+
+[ammo_9x19_fmj]:ammo_9x18_fmj
+$spawn						= "weapons\ammo\ammo_9x19_fmj"
+visual          					= w_att_huds\ammo_9x19.ogf
+description					= ammo_9x19_fmjD
+inv_name						= ammo_9x19_fmj
+inv_name_short			= ammo_9x19S
+inv_weight					= 0.22
+inv_grid_x					= 1
+k_ap							= 0.48
+k_hit							= 38
+k_bullet_speed			        = 380
+tier							= 1
+cost							= 950
+box_size						= 20
+[ammo_9x19_fmj_bad]:ammo_9x19_fmj
+description					= ammo_9x19_fmjD_bad
+inv_name						= ammo_9x19_fmj_bad
+inv_grid_y         			= 1
+k_ap							= 0.45
+k_hit							= 40
+k_bullet_speed			        = 390
+tracer							= on
+tracer_color_ID			        = 3
+tier							= 1
+cost							= 1120
+box_size						= 20
+[ammo_9x19_fmj_verybad]:ammo_9x19_fmj_bad
+
+[ammo_9x19_pbp]:ammo_9x19_fmj
+description					= ammo_9x19_pbpD
+inv_name						= ammo_9x19_pbp
+inv_grid_y					= 2
+1icon_layer = ap_ico
+k_ap							= 0.55
+k_hit							= 27
+k_bullet_speed			        = 600
+tier							= 2
+cost							= 1450
+box_size						= 20
+[ammo_9x19_pbp_bad]:ammo_9x19_pbp
+description					= ammo_9x19_pbpD_bad
+inv_name						= ammo_9x19_pbp_bad
+inv_grid_y         			= 3
+k_ap							= 0.37
+k_hit							= 55
+k_bullet_speed			        = 360
+tier							= 1
+cost							= 920
+box_size						= 20
+[ammo_9x19_pbp_verybad]:ammo_9x19_pbp_bad
+
+[ammo_9x19_ap]:ammo_9x19_fmj
+GroupControlSection	= spawn_group
+description					= ammo_9x19_ripD
+inv_name						= ammo_9x19_rip
+inv_grid_y					= 4
+wm_size						= 0.02
+1icon_layer = ep_ico
+k_ap							= 0.57
+k_hit							= 21
+k_bullet_speed			        = 480
+tier							= 1
+cost							= 1380
+box_size						= 20
+[ammo_9x19_ap_bad]:ammo_9x19_ap
+inv_grid_y					= 5
+[ammo_9x19_ap_verybad]:ammo_9x19_ap_bad
+
+[ammo_9x21_ps]:ammo_9x19_fmj
+visual          					= w_att_huds\ammo_9x21.ogf
+description					= ammo_9x21_psD
+inv_name						= ammo_9x21_ps
+inv_name_short			= ammo_9x21S
+inv_weight					= 0.24
+inv_grid_x         			= 2
+inv_grid_y         			= 0
+k_ap							= 0.5
+k_hit							= 48
+k_bullet_speed			        = 410
+tier							= 2
+cost							= 1470
+box_size						= 20
+[ammo_9x21_ps_bad]:ammo_9x21_ps
+description					= ammo_9x21_psD_bad
+inv_name						= ammo_9x21_ps_bad
+inv_grid_y         			= 1
+k_ap							= 0.48
+k_hit							= 51
+tracer							= on
+tracer_color_ID			        = 0
+k_bullet_speed			        = 420
+tier							= 2
+cost							= 1620
+box_size						= 20
+
+[ammo_9x21_pe]:ammo_9x21_ps
+inv_name						= ammo_9x21_pe
+description					= ammo_9x21_peD
+inv_grid_y         			= 4
+1icon_layer = ep_ico
+k_ap							= 0.42
+k_hit							= 70
+k_bullet_speed			        = 410
+tier							= 1
+cost							= 1400
+box_size						= 20
+[ammo_9x21_pe_bad]:ammo_9x21_pe
+description					= ammo_9x21_peD_bad
+inv_name						= ammo_9x21_pe_bad
+inv_grid_y         			= 5
+k_ap							= 0.39
+k_hit							= 78
+k_bullet_speed			        = 390
+tier							= 2
+cost							= 1510
+box_size						= 20
+
+[ammo_9x21_bt]:ammo_9x21_ps
+inv_name						= ammo_9x21_bt
+description					= ammo_9x21_btD
+inv_grid_y					= 2
+tracer							=	on
+tracer_color_ID			=	3
+1icon_layer = ap_ico
+k_ap							= 0.6
+k_hit							= 39
+k_bullet_speed			        = 420
+tracer							= on
+tracer_color_ID			        = 2
+tier							= 3
+cost							= 1950
+box_size						= 20
+[ammo_9x21_bt_bad]:ammo_9x21_bt
+description					= ammo_9x21_btD_bad
+inv_name						= ammo_9x21_bt_bad
+inv_grid_y					= 3
+k_ap							= 0.6
+k_hit							= 39
+k_bullet_speed			        = 430
+tier							= 2
+cost							= 1720
+box_size						= 20
+
+[ammo_7.62x25_p]:ammo_deso
+GroupControlSection	= spawn_group
+visual          					= w_att_huds\ammo_762x25.ogf
+inv_name						= ammo_762x25_p
+inv_name_short			= ammo_762x25S
+description					= ammo_762x25_pD
+box_size						= 20
+inv_weight					= 0.24
+inv_grid_x         			= 3
+inv_grid_y         			= 0
+wm_size        				= 0.04
+1icon_layer = ep_ico
+k_ap							= 0.33
+k_hit							= 45
+k_bullet_speed			        = 460
+tier							= 1
+cost							= 600
+box_size						= 20
+[ammo_7.62x25_p_bad]:ammo_7.62x25_p
+description					= ammo_762x25_pD_bad
+inv_name						= ammo_762x25_p_bad
+inv_grid_y         			= 1
+k_ap							= 0.41
+k_hit							= 33
+k_bullet_speed			        = 440
+tracer							= on
+tracer_color_ID			        = 2
+tier							= 1
+cost							= 780
+box_size						= 20
+[ammo_7.62x25_p_verybad]:ammo_7.62x25_p_bad
+
+[ammo_7.62x25_ps]:ammo_7.62x25_p
+description					= ammo_762x25_pstD
+inv_name						= ammo_762x25_pst
+inv_grid_y         			= 2
+1icon_layer = fmj_ico
+k_ap							= 0.44
+k_hit							= 28
+k_bullet_speed			        = 480
+tier							= 1
+cost							= 720
+box_size						= 20
+[ammo_7.62x25_ps_bad]:ammo_7.62x25_ps
+description					= ammo_762x25_pstD_bad
+inv_name						= ammo_762x25_pst_bad
+inv_grid_y         			= 3
+k_ap							= 0.53
+k_hit							= 31
+k_bullet_speed			        = 530
+tier							= 2
+cost							= 990
+box_size						= 20
+[ammo_7.62x25_ps_verybad]:ammo_7.62x25_ps_bad
+
+[ammo_11.43x23_fmj]:ammo_deso
+GroupControlSection	= spawn_group
+$spawn						= "weapons\ammo\ammo_11.43x23_fmj"
+visual          					= w_att_huds\ammo_45_acp.ogf
+inv_name						= ammo_45_acp_fmj
+inv_name_short			= ammo_45_acpS
+description					= ammo_45_acp_fmjD
+box_size						= 20
+inv_weight					= 0.3
+inv_grid_x         			= 4
+inv_grid_y         			= 0
+wm_size         				= 0.07
+1icon_layer = fmj_ico
+k_ap							= 0.51
+k_hit							= 40
+k_bullet_speed			        = 260
+tier							= 1
+cost							= 1100
+box_size						= 20
+[ammo_11.43x23_fmj_bad]:ammo_11.43x23_fmj
+description					= ammo_45_acp_fmjD_bad
+inv_name						= ammo_45_acp_fmj_bad
+inv_grid_y         			= 1
+k_ap							= 0.56
+k_hit							= 34
+k_bullet_speed			        = 260
+tier							= 1
+cost							= 1250
+box_size						= 20
+[ammo_11.43x23_fmj_verybad]:ammo_11.43x23_fmj_bad
+
+[ammo_11.43x23_hydro]:ammo_11.43x23_fmj
+GroupControlSection	= spawn_group
+description					= ammo_45_acp_hydroD
+inv_name						= ammo_45_acp_hydro
+inv_grid_y					= 4
+wm_size         				= 0.08
+1icon_layer = ep_ico
+k_ap							= 0.33
+k_hit							= 67
+k_bullet_speed			        = 320
+tier							= 2
+cost							= 1520
+box_size						= 20
+[ammo_11.43x23_hydro_bad]:ammo_11.43x23_hydro
+description					= ammo_45_acp_hydroD_bad
+inv_name						= ammo_45_acp_hydro_bad
+inv_grid_y					= 5
+k_ap							= 0.28
+k_hit							= 85
+k_bullet_speed			        = 290
+tier							= 1
+cost							= 1490
+box_size						= 20
+[ammo_11.43x23_hydro_verybad]:ammo_11.43x23_hydro_bad
+
+[ammo_11.43x23_ap]:ammo_11.43x23_fmj
+GroupControlSection	= spawn_group
+inv_name						= ammo_45_acp_ap
+description					= ammo_45_acp_apD
+inv_grid_y					= 2
+1icon_layer = ap_ico
+k_ap							= 0.6
+k_hit							= 45
+k_bullet_speed			        = 410
+tier							= 2
+cost							= 1720
+box_size						= 20
+[ammo_11.43x23_ap_bad]:ammo_11.43x23_ap
+description					= ammo_45_acp_apD_bad
+inv_name						= ammo_45_acp_ap_bad
+inv_grid_y					= 3
+k_ap							= 0.6
+k_hit							= 43
+k_bullet_speed                  = 250
+tracer							= on
+tracer_color_ID			        = 1
+tier							= 2
+cost							= 2100
+box_size						= 20
+
+[ammo_357_hp_mag]:ammo_deso
+GroupControlSection	= spawn_group
+$spawn						= "weapons\wpn_ammo\ammo_357_hp_mag"
+visual							= w_att_huds\ammo_357_mag.ogf
+box_size						= 12
+inv_name						= ammo_357_mag_hp
+inv_name_short			= ammo_357_magS
+description					= ammo_357_magD
+inv_weight					= 0.2
+inv_grid_x					= 5
+inv_grid_y					= 2
+wm_size						= 0.06
+1icon_layer = ep_ico
+k_ap							= 0.28
+k_hit							= 130
+k_bullet_speed			        = 380
+tier							= 2
+cost							= 1900
+box_size						= 20
+[ammo_357_hp_mag_bad]:ammo_357_hp_mag
+description					= ammo_357_magD_bad
+inv_name						= ammo_357_mag_hp_bad
+inv_grid_y					= 3
+k_ap							= 0.37
+k_hit							= 98
+k_bullet_speed			        = 390
+tier							= 2
+cost							= 2010
+box_size						= 20
+[ammo_357_hp_mag_verybad]:ammo_357_hp_mag_bad
+
+[ammo_357_fmj_mag]:ammo_357_hp_mag
+GroupControlSection	= spawn_group
+inv_name						= ammo_357_mag_fmj
+description					= ammo_357_mag_fmjD
+inv_grid_y					= 0
+1icon_layer = fmj_ico
+k_ap							= 0.43
+k_hit							= 65
+k_bullet_speed                  = 440
+tier							= 2
+cost							= 2200
+box_size						= 20
+[ammo_357_fmj_mag_bad]:ammo_357_fmj_mag
+description					= ammo_357_mag_fmjD_bad
+inv_name						= ammo_357_mag_fmj_bad
+inv_grid_y					= 1
+k_ap							= 0.51
+k_hit							= 80
+k_bullet_speed			        = 460
+tier							= 3
+cost							= 2940
+box_size						= 20
+
+[ammo_44_hp_mag]:ammo_deso
+GroupControlSection	= spawn_group
+$spawn						= "weapons\wpn_ammo\ammo_357_hp_mag" 
+visual          					= w_att_huds\ammo_44_mag.ogf
+inv_name						= ammo_44_mag_hp
+inv_name_short			= ammo_44_magS
+description					= ammo_44_mag_hpD
+inv_weight					= 0.15
+inv_grid_x         			= 6
+inv_grid_y         			= 2
+wm_size        				= 0.055
+1icon_layer = ep_ico
+k_ap							= 0.34
+k_hit							= 140
+k_bullet_speed			        = 390
+tier							= 2
+cost							= 2100
+box_size						= 20
+[ammo_44_hp_mag_bad]:ammo_44_hp_mag
+description					= ammo_44_mag_hpD_bad
+inv_name						= ammo_44_mag_hp_bad
+inv_grid_y         			= 3
+k_ap							= 0.41
+k_hit							= 100
+k_bullet_speed			        = 270
+tier							= 2
+cost							= 1860
+box_size						= 20
+
+[ammo_44_fmj_mag]:ammo_44_hp_mag
+GroupControlSection	= spawn_group
+inv_name						= ammo_44_mag_fmj
+description					= ammo_44_mag_fmjD
+inv_weight					= 0.170
+inv_grid_y					= 0
+wm_size						= 0.044
+1icon_layer = fmj_ico
+k_ap							= 0.52
+k_hit							= 80
+k_bullet_speed			        = 430
+tier							= 2
+cost							= 2420
+box_size						= 20
+[ammo_44_fmj_mag_bad]:ammo_44_fmj_mag
+description					= ammo_44_mag_fmjD_bad
+inv_name						= ammo_44_mag_fmj_bad
+inv_grid_y					= 1
+k_ap							= 0.58
+k_hit							= 65
+k_bullet_speed			        = 380
+tier							= 3
+cost							= 3100
+box_size						= 20
+
+[ammo_5.7x28_ss190]:ammo_deso
+GroupControlSection	= spawn_group
+visual							= w_att_huds\ammo_57x28.ogf
+inv_name						= ammo_57x28_ss190
+inv_name_short			= ammo_57x28S
+description					= ammo_57x28_ss190D
+box_size						= 30
+inv_weight					= 0.38
+inv_grid_x         			= 7
+inv_grid_y         			= 2
+wm_size         				= 0.02
+1icon_layer = ap_ico
+k_ap							= 0.47
+k_hit							= 27
+k_bullet_speed			        = 680
+tier							= 2
+cost							= 2000
+box_size						= 20
+[ammo_5.7x28_ss190_bad]:ammo_5.7x28_ss190
+description					= ammo_57x28_ss190D_bad
+inv_name						= ammo_57x28_ss190_bad
+inv_grid_y         			= 3
+k_ap							= 0.51
+k_hit							= 21
+k_bullet_speed			        = 850
+tracer_color_ID			        = 4
+tracer							= on
+tier							= 2
+cost							= 2450
+box_size						= 20
+[ammo_5.7x28_ss190_verybad]:ammo_5.7x28_ss190_bad
+
+[ammo_5.7x28_ss195]:ammo_5.7x28_ss190
+inv_name					= ammo_57x28_ss195lf
+description				= ammo_57x28_ss195lfD
+inv_grid_y         		= 0
+wm_size         			= 0.04
+1icon_layer = fmj_ico
+k_ap							= 0.27
+k_hit							= 40
+k_bullet_speed			        = 700
+tier							= 1
+cost							= 1720
+box_size						= 20
+[ammo_5.7x28_ss195_bad]:ammo_5.7x28_ss195
+description				= ammo_57x28_ss195lfD_bad
+inv_name					= ammo_57x28_ss195lf_bad
+inv_grid_y         		= 1
+k_ap							= 0.43
+k_hit							= 31
+k_bullet_speed                  = 310
+tier							= 1
+cost							= 1980
+box_size						= 20
+[ammo_5.7x28_ss195_verybad]:ammo_5.7x28_ss195_bad
+
+[ammo_5.45x39_fmj]:ammo_deso
+GroupControlSection	= spawn_group
+$spawn						= "weapons\ammo\ammo_5.45x39_fmj"
+visual							= w_att_huds\ammo_545x39.ogf
+inv_name						= ammo_545x39_ps
+inv_name_short			= ammo_545x39S
+description					= ammo_545x39_psD
+box_size						= 30
+inv_weight					= 0.36
+inv_grid_x         			= 8
+inv_grid_y         			= 0
+wm_size         				= 0.03
+1icon_layer = fmj_ico
+k_ap							= 0.55
+k_hit							= 45
+k_bullet_speed			        = 890
+tier							= 2
+cost							= 2500
+box_size						= 15
+[ammo_5.45x39_fmj_bad]:ammo_5.45x39_fmj
+description					= ammo_545x39_psD_bad
+inv_name						= ammo_545x39_ps_bad
+inv_grid_y         			= 1
+k_ap							= 0.52
+k_hit							= 50
+tracer							= on
+tracer_color_ID			        = 2
+k_bullet_speed			        = 870
+tier							= 3
+cost							= 2940
+box_size						= 15
+[ammo_5.45x39_fmj_verybad]:ammo_5.45x39_fmj_bad
+
+[ammo_5.45x39_ep]:ammo_5.45x39_fmj
+GroupControlSection	= spawn_group
+inv_name						= ammo_545x39_ep
+description					= ammo_545x39_epD
+inv_grid_y					= 4
+tracer							=	on
+tracer_color_ID			=	3
+1icon_layer = ep_ico
+k_ap							= 0.5
+k_hit							= 45
+k_bullet_speed			        = 870
+tier							= 2
+cost							= 2500
+box_size						= 15
+[ammo_5.45x39_ep_bad]:ammo_5.45x39_ep
+description					= ammo_545x39_epD_bad
+inv_name						= ammo_545x39_ep_bad
+inv_grid_y					= 5
+k_ap							= 0.47
+k_hit							= 50
+k_bullet_speed			        = 300
+tier							= 3
+cost							= 2940
+box_size						= 15
+[ammo_5.45x39_ep_verybad]:ammo_5.45x39_ep_bad
+
+[ammo_5.45x39_ap]:ammo_5.45x39_fmj
+GroupControlSection	= spawn_group
+$spawn						= "weapons\ammo\ammo_5.45x39_ap"
+inv_name						= ammo_545x39_bs
+description					= ammo_545x39_bsD
+inv_grid_y					= 2
+1icon_layer = ap_ico
+k_ap							= 0.66
+k_hit							= 31
+k_bullet_speed			        = 870
+tier							= 2
+cost							= 2720
+box_size						= 15
+[ammo_5.45x39_ap_bad]:ammo_5.45x39_ap
+description					= ammo_545x39_bsD_bad
+inv_name						= ammo_545x39_bs_bad
+inv_grid_y					= 3
+k_ap							= 0.63
+k_hit							= 36
+k_bullet_speed                  = 890
+tier							= 2
+cost							= 2250
+box_size						= 15
+[ammo_5.45x39_ap_verybad]:ammo_5.45x39_ap_bad
+
+[ammo_5.56x45_fmj]:ammo_deso
+GroupControlSection	= spawn_group
+$spawn						= "weapons\ammo\ammo_5.56x45_ss190"
+visual							= w_att_huds\ammo_556x45.ogf
+inv_name						= ammo_556x45_m855
+inv_name_short			= ammo_556x45S
+description					= ammo_556x45_m855D
+box_size						= 30
+inv_weight					= 0.36
+inv_grid_x					= 9
+inv_grid_y					= 0
+1icon_layer = fmj_ico
+k_ap							= 0.56
+k_hit							= 40
+k_bullet_speed			        = 990
+tier							= 2
+cost							= 2600
+box_size						= 15
+
+;fake_grenade_name = wpn_fake_missile2
+
+[ammo_5.56x45_fmj_bad]:ammo_5.56x45_fmj
+inv_name						= ammo_556x45_m855_bad
+description					= ammo_556x45_m855D_bad
+inv_grid_y					= 1
+k_ap							= 0.6
+k_hit							= 41
+k_bullet_speed			        = 950
+tracer							= on
+tracer_color_ID			        = 0
+tier							= 3
+cost							= 3320
+box_size						= 15
+[ammo_5.56x45_fmj_verybad]:ammo_5.56x45_fmj_bad
+
+[ammo_5.56x45_ss190]:ammo_5.56x45_fmj
+GroupControlSection	= spawn_group
+inv_name				= ammo_556x45_m856
+description			= ammo_556x45_m856D
+inv_grid_y         	= 4
+tracer_color_ID			= 2
+tracer							= on
+1icon_layer = ep_ico
+k_ap							= 0.66
+k_hit							= 46
+k_bullet_speed			        = 960
+tier							= 3
+cost							= 3210
+box_size						= 15
+[ammo_5.56x45_ss190_bad]:ammo_5.56x45_ss190
+inv_name				= ammo_556x45_m856_bad
+description			= ammo_556x45_m856D_bad
+inv_grid_y         	= 5
+k_ap							= 0.54
+k_hit							= 51
+k_bullet_speed			        = 940
+tier							= 2
+cost							= 2910
+box_size						= 15
+[ammo_5.56x45_ss190_verybad]:ammo_5.56x45_ss190_bad
+
+[ammo_5.56x45_ap]:ammo_5.56x45_fmj
+GroupControlSection	= spawn_group
+$spawn						= "weapons\ammo\ammo_5.56x45_ap"
+inv_name						= ammo_556x45_m855a1
+description					= ammo_556x45_m855a1D
+inv_grid_y					= 2
+1icon_layer = ap_ico
+k_ap							= 0.72
+k_hit							= 35
+k_bullet_speed			        = 980
+tier							= 3
+cost							= 3400
+box_size						= 15
+[ammo_5.56x45_ap_bad]:ammo_5.56x45_ap
+description					= ammo_556x45_m855a1D_bad
+inv_name						= ammo_556x45_m855a1_bad
+inv_grid_y					= 3
+k_ap							= 0.61
+k_hit							= 65
+k_bullet_speed			        = 840
+tier							= 4
+cost							= 3850
+box_size						= 15
+[ammo_5.56x45_ap_verybad]:ammo_5.56x45_ap_bad
+
+[ammo_7.62x39_fmj]:ammo_deso
+GroupControlSection	= spawn_group
+visual							= w_att_huds\ammo_762x39.ogf
+inv_name						= ammo_762x39_ps
+inv_name_short			= ammo_762x39S
+description					= ammo_762x39_psD
+box_size						= 20
+inv_weight					= 0.32
+inv_grid_x					= 10
+inv_grid_y					= 0
+wm_size						= 0.045
+1icon_layer = fmj_ico
+k_ap							= 0.56
+k_hit							= 51
+k_bullet_speed			        = 720
+tier							= 2
+cost							= 2700
+box_size						= 15
+[ammo_7.62x39_fmj_bad]:ammo_7.62x39_fmj
+description					= ammo_762x39_psD_bad
+inv_name						= ammo_762x39_ps_bad
+inv_grid_y         			= 1
+k_ap							= 0.52
+k_hit							= 53
+k_bullet_speed			        = 700
+tracer							= on
+tracer_color_ID			        = 1
+tier							= 3
+cost							= 3120
+box_size						= 15
+[ammo_7.62x39_fmj_verybad]:ammo_7.62x39_fmj_bad
+
+[ammo_7.62x39_ap]:ammo_7.62x39_fmj
+GroupControlSection	= spawn_group
+inv_name						= ammo_762x39_bp
+description					= ammo_762x39_bpD
+inv_grid_y					= 2
+1icon_layer = ap_ico
+k_ap							= 0.69
+k_hit							= 39
+k_bullet_speed			        = 740
+tier							= 2
+cost							= 2990
+box_size						= 15
+[ammo_7.62x39_ap_bad]:ammo_7.62x39_ap
+description					= ammo_762x39_bpD_bad
+inv_name						= ammo_762x39_bp_bad
+inv_grid_y         			= 3
+k_ap							= 0.81
+k_hit							= 48
+k_bullet_speed			        = 740
+tier							= 3
+cost							= 3890
+box_size						= 15
+[ammo_7.62x39_ap_verybad]:ammo_7.62x39_ap_bad
+
+[ammo_7.62x39_ep]:ammo_7.62x39_fmj
+GroupControlSection	= spawn_group
+description					= ammo_762x39_epD
+inv_name						= ammo_762x39_ep
+inv_grid_y         			= 4
+tracer							=	on
+tracer_color_ID			=	3
+1icon_layer = ep_ico
+k_ap							= 0.41
+k_hit							= 75
+k_bullet_speed                  = 290
+tier							= 2
+cost							= 2650
+box_size						= 15
+[ammo_7.62x39_ep_bad]:ammo_7.62x39_ep
+description					= ammo_762x39_epD_bad
+inv_name						= ammo_762x39_ep_bad
+inv_grid_y         			= 5
+k_ap							= 0.44
+k_hit							= 61
+k_bullet_speed                  = 690
+tier							= 2
+cost							= 2220
+box_size						= 15
+
+[ammo_9x39_pab9]:ammo_deso
+GroupControlSection	= spawn_group
+$spawn						= "weapons\ammo\ammo_9x39_pab9"
+visual							= w_att_huds\ammo_9x39.ogf
+description					= ammo_9x39_pab9D
+inv_name						= ammo_9x39_pab9
+inv_name_short			= ammo_9x39S
+box_size						= 20
+inv_weight					= 0.5
+inv_grid_x         			= 11
+inv_grid_y         			= 0
+1icon_layer = fmj_ico
+k_ap							= 0.68
+k_hit							= 58
+k_bullet_speed			        = 300
+tier							= 3
+cost							= 3550
+box_size						= 15
+[ammo_9x39_pab9_bad]:ammo_9x39_pab9
+inv_grid_y         			= 1
+[ammo_9x39_pab9_verybad]:ammo_9x39_pab9_bad
+
+[ammo_9x39_ap]:ammo_9x39_pab9
+GroupControlSection	= spawn_group
+$spawn						= "weapons\ammo\ammo_9x39_ap"
+description					= ammo_9x39_sp6D
+inv_name						= ammo_9x39_sp6
+inv_grid_y					= 2
+1icon_layer = ap_ico
+k_ap							= 0.82
+k_hit							= 62
+k_bullet_speed			        = 290
+tier							= 3
+cost							= 4280
+box_size						= 15
+[ammo_9x39_ap_bad]:ammo_9x39_ap
+inv_grid_y					= 3
+[ammo_9x39_ap_verybad]:ammo_9x39_ap_bad
+
+[ammo_9x39_sp5]:ammo_9x39_pab9
+GroupControlSection	= spawn_group
+description					= ammo_9x39_sp5D
+inv_name						= ammo_9x39_sp5
+inv_weight					= 0.5
+inv_grid_y					= 4
+1icon_layer = ep_ico
+k_ap							= 0.55
+k_hit							= 68
+k_bullet_speed			        = 290
+tier							= 3
+cost							= 3120
+box_size						= 15
+[ammo_9x39_sp5_bad]:ammo_9x39_sp5
+inv_grid_y					= 5
+
+[ammo_7.62x51_fmj]:ammo_deso
+GroupControlSection	= spawn_group
+$spawn						= "weapons\ammo\ammo_7.62x51_fmj"
+class							= AMMO
+visual							= w_att_huds\ammo_762x51.ogf
+description					= ammo_762x51_m80D
+inv_name						= ammo_762x51_m80
+inv_name_short			= ammo_762x51S
+box_size						= 15
+inv_weight					= 0.38
+inv_grid_x					= 12
+inv_grid_y					= 0
+wm_size						= 0.045
+1icon_layer = fmj_ico
+k_ap							= 0.68
+k_hit							= 90
+k_bullet_speed			        = 900
+tier							= 3
+cost							= 3600
+box_size						= 15
+[ammo_7.62x51_fmj_bad]:ammo_7.62x51_fmj
+inv_grid_y					= 1
+description					= ammo_762x51_m80D_bad
+inv_name						= ammo_762x51_m80_bad
+k_ap							= 0.64
+k_hit							= 99
+k_bullet_speed			        = 780
+tracer							= on
+tracer_color_ID			        = 4
+tier							= 3
+cost							= 4380
+box_size						= 15
+[ammo_7.62x51_fmj_verybad]:ammo_7.62x51_fmj_bad
+
+[ammo_7.62x51_ap]:ammo_7.62x51_fmj
+GroupControlSection	= spawn_group
+$spawn						= "weapons\ammo\ammo_7.62x51_ap"
+description					= ammo_762x51_m61D
+inv_name						= ammo_762x51_m61
+inv_grid_y					= 2
+1icon_layer = ap_ico
+k_ap							= 0.85
+k_hit							= 76
+k_bullet_speed			        = 920
+tier							= 3
+cost							= 4620
+box_size						= 15
+[ammo_7.62x51_ap_bad]:ammo_7.62x51_ap
+inv_grid_y					= 3
+[ammo_7.62x51_ap_verybad]:ammo_7.62x51_ap_bad
+
+[ammo_7.62x54_7h1]:ammo_deso
+GroupControlSection	= spawn_group
+$spawn						= "weapons\ammo\ammo_7.62x54_7h1"
+visual							= w_att_huds\ammo_762x54r.ogf
+description					= ammo_762x54_t46D
+inv_name						= ammo_762x54_t46
+inv_name_short			= ammo_762x54S
+box_size						= 10
+inv_weight					= 0.43
+inv_grid_x					= 13
+inv_grid_y					= 4
+wm_size						= 0.045
+1icon_layer = ep_ico
+k_ap							= 0.68
+k_hit							= 110
+k_bullet_speed			        = 870
+tier							= 3
+cost							= 4700
+box_size						= 5
+[ammo_7.62x54_7h1_bad]:ammo_7.62x54_7h1
+description					= ammo_762x54_t46D_bad
+inv_name						= ammo_762x54_t46_bad
+inv_grid_y					= 5
+k_ap							= 0.64
+k_hit							= 115
+k_bullet_speed			        = 800
+tracer							= on
+tracer_color_ID			        = 3
+tier							= 3
+cost							= 5120
+box_size						= 5
+[ammo_7.62x54_7h1_verybad]:ammo_7.62x54_7h1_bad
+
+[ammo_7.62x54_ap]:ammo_7.62x54_7h1
+GroupControlSection	= spawn_group
+$spawn						= "weapons\ammo\ammo_7.62x54_ap"
+description					= ammo_762x54_lpsD
+inv_name						= ammo_762x54_lps
+inv_grid_y					= 0
+tracer                          = off
+1icon_layer = fmj_ico
+k_ap							= 1.0
+k_hit							= 85
+k_bullet_speed			        = 610
+tier							= 4
+cost							= 7630
+box_size						= 5
+[ammo_7.62x54_ap_bad]:ammo_7.62x54_ap
+inv_grid_y					= 1
+[ammo_7.62x54_ap_verybad]:ammo_7.62x54_ap_bad
+
+[ammo_7.62x54_7h14]:ammo_7.62x54_ap
+GroupControlSection	= spawn_group
+$spawn						= "weapons\ammo\ammo_7.62x54_7h14"
+description					= ammo_762x54_snbD
+inv_name						= ammo_762x54_snb
+inv_grid_y					= 2
+1icon_layer = ap_ico
+k_ap							= 0.8
+k_hit							= 80
+k_bullet_speed			        = 820
+tier							= 4
+cost							= 6580
+box_size						= 5
+[ammo_7.62x54_7h14_bad]:ammo_7.62x54_7h14
+inv_grid_y					= 3
+[ammo_7.62x54_7h14_verybad]:ammo_7.62x54_7h14_bad
+
+[ammo_12.7x55_fmj]:ammo_deso
+GroupControlSection	= spawn_group
+$spawn						= "weapons\ammo\ammo_7.62x54_7h1"
+visual							= w_att_huds\ammo_127x55.ogf
+description					= ammo_127x55D
+inv_name						= ammo_127x55
+inv_name_short	        = ammo_127x55
+box_size						= 5
+inv_weight					= 0.5
+inv_grid_x					= 15
+inv_grid_y					= 0
+wm_size						= 0.055
+1icon_layer = fmj_ico
+k_ap							= 0.57
+k_hit							= 70
+buck_shot					    = 2
+k_bullet_speed			        = 300
+tier							= 4
+cost							= 5720
+box_size						= 5
+[ammo_12.7x55_fmj_bad]:ammo_12.7x55_fmj
+description					= ammo_127x55D_bad
+inv_name						= ammo_127x55_bad
+inv_grid_y					= 1
+k_ap							= 0.62
+k_hit							= 90
+k_bullet_speed			        = 290
+tier							= 4
+cost							= 5100
+box_size						= 5
+[ammo_12.7x55_fmj_verybad]:ammo_12.7x55_fmj_bad
+
+[ammo_12.7x55_ap]:ammo_12.7x55_fmj
+GroupControlSection	= spawn_group
+description					= ammo_ps12bD
+inv_name						= ammo_ps12b
+inv_weight					= 0.6
+inv_grid_y					= 2
+1icon_layer = ap_ico
+k_ap							= 0.9
+k_hit							= 120
+k_bullet_speed			        = 500
+tier							= 4
+cost							= 12980
+box_size						= 5
+[ammo_12.7x55_ap_bad]:ammo_12.7x55_ap
+inv_grid_y					= 3
+[ammo_12.7x55_ap_verybad]:ammo_12.7x55_ap_bad
+
+[ammo_12.7x55_pt2]:ammo_12.7x55_ap
+GroupControlSection	= spawn_group
+description					= ammo_sts130_sts130D
+inv_name						= ammo_sts130_sts130
+visual							= w_att_huds\ammo_127x55_pt2.ogf
+inv_weight					= 0.6
+inv_grid_y					= 4
+k_ap							= 0.68
+k_hit							= 135
+k_bullet_speed			        = 570
+tier							= 4
+cost							= 7830
+box_size						= 5
+[ammo_12.7x55_pt_bad]:ammo_12.7x55_pt2
+inv_grid_y					= 5
+
+
+
+[ammo_magnum_300]:ammo_deso
+GroupControlSection	= spawn_group
+$spawn						= "weapons\ammo\ammo_7.62x54_7h1"
+visual							= w_att_huds\ammo_762x67.ogf
+description					= ammo_762x67D
+inv_name						= ammo_762x67
+inv_name_short			= ammo_762x67S
+box_size						= 5
+inv_weight					= 0.67
+inv_grid_x					= 14
+inv_grid_y					= 0
+1icon_layer = ap_ico
+k_ap							= 0.69
+k_hit							= 140
+k_bullet_speed			        = 610
+tier							= 4
+cost							= 8500
+box_size						= 5
+[ammo_magnum_300_bad]:ammo_magnum_300
+description					= ammo_762x67D_bad
+inv_name						= ammo_762x67_bad
+inv_grid_y					= 1
+k_ap							= 0.85
+k_hit							= 95
+k_bullet_speed			        = 1100
+tier							= 5
+cost							= 14950
+box_size						= 5
+[ammo_magnum_300_verybad]:ammo_magnum_300_bad
+
+
+
+[ammo_12x76_zhekan]:ammo_deso
+GroupControlSection	= spawn_group
+$spawn						= "weapons\ammo\ammo_12x76_zhekan"
+visual							= w_att_huds\ammo_12x70.ogf
+description					= ammo_12x70_zhekanD
+inv_name						= ammo_12x70_zhekan
+inv_name_short			= ammo_12x70S
+inv_weight					= 0.6
+inv_grid_x					= 16
+inv_grid_y					= 2
+box_size						= 10
+wm_size						= 0.08
+k_air_resistance			= 1.1
+k_disp							= 0.3
+1icon_layer = fmj_ico
+k_hit							= 170
+k_ap							= 0.37
+k_bullet_speed			        = 420
+tier							= 1
+cost							= 1050
+box_size						= 10
+[ammo_12x76_zhekan_bad]:ammo_12x76_zhekan
+description					= ammo_12x70_zhekanD_bad
+inv_name						= ammo_12x70_zhekan_bad
+inv_grid_y					= 3
+k_hit							= 120
+k_ap							= 0.45
+k_bullet_speed			        = 420
+tier							= 2
+cost							= 1550
+box_size						= 10
+[ammo_12x76_zhekan_verybad]:ammo_12x76_zhekan_bad
+
+[ammo_12x70_buck]:ammo_12x76_zhekan
+GroupControlSection	= spawn_group
+$spawn						= "weapons\ammo\ammo_12x70_buck"
+description					= ammo_12x70_buckD
+inv_name						= ammo_12x70_buck
+inv_grid_y					= 0
+k_disp							=	1
+wm_size						= 0.035
+k_air_resistance			= 2.0
+1icon_layer = buck_ico
+buck_shot					    = 8
+k_hit							= 30
+k_ap							= 0.31
+k_bullet_speed			        = 190
+tier							= 1
+cost							= 900
+box_size						= 10
+[ammo_12x70_buck_self]:ammo_12x70_buck
+inv_grid_y					= 1
+[ammo_12x70_buck_bad]:ammo_12x70_buck
+description					= ammo_12x70_buckD_bad
+inv_name						= ammo_12x70_buck_bad
+inv_grid_y					= 1
+buck_shot					    = 6
+k_hit							= 40
+k_ap							= 0.36
+k_bullet_speed			        = 210
+tier							= 1
+cost							= 1120
+box_size						= 10
+[ammo_12x70_buck_verybad]:ammo_12x70_buck_bad
+
+[ammo_12x76_dart]:ammo_12x70_buck
+GroupControlSection	= spawn_group
+description					= ammo_12x70_flechetteD
+inv_name						= ammo_12x70_flechette
+inv_grid_y					= 4
+wm_size						= 0.02
+k_hit							= 25
+k_ap							= 0.55
+buck_shot				    	= 8
+k_bullet_speed			        = 475
+tier							= 2
+cost							= 2190
+box_size						= 10
+1icon_layer = buck_ico
+
+[ammo_12x76_dart_bad]:ammo_12x76_dart
+GroupControlSection	= spawn_group
+description					= ammo_12x70_flechetteD_bad
+inv_name						= ammo_12x70_flechette_bad
+inv_grid_y					= 5
+wm_size						= 0.015
+1icon_layer = ap_ico
+k_hit							= 35
+k_ap							= 1.0
+k_bullet_speed			        = 580
+tier							= 3
+cost							= 5000
+box_size						= 10
+buck_shot				    	= 1
+[ammo_12x76_dart_verybad]:ammo_12x76_dart
+
+[ammo_23x75_shrapnel]:ammo_deso
+GroupControlSection	= spawn_group
+$spawn				= "weapons\ammo\ammo_12x70_buck"
+visual					= w_att_huds\ammo_23x75.ogf
+description			= ammo_23x75_shrapnelD
+inv_name				= ammo_23x75_shrapnel
+inv_name_short	= ammo_23x75S
+box_size				= 4
+inv_weight			= 0.65
+inv_grid_x			= 17
+inv_grid_y			= 0
+k_air_resistance 	= 2.0
+1icon_layer = buck_ico
+k_hit							= 30
+k_ap					    	= 0.38
+buck_shot			            = 8
+k_bullet_speed			        = 280
+tier							= 2
+cost							= 1420
+box_size						= 10
+[ammo_23x75_shrapnel_bad]:ammo_23x75_shrapnel
+description			= ammo_23x75_shrapnelD_bad
+inv_name				= ammo_23x75_shrapnel_bad
+inv_grid_y			= 1
+k_hit							= 17
+k_ap					    	= 0.37
+buck_shot			            = 15
+k_bullet_speed			        = 210
+tier							= 2
+cost							= 1850
+box_size						= 10
+
+[ammo_23x75_barrikada]:ammo_23x75_shrapnel
+GroupControlSection	= spawn_group
+$spawn						= "weapons\ammo\ammo_12x76_zhekan"
+description					= ammo_23x75_barrikadaD
+inv_name						= ammo_23x75_barrikada
+inv_grid_y					= 2
+k_disp							= 0.45
+wm_size         				= 0.09
+k_air_resistance 			= 1.1
+1icon_layer = ap_ico
+k_hit							= 160
+k_ap							= 0.46
+k_bullet_speed			        = 500
+buck_shot			            = 1
+tier							= 3
+cost							= 2320
+box_size						= 10
+[ammo_23x75_barrikada_bad]:ammo_23x75_barrikada
+inv_grid_y					= 3
+
+[ammo_23x75_rsp_bad]:ammo_23x75_barrikada
+GroupControlSection	= spawn_group
+description					= ammo_23x75_rspD
+inv_name						= ammo_23x75_rsp
+k_disp							= 0.5
+tracer_color_ID			= 2
+tracer							= on
+buck_shot			            = 1
+k_hit							= 100
+k_ap							= 0.1
+wm_size         				= 0.33
+k_bullet_speed			        = 55
+tracer_width = 100
+1icon_layer = ep_ico
+
+;--------END------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+[ammo_7.92x33_fmj]:ammo_base
+GroupControlSection	= spawn_group
+discovery_dependency = 
+class			= AMMO 
+visual                  = dynamics\weapons\wpn_ammo\ammo_792x33_fmj.ogf 
+description		= ammo-7.92x33_fmj_descr
+$prefetch 		= 64
+box_size		= 15
+inv_name		= ammo-7.92x33_fmj
+inv_name_short	        = ammo-7.92x33_fmj_s
+inv_weight		= .37
+inv_grid_width     = 2
+inv_grid_height    = 1
+inv_grid_x         = 55
+inv_grid_y         = 27
+wm_size         = 0.066
+k_air_resistance = 0.25
+tier                                     = 4
+[ammo_7.92x33_fmj_bad]:ammo_7.92x33_fmj
+[ammo_7.92x33_fmj_verybad]:ammo_7.92x33_fmj
+[ammo_7.92x33_ap]:ammo_7.92x33_fmj
+[ammo_7.92x33_ap_bad]:ammo_7.92x33_ap
+[ammo_7.92x33_ap_verybad]:ammo_7.92x33_ap
+[ammo_50_bmg]:ammo_7.62x54_ap ; 7N13
+[ammo_50_bmg_bad]:ammo_50_bmg
+[ammo_50_bmg_verybad]:ammo_50_bmg
+[ammo_4.6x30_fmj]:ammo_base
+class			= AMMO_S
+inv_weight		= 0.2
+[ammo_4.6x30_fmj_bad]:ammo_4.6x30_fmj
+[ammo_4.6x30_fmj_verybad]:ammo_4.6x30_fmj
+
+[ammo_12x76_zhekan_heli]:ammo_12x76_zhekan ; Do not use! Fake zhekan for helicopter
+$spawn			= ;"weapons\ammo\ammo_12x76_zhekan_heli" ; option for Level Editor
+k_disp			= 1
+tracer			= on
+wm_size         = 0.06
+explosive		= off
+[ammo_12x76_bull]:ammo_12x76_zhekan
+wm_size						= 0.06
+
 [ammo_knife]:ammo_base
+cost							= 600
 GroupControlSection	                     = spawn_group
 discovery_dependency 	                 =
 $spawn			                         = "weapons\ammo\ammo_9x19_fmj" ; option for Level Editor
@@ -39,195 +1293,25 @@ description		                         = st_none
 slot 			                         = -1
 $prefetch 		                         = 64
 fake_ammo								 = true
-
-cost			                         = 0
-
-box_size		                         = 1
-
 inv_name			                     = st_none
 inv_name_short		                     = st_none
 inv_weight		                         = 0.001
-
 inv_grid_width                           = 1
 inv_grid_height                          = 1
 inv_grid_x                               = 0
 inv_grid_y                               = 0
-
-k_hit			                         = 1
-k_impulse		                         = 1.1
-k_ap			                         = 0.010
-impair			                         = 1.5
 tracer			                         = off
 wm_size         	                     = 0.085
 k_air_resistance 	                     = 1.5
-
-[ammo_knife_2]:ammo_base
+[ammo_knife_2]:ammo_knife
 GroupControlSection	                     = spawn_group
-discovery_dependency 	                 =
-$spawn			                         = "weapons\ammo\ammo_9x19_fmj" ; option for Level Editor
-class			                         = AMMO_S
-cform                                    = skeleton
-visual                                   = dynamics\weapons\wpn_ammo\ammo_9x19_fmj.ogf
-description		                         = st_none
-slot 			                         = -1
-$prefetch 		                         = 64
-fake_ammo								 = true
-
-cost			                         = 0
-
-box_size		                         = 1
-
-inv_name			                     = st_none
-inv_name_short		                     = st_none
-inv_weight		                         = 0.001
-
-inv_grid_width                           = 1
-inv_grid_height                          = 1
-inv_grid_x                               = 0
-inv_grid_y                               = 0
-
-k_hit			                         = 1
-k_impulse		                         = 1.2
-k_ap			                         = 0.018
-impair			                         = 1.5
-tracer			                         = off
-wm_size         	                     = 0.085
-k_air_resistance 	                     = 1.5
-
-[ammo_knife_3]:ammo_base
+[ammo_knife_3]:ammo_knife
 GroupControlSection	                     = spawn_group
-discovery_dependency 	                 =
-$spawn			                         = "weapons\ammo\ammo_9x19_fmj" ; option for Level Editor
-class			                         = AMMO_S
-cform                                    = skeleton
-visual                                   = dynamics\weapons\wpn_ammo\ammo_9x19_fmj.ogf
-description		                         = st_none
-slot 			                         = -1
-$prefetch 		                         = 64
-fake_ammo								 = true
-
-cost			                         = 0
-
-box_size		                         = 1
-
-inv_name		                         = st_none
-inv_name_short		                     = st_none
-inv_weight		                         = 0.001
-
-inv_grid_width                           = 1
-inv_grid_height                          = 1
-inv_grid_x                               = 0
-inv_grid_y                               = 0
-
-k_hit			                         = 1
-k_impulse		                         = 1.2
-k_ap			                         = 0.0235
-impair			                         = 1.5
-tracer			                         = off
-wm_size         	                     = 0.085
-k_air_resistance 	                     = 1.5
-
-[ammo_knife_4]:ammo_base
+[ammo_knife_4]:ammo_knife
 GroupControlSection	                     = spawn_group
-discovery_dependency 	                 =
-$spawn			                         = "weapons\ammo\ammo_9x19_fmj" ; option for Level Editor
-class			                         = AMMO_S
-cform                                    = skeleton
-visual                                   = dynamics\weapons\wpn_ammo\ammo_9x19_fmj.ogf
-description		                         = st_none
-slot 			                         = -1
-$prefetch 		                         = 64
-fake_ammo								 = true
-
-cost			                         = 0
-
-box_size		                         = 1
-
-inv_name		                         = st_none
-inv_name_short		                     = st_none
-inv_weight		                         = 0.001
-
-inv_grid_width                           = 1
-inv_grid_height                          = 1
-inv_grid_x                               = 0
-inv_grid_y                               = 0
-
-k_hit			                         = 1
-k_impulse		                         = 1.2
-k_ap			                         = 0.035
-impair			                         = 1.5
-tracer			                         = off
-wm_size         	                     = 0.085
-k_air_resistance 	                     = 1.5
-
-[ammo_knife_5]:ammo_base
+[ammo_knife_5]:ammo_knife
 GroupControlSection	                     = spawn_group
-discovery_dependency 	                 =
-$spawn			                         = "weapons\ammo\ammo_9x19_fmj" ; option for Level Editor
-class			                         = AMMO_S
-cform                                    = skeleton
-visual                                   = dynamics\weapons\wpn_ammo\ammo_9x19_fmj.ogf
-description		                         = st_none
-slot 			                         = -1
-$prefetch 		                         = 64
-fake_ammo								 = true
 
-cost			                         = 0
-
-box_size		                         = 1
-
-inv_name		                         = st_none
-inv_name_short		                     = st_none
-inv_weight		                         = 0.001
-
-inv_grid_width                           = 1
-inv_grid_height                          = 1
-inv_grid_x                               = 0
-inv_grid_y                               = 0
-
-k_hit			                         = 1
-k_impulse		                         = 1.4
-k_ap			                         = 0.045
-impair			                         = 1.5
-tracer			                         = off
-wm_size         	                     = 0.085
-k_air_resistance 	                     = 1.5
-
-[ammo_knife_6]:ammo_base
-GroupControlSection	                     = spawn_group
-discovery_dependency 	                 =
-$spawn			                         = "weapons\ammo\ammo_9x19_fmj" ; option for Level Editor
-class			                         = AMMO_S
-cform                                    = skeleton
-visual                                   = dynamics\weapons\wpn_ammo\ammo_9x19_fmj.ogf
-description		                         = st_none
-slot 			                         = -1
-$prefetch 		                         = 64
-fake_ammo								 = true
-
-cost			                         = 0
-
-box_size		                         = 1
-
-inv_name		                         = st_none
-inv_name_short		                     = st_none
-inv_weight		                         = 0.001
-
-inv_grid_width                           = 1
-inv_grid_height                          = 1
-inv_grid_x                               = 0
-inv_grid_y                               = 0
-
-k_hit			                         = 1
-k_impulse		                         = 2.0
-k_ap			                         = 0.050
-impair			                         = 1.5
-tracer			                         = off
-wm_size         	                     = 0.085
-k_air_resistance 	                     = 1.5
-
-
-;;;;;;;;;;;;;;;;;;;;;;;Binoc AMMO;;;;;;;;;;;;;;;;;;;;;;;
 [ammo_binoc]:ammo_base
 GroupControlSection	= spawn_group
 discovery_dependency 	=
@@ -238,31 +1322,15 @@ visual                 = dynamics\weapons\wpn_ammo\ammo_9x19_fmj.ogf
 description		= none
 $prefetch 		= 64
 fake_ammo								 = true
-
-cost			= 0
-
 box_size		= 0 ;50
-
 inv_name		= none
 inv_name_short	= none
 inv_weight		= 0
-
 inv_grid_width				= 2
 inv_grid_height				= 1
 inv_grid_x					= 14
 inv_grid_y					= 9
-
-k_dist			= 1
-k_disp			= 1
-k_hit			= 1
-k_impulse		= 1
-k_ap			= 0.1
-impair			= 1.5 ; 1
-buck_shot		= 1
-tracer			= off
-wm_size         	= 0.001
-k_air_resistance 	= 1
-
+wm_size                     = 0.001
 [ammo_dyno]:ammo_base
 GroupControlSection         = spawn_group
 discovery_dependency        =
@@ -278,7 +1346,6 @@ inv_name                    = -
 inv_name_short              = -
 description                 = -
 inv_weight                  = 0.0
-cost                        = 216
 visual                      = dynamics\weapons\wpn_ammo\ammo_12x76_zhekan.ogf
 tracer                      = off
 wm_size                     = 0.0000001
@@ -293,5131 +1360,20 @@ visual          = dynamics\weapons\wpn_ammo\ammo_9x19_fmj.ogf
 description		= st_energy_descr ; st_batteries_descr
 $prefetch 		= 64
 fake_ammo								 = true
-
-cost			= 0
-
 box_size		= 1
-
 inv_name		= st_energy ; st_batteries
 inv_name_short	= st_energy ; st_batteries
 inv_weight		= 0.01
-
 inv_grid_width		= 1
 inv_grid_height		= 1
 inv_grid_x			= 1
 inv_grid_y			= 26
-
-k_dist				= 1
-k_disp				= 1
-k_hit				= 1
-k_impulse			= 1
-k_ap				= 0.1
-impair				= 1
-buck_shot			= 1
-tracer				= off
 wm_size         	= 1
-k_air_resistance 	= 1
-
-[ammo_batteries_dead]:ammo_base	; dummy ammo section to be diplayed in UPD UI
+[ammo_batteries_dead]:ammo_batteries
 GroupControlSection	= spawn_group
-discovery_dependency 	=
-$spawn			= "weapons\ammo\ammo_9x19_fmj" ; option for Level Editor
-class			= AMMO_S
-cform           = skeleton
-visual          = dynamics\weapons\wpn_ammo\ammo_9x19_fmj.ogf
-description		= st_energy_descr ; st_batteries_dead_descr
-$prefetch 		= 64
-fake_ammo								 = true
-
-cost			= 0
-
-box_size		= 1 ;50
-
-inv_name		= st_energy ; st_batteries_dead
-inv_name_short	= st_energy ; st_batteries_dead
 inv_weight		= .1 ;.24
-
-inv_grid_width		= 1
-inv_grid_height		= 1
-inv_grid_x			= 0
-inv_grid_y			= 26
-
-k_dist				= 1
-k_disp				= 1
-k_hit				= 1
-k_impulse			= 1
-k_ap				= 1
-impair				= 1
-buck_shot			= 1
-tracer				= off
-wm_size         	= 1
-k_air_resistance 	= 1
-
-[ammo_batteries_ccell]:ammo_base	; dummy ammo section to be diplayed in UPD UI
+[ammo_batteries_ccell]:ammo_batteries
 GroupControlSection	= spawn_group
-discovery_dependency 	=
-$spawn			= "weapons\ammo\ammo_9x19_fmj" ; option for Level Editor
-class			= AMMO_S
-cform           = skeleton
-visual          = dynamics\weapons\wpn_ammo\ammo_9x19_fmj.ogf
-description		= st_energy_descr ; st_batteries_ccell_descr
-$prefetch 		= 64
-fake_ammo								 = true
-
-cost			= 0
-
-box_size		= 1 ;50
-
-inv_name		= st_energy ; st_batteries_ccell
-inv_name_short	= st_energy ; st_batteries_ccell
 inv_weight		= .1 ;.24
-
-inv_grid_width		= 1
-inv_grid_height		= 1
 inv_grid_x			= 2
 inv_grid_y			= 26
-
-k_dist				= 1
-k_disp				= 1
-k_hit				= 1
-k_impulse			= 1
-k_ap				= 1
-impair				= 1
-buck_shot			= 1
-tracer				= off
-wm_size         	= 1
-k_air_resistance 	= 1
-
-;;---------------------PISTOL AMMO----------------------
-
-
-[ammo_9x18_fmj]:ammo_base ; 57-N-181S or 7N15
-GroupControlSection	= spawn_group
-discovery_dependency =
-$spawn			= "weapons\ammo\ammo_9x18_fmj" ; option for Level Editor
-class			= AMMO_S
-cform           = skeleton
-visual          = dynamics\weapons\wpn_ammo\ammo_9x18_fmj.ogf
-description		= ammo-9x18-fmj_descr
-$prefetch 		= 64
-
-cost			= 560
-
-box_size		= 15
-
-inv_name		= ammo-9x18-fmj
-inv_name_short	= ammo-9x18-fmj_s
-inv_weight		= .16
-
-inv_grid_width		= 2
-inv_grid_height		= 1
-inv_grid_x			= 58
-inv_grid_y			= 0
-
-k_disp			= 0.66
-k_hit			= 0.76 ;  0.95
-k_impulse		= 0.6
-k_ap			= 0.014
-tracer_color_ID	= 0
-wm_size			= 0.09
-k_air_resistance = 0.8
-k_bullet_speed	= 1.875
-
-tier                                     = 1
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-[ammo_9x18_fmj_bad]:ammo_9x18_fmj
-GroupControlSection	= spawn_group
-discovery_dependency =
-$spawn			= "weapons\ammo\ammo_9x18_fmj" ; option for Level Editor
-class			= AMMO_S
-cform           = skeleton
-description		= ammo-9x18-fmj_descr
-visual          = dynamics\weapons\wpn_ammo\ammo_9x18_fmj.ogf
-$prefetch 		= 64
-
-cost			= 320
-
-box_size		= 15
-
-;inv_name		= ammo-9x18-fmj_bad
-inv_name_short	= ammo-9x18-fmj_s
-inv_weight		= .16
-
-inv_grid_width		= 2
-inv_grid_height		= 1
-inv_grid_x			= 60
-inv_grid_y			= 0
-
-k_disp			= 0.7
-k_hit			= 0.76 ;  0.95
-k_impulse		= 0.56
-k_ap			= 0.014
-impair			= 4
-tracer_color_ID	= 0
-wm_size			= 0.09
-k_air_resistance = 0.8
-k_bullet_speed	= 1.875
-
-tier                                     = 1
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-[ammo_9x18_fmj_verybad]:ammo_9x18_fmj
-GroupControlSection	= spawn_group
-discovery_dependency =
-description		= ammo-9x18-fmj_descr
-$spawn			= "weapons\ammo\ammo_9x18_fmj" ; option for Level Editor
-class			= AMMO_S
-cform           = skeleton
-visual          = dynamics\weapons\wpn_ammo\ammo_9x18_fmj.ogf
-$prefetch 		= 64
-
-cost			= 96
-
-box_size		= 15
-
-;inv_name		= ammo-9x18-fmj_verybad
-inv_name_short	= ammo-9x18-fmj_s
-inv_weight		= .16
-
-inv_grid_width		= 2
-inv_grid_height		= 1
-inv_grid_x			= 60
-inv_grid_y			= 0
-
-k_disp			= 0.75
-k_hit			= 0.76 ;  0.9
-k_impulse		= 0.52
-k_ap			= 0.014
-impair			= 4
-tracer_color_ID	= 0
-wm_size			= 0.09
-k_air_resistance = 0.8
-k_bullet_speed	= 1.875
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-[ammo_9x18_pmm]:ammo_base ; 7N16
-GroupControlSection	= spawn_group
-discovery_dependency =
-$spawn			= "weapons\ammo\ammo_9x18_pmm" ; option for Level Editor
-class			= AMMO_S
-cform           = skeleton
-visual          = dynamics\weapons\wpn_ammo\ammo_9x18_pmm.ogf
-description		= ammo-9x18-pmm_descr
-$prefetch 		= 64
-
-cost			= 1150
-
-box_size		= 15
-
-inv_name		= ammo-9x18-pmm
-inv_name_short	= ammo-9x18-pmm_s
-inv_weight		= .15
-
-inv_grid_width		= 2
-inv_grid_height		= 1
-inv_grid_x			= 58
-inv_grid_y			= 1
-.5
-k_disp			= 0.66
-k_hit			= 1.4 ;  1.25
-k_impulse		= 0.7
-k_ap			= 0.008
-
-tracer_color_ID	= 0
-wm_size         = 0.09
-k_air_resistance = 0.8
-k_bullet_speed	= 1.875
-k_cam_dispersion = 1.0 ;  1.1
-
-tier                                     = 1
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-[ammo_9x18_pmm_bad]:ammo_9x18_pmm
-GroupControlSection	= spawn_group
-discovery_dependency =
-$spawn			= "weapons\ammo\ammo_9x18_pmm" ; option for Level Editor
-class			= AMMO_S
-cform           = skeleton
-description		= ammo-9x18-pmm_descr
-visual          = dynamics\weapons\wpn_ammo\ammo_9x18_pmm.ogf
-$prefetch 		= 64
-
-cost			= 544
-
-box_size		= 15
-
-;inv_name		= ammo-9x18-pmm_bad
-inv_name_short	= ammo-9x18-pmm_s
-inv_weight		= .15
-
-inv_grid_width		= 2
-inv_grid_height		= 1
-inv_grid_x			= 60
-inv_grid_y			= 1
-.5
-k_disp			= 0.7
-k_hit			= 1.4 ;  1.2
-k_impulse		= 0.66
-k_ap			= 0.008
-impair			= 4
-tracer_color_ID	= 0
-wm_size         = 0.09
-k_air_resistance = 0.8
-k_bullet_speed	= 1.875
-k_cam_dispersion = 1.0 ;  1.1
-
-tier                                     = 1
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-[ammo_9x18_pmm_verybad]:ammo_9x18_pmm
-GroupControlSection	= spawn_group
-discovery_dependency =
-$spawn			= "weapons\ammo\ammo_9x18_pmm" ; option for Level Editor
-class			= AMMO_S
-cform           = skeleton
-description		= ammo-9x18-pmm_descr
-visual          = dynamics\weapons\wpn_ammo\ammo_9x18_pmm.ogf
-$prefetch 		= 64
-
-cost			= 160
-
-box_size		= 15
-
-;inv_name		= ammo-9x18-pmm_verybad
-inv_name_short	= ammo-9x18-pmm_s
-inv_weight		= .15
-
-inv_grid_width		= 2
-inv_grid_height		= 1
-inv_grid_x			= 60
-inv_grid_y			= 1
-.45
-k_disp			= 0.75
-k_hit			= 1.4 ;  1.15
-k_impulse		= 0.62
-k_ap			= 0.008
-impair			= 4
-tracer_color_ID	= 0
-wm_size         = 0.09
-k_air_resistance = 0.8
-k_bullet_speed	= 1.875
-k_cam_dispersion = 1.0 ;  1.1
-
-tier                                     = 1
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-[ammo_9x18_ap]:ammo_base ; RG028
-GroupControlSection	= spawn_group
-discovery_dependency =
-$spawn			= "weapons\ammo\ammo_9x18_fmj" ; option for Level Editor
-class			= AMMO_S
-cform           = skeleton
-visual          = dynamics\weapons\wpn_ammo\ammo_9x18_fmj.ogf
-description		= ammo-9x18-ap_descr
-$prefetch 		= 64
-
-cost			= 1200
-
-box_size		= 15
-
-inv_name		= ammo-9x18-ap
-inv_name_short	= ammo-9x18-ap_s
-
-inv_weight		= .17
-
-inv_grid_width     = 2
-inv_grid_height    = 1
-inv_grid_x         = 58
-inv_grid_y         = 2
-
-k_disp			= 0.66
-k_hit			= 0.76
-k_impulse		= 0.55
-k_ap			= 0.026 ;0.25
-tracer_color_ID	= 1
-wm_size			= 0.09
-k_air_resistance = 0.8
-k_bullet_speed	= 1.875
-k_cam_dispersion = 0.8
-
-tier                                     = 3
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-[ammo_9x18_ap_bad]:ammo_9x18_ap
-GroupControlSection	= spawn_group
-discovery_dependency =
-$spawn			= "weapons\ammo\ammo_9x18_fmj" ; option for Level Editor
-class			= AMMO_S
-description		= ammo-9x18-ap_descr
-cform           = skeleton
-visual          = dynamics\weapons\wpn_ammo\ammo_9x18_fmj.ogf
-$prefetch 		= 64
-
-cost			= 860
-
-box_size		= 15
-
-;inv_name		= ammo-9x18-ap_bad
-inv_name_short	= ammo-9x18-ap_s
-
-inv_weight		= .17
-
-inv_grid_width     = 2
-inv_grid_height    = 1
-inv_grid_x         = 60
-inv_grid_y         = 2
-
-k_disp			= 0.7
-k_hit			= 0.76 ;  0.95
-k_impulse		= 0.52
-k_ap			= 0.026 ;0.24
-impair			= 4
-tracer_color_ID	= 1
-wm_size			= 0.09
-k_air_resistance = 0.8
-k_cam_dispersion = 0.8
-k_bullet_speed	= 1.875
-
-tier                                     = 3
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-[ammo_9x18_ap_verybad]:ammo_9x18_ap
-GroupControlSection	= spawn_group
-discovery_dependency =
-$spawn			= "weapons\ammo\ammo_9x18_fmj" ; option for Level Editor
-class			= AMMO_S
-cform           = skeleton
-description		= ammo-9x18-ap_descr
-visual          = dynamics\weapons\wpn_ammo\ammo_9x18_fmj.ogf
-$prefetch 		= 64
-
-cost			= 144
-
-box_size		= 15
-
-;inv_name		= ammo-9x18-ap_verybad
-inv_name_short	= ammo-9x18-ap_s
-
-inv_weight		= .17
-
-inv_grid_width     = 2
-inv_grid_height    = 1
-inv_grid_x         = 60
-inv_grid_y         = 2
-
-k_disp			= 0.75
-k_hit			= 0.76 ;  0.9
-k_impulse		= 0.5
-k_ap			= 0.026
-impair			= 4
-tracer_color_ID	= 1
-wm_size			= 0.09
-k_air_resistance = 0.8
-k_cam_dispersion = 0.8
-k_bullet_speed	= 1.875
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-[ammo_9x19_fmj]:ammo_base ; 124 gr
-GroupControlSection	= spawn_group
-discovery_dependency =
-$spawn			= "weapons\ammo\ammo_9x19_fmj" ; option for Level Editor
-class			= AMMO_S
-cform                   = skeleton
-visual                  = dynamics\weapons\wpn_ammo\ammo_9x19_fmj.ogf
-description		= ammo-9x19-fmj_descr
-$prefetch 		= 64
-
-cost			= 645
-
-box_size		= 15
-
-inv_name		= ammo-9x19-fmj
-inv_name_short	= ammo-9x19-fmj_s
-inv_weight		= .18
-
-inv_grid_width		= 2
-inv_grid_height		= 1
-inv_grid_x			= 64
-inv_grid_y			= 0
-
-k_disp			= 0.66
-k_hit 			= 0.70
-k_impulse		= 0.44
-k_ap			= 0.017
-tracer_color_ID	= 0
-wm_size         = 0.09
-k_air_resistance = 0.75
-k_bullet_speed	= 1.875
-
-tier                                     = 2
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-[ammo_9x19_fmj_bad]:ammo_9x19_fmj
-GroupControlSection	= spawn_group
-discovery_dependency =
-$spawn			= "weapons\ammo\ammo_9x19_fmj" ; option for Level Editor
-class			= AMMO_S
-cform                   = skeleton
-description		= ammo-9x19-fmj_descr
-visual                  = dynamics\weapons\wpn_ammo\ammo_9x19_fmj.ogf
-slot = -1
-$prefetch 		= 64
-
-cost			= 360
-
-box_size		= 15
-
-;inv_name		= ammo-9x19-fmj_bad
-inv_name_short	= ammo-9x19-fmj_s
-inv_weight		= .18
-
-inv_grid_width		= 2
-inv_grid_height		= 1
-inv_grid_x			= 66
-inv_grid_y			= 0
-
-k_disp			= 0.7
-k_hit 			= 0.70
-k_impulse		= 0.42
-k_ap			= 0.017
-impair			= 4
-tracer_color_ID	= 0
-wm_size         = 0.09
-k_air_resistance = 0.75
-k_bullet_speed	= 1.875
-
-tier                                     = 2
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-[ammo_9x19_fmj_verybad]:ammo_9x19_fmj
-GroupControlSection	= spawn_group
-discovery_dependency =
-$spawn			= "weapons\ammo\ammo_9x19_fmj" ; option for Level Editor
-class			= AMMO_S
-cform                   = skeleton
-description		= ammo-9x19-fmj_descr
-visual                  = dynamics\weapons\wpn_ammo\ammo_9x19_fmj.ogf
-slot = -1
-$prefetch 		= 64
-
-cost			= 112
-
-box_size		= 15
-
-;inv_name		= ammo-9x19-fmj_verybad
-inv_name_short	= ammo-9x19-fmj_s
-inv_weight		= .18
-
-inv_grid_width		= 2
-inv_grid_height		= 1
-inv_grid_x			= 66
-inv_grid_y			= 0
-
-k_disp			= 0.7
-k_hit 			= 0.70
-k_impulse		= 0.42
-k_ap			= 0.017
-impair			= 4
-tracer_color_ID	= 0
-wm_size         = 0.09
-k_air_resistance = 0.75
-k_bullet_speed	= 1.875
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-[ammo_9x19_pbp]:ammo_base ; JHP +P
-GroupControlSection	= spawn_group
-discovery_dependency =
-$spawn			= "weapons\ammo\ammo_9x19_pbp" ; option for Level Editor
-class			= AMMO_S
-cform           = skeleton
-visual          = dynamics\weapons\wpn_ammo\ammo_9x19_pbp.ogf
-description		= ammo-9x19-pbp_descr
-$prefetch 		= 64
-
-cost			= 1125
-
-box_size		= 15
-
-inv_name		= ammo-9x19-pbp
-inv_name_short	= ammo-9x19-pbp_s
-inv_weight		= .17
-
-inv_grid_width	= 2
-inv_grid_height	= 1
-inv_grid_x		= 64
-inv_grid_y		= 1
-
-k_disp			= 0.66
-k_hit			= 1.35 ;  1.33
-k_impulse		= 1
-k_ap			= 0.01
-
-tracer_color_ID	= 0
-wm_size         = 0.09
-k_air_resistance = 0.75
-k_bullet_speed	= 1.875
-k_cam_dispersion = 1.0 ;  1.1
-
-tier                                     = 2
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-[ammo_9x19_pbp_bad]:ammo_9x19_pbp
-GroupControlSection	= spawn_group
-discovery_dependency =
-$spawn			= "weapons\ammo\ammo_9x19_pbp" ; option for Level Editor
-class			= AMMO_S
-cform           = skeleton
-description		= ammo-9x19-pbp_descr
-visual          = dynamics\weapons\wpn_ammo\ammo_9x19_pbp.ogf
-$prefetch 		= 64
-
-cost			= 630
-
-box_size		= 15
-
-;inv_name		= ammo-9x19-pbp_bad
-inv_name_short	= ammo-9x19-pbp_s
-inv_weight		= .17
-
-inv_grid_width	= 2
-inv_grid_height	= 1
-inv_grid_x		= 66
-inv_grid_y		= 1
-
-k_disp			= 0.7
-k_hit			= 1.35 ;  1.33
-k_impulse		= 0.96
-k_ap			= 0.009
-impair			= 4
-tracer_color_ID	= 0
-wm_size         = 0.09
-k_air_resistance = 0.75
-k_bullet_speed	= 1.875
-k_cam_dispersion = 1.0 ;  1.1
-
-tier                                     = 2
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-[ammo_9x19_pbp_verybad]:ammo_9x19_pbp
-GroupControlSection	= spawn_group
-discovery_dependency =
-$spawn			= "weapons\ammo\ammo_9x19_pbp" ; option for Level Editor
-class			= AMMO_S
-cform           = skeleton
-description		= ammo-9x19-pbp_descr
-visual          = dynamics\weapons\wpn_ammo\ammo_9x19_pbp.ogf
-$prefetch 		= 64
-
-cost			= 188
-
-box_size		= 15
-
-;inv_name		= ammo-9x19-pbp_verybad
-inv_name_short	= ammo-9x19-pbp_s
-inv_weight		= .17
-
-inv_grid_width	= 2
-inv_grid_height	= 1
-inv_grid_x		= 66
-inv_grid_y		= 1
-
-k_disp			= 0.75
-k_hit			= 1.35 ;  1.33
-k_impulse		= 0.9
-k_ap			= 0.009
-impair			= 4
-tracer_color_ID	= 0
-wm_size         = 0.09
-k_air_resistance = 0.75
-k_bullet_speed	= 1.875
-k_cam_dispersion = 1.0 ;  1.1
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-[ammo_9x19_ap]:ammo_base ; 7N21
-GroupControlSection	= spawn_group
-discovery_dependency =
-$spawn			= "weapons\ammo\ammo_9x19_fmj" ; option for Level Editor
-class			= AMMO_S
-cform                   = skeleton
-visual                  = dynamics\weapons\wpn_ammo\ammo_9x19_fmj.ogf
-description		= ammo-9x19-ap_descr
-$prefetch 		= 64
-
-cost			= 2350
-
-box_size		= 15
-
-inv_name		= ammo-9x19-ap
-inv_name_short	= ammo-9x19-ap_s
-inv_weight		= .14
-
-inv_grid_width     = 2
-inv_grid_height    = 1
-inv_grid_x         = 64
-inv_grid_y         = 2
-
-k_disp			= 0.66
-k_hit			= 0.70
-k_impulse		= 0.36
-k_ap			= 0.035
-
-tracer_color_ID	= 1
-wm_size         = 0.09
-k_air_resistance = 0.75
-k_bullet_speed	= 1.875
-k_cam_dispersion = 0.7 ;  1.1
-
-tier                                     = 4
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-[ammo_9x19_ap_bad]:ammo_9x19_ap
-GroupControlSection	= spawn_group
-discovery_dependency =
-$spawn			= "weapons\ammo\ammo_9x19_fmj" ; option for Level Editor
-class			= AMMO_S
-cform                   = skeleton
-description		= ammo-9x19-ap_descr
-visual                  = dynamics\weapons\wpn_ammo\ammo_9x19_fmj.ogf
-slot = -1
-$prefetch 		= 64
-
-cost			= 1500
-
-box_size		= 15
-
-;inv_name		= ammo-9x19-ap_bad
-inv_name_short	= ammo-9x19-ap_s
-inv_weight		= .14
-
-inv_grid_width     = 2
-inv_grid_height    = 1
-inv_grid_x         = 66
-inv_grid_y         = 2
-
-k_disp			= 0.7
-k_hit			= 0.70 ;  0.95
-k_impulse		= 0.32
-k_ap			= 0.035
-impair			= 4
-tracer_color_ID	= 1
-wm_size         = 0.09
-k_air_resistance = 0.75
-k_bullet_speed	= 1.875
-k_cam_dispersion = 0.7 ;  1.1
-
-tier                                     = 4
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-[ammo_9x19_ap_verybad]:ammo_9x19_ap
-GroupControlSection	= spawn_group
-discovery_dependency =
-$spawn			= "weapons\ammo\ammo_9x19_fmj" ; option for Level Editor
-class			= AMMO_S
-cform                   = skeleton
-description		= ammo-9x19-ap_descr
-visual                  = dynamics\weapons\wpn_ammo\ammo_9x19_fmj.ogf
-slot = -1
-$prefetch 		= 64
-
-cost			= 200
-
-box_size		= 15
-
-;inv_name		= ammo-9x19-ap_verybad
-inv_name_short	= ammo-9x19-ap_s
-inv_weight		= .14
-
-inv_grid_width     = 2
-inv_grid_height    = 1
-inv_grid_x         = 66
-inv_grid_y         = 2
-
-k_disp			= 0.75
-k_hit			= 0.70 ;  0.9
-k_impulse		= 0.29
-k_ap			= 0.035
-impair			= 4
-tracer_color_ID	= 1
-wm_size         = 0.09
-k_air_resistance = 0.75
-k_bullet_speed	= 1.875
-k_cam_dispersion = 0.7 ;  1.1
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-[ammo_5.7x28_ss190]:ammo_base
-GroupControlSection	= spawn_group
-discovery_dependency =
-$spawn			= "weapons\ammo\ammo_9x19_fmj" ; option for Level Editor
-class			= AMMO_S
-cform           = skeleton
-visual          = dynamics\weapons\wpn_ammo\ammo_57x28_ss190.ogf
-description		= ammo-5.7x28-ss190_descr
-$prefetch 		= 64
-
-cost			= 2600
-
-box_size		= 20
-
-inv_name		= ammo-5.7x28-ss190
-inv_name_short	= ammo-5.7x28-ss190_s
-inv_weight		= .09
-
-inv_grid_width		= 2
-inv_grid_height		= 1
-inv_grid_x			= 55
-inv_grid_y			= 7
-
-
-k_disp			= 0.66
-k_hit			= 0.69
-k_impulse		= 0.36
-k_ap			= 0.040
-tracer_color_ID	= 1
-wm_size         = 0.057
-k_air_resistance = 0.3 ; 0.8
-k_bullet_speed	= 1.5
-k_cam_dispersion = 0.8
-
-tier                                     = 4
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-[ammo_5.7x28_ss190_bad]:ammo_5.7x28_ss190
-GroupControlSection	= spawn_group
-discovery_dependency =
-$spawn			= "weapons\ammo\ammo_9x19_fmj" ; option for Level Editor
-class			= AMMO_S
-cform           = skeleton
-description		= ammo-5.7x28-ss190_descr
-visual          = dynamics\weapons\wpn_ammo\ammo_57x28_ss190.ogf
-$prefetch 		= 64
-
-cost			= 1300
-
-box_size		= 20
-
-;inv_name		= ammo-5.7x28-ss190_bad
-inv_name_short	= ammo-5.7x28-ss190_s
-inv_weight		= .09
-
-inv_grid_width		= 2
-inv_grid_height		= 1
-inv_grid_x			= 57
-inv_grid_y			= 7
-
-k_disp			= 0.7
-k_hit			= 0.69
-k_impulse		= 0.33
-k_ap			= 0.040
-impair			= 4
-tracer_color_ID	= 1
-wm_size         = 0.057
-k_air_resistance = 0.3 ; 0.8
-k_bullet_speed	= 1.5
-k_cam_dispersion = 0.8
-
-tier                                     = 4
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-[ammo_5.7x28_ss190_verybad]:ammo_5.7x28_ss190
-GroupControlSection	= spawn_group
-discovery_dependency =
-$spawn			= "weapons\ammo\ammo_9x19_fmj" ; option for Level Editor
-class			= AMMO_S
-cform           = skeleton
-description		= ammo-5.7x28-ss190_descr
-visual          = dynamics\weapons\wpn_ammo\ammo_57x28_ss190.ogf
-$prefetch 		= 64
-
-cost			= 250
-
-box_size		= 20
-
-;inv_name		= ammo-5.7x28-ss190_verybad
-inv_name_short	= ammo-5.7x28-ss190_s
-inv_weight		= .09
-
-inv_grid_width		= 2
-inv_grid_height		= 1
-inv_grid_x			= 57
-inv_grid_y			= 7
-
-k_disp			= 0.75
-k_hit			= 0.69
-k_impulse		= 0.3
-k_ap			= 0.040
-impair			= 4
-tracer_color_ID	= 1
-wm_size         = 0.057
-k_air_resistance = 0.3 ; 0.8
-k_bullet_speed	= 1.5
-
-tier                                     = 1
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-[ammo_5.7x28_ss195]:ammo_base
-GroupControlSection	= spawn_group
-discovery_dependency =
-$spawn			= "weapons\ammo\ammo_9x19_fmj" ; option for Level Editor
-class			= AMMO_S
-cform           = skeleton
-visual          = dynamics\weapons\wpn_ammo\ammo_57x28_ss195.ogf
-description		= ammo-5.7x28-ss195_descr
-$prefetch 		= 64
-
-cost			= 1275
-
-box_size		= 20
-
-inv_name		= ammo-5.7x28-ss195
-inv_name_short	= ammo-5.7x28-ss195_s
-
-inv_weight		= .1
-
-inv_grid_width     = 2
-inv_grid_height    = 1
-inv_grid_x         = 55
-inv_grid_y         = 6
-
-k_disp			= 0.66
-k_hit			= 0.69 ;  1.25
-k_impulse		= 1
-k_ap			= 0.025
-tracer_color_ID	= 0
-wm_size         = 0.057
-k_air_resistance = 0.3 ; 0.8
-k_bullet_speed	= 1.5
-
-tier                                     = 2
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-[ammo_5.7x28_ss195_bad]:ammo_5.7x28_ss195
-GroupControlSection	= spawn_group
-discovery_dependency =
-$spawn			= "weapons\ammo\ammo_9x19_fmj" ; option for Level Editor
-class			= AMMO_S
-cform           = skeleton
-visual          = dynamics\weapons\wpn_ammo\ammo_57x28_ss195.ogf
-description		= ammo-5.7x28-ss195_descr
-$prefetch 		= 64
-
-cost			= 700
-
-box_size		= 20
-
-;inv_name		= ammo-5.7x28-ss195_bad
-inv_name_short	= ammo-5.7x28-ss195_s
-
-inv_weight		= .1
-
-inv_grid_width     = 2
-inv_grid_height    = 1
-inv_grid_x         = 57
-inv_grid_y         = 6
-
-k_disp			= 0.7
-k_hit			= 0.69 ;  1.25
-k_impulse		= 0.97
-k_ap			= 0.025
-impair			= 4
-tracer_color_ID	= 0
-wm_size         = 0.057
-k_air_resistance = 0.3 ; 0.8
-k_bullet_speed	= 1.5
-
-tier                                     = 2
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-[ammo_5.7x28_ss195_verybad]:ammo_5.7x28_ss195
-GroupControlSection	= spawn_group
-discovery_dependency =
-$spawn			= "weapons\ammo\ammo_9x19_fmj" ; option for Level Editor
-class			= AMMO_S
-cform           = skeleton
-visual          = dynamics\weapons\wpn_ammo\ammo_57x28_ss195.ogf
-description		= ammo-5.7x28-ss195_descr
-$prefetch 		= 64
-
-cost			= 195
-
-box_size		= 20
-
-;inv_name		= ammo-5.7x28-ss195_verybad
-inv_name_short	= ammo-5.7x28-ss195_s
-
-inv_weight		= .1
-
-inv_grid_width     = 2
-inv_grid_height    = 1
-inv_grid_x         = 57
-inv_grid_y         = 6
-
-k_disp			= 0.75
-k_hit			= 0.69 ;  1.25
-k_impulse		= 0.92
-k_ap			= 0.025
-impair			= 4
-tracer_color_ID	= 0
-wm_size         = 0.057
-k_air_resistance = 0.3 ; 0.8
-k_bullet_speed	= 1.5
-
-tier                                     = 1
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-[ammo_7.62x25_p]:ammo_base
-GroupControlSection	= spawn_group
-discovery_dependency =
-$spawn			= "weapons\ammo\ammo_9x19_fmj" ; option for Level Editor
-class			= AMMO_S
-cform                   = skeleton
-visual                  = dynamics\weapons\wpn_ammo\ammo_762x25_p.ogf
-description		= ammo-7.62x25-p_descr
-slot = -1
-$prefetch 		= 64
-
-cost			= 875
-
-box_size		= 16
-
-inv_name		= ammo-7.62x25-p
-inv_name_short		= ammo-7.62x25-p_s
-inv_weight		= .17
-
-inv_grid_width		= 2
-inv_grid_height		= 1
-inv_grid_x		= 58
-inv_grid_y		= 8
-
-k_disp			= 0.70
-k_hit			= 0.70
-k_impulse		= 0.7
-k_ap			= 0.008
-tracer_color_ID	= 0
-wm_size        	= 0.0762
-k_air_resistance = 0.35 ; 0.8
-k_bullet_speed	= 1.875
-
-tier                                     = 3
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-[ammo_7.62x25_p_bad]:ammo_7.62x25_p
-GroupControlSection	= spawn_group
-discovery_dependency =
-$spawn			= "weapons\ammo\ammo_9x19_fmj" ; option for Level Editor
-class			= AMMO_S
-cform                   = skeleton
-visual                  = dynamics\weapons\wpn_ammo\ammo_762x25_p.ogf
-description		= ammo-7.62x25-p_descr
-slot = -1
-$prefetch 		= 64
-
-cost			= 300
-
-box_size		= 16
-
-;inv_name		= ammo-7.62x25-p_bad
-inv_name_short		= ammo-7.62x25-p_s
-inv_weight		= .17
-
-inv_grid_width		= 2
-inv_grid_height		= 1
-inv_grid_x		= 60
-inv_grid_y		= 8
-
-k_disp			= 0.70
-k_hit			= 0.70 ;  0.95
-k_impulse		= 0.64
-k_ap			= 0.008
-impair			= 4
-tracer_color_ID	= 0
-wm_size        	= 0.0762
-k_air_resistance = 0.35 ; 0.8
-k_bullet_speed	= 1.875
-
-tier                                     = 3
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-[ammo_7.62x25_p_verybad]:ammo_7.62x25_p
-GroupControlSection	= spawn_group
-discovery_dependency =
-$spawn			= "weapons\ammo\ammo_9x19_fmj" ; option for Level Editor
-class			= AMMO_S
-cform                   = skeleton
-visual                  = dynamics\weapons\wpn_ammo\ammo_762x25_p.ogf
-description		= ammo-7.62x25-p_descr
-slot = -1
-$prefetch 		= 64
-
-cost			= 115
-
-box_size		= 16
-
-;inv_name		= ammo-7.62x25-p_verybad
-inv_name_short		= ammo-7.62x25-p_s
-inv_weight		= .17
-
-inv_grid_width		= 2
-inv_grid_height		= 1
-inv_grid_x		= 60
-inv_grid_y		= 8
-
-k_disp			= 0.72
-k_hit			= 0.70 ;  0.9
-k_impulse		= 0.6
-k_ap			= 0.008
-impair			= 4
-tracer_color_ID	= 0
-wm_size        	= 0.0762
-k_air_resistance = 0.35 ; 0.8
-k_bullet_speed	= 1.875
-
-tier                                     = 3
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-[ammo_7.62x25_ps]:ammo_base
-GroupControlSection	= spawn_group
-discovery_dependency =
-$spawn			= "weapons\ammo\ammo_9x19_pbp" ; option for Level Editor
-class			= AMMO_S
-cform           = skeleton
-visual          = dynamics\weapons\wpn_ammo\ammo_762x25_ps.ogf
-description		= ammo-7.62x25-ps_descr
-$prefetch 		= 64
-
-cost			= 975
-
-box_size		= 16
-
-inv_name		= ammo-7.62x25-ps
-inv_name_short		= ammo-7.62x25-ps_s
-inv_weight		= .17
-
-inv_grid_width	= 2
-inv_grid_height	= 1
-inv_grid_x		= 58
-inv_grid_y		= 9
-
-k_disp			= 0.68
-k_hit			= 0.70
-k_impulse		= 0.5
-k_ap			= 0.025
-tracer_color_ID	= 0
-wm_size        	= 0.0762
-k_air_resistance = 0.35 ; 0.8
-k_bullet_speed	= 1.875
-k_cam_dispersion = 0.7
-
-tier                                     = 3
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-[ammo_7.62x25_ps_bad]:ammo_7.62x25_ps
-GroupControlSection	= spawn_group
-discovery_dependency =
-$spawn			= "weapons\ammo\ammo_9x19_pbp" ; option for Level Editor
-class			= AMMO_S
-cform           = skeleton
-visual          = dynamics\weapons\wpn_ammo\ammo_762x25_ps.ogf
-description		= ammo-7.62x25-ps_descr
-$prefetch 		= 64
-
-cost			= 624
-
-box_size		= 16
-
-;inv_name		= ammo-7.62x25-ps_bad
-inv_name_short		= ammo-7.62x25-ps_s
-inv_weight		= .17
-
-inv_grid_width	= 2
-inv_grid_height	= 1
-inv_grid_x		= 60
-inv_grid_y		= 9
-
-k_disp			= 0.68
-k_hit			= 0.70 ;  0.95
-k_impulse		= 0.46
-k_ap			= 0.025
-impair			= 4
-tracer_color_ID	= 0
-wm_size        	= 0.0762
-k_air_resistance = 0.35 ; 0.8
-k_bullet_speed	= 1.875
-k_cam_dispersion = 0.7
-
-tier                                     = 3
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-[ammo_7.62x25_ps_verybad]:ammo_7.62x25_ps
-GroupControlSection	= spawn_group
-discovery_dependency =
-$spawn			= "weapons\ammo\ammo_9x19_pbp" ; option for Level Editor
-class			= AMMO_S
-cform           = skeleton
-visual          = dynamics\weapons\wpn_ammo\ammo_762x25_ps.ogf
-description		= ammo-7.62x25-ps_descr
-$prefetch 		= 64
-
-cost			= 160
-
-box_size		= 16
-
-;inv_name		= ammo-7.62x25-ps_verybad
-inv_name_short		= ammo-7.62x25-ps_s
-inv_weight		= .17
-
-inv_grid_width	= 2
-inv_grid_height	= 1
-inv_grid_x		= 60
-inv_grid_y		= 9
-.47
-k_disp			= 0.68
-k_hit			= 0.70 ;  0.9
-k_impulse		= 0.42
-k_ap			= 0.025
-impair			= 4
-tracer_color_ID	= 0
-wm_size        	= 0.0762
-k_air_resistance = 0.35 ; 0.8
-k_bullet_speed	= 1.875
-k_cam_dispersion = 0.7
-
-tier                                     = 2
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-[ammo_11.43x23_fmj]:ammo_base ; 230gr
-GroupControlSection	= spawn_group
-discovery_dependency =
-$spawn			= "weapons\ammo\ammo_11.43x23_fmj" ; option for Level Editor
-class			= AMMO_S
-cform           = skeleton
-visual          = dynamics\weapons\wpn_ammo\ammo_1143x23_fmj.ogf
-description		= ammo-11.43x23-fmj_descr
-$prefetch 		= 64
-
-cost			= 950
-
-box_size		= 14
-
-inv_name		= ammo-11.43x23-fmj
-inv_name_short	= ammo-11.43x23-fmj_s
-inv_weight		= .29
-
-inv_grid_width	= 2
-inv_grid_height	= 1
-inv_grid_x		= 55
-inv_grid_y		= 11
-
-k_disp			= 0.66
-k_hit			= 0.74
-k_impulse		= 0.55
-k_ap			= 0.020
-tracer_color_ID	= 0
-wm_size         = 0.114
-k_air_resistance = 0.82 ; 0.8
-k_bullet_speed	= 1.875
-
-tier                                     = 2
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-[ammo_11.43x23_fmj_bad]:ammo_11.43x23_fmj
-GroupControlSection	= spawn_group
-discovery_dependency =
-$spawn			= "weapons\ammo\ammo_11.43x23_fmj" ; option for Level Editor
-class			= AMMO_S
-cform           = skeleton
-visual          = dynamics\weapons\wpn_ammo\ammo_1143x23_fmj.ogf
-description		= ammo-11.43x23-fmj_descr
-$prefetch 		= 64
-
-cost			= 504
-
-box_size		= 14
-
-;inv_name		= ammo-11.43x23-fmj_bad
-inv_name_short	= ammo-11.43x23-fmj_s
-inv_weight		= .29
-
-inv_grid_width	= 2
-inv_grid_height	= 1
-inv_grid_x		= 57
-inv_grid_y		= 11
-
-k_disp			= 0.7
-k_hit			= 0.74 ;  0.95
-k_impulse		= 0.50
-k_ap			= 0.020
-impair			= 4
-tracer_color_ID	= 0
-wm_size         = 0.1143
-k_air_resistance = 0.82 ; 0.8
-k_bullet_speed	= 1.875
-
-tier                                     = 2
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-[ammo_11.43x23_fmj_verybad]:ammo_11.43x23_fmj
-GroupControlSection	= spawn_group
-discovery_dependency =
-$spawn			= "weapons\ammo\ammo_11.43x23_fmj" ; option for Level Editor
-class			= AMMO_S
-cform           = skeleton
-visual          = dynamics\weapons\wpn_ammo\ammo_1143x23_fmj.ogf
-description		= ammo-11.43x23-fmj_descr
-$prefetch 		= 64
-
-cost			= 140
-
-box_size		= 14
-
-;inv_name		= ammo-11.43x23-fmj_verybad
-inv_name_short	= ammo-11.43x23-fmj_s
-inv_weight		= .29
-
-inv_grid_width	= 2
-inv_grid_height	= 1
-inv_grid_x		= 57
-inv_grid_y		= 11
-
-k_disp			= 0.75
-k_hit			= 0.74 ;  0.9
-k_impulse		= 0.50
-k_ap			= 0.020
-impair			= 4
-tracer_color_ID	= 0
-wm_size         = 0.1143
-k_air_resistance = 0.82 ; 0.8
-k_bullet_speed	= 1.875
-
-tier                                     = 2
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-[ammo_11.43x23_hydro]:ammo_base ; 165 gr
-GroupControlSection	= spawn_group
-discovery_dependency =
-$spawn			= "weapons\ammo\ammo_11.43x23_hydro" ; option for Level Editor
-class			= AMMO_S
-cform           = skeleton
-visual          = dynamics\weapons\wpn_ammo\ammo_1143x23_Hydro.ogf
-description		= ammo-11.43x23-hydro_descr
-$prefetch 		= 64
-
-cost			= 1425
-
-box_size		= 14
-
-inv_name		= ammo-11.43x23-hydro
-inv_name_short	= ammo-11.43x23-hydro_s
-inv_weight		= .23
-
-inv_grid_width		= 2
-inv_grid_height		= 1
-inv_grid_x			= 55
-inv_grid_y			= 12
-
-k_disp			= 0.66
-k_hit			= 1.64 ;  1.25
-k_impulse		= 0.7
-k_ap			= 0.010
-
-tracer_color_ID	= 0
-wm_size         = 0.1143
-k_air_resistance = 0.82 ; 0.8
-k_bullet_speed	= 1.875
-k_cam_dispersion = 1.0 ;  1.1
-
-tier                                     = 3
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-[ammo_11.43x23_hydro_bad]:ammo_11.43x23_hydro
-GroupControlSection	= spawn_group
-discovery_dependency =
-$spawn			= "weapons\ammo\ammo_11.43x23_hydro" ; option for Level Editor
-class			= AMMO_S
-cform           = skeleton
-visual          = dynamics\weapons\wpn_ammo\ammo_1143x23_Hydro.ogf
-description		= ammo-11.43x23-hydro_descr
-$prefetch 		= 64
-
-cost			= 870
-
-box_size		= 14
-
-;inv_name		= ammo-11.43x23-hydro_bad
-inv_name_short	= ammo-11.43x23-hydro_s
-inv_weight		= .23
-
-inv_grid_width		= 2
-inv_grid_height		= 1
-inv_grid_x			= 57
-inv_grid_y			= 12
-
-k_disp			= 0.7
-k_hit			= 1.64 ;   1.19
-k_impulse		= 0.68
-k_ap			= 0.010
-impair			= 4
-tracer_color_ID	= 0
-wm_size         = 0.1143
-k_air_resistance = 0.82 ; 0.8
-k_bullet_speed	= 1.875
-k_cam_dispersion = 1.0 ;  1.1
-
-tier                                     = 3
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-[ammo_11.43x23_hydro_verybad]:ammo_11.43x23_hydro
-GroupControlSection	= spawn_group
-discovery_dependency =
-$spawn			= "weapons\ammo\ammo_11.43x23_hydro" ; option for Level Editor
-class			= AMMO_S
-cform           = skeleton
-visual          = dynamics\weapons\wpn_ammo\ammo_1143x23_Hydro.ogf
-description		= ammo-11.43x23-hydro_descr
-$prefetch 		= 64
-
-cost			= 273
-
-box_size		= 14
-
-;inv_name		= ammo-11.43x23-hydro_verybad
-inv_name_short	= ammo-11.43x23-hydro_s
-inv_weight		= .23
-
-inv_grid_width		= 2
-inv_grid_height		= 1
-inv_grid_x			= 57
-inv_grid_y			= 12
-
-k_disp			= 0.75
-k_hit			= 1.64 ;  1.12
-k_impulse		= 0.66
-k_ap			= 0.010
-impair			= 4
-tracer_color_ID	= 0
-wm_size         = 0.1143
-k_air_resistance = 0.82 ; 0.8
-k_bullet_speed	= 1.875
-k_cam_dispersion = 1.0 ;  1.1
-
-tier                                     = 2
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-[ammo_5.45x39_fmj]:ammo_base ; 7N6
-GroupControlSection	= spawn_group
-discovery_dependency =
-$spawn			= "weapons\ammo\ammo_5.45x39_fmj" ; option for Level Editor
-class			= AMMO_S
-cform           = skeleton
-visual          = dynamics\weapons\wpn_ammo\ammo_545x39_fmj.ogf
-description		= ammo-5.45x39-fmj_descr
-$prefetch 		= 64
-
-cost			= 1350
-
-box_size		= 15
-
-inv_name		= ammo-5.45x39-fmj
-inv_name_short	= ammo-5.45x39-fmj_s
-inv_weight		= .16
-
-inv_grid_width		= 2
-inv_grid_height		= 1
-inv_grid_x			= 55
-inv_grid_y			= 14
-
-k_disp			= 0.66
-k_hit			= 1.14 ;  1.1
-k_impulse		= 0.6
-k_ap			= 0.027 ; 0.4
-tracer_color_ID	= 0
-wm_size         = 0.0545
-k_air_resistance = 0.25 ; 0.25
-k_bullet_speed	= 1.5
-
-tier                                     = 2
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-[ammo_5.45x39_fmj_bad]:ammo_5.45x39_fmj
-GroupControlSection	= spawn_group
-discovery_dependency =
-$spawn			= "weapons\ammo\ammo_5.45x39_fmj" ; option for Level Editor
-class			= AMMO_S
-cform           = skeleton
-visual          = dynamics\weapons\wpn_ammo\ammo_545x39_fmj.ogf
-description		= ammo-5.45x39-fmj_descr
-$prefetch 		= 64
-
-cost			= 740
-
-box_size		= 15
-
-;inv_name		= ammo-5.45x39-fmj_bad
-inv_name_short	= ammo-5.45x39-fmj_s
-inv_weight		= .16
-
-inv_grid_width		= 2
-inv_grid_height		= 1
-inv_grid_x			= 57
-inv_grid_y			= 14
-
-k_disp			= 0.7
-k_hit			= 1.14 ;  1.05
-k_impulse		= 0.58
-k_ap			= 0.027 ; 0.38
-impair			= 4
-tracer_color_ID	= 0
-wm_size         = 0.0545
-k_air_resistance = 0.25 ; 0.25
-k_bullet_speed	= 1.5
-
-tier                                     = 2
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-[ammo_5.45x39_fmj_verybad]:ammo_5.45x39_fmj
-GroupControlSection	= spawn_group
-discovery_dependency =
-$spawn			= "weapons\ammo\ammo_5.45x39_fmj" ; option for Level Editor
-class			= AMMO_S
-cform           = skeleton
-visual          = dynamics\weapons\wpn_ammo\ammo_545x39_fmj.ogf
-description		= ammo-5.45x39-fmj_descr
-$prefetch 		= 64
-
-cost			= 220
-
-box_size		= 15
-
-;inv_name		= ammo-5.45x39-fmj_verybad
-inv_name_short	= ammo-5.45x39-fmj_s
-inv_weight		= .16
-
-inv_grid_width		= 2
-inv_grid_height		= 1
-inv_grid_x			= 57
-inv_grid_y			= 14
-
-k_disp			= 0.75
-k_hit			= 1.14 ;  1.05
-k_impulse		= 0.56
-k_ap			= 0.027
-impair			= 4
-tracer_color_ID	= 0
-wm_size         = 0.0545
-k_air_resistance = 0.25 ; 0.25
-k_bullet_speed	= 1.5
-
-tier                                     = 2
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-[ammo_5.45x39_ep]:ammo_base ; 7N10
-GroupControlSection	= spawn_group
-discovery_dependency =
-$spawn			= "weapons\ammo\ammo_5.45x39_fmj" ; option for Level Editor
-class			= AMMO_S
-cform           = skeleton
-visual          = dynamics\weapons\wpn_ammo\ammo_545x39_fmj.ogf
-description		= ammo-5.45x39-ep_descr
-$prefetch 		= 64
-
-cost			= 1600
-
-box_size		= 15
-
-inv_name		= ammo-5.45x39-ep
-inv_name_short	= ammo-5.45x39-ep_s
-inv_weight		= .16
-
-inv_grid_width		= 2
-inv_grid_height		= 1
-inv_grid_x			= 61
-inv_grid_y			= 14
-
-k_disp			= 0.66
-k_hit			= 1.75 ; 0.5
-k_impulse		= 0.55
-k_ap			= 0.010 ; 0.5
-tracer_color_ID	= 0
-wm_size         = 0.0545
-k_air_resistance = 0.25 ; 0.25
-k_cam_dispersion = 1.0
-k_bullet_speed	= 1.5
-
-tier                                     = 2
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-[ammo_5.45x39_ep_bad]:ammo_5.45x39_ep
-GroupControlSection	= spawn_group
-discovery_dependency =
-$spawn			= "weapons\ammo\ammo_5.45x39_fmj" ; option for Level Editor
-class			= AMMO_S
-cform           = skeleton
-visual          = dynamics\weapons\wpn_ammo\ammo_545x39_fmj.ogf
-description		= ammo-5.45x39-ep_descr
-$prefetch 		= 64
-
-cost			= 1000
-
-box_size		= 15
-
-;inv_name		= ammo-5.45x39-ep_bad
-inv_name_short	= ammo-5.45x39-ep_s
-inv_weight		= .16
-
-inv_grid_width		= 2
-inv_grid_height		= 1
-inv_grid_x			= 63
-inv_grid_y			= 14
-
-k_disp			= 0.7
-k_hit			= 1.75 ;  0.95
-k_impulse		= 0.42
-k_ap			= 0.010 ; 0.48
-impair			= 4
-tracer_color_ID	= 0
-wm_size         = 0.0545
-k_air_resistance = 0.25 ; 0.25
-k_bullet_speed	= 1.5
-k_cam_dispersion = 1.0
-
-tier                                     = 2
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-[ammo_5.45x39_ep_verybad]:ammo_5.45x39_ep
-GroupControlSection	= spawn_group
-discovery_dependency =
-$spawn			= "weapons\ammo\ammo_5.45x39_fmj" ; option for Level Editor
-class			= AMMO_S
-cform           = skeleton
-visual          = dynamics\weapons\wpn_ammo\ammo_545x39_fmj.ogf
-description		= ammo-5.45x39-ep_descr
-$prefetch 		= 64
-
-cost			= 300
-
-box_size		= 15
-
-;inv_name		= ammo-5.45x39-ep_verybad
-inv_name_short	= ammo-5.45x39-ep_s
-inv_weight		= .16
-
-inv_grid_width		= 2
-inv_grid_height		= 1
-inv_grid_x			= 63
-inv_grid_y			= 14
-
-k_disp			= 0.75
-k_hit			= 1.75 ;  0.95
-k_impulse		= 0.42
-k_ap			= 0.010 ; 0.48
-impair			= 4
-tracer_color_ID	= 0
-wm_size         = 0.0545
-k_air_resistance = 0.25 ; 0.25
-k_bullet_speed	= 1.5
-k_cam_dispersion = 1.0
-
-tier                                     = 2
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-[ammo_5.45x39_ap]:ammo_base ; 7N22
-GroupControlSection	= spawn_group
-discovery_dependency =
-$spawn			= "weapons\ammo\ammo_5.45x39_ap" ; option for Level Editor
-class			= AMMO_S
-cform           = skeleton
-visual          = dynamics\weapons\wpn_ammo\ammo_545x39_ap.ogf
-description		= ammo-5.45x39-ap_descr
-$prefetch 		= 64
-
-cost			= 5100
-
-box_size		= 15
-
-inv_name		= ammo-5.45x39-ap
-inv_name_short	= ammo-5.45x39-ap_s
-inv_weight		= .16
-
-inv_grid_width		= 2
-inv_grid_height		= 1
-inv_grid_x			= 55
-inv_grid_y			= 15
-
-k_disp			= 0.66
-k_hit			= 1.1
-k_impulse		= 0.55
-k_ap			= 0.047; 0.6
-tracer_color_ID	= 1
-wm_size         = 0.0545
-k_air_resistance = 0.25 ; 0.25
-k_cam_dispersion = 0.8
-k_bullet_speed	= 1.5
-
-tier                                     = 5
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-[ammo_5.45x39_ap_bad]:ammo_5.45x39_ap
-GroupControlSection	= spawn_group
-discovery_dependency =
-$spawn			= "weapons\ammo\ammo_5.45x39_ap" ; option for Level Editor
-class			= AMMO_S
-cform           = skeleton
-visual          = dynamics\weapons\wpn_ammo\ammo_545x39_ap.ogf
-description		= ammo-5.45x39-ap_descr
-$prefetch 		= 64
-
-cost			= 2550
-
-box_size		= 15
-
-;inv_name		= ammo-5.45x39-ap_bad
-inv_name_short	= ammo-5.45x39-ap_s
-inv_weight		= .16
-
-inv_grid_width		= 2
-inv_grid_height		= 1
-inv_grid_x			= 57
-inv_grid_y			= 15
-
-k_disp			= 0.7
-k_hit			= 1.1 ;  0.95
-k_impulse		= 0.42
-k_ap			= 0.047; 0.58
-impair			= 4
-tracer_color_ID	= 1
-wm_size         = 0.0545
-k_air_resistance = 0.25 ; 0.25
-k_bullet_speed	= 1.5
-k_cam_dispersion = 0.8
-
-tier                                     = 5
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-[ammo_5.45x39_ap_verybad]:ammo_5.45x39_ap
-GroupControlSection	= spawn_group
-discovery_dependency =
-$spawn			= "weapons\ammo\ammo_5.45x39_ap" ; option for Level Editor
-class			= AMMO_S
-cform           = skeleton
-visual          = dynamics\weapons\wpn_ammo\ammo_545x39_ap.ogf
-description		= ammo-5.45x39-ap_descr
-$prefetch 		= 64
-
-cost			= 460
-
-box_size		= 15
-
-;inv_name		= ammo-5.45x39-ap_verybad
-inv_name_short	= ammo-5.45x39-ap_s
-inv_weight		= .16
-
-inv_grid_width		= 2
-inv_grid_height		= 1
-inv_grid_x			= 57
-inv_grid_y			= 15
-
-k_disp			= 0.75
-k_hit			= 1.1 ;  0.9
-k_impulse		= 0.38
-k_ap			= 0.050
-impair			= 4
-tracer_color_ID	= 0
-wm_size         = 0.0545
-k_air_resistance = 0.25
-k_bullet_speed	= 1.5
-k_cam_dispersion = 0.8
-
-tier                                     = 2
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-[ammo_5.56x45_fmj]:ammo_base ; M193
-GroupControlSection	= spawn_group
-discovery_dependency =
-$spawn			= "weapons\ammo\ammo_5.56x45_ss190" ; option for Level Editor
-class			= AMMO_S
-cform           = skeleton
-visual          = dynamics\weapons\wpn_ammo\ammo_556x45_ss190.ogf
-description		= ammo-5.56x45-fmj_descr
-$prefetch 		= 64
-
-cost			= 1500
-
-box_size		= 15
-
-inv_name		= ammo-5.56x45-fmj
-inv_name_short	= ammo-5.56x45-fmj_s
-inv_weight		= .17
-
-inv_grid_width		= 2
-inv_grid_height		= 1
-inv_grid_x			= 55
-inv_grid_y			= 16
-
-k_disp			= 0.66
-k_hit			= 1.05 ;  1.25
-k_impulse		= 0.58
-k_ap			= 0.029 ; 0.33
-tracer_color_ID	= 0
-wm_size         = 0.0556
-k_air_resistance = 0.20; 0.25
-k_bullet_speed	= 1.6
-
-tier                                     = 3
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-[ammo_5.56x45_fmj_bad]:ammo_5.56x45_fmj
-GroupControlSection	= spawn_group
-discovery_dependency =
-$spawn			= "weapons\ammo\ammo_5.56x45_ss190" ; option for Level Editor
-class			= AMMO_S
-cform           = skeleton
-visual          = dynamics\weapons\wpn_ammo\ammo_556x45_ss190.ogf
-description		= ammo-5.56x45-fmj_descr
-slot = -1
-$prefetch 		= 64
-
-cost			= 825
-
-box_size		= 15
-
-;inv_name		= ammo-5.56x45-fmj_bad
-inv_name_short	= ammo-5.56x45-fmj_s
-inv_weight		= .17
-
-inv_grid_width		= 2
-inv_grid_height		= 1
-inv_grid_x			= 57
-inv_grid_y			= 16
-
-k_disp			= 0.7
-k_hit			= 1.05 ;  1.19
-k_impulse		= 0.56
-k_ap			= 0.029 ; 0.31
-impair			= 4
-tracer_color_ID	= 0
-wm_size         = 0.0556
-k_air_resistance = 0.20; 0.25
-k_bullet_speed	= 1.6
-
-tier                                     = 3
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-[ammo_5.56x45_fmj_verybad]:ammo_5.56x45_fmj
-GroupControlSection	= spawn_group
-discovery_dependency =
-$spawn			= "weapons\ammo\ammo_5.56x45_ss190" ; option for Level Editor
-class			= AMMO_S
-cform           = skeleton
-visual          = dynamics\weapons\wpn_ammo\ammo_556x45_ss190.ogf
-description		= ammo-5.56x45-fmj_descr
-slot = -1
-$prefetch 		= 64
-
-cost			= 230
-
-box_size		= 15
-
-;inv_name		= ammo-5.56x45-fmj_verybad
-inv_name_short	= ammo-5.56x45-fmj_s
-inv_weight		= .17
-
-inv_grid_width		= 2
-inv_grid_height		= 1
-inv_grid_x			= 57
-inv_grid_y			= 16
-
-k_disp			= 0.75
-k_hit			= 1.05 ;  1.12
-k_impulse		= 0.53
-k_ap			= 0.029
-impair			= 4
-tracer_color_ID	= 0
-wm_size         = 0.0556
-k_air_resistance = 0.20; 0.25
-k_bullet_speed	= 1.6
-
-tier                                     = 2
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-[ammo_5.56x45_ss190]:ammo_base ; M855
-GroupControlSection	= spawn_group
-discovery_dependency =
-$spawn			= "weapons\ammo\ammo_5.56x45_ss190" ; option for Level Editor
-class			= AMMO_S
-cform           = skeleton
-visual          = dynamics\weapons\wpn_ammo\ammo_556x45_ss190.ogf
-description		= ammo-5.56x45-ss190_descr
-$prefetch 		= 64
-
-cost			= 1600
-
-box_size		= 15
-
-inv_name		= ammo-5.56x45-ss190
-inv_name_short	= ammo-5.56x45-ss190_s
-inv_weight		= .18
-
-inv_grid_width		= 2
-inv_grid_height		= 1
-inv_grid_x			= 61
-inv_grid_y			= 17
-
-k_disp			= 0.66
-k_hit			= 1.57
-k_impulse		= 0.58
-k_ap			= 0.013 ; 0.4
-tracer_color_ID	= 0
-wm_size         = 0.0556
-k_air_resistance = 0.20; 0.25
-k_cam_dispersion = 1.0
-k_bullet_speed	= 1.6
-
-tier                                     = 3
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-[ammo_5.56x45_ss190_bad]:ammo_5.56x45_ss190
-GroupControlSection	= spawn_group
-discovery_dependency =
-$spawn			= "weapons\ammo\ammo_5.56x45_ss190" ; option for Level Editor
-class			= AMMO_S
-cform           = skeleton
-visual          = dynamics\weapons\wpn_ammo\ammo_556x45_ss190.ogf
-description		= ammo-5.56x45-ss190_descr
-slot = -1
-$prefetch 		= 64
-
-cost			= 1000
-
-box_size		= 15
-
-;inv_name		= ammo-5.56x45-ss190_bad
-inv_name_short	= ammo-5.56x45-ss190_s
-inv_weight		= .18
-
-inv_grid_width		= 2
-inv_grid_height		= 1
-inv_grid_x			= 63
-inv_grid_y			= 17
-
-k_disp			= 0.7
-k_hit			= 1.57 ;  0.95
-k_impulse		= 0.56
-k_ap			= 0.013 ; 0.4
-impair			= 4
-tracer_color_ID	= 0
-wm_size         = 0.0556
-k_air_resistance = 0.20; 0.25
-k_bullet_speed	= 1.6
-k_cam_dispersion = 1.0
-
-tier                                     = 3
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-[ammo_5.56x45_ss190_verybad]:ammo_5.56x45_ss190
-GroupControlSection	= spawn_group
-discovery_dependency =
-$spawn			= "weapons\ammo\ammo_5.56x45_ss190" ; option for Level Editor
-class			= AMMO_S
-cform           = skeleton
-visual          = dynamics\weapons\wpn_ammo\ammo_556x45_ss190.ogf
-description		= ammo-5.56x45-ss190_descr
-slot = -1
-$prefetch 		= 64
-
-cost			= 320
-
-box_size		= 15
-
-;inv_name		= ammo-5.56x45-ss190_verybad
-inv_name_short	= ammo-5.56x45-ss190_s
-inv_weight		= .18
-
-inv_grid_width		= 2
-inv_grid_height		= 1
-inv_grid_x			= 63
-inv_grid_y			= 17
-
-k_disp			= 0.75
-k_hit			= 1.57 ;  0.9
-k_impulse		= 0.53
-k_ap			= 0.013
-impair			= 4
-tracer_color_ID	= 0
-wm_size         = 0.0556
-k_air_resistance = 0.20; 0.25
-k_bullet_speed	= 1.6
-k_cam_dispersion = 1.0
-
-tier                                     = 2
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-[ammo_5.56x45_ap]:ammo_base ; M855A1
-GroupControlSection	= spawn_group
-discovery_dependency =
-$spawn			= "weapons\ammo\ammo_5.56x45_ap" ; option for Level Editor
-class			= AMMO_S
-cform           = skeleton
-visual          = dynamics\weapons\wpn_ammo\ammo_556x45_ap.ogf
-description		= ammo-5.56x45-ap_descr
-$prefetch 		= 64
-
-cost			= 4100
-
-box_size		= 15
-
-inv_name		= ammo-5.56x45-ap
-inv_name_short	= ammo-5.56x45-ap_s
-inv_weight		= .18
-
-inv_grid_width		= 2
-inv_grid_height		= 1
-inv_grid_x			= 55
-inv_grid_y			= 17
-
-k_disp			= 0.66
-k_hit			= 1.05 ;  1.1
-k_impulse		= 0.54
-k_ap			= 0.052
-
-tracer_color_ID	= 1
-wm_size         = 0.0556
-k_air_resistance = 0.20; 0.25
-k_bullet_speed	= 1.6
-k_cam_dispersion = 0.8 ;  1.05
-
-tier                                     = 5
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-[ammo_5.56x45_ap_bad]:ammo_5.56x45_ap
-GroupControlSection	= spawn_group
-discovery_dependency =
-$spawn			= "weapons\ammo\ammo_5.56x45_ap" ; option for Level Editor
-class			= AMMO_S
-cform           = skeleton
-visual          = dynamics\weapons\wpn_ammo\ammo_556x45_ap.ogf
-description		= ammo-5.56x45-ap_descr
-$prefetch 		= 64
-
-cost			= 2000
-
-box_size		= 15
-
-;inv_name		= ammo-5.56x45-ap_bad
-inv_name_short	= ammo-5.56x45-ap_s
-inv_weight		= .18
-
-inv_grid_width		= 2
-inv_grid_height		= 1
-inv_grid_x			= 57
-inv_grid_y			= 17
-
-k_disp			= 0.7
-k_hit			= 1.05 ;  1.05
-k_impulse		= 0.52
-k_ap			= 0.052
-impair			= 4
-tracer_color_ID	= 1
-wm_size         = 0.0556
-k_air_resistance = 0.20; 0.25
-k_cam_dispersion = 0.8 ;  1.05
-k_bullet_speed	= 1.6
-
-tier                                     = 5
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-[ammo_5.56x45_ap_verybad]:ammo_5.56x45_ap
-GroupControlSection	= spawn_group
-discovery_dependency =
-$spawn			= "weapons\ammo\ammo_5.56x45_ap" ; option for Level Editor
-class			= AMMO_S
-cform           = skeleton
-visual          = dynamics\weapons\wpn_ammo\ammo_556x45_ap.ogf
-description		= ammo-5.56x45-ap_descr
-$prefetch 		= 64
-
-cost			= 560
-
-box_size		= 15
-
-;inv_name		= ammo-5.56x45-ap_verybad
-inv_name_short	= ammo-5.56x45-ap_s
-inv_weight		= .18
-
-inv_grid_width		= 2
-inv_grid_height		= 1
-inv_grid_x			= 57
-inv_grid_y			= 17
-
-k_disp			= 0.7
-k_hit			= 1.05 ;  1.05
-k_impulse		= 0.52
-k_ap			= 0.052
-impair			= 4
-tracer_color_ID	= 1
-wm_size         = 0.0556
-k_air_resistance = 0.20; 0.25
-k_cam_dispersion = 0.8 ;  1.05
-k_bullet_speed	= 1.6
-
-tier                                     = 3
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-[ammo_9x39_pab9]:ammo_base ; SP-5
-GroupControlSection	= spawn_group
-discovery_dependency =
-$spawn			= "weapons\ammo\ammo_9x39_pab9" ; option for Level Editor
-class			= AMMO_S
-cform           = skeleton
-visual          = dynamics\weapons\wpn_ammo\ammo_9x39_pab9.ogf
-description		= ammo-9x39-pab9_descr
-$prefetch 		= 64
-
-cost			= 1650
-
-box_size		= 14
-
-inv_name		= ammo-9x39-pab9
-inv_name_short	= ammo-9x39-pab9_s
-inv_weight		= .37
-
-inv_grid_width		= 2
-inv_grid_height		= 1
-inv_grid_x		= 55
-inv_grid_y		= 20
-
-k_disp			= 0.5
-k_hit			= 1.04
-k_impulse		= 0.55
-k_ap			= 0.034 ;0.35
-tracer_color_ID	= 0
-wm_size         = 0.09
-k_air_resistance = 0.63
-k_bullet_speed	= 0.73
-
-tier                                     = 3
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-[ammo_9x39_pab9_bad]:ammo_9x39_pab9
-GroupControlSection	= spawn_group
-discovery_dependency =
-$spawn			= "weapons\ammo\ammo_9x39_pab9" ; option for Level Editor
-class			= AMMO_S
-cform           = skeleton
-visual          = dynamics\weapons\wpn_ammo\ammo_9x39_pab9.ogf
-description		= ammo-9x39-pab9_descr
-$prefetch 		= 64
-
-cost			= 800
-
-box_size		= 14
-
-;inv_name		= ammo-9x39-pab9_bad
-inv_name_short	= ammo-9x39-pab9_s
-inv_weight		= .37
-
-inv_grid_width		= 2
-inv_grid_height		= 1
-inv_grid_x		= 57
-inv_grid_y		= 20
-
-k_disp			= 0.55
-k_hit			= 1.04 ;  0.95
-k_impulse		= 0.53
-k_ap			= 0.034; 0.33
-impair			= 4
-tracer_color_ID	= 0
-wm_size         = 0.09
-k_air_resistance = 0.63
-k_bullet_speed	= 0.73
-
-tier                                     = 3
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-[ammo_9x39_pab9_verybad]:ammo_9x39_pab9
-GroupControlSection	= spawn_group
-discovery_dependency =
-$spawn			= "weapons\ammo\ammo_9x39_pab9" ; option for Level Editor
-class			= AMMO_S
-cform           = skeleton
-visual          = dynamics\weapons\wpn_ammo\ammo_9x39_pab9.ogf
-description		= ammo-9x39-pab9_descr
-$prefetch 		= 64
-
-cost			= 425
-
-box_size		= 14
-
-;inv_name		= ammo-9x39-pab9_verybad
-inv_name_short	= ammo-9x39-pab9_s
-inv_weight		= .37
-
-inv_grid_width		= 2
-inv_grid_height		= 1
-inv_grid_x		= 57
-inv_grid_y		= 20
-
-k_disp			= 0.55
-k_hit			= 1.04 ;  0.95
-k_impulse		= 0.53
-k_ap			= 0.034; 0.33
-impair			= 4
-tracer_color_ID	= 0
-wm_size         = 0.09
-k_air_resistance = 0.63
-k_bullet_speed	= 0.73
-
-tier                                     = 3
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-[ammo_9x39_ap]:ammo_base ; SP-6
-GroupControlSection	= spawn_group
-discovery_dependency =
-$spawn			= "weapons\ammo\ammo_9x39_ap" ; option for Level Editor
-class			= AMMO_S
-cform           = skeleton
-visual          = dynamics\weapons\wpn_ammo\ammo_9x39_ap.ogf
-description		= ammo-9x39-ap_descr
-$prefetch 		= 64
-
-cost			= 5350
-
-box_size		= 14
-
-inv_name		= ammo-9x39-ap
-inv_name_short	= ammo-9x39-ap_s
-inv_weight		= .36
-
-inv_grid_width		= 2
-inv_grid_height		= 1
-inv_grid_x		= 55
-inv_grid_y		= 21
-
-k_disp			= 0.66
-k_hit			= 1.04
-k_impulse		= 0.5
-k_ap			= 0.055;0.45
-tracer_color_ID	= 1
-wm_size         = 0.09
-k_air_resistance = 0.63
-k_bullet_speed	= 0.73
-k_cam_dispersion = 0.8
-
-tier                                     = 5
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-[ammo_9x39_ap_bad]:ammo_9x39_ap
-GroupControlSection	= spawn_group
-discovery_dependency =
-$spawn			= "weapons\ammo\ammo_9x39_ap" ; option for Level Editor
-class			= AMMO_S
-cform           = skeleton
-visual          = dynamics\weapons\wpn_ammo\ammo_9x39_ap.ogf
-description		= ammo-9x39-ap_descr
-$prefetch 		= 64
-
-cost			= 2300
-
-box_size		= 14
-
-;inv_name		= ammo-9x39-ap_bad
-inv_name_short	= ammo-9x39-ap_s
-inv_weight		= .36
-
-inv_grid_width		= 2
-inv_grid_height		= 1
-inv_grid_x		= 57
-inv_grid_y		= 21
-
-k_disp			= 0.7
-k_hit			= 1.04 ;  0.95
-k_impulse		= 0.47
-k_ap			= 0.055;0.45
-impair			= 4
-tracer_color_ID	= 1
-wm_size         = 0.09
-k_air_resistance = 0.63
-k_bullet_speed	= 0.73
-k_cam_dispersion = 0.8
-
-tier                                     = 5
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-[ammo_9x39_ap_verybad]:ammo_9x39_ap
-GroupControlSection	= spawn_group
-discovery_dependency =
-$spawn			= "weapons\ammo\ammo_9x39_ap" ; option for Level Editor
-class			= AMMO_S
-cform           = skeleton
-visual          = dynamics\weapons\wpn_ammo\ammo_9x39_ap.ogf
-description		= ammo-9x39-ap_descr
-$prefetch 		= 64
-
-cost			= 635
-
-box_size		= 14
-
-;inv_name		= ammo-9x39-ap_verybad
-inv_name_short	= ammo-9x39-ap_s
-inv_weight		= .36
-
-inv_grid_width		= 2
-inv_grid_height		= 1
-inv_grid_x		= 57
-inv_grid_y		= 21
-
-k_disp			= 0.7
-k_hit			= 1.04 ;  0.95
-k_impulse		= 0.47
-k_ap			= 0.055;0.45
-impair			= 4
-tracer_color_ID	= 1
-wm_size         = 0.09
-k_air_resistance = 0.63
-k_bullet_speed	= 0.73
-k_cam_dispersion = 0.8
-
-tier                                     = 3
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-[ammo_12x70_buck]:ammo_base ; #00
-GroupControlSection	= spawn_group
-discovery_dependency =
-$spawn			= "weapons\ammo\ammo_12x70_buck" ; option for Level Editor
-class			= AMMO_S
-cform           = skeleton
-visual          = dynamics\weapons\wpn_ammo\ammo_12x70_buck.ogf
-description		= ammo-12x70-buck_descr
-$prefetch 		= 64
-
-cost			= 1000
-
-box_size		= 10
-
-inv_name		= ammo-12x70-buck
-inv_name_short	= ammo-12x70-buck_s
-inv_weight		= .45
-
-inv_grid_width	= 2
-inv_grid_height	= 1
-inv_grid_x		= 55
-inv_grid_y		= 22
-
-k_dist			= 0.75
-k_disp			= 4.0
-k_hit			= 0.42 ;  0.4
-k_impulse		= 0.5
-k_ap			= 0.003
-buck_shot		= 9
-tracer			= off
-4to1_tracer		= false
-wm_size         = 0.022
-k_air_resistance = 1.0
-k_cam_dispersion          = 1.3
-k_bullet_speed	= 1.425
-
-tier                                     = 2
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-[ammo_12x70_buck_bad]:ammo_12x70_buck
-GroupControlSection	= spawn_group
-discovery_dependency =
-$spawn			= "weapons\ammo\ammo_12x70_buck" ; option for Level Editor
-class			= AMMO_S
-cform           = skeleton
-visual          = dynamics\weapons\wpn_ammo\ammo_12x70_buck.ogf
-description		= ammo-12x70-buck_descr
-$prefetch 		= 64
-
-cost			= 415
-
-box_size		= 10
-
-;inv_name		= ammo-12x70-buck_bad
-inv_name_short	= ammo-12x70-buck_s
-inv_weight		= .45
-
-inv_grid_width	= 2
-inv_grid_height	= 1
-inv_grid_x		= 57
-inv_grid_y		= 22
-
-k_dist			= 0.75
-k_disp			= 4.0
-k_hit			= 0.42 ;  0.38
-k_impulse		= 0.33
-k_ap			= 0.003
-buck_shot		= 9
-impair			= 7
-tracer			= off
-4to1_tracer		= false
-wm_size         = 0.022
-k_air_resistance = 1.0
-k_bullet_speed	= 1.425
-k_cam_dispersion          = 1.3
-
-tier                                     = 2
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-[ammo_12x70_buck_verybad]:ammo_12x70_buck
-GroupControlSection	= spawn_group
-discovery_dependency =
-$spawn			= "weapons\ammo\ammo_12x70_buck" ; option for Level Editor
-class			= AMMO_S
-cform           = skeleton
-visual          = dynamics\weapons\wpn_ammo\ammo_12x70_buck.ogf
-description		= ammo-12x70-buck_descr
-$prefetch 		= 64
-
-cost			= 125
-
-box_size		= 10
-
-;inv_name		= ammo-12x70-buck_verybad
-inv_name_short	= ammo-12x70-buck_s
-inv_weight		= .45
-
-inv_grid_width	= 2
-inv_grid_height	= 1
-inv_grid_x		= 57
-inv_grid_y		= 22
-
-k_dist			= 0.75
-k_disp			= 4.0
-k_hit			= 0.42 ;  0.38
-k_impulse		= 0.33
-k_ap			= 0.003
-buck_shot		= 9
-impair			= 7
-tracer			= off
-4to1_tracer		= false
-wm_size         = 0.022
-k_air_resistance = 1.0
-k_bullet_speed	= 1.425
-k_cam_dispersion          = 1.3
-
-tier                                     = 1
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-[ammo_12x76_zhekan]:ammo_base
-GroupControlSection	= spawn_group
-discovery_dependency =
-$spawn			= "weapons\ammo\ammo_12x76_zhekan" ; option for Level Editor
-class			= AMMO_S
-cform           = skeleton
-visual          = dynamics\weapons\wpn_ammo\ammo_12x76_zhekan.ogf
-description		= ammo-12x76-zhekan_descr
-$prefetch 		= 64
-
-cost			= 1650
-
-box_size		= 10
-
-inv_name		= ammo-12x76-zhekan
-inv_name_short	= ammo-12x76-zhekan_s
-inv_weight		= .45
-
-inv_grid_width		= 2
-inv_grid_height		= 1
-inv_grid_x			= 55
-inv_grid_y			= 23
-
-k_dist			= 0.9
-k_disp			= 0.5
-k_hit			= 2.7 ;  2.0
-k_impulse		= 1.9
-k_ap			= 0.024
-impair			= 1.05
-tracer_color_ID	= 0
-
-wm_size         = 0.12
-k_air_resistance = 0.8
-k_bullet_speed	= 1.2
-k_cam_dispersion = 0.8
-
-tier                                     = 2
-
-[ammo_12x76_zhekan_bad]:ammo_12x76_zhekan
-GroupControlSection	= spawn_group
-discovery_dependency =
-$spawn			= "weapons\ammo\ammo_12x76_zhekan" ; option for Level Editor
-class			= AMMO_S
-cform           = skeleton
-visual          = dynamics\weapons\wpn_ammo\ammo_12x76_zhekan.ogf
-description		= ammo-12x76-zhekan_descr
-$prefetch 		= 64
-
-cost			= 690
-
-box_size		= 10
-
-;inv_name		= ammo-12x76-zhekan_bad
-inv_name_short	= ammo-12x76-zhekan_s
-inv_weight		= .45
-
-inv_grid_width		= 2
-inv_grid_height		= 1
-inv_grid_x			= 57
-inv_grid_y			= 23
-
-k_dist			= 0.9
-k_disp			= 0.55
-k_hit			= 2.7 ;  1.8
-k_impulse		= 1.9
-k_ap			= 0.024
-impair			= 7
-tracer_color_ID	= 0
-
-wm_size         = 0.12
-k_air_resistance = 0.8
-k_bullet_speed	= 1.2
-k_cam_dispersion = 0.8
-
-tier                                     = 2
-
-[ammo_12x76_zhekan_verybad]:ammo_12x76_zhekan
-GroupControlSection	= spawn_group
-discovery_dependency =
-$spawn			= "weapons\ammo\ammo_12x76_zhekan" ; option for Level Editor
-class			= AMMO_S
-cform           = skeleton
-visual          = dynamics\weapons\wpn_ammo\ammo_12x76_zhekan.ogf
-description		= ammo-12x76-zhekan_descr
-$prefetch 		= 64
-
-cost			= 210
-
-box_size		= 10
-
-;inv_name		= ammo-12x76-zhekan_verybad
-inv_name_short	= ammo-12x76-zhekan_s
-inv_weight		= .45
-
-inv_grid_width		= 2
-inv_grid_height		= 1
-inv_grid_x			= 57
-inv_grid_y			= 23
-
-k_dist			= 0.9
-k_disp			= 0.55
-k_hit			= 2.7 ;  1.8
-k_impulse		= 1.9
-k_ap			= 0.024
-impair			= 7
-tracer_color_ID	= 0
-
-wm_size         = 0.12
-k_air_resistance = 0.8
-k_bullet_speed	= 1.2
-k_cam_dispersion = 0.8
-
-tier                                     = 1
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-[ammo_12x70_buck_self]:ammo_12x70_buck
-GroupControlSection	= spawn_group
-discovery_dependency =
-$spawn			= "weapons\ammo\ammo_12x70_buck" ; option for Level Editor
-class			= AMMO_S
-cform           = skeleton
-visual          = dynamics\weapons\wpn_ammo\ammo_12x70_buck.ogf
-description		= ammo-12x70-buck_self_descr
-$prefetch 		= 64
-
-cost			= 460
-
-box_size		= 10
-
-inv_name		= ammo-12x70-buck_self
-inv_name_short	= ammo-12x70-buck_self
-inv_weight		= .52
-
-inv_grid_width	= 2
-inv_grid_height	= 1
-
-k_dist			= 0.7
-k_disp			= 5.0
-k_hit			= 0.3 ;  0.3
-k_impulse		= 0.25
-k_ap			= 0.003
-buck_shot		= 11
-impair			= 1.0
-tracer			= off
-4to1_tracer		= false
-wm_size         = 0.02
-k_air_resistance = 2.0
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-[ammo_12x76_bull]:ammo_base
-GroupControlSection	= spawn_group
-discovery_dependency =
-$spawn			= "weapons\ammo\ammo_12x76_zhekan" ; option for Level Editor
-class			= AMMO
-cform           = skeleton
-visual          = dynamics\weapons\wpn_ammo\ammo_12x76_dart.ogf
-description	    = ammo-12x76-bull_descr
-$prefetch 		= 64
-
-cost			= 5000
-
-box_size		= 10
-
-inv_name		= ammo-12x76-bull
-inv_name_short	= ammo-12x76-bull_s
-inv_weight		= .6
-
-inv_grid_width		= 2
-inv_grid_height		= 1
-inv_grid_x			= 55
-inv_grid_y			= 24
-.5
-k_disp			= 0.5
-k_hit			= 2.5 ;  2.5
-k_ap			= 0.04
-tracer			= off
-4to1_tracer		= false
-wm_size         = 0.06
-k_air_resistance = 1.0
-
-tier                                     = 5
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-[ammo_12x76_dart]:ammo_base
-GroupControlSection	= spawn_group
-discovery_dependency =
-$spawn			= "weapons\ammo\ammo_12x76_zhekan" ; option for Level Editor
-class			= AMMO
-cform           = skeleton
-visual          = dynamics\weapons\wpn_ammo\ammo_12x76_dart.ogf
-description	    = ammo-12x76-dart_descr
-$prefetch 		= 64
-
-cost			= 5000
-
-box_size		= 10
-
-inv_name		= ammo-12x76-dart
-inv_name_short	= ammo-12x76-dart_s
-inv_weight		= .4
-
-inv_grid_width		= 2
-inv_grid_height		= 1
-inv_grid_x			= 55
-inv_grid_y			= 24
-
-k_disp			= 0.33
-k_hit			= 1.52 ;  1.75
-k_impulse		= 1.9
-k_ap			= 0.042
-impair			= 1.05
-tracer_color_ID	= 1
-
-wm_size         = 0.12
-k_air_resistance = 0.8
-k_bullet_speed	= 1.25
-k_cam_dispersion          = 1.0
-
-tier                                     = 5
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-[ammo_12x76_dart_bad]:ammo_12x76_dart
-GroupControlSection	= spawn_group
-discovery_dependency =
-$spawn			= "weapons\ammo\ammo_12x76_zhekan" ; option for Level Editor
-class			= AMMO
-cform           = skeleton
-visual          = dynamics\weapons\wpn_ammo\ammo_12x76_dart.ogf
-description	    = ammo-12x76-dart_descr
-$prefetch 		= 64
-
-cost			= 3150
-
-box_size		= 10
-
-;inv_name		= ammo-12x76-dart_bad
-inv_name_short	= ammo-12x76-dart_s_bad
-inv_weight		= .4
-
-inv_grid_width		= 2
-inv_grid_height		= 1
-inv_grid_x			= 57
-inv_grid_y			= 24
-
-k_disp			= 0.38
-k_hit			= 1.52 ;  1.66
-k_impulse		= 1.9
-k_ap			= 0.042 ; 0.28
-impair			= 7
-tracer_color_ID	= 1
-
-wm_size         = 0.12
-k_air_resistance = 0.8
-k_bullet_speed	= 1.25
-k_cam_dispersion          = 1.0
-
-tier                                     = 5
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-[ammo_12x76_dart_verybad]:ammo_12x76_dart
-GroupControlSection	= spawn_group
-discovery_dependency =
-$spawn			= "weapons\ammo\ammo_12x76_zhekan" ; option for Level Editor
-class			= AMMO
-cform           = skeleton
-visual          = dynamics\weapons\wpn_ammo\ammo_12x76_dart.ogf
-description	    = ammo-12x76-dart_descr
-$prefetch 		= 64
-
-cost			= 330
-
-box_size		= 10
-
-;inv_name		= ammo-12x76-dart_verybad
-inv_name_short	= ammo-12x76-dart_s_verybad
-inv_weight		= .4
-
-inv_grid_width		= 2
-inv_grid_height		= 1
-inv_grid_x			= 57
-inv_grid_y			= 24
-
-k_disp			= 0.38
-k_hit			= 1.52 ;  1.66
-k_impulse		= 1.9
-k_ap			= 0.042 ; 0.28
-impair			= 7
-tracer_color_ID	= 1
-
-wm_size         = 0.12
-k_air_resistance = 0.8
-k_bullet_speed	= 1.25
-k_cam_dispersion          = 1.0
-
-tier                                     = 1
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-[ammo_12x76_zhekan_heli]:ammo_12x76_zhekan ; Do not use! Fake zhekan for helicopter
-$spawn			= ;"weapons\ammo\ammo_12x76_zhekan_heli" ; option for Level Editor
-k_disp			= 1
-k_hit			= 1.0 ;  1
-k_impulse		= 1
-k_ap			= 0.075
-tracer			= on
-4to1_tracer		= false
-tracer_color_ID	= 3
-wm_size         = 0.06
-explosive		= off
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-[ammo_7.62x39_fmj]:ammo_base ; 57-N-231
-GroupControlSection	= spawn_group
-discovery_dependency =
-;$spawn			= "weapons\ammo\ammo_7.62x39_fmj" ; option for Level Editor
-class			= AMMO
-cform                   = skeleton
-visual                  = dynamics\weapons\wpn_ammo\ammo_762x39_fmj.ogf
-description		= ammo-7.62x39_fmj_descr
-$prefetch 		= 64
-
-cost			= 1950
-box_size		= 15
-
-inv_name		= ammo-7.62x39_fmj
-inv_name_short	        = ammo-7.62x39_fmj_s
-inv_weight		= .24
-
-inv_grid_width     = 2
-inv_grid_height    = 1
-inv_grid_x         = 55
-inv_grid_y         = 25
-
-k_disp			= 0.75
-k_hit			= 1.17
-k_impulse		= 0.66
-k_ap		    = 0.030; 0.45
-tracer_color_ID	= 0
-wm_size         = 0.0762
-k_air_resistance = 0.3
-k_cam_dispersion          = 0.8
-k_bullet_speed			  = 1.2
-
-tier                                     = 4
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-[ammo_7.62x39_fmj_bad]:ammo_7.62x39_fmj
-GroupControlSection	= spawn_group
-discovery_dependency =
-;$spawn			= "weapons\ammo\ammo_7.62x39_fmj" ; option for Level Editor
-class			= AMMO
-cform                   = skeleton
-visual                  = dynamics\weapons\wpn_ammo\ammo_762x39_fmj.ogf
-description		= ammo-7.62x39_fmj_descr
-$prefetch 		= 64
-
-cost			= 855
-box_size		= 15
-
-;inv_name		= ammo-7.62x39_fmj_bad
-inv_name_short	        = ammo-7.62x39_fmj_s
-inv_weight		= .24
-
-inv_grid_width     = 2
-inv_grid_height    = 1
-inv_grid_x         = 57
-inv_grid_y         = 25
-
-k_disp			= 0.8
-k_hit			= 1.17 ;  0.95
-k_impulse		= 0.62
-k_ap		    = 0.030; 0.43
-impair			= 4
-tracer_color_ID	= 0
-wm_size         = 0.0762
-k_air_resistance = 0.3
-k_cam_dispersion          = 0.8
-k_bullet_speed			  = 1.2
-
-tier                                     = 3
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-[ammo_7.62x39_fmj_verybad]:ammo_7.62x39_fmj
-GroupControlSection	= spawn_group
-discovery_dependency =
-;$spawn			= "weapons\ammo\ammo_7.62x39_fmj" ; option for Level Editor
-class			= AMMO
-cform                   = skeleton
-visual                  = dynamics\weapons\wpn_ammo\ammo_762x39_fmj.ogf
-description		= ammo-7.62x39_fmj_descr
-$prefetch 		= 64
-
-cost			= 255
-box_size		= 15
-
-;inv_name		= ammo-7.62x39_fmj_verybad
-inv_name_short	        = ammo-7.62x39_fmj_s
-inv_weight		= .24
-
-inv_grid_width     = 2
-inv_grid_height    = 1
-inv_grid_x         = 57
-inv_grid_y         = 25
-
-k_disp			= 0.85
-k_hit			= 1.17 ;  0.9
-k_impulse		= 0.6
-k_ap		    = 0.030
-impair			= 1.3
-tracer_color_ID	= 0
-wm_size         = 0.0762
-k_air_resistance = 0.3
-k_bullet_speed	= 1.2
-
-tier                                     = 3
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-[ammo_7.62x39_ap]:ammo_base
-GroupControlSection	= spawn_group
-discovery_dependency =
-;$spawn			= "weapons\ammo\ammo_7.62x39_ap" ; option for Level Editor
-class			= AMMO_S
-cform                   = skeleton
-visual          = dynamics\weapons\wpn_ammo\ammo_762x39_ap.ogf
-description		= ammo-7.62x39_ap_descr
-$prefetch 		= 64
-
-cost			= 5450
-box_size		= 15
-
-inv_name		= ammo-7.62x39_ap
-inv_name_short	        = ammo-7.62x39_ap_s
-inv_weight		= .24
-
-inv_grid_width     = 2
-inv_grid_height    = 1
-inv_grid_x         = 55
-inv_grid_y         = 26
-
-k_disp			= 0.75
-k_hit			= 1.17
-k_impulse		= 0.6
-k_ap		    = 0.055; 0.55
-tracer_color_ID	= 1
-wm_size         = 0.0762
-k_air_resistance = 0.3
-k_cam_dispersion          = 1.0
-k_bullet_speed			  = 1.2
-
-tier                                     = 4
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-[ammo_7.62x39_ap_bad]:ammo_7.62x39_ap
-GroupControlSection	= spawn_group
-discovery_dependency =
-;$spawn			= "weapons\ammo\ammo_7.62x39_ap" ; option for Level Editor
-class			= AMMO_S
-cform                   = skeleton
-visual          = dynamics\weapons\wpn_ammo\ammo_762x39_ap.ogf
-description		= ammo-7.62x39_ap_descr
-$prefetch 		= 64
-
-cost			= 2500
-box_size		= 15
-
-;inv_name		= ammo-7.62x39_ap_bad
-inv_name_short	        = ammo-7.62x39_ap_s
-inv_weight		= .24
-
-inv_grid_width     = 2
-inv_grid_height    = 1
-inv_grid_x         = 57
-inv_grid_y         = 26
-
-k_disp			= 0.8
-k_hit			= 1.17 ;  0.95
-k_impulse		= 0.55
-k_ap		    = 0.055
-impair			= 4
-tracer_color_ID	= 1
-wm_size         = 0.0762
-k_air_resistance = 0.3
-k_cam_dispersion          = 1.0
-k_bullet_speed			  = 1.2
-
-tier                                     = 4
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-[ammo_7.62x39_ap_verybad]:ammo_7.62x39_ap
-GroupControlSection	= spawn_group
-discovery_dependency =
-;$spawn			= "weapons\ammo\ammo_7.62x39_ap" ; option for Level Editor
-class			= AMMO_S
-cform                   = skeleton
-visual          = dynamics\weapons\wpn_ammo\ammo_762x39_ap.ogf
-description		= ammo-7.62x39_ap_descr
-$prefetch 		= 64
-
-cost			= 430
-box_size		= 15
-
-;inv_name		= ammo-7.62x39_ap_verybad
-inv_name_short	        = ammo-7.62x39_ap_s
-inv_weight		= .24
-
-inv_grid_width     = 2
-inv_grid_height    = 1
-inv_grid_x         = 57
-inv_grid_y         = 26
-
-k_disp			= 0.8
-k_hit			= 1.17 ;  0.95
-k_impulse		= 0.55
-k_ap		    = 0.055
-impair			= 4
-tracer_color_ID	= 1
-wm_size         = 0.0762
-k_air_resistance = 0.3
-k_cam_dispersion          = 1.0
-k_bullet_speed			  = 1.2
-
-tier                                     = 3
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-[ammo_7.92x33_fmj]:ammo_base ; 7.92x57 German with mild steel
-GroupControlSection	= spawn_group
-discovery_dependency =
-;$spawn			= "weapons\ammo\ammo_7.62x39_fmj" ; option for Level Editor
-class			= AMMO
-cform                   = skeleton
-visual                  = dynamics\weapons\wpn_ammo\ammo_792x33_fmj.ogf
-description		= ammo-7.92x33_fmj_descr
-$prefetch 		= 64
-
-cost			= 1350
-box_size		= 10
-
-inv_name		= ammo-7.92x33_fmj
-inv_name_short	        = ammo-7.92x33_fmj_s
-inv_weight		= .37
-
-inv_grid_width     = 2
-inv_grid_height    = 1
-inv_grid_x         = 55
-inv_grid_y         = 27
-
-k_disp			= 0.85
-k_hit			= 1
-k_impulse		= 1.5
-k_ap		    = 0.027;0.45
-wm_size         = 0.0792
-k_air_resistance = 0.25
-k_cam_dispersion          = 0.8
-tracer_color_ID	= 0
-k_bullet_speed	= 1.5
-impair			= 2
-
-tier                                     = 4
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-[ammo_7.92x33_fmj_bad]:ammo_7.92x33_fmj
-GroupControlSection	= spawn_group
-discovery_dependency =
-;$spawn			= "weapons\ammo\ammo_7.62x39_fmj" ; option for Level Editor
-class			= AMMO
-cform                   = skeleton
-visual                  = dynamics\weapons\wpn_ammo\ammo_792x33_fmj.ogf
-description		= ammo-7.92x33_fmj_descr
-$prefetch 		= 64
-
-cost			= 1100
-box_size		= 10
-
-;inv_name		= ammo-7.92x33_fmj_bad
-inv_name_short	        = ammo-7.92x33_fmj_s
-inv_weight		= .37
-
-inv_grid_width     = 2
-inv_grid_height    = 1
-inv_grid_x         = 57
-inv_grid_y         = 27
-
-k_disp			= 0.9
-k_hit			= 1
-k_impulse		= 1.5
-k_ap		    = 0.027
-impair			= 3
-wm_size         = 0.0792
-k_air_resistance = 0.25
-k_bullet_speed	= 1.5
-k_cam_dispersion          = 0.8
-tracer_color_ID	= 0
-
-tier                                     = 4
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-[ammo_7.92x33_fmj_verybad]:ammo_7.92x33_fmj
-GroupControlSection	= spawn_group
-discovery_dependency =
-;$spawn			= "weapons\ammo\ammo_7.62x39_fmj" ; option for Level Editor
-class			= AMMO
-cform                   = skeleton
-visual                  = dynamics\weapons\wpn_ammo\ammo_792x33_fmj.ogf
-description		= ammo-7.92x33_fmj_descr
-$prefetch 		= 64
-
-cost			= 335
-box_size		= 10
-
-;inv_name		= ammo-7.92x33_fmj_verybad
-inv_name_short	        = ammo-7.92x33_fmj_s
-inv_weight		= .37
-
-inv_grid_width     = 2
-inv_grid_height    = 1
-inv_grid_x         = 57
-inv_grid_y         = 27
-
-k_disp			= 0.9
-k_hit			= 1
-k_impulse		= 1.5
-k_ap		    = 0.027
-impair			= 5
-wm_size         = 0.0792
-k_air_resistance = 0.25
-k_bullet_speed	= 1.5
-k_cam_dispersion          = 0.8
-tracer_color_ID	= 0
-
-tier                                     = 4
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-[ammo_7.92x33_ap]:ammo_base ; 7.92x57 SA AP
-GroupControlSection	= spawn_group
-discovery_dependency =
-;$spawn			= "weapons\ammo\ammo_7.62x39_ap" ; option for Level Editor
-class			= AMMO_S
-cform                   = skeleton
-visual          = dynamics\weapons\wpn_ammo\ammo_792x33_ap.ogf
-description		= ammo-7.92x33_ap_descr
-$prefetch 		= 64
-
-cost			= 4500
-box_size		= 10
-
-inv_name		= ammo-7.92x33_ap
-inv_name_short	        = ammo-7.92x33_ap_s
-inv_weight		= .37
-
-inv_grid_width     = 2
-inv_grid_height    = 1
-inv_grid_x         = 55
-inv_grid_y         = 28
-
-k_disp			= 0.85
-k_hit			= 1
-k_impulse		= 1.5
-k_ap		    = 0.039; 0.55
-wm_size         = 0.0792
-k_air_resistance = 0.25
-k_cam_dispersion          = 1.8
-tracer_color_ID	= 1
-k_bullet_speed	= 1.5
-impair			= 2
-
-tier                                     = 5
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-[ammo_7.92x33_ap_bad]:ammo_7.92x33_ap
-GroupControlSection	= spawn_group
-discovery_dependency =
-;$spawn			= "weapons\ammo\ammo_7.62x39_ap" ; option for Level Editor
-class			= AMMO_S
-cform                   = skeleton
-visual          = dynamics\weapons\wpn_ammo\ammo_792x33_ap.ogf
-description		= ammo-7.92x33_ap_descr
-$prefetch 		= 64
-
-cost			= 3500
-box_size		= 10
-
-;inv_name		= ammo-7.92x33_ap_bad
-inv_name_short	        = ammo-7.92x33_ap_s
-inv_weight		= .37
-
-inv_grid_width     = 2
-inv_grid_height    = 1
-inv_grid_x         = 57
-inv_grid_y         = 28
-
-k_disp			= 0.9
-k_hit			= 1
-k_impulse		= 0.47
-k_ap		    = 0.039 ; 0.53
-impair			= 3
-wm_size         = 0.0792
-k_air_resistance = 0.25
-k_bullet_speed	= 1.5
-k_cam_dispersion          = 1.8
-tracer_color_ID	= 1
-
-tier                                     = 5
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-[ammo_7.92x33_ap_verybad]:ammo_7.92x33_ap
-GroupControlSection	= spawn_group
-discovery_dependency =
-;$spawn			= "weapons\ammo\ammo_7.62x39_ap" ; option for Level Editor
-class			= AMMO_S
-cform                   = skeleton
-visual          = dynamics\weapons\wpn_ammo\ammo_792x33_ap.ogf
-description		= ammo-7.92x33_ap_descr
-$prefetch 		= 64
-
-cost			= 530
-box_size		= 10
-
-;inv_name		= ammo-7.92x33_ap_verybad
-inv_name_short	        = ammo-7.92x33_ap_s
-inv_weight		= .37
-
-inv_grid_width     = 2
-inv_grid_height    = 1
-inv_grid_x         = 57
-inv_grid_y         = 28
-
-k_disp			= 0.9
-k_hit			= 1
-k_impulse		= 0.47
-k_ap		    = 0.039 ; 0.53
-impair			= 5
-wm_size         = 0.0792
-k_air_resistance = 0.25
-k_bullet_speed	= 1.5
-k_cam_dispersion          = 1.8
-tracer_color_ID	= 1
-
-tier                                     = 3
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-[ammo_7.62x51_fmj]:ammo_base ; M80
-GroupControlSection	= spawn_group
-discovery_dependency =
-$spawn			= "weapons\ammo\ammo_7.62x51_fmj" ; option for Level Editor
-class			= AMMO
-cform                   = skeleton
-visual                  = dynamics\weapons\wpn_ammo\ammo_762x51_fmj.ogf
-description				= ammo-7.62x51_fmj_descr
-$prefetch 		= 64
-
-cost					 = 3000
-
-box_size		= 15
-
-inv_name		= ammo-7.62x51_fmj
-inv_name_short		= ammo-7.62x51_fmj_s
-inv_weight		= .38
-
-inv_grid_width     = 2
-inv_grid_height    = 1
-inv_grid_x         = 55
-inv_grid_y         = 29
-
-k_disp			= 0.5
-k_hit			= 0.89 ;  1.1
-k_impulse		= 0.66
-k_ap		    = 0.034
-tracer_color_ID	= 0
-wm_size         = 0.0762
-k_air_resistance = 0.25
-k_cam_dispersion          = 0.8
-k_bullet_speed	= 1.5
-
-tier                                     = 4
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-[ammo_7.62x51_fmj_bad]:ammo_7.62x51_fmj
-GroupControlSection	= spawn_group
-discovery_dependency =
-$spawn			= "weapons\ammo\ammo_7.62x51_fmj" ; option for Level Editor
-class			= AMMO
-cform                   = skeleton
-visual                  = dynamics\weapons\wpn_ammo\ammo_762x51_fmj.ogf
-description				= ammo-7.62x51_fmj_descr
-$prefetch 		= 64
-
-cost					 = 1240
-
-box_size		= 15
-
-;inv_name		= ammo-7.62x51_fmj_bad
-inv_name_short		= ammo-7.62x51_fmj_s
-inv_weight		= .38
-
-inv_grid_width     = 2
-inv_grid_height    = 1
-inv_grid_x         = 57
-inv_grid_y         = 29
-
-k_disp			= 0.55
-k_hit			= 0.89 ;  1.05
-k_impulse		= 0.63
-k_ap		    = 0.034
-impair			= 4
-tracer_color_ID	= 0
-wm_size         = 0.0762
-k_air_resistance = 0.25
-k_bullet_speed	= 1.5
-k_cam_dispersion          = 0.8
-
-tier                                     = 4
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-[ammo_7.62x51_fmj_verybad]:ammo_7.62x51_fmj
-GroupControlSection	= spawn_group
-discovery_dependency =
-$spawn			= "weapons\ammo\ammo_7.62x51_fmj" ; option for Level Editor
-class			= AMMO
-cform                   = skeleton
-visual                  = dynamics\weapons\wpn_ammo\ammo_762x51_fmj.ogf
-description				= ammo-7.62x51_fmj_descr
-$prefetch 		= 64
-
-cost					 = 350
-
-box_size		= 15
-
-;inv_name		= ammo-7.62x51_fmj_verybad
-inv_name_short		= ammo-7.62x51_fmj_s
-inv_weight		= .38
-
-inv_grid_width     = 2
-inv_grid_height    = 1
-inv_grid_x         = 57
-inv_grid_y         = 29
-
-k_disp			= 0.55
-k_hit			= 0.89 ;  1.05
-k_impulse		= 0.63
-k_ap		    = 0.034
-impair			= 4
-tracer_color_ID	= 0
-wm_size         = 0.0762
-k_air_resistance = 0.25
-k_bullet_speed	= 1.5
-k_cam_dispersion          = 0.8
-
-tier                                     = 3
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-[ammo_7.62x51_ap]:ammo_base ; M61
-GroupControlSection	= spawn_group
-discovery_dependency =
-$spawn			= "weapons\ammo\ammo_7.62x51_ap" ; option for Level Editor
-class			= AMMO
-cform                   = skeleton
-visual                  = dynamics\weapons\wpn_ammo\ammo_762x51_ap.ogf
-description				= ammo-7.62x51_ap_descr
-$prefetch 		= 64
-
-cost					 = 7500
-
-box_size		= 15
-
-inv_name		= ammo-7.62x51_ap
-inv_name_short		= ammo-7.62x51_ap
-inv_weight		= .38
-
-inv_grid_width     = 2
-inv_grid_height    = 1
-inv_grid_x         = 55
-inv_grid_y         = 30
-
-k_disp			= 0.5
-k_impulse		= 0.5
-k_hit			= 0.89 ;  1.05
-k_ap		    = 0.062
-tracer_color_ID	= 1
-wm_size         = 0.0762
-k_air_resistance = 0.25
-k_cam_dispersion          = 1.2
-k_bullet_speed	= 1.5
-
-tier                                     = 5
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-[ammo_7.62x51_ap_bad]:ammo_7.62x51_ap
-GroupControlSection	= spawn_group
-discovery_dependency =
-$spawn			= "weapons\ammo\ammo_7.62x51_ap" ; option for Level Editor
-class			= AMMO
-cform                   = skeleton
-visual                  = dynamics\weapons\wpn_ammo\ammo_762x51_ap.ogf
-description				= ammo-7.62x51_ap_descr
-$prefetch 		= 64
-
-cost					 = 3125
-
-box_size		= 15
-
-;inv_name		= ammo-7.62x51_ap_bad
-inv_name_short		= ammo-7.62x51_ap
-inv_weight		= .38
-
-inv_grid_width     = 2
-inv_grid_height    = 1
-inv_grid_x         = 57
-inv_grid_y         = 30
-
-k_disp			= 0.55
-k_hit			= 0.89 ;  0.95
-k_impulse		= 0.48
-k_ap		    = 0.062
-impair			= 4
-tracer_color_ID	= 1
-wm_size         = 0.0762
-k_air_resistance = 0.25
-k_bullet_speed	= 1.5
-k_cam_dispersion          = 1.2
-
-tier                                     = 5
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-[ammo_7.62x51_ap_verybad]:ammo_7.62x51_ap
-GroupControlSection	= spawn_group
-discovery_dependency =
-$spawn			= "weapons\ammo\ammo_7.62x51_ap" ; option for Level Editor
-class			= AMMO
-cform                   = skeleton
-visual                  = dynamics\weapons\wpn_ammo\ammo_762x51_ap.ogf
-description				= ammo-7.62x51_ap_descr
-$prefetch 		= 64
-
-cost					 = 630
-
-box_size		= 15
-
-;inv_name		= ammo-7.62x51_ap_verybad
-inv_name_short		= ammo-7.62x51_ap
-inv_weight		= .38
-
-inv_grid_width     = 2
-inv_grid_height    = 1
-inv_grid_x         = 57
-inv_grid_y         = 30
-
-k_disp			= 0.55
-k_hit			= 0.89 ;  0.95
-k_impulse		= 0.48
-k_ap		    = 0.062
-impair			= 4
-tracer_color_ID	= 1
-wm_size         = 0.0762
-k_air_resistance = 0.25
-k_bullet_speed	= 1.5
-k_cam_dispersion          = 1.2
-
-tier                                     = 4
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-[ammo_pkm_100]:ammo_base ; 57-N-323S belt
-GroupControlSection	= spawn_group
-discovery_dependency =
-$spawn			= "weapons\ammo\ammo_pkm_100" ; option for Level Editor
-class			= AMMO_S
-cform           = skeleton
-visual          = dynamics\weapons\wpn_ammo\ammo_pkm.ogf
-description		= ammo-7.62x54-r_descr
-$prefetch 		= 64
-
-cost			= 5000
-
-box_size		= 30
-
-inv_name		= ammo-7.62x54-r
-inv_name_short		= ammo-7.62x54-r_s
-inv_weight		= 0.54
-
-inv_grid_width		= 2
-inv_grid_height		= 1
-inv_grid_x			= 55
-inv_grid_y			= 18
-
-k_hit			= 1.02 ;  1
-k_disp			= 0.9
-k_impulse		= 0.6
-k_ap			= 0.037 ; 0.4
-tracer_color_ID	= 0
-wm_size         = 0.0762
-k_air_resistance = 0.3
-k_cam_dispersion          = 0.8
-k_bullet_speed	= 1.5
-
-tier                                     = 4
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-[ammo_pkm_100_bad]:ammo_pkm_100
-GroupControlSection	= spawn_group
-discovery_dependency =
-$spawn			= "weapons\ammo\ammo_pkm_100" ; option for Level Editor
-class			= AMMO_S
-cform           = skeleton
-visual          = dynamics\weapons\wpn_ammo\ammo_pkm.ogf
-description		= ammo-7.62x54-r_descr
-$prefetch 		= 64
-
-cost			= 1380
-
-box_size		= 15
-
-;inv_name		= ammo-7.62x54-r_bad
-inv_name_short		= ammo-7.62x54-r_s
-inv_weight		= 0.54
-
-inv_grid_width		= 2
-inv_grid_height		= 1
-inv_grid_x			= 57
-inv_grid_y			= 18
-
-k_disp			= 0.95
-k_hit			= 1.02 ;  1
-k_impulse		= 0.56
-k_ap			= 0.037 ; 0.4
-impair			= 5
-tracer_color_ID	= 0
-wm_size         = 0.0762
-k_air_resistance = 0.3
-k_bullet_speed	= 1.5
-k_cam_dispersion          = 0.8
-
-tier                                     = 3
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-[ammo_pkm_100_verybad]:ammo_pkm_100
-GroupControlSection	= spawn_group
-discovery_dependency =
-$spawn			= "weapons\ammo\ammo_pkm_100" ; option for Level Editor
-class			= AMMO_S
-cform           = skeleton
-visual          = dynamics\weapons\wpn_ammo\ammo_pkm.ogf
-description		= ammo-7.62x54-r_descr
-$prefetch 		= 64
-
-cost			= 100
-
-box_size		= 15
-
-;inv_name		= ammo-7.62x54-r_verybad
-inv_name_short		= ammo-7.62x54-r_s
-inv_weight		= 0.54
-
-inv_grid_width		= 2
-inv_grid_height		= 1
-inv_grid_x			= 57
-inv_grid_y			= 18
-
-k_disp			= 0.95
-k_hit			= 1.02 ;  1
-k_impulse		= 0.56
-k_ap			= 0.037 ; 0.4
-impair			= 5
-tracer_color_ID	= 0
-wm_size         = 0.0762
-k_air_resistance = 0.3
-k_bullet_speed	= 1.5
-k_cam_dispersion          = 0.8
-
-tier                                     = 3
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-[ammo_7.62x54_7h1]:ammo_base
-GroupControlSection	= spawn_group
-discovery_dependency =
-$spawn			= "weapons\ammo\ammo_7.62x54_7h1" ; option for Level Editor
-class			= AMMO_S
-cform           = skeleton
-visual          = dynamics\weapons\wpn_ammo\ammo_762x54_7h1.ogf
-description		= ammo-7.62x54-7n1_descr
-$prefetch 		= 64
-
-cost			= 2250
-
-box_size		= 10
-
-inv_name		= ammo-7.62x54-7n1
-inv_name_short		= ammo-7.62x54-7n1_s
-inv_weight		= .22
-
-inv_grid_width     = 2
-inv_grid_height    = 1
-inv_grid_x         = 55
-inv_grid_y         = 19
-
-k_disp			= 0.66
-k_impulse		= 1.5
-k_hit           = 0.85
-k_ap			= 0.030; 0.5
-tracer_color_ID	= 0
-wm_size         = 0.0762
-k_air_resistance = 0.25
-k_cam_dispersion          = 0.8
-k_bullet_speed	= 1.5
-
-tier                                     = 4
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-[ammo_7.62x54_7h1_bad]:ammo_7.62x54_7h1
-GroupControlSection	= spawn_group
-discovery_dependency =
-$spawn			= "weapons\ammo\ammo_7.62x54_7h1" ; option for Level Editor
-class			= AMMO_S
-cform           = skeleton
-visual          = dynamics\weapons\wpn_ammo\ammo_762x54_7h1.ogf
-description		= ammo-7.62x54-7n1_descr
-$prefetch 		= 64
-
-cost			= 1540
-
-box_size		= 10
-
-;inv_name		= ammo-7.62x54-7n1_bad
-inv_name_short		= ammo-7.62x54-7n1_s
-inv_weight		= .22
-
-inv_grid_width     = 2
-inv_grid_height    = 1
-inv_grid_x         = 57
-inv_grid_y         = 19
-
-k_disp			= 0.7
-k_hit           = 0.85
-k_impulse		= 1.5
-k_ap			= 0.030;0.48
-impair			= 9
-tracer_color_ID	= 0
-wm_size         = 0.0762
-k_air_resistance = 0.25
-k_bullet_speed	= 1.5
-k_cam_dispersion          = 0.8
-
-tier                                     = 4
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-[ammo_7.62x54_7h1_verybad]:ammo_7.62x54_7h1
-GroupControlSection	= spawn_group
-discovery_dependency =
-$spawn			= "weapons\ammo\ammo_7.62x54_7h1" ; option for Level Editor
-class			= AMMO_S
-cform           = skeleton
-visual          = dynamics\weapons\wpn_ammo\ammo_762x54_7h1.ogf
-description		= ammo-7.62x54-7n1_descr
-$prefetch 		= 64
-
-cost			= 235
-
-box_size		= 10
-
-;inv_name		= ammo-7.62x54-7n1_verybad
-inv_name_short		= ammo-7.62x54-7n1_s
-inv_weight		= .22
-
-inv_grid_width     = 2
-inv_grid_height    = 1
-inv_grid_x         = 57
-inv_grid_y         = 19
-
-k_disp			= 0.7
-k_hit           = 0.85
-k_impulse		= 1.5
-k_ap			= 0.030;0.48
-impair			= 9
-tracer_color_ID	= 0
-wm_size         = 0.0762
-k_air_resistance = 0.25
-k_bullet_speed	= 1.5
-k_cam_dispersion          = 0.8
-
-tier                                     = 4
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-[ammo_7.62x54_ap]:ammo_base ; 7N13
-GroupControlSection	= spawn_group
-discovery_dependency	=
-$spawn			= "weapons\ammo\ammo_7.62x54_ap" ; option for Level Editor
-class			= AMMO
-cform                   = skeleton
-visual                  = dynamics\weapons\wpn_ammo\ammo_762x54_ap.ogf
-description		= ammo-7.62x54-ap_descr
-$prefetch 		= 64
-
-cost					 = 9500
-
-box_size		= 10
-
-inv_name		= ammo-7.62x54-ap
-inv_name_short		= ammo-7.62x54-ap_s
-inv_weight		= .33
-
-inv_grid_width     = 2
-inv_grid_height    = 1
-inv_grid_x         = 55
-inv_grid_y         = 32
-
-k_disp			= 0.9
-k_impulse		= 1.5
-k_hit           = 0.85
-k_ap		    = 0.08 ; 0.6
-tracer_color_ID	= 1
-wm_size         = 0.0762
-k_air_resistance = 0.25
-k_cam_dispersion          = 1.4
-k_bullet_speed	= 1.5
-
-tier                                     = 5
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-[ammo_7.62x54_ap_bad]:ammo_7.62x54_ap
-GroupControlSection	= spawn_group
-discovery_dependency	=
-$spawn			= "weapons\ammo\ammo_7.62x54_ap" ; option for Level Editor
-class			= AMMO
-cform                   = skeleton
-visual                  = dynamics\weapons\wpn_ammo\ammo_762x54_ap.ogf
-description		= ammo-7.62x54-ap_descr
-$prefetch 		= 64
-
-cost					 = 4500
-
-box_size		= 10
-
-;inv_name		= ammo-7.62x54-ap_bad
-inv_name_short		= ammo-7.62x54-ap_s
-inv_weight		= .33
-
-inv_grid_width     = 2
-inv_grid_height    = 1
-inv_grid_x         = 57
-inv_grid_y         = 32
-
-k_disp			= 0.95
-k_hit           = 0.85
-k_impulse		= 1.5
-k_ap		    = 0.08; 0.58
-impair			= 9
-tracer_color_ID	= 1
-wm_size         = 0.0762
-k_air_resistance = 0.25
-k_bullet_speed	= 1.5
-k_cam_dispersion          = 1.4
-
-tier                                     = 5
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-[ammo_7.62x54_ap_verybad]:ammo_7.62x54_ap
-GroupControlSection	= spawn_group
-discovery_dependency	=
-$spawn			= "weapons\ammo\ammo_7.62x54_ap" ; option for Level Editor
-class			= AMMO
-cform                   = skeleton
-visual                  = dynamics\weapons\wpn_ammo\ammo_762x54_ap.ogf
-description		= ammo-7.62x54-ap_descr
-$prefetch 		= 64
-
-cost					 = 500
-
-box_size		= 10
-
-;inv_name		= ammo-7.62x54-ap_verybad
-inv_name_short		= ammo-7.62x54-ap_s
-inv_weight		= .33
-
-inv_grid_width     = 2
-inv_grid_height    = 1
-inv_grid_x         = 57
-inv_grid_y         = 32
-
-k_disp			= 0.95
-k_hit           = 0.85
-k_impulse		= 1.5
-k_ap		    = 0.08; 0.58
-impair			= 9
-tracer_color_ID	= 1
-wm_size         = 0.0762
-k_air_resistance = 0.25
-k_bullet_speed	= 1.5
-k_cam_dispersion          = 1.4
-
-tier                                     = 4
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-[ammo_4.6x30_fmj]:ammo_base
-GroupControlSection	= spawn_group
-discovery_dependency =
-$spawn			= "weapons\ammo\ammo_9x19_fmj" ; option for Level Editor
-class			= AMMO_S
-cform           = skeleton
-visual          = dynamics\weapons\wpn_ammo\ammo_46x30_fmj.ogf
-description		= ammo-4.6x30-fmj_descr
-$prefetch 		= 64
-
-cost			= 3000
-
-box_size		= 15
-
-inv_name		= ammo-4.6x30-fmj
-inv_name_short	= ammo-4.6x30-fmj_s
-inv_weight		= .09
-
-inv_grid_width		= 2
-inv_grid_height		= 1
-inv_grid_x			= 55
-inv_grid_y			= 36
-
-
-k_disp			= 0.66
-k_impulse		= 0.36
-k_ap			= 0.025 ; 0.35
-tracer_color_ID	= 0
-wm_size         = 0.017
-k_air_resistance = 0.8
-
-tier                                     = 2
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-[ammo_4.6x30_fmj_bad]:ammo_4.6x30_fmj
-GroupControlSection	= spawn_group
-discovery_dependency =
-$spawn			= "weapons\ammo\ammo_9x19_fmj" ; option for Level Editor
-class			= AMMO_S
-cform           = skeleton
-description		= ammo-4.6x30-fmj_descr
-visual          = dynamics\weapons\wpn_ammo\ammo_46x30_fmj.ogf
-$prefetch 		= 64
-
-cost			= 1750
-
-box_size		= 15
-
-;inv_name		= ammo-4.6x30-fmj_bad
-inv_name_short	= ammo-4.6x30-fmj_s
-inv_weight		= .09
-
-inv_grid_width		= 2
-inv_grid_height		= 1
-inv_grid_x			= 57
-inv_grid_y			= 36
-
-k_disp			= 0.7
-k_hit			= 1.0 ;  0.95
-k_impulse		= 0.33
-k_ap			= 0.025 ; 0.35
-impair			= 3.5
-tracer_color_ID	= 0
-wm_size         = 0.017
-k_air_resistance = 0.8
-k_bullet_speed	= 0.95
-
-tier                                     = 2
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-[ammo_4.6x30_fmj_verybad]:ammo_4.6x30_fmj
-GroupControlSection	= spawn_group
-discovery_dependency =
-$spawn			= "weapons\ammo\ammo_9x19_fmj" ; option for Level Editor
-class			= AMMO_S
-cform           = skeleton
-description		= ammo-4.6x30-fmj_descr
-visual          = dynamics\weapons\wpn_ammo\ammo_46x30_fmj.ogf
-$prefetch 		= 64
-
-cost			= 250
-
-box_size		= 15
-
-;inv_name		= ammo-4.6x30-fmj_verybad
-inv_name_short	= ammo-4.6x30-fmj_s
-inv_weight		= .09
-
-inv_grid_width		= 2
-inv_grid_height		= 1
-inv_grid_x			= 57
-inv_grid_y			= 36
-
-k_disp			= 0.75
-k_hit			= 1.0 ;  0.9
-k_impulse		= 0.3
-k_ap			= 0.03
-impair			= 1.3
-tracer_color_ID	= 0
-wm_size         = 0.017
-k_air_resistance = 0.8
-k_bullet_speed	= 0.9
-
-tier                                     = 1
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-[ammo_7.62x54_7h14]:ammo_base
-GroupControlSection	= spawn_group
-discovery_dependency	=
-$spawn			= "weapons\ammo\ammo_7.62x54_7h14" ; option for Level Editor
-class			= AMMO
-cform                   = skeleton
-visual                  = dynamics\weapons\wpn_ammo\ammo_762x54_7h14.ogf
-description		= ammo-7.62x54_7n14_descr
-$prefetch 		= 64
-
-cost					 = 4000
-
-box_size		= 10
-
-inv_name		= ammo-7.62x54_7n14
-inv_name_short		= ammo-7.62x54_7n14_s
-inv_weight		= .22
-
-inv_grid_width     = 2
-inv_grid_height    = 1
-inv_grid_x         = 55
-inv_grid_y         = 31
-
-k_disp			= 0.66
-k_hit           = 0.85
-k_impulse		= 1.5
-k_ap			= 0.045 ;0.60
-tracer_color_ID	= 0
-wm_size         = 0.0762
-k_air_resistance = 0.25
-k_cam_dispersion          = 1.2
-k_bullet_speed	= 1.5
-
-tier                                     = 4
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-[ammo_7.62x54_7h14_bad]:ammo_7.62x54_7h14
-GroupControlSection	= spawn_group
-discovery_dependency	=
-$spawn			= "weapons\ammo\ammo_7.62x54_7h14" ; option for Level Editor
-class			= AMMO
-cform                   = skeleton
-visual                  = dynamics\weapons\wpn_ammo\ammo_762x54_7h14.ogf
-description		= ammo-7.62x54_7n14_descr
-$prefetch 		= 64
-
-cost					 = 2925
-
-box_size		= 10
-
-;inv_name		= ammo-7.62x54_7n14_bad
-inv_name_short		= ammo-7.62x54_7n14_s
-inv_weight		= .22
-
-inv_grid_width     = 2
-inv_grid_height    = 1
-inv_grid_x         = 57
-inv_grid_y         = 31
-
-k_disp			= 0.7
-k_hit           = 1.017
-k_impulse		= 0.85
-k_ap			= 0.045 ; 0.58
-impair			= 9
-tracer_color_ID	= 0
-wm_size         = 0.0762
-k_air_resistance = 0.25
-k_bullet_speed	= 1.5
-k_cam_dispersion          = 1.2
-
-tier                                     = 4
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-[ammo_7.62x54_7h14_verybad]:ammo_7.62x54_7h14
-GroupControlSection	= spawn_group
-discovery_dependency	=
-$spawn			= "weapons\ammo\ammo_7.62x54_7h14" ; option for Level Editor
-class			= AMMO
-cform                   = skeleton
-visual                  = dynamics\weapons\wpn_ammo\ammo_762x54_7h14.ogf
-description		= ammo-7.62x54_7n14_descr
-$prefetch 		= 64
-
-cost					 = 400
-
-box_size		= 10
-
-;inv_name		= ammo-7.62x54_7n14_verybad
-inv_name_short		= ammo-7.62x54_7n14_s
-inv_weight		= .22
-
-inv_grid_width     = 2
-inv_grid_height    = 1
-inv_grid_x         = 57
-inv_grid_y         = 31
-
-k_disp			= 0.7
-k_hit           = 0.85
-k_impulse		= 1.5
-k_ap			= 0.045 ; 0.58
-impair			= 9
-tracer_color_ID	= 0
-wm_size         = 0.0762
-k_air_resistance = 0.25
-k_bullet_speed	= 1.5
-k_cam_dispersion          = 1.2
-
-
-tier                                     = 4
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-[ammo_12.7x55_fmj]:ammo_base
-GroupControlSection	= spawn_group
-discovery_dependency	=
-$spawn			= "weapons\ammo\ammo_7.62x54_7h1" ; option for Level Editor
-class			= AMMO
-cform                   = skeleton
-visual                  = dynamics\weapons\wpn_ammo\ammo_127x55_fmj.ogf
-description		= ammo-12.7x55-fmj_descr
-$prefetch 		= 64
-
-cost			= 3000
-box_size		= 10
-
-inv_name		= ammo-12.7x55-fmj
-inv_name_short	        = ammo-12.7x55-fmj_s
-inv_weight		= 0.44
-
-inv_grid_width		= 2
-inv_grid_height		= 1
-inv_grid_x		= 55
-inv_grid_y		= 33
-
-k_disp			= 0.66
-k_hit			= 1.2 ;  2.0
-k_impulse		= 2.8
-k_ap			= 0.038; 0.5
-tracer_color_ID	= 0
-wm_size         = 0.127
-k_air_resistance = 0.60
-k_cam_dispersion          = 1.0
-k_bullet_speed	= 0.8
-
-tier                                     = 4
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-[ammo_12.7x55_fmj_bad]:ammo_12.7x55_fmj
-GroupControlSection	= spawn_group
-discovery_dependency	=
-$spawn			= "weapons\ammo\ammo_7.62x54_7h1" ; option for Level Editor
-class			= AMMO
-cform                   = skeleton
-visual                  = dynamics\weapons\wpn_ammo\ammo_127x55_fmj.ogf
-description		= ammo-12.7x55-fmj_descr
-$prefetch 		= 64
-
-cost			= 1750
-box_size		= 10
-
-;inv_name		= ammo-12.7x55-fmj_bad
-inv_name_short	        = ammo-12.7x55-fmj_s
-inv_weight		= 0.44
-
-inv_grid_width		= 2
-inv_grid_height		= 1
-inv_grid_x		= 57
-inv_grid_y		= 33
-
-k_disp			= 0.66
-k_hit			= 1.2 ;  2.0
-k_impulse		= 2.8
-k_ap			= 0.030; 0.5
-impair = 9
-tracer_color_ID	= 0
-wm_size         = 0.127
-k_air_resistance = 0.60
-k_cam_dispersion          = 1.0
-k_bullet_speed	= 0.8
-
-tier                                     = 4
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-[ammo_12.7x55_fmj_verybad]:ammo_12.7x55_fmj
-GroupControlSection	= spawn_group
-discovery_dependency	=
-$spawn			= "weapons\ammo\ammo_7.62x54_7h1" ; option for Level Editor
-class			= AMMO
-cform                   = skeleton
-visual                  = dynamics\weapons\wpn_ammo\ammo_127x55_fmj.ogf
-description		= ammo-12.7x55-fmj_descr
-$prefetch 		= 64
-
-cost			= 1260
-box_size		= 10
-
-;inv_name		= ammo-12.7x55-fmj_verybad
-inv_name_short	        = ammo-12.7x55-fmj_s
-inv_weight		= 0.44
-
-inv_grid_width		= 2
-inv_grid_height		= 1
-inv_grid_x		= 57
-inv_grid_y		= 33
-
-k_disp			= 0.66
-k_hit			= 1.2 ;  2.0
-k_impulse		= 2.8
-k_ap			= 0.030; 0.5
-impair = 9
-tracer_color_ID	= 0
-wm_size         = 0.127
-k_air_resistance = 0.60
-k_cam_dispersion          = 1.0
-k_bullet_speed	= 0.8
-
-tier                                     = 4
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-[ammo_12.7x55_ap]:ammo_base
-GroupControlSection	= spawn_group
-discovery_dependency	=
-$spawn			= "weapons\ammo\ammo_7.62x54_7h1" ; option for Level Editor
-class			= AMMO_S
-cform                   = skeleton
-visual			= dynamics\weapons\wpn_ammo\ammo_127x55_ap.ogf
-description		= ammo_12.7x55_ap_descr
-$prefetch 		= 64
-
-cost			= 6900
-box_size		= 10
-
-inv_name		= ammo_12.7x55_ap
-inv_name_short	        = ammo_12.7x55_ap_s
-inv_weight		= 0.44
-
-inv_grid_width		= 2
-inv_grid_height		= 1
-inv_grid_x		= 55
-inv_grid_y		= 34
-
-k_disp			= 0.66
-k_hit			= 1.2 ;  1.5
-k_impulse		= 2.8
-k_ap			= 0.075
-tracer_color_ID	= 1
-wm_size			= 0.127
-k_air_resistance = 0.60
-k_cam_dispersion          = 1.2
-k_bullet_speed	= 0.8
-
-tier                                     = 5
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-[ammo_12.7x55_ap_bad]:ammo_12.7x55_ap
-GroupControlSection	= spawn_group
-discovery_dependency	=
-$spawn			= "weapons\ammo\ammo_7.62x54_7h1" ; option for Level Editor
-class			= AMMO_S
-cform                   = skeleton
-visual			= dynamics\weapons\wpn_ammo\ammo_127x55_ap.ogf
-description		= ammo_12.7x55_ap_descr
-$prefetch 		= 64
-
-cost			= 4000
-box_size		= 10
-
-;inv_name		= ammo_12.7x55_ap_bad
-inv_name_short	        = ammo_12.7x55_ap_s
-inv_weight		= 0.44
-
-inv_grid_width		= 2
-inv_grid_height		= 1
-inv_grid_x		= 57
-inv_grid_y		= 34
-
-k_disp			= 0.7
-k_hit			= 1.2 ;  1.35
-k_impulse		= 2.8
-k_ap			= 0.05; 0.68
-impair			= 9
-tracer_color_ID	= 1
-wm_size			= 0.127
-k_air_resistance = 0.60
-k_bullet_speed	= 0.8
-k_cam_dispersion          = 1.2
-
-tier                                     = 5
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-[ammo_12.7x55_ap_verybad]:ammo_12.7x55_ap
-GroupControlSection	= spawn_group
-discovery_dependency	=
-$spawn			= "weapons\ammo\ammo_7.62x54_7h1" ; option for Level Editor
-class			= AMMO_S
-cform                   = skeleton
-visual			= dynamics\weapons\wpn_ammo\ammo_127x55_ap.ogf
-description		= ammo_12.7x55_ap_descr
-$prefetch 		= 64
-
-cost			= 200
-box_size		= 10
-
-;inv_name		= ammo_12.7x55_ap_verybad
-inv_name_short	        = ammo_12.7x55_ap_s
-inv_weight		= 0.44
-
-inv_grid_width		= 2
-inv_grid_height		= 1
-inv_grid_x		= 57
-inv_grid_y		= 34
-
-k_disp			= 0.7
-k_hit			= 1.2;  1.35
-k_impulse		= 2.8
-k_ap			= 0.05; 0.68
-impair			= 9
-tracer_color_ID	= 1
-wm_size			= 0.127
-k_air_resistance = 0.60
-k_bullet_speed	= 0.8
-k_cam_dispersion          = 1.2
-
-tier                                     = 5
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-[ammo_magnum_300]:ammo_base
-GroupControlSection	= spawn_group
-discovery_dependency =
-$spawn			= "weapons\ammo\ammo_7.62x54_7h1" ; option for Level Editor
-class			= AMMO_S
-cform           = skeleton
-visual          = dynamics\weapons\wpn_ammo\ammo_338_lapua.ogf
-description		= ammo-338-lapua_descr
-$prefetch 		= 64
-
-cost			= 17000
-
-box_size		= 10
-
-inv_name		= ammo-338-lapua
-inv_name_short		= ammo-338-lapua_s
-inv_weight		= .44
-
-inv_grid_width     = 2
-inv_grid_height    = 1
-inv_grid_x         = 55
-inv_grid_y         = 35
-
-k_disp			= 0.66
-k_hit			= 1.45
-k_impulse		= 2.0
-k_ap			= 0.14
-tracer_color_ID	= 1
-wm_size         = 0.13
-k_air_resistance = 0.35
-k_cam_dispersion          = 1.5
-k_bullet_speed	= 1.5
-
-tier                                     = 5
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-[ammo_magnum_300_bad]:ammo_magnum_300
-GroupControlSection	= spawn_group
-discovery_dependency =
-$spawn			= "weapons\ammo\ammo_7.62x54_7h1" ; option for Level Editor
-class			= AMMO_S
-cform           = skeleton
-visual          = dynamics\weapons\wpn_ammo\ammo_338_lapua.ogf
-description		= ammo-338-lapua_descr
-$prefetch 		= 64
-
-cost			= 11000
-
-box_size		= 10
-
-;inv_name		= ammo-338-lapua_bad
-inv_name_short		= ammo-338-lapua_s
-inv_weight		= .44
-
-inv_grid_width     = 2
-inv_grid_height    = 1
-inv_grid_x         = 57
-inv_grid_y         = 35
-
-k_disp			= 0.7
-k_hit			= 1.45
-k_impulse		= 2.0
-k_ap			= 0.140; 0.78
-impair			= 9
-tracer_color_ID	= 1
-wm_size         = 0.13
-k_air_resistance = 0.35
-k_bullet_speed	= 1.2
-k_cam_dispersion          = 1.5
-
-tier                                     = 5
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-[ammo_magnum_300_verybad]:ammo_magnum_300
-GroupControlSection	= spawn_group
-discovery_dependency =
-$spawn			= "weapons\ammo\ammo_7.62x54_7h1" ; option for Level Editor
-class			= AMMO_S
-cform           = skeleton
-visual          = dynamics\weapons\wpn_ammo\ammo_338_lapua.ogf
-description		= ammo-338-lapua_descr
-$prefetch 		= 64
-
-cost			= 720
-
-box_size		= 10
-
-;inv_name		= ammo-338-lapua_verybad
-inv_name_short		= ammo-338-lapua_s
-inv_weight		= .44
-
-inv_grid_width     = 2
-inv_grid_height    = 1
-inv_grid_x         = 57
-inv_grid_y         = 35
-
-k_disp			= 0.7
-k_hit			= 1.45
-k_impulse		= 2.0
-k_ap			= 0.140; 0.78
-impair			= 9
-tracer_color_ID	= 1
-wm_size         = 0.13
-k_air_resistance = 0.35
-k_bullet_speed	= 1.2
-k_cam_dispersion          = 1.5
-
-tier                                     = 5
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-[ammo_357_hp_mag]:identity_immunities,default_weapon_params,ammo_base ; JHP
-GroupControlSection	= spawn_group
-discovery_dependency =
-$spawn			= "weapons\wpn_ammo\ammo_357_hp_mag" ; option for Level Editor
-class			= AMMO
-cform                   = skeleton
-visual                  = dynamics\weapons\wpn_ammo\ammo_357_jhp.ogf
-description		= ammo-357-hp_descr
-$prefetch 		= 64
-
-cost			= 2600
-
-box_size		= 13
-
-inv_name		= ammo-357-hp
-inv_name_short		= ammo-357-hp_s
-inv_weight		= 0.21
-
-inv_grid_width     = 2
-inv_grid_height    = 1
-inv_grid_x         = 55
-inv_grid_y         = 37
-
-k_disp			= 0.5
-k_hit			= 2.6 ;  1.25
-k_impulse		= 0.75
-k_ap			= 0.019
-wm_size        	= 0.048
-k_air_resistance = 0.8
-k_cam_dispersion          = 1.1
-tracer_color_ID	= 0
-k_bullet_speed	= 1.5
-
-tier                                     = 1
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-[ammo_357_hp_mag_bad]:ammo_357_hp_mag
-GroupControlSection	= spawn_group
-discovery_dependency =
-$spawn			= "weapons\wpn_ammo\ammo_357_hp_mag" ; option for Level Editor
-class			= AMMO
-cform                   = skeleton
-visual                  = dynamics\weapons\wpn_ammo\ammo_357_jhp.ogf
-description		= ammo-357-hp_descr
-$prefetch 		= 64
-
-cost			= 1500
-
-box_size		= 13
-
-;inv_name		= ammo-357-hp_bad
-inv_name_short		= ammo-357-hp_s
-inv_weight		= 0.21
-
-inv_grid_width     = 2
-inv_grid_height    = 1
-inv_grid_x         = 57
-inv_grid_y         = 37
-
-k_disp			= 0.55
-k_hit			= 2.6 ;  1.19
-k_impulse		= 0.72
-k_ap			= 0.019; 0.23
-impair			= 7
-wm_size        	= 0.048
-k_air_resistance = 0.8
-k_bullet_speed	= 1.5
-k_cam_dispersion          = 1.1
-tracer_color_ID	= 0
-tier                                     = 1
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-[ammo_357_hp_mag_verybad]:ammo_357_hp_mag
-GroupControlSection	= spawn_group
-discovery_dependency =
-$spawn			= "weapons\wpn_ammo\ammo_357_hp_mag" ; option for Level Editor
-class			= AMMO
-cform                   = skeleton
-visual                  = dynamics\weapons\wpn_ammo\ammo_357_jhp.ogf
-description		= ammo-357-hp_descr
-$prefetch 		= 64
-
-cost			= 240
-
-box_size		= 13
-
-;inv_name		= ammo-357-hp_verybad
-inv_name_short		= ammo-357-hp_s
-inv_weight		= 0.21
-
-inv_grid_width     = 2
-inv_grid_height    = 1
-inv_grid_x         = 57
-inv_grid_y         = 37
-
-k_disp			= 0.55
-k_hit			= 2.6 ;  1.19
-k_impulse		= 0.72
-k_ap			= 0.019; 0.23
-impair			= 7
-wm_size        	= 0.048
-k_air_resistance = 0.8
-k_bullet_speed	= 1.5
-k_cam_dispersion          = 1.1
-tracer_color_ID	= 0
-
-tier                                     = 1
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-[ammo_50_bmg]:ammo_base ; 7N13
-GroupControlSection	= spawn_group
-discovery_dependency	=
-$spawn			= "weapons\ammo\ammo_7.62x54_ap" ; option for Level Editor
-class			= AMMO
-cform                   = skeleton
-visual                  = dynamics\weapons\wpn_ammo\ammo_50_bmg.ogf
-description		= ammo-50-bmg_descr
-$prefetch 		= 64
-
-cost					 = 27200
-
-box_size		= 15
-
-inv_name		= ammo-50-bmg
-inv_name_short		= ammo-50-bmg_s
-inv_weight		= .33
-
-inv_grid_width     = 2
-inv_grid_height    = 1
-inv_grid_x         = 55
-inv_grid_y         = 38
-
-k_disp			= 0.9
-k_hit			= 1.5
-k_impulse		= 1.9
-k_ap		    = 0.19;0.6
-tracer_color_ID	= 1
-wm_size         = 0.127
-k_air_resistance = 0.35
-k_cam_dispersion          = 1.6
-
-tier                                     = 5
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-[ammo_50_bmg_bad]:ammo_50_bmg
-GroupControlSection	= spawn_group
-discovery_dependency	=
-$spawn			= "weapons\ammo\ammo_7.62x54_ap" ; option for Level Editor
-class			= AMMO
-cform                   = skeleton
-visual                  = dynamics\weapons\wpn_ammo\ammo_50_bmg.ogf
-description		= ammo-50-bmg_descr
-$prefetch 		= 64
-
-cost					 = 15110
-
-box_size		= 15
-
-;inv_name		= ammo-50-bmg_bad
-inv_name_short		= ammo-50-bmg_s
-inv_weight		= .33
-
-inv_grid_width     = 2
-inv_grid_height    = 1
-inv_grid_x         = 57
-inv_grid_y         = 38
-
-k_disp			= 0.95
-k_hit			= 1.5 ;  0.95
-k_impulse		= 0.43
-k_ap		    = 0.19; 0.58
-impair			= 3.5
-tracer_color_ID	= 1
-wm_size         = 0.127
-k_air_resistance = 0.35
-k_bullet_speed	= 0.95
-k_cam_dispersion          = 1.6
-
-tier                                     = 5
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-[ammo_50_bmg_verybad]:ammo_50_bmg
-GroupControlSection	= spawn_group
-discovery_dependency	=
-$spawn			= "weapons\ammo\ammo_7.62x54_ap" ; option for Level Editor
-class			= AMMO
-cform                   = skeleton
-visual                  = dynamics\weapons\wpn_ammo\ammo_50_bmg.ogf
-description		= ammo-50-bmg_descr
-$prefetch 		= 64
-
-cost					 = 500
-
-box_size		= 15
-
-;inv_name		= ammo-50-bmg_verybad
-inv_name_short		= ammo-50-bmg_s
-inv_weight		= .33
-
-inv_grid_width     = 2
-inv_grid_height    = 1
-inv_grid_x         = 57
-inv_grid_y         = 38
-
-k_hit			= 1.0 ;  0.9
-k_impulse		= 0.4
-k_ap		    = 0.055
-impair			= 1.3
-tracer_color_ID	= 0
-wm_size         = 0.127
-k_air_resistance = 0.35
-k_bullet_speed	= 0.9
-
-tier                                     = 4
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Grenades for Attachable grenade launcher
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-[ammo_vog-25]:ammo_base
-GroupControlSection	= spawn_group
-discovery_dependency =
-$spawn			= "weapons\ammo\ammo_vog-25" ; option for Level Editor
-class			= S_VOG25
-cform           = skeleton
-visual          = dynamics\weapons\wpn_ammo\ammo_vog_25.ogf
-description		= ammo-vog-25_descr
-
-$prefetch 		= 64
-
-cost			= 2180
-
-box_size		= 1
-
-inv_name		= ammo-vog-25
-inv_name_short	= ammo-vog-25_s
-inv_weight		= 0.26 ;.08
-
-inv_grid_width		= 1
-inv_grid_height		= 1
-inv_grid_x			= 55
-inv_grid_y			= 39
-
-kill_msg_x			= 38
-kill_msg_y			= 233
-kill_msg_width		= 21
-kill_msg_height		= 22
-
-k_disp			= 0.66
-k_hit			= 0.8 ;  2
-k_impulse		= 1.3
-k_ap			= 0.035
-buck_shot		= 0
-tracer			= off
-wm_size         = 0.05
-
-fake_grenade_name = wpn_fake_missile
-
-tier                                     = 5
-snd_on_take								 = other
-grenade_ammo							 = true
-
-[ammo_vog-25_bad]:ammo_vog-25
-GroupControlSection	= spawn_group
-discovery_dependency =
-$spawn			= "weapons\ammo\ammo_vog-25" ; option for Level Editor
-class			= S_VOG25
-cform           = skeleton
-visual          = dynamics\weapons\wpn_ammo\ammo_vog_25.ogf
-description		= ammo-vog-25_descr
-
-$prefetch 		= 64
-
-cost			= 480
-
-box_size		= 1
-
-;inv_name		= ammo-vog-25_bad
-inv_name_short	= ammo-vog-25_s
-inv_weight		= 0.26 ;.08
-
-inv_grid_width		= 1
-inv_grid_height		= 1
-inv_grid_x			= 55
-inv_grid_y			= 39
-
-kill_msg_x			= 38
-kill_msg_y			= 233
-kill_msg_width		= 21
-kill_msg_height		= 22
-
-k_disp			= 0.66
-k_hit			= 0.8 ;  1.536
-k_impulse		= 1.2
-k_ap			= 0.030
-impair			= 1.1
-buck_shot		= 0
-tracer			= off
-wm_size         = 0.05
-
-fake_grenade_name = wpn_fake_missile
-
-tier                                     = 5
-snd_on_take								 = other
-grenade_ammo							 = true
-
-[ammo_vog-25_verybad]:ammo_vog-25
-GroupControlSection	= spawn_group
-discovery_dependency =
-$spawn			= "weapons\ammo\ammo_vog-25" ; option for Level Editor
-class			= S_VOG25
-cform           = skeleton
-visual          = dynamics\weapons\wpn_ammo\ammo_vog_25.ogf
-description		= ammo-vog-25_descr
-
-$prefetch 		= 64
-
-cost			= 230
-
-box_size		= 1
-
-;inv_name		= ammo-vog-25_verybad
-inv_name_short	= ammo-vog-25_s
-inv_weight		= 0.26 ;.08
-
-inv_grid_width		= 1
-inv_grid_height		= 1
-inv_grid_x			= 55
-inv_grid_y			= 39
-
-kill_msg_x			= 38
-kill_msg_y			= 233
-kill_msg_width		= 21
-kill_msg_height		= 22
-
-k_disp			= 0.66
-k_hit			= 0.8 ;  1.01
-k_impulse		= 1.12
-k_ap			= 0.027
-impair			= 1.3
-buck_shot		= 0
-tracer			= off
-wm_size         = 0.05
-
-fake_grenade_name = wpn_fake_missile
-
-tier                                     = 5
-snd_on_take								 = other
-grenade_ammo							 = true
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-[ammo_m209]:ammo_base
-GroupControlSection	= spawn_group
-discovery_dependency =
-$spawn			= "weapons\ammo\ammo_m209" ; option for Level Editor
-class			= S_M209
-cform           = skeleton
-visual          = dynamics\weapons\wpn_ammo\ammo_m209.ogf
-description		= ammo-m209_descr
-$prefetch 		= 64
-
-cost			= 2264
-
-box_size		= 1
-
-inv_name		= ammo-m209
-inv_name_short	= ammo-m209_s
-inv_weight		= 0.2 ;.08
-
-inv_grid_width		= 1
-inv_grid_height		= 1
-inv_grid_x			= 55
-inv_grid_y			= 40
-
-kill_msg_x			= 61
-kill_msg_y			= 232
-kill_msg_width		= 19
-kill_msg_height		= 22
-
-
-k_disp			= 0.66
-k_hit			= 0.8 ;  2.1
-k_impulse		= 1.35
-k_ap			= 0.035
-buck_shot		= 0
-tracer			= off
-wm_size         = 0.05
-
-fake_grenade_name = wpn_fake_missile2
-
-tier                                     = 5
-snd_on_take								 = other
-grenade_ammo							 = true
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-[ammo_m209_bad]:ammo_m209
-GroupControlSection	= spawn_group
-discovery_dependency =
-$spawn			= "weapons\ammo\ammo_m209" ; option for Level Editor
-class			= S_M209
-cform           = skeleton
-visual          = dynamics\weapons\wpn_ammo\ammo_m209.ogf
-description		= ammo-m209_descr
-slot = -1
-$prefetch 		= 64
-
-cost			= 665
-
-box_size		= 1
-
-;inv_name		= ammo-m209_bad
-inv_name_short	= ammo-m209_s
-inv_weight		= 0.2 ;.08
-
-inv_grid_width		= 1
-inv_grid_height		= 1
-inv_grid_x			= 55
-inv_grid_y			= 40
-
-kill_msg_x			= 61
-kill_msg_y			= 232
-kill_msg_width		= 73
-kill_msg_height		= 18
-
-
-k_disp			= 0.66
-k_hit			= 0.8 ;  1.78
-k_impulse		= 1.30
-k_ap			= 0.0305
-impair			= 1.1
-buck_shot		= 0
-tracer			= off
-wm_size         = 0.05
-
-fake_grenade_name = wpn_fake_missile2
-
-tier                                     = 5
-snd_on_take								 = other
-grenade_ammo							 = true
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-[ammo_m209_verybad]:ammo_m209
-GroupControlSection	= spawn_group
-discovery_dependency =
-$spawn			= "weapons\ammo\ammo_m209" ; option for Level Editor
-class			= S_M209
-cform           = skeleton
-visual          = dynamics\weapons\wpn_ammo\ammo_m209.ogf
-description		= ammo-m209_descr
-slot = -1
-$prefetch 		= 64
-
-cost			= 300
-
-box_size		= 1
-
-;inv_name		= ammo-m209_verybad
-inv_name_short	= ammo-m209_s
-inv_weight		= 0.2 ;.08
-
-inv_grid_width		= 1
-inv_grid_height		= 1
-inv_grid_x			= 55
-inv_grid_y			= 40
-
-kill_msg_x			= 61
-kill_msg_y			= 232
-kill_msg_width		= 73
-kill_msg_height		= 25
-
-
-k_disp			= 0.66
-k_hit			= 0.8 ;  1.38
-k_impulse		= 1.26
-k_ap			= 0.0301
-impair			= 1.3
-buck_shot		= 0
-tracer			= off
-wm_size         = 0.05
-
-fake_grenade_name = wpn_fake_missile2
-
-tier                                     = 5
-snd_on_take								 = other
-grenade_ammo							 = true
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-[ammo_og-7b]:ammo_base
-GroupControlSection	= spawn_group
-discovery_dependency =
-$spawn			= "weapons\ammo\ammo_og-7b" ; option for Level Editor
-class			= S_OG7B
-cform           = skeleton
-visual          = dynamics\weapons\wpn_ammo\ammo_og_7b.ogf
-description		= ammo-og-7b_descr
-$prefetch 		= 64
-
-cost			= 12490
-
-box_size		= 1
-
-inv_name		= ammo-og-7b
-inv_name_short	= ammo-og-7b_s
-inv_weight		= 1.96
-
-inv_grid_width		= 3
-inv_grid_height		= 1
-inv_grid_x			= 55
-inv_grid_y			= 42
-
-
-k_disp			= 1.52
-k_hit			= 1.0 ;  2.5
-k_impulse		= 1.5
-k_ap			= 0.125
-buck_shot		= 0
-tracer			= off
-wm_size         = 0.1
-
-wallmark_section			= explosion_marks
-
-tier                                     = 5
-snd_on_take								 = other
-grenade_ammo							 = true
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-[ammo_og-7b_bad]:ammo_og-7b
-GroupControlSection	= spawn_group
-discovery_dependency =
-$spawn			= "weapons\ammo\ammo_og-7b" ; option for Level Editor
-class			= S_OG7B
-cform           = skeleton
-visual          = dynamics\weapons\wpn_ammo\ammo_og_7b.ogf
-description		= ammo-og-7b_descr
-$prefetch 		= 64
-
-cost			= 520
-
-box_size		= 1
-
-;inv_name		= ammo-og-7b_bad
-inv_name_short	= ammo-og-7b_s
-inv_weight		= 1.96
-
-inv_grid_width		= 3
-inv_grid_height		= 1
-inv_grid_x			= 55
-inv_grid_y			= 42
-
-
-k_disp			= 1.52
-k_hit			= 3.0 ;  1.89
-k_impulse		= 1.4
-k_ap			= 0.125
-impair			= 1.1
-buck_shot		= 0
-tracer			= off
-wm_size         = 0.1
-
-wallmark_section			= explosion_marks
-
-tier                                     = 5
-snd_on_take								 = other
-grenade_ammo							 = true
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-[ammo_og-7b_verybad]:ammo_og-7b
-GroupControlSection	= spawn_group
-discovery_dependency =
-$spawn			= "weapons\ammo\ammo_og-7b" ; option for Level Editor
-class			= S_OG7B
-cform           = skeleton
-visual          = dynamics\weapons\wpn_ammo\ammo_og_7b.ogf
-description		= ammo-og-7b_descr
-$prefetch 		= 64
-
-cost			= 200
-
-box_size		= 1
-
-;inv_name		= ammo-og-7b_verybad
-inv_name_short	= ammo-og-7b_s
-inv_weight		= 1.96
-
-inv_grid_width		= 3
-inv_grid_height		= 1
-inv_grid_x			= 55
-inv_grid_y			= 42
-
-
-k_disp			= 1.52
-k_hit			= 3.0 ;  1.29
-k_impulse		= 1.3
-k_ap			= 0.122
-impair			= 1.3
-buck_shot		= 0
-tracer			= off
-wm_size         = 0.1
-
-wallmark_section			= explosion_marks
-
-tier                                     = 5
-snd_on_take								 = other
-grenade_ammo							 = true
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-[ammo_gauss]:ammo_base
-GroupControlSection	= spawn_group
-discovery_dependency =
-$spawn			= "weapons\ammo\ammo_gauss" ; option for Level Editor
-class			= AMMO_S
-cform           = skeleton
-visual          = dynamics\weapons\wpn_ammo\ammo_gauss.ogf
-description		= ammo-gauss_descr
-$prefetch 		= 64
-
-cost			= 20512
-
-box_size		= 8
-
-inv_name		= ammo-gauss
-inv_name_short	= ammo-gauss
-inv_weight		= 0.6
-
-inv_grid_width		= 1
-inv_grid_height		= 1
-inv_grid_x			= 55
-inv_grid_y			= 41
-
-k_disp			= 0.66
-k_hit			= 2.5 ;  2.5
-k_impulse		= 1
-k_ap			= 0.5
-tracer			= off
-wm_size         = 0.01
-k_air_resistance = 0.01
-explosive		= on
-
-tier                                     = 5
-snd_on_take								 = other
-
-[ammo_gauss_bad]:ammo_gauss
-GroupControlSection	= spawn_group
-discovery_dependency =
-$spawn			= "weapons\ammo\ammo_gauss" ; option for Level Editor
-class			= AMMO_S
-cform           = skeleton
-visual          = dynamics\weapons\wpn_ammo\ammo_gauss.ogf
-description		= ammo-gauss_descr
-$prefetch 		= 64
-
-cost			= 10256
-
-box_size		= 8
-
-;inv_name		= ammo-gauss_bad
-inv_name_short	= ammo-gauss
-inv_weight		= 0.6
-
-inv_grid_width		= 1
-inv_grid_height		= 1
-inv_grid_x			= 56
-inv_grid_y			= 41
-
-k_disp			= 0.7
-k_hit			= 2.3 ;  2.3
-k_impulse		= 1
-k_ap			= 0.45
-impair			= 32
-tracer			= off
-wm_size         = 0.01
-k_air_resistance = 0.01
-explosive		= on
-
-tier                                     = 5
-snd_on_take								 = other
-
-[ammo_gauss_verybad]:ammo_gauss
-GroupControlSection	= spawn_group
-discovery_dependency =
-$spawn			= "weapons\ammo\ammo_gauss" ; option for Level Editor
-class			= AMMO_S
-cform           = skeleton
-visual          = dynamics\weapons\wpn_ammo\ammo_gauss.ogf
-description		= ammo-gauss_descr
-$prefetch 		= 64
-
-cost			= 1570
-
-box_size		= 8
-
-;inv_name		= ammo-gauss_verybad
-inv_name_short	= ammo-gauss
-inv_weight		= 0.6
-
-inv_grid_width		= 1
-inv_grid_height		= 1
-inv_grid_x			= 56
-inv_grid_y			= 41
-
-k_disp			= 0.75
-k_hit			= 2.0 ;  2.0
-k_impulse		= 1
-k_ap			= 0.4
-impair			= 1.3
-tracer			= off
-wm_size         = 0.01
-k_air_resistance = 0.01
-explosive		= on
-
-tier                                     = 5
-snd_on_take								 = other
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-[ammo_gauss_cardan]:ammo_gauss
-$spawn			= "weapons\ammo\ammo_gauss_cardan" ; option for Level Editor
-visual          = dynamics\weapons\wpn_ammo\ammo_gauss_custom.ogf
-description		= ammo-gauss_cardan_descr
-
-cost			= 8399
-
-box_size		= 6
-
-inv_name		= ammo-gauss_cardan
-inv_name_short	= ammo-gauss_cardan
-
-inv_grid_width		= 1
-inv_grid_height		= 1
-inv_grid_x			= 58
-inv_grid_y			= 41
-
-tier                                     = 5
-snd_on_take								 = other
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

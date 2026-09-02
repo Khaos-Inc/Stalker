@@ -1,0 +1,236 @@
+--\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ wpn_grizzly \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+[grizzly_trigger]:attachment_base
+kind  =  grizzly
+inv_ui_sign				= grzly_trig
+visual						= w_att_huds\grizzly_trigger	
+inv_name					= grizzly_trigger
+inv_name_short		= grizzly_triggerS
+cost							= 1100
+inv_weight					= 0.1
+inv_grid_x         			= 4
+inv_grid_y         			= 47
+1icon_layer = clean_lub1_ico
+attachment_point = grizzly_trigger|0,0,0|0,0,0
+attachment_slots	=	grizzly_barrel|muzzle|0,0,0|0,0,0
+item_tags =	trigger
+override_section = grizzly_trigger_attributes		;
+
+[grizzly_trigger_attributes]
+
+[grizzly_trigger_up]:grizzly_trigger
+kind  =  grizzly
+inv_ui_sign				= grzly_trig+
+visual						= w_att_huds\grizzly_trigger_up	
+inv_name					= grizzly_trigger_up
+inv_name_short			= grizzly_trigger_upS
+cost							= 3300
+inv_grid_x         			= 5
+override_section		=	grizzly_trigger_up_attributes
+
+inv_weight = 0.1
+[grizzly_trigger_up_attributes]
+fire_modes = -1
+
+[grizzly_zatvor]:attachment_base
+kind  =  grizzly
+inv_ui_sign				= grzly_slide
+visual						= w_att_huds\grizzly_zatvor_165
+inv_name					= grizzly_zatvor_165
+inv_name_short		= grizzly_zatvorS
+cost							= 1200
+inv_weight				= 0.2
+inv_grid_width			= 2
+inv_grid_x				= 4
+inv_grid_y				= 68
+1icon_layer = clean_lub2_ico
+attachment_point = grizzly_zatvor|0,0,0|0,0,0
+attachment_slots	= zatvor_side|zatvor|0,0.0562,-0.0136|0,0,0
+item_tags =	zatvor
+override_section = grizzly_zatvor_attributes		;deagle_zatvor_att
+
+[grizzly_zatvor_attributes]
+rpm = 700
+zoom_rotate_time = 0.1
+recoil_koeff = -0.03
+inertia_koeff = 1.1
+impair_koeff = 0.8
+[grizzly_zatvor_165_att]:rpm_700_zatvor_att
+zoom_rotate_time = 0.1
+recoil_koeff 		= -0.33
+inertia_koeff	= 1.1
+impair_koeff	= 0.8
+
+[grizzly_zatvor_b]:grizzly_zatvor
+kind  =  grizzly
+inv_ui_sign				= grzly_slide10
+visual						= w_att_huds\grizzly_zatvor_254
+inv_name					= grizzly_zatvor_254
+cost							= 3600
+inv_weight					= 0.32
+inv_grid_x				= 6
+attachment_point = grizzly_zatvor_b|0,0,0|0,0,0
+override_section = grizzly_zatvor_b_attributes
+
+[grizzly_zatvor_b_attributes]
+rpm = 600
+zoom_rotate_time = 0.12
+recoil_koeff = -0.05
+inertia_koeff = 1.2
+[grizzly_zatvor_254_att]:rpm_600_zatvor_att
+zoom_rotate_time = 0.12
+recoil_koeff = -0.54
+inertia_koeff	= 1.2
+
+[grizzly_barrel_165]:attachment_base 
+kind  =  grizzly
+inv_ui_sign				= grzly_bar
+visual						= w_att_huds\grizzly_barrel_165	
+inv_name					= grizzly_barrel_165
+inv_name_short			= grizzly_barrelS
+cost							= 1300
+inv_weight					= 0.12
+inv_grid_x         		= 6
+inv_grid_y         		= 67
+1icon_layer 			= clean1_ico
+attachment_point = grizzly_barrel|0,0,0|0,0,0
+attachment_slots	= colt_spring|zatvor|0,-0.00128,0.01842|0,0,0#grizzly_zatvor|zatvor|0,0,0|0,0,0#grizzly_muzzle|zatvor|0,0,0|0,0,0
+item_tags = barrel
+override_section = grizzly_barrel_165_attributes		;
+
+[grizzly_barrel_165_attributes]
+fire_point = 0, 0, 0.044
+bullet_speed = 1.1
+fire_dispersion_base = 0.21
+zoom_rotate_time = 0.07
+recoil_koeff = -0.08
+inertia_koeff = 1.1
+[grizzly_barrel_attributes]
+fire_point							= 0, 0, 0.044
+bullet_speed				= 1.1
+fire_dispersion_base		= 0.21
+zoom_rotate_time = 0.07
+recoil_koeff            = -0.28
+inertia_koeff            = 1.1
+
+[grizzly_barrel_165_up]:grizzly_barrel_165
+kind  =  grizzly
+inv_ui_sign				= grzly_bar+
+visual						= w_att_huds\grizzly_barrel_165_up	
+inv_name					= grizzly_barrel_165_up
+inv_name_short		= grizzly_barrel_165_upS
+cost							= 1600
+inv_grid_x         			= 7
+attachment_slots	=	colt_spring|zatvor|0,-0.00128,0.01842|0,0,0#grizzly_zatvor|zatvor|0,0,0|0,0,0#45_muzzle|muzzle|0,0,0|0,0,0
+override_section = grizzly_barrel_165_up_attributes
+
+inv_weight = 0.12
+[grizzly_barrel_165_up_attributes]
+fire_point = 0, 0, 0.044
+bullet_speed = 1.1
+fire_dispersion_base = 0.21
+zoom_rotate_time = 0.07
+recoil_koeff = -0.1
+inertia_koeff = 1.1
+
+[grizzly_barrel_254]:grizzly_barrel_165 
+kind  =  grizzly
+inv_ui_sign				= grzly_bar10
+visual						= w_att_huds\grizzly_barrel_254	
+inv_name					= grizzly_barrel_254
+inv_name_short		= grizzly_barrel_254S
+cost							= 3500
+inv_grid_width			= 2
+inv_grid_x				= 8
+attachment_slots		=	colt_spring|zatvor|0,-0.00128,0.01842|0,0,0#grizzly_zatvor_b|zatvor|0,0,0|0,0,0
+override_section = grizzly_barrel_254_attributes		;
+
+inv_weight = 0.12
+[grizzly_barrel_254_attributes]
+fire_point = 0, 0, 0.13
+weapon_lenght = 0.1
+bullet_speed = 1.3
+k_hit_koeff = 1.1
+fire_dispersion_base = 0.12
+zoom_rotate_time = 0.09
+recoil_koeff = -0.14
+inertia_koeff = 1.2
+[grizzly_barrel_10_attributes]
+fire_point							= 0, 0, 0.13
+weapon_lenght				=	0.1
+bullet_speed					= 1.3
+k_hit_koeff						= 1.1
+fire_dispersion_base		= 0.12
+zoom_rotate_time = 0.09
+recoil_koeff            = -0.33
+inertia_koeff            = 1.2
+
+[grizzly_muzzle]:attachment_base
+kind  =  grizzly
+inv_ui_sign				= grzly_mb
+visual						= w_att_huds\grizzly_muzzle
+inv_name					= grizzly_muzzle
+inv_name_short		= grizzly_muzzleS
+cost							= 2600
+inv_weight				= 0.08
+inv_grid_x				= 8
+inv_grid_y				= 68
+attachment_point	= grizzly_muzzle|0,0,0|0,0,0
+item_tags				= muzzle_device
+override_section		= grizzly_muzzle_attributes	;
+[grizzly_muzzle_attributes]:05_muzzle_lenght_attributes
+fire_point = 0, 0, 0.04
+zoom_rotate_time = 0.01
+recoil_koeff = -0.07
+
+[mag_wpn_grizzly_44_hp_mag]:mag_wpn_base,wg_wpn_grizzly,ag_ammo_44_hp_mag
+inv_ui_sign					= grzly7
+visual							= w_att_huds\grizzly_mag7
+inv_name						= grizzly_mag7
+inv_name_short			= grizzly_mag7S
+inv_grid_x					= 9
+inv_grid_y					= 68
+inv_weight					= 0.07
+cost								= 400
+max_mag_size				= 7
+mag_size						= small
+override_section			= mag_wpn_grizzly_44_hp_mag_attributes
+
+[mag_wpn_grizzly_44_hp_mag_attributes]
+animation_prefix_mag = 7_
+[grizzly_mag_att]
+animation_prefix_mag	=	7_
+
+[mag_wpn_grizzly_15_44_hp_mag]:mag_wpn_grizzly_44_hp_mag
+inv_ui_sign					= grzly15
+visual							= w_att_huds\grizzly_mag15
+inv_name						= grizzly_mag15
+inv_name_short			= grizzly_mag15S
+inv_grid_height			= 2
+inv_grid_x					= 10
+inv_grid_y					= 67
+inv_weight					= 0.15
+cost								= 800
+max_mag_size				= 15
+mag_size						= medium
+override_section			= mag_wpn_grizzly_15_44_hp_mag_attributes
+
+[mag_wpn_grizzly_15_44_hp_mag_attributes]
+animation_prefix_mag = 15_
+[grizzly_mag15_att]
+animation_prefix_mag		= 15_
+
+[mag_wpn_grizzly_drum_44_hp_mag]:mag_wpn_grizzly_15_44_hp_mag
+inv_ui_sign					= grzly44
+visual							= w_att_huds\grizzly_mag44
+inv_name						= grizzly_mag44
+inv_name_short			= grizzly_mag44S
+inv_grid_x					= 11
+inv_weight					= 0.64
+cost								= 1600
+max_mag_size				= 44
+mag_size						= large
+override_section			= mag_wpn_grizzly_drum_44_hp_mag_attributes
+
+[mag_wpn_grizzly_drum_44_hp_mag_attributes]
+animation_prefix_mag = 44_

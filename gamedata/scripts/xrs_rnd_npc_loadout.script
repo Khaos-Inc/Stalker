@@ -6,10 +6,6 @@
 	
 	Support for loadouts per community/rank/model/npc section name/squad section name
 	Support for chances of weapons per loaodut
-	
-	Modified by SD 2024/11/26
-	Changed chance to weight, with default of 10. To allow for better control of how often items appear
-	Added chance to not include scope, grenade launcher or silencer. Made random attachment work over valid values only. Added scope blacklist
 --]]
 
 local enable_debug = false
@@ -17,13 +13,69 @@ local ini
 local tmp
 local loadouts = {}
 local skip_npc = {}
-local global_scope_blacklist = {}
-local weapon_scope_blacklist = {}
-local default_weight
-local default_scope_chance = {}
-local default_gl_chance = {}
-local default_sil_chance = {}
+local scope_chance = {}
 local parse_list = parse_list
+
+-- Desolation modular weapon build resolver.
+-- [weapon_debug_variants] stores base weapon -> named build list.
+-- We cache the reverse relation once so NPC loadout entries may use either
+-- the real section (wpn_*) or a named modular build (optionally prefixed wpn_).
+local weapon_variant_to_base = {}
+
+local function build_weapon_variant_cache()
+	weapon_variant_to_base = {}
+
+	if not (ini_sys and ini_sys:section_exist("weapon_debug_variants")) then
+		printe("! NPC Loadouts | [weapon_debug_variants] section is missing; modular variants disabled")
+		return
+	end
+
+	local count = ini_sys:line_count("weapon_debug_variants")
+	local cached_count = 0
+	local result, base_section, variants
+	for i=0,count-1 do
+		result, base_section, variants = ini_sys:r_line_ex("weapon_debug_variants", i, "", "")
+		if base_section and base_section ~= "" and variants and variants ~= "" then
+			local list = str_explode(variants, ",")
+			for j=1,#list do
+				local variant = string.gsub(list[j] or "", "^%s*(.-)%s*$", "%1")
+				if variant ~= "" then
+					if not weapon_variant_to_base[variant] then
+						cached_count = cached_count + 1
+					end
+					weapon_variant_to_base[variant] = base_section
+				end
+			end
+		end
+	end
+
+	print_debug("NPC Loadouts | cached %s modular weapon variants", cached_count)
+end
+
+local function resolve_loadout_item(section)
+	if not section or section == "" then
+		return nil, nil
+	end
+
+	-- Normal section: preserve original behavior exactly.
+	if ini_sys:section_exist(section) then
+		return section, nil
+	end
+
+	-- Named Desolation build. Old loadout lists often keep the conventional
+	-- wpn_ prefix even though the build ID itself does not have one.
+	local preset_id = section
+	if string.sub(preset_id, 1, 4) == "wpn_" then
+		preset_id = string.sub(preset_id, 5)
+	end
+
+	local base_section = weapon_variant_to_base[preset_id]
+	if base_section and ini_sys:section_exist(base_section) then
+		return base_section, preset_id
+	end
+
+	return nil, nil
+end
 
 function on_game_start()
 	local Enabled = true --ini:r_bool_ex("settings","enable") or false
@@ -40,32 +92,14 @@ function init_settings()
 	local str_explode = str_explode
 	local sfind  = string.find
 	
-	-- Scope chances
-	tmp = ini:r_string_ex("settings","default_scope_chance")
+	-- Scope chance
+	tmp = ini:r_string_ex("settings","scope_chance")
 	if tmp then
 		tmp = str_explode(tmp,",")
 		for i=1,#tmp do
-			default_scope_chance[i] = tonumber(tmp[i]) or 15
+			scope_chance[i] = tonumber(tmp[i]) or 0
 		end
 	end
-	-- Grenade launcher chances
-	tmp = ini:r_string_ex("settings","default_gl_chance")
-	if tmp then
-		tmp = str_explode(tmp,",")
-		for i=1,#tmp do
-			default_gl_chance[i] = tonumber(tmp[i]) or 100
-		end
-	end
-	-- Silencer chances
-	tmp = ini:r_string_ex("settings","default_sil_chance")
-	if tmp then
-		tmp = str_explode(tmp,",")
-		for i=1,#tmp do
-			default_sil_chance[i] = tonumber(tmp[i]) or 100
-		end
-	end
-
-	default_weight = tonumber(ini:r_string_ex("settings","scope_chance") or 10)
 
 	-- Skip NPCs
 	n = ini:line_count("skip_npcs")
@@ -73,27 +107,9 @@ function init_settings()
 		result, id, value = ini:r_line_ex("skip_npcs",i,"","")
 		skip_npc[id] = true
 	end
-
-	-- Global scope blacklist
-	n = ini:line_count("scope_blacklist")
-	for i=0,n-1 do
-		result, id, value = ini:r_line_ex("scope_blacklist",i,"","")
-		global_scope_blacklist[id] = true
-	end
-
-	-- Weapon scope blacklist
-	n = ini:line_count("weapon_scope_blacklist")
-	for i=0,n-1 do
-		result, id, value = ini:r_line_ex("weapon_scope_blacklist",i,"","")
-		local weapon_scope_list = {}
-		if value then
-			value = str_explode(value,",")
-			for i=1,#value do
-				weapon_scope_list[value[i]] = true
-			end
-		end
-		weapon_scope_blacklist[id] = weapon_scope_list
-	end
+	
+	-- Build Desolation modular weapon variant lookup before validating loadout entries.
+	build_weapon_variant_cache()
 
 	-- Gather loadouts
 	local slots_tbl = {}
@@ -105,28 +121,30 @@ function init_settings()
 		tmp = ini:r_string_ex(section,"extra")
 		if tmp then slots_tbl[tmp] = true end
 	end)
-
+		
 	for section,_ in pairs(slots_tbl) do
 		loadouts[section] = {}
 		n = ini:line_count(section)
+		cnt = 0
 		for i=0,n-1 do
 			result, id, value = ini:r_line_ex(section,i,"","")
 			tmp = str_explode(id,":")
-			if tmp and tmp[1] and ini_sys:section_exist(tmp[1]) then
-				local weight = tonumber(tmp[4]) or default_weight
-				local base_entry = {
-					sec = tmp[1],
-					attachment = tmp[2] or "0",
-					ammo_type = tmp[3] or "0",
-					scope_chance = tonumber(tmp[5]) or "d",
-					gl_chance = tonumber(tmp[6]) or "d",
-					sil_chance = tonumber(tmp[7]) or "d",
-				}
-				for j=1,weight do
-					table.insert(loadouts[section], base_entry)
+			local raw_section = tmp and tmp[1]
+			local resolved_section, preset_id = resolve_loadout_item(raw_section)
+			if resolved_section then
+				cnt = cnt + 1
+				loadouts[section][cnt] = {}
+				loadouts[section][cnt].sec = resolved_section
+				loadouts[section][cnt].preset_id = preset_id
+				loadouts[section][cnt].source_sec = raw_section
+				loadouts[section][cnt].attachment = tmp[2] or "0"
+				loadouts[section][cnt].ammo_type = tmp[3] or "0"
+				loadouts[section][cnt].chance = tonumber(tmp[4]) or 50
+				if preset_id then
+					print_debug("NPC Loadouts | variant [%s] -> base [%s] preset [%s]", tostring(raw_section), tostring(resolved_section), tostring(preset_id))
 				end
 			else
-				printe("! ERROR: NPC Loadouts | something is wrong in [%s] - %s", section, tmp[1])
+				printe("! ERROR: NPC Loadouts | something is wrong in [%s] - %s", section, tostring(raw_section))
 			end
 		end
 	end
@@ -177,10 +195,20 @@ function create_item_on_npc(se_npc, squad_name, comm, rank, visual, player_id, s
 	
 	-- Pick an item
 	local pick
-	if (#loadouts[slot] > 1) then
-		pick = math.random(#loadouts[slot])
-	elseif (#loadouts[slot] == 1) then
-		pick = 1
+	shuffle_table(loadouts[slot])
+	for i=1,#loadouts[slot] do
+		if (math.random(100) < loadouts[slot][i].chance) then
+			pick = i
+			break
+		end
+	end
+	
+	if (not pick) then
+		if (#loadouts[slot] > 1) then
+			pick = math.random(#loadouts[slot])
+		elseif (#loadouts[slot] == 1) then
+			pick = 1
+		end
 	end
 
 	if (not pick) then
@@ -190,72 +218,30 @@ function create_item_on_npc(se_npc, squad_name, comm, rank, visual, player_id, s
 	
 	-- Give it to NPC based on data
 	local section = loadouts[slot][pick].sec
+	local preset_id = loadouts[slot][pick].preset_id
 	local ammo_typ = loadouts[slot][pick].ammo_type
 	local attachment = loadouts[slot][pick].attachment
-	local scope_chance = loadouts[slot][pick].scope_chance
-	local gl_chance = loadouts[slot][pick].gl_chance
-	local sil_chance = loadouts[slot][pick].sil_chance
 	print_debug("NPC Loadouts | END | %s | %s - %s - [%s]", se_npc:name(), slot_type, loadout, section)
-
+	
 	-- Items
 	if (slot_type == "extra") then
 		alife_create_item(section, se_npc)
-
+		
 	-- Weapons
 	else
-		local prog_difficulty = game_difficulties.get_eco_factor("type") or 1
-
-		-- resolve random attachment
-		local scopes
-		local orig_attachment = attachment
-		if orig_attachment == "r" then
-			attachment, scopes = resolve_random_attachment(section)
-		end
-
-		-- Resolve scope chance
-		if (bit_and(attachment,1) ~= 0) then
-			if ((100 * math.random()) >= ((scope_chance ~= "d") and scope_chance or default_scope_chance[prog_difficulty])) then
-				attachment = attachment - 1
-			else
-				-- Handle the scopes system here, we had a successful scope_chance roll so if possible we swap current section with one with a scope
-				if not scopes and ini_sys:line_exist(section,"scopes") then
-					scopes = parse_list(ini_sys, section, "scopes")
-				end
-				if scopes and (#scopes > 0) then
-					local filtered_scopes = {}
-					local scope_blacklist = weapon_scope_blacklist[section]
-					for i=1,#scopes do
-						if not (scope_blacklist and scope_blacklist[scopes[i]]) and not global_scope_blacklist[scopes[i]] then
-							table.insert(filtered_scopes, scopes[i])
-						end
-					end
-					if filtered_scopes and (#filtered_scopes > 0) then
-						local pick_scope = filtered_scopes[math.random(#filtered_scopes)]
-						if pick_scope and ini_sys:section_exist(section .. "_" .. pick_scope) then
-							section = section .. "_" .. pick_scope
-							-- since we have a new section compatible attachments might have changed, so for random attachment we reroll it
-							if orig_attachment == "r" then
-								attachment, scopes = resolve_random_attachment(section)
-							end
-						end
-					end
+		-- Add random scope
+		local cha = game_difficulties.get_eco_factor("scope_chance") or scope_chance[ game_difficulties.get_eco_factor("type") or 1 ]
+		cha = cha * 100
+		if (not preset_id) and ini_sys:line_exist(section,"scopes") and (math.random(100) <= cha) then
+			local scopes = parse_list(ini_sys, section, "scopes")
+			if scopes and (#scopes > 0) then
+				local pick_scope = scopes[math.random(#scopes)]
+				if pick_scope and ini_sys:section_exist(section .. "_" .. pick_scope) then
+					section = section .. "_" .. pick_scope
 				end
 			end
 		end
-
-		-- Cleanup scope attachment if its not a valid attachment, scope chance is already resolved
-		if (bit_and(attachment,1) ~= 0) and (utils_data.read_from_ini(nil,section,"scope_status","float",nil) ~= 2) then
-			attachment = attachment - 1
-		end
-		-- Resolve grenade launcher chance and cleanup if its not a valid attachment
-		if (bit_and(attachment,2) ~= 0) and (((100 * math.random()) >= ((gl_chance ~= "d") and gl_chance or default_gl_chance[prog_difficulty])) or (utils_data.read_from_ini(nil,section,"grenade_launcher_status","float",nil) ~= 2)) then
-			attachment = attachment - 2
-		end
-		-- Resolve silencer chance and cleanup if its not a valid attachment
-		if (bit_and(attachment,4) ~= 0) and (((100 * math.random()) >= ((sil_chance ~= "d") and sil_chance or default_sil_chance[prog_difficulty])) or (utils_data.read_from_ini(nil,section,"silencer_status","float",nil) ~= 2)) then
-			attachment = attachment - 4
-		end
-
+		
 		local se_wpn = alife_create_item(section, se_npc)
 		if (se_wpn) then
 			local ammos = parse_list(ini_sys, section, "ammo_class")
@@ -270,12 +256,42 @@ function create_item_on_npc(se_npc, squad_name, comm, rank, visual, player_id, s
 				printe("! ERROR: NPC Loadouts | wrong ammo_type set for [%s], missing value in ammo_class", section)
 			end
 
+
 			if (attachment or ammo_typ) then
 				local data = utils_stpk.get_weapon_data(se_wpn)
 
-				data.addon_flags = attachment
+				local flag = tonumber(attachment) or 0
+				if (attachment == "r") then
+					flag = 0
+					if (utils_data.read_from_ini(nil,section,"scope_status","float",nil)) then
+						flag = flag + 1
+					end
+
+					if (utils_data.read_from_ini(nil,section,"grenade_launcher_status","float",nil)) then
+						flag = flag + 2
+					end
+
+					if (utils_data.read_from_ini(nil,section,"silencer_status","float",nil)) then
+						flag = flag + 4
+					end
+
+					flag = math.random(0,flag)
+				end
+
+				data.addon_flags = flag
 				data.ammo_type = ammo_type
 				utils_stpk.set_weapon_data(data,se_wpn)
+			end
+
+			-- Apply modular build after the real/base weapon exists. deso_trade queues
+			-- installation until the spawned server object is ready for modules.
+			if preset_id then
+				if deso_trade and deso_trade.queue_weapon_preset then
+					deso_trade.queue_weapon_preset(se_wpn.id, preset_id)
+					print_debug("NPC Loadouts | queued preset [%s] on [%s] id=[%s]", tostring(preset_id), tostring(section), tostring(se_wpn.id))
+				else
+					printe("! ERROR: NPC Loadouts | cannot apply preset [%s] to [%s]: deso_trade.queue_weapon_preset is unavailable", tostring(preset_id), tostring(section))
+				end
 			end
 
 			
@@ -290,40 +306,6 @@ function create_item_on_npc(se_npc, squad_name, comm, rank, visual, player_id, s
 			--]]
 		end
 	end
-end
-
-function resolve_random_attachment(section)
-	local scopes
-	local valid_flags = {0}
-	local add_scope_flag = utils_data.read_from_ini(nil,section,"scope_status","float",nil) == 2
-	if not add_scope_flag and ini_sys:line_exist(section,"scopes") then
-		scopes = parse_list(ini_sys, section, "scopes")
-		if scopes and (#scopes > 0) then
-			add_scope_flag = true
-		end
-	end
-	if (add_scope_flag) then
-		tmp = valid_flags
-		for i=1,#valid_flags do
-			table.insert(tmp, valid_flags[i]+1)
-		end
-		valid_flags = tmp
-	end
-	if (utils_data.read_from_ini(nil,section,"grenade_launcher_status","float",nil) == 2) then
-		tmp = valid_flags
-		for i=1,#valid_flags do
-			table.insert(tmp, valid_flags[i]+2)
-		end
-		valid_flags = tmp
-	end
-	if (utils_data.read_from_ini(nil,section,"silencer_status","float",nil) == 2) then
-		tmp = valid_flags
-		for i=1,#valid_flags do
-			table.insert(tmp, valid_flags[i]+4)
-		end
-		valid_flags = tmp
-	end
-	return valid_flags[math.random(#valid_flags)], scopes
 end
 
 ---------------------
@@ -355,13 +337,23 @@ function simulate_npc_loadouts(num, comm, rank, slot_types)
 			printe("! ERROR: NPC Loadouts | section [%s] doesn't exist", slot)
 			return
 		end
-
+		
 		-- Pick an item
 		local pick
-		if (#loadouts[slot] > 1) then
-			pick = math.random(#loadouts[slot])
-		elseif (#loadouts[slot] == 1) then
-			pick = 1
+		shuffle_table(loadouts[slot])
+		for i=1,#loadouts[slot] do
+			if (math.random(100) < loadouts[slot][i].chance) then
+				pick = i
+				break
+			end
+		end
+	
+		if (not pick) then
+			if (#loadouts[slot] > 1) then
+				pick = math.random(#loadouts[slot])
+			elseif (#loadouts[slot] == 1) then
+				pick = 1
+			end
 		end
 	
 		if (not pick) then
@@ -369,9 +361,10 @@ function simulate_npc_loadouts(num, comm, rank, slot_types)
 		end
 		
 		local section = loadouts[slot][pick].sec
+		local preset_id = loadouts[slot][pick].preset_id
 		local ammo_typ = loadouts[slot][pick].ammo_type
 		local attachment = loadouts[slot][pick].attachment
-		local str = section .. ":" .. ammo_typ .. ":" .. attachment
+		local str = (preset_id and (section .. " [preset=" .. preset_id .. "]") or section) .. ":" .. ammo_typ .. ":" .. attachment
 		print_tbl[#print_tbl+1] = ("-" .. ld .. "_" .. n .. " := " .. str)
 	end
 	
@@ -397,3 +390,43 @@ function simulate_npc_loadouts(num, comm, rank, slot_types)
 		printf(print_tbl[i])
 	end
 end
+
+-- WUUT / Desolation modular weapon preset support.
+-- Spawns the real base weapon into an NPC/trader inventory, then registers the
+-- preset ID for delayed module installation by wuut_mags.
+
+-- Desolation standalone modular weapon preset support.
+-- No WUUT scripts are required.
+function Spawn_WeaponVariantOnNPC(section, preset_id, pos, lvid, gvid, npc_id)
+    printf(
+        "Spawn_WeaponVariantOnNPC section=[%s] preset=[%s] npc_id=[%s]",
+        tostring(section),
+        tostring(preset_id),
+        tostring(npc_id))
+
+    local server_object = alife_create_item(
+        section,
+        {pos, lvid, gvid, npc_id})
+
+    if not server_object then
+        printe(
+            "! Spawn_WeaponVariantOnNPC: failed section=[%s]",
+            tostring(section))
+        return nil
+    end
+
+    local id = server_object.id
+
+    if preset_id then
+        deso_trade.queue_weapon_preset(id, preset_id)
+    end
+
+    printf(
+        "Spawn_WeaponVariantOnNPC: spawned section=[%s] preset=[%s] id=[%s]",
+        tostring(section),
+        tostring(preset_id),
+        tostring(id))
+
+    return id
+end
+

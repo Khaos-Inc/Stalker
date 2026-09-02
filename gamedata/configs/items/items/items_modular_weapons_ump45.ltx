@@ -1,0 +1,251 @@
+--\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ wpn_ump45 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+[ump45_zatvor]:attachment_base
+kind  =  ump45
+inv_ui_sign				= ump_bolt
+visual						= w_att_huds\ump45_zatvor	
+inv_name					= ump45_zatvor
+inv_name_short			= ump45_zatvorS
+cost							= 850
+inv_weight					= 0.18
+inv_grid_width			= 2
+inv_grid_x					= 18
+inv_grid_y					= 28
+1icon_layer = clean_lub2_ico
+attachment_point = ump45_zatvor|0,0,0|0,0,0
+attachment_slots = ump45_spring|wpn_body|0,0,0|0,0,0
+item_tags =	zatvor
+override_section = ump45_zatvor_attributes
+
+[ump45_zatvor_attributes]
+rpm = 600
+zoom_rotate_time = 0.08
+impair_koeff = 0.85
+[ump45_zatvor_att]:rpm_600_zatvor_att
+zoom_rotate_time = 0.08
+impair_koeff = 0.85
+recoil_koeff = -0.45
+
+[ump45_spring]:attachment_base
+kind  =  ump45
+inv_ui_sign = ump_spr
+visual = w_att_huds\ump45_spring	
+inv_name = ump45_spring
+inv_name_short = ump45_spring
+cost = 500
+inv_weight = 0.08
+inv_grid_x = 19
+inv_grid_y = 27
+1icon_layer = clean1_ico
+attachment_point = ump45_spring|0,0,0|0,0,0
+attachment_slots = ump45_stock|wpn_body|0,0,0|0,0,0
+item_tags =	spring
+override_section = ump45_spring_attributes
+
+[ump45_spring_attributes]
+
+[ump45_barrel]:attachment_base
+kind  =  ump45
+inv_ui_sign				= ump_bar
+visual						= w_att_huds\ump45_barrel	
+inv_name					= ump45_barrel
+inv_name_short			= ump45_barrel
+cost							= 800
+inv_weight					= 0.11
+inv_grid_width			= 2
+inv_grid_x					= 20
+inv_grid_y					= 27
+1icon_layer = clean2_ico
+attachment_point		= ump45_barrel|0,0,0|0,0,0
+attachment_slots		= ump45_muzzle|muzzle|0,0,0|0,0,0
+item_tags	=	barrel
+override_section			=	ump45_barrel_attributes
+
+[ump45_barrel_attributes]
+zoom_rotate_time = 0.01
+recoil_koeff = -0.05
+inertia_koeff = 1.1
+fire_point = 0, 0, 0.03
+weapon_lenght = 0.04
+bullet_speed = 1
+k_hit_koeff = 1.2
+fire_dispersion_base = 0.15
+[ump_barrel_attributes]:ar_barrel_1_att 
+fire_point = 0, 0, 0.03
+weapon_lenght				=	0.04
+bullet_speed				= 1
+k_hit_koeff						= 1.2
+fire_dispersion_base		= 0.15
+
+[ump45_barrel_usc]:ump45_barrel
+kind  =  ump45
+inv_ui_sign				= usc_bar
+visual						= w_att_huds\ump45_barrel_usc	
+inv_name					= ump45_barrel_usc
+inv_name_short			= ump45_barrel_uscS
+cost							= 1600
+inv_weight					= 0.23
+inv_grid_x					= 22
+attachment_slots		= ump45_muzzle|muzzle|0,0,0.175|0,0,0
+override_section			=	ump45_barrel_usc_attributes
+
+[ump45_barrel_usc_attributes]
+zoom_rotate_time = 0.04
+recoil_koeff = -0.07
+inertia_koeff = 1.2
+fire_point = 0, 0, 0.22
+weapon_lenght = 0.2
+rpm_koeff = -0.05
+bullet_speed = 1.26
+k_hit_koeff = 1.4
+fire_dispersion_base = 0.09
+impair_koeff = 0.85
+[usc_barrel_attributes]:ar_barrel_5_att
+fire_point 				= 0, 0, 0.22
+weapon_lenght				=	0.2
+rpm_koeff						= -0.05
+bullet_speed				= 1.26
+k_hit_koeff						= 1.4
+fire_dispersion_base		= 0.09
+impair_koeff					= 0.85
+
+[ump45_muzzle]:attachment_base
+kind  =  ump45
+inv_ui_sign				= ump_mb
+visual						= w_att_huds\ump45_muzzle_bnt	
+inv_name					= ump45_muzzle_bnt
+inv_name_short			= ump45_muzzle_bntS
+cost							= 550
+inv_weight					= 0.05
+inv_grid_x					= 26
+inv_grid_y					= 28
+attachment_point		= ump45_muzzle|0,0,0|0,0,0
+item_tags =	muzzle_device
+override_section = ump45_muzzle_attributes
+
+[ump45_muzzle_attributes]
+weapon_lenght = 0.05
+recoil_koeff = -0.07
+
+[ump45_silencer]:ump45_muzzle
+kind  =  ump45
+inv_ui_sign				= ump_sil
+visual						= w_att_huds\ump45_silencer_bnt	
+inv_name					= ump45_silencer_bnt
+inv_name_short			= ump45_silencer_bntS
+cost							= 1200
+inv_weight					= 0.37
+inv_grid_width			= 2
+inv_grid_x					= 25
+inv_grid_y					= 27
+attachment_slots		= b3|muzzle|0,-0.02125,0.01|0,0,0
+override_section = ump45_silencer_attributes
+override_section = ump45_silencer_attributes
+
+[ump45_silencer_attributes]
+silencer_status = 1
+silencer_name = wpn_addon_silencer
+silencer_x = 1
+silencer_y = 1
+weapon_lenght = 0.2
+zoom_rotate_time = 0.06
+recoil_koeff = -0.13
+inertia_koeff = 1.3
+
+[ump45_stock]:attachment_base
+kind  =  ump45
+inv_ui_sign				= ump_stock
+visual						= w_att_huds\ump45_stock	
+inv_name					= ump45_stock
+inv_name_short			= ump45_stock
+cost							= 1600
+inv_weight					= 0.45
+inv_grid_width			= 2
+inv_grid_x					= 20
+inv_grid_y					= 28
+attachment_point		= ump45_stock|0,0,0|0,0,0
+item_tags =	stock
+override_section = ump45_stock_attributes
+
+[ump45_stock_attributes]
+weapon_lenght = 0.2
+zoom_rotate_time = 0.05
+recoil_koeff = -0.24
+inertia_koeff = 0.7
+[ump45_stock_att]
+weapon_lenght = 0.2
+zoom_rotate_time = 0.05
+recoil_koeff            = -0.27
+inertia_koeff          = 0.7
+
+[ump45_stock_usc]:ump45_stock
+kind  =  ump45
+inv_ui_sign				= usc_stock
+visual						= w_att_huds\ump45_stock_usc	
+inv_name					= ump45_stock_usc
+inv_name_short			= ump45_stock_uscS
+cost							= 1800
+inv_weight					= 0.55
+inv_grid_height			= 2
+inv_grid_x					= 27
+inv_grid_y					= 27
+override_section = ump45_stock_usc_attributes
+
+[ump45_stock_usc_attributes]
+weapon_lenght = 0.2
+zoom_rotate_time = -0.01
+recoil_koeff = -0.25
+inertia_koeff = 0.7
+
+[ump45_stock_brace]:ump45_stock
+kind  =  ump45
+inv_ui_sign				= ump_brace
+visual						= w_att_huds\ump45_stock_brace	
+inv_name					= ump45_stock_brace
+inv_name_short			= ump45_stock_braceS
+cost							= 1550
+inv_weight					= 0.27
+inv_grid_x					= 22
+override_section = ump45_stock_brace_attributes
+
+[ump45_stock_brace_attributes]
+weapon_lenght = 0.2
+zoom_rotate_time = 0.01
+recoil_koeff = -0.17
+inertia_koeff = 0.8
+
+[mag_wpn_ump45_11.43x23_fmj]:mag_wpn_base,wg_wpn_ump45,ag_ammo_11.43x23_fmj
+inv_ui_sign					= ump_25
+visual							= w_att_huds\ump45_mag
+inv_name						= ump45_mag
+inv_name_short				= ump45_mag
+inv_grid_height				= 2
+inv_grid_x						= 29
+inv_grid_y						= 27
+inv_weight						= 0.1
+cost								= 400
+max_mag_size				= 25
+mag_size						= small
+override_section				= mag_wpn_ump45_11.43x23_fmj_attributes
+
+[mag_wpn_ump45_11.43x23_fmj_attributes]
+animation_prefix_mag = 25_
+[ump45_mag_attributes]
+animation_prefix_mag			=	25_
+
+[mag_wpn_ump45_50_11.43x23_fmj]:mag_wpn_ump45_11.43x23_fmj
+inv_ui_sign					= ump_50
+visual							= w_att_huds\ump45_mag_usc50
+inv_name						= ump45_mag_usc50
+inv_name_short				= ump45_mag_usc50
+inv_grid_x						= 30
+inv_weight						= 0.62
+cost								= 1500
+max_mag_size				= 50
+mag_size						= large
+override_section				= mag_wpn_ump45_50_11.43x23_fmj_attributes
+
+[mag_wpn_ump45_50_11.43x23_fmj_attributes]
+animation_prefix_mag = 50_
+[ump45_mag50_attributes]
+animation_prefix_mag			=	50_

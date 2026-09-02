@@ -1,0 +1,257 @@
+---\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ HIGGINS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+[higgins_zatvor]:attachment_base
+kind  =  hig
+inv_ui_sign					= hi_bolt
+visual							= w_att_huds\higgins_zatvor	
+inv_name						= higgins_zatvor
+inv_name_short			= higgins_zatvor
+cost								= 800
+inv_weight					= 0.14
+inv_grid_x					= 39
+inv_grid_y					= 63
+1icon_layer = clean_lub1_ico
+attachment_point		= higgins_zatvor|0,0,0|0,0,0
+item_tags					= zatvor
+override_section			= higgins_zatvor_attributes
+
+[higgins_zatvor_attributes]
+rpm = 50
+[higgins_zatvor_att]
+rpm = 50
+
+[higgins_barrel_270]:attachment_base
+kind  =  hig
+inv_ui_sign					= hi_27cm
+visual							= w_att_huds\higgins_barrel_270
+inv_name						= higgins_barrel_270
+inv_name_short			= higgins_barrelS
+cost								= 2000
+inv_weight					= 0.45
+inv_grid_width				= 3
+inv_grid_x					= 6
+inv_grid_y					= 65
+1icon_layer = clean3_ico
+attachment_point		= higgins_barrel|0,0,0|0,0,0
+attachment_slots			= choke|muzzle|0,0,-0.2162|0,0,0#higgins_zatvor|zatvor|0,0,0|0,0,0
+item_tags					= barrel
+override_section = higgins_barrel_270_attributes
+[higgins_barrel_270_attributes]:12_barrel_5_att,12_barrel_270_att
+fire_point 					= 0, 0, -0.19
+weapon_lenght			= 0.25
+ammo_mag_size	= +3
+
+[12_barrel_270_att]
+bullet_speed				= 1
+k_hit_koeff					= 0.9
+fire_dispersion_base	= 4.4
+
+override_section = 12_barrel_5_att
+[12_barrel_5_att]
+zoom_rotate_time = 0.08
+recoil_koeff             = -0.18
+inertia_koeff            = 1.5
+
+[higgins_barrel_510]:higgins_barrel_270
+kind  =  hig
+inv_ui_sign					= hi_51cm
+visual							= w_att_huds\higgins_barrel_510
+inv_name						= higgins_barrel_510
+cost								= 3000
+inv_weight					= 0.54
+inv_grid_x         			= 9
+attachment_slots			= higgins_mag|wpn_body|0,0,0|0,0,0#choke|muzzle|0,0,0|0,0,0#higgins_zatvor|zatvor|0,0,0|0,0,0
+override_section			= higgins_barrel_510_attributes
+[higgins_barrel_510_attributes]:12_barrel_9_att,12_barrel_500_att
+fire_point 					= 0, 0, 0.02
+weapon_lenght			= 0.46
+
+[12_barrel_500_att]
+bullet_speed				= 1.24
+fire_dispersion_base	= 3.5
+
+override_section = 12_barrel_9_att
+[12_barrel_9_att]
+zoom_rotate_time = 0.11
+recoil_koeff            = -0.24
+inertia_koeff           = 1.7
+
+[higgins_barrel_710]:higgins_barrel_270
+kind  =  hig
+inv_ui_sign					= hi_71cm
+visual							= w_att_huds\higgins_barrel_710
+inv_name						= higgins_barrel_710
+cost								= 4100
+inv_weight					= 0.7
+inv_grid_width     		= 4
+inv_grid_x         			= 12
+1icon_layer = clean4_ico
+attachment_slots			= higgins_mag|wpn_body|0,0,0|0,0,0#choke|muzzle|0,0,0.1832|0,0,0#higgins_zatvor|zatvor|0,0,0|0,0,0
+override_section			= higgins_barrel_710_attributes
+[higgins_barrel_710_attributes]:12_barrel_11_att,12_barrel_700_att
+fire_point 					= 0, 0, 0.2
+weapon_lenght			= 0.64
+impair_koeff				= 0.8
+
+[12_barrel_700_att]
+bullet_speed				= 1.25
+k_hit_koeff					= 1.15
+fire_dispersion_base	= 3.1
+
+[higgins_mag3]:attachment_base
+kind  =  hig
+inv_ui_sign				= mag3
+visual						= w_att_huds\higgins_mag3	
+inv_name					= higgins_mag3
+inv_name_short		= higgins_mag3S
+cost							= 600
+inv_weight				= 0.11
+inv_grid_x				= 16
+inv_grid_y				= 65
+attachment_point	= higgins_mag|0,0,0|0,0,0		
+item_tags	=	mag
+override_section 	= higgins_mag3_attributes
+[higgins_mag3_attributes]:12_mag_1_att
+ammo_mag_size	= +3
+
+[12_mag_1_att]
+zoom_rotate_time = 0.01
+recoil_koeff            = -0.03
+
+[higgins_mag4]:higgins_mag3
+kind  =  hig
+inv_ui_sign				= mag4
+visual						= w_att_huds\higgins_mag4
+inv_name					= higgins_mag4
+inv_name_short		= higgins_mag4S
+cost							= 800
+inv_weight				= 0.15
+inv_grid_width			= 2
+inv_grid_x				= 17
+attachment_slots		= tubemag|wpn_body|0,0.038,0.425|0,0,0	
+override_section 		= higgins_mag4_attributes
+[higgins_mag4_attributes]:12_mag_1_att
+ammo_mag_size	= +4
+
+[higgins_mag6]:higgins_mag4
+kind  =  hig
+inv_ui_sign				= mag6
+visual						= w_att_huds\higgins_mag6	
+inv_name					= higgins_mag6
+inv_name_short		= higgins_mag6S
+cost							= 1200
+inv_weight				= 0.23
+inv_grid_x				= 19
+attachment_slots		= tubemag|wpn_body|0,0.038,0.425|0,0,0#barrel_side|wpn_body|0,0.00173,0.0806|0,0,0
+override_section = higgins_mag6_attributes
+[higgins_mag6_attributes]:12_mag_3_att
+ammo_mag_size	= +6
+
+[higgins_lower]:attachment_base
+kind  =  hig
+inv_ui_sign					= hig_stck
+visual							= w_att_huds\higgins_lower	
+inv_name						= higgins_lower
+inv_name_short			= higgins_lowerS
+cost								= 1400
+inv_weight					= 1.2
+inv_grid_width				= 4
+inv_grid_x					= 6
+inv_grid_y					= 66
+attachment_point		= higgins_lower|0,0,0|0,0,0
+attachment_slots			= higgins_barrel|wpn_body|0,0,0|0,0,0
+item_tags					= stock
+override_section			= higgins_lower_attributes
+
+[higgins_lower_attributes]
+weapon_lenght = 0.5
+zoom_rotate_time = 0.06
+recoil_koeff = -0.24
+inertia_koeff = 0.6
+[higgins_lower_att]
+weapon_lenght			= 0.5
+zoom_rotate_time = 0.06
+recoil_koeff            = -0.41
+inertia_koeff          = 0.6
+
+[higgins_lower_savage]:higgins_lower
+kind  =  hig
+inv_ui_sign					= hig_stck+
+visual							= w_att_huds\higgins_lower_savage	
+inv_name						= higgins_lower_savage_212_tactical
+inv_name_short			= higgins_lower_savage_212_tacticalS
+cost								= 2800
+inv_weight					= 1.05
+inv_grid_x					= 10
+attachment_slots			= higgins_barrel|wpn_body|0,0,0|0,0,0#picgrp|wpn_body|0,-0.02,0.029|0,0,0#pica_3|wpn_body|0.0225,0.0574,0.36|0,0,61#pica_13|wpn_body|0,0.0908,0.091|0,0,0
+override_section			= higgins_lower_savage_attributes
+
+[higgins_lower_savage_attributes]
+weapon_lenght = 0.5
+zoom_rotate_time = 0.02
+recoil_koeff = -0.26
+inertia_koeff = 0.6
+[higgins_lower_savage_att]
+weapon_lenght			= 0.5
+zoom_rotate_time = 0.02
+recoil_koeff            = -0.36
+inertia_koeff          = 0.6
+
+[higgins_lower_short]:higgins_lower
+kind  =  hig
+inv_ui_sign					= hig_cut
+visual							= w_att_huds\higgins_lower_short	
+inv_name						= higgins_lower_short
+inv_name_short			= higgins_lower_shortS
+cost								= 950
+inv_weight					= 0.6
+inv_grid_width				= 3
+inv_grid_x					= 14
+override_section			= higgins_lower_short_attributes
+
+[higgins_lower_short_attributes]
+weapon_lenght = 0.22
+zoom_rotate_time = -0.01
+recoil_koeff = -0.17
+inertia_koeff = 0.9
+[higgins_lowerS_att]
+weapon_lenght = 0.22
+zoom_rotate_time = -0.01
+recoil_koeff            = -0.17
+inertia_koeff          = 0.9
+
+[choke_higgins_muzzle]:attachment_base
+kind  =  hig
+inv_ui_sign				= cyl
+visual						= w_att_huds\choke_higgins_muzzle
+inv_name					= choke_higgins_muzzle
+inv_name_short		= choke_higgins_muzzleS
+cost							= 100
+inv_weight				= 0.05
+inv_grid_x				= 18
+inv_grid_y				= 66
+attachment_point	= choke|0,0,0|0,0,0
+override_section = choke_higgins_muzzle_attributes
+
+[choke_higgins_muzzle_attributes]
+fire_dispersion_base_koeff = -0.02
+impair_koeff = 0.9
+
+[choke_higgins_muzzle_brake]:choke_higgins_muzzle
+kind  =  hig
+inv_ui_sign				= hmb
+visual						= w_att_huds\choke_higgins_muzzle_brake
+inv_name					= choke_higgins_muzzle_brake
+inv_name_short		= choke_higgins_muzzle_brakeS
+cost							= 950
+inv_weight				= 0.13
+inv_grid_x				= 19
+item_tags =	muzzle_device
+override_section = choke_higgins_muzzle_brake_attributes
+
+[choke_higgins_muzzle_brake_attributes]
+weapon_lenght = 0.07
+fire_dispersion_base_koeff = -0.02
+[choke_higgins_muzzle_brake_att]
+weapon_lenght = 0.07
+fire_dispersion_base_koeff = -0.02

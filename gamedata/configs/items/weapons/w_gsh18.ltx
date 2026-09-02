@@ -1,2 +1,52 @@
-[wpn_gsh18]:wpn_fort17
-[wpn_gsh18_custom]:wpn_fort17
+[wpn_gsh18]:wpn_beretta,wpn_gsh18_sounds
+GroupControlSection		= spawn_group
+$spawn							= "weapons\gsh18"
+inv_grid_width					= 2
+inv_grid_height				= 2
+inv_grid_x						= 0
+inv_grid_y						= 31
+inv_name                  		= wpn_gsh18
+inv_name_short        		= wpn_gsh18
+description               		= wpn_gsh18_descr
+inv_weight						= 0.15
+cost									= 27000
+ammo_mag_size				= 18
+npc_rpm  = 450
+zoom_rotate_time = 0.1
+inertia_koeff		=	0.4
+attachment_slots				= slot_magazin|magazin|0,0,0|0,0,0#gsh18_trigger|wpn_body|0,0,0|0,0,0#gsh18_rail|wpn_body|0,0,0|0,0,0
+aimpoint_offset_y			= 0.04866
+ui_render_cam_offset		= 0.48, -0.12, 1.1
+visual								= w_att_huds\gsh18.ogf
+hud                        			= wpn_gsh18_hud
+additional_sounds			= gsh_additional_sounds
+[gsh_additional_sounds]:hpsa_additional_sounds
+[wpn_gsh18_hud]:wpn_glock_hud
+
+weapon_recoil_vert         = 3.02
+weapon_recoil_vert_inc     = 0.302
+weapon_recoil_horz         = 2.5
+weapon_recoil_ret_speed    = 5.0
+
+
+anm_reload_misfire_sounds	= 0,snd_move_in|15,snd_slide_back|29,snd_slide_release
+anm_reload_misfire				= pm_m_unjam, unjam, 1.4
+item_visual                 			= w_att_huds\gsh18_hud.ogf
+;hands_position					= 0.06, -0.05, -0.1
+;hands_position_16x9			= 0.06, -0.05, -0.1
+;hands_orientation				= 0.3, 0.3, 0
+;hands_orientation_16x9		= 0.3, 0.3, 0
+;aim_hud_offset_pos			= -0.0603, 0.0342, 0
+;aim_hud_offset_pos_16x9	= -0.0603, 0.0342, 0
+;aim_hud_offset_rot				= 0.007, 0.006, 0
+;aim_hud_offset_rot_16x9	= 0.007, 0.006, 0
+shooting_backward_offset		= 0.04,0.03
+hands_position					= 0.06, -0.05, -0.05
+hands_position_16x9			= 0.06, -0.05, -0.05
+hands_orientation				= 0.3, 0.3, 0
+hands_orientation_16x9		= 0.3, 0.3, 0
+aim_hud_offset_pos			= -0.0603, 0.0342, -0.05
+aim_hud_offset_pos_16x9	= -0.0603, 0.0342, -0.05
+aim_hud_offset_rot				= 0.005, 0.006, 0
+aim_hud_offset_rot_16x9	= 0.005, 0.006, 0
+  

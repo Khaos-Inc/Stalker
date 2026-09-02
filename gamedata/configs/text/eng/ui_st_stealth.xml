@@ -121,6 +121,10 @@
 		<text>Combat AI</text>
 	</string>
 
+	<string id="ui_mcm_menu_uninstall_tab">
+		<text>Safe Uninstall</text>
+	</string>
+
 	<string id="ui_mcm_menu_combat_tab_settings">
 		<text>Main</text>
 	</string>
@@ -128,6 +132,22 @@
 	<string id="ui_mcm_combat_title">
 		<text>Combat AI</text>
 	</string>
+	<!-- Safe Uninstall -->
+	<string id="ui_mcm_combat_uninstall_header">
+		<text>Safe Uninstall</text>
+	</string>
+	<string id="ui_mcm_combat_uninstall_warning">
+		<text>IMPORTANT - SAFE UNINSTALL:\n1) Enable the option below and Apply.\n2) Start a NEW GAME once.\n3) After the new game has loaded, exit the game normally.\n4) Remove RE:DONE Combat AI.\nThis restores the vanilla AI aim values and saves them back to user.ltx.</text>
+	</string>
+	<string id="ui_mcm_stealth_uninstall_tab_uninstall_mode">
+		<text>Safe Uninstall / Restore Vanilla Aim</text>
+	</string>
+	<string id="ui_mcm_stealth_uninstall_tab_uninstall_mode_desc">
+		<text>Restores the vanilla AI aim console values and immediately saves the current console configuration to user.ltx. Use this only when preparing to uninstall RE:DONE Combat AI.
+			
+ Default: Disabled</text>
+	</string>
+
 
 	<string id="ui_mcm_combat_header_main">
 		<text>Combat AI Settings</text>
@@ -231,10 +251,10 @@
 	</string>
 
 	<!-- Detection Sniper Combat -->
-	<string id="ui_mcm_stealth_combat_tab_combat_tab_settings_detection_Sniper_combat">
+	<string id="ui_mcm_stealth_combat_tab_combat_tab_settings_detection_sniper_combat">
 		<text>Sniper Detection</text>
 	</string>
-	<string id="ui_mcm_stealth_combat_tab_combat_tab_settings_detection_Sniper_combat_desc">
+	<string id="ui_mcm_stealth_combat_tab_combat_tab_settings_detection_sniper_combat_desc">
 		<text>Enable NPC sniper combat detection when the player is using a sniper rifle. NPCs will switch to a camping scheme instead of direct engagement. WIP.\n
 				\n Default: Enabled</text>
 	</string>
@@ -786,7 +806,7 @@
 		<text>Enemy ID Debug</text>
 	</string>
 	<string id="ui_mcm_stealth_debug_tab_debug_enemy_desc">
-		<text>Logging ENEMY selection & state transitions (NPC best_enemy system):
+		<text>Logging ENEMY selection and state transitions (NPC best_enemy system):
 				\n Console: ENGINE / MEMORY / SWITCH / STATE changes
 				\n Mode: RAW (all enemy resolution steps)
 				\n Mode: CLEAN (only enemy changes per NPC)

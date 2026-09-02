@@ -2,6 +2,7 @@
 ; UNUSED -- it works the same as wpn_binoc_inv and all traders sell that one, so this cannot be obtained normally 
 ; since most properties are defined here i'd say in 1.6 to delete the _inv version and keep and use this one instead
 [wpn_binoc]:identity_immunities,weapon_probability,default_weapon_params,wpn_binoc_sounds
+modular_attachments = false
         GroupControlSection         = spawn_group
         discovery_dependency        =
         $npc                        = on
@@ -9,7 +10,11 @@
         $spawn                      = "weapons\binocular"
         scheduled                   = off
         cform                       = skeleton
-        
+		dont_stack                    = false
+		
+		attachment_slots = slot_magazin|magazin|0,0,0|0,0,0
+		ui_render_cam_offset = 0.25, -0.09, 0.7
+		
         class                       = WP_BINOC
         slot                        = 4
         animation_slot              = 13
@@ -94,7 +99,7 @@
         hit_power                   = 0
         hit_type                    = fire_wound
         fire_distance               = 0
-        bullet_speed                = 0
+        bullet_speed = 1;                = 0
         rpm                         = 0
         rpm_empty_click             = 0
         
@@ -146,18 +151,17 @@
         zoom_hide_crosshair         = true
         
         item_position               = 0, 0, 0
-        item_orientation            = 0, 0, 0
-        hands_position              					   = 0.000000,-0.080000,0.000000
-hands_position_16x9         					   = 0.000000,-0.080000,0.000000
-hands_orientation           					   = 0,0,0
-hands_orientation_16x9      					   = 0,0,0
-
-        aim_hud_offset_pos          = 0.00876, -0.137671, -0.10682
-        aim_hud_offset_pos_16x9     = 0.00876, -0.137671, -0.10682
-        aim_hud_offset_rot          = -0.805134, -0.01936, 0.04008
-        aim_hud_offset_rot_16x9     = -0.805134, -0.01936, 0.04008
-
-
+        item_orientation            = 180, 0, 0
+        
+        hands_position              = 0, -0.12, -0.05
+        hands_position_16x9         = 0, -0.12, -0.05
+        hands_orientation           = 0, -10, 0
+        hands_orientation_16x9      = 0, -10, 0
+        
+        aim_hud_offset_pos          = 0, -0.03, -0.5
+        aim_hud_offset_pos_16x9     = 0, -0.03, -0.5
+        aim_hud_offset_rot          = -0.15, 0.0, 0.0
+        aim_hud_offset_rot_16x9     = -0.15, 0.0, 0.0
         
         gl_hud_offset_pos           = 0, 0, 0
         gl_hud_offset_rot           = 0, 0, 0
@@ -165,23 +169,19 @@ hands_orientation_16x9      					   = 0,0,0
         lean_hud_offset_pos         = 0, 0, 0
         lean_hud_offset_rot         = 0, 0, 0
         
-        anm_show										   = binoculars_draw
-anm_hide										   = binoculars_holster
-anm_idle										   = binoculars_idle
-anm_idle_aim									   = binoculars_idle
-anm_idle_moving_slow							   = binoculars_idle_moving_slow
-anm_idle_moving									   = binoculars_idle_moving
-anm_idle_moving_crouch							   = binoculars_idle_moving_crouch
-anm_bore										   = binoculars_idle
-
-anm_idle_sprint                                               = binoculars_sprint
-
+        anm_hide                    = binoculars_holster
+        anm_idle                    = binoculars_idle
+        anm_idle_aim                = binoculars_idle_aim
+        anm_idle_moving             = binoculars_idle_moving
+        anm_idle_moving_crouch      = binoculars_idle_moving, idle, 0.75
+        anm_idle_sprint             = binoculars_idle_sprint
+        anm_show                    = binoculars_draw
  
 		freelook_z_offset_mul		= 0.75
  
 ;------------------------------------------------------------------------------------------------
 [wpn_binoc_inv]:identity_immunities,weapon_probability,default_weapon_params,wpn_binoc
-        animation_slot              = 2
+        animation_slot              = 13
         hand_dependence             = 1
         
         hud                         = wpn_binoculars_hud

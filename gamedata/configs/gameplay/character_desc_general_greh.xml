@@ -1,3 +1,4 @@
+
 <specific_character id="sim_default_greh_0_default_0" team_default = "1">
 #include "gameplay\profiles\character_desc_greh_0.xml"
     <icon>ui_inGame2_bandit_5</icon>
@@ -409,15 +410,15 @@
 <!--  Sin Veteran Heavy Weapons  -->
 <specific_character id="sim_greh_hwp" team_default = "1">
     <name>GENERATE_NAME_stalker</name>
-    <icon>ui_inGame3_ico_greh</icon>
+    <icon>ui_inGame2_Freedom_2</icon>
     <map_icon x="1" y="0"></map_icon>
     <bio>Sinner.</bio>
     <class>sim_greh_hwp</class>
     <community>greh</community> <terrain_sect>stalker_terrain</terrain_sect>
-    <snd_config>characters_voice\human\greh_1\</snd_config>
+    <snd_config>characters_voice\human\greh_3\</snd_config>
     <rank>12000</rank>
     <reputation>-600</reputation>
-    <visual>actors\stalker_greh\stalker_greh_exolight_with_powered_arm</visual>
+    <visual>actors\stalker_greh\stalker_greh_4</visual>
     <supplies>
 	[spawn_loadout] \n
 	  wpn_rpg7 = 1 \n
@@ -437,7 +438,7 @@
 <!--  Sin Expert Sniper  -->
 <specific_character id="sim_greh_sniper_default_0" team_default = "1">
     <name>GENERATE_NAME_stalker</name>
-    <icon>ui_inGame3_ico_greh</icon>
+    <icon>ui_inGame2_merc_2</icon>
     <map_icon x="1" y="0"></map_icon>
     <bio>Sinner.</bio>
     <class>sim_greh_sniper</class>
@@ -445,7 +446,7 @@
     <snd_config>characters_voice\human\greh_3\</snd_config>
     <rank>9000</rank>
     <reputation>-600</reputation>
-    <visual>actors\stalker_greh\stalker_greh_sunrise_wraith_1</visual>
+    <visual>actors\stalker_greh\stalker_greh_3a_merc</visual>
     <supplies>
 	[spawn_loadout] \n
 	  wpn_vintorez_pso1m21 = 1 \n
@@ -467,7 +468,7 @@
 	
 <specific_character id="sim_greh_sniper_default_1" team_default = "1">
     <name>GENERATE_NAME_stalker</name>
-    <icon>ui_inGame3_ico_greh</icon>
+    <icon>ui_inGame2_merc_2</icon>
     <map_icon x="1" y="0"></map_icon>
     <bio>Sinner.</bio>
     <class>sim_greh_sniper</class>
@@ -475,7 +476,7 @@
     <snd_config>characters_voice\human\greh_3\</snd_config>
     <rank>9000</rank>
     <reputation>-600</reputation>
-    <visual>actors\stalker_greh\stalker_greh_sunrise_wraith_2</visual>
+    <visual>actors\stalker_greh\stalker_greh_3b_merc</visual>
     <supplies>
 	[spawn_loadout] \n
 	  wpn_vintorez_pso1m21 = 1 \n
@@ -497,7 +498,7 @@
 	
 <specific_character id="sim_greh_sniper_default_2" team_default = "1">
     <name>GENERATE_NAME_stalker</name>
-    <icon>ui_inGame3_ico_greh</icon>
+    <icon>ui_inGame2_merc_2</icon>
     <map_icon x="1" y="0"></map_icon>
     <bio>Sinner.</bio>
     <class>sim_greh_sniper</class>
@@ -505,7 +506,7 @@
     <snd_config>characters_voice\human\greh_3\</snd_config>
     <rank>9000</rank>
     <reputation>-600</reputation>
-    <visual>actors\stalker_greh\stalker_greh_sts_wraith</visual>
+    <visual>actors\stalker_greh\stalker_greh_3c_merc</visual>
     <supplies>
 	[spawn_loadout] \n
 	  wpn_vintorez_pso1m21 = 1 \n
@@ -526,7 +527,7 @@
 </specific_character>
 
 
-<!-- Special -->
+	<!-- Special -->
 <specific_character id="sim_default_greh_trader" team_default = "1">
 #include "gameplay\profiles\character_desc_greh_special.xml"
     <name>GENERATE_NAME_stalker</name>
@@ -590,3 +591,4 @@
 	<actor_dialog>dm_ordered_task_completed_dialog</actor_dialog>
 	<actor_dialog>actor_break_dialog</actor_dialog>
 </specific_character>
+	

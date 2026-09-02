@@ -1,0 +1,350 @@
+--\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ wpn_mp153 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+[153_zatvor]:attachment_base
+kind  =  153
+inv_ui_sign				= 153_bolt
+visual							= w_att_huds\153_zatvor	
+inv_name					= 153_zatvor
+inv_name_short		= 153_zatvor
+cost							= 1500
+inv_weight				= 0.35
+inv_grid_width			= 2
+inv_grid_x					= 13
+inv_grid_y					= 53
+1icon_layer = clean_lub2_ico
+attachment_point	= 153_zatvor|0,0,0|0,0,0
+attachment_slots	= 153_hg|wpn_body|0,0,0|0,0,0#153_barrel|wpn_body|0,0,0|0,0,0
+item_tags = zatvor
+override_section = 153_zatvor_attributes
+
+[153_zatvor_attributes]
+zoom_rotate_time = 0.07
+rpm = 1000
+
+[153_barrel_370]:133_barrel_370
+kind  =  153
+inv_ui_sign				= 153_37cm
+visual							= w_att_huds\153_barrel_370	
+inv_name					= 153_barrel_370
+inv_name_short		= 153_barrel_370S
+cost							= 2100
+inv_weight				= 0.24
+inv_grid_y					= 53
+attachment_point = 153_barrel|0,0,0|0,0,0
+override_section = 153_barrel_370_attributes
+[153_barrel_370_attributes]:133_barrel_370_attributes
+rpm_koeff = 0.1
+
+[153_barrel_510]:133_barrel_510
+kind  =  153
+inv_ui_sign				= 153_51cm
+visual							= w_att_huds\153_barrel_510	
+inv_name					= 153_barrel_510
+inv_name_short		= 153_barrel_510S
+cost							= 2700
+inv_weight				= 0.29
+inv_grid_y					= 53
+attachment_point = 153_barrel|0,0,0|0,0,0
+override_section = 153_barrel_510_attributes
+
+[153_barrel_510_attributes]
+zoom_rotate_time = 0.08
+recoil_koeff = -0.03
+inertia_koeff = 1.4
+bullet_speed = 1.05
+fire_dispersion_base = 3.5
+fire_point = 0, 0, 0.17
+weapon_lenght = 0.15
+rpm_koeff = 0.05
+[153_barrel_510_att]:133_barrel_510_attributes
+rpm_koeff = 0.05
+
+[153_barrel_540]:133_barrel_540
+kind  =  153
+inv_ui_sign				= 153_54cm
+visual							= w_att_huds\153_barrel_540	
+inv_name					= 153_barrel_540
+inv_name_short		= 153_barrel_540S
+cost							= 2600
+inv_weight				= 0.27
+inv_grid_y					= 53
+attachment_point = 153_barrel|0,0,0|0,0,0
+override_section = 153_barrel_540_attributes
+
+[153_barrel_540_attributes]
+zoom_rotate_time = 0.09
+recoil_koeff = -0.04
+inertia_koeff = 1.5
+bullet_speed = 1.08
+k_hit_koeff = 1.05
+fire_dispersion_base = 3.4
+fire_point = 0, 0, 0.2
+weapon_lenght = 0.2
+
+[153_barrel_610]:133_barrel_610
+kind  =  153
+inv_ui_sign				= 153_61cm
+visual							= w_att_huds\153_barrel_610	
+inv_name					= 153_barrel_610
+inv_name_short		= 153_barrel_610S
+cost							= 3000
+inv_weight				= 0.33
+inv_grid_y					= 53
+attachment_point	= 153_barrel|0,0,0|0,0,0
+override_section = 153_barrel_610_attributes
+[153_barrel_610_attributes]:133_barrel_610_attributes
+rpm_koeff = -0.05
+
+[153_barrel_660]:133_barrel_660
+kind  =  153
+inv_ui_sign				= 153_66cm
+visual							= w_att_huds\153_barrel_660	
+inv_name					= 153_barrel_660
+inv_name_short		= 153_barrel_660S
+cost							= 3350
+inv_weight				= 0.41
+inv_grid_y					= 53
+attachment_point = 153_barrel|0,0,0|0,0,0
+override_section = 153_barrel_660_attributes
+[153_barrel_660_attributes]:133_barrel_660_attributes
+rpm_koeff = -0.1
+
+[153_barrel_710]:133_barrel_710
+kind  =  153
+inv_ui_sign				= 153_71cm
+visual							= w_att_huds\153_barrel_710	
+inv_name					= 153_barrel_710
+inv_name_short		= 153_barrel_710S
+cost							= 3600
+inv_weight				= 0.45
+inv_grid_y					= 53
+attachment_point = 153_barrel|0,0,0|0,0,0
+override_section =	153_barrel_710_attributes
+[153_barrel_710_attributes]:133_barrel_710_attributes
+rpm_koeff = -0.15
+
+[153_hg]:attachment_base
+kind  =  153
+inv_ui_sign				= 153_hg
+visual							= w_att_huds\153_hg
+inv_name					= 153_hg
+inv_name_short		= 153_hgS
+cost							= 800
+inv_weight				= 0.35
+inv_grid_width			= 2
+inv_grid_x					= 4
+inv_grid_y					= 54
+attachment_point = 153_hg|0,0,0|0,0,0
+item_tags =	hg
+override_section = 153_hg_attributes
+
+[153_hg_attributes]
+animation_prefix = c_
+zoom_rotate_time = -0.01
+inertia_koeff = 0.9
+
+[153_hg_poly]:153_hg
+kind  =  153
+visual							= w_att_huds\153_hg_poly
+inv_name					= 153_hg_poly
+cost							= 900
+inv_weight				= 0.27
+inv_grid_x					= 34
+inv_grid_y					= 50
+override_section = 153_hg_poly_attributes
+
+[153_hg_poly_attributes]
+animation_prefix = c_
+zoom_rotate_time = 0.01
+inertia_koeff = 0.8
+
+[153_hg_tac]:153_hg
+kind  =  153
+inv_ui_sign				= 153_hgP
+visual							= w_att_huds\153_hg_taktikatula
+description				= pica_3_up
+inv_name					= 153_hg_taktikatula
+inv_name_short		= 153_hg_taktikatulaS
+cost							= 1300
+inv_weight				= 0.25
+inv_grid_x					= 6
+attachment_slots	= picgrp|wpn_body|0,-0.0337,0.095|0,0,0#pica_3|wpn_body|0,0.0019,0.42|0,0,-180
+override_section = 153_hg_tac_attributes
+
+[153_hg_tac_attributes]
+animation_prefix = c_
+zoom_rotate_time = 0.01
+inertia_koeff = 0.8
+
+[choke_cyl]:attachment_base
+kind  =  12gamuzz
+inv_ui_sign				= cyl
+visual							= w_att_huds\choke_grey_cyl
+inv_name					= choke_cyl
+inv_name_short		= chokeS
+cost							= 500
+inv_weight				= 0.06
+inv_grid_x					= 29
+inv_grid_y					= 54
+attachment_point	= choke|0,0,0|0,0,0
+item_tags	=	muzzle_device
+override_section = choke_cyl_attributes
+
+[choke_cyl_attributes]
+fire_dispersion_base_koeff = -0.02
+impair_koeff = 0.9
+
+[choke_cyl1]:choke_cyl
+kind  =  12gamuzz
+visual							= w_att_huds\choke_grey1_cyl
+inv_name					= choke_cyl1
+inv_grid_x					= 30
+override_section = choke_cyl1_attributes
+
+[choke_cyl1_attributes]
+fire_dispersion_base_koeff = -0.02
+impair_koeff = 0.9
+[choke_cyl_b]:choke_cyl
+kind  =  12gamuzz
+visual							= w_att_huds\choke_black_cyl
+inv_name					= choke_cyl_b
+inv_grid_x					= 31
+override_section = choke_cyl_b_attributes
+
+[choke_cyl_b_attributes]
+fire_dispersion_base_koeff = -0.02
+impair_koeff = 0.9
+
+[choke_cyl_raptor]:choke_cyl
+kind  =  12gamuzz
+inv_ui_sign				= 12mb
+visual							= w_att_huds\choke_tss_raptor_cyl
+inv_name					= choke_tss_raptor_cyl
+inv_name_short		= choke_tss_raptor_cylS
+cost							= 1000
+inv_weight				= 0.12
+inv_grid_x					= 32
+override_section = choke_cyl_raptor_attributes
+
+[choke_cyl_raptor_attributes]
+weapon_lenght = 0.05
+fire_dispersion_base_koeff = -0.02
+recoil_koeff = -0.1
+[choke_tss_raptor_cyl_att]
+weapon_lenght = 0.05
+fire_dispersion_base_koeff = -0.02
+impair_koeff = 0.95
+recoil_koeff = -0.1
+
+[choke_adapter]:choke_cyl
+kind  =  12gamuzz
+inv_ui_sign				= 12g_adp
+visual							= w_att_huds\choke_adapter_cyl
+inv_name					= choke_adapter_cyl
+inv_name_short		= choke_adapter_cylS
+cost							= 750
+inv_weight				= 0.08
+inv_grid_x					= 33
+attachment_slots	= 12ga_muzzle|muzzle|0,0,0|0,0,0
+override_section = choke_adapter_attributes
+
+[choke_adapter_attributes]
+fire_dispersion_base_koeff = -0.02
+impair_koeff = 0.9
+
+[choke_ic]:choke_cyl
+kind  =  12gamuzz
+inv_ui_sign				= ic
+visual							= w_att_huds\choke_yellow_ic
+inv_name					= choke_ic
+inv_name_short		= choke_icS
+cost							= 900
+inv_grid_x					= 34
+inv_grid_y					= 54
+attachment_point	= choke|0,0,0|0,0,0
+override_section = choke_ic_attributes
+
+[choke_ic_attributes]
+fire_dispersion_base_koeff = -0.05
+impair_koeff = 0.95
+
+[choke_ic_sgm]:choke_cyl
+kind  =  12gamuzz
+inv_ui_sign				= ic
+visual							= w_att_huds\choke_sgm_ic
+inv_name					= choke_sgm_ic
+inv_name_short		= choke_sgm_icS
+cost							= 900
+inv_grid_x					= 35
+override_section = choke_ic_sgm_attributes
+
+[choke_ic_sgm_attributes]
+fire_dispersion_base_koeff = -0.05
+impair_koeff = 0.95
+weapon_lenght = 0.05
+recoil_koeff = -0.1
+[choke_sgm_ic_att]:choke_ic_att
+weapon_lenght = 0.05
+recoil_koeff = -0.1
+
+[choke_m]:choke_cyl
+kind  =  12gamuzz
+inv_ui_sign				= m
+visual							= w_att_huds\choke_green_m
+inv_name					= choke_m
+inv_name_short		= choke_mS
+cost							= 900
+inv_grid_x					= 36
+override_section = choke_m_attributes
+
+[choke_m_attributes]
+fire_dispersion_base_koeff = -0.1
+impair_koeff = 0.95
+
+[choke_im]:choke_cyl
+kind  =  12gamuzz
+inv_ui_sign				= im
+visual							= w_att_huds\choke_blue_im
+inv_name					= choke_im
+inv_name_short		= choke_imS
+cost							= 900
+inv_grid_x					= 37
+override_section = choke_im_attributes
+
+[choke_im_attributes]
+fire_dispersion_base_koeff = -0.15
+impair_koeff = 0.95
+
+[choke_f]:choke_cyl
+kind  =  12gamuzz
+inv_ui_sign				= f
+visual							= w_att_huds\choke_purple_f
+inv_name					= choke_f
+inv_name_short		= choke_fS
+cost							= 900
+inv_grid_x					= 38
+override_section = choke_f_attributes
+
+[choke_f_attributes]
+fire_dispersion_base_koeff = -0.2
+impair_koeff = 1.05
+[choke_f_att]
+fire_dispersion_base_koeff = -0.2
+impair_koeff = 1.05
+
+[choke_ef]:choke_cyl
+kind  =  12gamuzz
+inv_ui_sign				= ef
+visual							= w_att_huds\choke_red_ef
+inv_name					= choke_ef
+inv_name_short		= choke_efS
+cost							= 900
+inv_grid_x					= 39
+override_section = choke_ef_attributes
+
+[choke_ef_attributes]
+fire_dispersion_base_koeff = -0.25
+impair_koeff = 1.1
+[choke_ef_att]
+fire_dispersion_base_koeff = -0.25
+impair_koeff = 1.1

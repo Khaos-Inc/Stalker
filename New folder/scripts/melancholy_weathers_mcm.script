@@ -1,0 +1,551 @@
+-- Monkey patches to change SSS' MCM default values
+-- For Melancholy Weathers
+-- All loose ssfx_ scripts are handled here, except ssfx_lut.script.
+
+local function ensure_module(name)
+    _G[name] = _G[name] or {}
+    return _G[name]
+end
+
+local function set_defs(page, defs)
+    if not (page and page.gr) then return end
+    for _, opt in ipairs(page.gr) do
+        if defs[opt.id] ~= nil then opt.def = defs[opt.id] end
+    end
+end
+
+local ssfx_florafixes = ensure_module("ssfx_florafixes")
+do
+    local ssfx_sss_int = 3.5
+    local ssfx_sss_color = 0.6
+
+    local ssfx_grass_spec = 0.04
+    local ssfx_grass_spec_wet = 0.21
+    local ssfx_trees_spec = 0.35
+    local ssfx_trees_spec_wet = 0.21
+
+    function ssfx_florafixes.apply_florafixes_settings()
+        get_console():execute("ssfx_florafixes_1 (" .. ssfx_grass_spec .. "," .. ssfx_grass_spec_wet .. "," .. ssfx_trees_spec .. "," .. ssfx_trees_spec_wet .. ")")
+        get_console():execute("ssfx_florafixes_2 (" .. ssfx_sss_int .. "," .. ssfx_sss_color .. ",0,0)")
+    end
+
+    function ssfx_florafixes.on_option_change()
+        local module_id = "florafixes"
+
+        ssfx_sss_int = ssfx_001_mcm.ssfx_get_setting(module_id, "sss_int", ssfx_florafixes_settings)
+        ssfx_sss_color = ssfx_001_mcm.ssfx_get_setting(module_id, "sss_color", ssfx_florafixes_settings)
+
+        ssfx_grass_spec = ssfx_001_mcm.ssfx_get_setting(module_id, "grass_specular", ssfx_florafixes_settings)
+        ssfx_grass_spec_wet = ssfx_001_mcm.ssfx_get_setting(module_id, "grass_specular_wet", ssfx_florafixes_settings)
+        ssfx_trees_spec = ssfx_001_mcm.ssfx_get_setting(module_id, "trees_specular", ssfx_florafixes_settings)
+        ssfx_trees_spec_wet = ssfx_001_mcm.ssfx_get_setting(module_id, "trees_specular_wet", ssfx_florafixes_settings)
+
+        ssfx_florafixes.apply_florafixes_settings()
+    end
+
+    function ssfx_florafixes.on_game_start()
+        RegisterScriptCallback("on_option_change", ssfx_florafixes.on_option_change)
+        ssfx_florafixes.on_option_change()
+    end
+end
+
+local ssfx_florafixes_mcm = ensure_module("ssfx_florafixes_mcm")
+function ssfx_florafixes_mcm.on_mcm_load()
+    local op = { id = "florafixes", sh = true, text = "ui_mcm_ssfx_module_florafixes", gr = {
+        { id = "title", type = "slide", link = "ui_options_slider_player", text = "ui_mcm_ssfx_module_florafixes_title", size = { 512, 50 }, spacing = 20 },
+
+        { id = "sss_int_mcm", type = "track", val = 2, min = 0.0, max = 10.0, step = 0.1, def = 3.5 },
+        { id = "sss_color_mcm", type = "track", val = 2, min = 0.0, max = 1.0, step = 0.01, def = 0.6 },
+
+        { id = "line", type = "line" },
+
+        { id = "grass_specular_mcm", type = "track", val = 2, min = 0.0, max = 1.0, step = 0.01, def = 0.04 },
+        { id = "grass_specular_wet_mcm", type = "track", val = 2, min = 0.0, max = 1.0, step = 0.01, def = 0.21 },
+
+        { id = "trees_specular_mcm", type = "track", val = 2, min = 0.0, max = 1.0, step = 0.01, def = 0.35 },
+        { id = "trees_specular_wet_mcm", type = "track", val = 2, min = 0.0, max = 1.0, step = 0.01, def = 0.21 },
+    } }
+
+    return op, "ssfx_module"
+end
+
+local ssfx_fog_settings = ensure_module("ssfx_fog_settings")
+ssfx_fog_settings.ssfx_default_settings = {
+    ["height"] = 20,
+    ["density"] = 1,
+    ["suncolor"] = 0.3,
+    ["scattering"] = 1,
+}
+
+local ssfx_fog_mcm = ensure_module("ssfx_fog_mcm")
+function ssfx_fog_mcm.on_mcm_load()
+    local op = { id = "fog", sh = true, text = "ui_mcm_ssfx_module_fog", gr = {
+        { id = "title", type = "slide", link = "ui_options_slider_player", text = "ui_mcm_ssfx_module_fog_title", size = { 512, 50 }, spacing = 20 },
+
+        { id = "height_mcm", type = "track", val = 2, min = 1.0, max = 20.0, step = 0.1, def = 20 },
+        { id = "density_mcm", type = "track", val = 2, min = 0.0, max = 5.0, step = 0.1, def = 1 },
+        { id = "suncolor_mcm", type = "track", val = 2, min = 0.0, max = 1.0, step = 0.05, def = 0.3 },
+
+        { id = "line", type = "line" },
+
+        { id = "scattering_mcm", type = "track", val = 2, min = 0.0, max = 1.0, step = 0.1, def = 1 },
+    } }
+
+    return op, "ssfx_module"
+end
+
+local ssfx_il_settings = ensure_module("ssfx_il_settings")
+ssfx_il_settings.ssfx_default_settings = {
+    ["quality"] = 32,
+    ["res"] = 0.15,
+    ["blur"] = 0.5,
+    ["vibrance"] = 0.7,
+    ["distance"] = 150.0,
+    ["global_int"] = 1.0,
+    ["hud_int"] = 1.0,
+    ["flora_int"] = 0.3,
+}
+
+local ssfx_il_mcm = ensure_module("ssfx_il_mcm")
+function ssfx_il_mcm.on_mcm_load()
+    local op = { id = "il", sh = true, text = "ui_mcm_ssfx_module_il", gr = {
+        { id = "title", type = "slide", link = "ui_options_slider_player", text = "ui_mcm_ssfx_module_il_title", size = { 512, 50 }, spacing = 20 },
+
+        { id = "quality_mcm", type = "list", val = 2, content = { { 16.0, "ssfx_quality_very_low" }, { 24.0, "ssfx_quality_low" }, { 32.0, "ssfx_quality_medium" }, { 48.0, "ssfx_quality_high" }, { 64.0, "ssfx_quality_veryhigh" } }, def = 32.0, restart = true },
+        { id = "res_mcm", type = "track", val = 2, min = 0.15, max = 1.0, step = 0.05, def = 0.15 },
+        { id = "distance_mcm", type = "track", val = 2, min = 20.0, max = 300.0, step = 1.0, def = 150.0 },
+
+        { id = "line", type = "line" },
+
+        { id = "blur_mcm", type = "track", val = 2, min = 0.0, max = 1.0, step = 0.1, def = 0.5 },
+        { id = "vibrance_mcm", type = "track", val = 2, min = 0.0, max = 2.0, step = 0.1, def = 0.7 },
+
+        { id = "line", type = "line" },
+
+        { id = "global_int_mcm", type = "track", val = 2, min = 0.0, max = 4.0, step = 0.1, def = 1.0 },
+        { id = "hud_int_mcm", type = "track", val = 2, min = 0.0, max = 1.0, step = 0.1, def = 1.0 },
+        { id = "flora_int_mcm", type = "track", val = 2, min = 0.0, max = 1.0, step = 0.1, def = 0.3 },
+    } }
+
+    return op, "ssfx_module"
+end
+
+local ssfx_pp_mcm = ensure_module("ssfx_pp_mcm")
+function ssfx_pp_mcm.on_mcm_load()
+    local op = { id = "ssfx_pp", sh = false, gr = {
+        { id = "ssfx_bloom", sh = true, precondition = { ssfx_001_mcm.ssfx_module_installed, ssfx_pp_bloom }, output = "ui_mcm_ssfx_module_not_installed", gr = {
+            { id = "title", type = "slide", link = "ui_options_slider_player", text = "ui_mcm_ssfx_module_bloom_title", size = { 512, 50 }, spacing = 20 },
+
+            { id = "use_weather_mcm", type = "check", val = 1, def = false },
+
+            { id = "line", type = "line" },
+
+            { id = "threshold_mcm", type = "track", val = 2, min = 1.0, max = 10.0, step = 0.1, def = 5.5 },
+            { id = "exposure_mcm", type = "track", val = 2, min = 1.0, max = 100.0, step = 0.1, def = 1.3 },
+
+            { id = "line", type = "line" },
+
+            { id = "blur_mcm", type = "track", val = 2, min = 1.0, max = 5.0, step = 0.1, def = 1.0 },
+
+            { id = "line", type = "line" },
+
+            { id = "vibrance_mcm", type = "track", val = 2, min = 0.0, max = 10.0, step = 0.1, def = 0.3 },
+            { id = "sky_mcm", type = "track", val = 2, min = 0.0, max = 10.0, step = 0.1, def = 1.3 },
+
+            { id = "line", type = "line" },
+
+            { id = "lens_mcm", type = "track", val = 2, min = 0.0, max = 10.0, step = 0.1, def = 0.0 },
+            { id = "dirt_mcm", type = "track", val = 2, min = 0.0, max = 10.0, step = 0.1, def = 0.0 },
+        } },
+
+        { id = "ssfx_motionblur", sh = true, precondition = { ssfx_001_mcm.ssfx_module_installed, ssfx_pp_mblur }, output = "ui_mcm_ssfx_module_not_installed", gr = {
+            { id = "title", type = "slide", link = "ui_options_slider_player", text = "ui_mcm_ssfx_module_motionblur_title", size = { 512, 50 }, spacing = 20 },
+
+            { id = "quality_mcm", type = "list", val = 2, content = { { 4.0, "ssfx_quality_very_low" }, { 6.0, "ssfx_quality_low" }, { 8.0, "ssfx_quality_medium" }, { 12.0, "ssfx_quality_high" } }, def = 4.0 },
+
+            { id = "line", type = "line" },
+
+            { id = "intensity_mcm", type = "track", val = 2, min = 0.0, max = 2.0, step = 0.1, def = 0.0 },
+            { id = "camera_mcm", type = "track", val = 2, min = 0.0, max = 1.0, step = 0.1, def = 0.0 },
+
+            { id = "hudonly_mcm", type = "check", val = 1, def = true },
+        } },
+
+        { id = "ssfx_taa", sh = true, precondition = { ssfx_001_mcm.ssfx_module_installed, ssfx_pp_0taa }, output = "ui_mcm_ssfx_module_not_installed", gr = {
+            { id = "title", type = "slide", link = "ui_options_slider_player", text = "ui_mcm_ssfx_module_taa_title", size = { 512, 50 }, spacing = 20 },
+
+            { id = "enabled_mcm", type = "check", val = 1, def = true },
+
+            { id = "line", type = "line" },
+
+            { id = "sharpness_mcm", type = "track", val = 2, min = 0.0, max = 1.0, step = 0.1, def = 0.2 },
+            { id = "jitter_mcm", type = "track", val = 2, min = 0.0, max = 1.0, step = 0.1, def = 0.3 },
+        } },
+    } }
+
+    return op, "ssfx_module"
+end
+
+local ssfx_sss_settings = ensure_module("ssfx_sss_settings")
+ssfx_sss_settings.ssfx_default_settings = {
+    ["quality_dir"] = 18,
+    ["quality_point"] = 4,
+    ["enable_dir"] = 1.0,
+    ["enable_point"] = 1.0,
+    ["len_dir"] = 1.8,
+    ["len_point"] = 1.0,
+}
+
+local ssfx_sss_mcm = ensure_module("ssfx_sss_mcm")
+function ssfx_sss_mcm.on_mcm_load()
+    local op = { id = "sss", sh = true, text = "ui_mcm_ssfx_module_sss", gr = {
+        { id = "title", type = "slide", link = "ui_options_slider_player", text = "ui_mcm_ssfx_module_sss_title", size = { 512, 50 }, spacing = 20 },
+
+        { id = "quality_dir_mcm", type = "list", val = 2, content = { { 6.0, "ssfx_quality_low" }, { 12.0, "ssfx_quality_medium" }, { 18.0, "ssfx_quality_high" }, { 24.0, "ssfx_quality_veryhigh" } }, def = 18.0, restart = true },
+        { id = "quality_point_mcm", type = "list", val = 2, content = { { 2.0, "ssfx_quality_low" }, { 4.0, "ssfx_quality_medium" }, { 6.0, "ssfx_quality_high" }, { 8.0, "ssfx_quality_veryhigh" } }, def = 4.0, restart = true },
+
+        { id = "line", type = "line" },
+
+        { id = "enable_dir_mcm", type = "check", val = 1, def = true },
+        { id = "enable_point_mcm", type = "check", val = 1, def = true },
+
+        { id = "line", type = "line" },
+
+        { id = "len_dir_mcm", type = "track", val = 2, min = 0.1, max = 2.0, step = 0.1, def = 1.8 },
+        { id = "len_point_mcm", type = "track", val = 2, min = 0.1, max = 2.0, step = 0.1, def = 1.0 },
+    } }
+
+    return op, "ssfx_module"
+end
+
+local ssfx_terrain = ensure_module("ssfx_terrain")
+do
+    local ssfx_terrain_distance = 18.0
+
+    local ssfx_terrain_pom_quality = 24.0
+    local ssfx_terrain_pom_refine = false
+
+    local ssfx_terrain_pom_range = 20.0
+    local ssfx_terrain_pom_height = 0.05
+    local ssfx_terrain_pom_water = 0.6
+
+    local ssfx_terrain_grass_align = true
+    local ssfx_terrain_grass_slope = 90.0
+
+    function ssfx_terrain.apply_terrain_settings()
+        get_console():execute("ssfx_terrain_quality (" .. ssfx_terrain_distance .. ",0,0,0)")
+
+        get_console():execute("ssfx_terrain_grass_align " .. (ssfx_terrain_grass_align and 1 or 0))
+        get_console():execute("ssfx_terrain_grass_slope " .. ssfx_terrain_grass_slope)
+
+        get_console():execute("ssfx_terrain_pom (" .. ssfx_terrain_pom_quality .. "," .. ssfx_terrain_pom_range .. "," .. ssfx_terrain_pom_height .. "," .. ssfx_terrain_pom_water .. ")")
+        get_console():execute("ssfx_terrain_pom_refine " .. (ssfx_terrain_pom_refine and 1 or 0))
+    end
+
+    function ssfx_terrain.on_option_change()
+        ssfx_terrain_distance = ssfx_001_mcm.ssfx_get_setting("terrain", "distance", ssfx_terrain_settings)
+
+        ssfx_terrain_pom_quality = ssfx_001_mcm.ssfx_get_setting("terrain", "pom_quality", ssfx_terrain_settings)
+        ssfx_terrain_pom_refine = ssfx_001_mcm.ssfx_get_setting("terrain", "pom_refine", ssfx_terrain_settings)
+
+        ssfx_terrain_pom_range = ssfx_001_mcm.ssfx_get_setting("terrain", "pom_range", ssfx_terrain_settings)
+        ssfx_terrain_pom_height = ssfx_001_mcm.ssfx_get_setting("terrain", "pom_height", ssfx_terrain_settings)
+        ssfx_terrain_pom_water = ssfx_001_mcm.ssfx_get_setting("terrain", "pom_water_level", ssfx_terrain_settings)
+
+        ssfx_terrain_grass_align = ssfx_001_mcm.ssfx_get_setting("terrain", "grass_align", ssfx_terrain_settings)
+        ssfx_terrain_grass_slope = ssfx_001_mcm.ssfx_get_setting("terrain", "grass_slope", ssfx_terrain_settings)
+
+        ssfx_terrain_grass_slope = ssfx_terrain_grass_slope / 90
+
+        ssfx_terrain.apply_terrain_settings()
+    end
+
+    function ssfx_terrain.on_game_start()
+        RegisterScriptCallback("on_option_change", ssfx_terrain.on_option_change)
+        ssfx_terrain.on_option_change()
+    end
+end
+
+local ssfx_terrain_mcm = ensure_module("ssfx_terrain_mcm")
+function ssfx_terrain_mcm.on_mcm_load()
+    local op = { id = "terrain", sh = true, text = "ui_mcm_ssfx_module_terrain", gr = {
+        { id = "title", type = "slide", link = "ui_options_slider_player", text = "ui_mcm_ssfx_module_terrain_title", size = { 512, 50 }, spacing = 20 },
+
+        { id = "distance_mcm", type = "track", val = 2, min = 0.0, max = 40.0, step = 1.0, def = 18.0 },
+
+        { id = "line", type = "line" },
+
+        { id = "pom_quality_mcm", type = "list", val = 2, content = { { 12.0, "ssfx_quality_low" }, { 24.0, "ssfx_quality_medium" }, { 36.0, "ssfx_quality_high" } }, def = 24.0 },
+        { id = "pom_refine_mcm", type = "check", val = 1, def = false, restart = true },
+
+        { id = "line", type = "line" },
+
+        { id = "pom_range_mcm", type = "track", val = 2, min = 0.0, max = 40.0, step = 0.1, def = 20 },
+        { id = "pom_height_mcm", type = "track", val = 2, min = 0.01, max = 0.1, step = 0.01, def = 0.05 },
+        { id = "pom_water_level_mcm", type = "track", val = 2, min = 0.0, max = 2.0, step = 0.1, def = 0.6 },
+
+        { id = "line", type = "line" },
+
+        { id = "grass_align_mcm", type = "check", val = 1, def = true },
+        { id = "grass_slope_mcm", type = "track", val = 2, min = 0.0, max = 90.0, step = 1.0, def = 90.0 },
+    } }
+
+    return op, "ssfx_module"
+end
+
+local ssfx_wetness = ensure_module("ssfx_wetness")
+do
+    ssfx_wetness.module_installed = true
+
+    local ssfx_gloss_auto = true
+    local ssfx_gloss_auto_max = 0.85
+
+    local ssfx_gloss_min = 0.53
+    local ssfx_gloss_max = 0.83
+
+    local ssfx_spec_int = 0.35
+    local ssfx_spec_color = 0.5
+
+    local ssfx_wet_buildup = 0
+    local ssfx_wet_drying = 0
+
+    local ssfx_wet_ripples_size = 0
+    local ssfx_wet_ripples_speed = 0
+    local ssfx_wet_ripples_minspeed = 0
+    local ssfx_wet_ripples_int = 0
+
+    local ssfx_wet_waterfall_size = 0
+    local ssfx_wet_waterfall_speed = 0
+    local ssfx_wet_waterfall_minspeed = 0
+    local ssfx_wet_waterfall_int = 0
+
+    local ssfx_wet_res = 0
+    local ssfx_wet_dist = 0
+
+    local function update_rain()
+        if ssfx_gloss_auto then
+            local wetness_gloss = ssfx_gloss_min + (math.max(ssfx_gloss_auto_max - ssfx_gloss_min, 0) * level.rain_wetness())
+            get_console():execute("ssfx_gloss_factor " .. (wetness_gloss * 0.96))
+        end
+    end
+
+    function ssfx_wetness.apply_extra_settings()
+        get_console():execute("ssfx_lightsetup_1 (" .. ssfx_spec_int .. "," .. ssfx_spec_color .. ",0,0)")
+        get_console():execute("ssfx_gloss_minmax (" .. ssfx_gloss_min .. "," .. ssfx_gloss_max .. ",0)")
+
+        if not ssfx_gloss_auto then
+            get_console():execute("ssfx_gloss_factor 0")
+        end
+
+        get_console():execute("ssfx_wetness_multiplier (" .. ssfx_wet_buildup .. "," .. ssfx_wet_drying .. ",0)")
+
+        local ripples_size = math.max(2.0 - ssfx_wet_ripples_size, 0.01)
+        get_console():execute("ssfx_wetsurfaces_1 (" .. ripples_size .. "," .. ssfx_wet_ripples_speed .. "," .. ssfx_wet_ripples_minspeed .. "," .. ssfx_wet_ripples_int .. ")")
+
+        local waterfall_size = math.max(2.0 - ssfx_wet_waterfall_size, 0.01)
+        get_console():execute("ssfx_wetsurfaces_2 (" .. waterfall_size .. "," .. ssfx_wet_waterfall_speed .. "," .. ssfx_wet_waterfall_minspeed .. "," .. ssfx_wet_waterfall_int .. ")")
+
+        local wet_resolution = math.pow(2, ssfx_wet_res + 6)
+        get_console():execute("r3_dynamic_wet_surfaces_sm_res " .. wet_resolution)
+        get_console():execute("r3_dynamic_wet_surfaces_far " .. ssfx_wet_dist)
+    end
+
+    function ssfx_wetness.on_option_change()
+        local module_id = "ssfx_wetness/ssfx_gloss"
+
+        ssfx_gloss_min = ssfx_001_mcm.ssfx_get_setting(module_id, "min_gloss", ssfx_wetness_settings)
+        ssfx_gloss_max = ssfx_001_mcm.ssfx_get_setting(module_id, "max_gloss", ssfx_wetness_settings)
+
+        ssfx_gloss_auto = ssfx_001_mcm.ssfx_get_setting(module_id, "auto_gloss", ssfx_wetness_settings)
+        ssfx_gloss_auto_max = ssfx_001_mcm.ssfx_get_setting(module_id, "auto_gloss_max", ssfx_wetness_settings)
+
+        ssfx_spec_int = ssfx_001_mcm.ssfx_get_setting(module_id, "specular_int", ssfx_wetness_settings)
+        ssfx_spec_color = ssfx_001_mcm.ssfx_get_setting(module_id, "specular_color", ssfx_wetness_settings)
+
+        local module_id_2 = "ssfx_wetness/ssfx_wet_surf"
+
+        ssfx_wet_buildup = ssfx_001_mcm.ssfx_get_setting(module_id_2, "buildup_speed", ssfx_wetness_settings)
+        ssfx_wet_drying = ssfx_001_mcm.ssfx_get_setting(module_id_2, "dry_speed", ssfx_wetness_settings)
+
+        ssfx_wet_ripples_size = ssfx_001_mcm.ssfx_get_setting(module_id_2, "ripples_size", ssfx_wetness_settings)
+        ssfx_wet_ripples_speed = ssfx_001_mcm.ssfx_get_setting(module_id_2, "ripples_speed", ssfx_wetness_settings)
+        ssfx_wet_ripples_minspeed = ssfx_001_mcm.ssfx_get_setting(module_id_2, "ripples_min_speed", ssfx_wetness_settings)
+        ssfx_wet_ripples_int = ssfx_001_mcm.ssfx_get_setting(module_id_2, "ripples_intensity", ssfx_wetness_settings)
+
+        ssfx_wet_waterfall_size = ssfx_001_mcm.ssfx_get_setting(module_id_2, "waterfall_size", ssfx_wetness_settings)
+        ssfx_wet_waterfall_speed = ssfx_001_mcm.ssfx_get_setting(module_id_2, "waterfall_speed", ssfx_wetness_settings)
+        ssfx_wet_waterfall_minspeed = ssfx_001_mcm.ssfx_get_setting(module_id_2, "waterfall_min_speed", ssfx_wetness_settings)
+        ssfx_wet_waterfall_int = ssfx_001_mcm.ssfx_get_setting(module_id_2, "waterfall_intensity", ssfx_wetness_settings)
+
+        ssfx_wet_res = ssfx_001_mcm.ssfx_get_setting(module_id_2, "cover_res", ssfx_wetness_settings)
+        ssfx_wet_dist = ssfx_001_mcm.ssfx_get_setting(module_id_2, "cover_distance", ssfx_wetness_settings)
+
+        if ssfx_gloss_auto then
+            RegisterScriptCallback("actor_on_update", update_rain)
+        else
+            UnregisterScriptCallback("actor_on_update", update_rain)
+        end
+
+        ssfx_wetness.apply_extra_settings()
+    end
+
+    function ssfx_wetness.on_game_start()
+        RegisterScriptCallback("on_option_change", ssfx_wetness.on_option_change)
+        ssfx_wetness.on_option_change()
+    end
+end
+
+local ssfx_wetness_mcm = ensure_module("ssfx_wetness_mcm")
+function ssfx_wetness_mcm.on_mcm_load()
+    local op = { id = "ssfx_wetness", sh = false, gr = {
+        { id = "ssfx_gloss", sh = true, gr = {
+            { id = "title", type = "slide", link = "ui_options_slider_player", text = "ui_mcm_ssfx_module_gloss_title", size = { 512, 50 }, spacing = 20 },
+
+            { id = "min_gloss_mcm", type = "track", val = 2, min = 0.01, max = 1.0, step = 0.01, def = 0.53 },
+            { id = "max_gloss_mcm", type = "track", val = 2, min = 0.01, max = 1.0, step = 0.01, def = 0.83 },
+
+            { id = "line", type = "line" },
+
+            { id = "auto_gloss_mcm", type = "check", val = 1, def = true },
+            { id = "auto_gloss_max_mcm", type = "track", val = 2, min = 0.01, max = 1.0, step = 0.01, def = 0.85 },
+
+            { id = "line", type = "line" },
+
+            { id = "specular_int_mcm", type = "track", val = 2, min = 0.0, max = 1.0, step = 0.01, def = 0.35 },
+            { id = "specular_color_mcm", type = "track", val = 2, min = 0.0, max = 1.0, step = 0.1, def = 0.5 },
+        } },
+
+        { id = "ssfx_wet_surf", sh = true, gr = {
+            { id = "title", type = "slide", link = "ui_options_slider_player", text = "ui_mcm_ssfx_module_wet_surf_title", size = { 512, 50 }, spacing = 20 },
+
+            { id = "buildup_speed_mcm", type = "track", val = 2, min = 0.1, max = 20.0, step = 0.1, def = 1.0 },
+            { id = "dry_speed_mcm", type = "track", val = 2, min = 0.1, max = 20.0, step = 0.1, def = 0.3 },
+
+            { id = "line", type = "line" },
+
+            { id = "ripples_size_mcm", type = "track", val = 2, min = 0.01, max = 1.9, step = 0.01, def = 1.5 },
+            { id = "ripples_speed_mcm", type = "track", val = 2, min = 0.01, max = 2.0, step = 0.01, def = 1.4 },
+            { id = "ripples_min_speed_mcm", type = "track", val = 2, min = 0.01, max = 2.0, step = 0.01, def = 0.7 },
+            { id = "ripples_intensity_mcm", type = "track", val = 2, min = 0.01, max = 2.0, step = 0.01, def = 1.25 },
+
+            { id = "waterfall_size_mcm", type = "track", val = 2, min = 0.01, max = 2.0, step = 0.01, def = 1.2 },
+            { id = "waterfall_speed_mcm", type = "track", val = 2, min = 0.01, max = 2.0, step = 0.01, def = 1.5 },
+            { id = "waterfall_min_speed_mcm", type = "track", val = 2, min = 0.01, max = 2.0, step = 0.01, def = 0.2 },
+            { id = "waterfall_intensity_mcm", type = "track", val = 2, min = 0.01, max = 1.0, step = 0.01, def = 0.35 },
+
+            { id = "line", type = "line" },
+
+            { id = "cover_res_mcm", type = "list", val = 2, content = { { 0.0, "ssfx_cover_64" }, { 1.0, "ssfx_cover_128" }, { 2.0, "ssfx_cover_256" }, { 3.0, "ssfx_cover_512" }, { 4.0, "ssfx_cover_1024" }, { 5.0, "ssfx_cover_2048" } }, def = 1.0 },
+            { id = "cover_distance_mcm", type = "track", val = 2, min = 30.0, max = 100.0, step = 1.0, def = 30 },
+        } },
+    } }
+
+    return op, "ssfx_module"
+end
+
+local function patch_mcm_defaults(name, group, defs)
+    local module = _G[name]
+    local original = module and module.on_mcm_load
+    if not original then return end
+
+    module.on_mcm_load = function(...)
+        local opts, extra = original(...)
+        local page = opts
+        if group then
+            page = opts and opts.gr and opts.gr[group]
+        end
+        set_defs(page, defs)
+        return opts, extra
+    end
+end
+
+local mcm_defaults = {
+    { "ssfx_ao_mcm", nil, {
+        quality_mcm = 4,
+        res_mcm = 1,
+        distance_mcm = 150,
+        blur_mcm = 1,
+        radius_mcm = 2.1,
+        max_occ_mcm = 0.2,
+        global_int_mcm = 1.0,
+        hud_int_mcm = 0.8,
+        flora_int_mcm = 0.4,
+    } },
+    { "ssfx_pp_mcm", 1, {
+        use_weather_mcm = false,
+        threshold_mcm = 5.5,
+        exposure_mcm = 1.3,
+        blur_mcm = 1,
+        vibrance_mcm = 0.3,
+        sky_mcm = 1.3,
+        lens_mcm = 0,
+        dirt_mcm = 0,
+    } },
+    { "ssfx_rain_mcm", 1, {
+        quality_mcm = 2,
+        max_drops_mcm = 3500,
+        radius_mcm = 25,
+        speed_mcm = 2.0,
+        len_mcm = 4.2,
+        width_mcm = 0.1,
+        alpha_mcm = 0.8,
+        brightness_mcm = 0.35,
+        refraction_mcm = 3,
+        reflection_mcm = 1,
+        splash_alpha_mcm = 0.5,
+        splash_refraction_mcm = 1.5,
+    } },
+    { "ssfx_shadows_mcm", nil, {
+        lod_quality_mcm = 1,
+        lod_min_mcm = 1,
+        lod_max_mcm = 0,
+        volumetric_force_mcm = false,
+        volumetric_int_mcm = 0.8,
+        volumetric_quality_mcm = 4.0,
+    } },
+    { "ssfx_ssr_mcm", nil, {
+        quality_mcm = 0,
+        render_scale_mcm = 1,
+        blur_mcm = 0.35,
+        use_noise_mcm = true,
+        general_int_mcm = 1,
+        sky_int_mcm = 2,
+        weapon_int_mcm = 0.5,
+        weapon_int_max_mcm = 0.02,
+    } },
+    { "ssfx_weapons_dof_mcm", nil, {
+        aim_fadestart_mcm = 0,
+        aim_fadelen_mcm = 0,
+        aim_blur_mcm = 0,
+        aim_edgeblur_mcm = 0,
+        fadestart_mcm = 0,
+        fadelen_mcm = 0,
+        blur_mcm = 0,
+        edgeblur_mcm = 0,
+        reloading_mcm = false,
+        pda_mcm = false,
+        inventory_mcm = false,
+        fdda_mcm = false,
+        looting_mutant_mcm = false,
+    } },
+    { "ssfx_wind_mcm", nil, {
+        min_speed_mcm = 0.45,
+        grass_speed_mcm = 12.1,
+        grass_turbulence_mcm = 1.7,
+        grass_push_mcm = 1.3,
+        grass_wave_mcm = 0.9,
+        trees_speed_mcm = 11.5,
+        trees_trunk_mcm = 0.2,
+        trees_bend_mcm = 0.55,
+    } },
+}
+
+for _, patch in ipairs(mcm_defaults) do
+    patch_mcm_defaults(patch[1], patch[2], patch[3])
+end
+
+function on_game_start()
+    ssfx_florafixes.on_game_start()
+    ssfx_terrain.on_game_start()
+    ssfx_wetness.on_game_start()
+end

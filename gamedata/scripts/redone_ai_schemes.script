@@ -30,6 +30,29 @@ local aggressive      = (aggression_mode == 1)
 local balanced        = (aggression_mode == 2)
 local defensive       = (aggression_mode == 3)
 -------------------------------
+local coward_min, coward_max
+local dumb_min, dumb_max
+
+local function update_aggression_thresholds()
+        if aggression_mode == 1 then
+                coward_min, coward_max = 1500, 5000
+                dumb_min, dumb_max     = 10000, 15000
+
+        elseif aggression_mode == 2 then
+                coward_min, coward_max = 2500, 5000
+                dumb_min, dumb_max     = 7500, 10000
+
+        elseif aggression_mode == 3 then
+                coward_min, coward_max = 3500, 5000
+                dumb_min, dumb_max     = 5000, 7500
+        else
+                coward_min, coward_max = 2500, 5000
+                dumb_min, dumb_max     = 7500, 10000
+        end
+end
+
+update_aggression_thresholds()
+-------------------------------
 local meta_debug_mode = stealth_mcm.get_config("debug_meta")
 local DEBUG_META_OFF         = (meta_debug_mode == 1)
 local DEBUG_META_TRACE_CLEAN = (meta_debug_mode == 2)
@@ -100,6 +123,7 @@ function on_option_change()
         aggressive             = (aggression_mode == 1)
         balanced               = (aggression_mode == 2)
         defensive              = (aggression_mode == 3)
+        update_aggression_thresholds()
         meta_debug_mode        = stealth_mcm.get_config("debug_meta")
         DEBUG_META_OFF         = (meta_debug_mode == 1)
         DEBUG_META_TRACE_CLEAN = (meta_debug_mode == 2)
@@ -146,7 +170,7 @@ end
 -----------------------------------------------------------------------------
 -- NPC TABLES\TIME
 -----------------------------------------------------------------------------
-math.randomseed(os.time())
+--math.randomseed(os.time())
 math.random(); math.random(); math.random()
 local rnd  = math_random(150000,550000)
 local rnd2 = math_random(250000,550000)
@@ -163,6 +187,7 @@ local time_table2  = {}
 local time_table3  = {}
 local time_table4  = {}
 local time_table5  = {}
+
 ------------------------------------------------
 -- DEBUG
 local LAST_META_LOG = {}
@@ -209,7 +234,7 @@ local SAFE_EMPTY = setmetatable({}, {
 ------------------------------------------------
 -- SWITCH TABLE FACTORY
 ------------------------------------------------
-local CLEANUP_INTERVAL = 100
+local CLEANUP_INTERVAL = 25
 local function create_swicth_table(scheme_id)
 	local access_counter = 0
 
@@ -342,22 +367,6 @@ local swicth_table5 = swicth_tables[5]
 -----------------------------------------------------------------------------
 -- NPC SCHEMES
 -----------------------------------------------------------------------------
-local coward_min, coward_max
-local dumb_min, dumb_max
-
-if aggression_mode == 1 then
-        coward_min, coward_max = 1500, 5000
-        dumb_min, dumb_max     = 10000, 15000
-
-elseif aggression_mode == 2 then
-        coward_min, coward_max = 2500, 5000
-        dumb_min, dumb_max     = 7500, 10000
-
-elseif aggression_mode == 3 then
-        coward_min, coward_max = 3500, 5000
-        dumb_min, dumb_max     = 5000, 7500
-end
-
 function coward_npc(id, npc)
         if not npc then
                 npc = db.storage[id] and db.storage[id].object
@@ -804,7 +813,7 @@ function scheme_cover_coward(enemy, npc, actor)
                 	set_table_memory(npc, enemy, table_npc, "coward")
                 end
 
-                local is_actor_target = enemy and actor
+                local is_actor_target = enemy and actor and enemy:id() == actor:id()
                 if not is_actor_target then
                         if (not npc_see_enemy and enemy_see_npc) then
                                 return false
@@ -820,7 +829,7 @@ function scheme_cover_coward(enemy, npc, actor)
                         end
                 end
 
-                if sniper_combat_enabled and is_actor_sniper then
+                if is_actor_target and sniper_combat_enabled() and is_actor_sniper then
                         if dist >= 500 and t1 ~= nil then
                 	        if swicth_table[npc_id]["priority"].value >= 0.05 and enemy_health < 0.5 then
                 		        return true
@@ -1023,7 +1032,7 @@ function scheme_camper_coward(enemy, npc, actor)
                 	set_table_memory(npc, enemy, table_npc, "coward")
                 end
 
-                local is_actor_target = enemy and actor
+                local is_actor_target = enemy and actor and enemy:id() == actor:id()
                 if not is_actor_target then
                         if (not npc_see_enemy and enemy_see_npc) then
                                 return false
@@ -1039,7 +1048,7 @@ function scheme_camper_coward(enemy, npc, actor)
                         end
                 end
 
-                if sniper_combat_enabled and is_actor_sniper then
+                if is_actor_target and sniper_combat_enabled() and is_actor_sniper then
                         if dist >= 500 and t2 ~= nil then
                 	        if swicth_table2[npc_id]["priority"].value >= 0.05 and enemy_health < 0.5 then
                 		        return false
@@ -1248,7 +1257,7 @@ function scheme_cover_dumb(enemy, npc, actor)
                 	set_table_memory(npc, enemy, table_npc, "coward")
                 end
 
-                local is_actor_target = enemy and actor
+                local is_actor_target = enemy and actor and enemy:id() == actor:id()
                 if not is_actor_target then
                         if (not npc_see_enemy and enemy_see_npc) then
                                 return false
@@ -1264,7 +1273,7 @@ function scheme_cover_dumb(enemy, npc, actor)
                         end
                 end
 
-                if sniper_combat_enabled and is_actor_sniper then
+                if is_actor_target and sniper_combat_enabled() and is_actor_sniper then
                         if dist >= 500 and t3 ~= nil then
                 	        if swicth_table3[npc_id]["priority"].value >= 0.05 and enemy_health < 0.5 then
                 		        return true
@@ -1467,7 +1476,7 @@ function scheme_camper_dumb(enemy, npc, actor)
                 	set_table_memory(npc, enemy, table_npc, "coward")
                 end
 
-                local is_actor_target = enemy and actor
+                local is_actor_target = enemy and actor and enemy:id() == actor:id()
                 if not is_actor_target then
                         if (not npc_see_enemy and enemy_see_npc) then
                                 return false
@@ -1483,7 +1492,7 @@ function scheme_camper_dumb(enemy, npc, actor)
                         end
                 end
 
-                if sniper_combat_enabled and is_actor_sniper then
+                if is_actor_target and sniper_combat_enabled() and is_actor_sniper then
                         if dist >= 500 and t4 ~= nil then
                 	        if swicth_table4[npc_id]["priority"].value >= 0.05 and enemy_health < 0.5 then
                 		        return false
@@ -1692,7 +1701,7 @@ function scheme_stupid(enemy, npc, actor)
                 	set_table_memory(npc, enemy, table_npc, "coward")
                 end
 
-                local is_actor_target = enemy and actor
+                local is_actor_target = enemy and actor and enemy:id() == actor:id()
                 if not is_actor_target then
                         if (not npc_see_enemy and enemy_see_npc) then
                                 return false
@@ -1708,7 +1717,7 @@ function scheme_stupid(enemy, npc, actor)
                         end
                 end
 
-                if sniper_combat_enabled and is_actor_sniper then
+                if is_actor_target and sniper_combat_enabled() and is_actor_sniper then
                         if dist >= 500 and t5 ~= nil then
                 	        if swicth_table5[npc_id]["priority"].value >= 0.05 and enemy_health < 0.5 then
                 		        return true

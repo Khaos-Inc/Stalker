@@ -1,391 +1,456 @@
-;------------------------------------------------------------------------------------------------
-[wpn_beretta]:identity_immunities,weapon_probability,default_weapon_params,wpn_beretta_sounds
-GroupControlSection                      = spawn_group
-$npc                                     = on
-$prefetch                                = 8
-$spawn                                   = "weapons\beretta"
-scheduled                                = off
-cform                                    = skeleton
-hud_fov                                  = 0.65
-class                                    = WP_PM
-slot                                     = 1
-animation_slot                           = 1
-ef_weapon_type                           = 5
-hand_dependence                          = 1
-single_handed                            = 1
-
-default_to_ruck                          = false
-sprint_allowed                           = true
-
-inv_grid_height                          = 1
-inv_grid_width                           = 2
-inv_grid_x                               = 37
-inv_grid_y                               = 78
-inv_name                                 = st_wpn_beretta
-inv_name_short                           = st_wpn_beretta
-description                              = st_wpn_beretta_descr
-
-kind                                     = w_pistol
-inv_weight                               = 0.95
-cost                                     = 7120
-repair_type                              = pistol
-
-hud                                      = wpn_beretta_hud
-visual                                   = dynamics\weapons\wpn_beretta92fs\wpn_beretta92fs.ogf
-position                                 = -0.021, -0.085, 0.0
-orientation                              = 0, 0, 0
-fire_point                               = 0.0, 0.133, 0.161
-fire_point2                              = 0.0, 0.133, 0.161
-ph_mass                                  = 1
-
-flame_particles                          = weapons\generic_weapon03
-smoke_particles                          = weapons\generic_shoot_00
-grenade_flame_particles                  = weapons\generic_weapon01
-
-shell_point		 	                     = 0.0, 0.133, 0.047
-shell_dir		 	                     = 0.0, 0.0, 0.4
-shell_particles	 		                 = weapons\9x19
-
-light_disabled                           = false
-light_color                              = 0.6, 0.5, 0.3
-light_range                              = 3.0
-light_time                               = 0.2
-light_var_color                          = 0.05
-light_var_range                          = 0.5
-
-upgrades                                 = up_gr_firstab_beretta, up_gr_seconab_beretta, up_gr_thirdab_beretta, up_gr_fourtab_beretta, up_gr_fifthab_beretta, up_gr_fifthcd_beretta
-installed_upgrades                       =
-upgrade_scheme                           = upgrade_scheme_beretta
-upgr_icon_x                              = 1300
-upgr_icon_y                              = 700
-upgr_icon_width                          = 150
-upgr_icon_height                         = 100
-
-fire_modes                               = 1
-ammo_class                               = ammo_9x19_fmj, ammo_9x19_fmj_bad, ammo_9x19_fmj_verybad, ammo_9x19_pbp, ammo_9x19_pbp_bad, ammo_9x19_pbp_verybad, ammo_9x19_ap, ammo_9x19_ap_bad, ammo_9x19_ap_verybad
-ammo_elapsed                             = 15
-ammo_mag_size                            = 15
-startup_ammo                             = 90
-
-scope_status                             = 0
-scope_name                               = wpn_addon_scope
-scope_x                                  = 47
-scope_y                                  = 0
-scope_zoom_factor                        = 0
-
-silencer_name                            = wpn_sil_9mm
-silencer_status                          = 2
-silencer_x                               = 70
-silencer_y                               = -17
-silencer_light_color                     = 0.6, 0.5, 0.3
-silencer_light_range                     = 0.01
-silencer_light_time                      = 0.2
-silencer_light_var_color                 = 0.05
-silencer_light_var_range                 = 0.5
-silencer_smoke_particles                 = weapons\generic_shoot_00
-
-grenade_class                            = ammo_vog-25, ammo_vog-25_bad, ammo_vog-25_verybad
-grenade_launcher_status                  = 0
-launch_speed                             = 0
-
-hit_impulse                              = 24
-hit_power                                = 0.46, 0.46, 0.46, 0.46
-hit_type                                 = fire_wound
-fire_distance                            = 400
-bullet_speed                             = 362
-rpm                                      = 325
-rpm_empty_click                          = 120
-
-use_aim_bullet                           = false
-time_to_aim                              = 0.0 ;  1.0
-zoom_dof                                 = -1000, 1.0, 1000
-zoom_enabled                             = true
-zoom_rotate_time                         = 0.25
-reload_dof                               = 0.0, 0.5, 5, 1.7
-control_inertion_factor = 1.0f
-crosshair_inertion                       = 2.8
-fire_dispersion_base                     = 0.48
-fire_dispersion_condition_factor         = 0.001
-
-misfire_probability                      = 0.005
-misfire_start_condition                  = 0.7 ;  0.89
-misfire_start_prob                       = 0.007
-misfire_end_condition                    = 0.14
-misfire_end_prob                         = 0.11
-
-condition_queue_shot_dec                 = 0.0016
-condition_shot_dec                       = 0.0016
-
-cam_return                               = 0
-cam_relax_speed                          = 8
-cam_dispersion                           = 2.0
-cam_dispersion_frac                      = 1.1
-cam_dispersion_inc                       = 0.0
-cam_max_angle                            = 50.0
-cam_max_angle_horz                       = 50.0
-cam_step_angle_horz                      = 0.42
-zoom_cam_dispersion                      = 1.5
-
-
-snd_draw					                                      = weapons\beretta\beretta_draw
-snd_holster					                                      = weapons\pistol_holster
-snd_empty					                                      = weapons\beretta\beretta_empty
-snd_reload					                                      = weapons\beretta\beretta_reload
-snd_reload_empty                                                  = weapons\beretta\beretta_reload_full
-snd_reload_misfire                                                = weapons\beretta\grach_revival
-snd_close					                                      = weapons\beretta\beretta_close
-snd_silncer_shot				                                  = weapons\beretta\beretta_shot_sil
-
-
-PDM_disp_accel_factor                    = 1.055
-PDM_disp_base                            = 0.65
-PDM_disp_crouch                          = 1.0
-PDM_disp_crouch_no_acc                   = 1.0
-PDM_disp_vel_factor                      = 1.05
-
-cam_relax_speed_ai                       = 360
-holder_fov_modifier                      = 1.0
-holder_range_modifier                    = 1.0
-min_radius                               = 0
-max_radius                               = 500
-hit_probability_gd_novice                = 1.00
-hit_probability_gd_stalker               = 1.00
-hit_probability_gd_veteran               = 1.00
-hit_probability_gd_master                = 1.00
-
-kill_msg_x                               = 200
-kill_msg_y                               = 153
-kill_msg_width                           = 37
-kill_msg_height                          = 24
-weapon_lower_speed						 = 0.2
-
-[wpn_beretta_hud]:hud_base
-item_visual                              = anomaly_weapons\wpn_beretta92fs\wpn_beretta92fs_hud.ogf
-attach_place_idx                         = 0
-zoom_hide_crosshair                      = true   
-
-item_position               = 0.000318, -0.003976, 0
-item_orientation			= 0, 0, 0
-		
-        hands_orientation                = 1.47, -0.71333, -5.543992
-        hands_orientation_16x9           = 1.47, -0.71333, -5.543992
-        hands_position                   = -0.019436, -0.061725, -0.061497
-        hands_position_16x9              = -0.019436, -0.061725, -0.061497
-
-        aim_hud_offset_pos               = 0.026804, -0.003006, -0.056683
-        aim_hud_offset_pos_16x9          = 0.026804, -0.003006, -0.056683
-        aim_hud_offset_rot               = -0.006406, 0.026136, -0.086202
-        aim_hud_offset_rot_16x9          = -0.006406, 0.026136, -0.086202
-
-lowered_hud_offset_pos           = 0.046401, 0.027462, 0.046365
-lowered_hud_offset_pos_16x9      = 0.046401, 0.027462, 0.046365
-
-lowered_hud_offset_rot           = 0.212509, -0.152878, -0.095673
-lowered_hud_offset_rot_16x9      = 0.212509, -0.152878, -0.095673
-
-gl_hud_offset_pos           = 0, 0, 0
-gl_hud_offset_rot           = 0, 0, 0
-        
-lean_hud_offset_pos         = 0, 0, 0
-lean_hud_offset_rot         = 0, 0, 0
-        
-safemode_anm				= 
-safemode_anm2				= 
-
-anm_hide                                 = 92_hide, idle
-anm_hide_empty                           = 92_hide, idle_empty
-anm_idle                                 = 92_idle, idle
-anm_idle_aim                             = 92_aim, idle
-anm_idle_aim_empty                       = 92_aim, idle_empty
-anm_idle_aim_moving                      = 92_walk, idle, 0.75
-anm_idle_aim_moving_crouch               = 92_walk, idle
-anm_idle_aim_moving_crouch_empty         = 92_walk, idle_empty
-anm_idle_aim_moving_empty                = 92_walk, idle_empty, 0.7
-anm_idle_empty                           = 92_idle, idle_empty
-anm_idle_moving                          = 92_walk, idle
-anm_idle_moving_crouch                   = 92_walk, idle
-anm_idle_moving_crouch_empty             = 92_walk, idle_empty
-anm_idle_moving_empty                    = 92_walk, idle_empty
-anm_idle_sprint                          = 92_sprint, idle
-anm_idle_sprint_empty                    = 92_sprint, idle_empty
-anm_reload                               = 92_reload, beretta_reload
-anm_reload_empty                         = 92_reload_empty, beretta_reload_full
-anm_reload_misfire                       = 92_misfire, beretta_revival
-anm_shot_l                               = 92_shoot, beretta_shoot_empty
-anm_shots                                = 92_shoot, beretta_shoot
-anm_show                                 = 92_draw, idle
-anm_show_empty                           = 92_draw, idle_empty
-anm_shots_aim                            = 92_aim_shoot, beretta_shoot
-anm_shots_aim_l                          = 92_aim_shoot, beretta_shoot_empty
-anm_idle_aim_start                       = 92_aim_start, idle
-anm_idle_aim_end                         = 92_aim_end, idle
-anm_idle_aim_start_empty                 = 92_aim_start, idle_empty
-anm_idle_aim_end_empty                   = 92_aim_end, idle_empty
-
-anm_hide_jammed                        = 92_hide, idle_jammed         
-anm_idle_jammed                        = 92_idle, idle_jammed
-anm_idle_aim_jammed                    = 92_aim, idle_jammed
-anm_idle_aim_moving_jammed             = 92_walk, idle_jammed, 0.75
-anm_idle_aim_moving_crouch_jammed      = 92_walk, idle_jammed,  0.7
-anm_idle_moving_jammed                 = 92_walk, idle_jammed
-anm_idle_moving_crouch_jammed          = 92_walk, idle_jammed, 0.7
-anm_idle_sprint_jammed                 = 92_sprint, idle_jammed
-anm_show_jammed                        = 92_draw, idle_jammed
-anm_idle_aim_start_jammed              = 92_aim_start, idle_jammed
-anm_idle_aim_end_jammed                = 92_aim_end, idle_jammed
-
-
-;--- Переходы спринта---
-
-        anm_sprint_start             = 92_sprint_start, idle
-        anm_sprint_end               = 92_sprint_end, idle
-		anm_sprint_start_empty       = 92_sprint_start, idle_empty
-        anm_sprint_end_empty         = 92_sprint_end, idle_empty
-		anm_sprint_start_jammed      = 92_sprint_start, idle_jammed   
-		anm_sprint_end_jammed        = 92_sprint_end, idle_jammed
-		
-
-;--- Паттерны спринта---
-
-        ts_pattern_sprint_start      = .+, anm_idle_sprint, anm_sprint_start, 1
-        ts_pattern_sprint_end        = anm_idle_sprint, ^anm_idle.*, anm_sprint_end
-        ts_strict_sprint_end_move    = anm_sprint_start, anm_idle_moving, anm_sprint_end  
-
-shell_bone                               = wpn_body
-shell_point                              = 200, 200, 200
-
-fire_bone                                = wpn_body
-fire_point                               = 0, 0.075, 0.3
-
-;------------------------------------------------------------------------------------------------
-[wpn_beretta_alt]:wpn_beretta
-inv_grid_x                               = 43
-inv_name                                 = st_wpn_beretta_alt
-inv_name_short                           = st_wpn_beretta_alt
-
-cost                                     = 8290
-
-hud                                      = wpn_beretta_sk3_hud
-visual                                   = dynamics\weapons\wpn_beretta92fs\wpn_beretta92fs_sk3.ogf
-
-installed_upgrades                       = up_fiftha_beretta
-
-rpm                                      = 363
-
-fire_dispersion_base                     = 0.46
-
-misfire_start_condition                  = 0.7 ;  0.82
-misfire_start_prob                       = 0.007
-misfire_end_condition                    = 0.1
-misfire_end_prob                         = 0.1
-
-condition_queue_shot_dec                 = 0.0015
-condition_shot_dec                       = 0.0015
-
-
-[wpn_beretta_sk3_hud]:wpn_beretta_hud
-item_visual                              = anomaly_weapons\wpn_beretta92fs\wpn_beretta92fs_sk3_hud.ogf
-        aim_hud_offset_pos               = 0.026857, -0.002722, -0.056683
-        aim_hud_offset_pos_16x9          = 0.026857, -0.002722, -0.056683
-;------------------------------------------------------------------------------------------------
-[wpn_beretta_camo]:wpn_beretta
-inv_grid_x                               = 39
-inv_name                                 = st_wpn_beretta_camo
-inv_name_short                           = st_wpn_beretta_camo
-
-cost                                     = 11650
-icons_texture = ui\ui_icon_px4
-
-inv_grid_width     = 2
-inv_grid_height    = 1
-inv_grid_x         = 0
-inv_grid_y         = 1
-
-upgr_icon_path     = ui\ui_icon_px4
-
-upgr_icon_x        = 100
-upgr_icon_y        = 100
-upgr_icon_width    = 150
-upgr_icon_height   = 100
-inv_name                                 = st_wpn_beretta_px4
-inv_name_short                           = st_wpn_beretta_px4
-description                              = st_wpn_beretta_px4_descr
-hud                                      = wpn_beretta_sk1_hud
-visual                                   = dynamics\weapons\wpn_beretta92fs\wpn_beretta92fs_sk1.ogf
-
-installed_upgrades                       = up_fiftha_beretta, up_thirda_beretta, up_thirdd_beretta
-
-fire_dispersion_base                     = 0.4
-
-misfire_start_condition                  = 0.7 ;  0.77
-misfire_start_prob                       = 0.007
-misfire_end_condition                    = 0.09
-misfire_end_prob                         = 0.1
-
-condition_queue_shot_dec                 = 0.0017
-condition_shot_dec                       = 0.0017
-
-
-[wpn_beretta_sk1_hud]:wpn_beretta_hud
-item_visual                              = anomaly_weapons\wpn_beretta92fs\wpn_beretta92fs_sk1_hud.ogf
-        aim_hud_offset_pos               = 0.026273, -0.005207, -0.056683
-        aim_hud_offset_pos_16x9          = 0.026273, -0.005207, -0.056683
-        aim_hud_offset_rot               = -0.016069, 0.026023, -0.086202
-        aim_hud_offset_rot_16x9          = -0.016069, 0.026023, -0.086202
-;------------------------------------------------------------------------------------------------
-[wpn_beretta_modern]:wpn_beretta
-
-cost                                     = 7120
-
-icons_texture = ui\ui_icon_ppp
-
-inv_grid_width     = 2
-inv_grid_height    = 1
-inv_grid_x         = 4
-inv_grid_y         = 0
-
-upgr_icon_path     = ui\ui_icon_ppp
-
-upgr_icon_x        = 300
-upgr_icon_y        = 400
-upgr_icon_width    = 150
-upgr_icon_height   = 100
-
-inv_name                                 = st_wpn_beretta
-inv_name_short                           = st_wpn_beretta
-description                              = st_wpn_beretta_descr
-
-upgrades                                 = up_gr_firstab_beretta, up_gr_seconab_beretta, up_gr_thirdab_beretta, up_gr_fourtab_beretta
-silencer_status                          = 2
-
-
-hud                                      = wpn_beretta_sk2_hud
-visual                                   = dynamics\weapons\wpn_beretta92fs\wpn_beretta92fs_sk2.ogf
-
-rpm                                      = 330
-
-fire_dispersion_base                     = 0.44
-
-misfire_start_condition                  = 0.7 ;  0.8
-misfire_start_prob                       = 0.007
-misfire_end_condition                    = 0.1
-misfire_end_prob                         = 0.1
-
-condition_queue_shot_dec                 = 0.0014
-condition_shot_dec                       = 0.0014
-
-
-[wpn_beretta_sk2_hud]:wpn_beretta_hud
-item_visual                              = anomaly_weapons\wpn_beretta92fs\wpn_beretta92fs_sk2_hud.ogf
-        aim_hud_offset_pos               = 0.026913, 0.001114, -0.056683
-        aim_hud_offset_pos_16x9          = 0.026913, 0.001114, -0.056683
-        aim_hud_offset_rot               = -0.0074, 0.026032, -0.086202
-        aim_hud_offset_rot_16x9          = -0.0074, 0.026032, -0.086202
-		
-[wpn_beretta_modern_d0cter]:wpn_beretta_modern
-
-
-[wpn_beretta_modern_rmr]:wpn_beretta_modern
-
-
-[wpn_beretta_modern_deltapoint]:wpn_beretta_modern
+[wpn_beretta]:wpn_pm,wpn_beretta_sounds
+GroupControlSection				= spawn_group
+$spawn									= "weapons\beretta"
+inv_grid_width							= 3
+inv_grid_height						= 2
+inv_grid_x								= 0
+inv_grid_y								= 26
+inv_name									= wpn_beretta
+inv_name_short						= wpn_berettaS
+description								= wpn_beretta_descr
+max_radius								= 200
+ph_mass                     				= 2
+fire_point									= 0.0, 0.05, 0.18
+shell_particles							= weapons\9x19
+required_tags_shoot 				= trigger,barrel,zatvor
+ammo_class								= ammo_9x19_fmj, ammo_9x19_fmj_bad, ammo_9x19_fmj_verybad, ammo_9x19_pbp, ammo_9x19_pbp_bad, ammo_9x19_pbp_verybad, ammo_9x19_ap, ammo_9x19_ap_bad, ammo_9x19_ap_verybad
+inv_weight                               = 0.4
+cost                                     	= 24000
+ammo_mag_size						= 15
+npc_rpm  = 350
+
+weapon_lenght						= 0.2
+zoom_rotate_time = 0.15
+attachment_slots						= slot_magazin|magazin|0,0,0|0,0,0#beretta_trigger|wpn_body|0,0,0|0,0,0#beretta_stock|wpn_body|0,0,0|0,0,0#beretta_guard|wpn_body|0,0,0|0,0,0
+aimpoint_offset_y					= 0.049643
+additional_hud_offset				= 0, 0, -0.1
+ui_render_cam_offset				= 0.3, -0.11, 1.04
+visual										= w_att_huds\beretta.ogf
+hud											= wpn_beretta_hud
+additional_sounds					= beretta_additional_sounds
+[beretta_additional_sounds]:hpsa_additional_sounds
+snd_slide_release					= weapons\main\beretta_slide_release
+snd_slide_back						= weapons\main\beretta_slide_back
+snd_selector							= weapons\main\agram_selector
+
+[wpn_beretta_hud]:wpn_cz75_hud
+
+weapon_recoil_vert         = 4.04
+weapon_recoil_vert_inc     = 0.404
+weapon_recoil_horz         = 2.8
+weapon_recoil_ret_speed    = 5.0
+
+
+anm_reload_misfire_sounds					= 0,snd_move_in|16,snd_slide_back|28,snd_slide_release
+anm_switch_mode_sounds						= 0,snd_slow_arm|14,snd_selector
+anm_switch_mode_empty_sounds			= 0,snd_slow_arm|14,snd_selector
+
+raf_anm_reload_misfire_sounds				= 0,snd_move_in|16,snd_slide_back|28,snd_slide_release
+raf_anm_switch_mode_sounds				= 0,snd_slow_arm|14,snd_selector
+raf_anm_switch_mode_empty_sounds	= 0,snd_slow_arm|14,snd_selector
+17_raf_anm_reload_p1_sounds					= 0,snd_move_out|16,snd_mag_out
+17_raf_anm_reload_p2_sounds		 			= 0,snd_move_in|19,snd_mag_in
+17_raf_anm_reload_empty_p1_sounds		= 0,snd_move_out|16,snd_mag_out
+17_raf_anm_reload_empty_p2_sounds 		= 0,snd_move_in_empty|19,snd_mag_in|47,snd_slide_release
+17_raf_anm_mag_check_sounds					= 0,snd_move_out|16,snd_mag_out|30,snd_move_end|76,snd_mag_in
+17_raf_anm_mag_check_empty_sounds		= 0,snd_move_out|16,snd_mag_out|30,snd_move_end|76,snd_mag_in
+33_raf_anm_reload_p1_sounds					= 0,snd_move_out|16,snd_mag_out_33
+33_raf_anm_reload_p2_sounds		 			= 0,snd_move_in|19,snd_mag_in_33
+33_raf_anm_reload_empty_p1_sounds		= 0,snd_move_out|16,snd_mag_out_33
+33_raf_anm_reload_empty_p2_sounds 		= 0,snd_move_in_empty|19,snd_mag_in_33|47,snd_slide_release
+33_raf_anm_mag_check_sounds					= 0,snd_move_out|16,snd_mag_out_33|30,snd_move_end|76,snd_mag_in_33
+33_raf_anm_mag_check_empty_sounds		= 0,snd_move_out|16,snd_mag_out_33|30,snd_move_end|76,snd_mag_in_33
+50_raf_anm_reload_p1_sounds					= 0,snd_move_out|16,snd_mag_out_50
+50_raf_anm_reload_p2_sounds		 			= 0,snd_move_in|19,snd_mag_in_50
+50_raf_anm_reload_empty_p1_sounds		= 0,snd_move_out|16,snd_mag_out_50
+50_raf_anm_reload_empty_p2_sounds 		= 0,snd_move_in_empty|19,snd_mag_in_50|47,snd_slide_release
+50_raf_anm_mag_check_sounds					= 0,snd_move_out|16,snd_mag_out_50|30,snd_move_end|76,snd_mag_in_50
+50_raf_anm_mag_check_empty_sounds		= 0,snd_move_out|16,snd_mag_out_50|30,snd_move_end|76,snd_mag_in_50
+
+h_anm_reload_misfire_sounds					= 0,snd_move_in|16,snd_slide_back|28,snd_slide_release
+h_anm_switch_mode_sounds						= 0,snd_slow_arm|14,snd_selector
+h_anm_switch_mode_empty_sounds			= 0,snd_slow_arm|14,snd_selector
+17_h_anm_reload_p1_sounds						= 0,snd_move_out|16,snd_mag_out
+17_h_anm_reload_p2_sounds		 				= 0,snd_move_in|19,snd_mag_in
+17_h_anm_reload_empty_p1_sounds			= 0,snd_move_out|16,snd_mag_out
+17_h_anm_reload_empty_p2_sounds 			= 0,snd_move_in_empty|19,snd_mag_in|47,snd_slide_release
+17_h_anm_mag_check_sounds					= 0,snd_move_out|16,snd_mag_out|30,snd_move_end|76,snd_mag_in
+17_h_anm_mag_check_empty_sounds		= 0,snd_move_out|16,snd_mag_out|30,snd_move_end|76,snd_mag_in
+33_h_anm_reload_p1_sounds						= 0,snd_move_out|16,snd_mag_out_33
+33_h_anm_reload_p2_sounds		 				= 0,snd_move_in|19,snd_mag_in_33
+33_h_anm_reload_empty_p1_sounds			= 0,snd_move_out|16,snd_mag_out_33
+33_h_anm_reload_empty_p2_sounds 			= 0,snd_move_in_empty|19,snd_mag_in_33|47,snd_slide_release
+33_h_anm_mag_check_sounds					= 0,snd_move_out|16,snd_mag_out_33|30,snd_move_end|76,snd_mag_in_33
+33_h_anm_mag_check_empty_sounds		= 0,snd_move_out|16,snd_mag_out_33|30,snd_move_end|76,snd_mag_in_33
+50_h_anm_reload_p1_sounds						= 0,snd_move_out|16,snd_mag_out_50
+50_h_anm_reload_p2_sounds		 				= 0,snd_move_in|19,snd_mag_in_50
+50_h_anm_reload_empty_p1_sounds			= 0,snd_move_out|16,snd_mag_out_50
+50_h_anm_reload_empty_p2_sounds 			= 0,snd_move_in_empty|19,snd_mag_in_50|47,snd_slide_release
+50_h_anm_mag_check_sounds					= 0,snd_move_out|16,snd_mag_out_50|30,snd_move_end|76,snd_mag_in_50
+50_h_anm_mag_check_empty_sounds		= 0,snd_move_out|16,snd_mag_out_50|30,snd_move_end|76,snd_mag_in_50
+
+r_anm_reload_misfire_sounds						= 0,snd_move_in|16,snd_slide_back|28,snd_slide_release
+r_anm_switch_mode_sounds						= 0,snd_slow_arm|14,snd_selector
+r_anm_switch_mode_empty_sounds			= 0,snd_slow_arm|14,snd_selector
+17_r_anm_reload_p1_sounds						= 0,snd_move_out|16,snd_mag_out
+17_r_anm_reload_p2_sounds		 				= 0,snd_move_in|19,snd_mag_in
+17_r_anm_reload_empty_p1_sounds			= 0,snd_move_out|16,snd_mag_out
+17_r_anm_reload_empty_p2_sounds 			= 0,snd_move_in_empty|19,snd_mag_in|47,snd_slide_release
+17_r_anm_mag_check_sounds					= 0,snd_move_out|16,snd_mag_out|30,snd_move_end|76,snd_mag_in
+17_r_anm_mag_check_empty_sounds			= 0,snd_move_out|16,snd_mag_out|30,snd_move_end|76,snd_mag_in
+33_r_anm_reload_p1_sounds						= 0,snd_move_out|16,snd_mag_out_33
+33_r_anm_reload_p2_sounds		 				= 0,snd_move_in|19,snd_mag_in_33
+33_r_anm_reload_empty_p1_sounds			= 0,snd_move_out|16,snd_mag_out_33
+33_r_anm_reload_empty_p2_sounds 			= 0,snd_move_in_empty|19,snd_mag_in_33|47,snd_slide_release
+33_r_anm_mag_check_sounds					= 0,snd_move_out|16,snd_mag_out_33|30,snd_move_end|76,snd_mag_in_33
+33_r_anm_mag_check_empty_sounds			= 0,snd_move_out|16,snd_mag_out_33|30,snd_move_end|76,snd_mag_in_33
+50_r_anm_reload_p1_sounds						= 0,snd_move_out|16,snd_mag_out_50
+50_r_anm_reload_p2_sounds		 				= 0,snd_move_in|19,snd_mag_in_50
+50_r_anm_reload_empty_p1_sounds			= 0,snd_move_out|16,snd_mag_out_50
+50_r_anm_reload_empty_p2_sounds 			= 0,snd_move_in_empty|19,snd_mag_in_50|47,snd_slide_release
+50_r_anm_mag_check_sounds					= 0,snd_move_out|16,snd_mag_out_50|30,snd_move_end|76,snd_mag_in_50
+50_r_anm_mag_check_empty_sounds			= 0,snd_move_out|16,snd_mag_out_50|30,snd_move_end|76,snd_mag_in_50
+
+t_anm_reload_misfire_sounds						= 0,snd_move_in|16,snd_slide_back|28,snd_slide_release
+t_anm_switch_mode_sounds						= 0,snd_slow_arm|14,snd_selector
+t_anm_switch_mode_empty_sounds			= 0,snd_slow_arm|14,snd_selector
+17_t_anm_reload_p1_sounds						= 0,snd_move_out|16,snd_mag_out
+17_t_anm_reload_p2_sounds		 				= 0,snd_move_in|19,snd_mag_in
+17_t_anm_reload_empty_p1_sounds			= 0,snd_move_out|16,snd_mag_out
+17_t_anm_reload_empty_p2_sounds 			= 0,snd_move_in_empty|19,snd_mag_in|47,snd_slide_release
+17_t_anm_mag_check_sounds					= 0,snd_move_out|16,snd_mag_out|30,snd_move_end|76,snd_mag_in
+17_t_anm_mag_check_empty_sounds			= 0,snd_move_out|16,snd_mag_out|30,snd_move_end|76,snd_mag_in
+33_t_anm_reload_p1_sounds						= 0,snd_move_out|16,snd_mag_out_33
+33_t_anm_reload_p2_sounds		 				= 0,snd_move_in|19,snd_mag_in_33
+33_t_anm_reload_empty_p1_sounds			= 0,snd_move_out|16,snd_mag_out_33
+33_t_anm_reload_empty_p2_sounds 			= 0,snd_move_in_empty|19,snd_mag_in_33|47,snd_slide_release
+33_t_anm_mag_check_sounds					= 0,snd_move_out|16,snd_mag_out_33|30,snd_move_end|76,snd_mag_in_33
+33_t_anm_mag_check_empty_sounds			= 0,snd_move_out|16,snd_mag_out_33|30,snd_move_end|76,snd_mag_in_33
+50_t_anm_reload_p1_sounds						= 0,snd_move_out|16,snd_mag_out_50
+50_t_anm_reload_p2_sounds		 				= 0,snd_move_in|19,snd_mag_in_50
+50_t_anm_reload_empty_p1_sounds			= 0,snd_move_out|16,snd_mag_out_50
+50_t_anm_reload_empty_p2_sounds 			= 0,snd_move_in_empty|19,snd_mag_in_50|47,snd_slide_release
+50_t_anm_mag_check_sounds					= 0,snd_move_out|16,snd_mag_out_50|30,snd_move_end|76,snd_mag_in_50
+50_t_anm_mag_check_empty_sounds			= 0,snd_move_out|16,snd_mag_out_50|30,snd_move_end|76,snd_mag_in_50
+
+v_anm_reload_misfire_sounds						= 0,snd_move_in|16,snd_slide_back|28,snd_slide_release
+v_anm_switch_mode_sounds						= 0,snd_slow_arm|14,snd_selector
+v_anm_switch_mode_empty_sounds			= 0,snd_slow_arm|14,snd_selector
+17_v_anm_reload_p1_sounds						= 0,snd_move_out|16,snd_mag_out
+17_v_anm_reload_p2_sounds		 				= 0,snd_move_in|19,snd_mag_in
+17_v_anm_reload_empty_p1_sounds			= 0,snd_move_out|16,snd_mag_out
+17_v_anm_reload_empty_p2_sounds 			= 0,snd_move_in_empty|19,snd_mag_in|47,snd_slide_release
+17_v_anm_mag_check_sounds					= 0,snd_move_out|16,snd_mag_out|30,snd_move_end|76,snd_mag_in
+17_v_anm_mag_check_empty_sounds		= 0,snd_move_out|16,snd_mag_out|30,snd_move_end|76,snd_mag_in
+33_v_anm_reload_p1_sounds						= 0,snd_move_out|16,snd_mag_out_33
+33_v_anm_reload_p2_sounds		 				= 0,snd_move_in|19,snd_mag_in_33
+33_v_anm_reload_empty_p1_sounds			= 0,snd_move_out|16,snd_mag_out_33
+33_v_anm_reload_empty_p2_sounds 			= 0,snd_move_in_empty|19,snd_mag_in_33|47,snd_slide_release
+33_v_anm_mag_check_sounds					= 0,snd_move_out|16,snd_mag_out_33|30,snd_move_end|76,snd_mag_in_33
+33_v_anm_mag_check_empty_sounds		= 0,snd_move_out|16,snd_mag_out_33|30,snd_move_end|76,snd_mag_in_33
+50_v_anm_reload_p1_sounds						= 0,snd_move_out|16,snd_mag_out_50
+50_v_anm_reload_p2_sounds		 				= 0,snd_move_in|19,snd_mag_in_50
+50_v_anm_reload_empty_p1_sounds			= 0,snd_move_out|16,snd_mag_out_50
+50_v_anm_reload_empty_p2_sounds 			= 0,snd_move_in_empty|19,snd_mag_in_50|47,snd_slide_release
+50_v_anm_mag_check_sounds					= 0,snd_move_out|16,snd_mag_out_50|30,snd_move_end|76,snd_mag_in_50
+50_v_anm_mag_check_empty_sounds		= 0,snd_move_out|16,snd_mag_out_50|30,snd_move_end|76,snd_mag_in_50
+
+item_visual                 					= w_att_huds\beretta_hud.ogf
+;hands_position							= 0.06, -0.06, -0.1
+;hands_position_16x9					= 0.06, -0.06, -0.1
+hands_orientation						= 0.3, 0.3, 0
+hands_orientation_16x9				= 0.3, 0.3, 0
+;aim_hud_offset_pos					= -0.0602, 0.0354, 0
+;aim_hud_offset_pos_16x9			= -0.0602, 0.0354, 0
+;aim_hud_offset_rot						= 0.008, 0.006, 0
+;aim_hud_offset_rot_16x9			= 0.008, 0.006, 0
+shooting_backward_offset		= 0.04,0.03
+hands_position							= 0.06, -0.06, -0.05
+hands_position_16x9					= 0.06, -0.06, -0.05
+aim_hud_offset_pos					= -0.0602, 0.0354, -0.05
+aim_hud_offset_pos_16x9			= -0.0602, 0.0354, -0.05
+aim_hud_offset_rot						= 0.008, 0.0055, 0
+aim_hud_offset_rot_16x9			= 0.008, 0.0055, 0
+anm_switch_mode										= cz75_m_firemode, firemode, 1.2
+anm_switch_mode_empty							= cz75_m_firemode, firemode_empty, 1.2
+anm_reload_misfire										= pernach_m_unjam, unjam, 1.4  
+
+raf_anm_bore                                 				= beretta_raf_bore, idle
+raf_anm_bore_empty									= beretta_raf_bore_e, idle_empty
+raf_anm_hide												= beretta_raf_holster_e, idle, 1.4
+raf_anm_hide_empty									= beretta_raf_holster_e, idle_empty, 1.4
+raf_anm_idle												= beretta_raf_idle, idle
+raf_anm_idle_empty									= beretta_raf_idle, idle_empty
+raf_anm_idle_aim										= beretta_raf_idle_aim, idle
+raf_anm_idle_aim_empty								= beretta_raf_idle_aim, idle_empty
+raf_anm_idle_aim_moving							= beretta_raf_walk_aim, idle
+raf_anm_idle_aim_moving_crouch				= beretta_raf_walk_aim, idle
+raf_anm_idle_aim_moving_crouch_empty	= beretta_raf_walk_aim, idle_empty
+raf_anm_idle_aim_moving_empty				= beretta_raf_walk_aim, idle_empty
+raf_anm_idle_moving									= beretta_raf_walk, idle
+raf_anm_idle_moving_crouch						= beretta_raf_walk, idle, 0.7
+raf_anm_idle_moving_crouch_empty			= beretta_raf_walk, idle_empty, 0.7
+raf_anm_idle_moving_empty						= beretta_raf_walk, idle_empty
+raf_anm_shot_l											= beretta_raf_shoot, shoot_last
+raf_anm_shots												= beretta_raf_shoot, shoot, 2
+raf_anm_show												= beretta_raf_show_e, idle, 1.4
+raf_anm_show_empty									= beretta_raf_show_e, idle_empty, 1.4
+raf_anm_reload_misfire								= beretta_raf_unjam, unjam, 1.4
+raf_anm_switch_mode									= beretta_raf_firemode, firemode, 1.2
+raf_anm_switch_mode_empty						= beretta_raf_firemode, firemode_empty, 1.2
+raf_anm_reload											= beretta_raf_reload_15_p1, reload_p1, 1.2
+raf_anm_reload_p1										= beretta_raf_reload_15_p1, reload_p1, 1.2
+raf_anm_reload_p2										= beretta_raf_reload_15_p2, reload_p2, 1.2
+raf_anm_reload_empty								= beretta_raf_reload_15_p1, reload_empty_p1, 1.2
+raf_anm_reload_empty_p1							= beretta_raf_reload_15_p1, reload_empty_p1, 1.2
+raf_anm_reload_empty_p2							= beretta_raf_reload_15e_p2, reload_empty_p2, 1.2
+raf_anm_mag_check									= beretta_raf_check_15, check, 1.4
+raf_anm_mag_check_empty						= beretta_raf_check_15, check_empty, 1.4
+17_raf_anm_reload										= beretta_raf_reload_15_p1, reload_p1, 1.2
+17_raf_anm_reload_p1								= beretta_raf_reload_15_p1, reload_p1, 1.2
+17_raf_anm_reload_p2								= beretta_raf_reload_15_p2, reload_p2, 1.2
+17_raf_anm_reload_empty							= beretta_raf_reload_15_p1, reload_empty_p1, 1.2
+17_raf_anm_reload_empty_p1						= beretta_raf_reload_15_p1, reload_empty_p1, 1.2
+17_raf_anm_reload_empty_p2						= beretta_raf_reload_15e_p2, reload_empty_p2, 1.2
+17_raf_anm_mag_check								= beretta_raf_check_15, check, 1.4
+17_raf_anm_mag_check_empty					= beretta_raf_check_15, check_empty, 1.4
+33_raf_anm_reload										= beretta_raf_reload_30_p1, reload_p1, 1.2
+33_raf_anm_reload_p1								= beretta_raf_reload_30_p1, reload_p1, 1.2
+33_raf_anm_reload_p2								= beretta_raf_reload_30_p2, reload_p2, 1.2
+33_raf_anm_reload_empty							= beretta_raf_reload_30_p1, reload_empty_p1, 1.2
+33_raf_anm_reload_empty_p1						= beretta_raf_reload_30_p1, reload_empty_p1, 1.2
+33_raf_anm_reload_empty_p2						= beretta_raf_reload_30e_p2, reload_empty_p2, 1.2
+33_raf_anm_mag_check								= beretta_raf_check_30, check, 1.4
+33_raf_anm_mag_check_empty					= beretta_raf_check_30, check_empty, 1.4
+50_raf_anm_reload										= beretta_raf_reload_50_p1, reload_p1, 1.2
+50_raf_anm_reload_p1								= beretta_raf_reload_50_p1, reload_p1, 1.2
+50_raf_anm_reload_p2								= beretta_raf_reload_50_p2, reload_p2, 1.2
+50_raf_anm_reload_empty							= beretta_raf_reload_50_p1, reload_empty_p1, 1.2
+50_raf_anm_reload_empty_p1						= beretta_raf_reload_50_p1, reload_empty_p1, 1.2
+50_raf_anm_reload_empty_p2						= beretta_raf_reload_50e_p2, reload_empty_p2, 1.2
+50_raf_anm_mag_check								= beretta_raf_check_50, check, 1.4
+50_raf_anm_mag_check_empty					= beretta_raf_check_50, check_empty, 1.4
+
+h_anm_bore                                 				= beretta_h_bore, idle
+h_anm_bore_empty									= beretta_h_bore_e, idle_empty
+h_anm_hide												= beretta_h_holster_e, idle, 1.4
+h_anm_hide_empty									= beretta_h_holster_e, idle_empty, 1.4
+h_anm_idle												= beretta_h_idle, idle
+h_anm_idle_empty									= beretta_h_idle, idle_empty
+h_anm_idle_aim										= beretta_h_idle_aim, idle
+h_anm_idle_aim_empty								= beretta_h_idle_aim, idle_empty
+h_anm_idle_aim_moving							= beretta_h_walk_aim, idle
+h_anm_idle_aim_moving_crouch				= beretta_h_walk_aim, idle
+h_anm_idle_aim_moving_crouch_empty	= beretta_h_walk_aim, idle_empty
+h_anm_idle_aim_moving_empty				= beretta_h_walk_aim, idle_empty
+h_anm_idle_moving									= beretta_h_walk, idle
+h_anm_idle_moving_crouch						= beretta_h_walk, idle, 0.7
+h_anm_idle_moving_crouch_empty			= beretta_h_walk, idle_empty, 0.7
+h_anm_idle_moving_empty						= beretta_h_walk, idle_empty
+h_anm_shot_l											= beretta_h_shoot, shoot_last
+h_anm_shots												= beretta_h_shoot, shoot, 2
+h_anm_show												= beretta_h_show_e, idle, 1.4
+h_anm_show_empty									= beretta_h_show_e, idle_empty, 1.4
+h_anm_reload_misfire								= beretta_h_unjam, unjam, 1.4
+h_anm_switch_mode									= beretta_h_firemode, firemode, 1.2
+h_anm_switch_mode_empty						= beretta_h_firemode, firemode_empty, 1.2
+h_anm_reload											= beretta_h_reload_15_p1, reload_p1, 1.2
+h_anm_reload_p1										= beretta_h_reload_15_p1, reload_p1, 1.2
+h_anm_reload_p2										= beretta_h_reload_15_p2, reload_p2, 1.2
+h_anm_reload_empty								= beretta_h_reload_15_p1, reload_empty_p1, 1.2
+h_anm_reload_empty_p1							= beretta_h_reload_15_p1, reload_empty_p1, 1.2
+h_anm_reload_empty_p2							= beretta_h_reload_15e_p2, reload_empty_p2, 1.2
+h_anm_mag_check									= beretta_h_check_15, check, 1.4
+h_anm_mag_check_empty						= beretta_h_check_15, check_empty, 1.4
+17_h_anm_reload										= beretta_h_reload_15_p1, reload_p1, 1.2
+17_h_anm_reload_p1								= beretta_h_reload_15_p1, reload_p1, 1.2
+17_h_anm_reload_p2								= beretta_h_reload_15_p2, reload_p2, 1.2
+17_h_anm_reload_empty							= beretta_h_reload_15_p1, reload_empty_p1, 1.2
+17_h_anm_reload_empty_p1						= beretta_h_reload_15_p1, reload_empty_p1, 1.2
+17_h_anm_reload_empty_p2						= beretta_h_reload_15e_p2, reload_empty_p2, 1.2
+17_h_anm_mag_check								= beretta_h_check_15, check, 1.4
+17_h_anm_mag_check_empty					= beretta_h_check_15, check_empty, 1.4
+33_h_anm_reload										= beretta_h_reload_30_p1, reload_p1, 1.2
+33_h_anm_reload_p1								= beretta_h_reload_30_p1, reload_p1, 1.2
+33_h_anm_reload_p2								= beretta_h_reload_30_p2, reload_p2, 1.2
+33_h_anm_reload_empty							= beretta_h_reload_30_p1, reload_empty_p1, 1.2
+33_h_anm_reload_empty_p1						= beretta_h_reload_30_p1, reload_empty_p1, 1.2
+33_h_anm_reload_empty_p2						= beretta_h_reload_30e_p2, reload_empty_p2, 1.2
+33_h_anm_mag_check								= beretta_h_check_30, check, 1.4
+33_h_anm_mag_check_empty					= beretta_h_check_30, check_empty, 1.4
+50_h_anm_reload										= beretta_h_reload_50_p1, reload_p1, 1.2
+50_h_anm_reload_p1								= beretta_h_reload_50_p1, reload_p1, 1.2
+50_h_anm_reload_p2								= beretta_h_reload_50_p2, reload_p2, 1.2
+50_h_anm_reload_empty							= beretta_h_reload_50_p1, reload_empty_p1, 1.2
+50_h_anm_reload_empty_p1						= beretta_h_reload_50_p1, reload_empty_p1, 1.2
+50_h_anm_reload_empty_p2						= beretta_h_reload_50e_p2, reload_empty_p2, 1.2
+50_h_anm_mag_check								= beretta_h_check_50, check, 1.4
+50_h_anm_mag_check_empty					= beretta_h_check_50, check_empty, 1.4
+
+r_anm_bore                                 				= beretta_r_bore, idle
+r_anm_bore_empty									= beretta_r_bore_e, idle_empty
+r_anm_hide												= beretta_r_holster_e, idle, 1.4
+r_anm_hide_empty									= beretta_r_holster_e, idle_empty, 1.4
+r_anm_idle												= beretta_r_idle, idle
+r_anm_idle_empty									= beretta_r_idle, idle_empty
+r_anm_idle_aim										= beretta_r_idle_aim, idle
+r_anm_idle_aim_empty								= beretta_r_idle_aim, idle_empty
+r_anm_idle_aim_moving							= beretta_r_walk_aim, idle
+r_anm_idle_aim_moving_crouch				= beretta_r_walk_aim, idle
+r_anm_idle_aim_moving_crouch_empty	= beretta_r_walk_aim, idle_empty
+r_anm_idle_aim_moving_empty				= beretta_r_walk_aim, idle_empty
+r_anm_idle_moving									= beretta_r_walk, idle
+r_anm_idle_moving_crouch						= beretta_r_walk, idle, 0.7
+r_anm_idle_moving_crouch_empty			= beretta_r_walk, idle_empty, 0.7
+r_anm_idle_moving_empty						= beretta_r_walk, idle_empty
+r_anm_shot_l											= beretta_r_shoot, shoot_last
+r_anm_shots												= beretta_r_shoot, shoot, 2
+r_anm_show												= beretta_r_show_e, idle, 1.4
+r_anm_show_empty									= beretta_r_show_e, idle_empty, 1.4
+r_anm_reload_misfire								= beretta_r_unjam, unjam, 1.4
+r_anm_switch_mode									= beretta_r_firemode, firemode, 1.2
+r_anm_switch_mode_empty						= beretta_r_firemode, firemode_empty, 1.2
+r_anm_reload											= beretta_r_reload_15_p1, reload_p1, 1.2
+r_anm_reload_p1										= beretta_r_reload_15_p1, reload_p1, 1.2
+r_anm_reload_p2										= beretta_r_reload_15_p2, reload_p2, 1.2
+r_anm_reload_empty								= beretta_r_reload_15_p1, reload_empty_p1, 1.2
+r_anm_reload_empty_p1							= beretta_r_reload_15_p1, reload_empty_p1, 1.2
+r_anm_reload_empty_p2							= beretta_r_reload_15e_p2, reload_empty_p2, 1.2
+r_anm_mag_check									= beretta_r_check_15, check, 1.4
+r_anm_mag_check_empty						= beretta_r_check_15, check_empty, 1.4
+17_r_anm_reload										= beretta_r_reload_15_p1, reload_p1, 1.2
+17_r_anm_reload_p1								= beretta_r_reload_15_p1, reload_p1, 1.2
+17_r_anm_reload_p2								= beretta_r_reload_15_p2, reload_p2, 1.2
+17_r_anm_reload_empty							= beretta_r_reload_15_p1, reload_empty_p1, 1.2
+17_r_anm_reload_empty_p1						= beretta_r_reload_15_p1, reload_empty_p1, 1.2
+17_r_anm_reload_empty_p2						= beretta_r_reload_15e_p2, reload_empty_p2, 1.2
+17_r_anm_mag_check								= beretta_r_check_15, check, 1.4
+17_r_anm_mag_check_empty					= beretta_r_check_15, check_empty, 1.4
+33_r_anm_reload										= beretta_r_reload_30_p1, reload_p1, 1.2
+33_r_anm_reload_p1								= beretta_r_reload_30_p1, reload_p1, 1.2
+33_r_anm_reload_p2								= beretta_r_reload_30_p2, reload_p2, 1.2
+33_r_anm_reload_empty							= beretta_r_reload_30_p1, reload_empty_p1, 1.2
+33_r_anm_reload_empty_p1						= beretta_r_reload_30_p1, reload_empty_p1, 1.2
+33_r_anm_reload_empty_p2						= beretta_r_reload_30e_p2, reload_empty_p2, 1.2
+33_r_anm_mag_check								= beretta_r_check_30, check, 1.4
+33_r_anm_mag_check_empty					= beretta_r_check_30, check_empty, 1.4
+50_r_anm_reload										= beretta_r_reload_50_p1, reload_p1, 1.2
+50_r_anm_reload_p1								= beretta_r_reload_50_p1, reload_p1, 1.2
+50_r_anm_reload_p2								= beretta_r_reload_50_p2, reload_p2, 1.2
+50_r_anm_reload_empty							= beretta_r_reload_50_p1, reload_empty_p1, 1.2
+50_r_anm_reload_empty_p1						= beretta_r_reload_50_p1, reload_empty_p1, 1.2
+50_r_anm_reload_empty_p2						= beretta_r_reload_50e_p2, reload_empty_p2, 1.2
+50_r_anm_mag_check								= beretta_r_check_50, check, 1.4
+50_r_anm_mag_check_empty					= beretta_r_check_50, check_empty, 1.4
+
+t_anm_bore                                 				= beretta_t_bore, idle
+t_anm_bore_empty									= beretta_t_bore_e, idle_empty
+t_anm_hide												= beretta_t_holster_e, idle, 1.4
+t_anm_hide_empty									= beretta_t_holster_e, idle_empty, 1.4
+t_anm_idle												= beretta_t_idle, idle
+t_anm_idle_empty									= beretta_t_idle, idle_empty
+t_anm_idle_aim										= beretta_t_idle_aim, idle
+t_anm_idle_aim_empty								= beretta_t_idle_aim, idle_empty
+t_anm_idle_aim_moving							= beretta_t_walk_aim, idle
+t_anm_idle_aim_moving_crouch				= beretta_t_walk_aim, idle
+t_anm_idle_aim_moving_crouch_empty	= beretta_t_walk_aim, idle_empty
+t_anm_idle_aim_moving_empty				= beretta_t_walk_aim, idle_empty
+t_anm_idle_moving									= beretta_t_walk, idle
+t_anm_idle_moving_crouch						= beretta_t_walk, idle, 0.7
+t_anm_idle_moving_crouch_empty			= beretta_t_walk, idle_empty, 0.7
+t_anm_idle_moving_empty						= beretta_t_walk, idle_empty
+t_anm_shot_l											= beretta_t_shoot, shoot_last
+t_anm_shots												= beretta_t_shoot, shoot, 2
+t_anm_show												= beretta_t_show_e, idle, 1.4
+t_anm_show_empty									= beretta_t_show_e, idle_empty, 1.4
+t_anm_reload_misfire								= beretta_t_unjam, unjam, 1.4
+t_anm_switch_mode									= beretta_t_firemode, firemode, 1.2
+t_anm_switch_mode_empty						= beretta_t_firemode, firemode_empty, 1.2
+t_anm_reload											= beretta_t_reload_15_p1, reload_p1, 1.2
+t_anm_reload_p1										= beretta_t_reload_15_p1, reload_p1, 1.2
+t_anm_reload_p2										= beretta_t_reload_15_p2, reload_p2, 1.2
+t_anm_reload_empty								= beretta_t_reload_15_p1, reload_empty_p1, 1.2
+t_anm_reload_empty_p1							= beretta_t_reload_15_p1, reload_empty_p1, 1.2
+t_anm_reload_empty_p2							= beretta_t_reload_15e_p2, reload_empty_p2, 1.2
+t_anm_mag_check									= beretta_t_check_15, check, 1.4
+t_anm_mag_check_empty						= beretta_t_check_15, check_empty, 1.4
+17_t_anm_reload										= beretta_t_reload_15_p1, reload_p1, 1.2
+17_t_anm_reload_p1								= beretta_t_reload_15_p1, reload_p1, 1.2
+17_t_anm_reload_p2								= beretta_t_reload_15_p2, reload_p2, 1.2
+17_t_anm_reload_empty							= beretta_t_reload_15_p1, reload_empty_p1, 1.2
+17_t_anm_reload_empty_p1						= beretta_t_reload_15_p1, reload_empty_p1, 1.2
+17_t_anm_reload_empty_p2						= beretta_t_reload_15e_p2, reload_empty_p2, 1.2
+17_t_anm_mag_check								= beretta_t_check_15, check, 1.4
+17_t_anm_mag_check_empty					= beretta_t_check_15, check_empty, 1.4
+33_t_anm_reload										= beretta_t_reload_30_p1, reload_p1, 1.2
+33_t_anm_reload_p1								= beretta_t_reload_30_p1, reload_p1, 1.2
+33_t_anm_reload_p2								= beretta_t_reload_30_p2, reload_p2, 1.2
+33_t_anm_reload_empty							= beretta_t_reload_30_p1, reload_empty_p1, 1.2
+33_t_anm_reload_empty_p1						= beretta_t_reload_30_p1, reload_empty_p1, 1.2
+33_t_anm_reload_empty_p2						= beretta_t_reload_30e_p2, reload_empty_p2, 1.2
+33_t_anm_mag_check								= beretta_t_check_30, check, 1.4
+33_t_anm_mag_check_empty					= beretta_t_check_30, check_empty, 1.4
+50_t_anm_reload										= beretta_t_reload_50_p1, reload_p1, 1.2
+50_t_anm_reload_p1								= beretta_t_reload_50_p1, reload_p1, 1.2
+50_t_anm_reload_p2								= beretta_t_reload_50_p2, reload_p2, 1.2
+50_t_anm_reload_empty							= beretta_t_reload_50_p1, reload_empty_p1, 1.2
+50_t_anm_reload_empty_p1						= beretta_t_reload_50_p1, reload_empty_p1, 1.2
+50_t_anm_reload_empty_p2						= beretta_t_reload_50e_p2, reload_empty_p2, 1.2
+50_t_anm_mag_check								= beretta_t_check_50, check, 1.4
+50_t_anm_mag_check_empty					= beretta_t_check_50, check_empty, 1.4
+
+v_anm_bore                                 				= beretta_v_bore, idle
+v_anm_bore_empty									= beretta_v_bore_e, idle_empty
+v_anm_hide												= beretta_v_holster_e, idle, 1.4
+v_anm_hide_empty									= beretta_v_holster_e, idle_empty, 1.4
+v_anm_idle												= beretta_v_idle, idle
+v_anm_idle_empty									= beretta_v_idle, idle_empty
+v_anm_idle_aim										= beretta_v_idle_aim, idle
+v_anm_idle_aim_empty								= beretta_v_idle_aim, idle_empty
+v_anm_idle_aim_moving							= beretta_v_walk_aim, idle
+v_anm_idle_aim_moving_crouch				= beretta_v_walk_aim, idle
+v_anm_idle_aim_moving_crouch_empty	= beretta_v_walk_aim, idle_empty
+v_anm_idle_aim_moving_empty				= beretta_v_walk_aim, idle_empty
+v_anm_idle_moving									= beretta_v_walk, idle
+v_anm_idle_moving_crouch						= beretta_v_walk, idle, 0.7
+v_anm_idle_moving_crouch_empty			= beretta_v_walk, idle_empty, 0.7
+v_anm_idle_moving_empty						= beretta_v_walk, idle_empty
+v_anm_shot_l											= beretta_v_shoot, shoot_last
+v_anm_shots												= beretta_v_shoot, shoot, 2
+v_anm_show												= beretta_v_show_e, idle, 1.4
+v_anm_show_empty									= beretta_v_show_e, idle_empty, 1.4
+v_anm_reload_misfire								= beretta_v_unjam, unjam, 1.4
+v_anm_switch_mode									= beretta_v_firemode, firemode, 1.2
+v_anm_switch_mode_empty						= beretta_v_firemode, firemode_empty, 1.2
+v_anm_reload											= beretta_v_reload_15_p1, reload_p1, 1.2
+v_anm_reload_p1										= beretta_v_reload_15_p1, reload_p1, 1.2
+v_anm_reload_p2										= beretta_v_reload_15_p2, reload_p2, 1.2
+v_anm_reload_empty								= beretta_v_reload_15_p1, reload_empty_p1, 1.2
+v_anm_reload_empty_p1							= beretta_v_reload_15_p1, reload_empty_p1, 1.2
+v_anm_reload_empty_p2							= beretta_v_reload_15e_p2, reload_empty_p2, 1.2
+v_anm_mag_check									= beretta_v_check_15, check, 1.4
+v_anm_mag_check_empty						= beretta_v_check_15, check_empty, 1.4
+17_v_anm_reload										= beretta_v_reload_15_p1, reload_p1, 1.2
+17_v_anm_reload_p1								= beretta_v_reload_15_p1, reload_p1, 1.2
+17_v_anm_reload_p2								= beretta_v_reload_15_p2, reload_p2, 1.2
+17_v_anm_reload_empty							= beretta_v_reload_15_p1, reload_empty_p1, 1.2
+17_v_anm_reload_empty_p1						= beretta_v_reload_15_p1, reload_empty_p1, 1.2
+17_v_anm_reload_empty_p2						= beretta_v_reload_15e_p2, reload_empty_p2, 1.2
+17_v_anm_mag_check								= beretta_v_check_15, check, 1.4
+17_v_anm_mag_check_empty					= beretta_v_check_15, check_empty, 1.4
+33_v_anm_reload										= beretta_v_reload_30_p1, reload_p1, 1.2
+33_v_anm_reload_p1								= beretta_v_reload_30_p1, reload_p1, 1.2
+33_v_anm_reload_p2								= beretta_v_reload_30_p2, reload_p2, 1.2
+33_v_anm_reload_empty							= beretta_v_reload_30_p1, reload_empty_p1, 1.2
+33_v_anm_reload_empty_p1						= beretta_v_reload_30_p1, reload_empty_p1, 1.2
+33_v_anm_reload_empty_p2						= beretta_v_reload_30e_p2, reload_empty_p2, 1.2
+33_v_anm_mag_check								= beretta_v_check_30, check, 1.4
+33_v_anm_mag_check_empty					= beretta_v_check_30, check_empty, 1.4
+50_v_anm_reload										= beretta_v_reload_50_p1, reload_p1, 1.2
+50_v_anm_reload_p1								= beretta_v_reload_50_p1, reload_p1, 1.2
+50_v_anm_reload_p2								= beretta_v_reload_50_p2, reload_p2, 1.2
+50_v_anm_reload_empty							= beretta_v_reload_50_p1, reload_empty_p1, 1.2
+50_v_anm_reload_empty_p1						= beretta_v_reload_50_p1, reload_empty_p1, 1.2
+50_v_anm_reload_empty_p2						= beretta_v_reload_50e_p2, reload_empty_p2, 1.2
+50_v_anm_mag_check								= beretta_v_check_50, check, 1.4
+50_v_anm_mag_check_empty					= beretta_v_check_50, check_empty, 1.4

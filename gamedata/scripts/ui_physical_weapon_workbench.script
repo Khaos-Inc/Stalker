@@ -1,0 +1,2880 @@
+--[[
+Physical weapon workbench.
+
+The centre is transparent because the weapon is a real temporary world object.
+The side panels are normal UI controls layered over the inspection camera.
+]]
+
+local GUI = nil
+
+local INSTALLED_ROWS = 10
+local AVAILABLE_ROWS = 10
+local PLACEMENT_BOXES = 32
+local POPUP_MINIATURE_SLOT_BASE = 1000
+local LEADER_DRAW_SEGMENTS = 2
+local LEADER_BORDER_SEGMENTS = 4
+local LEADER_SEGMENTS = LEADER_DRAW_SEGMENTS + LEADER_BORDER_SEGMENTS
+local LEADER_COLOR = GetARGB(235, 18, 20, 19)
+local ANCHOR_COLOR = GetARGB(245, 18, 20, 19)
+
+local function item_display_name(section)
+    if not section or section == "" then
+        return ""
+    end
+
+    local ini = system_ini()
+
+    if ini:section_exist(section) and ini:line_exist(section, "inv_name") then
+        local key = ini:r_string(section, "inv_name")
+        local translated = game.translate_string(key)
+
+        if translated and translated ~= "" then
+            return translated
+        end
+    end
+
+    return section
+end
+
+local function is_module_section(section)
+    if not section or section == "" then
+        return false
+    end
+
+    local ini = system_ini()
+
+    return ini:section_exist(section) and
+           ini:line_exist(section, "attachment_point")
+end
+
+
+local ICON_GRID_SIZE = 50
+
+local function get_icon_data(section)
+    if not section or section == "" then
+        return nil
+    end
+
+    local ini = system_ini()
+
+    if not ini:section_exist(section) or
+       not ini:line_exist(section, "inv_grid_x") or
+       not ini:line_exist(section, "inv_grid_y") or
+       not ini:line_exist(section, "inv_grid_width") or
+       not ini:line_exist(section, "inv_grid_height")
+    then
+        return nil
+    end
+
+    local grid_w = ini:r_u32(section, "inv_grid_width")
+    local grid_h = ini:r_u32(section, "inv_grid_height")
+
+    if grid_w == 0 or grid_h == 0 then
+        return nil
+    end
+
+    local texture = "ui\\ui_icon_equipment"
+
+    if ini:line_exist(section, "icons_texture") then
+        texture = ini:r_string(section, "icons_texture")
+    elseif ini:line_exist(section, "inv_icon_path") then
+        texture = ini:r_string(section, "inv_icon_path")
+    end
+
+    return {
+        texture = texture,
+        grid_x = ini:r_u32(section, "inv_grid_x"),
+        grid_y = ini:r_u32(section, "inv_grid_y"),
+        grid_w = grid_w,
+        grid_h = grid_h,
+        width = grid_w * ICON_GRID_SIZE,
+        height = grid_h * ICON_GRID_SIZE
+    }
+end
+
+local function hide_icon(icon)
+    if icon then
+        icon:Show(false)
+    end
+end
+
+local function set_section_icon(icon, button, section, x, y)
+    if not icon or not button then
+        return false
+    end
+
+    local data = get_icon_data(section)
+
+    if not data then
+        hide_icon(icon)
+        button:Show(false)
+        button:Enable(false)
+        return false
+    end
+
+    button:SetWndPos(vector2():set(x, y))
+    button:SetWndSize(vector2():set(data.width, data.height))
+    button:Show(true)
+    button:Enable(true)
+
+    icon:InitTexture(data.texture)
+    icon:SetTextureRect(
+        Frect():set(
+            data.grid_x * ICON_GRID_SIZE,
+            data.grid_y * ICON_GRID_SIZE,
+            (data.grid_x + data.grid_w) * ICON_GRID_SIZE,
+            (data.grid_y + data.grid_h) * ICON_GRID_SIZE))
+    icon:SetWndPos(vector2():set(x, y))
+    icon:SetWndSize(vector2():set(data.width, data.height))
+    icon:SetStretchTexture(true)
+    icon:Show(true)
+
+    return data
+end
+
+local function set_marker_module_icon(icon, section, center_x, center_y)
+    if not icon then
+        return false
+    end
+
+    local data = get_icon_data(section)
+    if not data then
+        icon:Show(false)
+        return false
+    end
+
+    local max_size = 26
+    local scale = math.min(max_size / data.width, max_size / data.height)
+    local width = math.max(8, data.width * scale)
+    local height = math.max(8, data.height * scale)
+
+    icon:InitTexture(data.texture)
+    icon:SetTextureRect(
+        Frect():set(
+            data.grid_x * ICON_GRID_SIZE,
+            data.grid_y * ICON_GRID_SIZE,
+            (data.grid_x + data.grid_w) * ICON_GRID_SIZE,
+            (data.grid_y + data.grid_h) * ICON_GRID_SIZE))
+    icon:SetWndPos(vector2():set(center_x - width * 0.5, center_y - height * 0.5))
+    icon:SetWndSize(vector2():set(width, height))
+    icon:SetStretchTexture(true)
+    icon:Show(true)
+    return true
+end
+
+local function layout_icon_entries(entries, buttons, icons, panel_x, panel_y, panel_width)
+    local x = panel_x
+    local y = panel_y
+    local row_height = 0
+    local spacing = 4
+
+    for index = 1, math.max(#buttons, #icons) do
+        local entry = entries[index]
+        local button = buttons[index]
+        local icon = icons[index]
+
+        if entry then
+            local data = get_icon_data(entry.section)
+
+            if data then
+                if x > panel_x and x + data.width > panel_x + panel_width then
+                    x = panel_x
+                    y = y + row_height + spacing
+                    row_height = 0
+                end
+
+                set_section_icon(
+                    icon,
+                    button,
+                    entry.section,
+                    x,
+                    y)
+
+                x = x + data.width + spacing
+                row_height = math.max(row_height, data.height)
+            else
+                button:Show(false)
+                button:Enable(false)
+                hide_icon(icon)
+            end
+        else
+            button:Show(false)
+            button:Enable(false)
+            hide_icon(icon)
+        end
+    end
+end
+
+local WORKBENCH_DEBUG = false
+
+local function wb_debug(fmt, ...)
+    if not WORKBENCH_DEBUG then
+        return
+    end
+
+    if select("#", ...) > 0 then
+        printf("[WB DEBUG] " .. string.format(fmt, ...))
+    else
+        printf("[WB DEBUG] " .. tostring(fmt))
+    end
+end
+
+
+local TOOLTIP_STAT_FIELDS = {
+    {"inv_weight", "Weight", " kg"},
+    {"cost", "Value", " RU"},
+    {"ammo_mag_size", "Magazine size", ""},
+    {"rpm", "Rate of fire", " RPM"},
+    {"rpm_mode_2", "Alternate RPM", " RPM"},
+    {"bullet_speed", "Bullet velocity", " m/s"},
+    {"fire_dispersion_base", "Accuracy / dispersion", ""},
+    {"weapon_length", "Weapon length", " m"},
+    {"weapon_lenght", "Weapon length", " m"},
+    {"zoom_rotate_time", "ADS time", " s"},
+    {"recoil_koeff", "Recoil modifier", ""},
+    {"inertia_koeff", "Inertia modifier", ""},
+    {"weapon_recoil_vert", "Vertical HUD recoil", ""},
+    {"weapon_recoil_horz", "Horizontal HUD recoil", ""},
+    {"weapon_recoil_back", "Backward HUD recoil", ""},
+    {"weapon_recoil_back_max", "Maximum back recoil", ""},
+    {"weapon_recoil_ret_speed", "Recoil recovery", ""},
+    {"weapon_recoil_ads_mult", "ADS recoil multiplier", ""},
+    {"weapon_recoil_ads_multiplier", "ADS recoil multiplier", ""},
+    {"hit_power", "Damage", ""},
+    {"hit_impulse", "Hit impulse", ""},
+    {"fire_distance", "Effective distance", " m"},
+    {"cam_dispersion", "Vertical recoil", ""},
+    {"cam_dispersion_inc", "Recoil increase", ""},
+    {"cam_step_angle_horz", "Horizontal recoil", ""}
+}
+
+local function tooltip_config_value(ini, section, key)
+    if not section or section == "" or
+       not ini:section_exist(section) or
+       not ini:line_exist(section, key)
+    then
+        return nil
+    end
+
+    local ok, value = pcall(function()
+        return ini:r_string(section, key)
+    end)
+
+    if not ok or value == nil then
+        return nil
+    end
+
+    value = tostring(value)
+    value = string.gsub(value, "^%s+", "")
+    value = string.gsub(value, "%s+$", "")
+    return value ~= "" and value or nil
+end
+
+local function tooltip_description(section)
+    local ini = system_ini()
+    if not section or not ini:section_exist(section) then
+        return nil
+    end
+
+    for _, key in ipairs({"description", "inv_name_short"}) do
+        local value = tooltip_config_value(ini, section, key)
+        if value then
+            local translated = game.translate_string(value)
+            if translated and translated ~= "" and translated ~= value then
+                return translated
+            end
+        end
+    end
+    return nil
+end
+
+local function tooltip_add_section_stats(lines, seen, section, heading, max_lines)
+    local ini = system_ini()
+    if not section or section == "" or not ini:section_exist(section) then
+        return
+    end
+
+    local added_heading = false
+    for _, field in ipairs(TOOLTIP_STAT_FIELDS) do
+        if #lines >= max_lines then
+            return
+        end
+
+        local key, label, suffix = field[1], field[2], field[3]
+        local value = tooltip_config_value(ini, section, key)
+        local identity = label .. "|" .. tostring(value)
+        if value and not seen[identity] then
+            if heading and heading ~= "" and not added_heading then
+                table.insert(lines, heading)
+                added_heading = true
+            end
+            table.insert(lines, string.format("%s: %s%s", label, value, suffix or ""))
+            seen[identity] = true
+        end
+    end
+end
+
+local function tooltip_pretty_key(key)
+    local labels = {
+        inv_weight = "Weight",
+        cost = "Value",
+        zoom_rotate_time = "ADS time",
+        recoil_koeff = "Recoil modifier",
+        inertia_koeff = "Inertia modifier",
+        weapon_length = "Weapon length",
+        weapon_lenght = "Weapon length",
+        ammo_mag_size = "Magazine size",
+        max_mag_size = "Maximum magazine size",
+        rpm = "Rate of fire",
+        rpm_mode_2 = "Alternate rate of fire",
+        rpm_koeff = "Rate-of-fire modifier",
+        bullet_speed = "Bullet velocity",
+        fire_dispersion_base = "Accuracy / dispersion",
+        hit_power = "Damage",
+        hit_impulse = "Hit impulse",
+        fire_distance = "Effective distance",
+        weapon_recoil_vert = "Vertical HUD recoil",
+        weapon_recoil_horz = "Horizontal HUD recoil",
+        weapon_recoil_back = "Backward HUD recoil",
+        weapon_recoil_back_max = "Maximum back recoil",
+        weapon_recoil_ret_speed = "Recoil recovery",
+        weapon_recoil_ads_mult = "ADS recoil multiplier",
+        weapon_recoil_ads_multiplier = "ADS recoil multiplier",
+        cam_dispersion = "Vertical recoil",
+        cam_dispersion_inc = "Recoil increase",
+        cam_step_angle_horz = "Horizontal recoil"
+    }
+
+    if labels[key] then
+        return labels[key]
+    end
+
+    local result = string.gsub(tostring(key), "_", " ")
+    result = string.gsub(result, "^%l", string.upper)
+    return result
+end
+
+local function tooltip_value_suffix(key)
+    local suffixes = {
+        inv_weight = " kg",
+        cost = " RU",
+        zoom_rotate_time = " s",
+        weapon_length = " m",
+        weapon_lenght = " m",
+        rpm = " RPM",
+        rpm_mode_2 = " RPM",
+        bullet_speed = " m/s",
+        fire_distance = " m"
+    }
+    return suffixes[key] or ""
+end
+
+local function tooltip_add_override_attributes(lines, section, max_lines)
+    local ini = system_ini()
+    if not section or section == "" or not ini:section_exist(section) then
+        return
+    end
+
+    if #lines < max_lines then
+        table.insert(lines, "Module attributes")
+    end
+
+    local count = ini:line_count(section)
+    for i = 0, count - 1 do
+        if #lines >= max_lines then
+            return
+        end
+
+        local ok, _, key, value = pcall(function()
+            return ini:r_line(section, i, "", "")
+        end)
+
+        if ok and key and value and tostring(key) ~= "" then
+            key = tostring(key)
+            value = tostring(value)
+            value = string.gsub(value, "^%s+", "")
+            value = string.gsub(value, "%s+$", "")
+
+            if value ~= "" then
+                table.insert(lines, string.format(
+                    "%s: %s%s",
+                    tooltip_pretty_key(key),
+                    value,
+                    tooltip_value_suffix(key)))
+            end
+        end
+    end
+end
+
+local function build_workbench_tooltip(section, object_id)
+    if not section or section == "" then
+        return nil, nil
+    end
+
+    local ini = system_ini()
+    local title = item_display_name(section)
+    local lines = {}
+    local max_lines = 15
+
+    -- Item values always come from the module's own item section.
+    local weight = tooltip_config_value(ini, section, "inv_weight")
+    if weight then
+        table.insert(lines, "Weight: " .. weight .. " kg")
+    end
+
+    local cost = tooltip_config_value(ini, section, "cost")
+    if cost then
+        table.insert(lines, "Value: " .. cost .. " RU")
+    end
+
+    if object_id and #lines < max_lines then
+        local obj = level.object_by_id(object_id)
+        if obj and obj.condition then
+            local ok, condition = pcall(function() return obj:condition() end)
+            if ok and condition then
+                table.insert(lines, string.format(
+                    "Condition: %d%%",
+                    math.floor(condition * 100 + 0.5)))
+            end
+        end
+    end
+
+    -- Every line in override_section is an actual module attribute and should
+    -- be displayed, not only a hardcoded subset.
+    local override_section = tooltip_config_value(ini, section, "override_section")
+    if override_section and ini:section_exist(override_section) and #lines < max_lines then
+        tooltip_add_override_attributes(lines, override_section, max_lines)
+    end
+
+    if #lines == 0 then
+        table.insert(lines, "No item values or module attributes configured")
+    end
+
+    return title, lines
+end
+
+
+-- Persistent workbench weapon-stat calculation. This mirrors the modular
+-- attribute rules used by CWeapon::Module_ApplyOverrides closely enough for
+-- live UI previews: direct values replace, coefficient values accumulate, and
+-- zoom_rotate_time / weapon_length / weight / cost are additive.
+local function wb_num(section, key)
+    local value = tooltip_config_value(system_ini(), section, key)
+    if not value then return nil end
+    value = string.match(value, "^[^,]+") or value
+    return tonumber(value)
+end
+
+local function wb_raw(section, key)
+    return tooltip_config_value(system_ini(), section, key)
+end
+
+local function wb_override(section)
+    local name = wb_raw(section, "override_section")
+    if name and system_ini():section_exist(name) then return name end
+    return nil
+end
+
+local function wb_first_num(item_section, override_section, key)
+    local value = override_section and wb_num(override_section, key) or nil
+    if value == nil then value = wb_num(item_section, key) end
+    return value
+end
+
+local function wb_new_stats(weapon_section)
+    local ini = system_ini()
+    local hud = wb_raw(weapon_section, "hud")
+    local stats = {
+        weight = wb_num(weapon_section, "inv_weight") or 0,
+        cost = wb_num(weapon_section, "cost") or 0,
+        mag = wb_num(weapon_section, "ammo_mag_size") or 0,
+        rpm = wb_num(weapon_section, "rpm") or 0,
+        rpm_mode_2 = wb_num(weapon_section, "rpm_mode_2"),
+        bullet_speed = wb_num(weapon_section, "bullet_speed") or 0,
+        dispersion = wb_num(weapon_section, "fire_dispersion_base") or 0,
+        weapon_length = (wb_num(weapon_section, "weapon_length") or wb_num(weapon_section, "weapon_lenght") or 0),
+        ads_time = wb_num(weapon_section, "zoom_rotate_time") or 0,
+        recoil_modifier = 0,
+        inertia_modifier = 1,
+        rpm_modifier = 0,
+        recoil_vert = 0,
+        recoil_horz = 0,
+        recoil_back = 0,
+        recoil_recovery = 0
+    }
+    if hud and ini:section_exist(hud) then
+        stats.weapon_length = stats.weapon_length + (wb_num(hud, "weapon_length") or wb_num(hud, "weapon_lenght") or 0)
+        stats.recoil_vert = wb_num(hud, "weapon_recoil_vert") or 0
+        stats.recoil_horz = wb_num(hud, "weapon_recoil_horz") or 0
+        stats.recoil_back = wb_num(hud, "weapon_recoil_back") or 0
+        stats.recoil_recovery = wb_num(hud, "weapon_recoil_ret_speed") or 0
+    end
+    return stats
+end
+
+local function wb_apply_module(stats, section)
+    if not section or section == "" then return end
+    local override = wb_override(section)
+
+    stats.weight = stats.weight + (wb_num(section, "inv_weight") or 0)
+    stats.cost = stats.cost + (wb_num(section, "cost") or 0)
+
+    local length = (wb_num(section, "weapon_length") or wb_num(section, "weapon_lenght") or 0)
+    if override then
+        length = length + (wb_num(override, "weapon_length") or wb_num(override, "weapon_lenght") or 0)
+        stats.ads_time = stats.ads_time + (wb_num(override, "zoom_rotate_time") or 0)
+    end
+    stats.weapon_length = stats.weapon_length + length
+
+    local recoil = wb_first_num(section, override, "recoil_koeff")
+    if recoil ~= nil then stats.recoil_modifier = stats.recoil_modifier + recoil end
+    local inertia = wb_first_num(section, override, "inertia_koeff")
+    if inertia and inertia > 0 then stats.inertia_modifier = stats.inertia_modifier * inertia end
+    local rpmk = wb_first_num(section, override, "rpm_koeff")
+    if rpmk ~= nil then stats.rpm_modifier = stats.rpm_modifier + rpmk end
+
+    for _, key in ipairs({"rpm", "rpm_mode_2", "bullet_speed", "fire_dispersion_base"}) do
+        local v = wb_first_num(section, override, key)
+        if v ~= nil and (key == "fire_dispersion_base" or v > 0) then
+            if key == "fire_dispersion_base" then stats.dispersion = v else stats[key] = v end
+        end
+    end
+
+    local raw_mag = override and wb_raw(override, "ammo_mag_size") or nil
+    if not raw_mag then raw_mag = wb_raw(section, "ammo_mag_size") end
+    if raw_mag then
+        local trimmed = string.gsub(raw_mag, "^%s+", "")
+        if string.sub(trimmed, 1, 1) == "+" then
+            stats.mag = stats.mag + (tonumber(string.sub(trimmed, 2)) or 0)
+        else
+            local v = tonumber(trimmed)
+            if v and v > 0 then stats.mag = v end
+        end
+    end
+    local max_mag = wb_first_num(section, override, "max_mag_size")
+    if max_mag and max_mag > 0 then stats.mag = max_mag end
+end
+
+local function wb_collect_weapon_stats(weapon, add_section, exclude_index)
+    if not weapon then return nil end
+    local stats = wb_new_stats(weapon:section())
+    for index = 0, weapon:module_count() - 1 do
+        if index ~= exclude_index then
+            wb_apply_module(stats, weapon:module_get_section(index))
+        end
+    end
+    if add_section then wb_apply_module(stats, add_section) end
+
+    local rpm_mult = math.max(0.1, math.min(3.0, 1 + stats.rpm_modifier))
+    stats.rpm = stats.rpm * rpm_mult
+    stats.rpm_mode_2 = (stats.rpm_mode_2 or stats.rpm) * rpm_mult
+    stats.ads_time = math.max(0.01, stats.ads_time)
+    local recoil_mult = math.max(0.1, math.min(3.0, 1 + stats.recoil_modifier))
+    stats.recoil_vert = stats.recoil_vert * recoil_mult
+    stats.recoil_horz = stats.recoil_horz * recoil_mult
+    stats.recoil_back = stats.recoil_back * recoil_mult
+    return stats
+end
+
+local WEAPON_TOOLTIP_ROWS = {
+    {"weight", "Weight", " kg", 2},
+    {"cost", "Value", " RU", 0},
+    {"mag", "Magazine size", "", 0},
+    {"rpm", "Rate of fire", " RPM", 0},
+    {"bullet_speed", "Bullet velocity", " m/s", 0},
+    {"dispersion", "Accuracy / dispersion", "", 4},
+    {"weapon_length", "Weapon length", " m", 3},
+    {"ads_time", "ADS time", " s", 3},
+    {"recoil_vert", "Vertical recoil", "", 3},
+    {"recoil_horz", "Horizontal recoil", "", 3},
+    {"recoil_back", "Backward recoil", "", 3},
+    {"recoil_recovery", "Recoil recovery", "", 2},
+    {"recoil_modifier", "Total recoil modifier", "", 3},
+    {"inertia_modifier", "Total inertia modifier", "", 3}
+}
+
+local function wb_fmt(v, decimals)
+    if decimals == 0 then return string.format("%.0f", v or 0) end
+    return string.format("%." .. tostring(decimals or 2) .. "f", v or 0)
+end
+
+local WB_STAT_DIRECTION = {
+    weight = "lower",
+    cost = "neutral", 
+    mag = "higher",
+    rpm = "higher",
+    bullet_speed = "higher",
+    dispersion = "lower",
+    weapon_length = "lower",
+    ads_time = "lower",
+    recoil_vert = "lower",
+    recoil_horz = "lower",
+    recoil_back = "lower",
+    recoil_recovery = "higher",
+    recoil_modifier = "lower",
+    inertia_modifier = "lower",
+}
+
+local WB_COLOR_GOOD = GetARGB(255, 92, 220, 110)     -- зелёный
+local WB_COLOR_BAD = GetARGB(255, 235, 90, 90)       -- красный
+local WB_COLOR_DEFAULT = GetARGB(235, 225, 225, 225) -- обычный цвет
+
+local function wb_set_text_color(wnd, color)
+    if not wnd or not color then
+        return
+    end
+
+    if wnd.SetTextColor then
+        wnd:SetTextColor(color)
+    elseif wnd.SetColor then
+        wnd:SetColor(color)
+    end
+end
+
+local function wb_delta_color(key, delta)
+    if delta == nil then
+        return WB_COLOR_DEFAULT
+    end
+
+    -- Защита от NaN, если вдруг придёт битое значение.
+    if delta ~= delta then
+        return WB_COLOR_DEFAULT
+    end
+
+    if math.abs(delta) <= 0.00005 then
+        return WB_COLOR_DEFAULT
+    end
+
+    local direction = WB_STAT_DIRECTION[key]
+
+    if not direction or direction == "neutral" then
+        return WB_COLOR_DEFAULT
+    end
+
+    local is_good = false
+
+    if direction == "higher" then
+        is_good = delta > 0
+    elseif direction == "lower" then
+        is_good = delta < 0
+    else
+        return WB_COLOR_DEFAULT
+    end
+
+    if is_good then
+        return WB_COLOR_GOOD
+    end
+
+    return WB_COLOR_BAD
+end
+
+local function wb_stat_lines(current, compared, mode)
+    local lines = {}
+
+    for _, row in ipairs(WEAPON_TOOLTIP_ROWS) do
+        local key, label, suffix, decimals = row[1], row[2], row[3], row[4]
+        local cur = current[key] or 0
+
+        local text = label .. ": " .. wb_fmt(cur, decimals) .. suffix
+        local color = WB_COLOR_DEFAULT
+
+        if compared then
+            local other = compared[key] or 0
+            local delta
+
+            if mode == "installed" then
+                delta = cur - other
+
+                if math.abs(delta) > 0.00005 then
+                    text = text .. string.format(
+                        "  (module %+." .. decimals .. "f%s)",
+                        delta,
+                        suffix
+                    )
+
+                    color = wb_delta_color(key, delta)
+                end
+            else
+                delta = other - cur
+
+                if math.abs(delta) > 0.00005 then
+                    text = text .. "  ->  " .. wb_fmt(other, decimals) .. suffix
+                    text = text .. string.format(
+                        "  (%+." .. decimals .. "f%s)",
+                        delta,
+                        suffix
+                    )
+
+                    color = wb_delta_color(key, delta)
+                end
+            end
+        end
+
+        table.insert(lines, {
+            text = text,
+            color = color,
+        })
+    end
+
+    return lines
+end
+
+local MINIMAL_BASELINE = false
+local CALLOUT_BASELINE = true
+local ENABLE_MINIATURES = true
+
+local function console_value_is_enabled(value)
+    local normalized = string.lower(tostring(value or ""))
+
+    return normalized == "1" or
+           normalized == "on" or
+           normalized == "true"
+end
+
+class "UIPhysicalWeaponWorkbench" (CUIScriptWnd)
+
+function UIPhysicalWeaponWorkbench:__init(weapon) super()
+    self.weapon_id = weapon and weapon:id() or nil
+    self.preview_started = false
+    self.closed = false
+
+    -- This window continuously moves and toggles Lua UI controls. The
+    -- multithreaded UI path can render/hit-test those controls between updates,
+    -- producing hover flicker. Disable it only for this workbench and remember
+    -- whether it must be restored afterward.
+    self.restore_mt_ui = false
+
+    local mt_ui_value = get_console_cmd(0, "mt_ui")
+    if console_value_is_enabled(mt_ui_value) then
+        self.restore_mt_ui = true
+        get_console():execute("mt_ui 0")
+        printf("PHYSICAL WORKBENCH: temporarily disabled mt_ui")
+    end
+
+    self.installed_sections = {}
+    self.all_available_items = {}
+    self.visible_available_items = {}
+    self.attachment_points = {}
+    -- Stable per-slot callout layout. The leader side/lane must not be
+    -- recalculated from tiny world2ui changes every frame, otherwise points
+    -- near the screen centre jump between the left and right sides.
+    self.callout_layouts = {}
+    -- The radial slot map is keyed by logical attachment-point keys. It is
+    -- recomputed only when the visible key set changes, never from sub-pixel
+    -- projection jitter on every frame.
+    self.radial_layout_signature = nil
+    self.radial_best_offset = 0
+    self.radial_last_assignment_time = 0
+    self.selected_point_index = nil
+
+    -- The preview object and its installed script attachments may need a few
+    -- frames before their world transforms are valid. Retry on initial entry as
+    -- well as after install/remove operations.
+    self.refresh_retry_count = 20
+    self.refresh_retry_time = time_global()
+    self.point_rebuild_pending = true
+    self.point_rebuild_time = 0
+    self.debug_last_selected_point = nil
+    self.debug_last_visible_count = 0
+
+    self.installed_buttons = {}
+    self.installed_icons = {}
+    self.available_buttons = {}
+    self.available_icons = {}
+    self.placement_buttons = {}
+    self.placement_line_h = {}
+    self.placement_line_v = {}
+    self.placement_line_segments = {}
+    self.placement_anchor_icons = {}
+    self.placement_empty_icons = {}
+    self.placement_module_icons = {}
+    self.placement_labels = {}
+    -- Creating a script_attachment can synchronously load an OGF. Limit new
+    -- miniature creation per frame so assembled weapons do not stall the UI.
+    self.miniature_sections = {}
+    self.miniature_create_budget = 0
+    self.tooltip_section = nil
+    self.tooltip_object_id = nil
+    self.module_popup_open = false
+    self.module_popup_point_index = nil
+    self.popup_remove_button = nil
+    self.popup_miniature_sections = {}
+
+    self:InitControls()
+
+    if CALLOUT_BASELINE then
+        self.installed_caption:Show(false)
+        self.available_caption:Show(false)
+        self.left_panel:Show(false)
+        self.right_panel:Show(false)
+        self.status_text:Show(false)
+        for i = 1, INSTALLED_ROWS do
+            if self.installed_buttons[i] then self.installed_buttons[i]:Show(false) end
+            if self.installed_icons[i] then self.installed_icons[i]:Show(false) end
+        end
+        for i = 1, AVAILABLE_ROWS do
+            if self.available_buttons[i] then self.available_buttons[i]:Show(false) end
+            if self.available_icons[i] then self.available_icons[i]:Show(false) end
+        end
+    end
+
+    if self.weapon_id then
+        self.preview_started =
+            level.weapon_preview_test_start(self.weapon_id) == true
+    end
+
+    if not self.preview_started then
+        printf("! PHYSICAL WORKBENCH: preview start failed")
+    end
+
+    level.hide_indicators_safe()
+    if not MINIMAL_BASELINE then
+        self:RefreshLists()
+    else
+        self:ShowWeaponStats(nil, nil, nil)
+    end
+end
+
+function UIPhysicalWeaponWorkbench:RestoreMtUi()
+    if not self.restore_mt_ui then
+        return
+    end
+
+    self.restore_mt_ui = false
+    get_console():execute("mt_ui 1")
+    printf("PHYSICAL WORKBENCH: restored mt_ui")
+end
+
+function UIPhysicalWeaponWorkbench:__finalize()
+    -- Safety path for abnormal destruction. Normal closure restores it in
+    -- Close() after the dialog has released UI ownership.
+    self:RestoreMtUi()
+end
+
+function UIPhysicalWeaponWorkbench:GetWeapon()
+    if not self.weapon_id then
+        return nil
+    end
+
+    return level.object_by_id(self.weapon_id)
+end
+
+function UIPhysicalWeaponWorkbench:InitControls()
+    self:SetWndRect(Frect():set(0, 0, 1024, 768))
+
+    self.xml = CScriptXmlInit()
+    self.xml:ParseFile("ui_physical_weapon_workbench.xml")
+
+    local xml = self.xml
+
+    self.top_bar = xml:InitStatic("workbench:top_bar", self)
+    self.left_panel = xml:InitStatic("workbench:left_panel", self)
+    self.right_panel = xml:InitStatic("workbench:right_panel", self)
+    self.right_panel:SetTextureColor(GetARGB(225, 12, 14, 17))
+    self.right_panel:Enable(false)
+    self.bottom_bar = xml:InitStatic("workbench:bottom_bar", self)
+
+    self.title = xml:InitTextWnd("workbench:title", self)
+    self.weapon_name = xml:InitTextWnd("workbench:weapon_name", self)
+    self.installed_caption =
+        xml:InitTextWnd("workbench:installed_caption", self)
+    self.available_caption =
+        xml:InitTextWnd("workbench:available_caption", self)
+    self.preview_help =
+        xml:InitTextWnd("workbench:preview_help", self)
+    self.status_text =
+        xml:InitTextWnd("workbench:status_text", self)
+
+    self.tooltip_panel =
+        xml:InitStatic("workbench:tooltip_panel", self)
+    self.tooltip_title =
+        xml:InitTextWnd("workbench:tooltip_title", self)
+    self.tooltip_lines = {}
+    for i = 1, 15 do
+        local line = xml:InitTextWnd(
+            string.format("workbench:tooltip_line_%d", i),
+            self)
+        line:Show(false)
+        self.tooltip_lines[i] = line
+    end
+    self.tooltip_panel:Show(false)
+    self.tooltip_title:Show(false)
+
+    self.close_button =
+        xml:Init3tButton("workbench:close_button", self)
+
+    self:Register(self.close_button, "close_button")
+    self:AddCallback(
+        "close_button",
+        ui_events.BUTTON_CLICKED,
+        self.Close,
+        self)
+
+    -- One real C++ child window draws every leader in a single line-list batch.
+    -- It is attached before the boxes, so boxes and anchor dots render on top.
+    self.workbench_lines = xml:InitWorkbenchLines(self)
+
+    if MINIMAL_BASELINE then
+        self.installed_caption:Show(false)
+        self.available_caption:Show(false)
+        self.left_panel:Show(false)
+        self.right_panel:Show(false)
+        self.status_text:Show(false)
+        return
+    end
+
+    for i = 1, INSTALLED_ROWS do
+        local button =
+            xml:Init3tButton(
+                string.format("workbench:installed_button_%02d", i),
+                self)
+
+        local icon =
+            xml:InitStatic(
+                string.format("workbench:installed_icon_%02d", i),
+                self)
+
+        local callback_name =
+            string.format("installed_button_%02d", i)
+
+        self:Register(button, callback_name)
+
+        self:AddCallback(
+            callback_name,
+            ui_events.BUTTON_CLICKED,
+            function()
+                self:OnInstalledClicked(i)
+            end,
+            self)
+
+        icon:Show(false)
+
+        self.installed_buttons[i] = button
+        self.installed_icons[i] = icon
+    end
+
+    for i = 1, AVAILABLE_ROWS do
+        local button =
+            xml:Init3tButton(
+                string.format("workbench:available_button_%02d", i),
+                self)
+
+        local icon =
+            xml:InitStatic(
+                string.format("workbench:available_icon_%02d", i),
+                self)
+
+        local callback_name =
+            string.format("available_button_%02d", i)
+
+        self:Register(button, callback_name)
+
+        self:AddCallback(
+            callback_name,
+            ui_events.BUTTON_CLICKED,
+            function()
+                self:OnAvailableClicked(i)
+            end,
+            self)
+
+        icon:Show(false)
+
+        self.available_buttons[i] = button
+        self.available_icons[i] = icon
+    end
+
+    for i = 1, PLACEMENT_BOXES do
+        local line_h = nil
+        local line_v = nil
+
+        local line_segments = {}
+        for segment_index = LEADER_DRAW_SEGMENTS + 1, LEADER_SEGMENTS do
+            local segment =
+                xml:InitStatic(
+                    string.format(
+                        "workbench:placement_line_%02d_%02d",
+                        i,
+                        segment_index),
+                    self)
+            segment:SetTextureColor(LEADER_COLOR)
+            segment:Show(false)
+            line_segments[segment_index] = segment
+        end
+
+        local anchor_icon =
+            xml:InitStatic(
+                string.format("workbench:placement_anchor_%02d", i),
+                self)
+        anchor_icon:SetTextureColor(ANCHOR_COLOR)
+
+        local button =
+            xml:Init3tButton(
+                string.format("workbench:placement_button_%02d", i),
+                self)
+
+        local empty_icon =
+            xml:InitStatic(
+                string.format("workbench:placement_empty_%02d", i),
+                self)
+
+        local module_icon =
+            xml:InitStatic(
+                string.format("workbench:placement_icon_%02d", i),
+                self)
+
+        local label =
+            xml:InitTextWnd(
+                string.format("workbench:placement_label_%02d", i),
+                self)
+
+        local callback_name =
+            string.format("placement_button_%02d", i)
+
+        self:Register(button, callback_name)
+
+        self:AddCallback(
+            callback_name,
+            ui_events.BUTTON_CLICKED,
+            function()
+                self:OnPlacementClicked(i)
+            end,
+            self)
+
+        anchor_icon:Show(false)
+        button:Show(false)
+        button:Enable(false)
+        empty_icon:Show(false)
+        module_icon:Show(false)
+        label:Show(false)
+
+        self.placement_buttons[i] = button
+        self.placement_line_h[i] = line_h
+        self.placement_line_v[i] = line_v
+        self.placement_line_segments[i] = line_segments
+        self.placement_anchor_icons[i] = anchor_icon
+        self.placement_empty_icons[i] = empty_icon
+        self.placement_module_icons[i] = module_icon
+        self.placement_labels[i] = label
+    end
+
+    -- Attach the remove button after the entire placement-callout layer.
+    -- This keeps the X above any overlapping placement control.
+    self.popup_remove_button =
+        xml:Init3tButton("workbench:popup_remove_button", self)
+    self:Register(self.popup_remove_button, "popup_remove_button")
+    self:AddCallback(
+        "popup_remove_button",
+        ui_events.BUTTON_CLICKED,
+        self.OnPopupRemoveClicked,
+        self)
+    self.popup_remove_button:Show(false)
+    self.popup_remove_button:Enable(false)
+
+    local weapon = self:GetWeapon()
+
+    if weapon then
+        self.weapon_name:SetText(item_display_name(weapon:section()))
+    else
+        self.weapon_name:SetText("NO WEAPON")
+    end
+end
+
+function UIPhysicalWeaponWorkbench:SetStatus(text)
+    self.status_text:SetText(text or "")
+end
+
+function UIPhysicalWeaponWorkbench:HideAttachmentPoints()
+    if self.workbench_lines then
+        self.workbench_lines:ClearLines()
+    end
+
+    -- Minimal baseline does not create attachment-point widgets. Cleanup must
+    -- therefore tolerate absent tables and entries.
+    for i = 1, PLACEMENT_BOXES do
+        if self.placement_line_h and self.placement_line_h[i] then
+            if self.placement_line_h[i] then self.placement_line_h[i]:Show(false) end
+        end
+        if self.placement_line_v and self.placement_line_v[i] then
+            if self.placement_line_v[i] then self.placement_line_v[i]:Show(false) end
+        end
+        if self.placement_line_segments and self.placement_line_segments[i] then
+            for segment_index = 1, LEADER_SEGMENTS do
+                local segment = self.placement_line_segments[i][segment_index]
+                if segment then
+                    segment:Show(false)
+                end
+            end
+        end
+        if self.placement_anchor_icons and self.placement_anchor_icons[i] then
+            self.placement_anchor_icons[i]:Show(false)
+        end
+        if self.placement_buttons and self.placement_buttons[i] then
+            self.placement_buttons[i]:Show(false)
+            self.placement_buttons[i]:Enable(false)
+        end
+        if self.placement_empty_icons and self.placement_empty_icons[i] then
+            self.placement_empty_icons[i]:Show(false)
+        end
+        if self.placement_module_icons and self.placement_module_icons[i] then
+            self.placement_module_icons[i]:Show(false)
+        end
+        if self.placement_labels and self.placement_labels[i] then
+            self.placement_labels[i]:Show(false)
+        end
+        if self.miniature_sections then
+            self.miniature_sections[i] = nil
+        end
+    end
+end
+
+function UIPhysicalWeaponWorkbench:ConsumeInventoryItem(object_id)
+    local server_item = alife():object(object_id)
+
+    if not server_item then
+        return false
+    end
+
+    alife():release(server_item, true)
+    return true
+end
+
+function UIPhysicalWeaponWorkbench:InstallAvailable(entry)
+    local weapon = self:GetWeapon()
+
+    if not weapon or not entry then
+        return false
+    end
+
+    if not weapon:module_install_placement(
+            entry.section,
+            entry.placement_index)
+    then
+        self:SetStatus(
+            "Could not attach " .. item_display_name(entry.section))
+        return false
+    end
+
+    if not self:ConsumeInventoryItem(entry.object_id) then
+        local installed_count = weapon:module_count()
+
+        for index = installed_count - 1, 0, -1 do
+            if weapon:module_get_section(index) == entry.section and
+               weapon:module_can_remove_index(index)
+            then
+                weapon:module_remove_index(index)
+                break
+            end
+        end
+
+        self:SetStatus(
+            "Inventory item vanished; installation was cancelled")
+        return false
+    end
+
+    self:SetStatus("Attached " .. item_display_name(entry.section))
+    self:HideModulePopup()
+    self.selected_point_index = nil
+    self.visible_available_items = {}
+
+    self.refresh_retry_count = 12
+    self.refresh_retry_time = time_global()
+    self.point_rebuild_pending = true
+    self:RefreshLists()
+    return true
+end
+
+function UIPhysicalWeaponWorkbench:ClearPopupMiniatures()
+    if not level.weapon_preview_test_miniature_clear then
+        return
+    end
+
+    for row = 1, AVAILABLE_ROWS do
+        level.weapon_preview_test_miniature_clear(
+            POPUP_MINIATURE_SLOT_BASE + row)
+        self.popup_miniature_sections[row] = nil
+    end
+end
+
+function UIPhysicalWeaponWorkbench:RectanglesOverlap(
+    ax, ay, aw, ah,
+    bx, by, bw, bh)
+
+    return ax < bx + bw and
+           ax + aw > bx and
+           ay < by + bh and
+           ay + ah > by
+end
+
+function UIPhysicalWeaponWorkbench:UpdatePlacementInputStates()
+    local popup = self.module_popup_rect
+
+    for i = 1, PLACEMENT_BOXES do
+        local button = self.placement_buttons and self.placement_buttons[i]
+        local point = self.attachment_points and self.attachment_points[i]
+
+        if button then
+            local visible = point ~= nil and button:IsShown()
+            local blocked = false
+
+            if visible and self.module_popup_open and popup then
+                local bx = (point.callout_x or 0) - 23
+                local by = (point.callout_y or 0) - 23
+
+                blocked = self:RectanglesOverlap(
+                    bx, by, 46, 46,
+                    popup.x, popup.y, popup.w, popup.h)
+            end
+
+            button:Enable(visible and not blocked)
+        end
+    end
+end
+
+function UIPhysicalWeaponWorkbench:HideModulePopup()
+    self:ClearPopupMiniatures()
+    self.module_popup_open = false
+    self.module_popup_point_index = nil
+    self.module_popup_rect = nil
+    self:UpdatePlacementInputStates()
+    if self.right_panel then self.right_panel:Show(false) end
+    if self.available_caption then self.available_caption:Show(false) end
+    if self.popup_remove_button then
+        self.popup_remove_button:Show(false)
+        self.popup_remove_button:Enable(false)
+    end
+    for i = 1, AVAILABLE_ROWS do
+        if self.available_buttons[i] then
+            self.available_buttons[i]:Show(false)
+            self.available_buttons[i]:Enable(false)
+        end
+        if self.available_icons[i] then self.available_icons[i]:Show(false) end
+    end
+end
+
+function UIPhysicalWeaponWorkbench:ShowModulePopup(point_index)
+    local point = self.attachment_points[point_index]
+    if not point then
+        self:HideModulePopup()
+        return
+    end
+
+    local occupied = point.installed_section and point.installed_section ~= ""
+    if not occupied and #point.options == 0 then
+        self:HideModulePopup()
+        return
+    end
+
+    local box_x = point.callout_x or 512
+    local box_y = point.callout_y or 384
+    local cell_size = 46
+    local cell_gap = 4
+    local columns = occupied and 1 or math.min(4, math.max(1, #point.options))
+    local rows = occupied and 1 or math.ceil(math.min(#point.options, AVAILABLE_ROWS) / columns)
+    local popup_width = occupied and 112 or (columns * cell_size + (columns - 1) * cell_gap + 16)
+    local popup_height = occupied and 58 or (rows * cell_size + (rows - 1) * cell_gap + 34)
+
+    -- Hug the selected callout box. One UI unit leaves only a hairline gap.
+    local gap = 1
+    local box_half = 16
+    local popup_x = box_x + box_half + gap
+    if popup_x + popup_width > 1018 then
+        popup_x = box_x - box_half - popup_width - gap
+    end
+    popup_x = math.max(6, math.min(1018 - popup_width, popup_x))
+
+    local popup_y = box_y - popup_height * 0.5
+    popup_y = math.max(78, math.min(690 - popup_height, popup_y))
+
+    self.module_popup_open = true
+    self.module_popup_point_index = point_index
+
+    -- Only placement boxes physically covered by the popup are blocked.
+    -- Every other callout stays clickable so the user can switch points
+    -- without first closing the popup.
+    self.module_popup_rect = {
+        x = popup_x,
+        y = popup_y,
+        w = popup_width,
+        h = popup_height
+    }
+    self:UpdatePlacementInputStates()
+
+    self.right_panel:SetWndPos(vector2():set(popup_x, popup_y))
+    self.right_panel:SetWndSize(vector2():set(popup_width, popup_height))
+    self.right_panel:Show(true)
+
+    self.available_caption:SetWndPos(vector2():set(popup_x + 7, popup_y + 5))
+    self.available_caption:SetWndSize(vector2():set(popup_width - 14, 18))
+
+    if occupied then
+        self.visible_available_items = {}
+        self.available_caption:SetText("")
+        self.available_caption:Show(false)
+
+        for i = 1, AVAILABLE_ROWS do
+            if self.available_buttons[i] then
+                self.available_buttons[i]:Show(false)
+                self.available_buttons[i]:Enable(false)
+            end
+            if self.available_icons[i] then self.available_icons[i]:Show(false) end
+        end
+
+        local miniature_x = popup_x + 30
+        local miniature_y = popup_y + popup_height * 0.5
+        level.weapon_preview_test_miniature_set(
+            POPUP_MINIATURE_SLOT_BASE + 1,
+            point.installed_section,
+            miniature_x,
+            miniature_y)
+        self.popup_miniature_sections[1] = point.installed_section
+        for i = 2, AVAILABLE_ROWS do
+            if self.popup_miniature_sections[i] then
+                level.weapon_preview_test_miniature_clear(
+                    POPUP_MINIATURE_SLOT_BASE + i)
+                self.popup_miniature_sections[i] = nil
+            end
+        end
+
+        self.popup_remove_button:SetWndPos(
+            vector2():set(popup_x + popup_width - 36, popup_y + 14))
+        self.popup_remove_button:SetWndSize(vector2():set(28, 28))
+        self.popup_remove_button:Show(true)
+        self.popup_remove_button:Enable(true)
+    else
+        self.available_caption:SetText("COMPATIBLE MODULES")
+        self.available_caption:Show(true)
+        self.popup_remove_button:Show(false)
+        self.popup_remove_button:Enable(false)
+
+        local count = math.min(#self.visible_available_items, AVAILABLE_ROWS)
+        for i = 1, AVAILABLE_ROWS do
+            local button = self.available_buttons[i]
+            local icon = self.available_icons[i]
+            if icon then icon:Show(false) end
+
+            if i <= count and button then
+                local col = (i - 1) % columns
+                local row = math.floor((i - 1) / columns)
+                local x = popup_x + 8 + col * (cell_size + cell_gap)
+                local y = popup_y + 26 + row * (cell_size + cell_gap)
+
+                button:SetWndPos(vector2():set(x, y))
+                button:SetWndSize(vector2():set(cell_size, cell_size))
+                button:Show(true)
+                button:Enable(true)
+
+                local entry = self.visible_available_items[i]
+                if entry and entry.section then
+                    level.weapon_preview_test_miniature_set(
+                        POPUP_MINIATURE_SLOT_BASE + i,
+                        entry.section,
+                        x + cell_size * 0.5,
+                        y + cell_size * 0.5)
+                    self.popup_miniature_sections[i] = entry.section
+                end
+            elseif button then
+                button:Show(false)
+                button:Enable(false)
+                if self.popup_miniature_sections[i] then
+                    level.weapon_preview_test_miniature_clear(
+                        POPUP_MINIATURE_SLOT_BASE + i)
+                    self.popup_miniature_sections[i] = nil
+                end
+            end
+        end
+    end
+end
+
+function UIPhysicalWeaponWorkbench:UpdateAvailableRows()
+    wb_debug("UpdateAvailableRows selected=%s visible_count=%d", tostring(self.selected_point_index), #self.visible_available_items)
+    if self.module_popup_open and self.module_popup_point_index then
+        self:ShowModulePopup(self.module_popup_point_index)
+    else
+        for i = 1, AVAILABLE_ROWS do
+            if self.available_buttons[i] then self.available_buttons[i]:Show(false) end
+            if self.available_icons[i] then self.available_icons[i]:Show(false) end
+        end
+    end
+end
+
+local function make_attachment_point_key(owner, owner_instance, slot, entry, rail_start, rail_length)
+    return string.format(
+        "%s|%s|%s|%s|%s|%s",
+        tostring(owner or ""),
+        tostring(owner_instance or 0),
+        tostring(slot or ""),
+        tostring(entry or -1),
+        tostring(rail_start or 0),
+        tostring(rail_length or 0))
+end
+
+function UIPhysicalWeaponWorkbench:FindOrCreatePoint(
+    point_key,
+    world_pos,
+    section,
+    object_id,
+    placement_index,
+    installed_section,
+    installed_index)
+
+    -- Do not merge points only because they occupy the same bone coordinates.
+    -- Different logical slots can intentionally share one transform. The key is
+    -- the resolved slot provider + entry + rail range, so only modules that fit
+    -- the exact same physical placement are grouped into one callout.
+    for index, point in ipairs(self.attachment_points) do
+        if point.key == point_key then
+            if section and object_id and placement_index ~= nil then
+                point.options[#point.options + 1] = {
+                    object_id = object_id,
+                    section = section,
+                    placement_index = placement_index
+                }
+            end
+
+            if installed_section then
+                point.installed_section = installed_section
+                point.installed_index = installed_index
+            end
+            return true
+        end
+    end
+
+    if #self.attachment_points >= PLACEMENT_BOXES then
+        if installed_index ~= nil then
+            -- Available placement candidates are gathered before occupied
+            -- modules. A provider with many rail positions (for example the
+            -- Ultimak gas tube) can fill the complete UI point budget before
+            -- the installed-module pass starts. Never discard an occupied
+            -- module box: evict one unoccupied candidate to make room.
+            local remove_index = nil
+
+            for index = #self.attachment_points, 1, -1 do
+                if self.attachment_points[index].installed_index == nil then
+                    remove_index = index
+                    break
+                end
+            end
+
+            if remove_index then
+                table.remove(self.attachment_points, remove_index)
+            else
+                -- Every existing point is occupied. There is no safe candidate
+                -- to replace, so keep the already-visible occupied set.
+                return false
+            end
+        else
+            return false
+        end
+    end
+
+    local layout = self.callout_layouts[point_key]
+    if not layout then
+        layout = {
+            side = nil,
+            lane = nil,
+            radial_slot = nil,
+            smooth_x = nil,
+            smooth_y = nil
+        }
+        self.callout_layouts[point_key] = layout
+    end
+
+    local point = {
+        key = point_key,
+        x = world_pos.x,
+        y = world_pos.y,
+        z = world_pos.z,
+        options = {},
+        installed_section = installed_section,
+        installed_index = installed_index,
+        callout_layout = layout
+    }
+
+    if section and object_id and placement_index ~= nil then
+        point.options[1] = {
+            object_id = object_id,
+            section = section,
+            placement_index = placement_index
+        }
+    end
+
+    self.attachment_points[#self.attachment_points + 1] = point
+    return true
+end
+
+function UIPhysicalWeaponWorkbench:RebuildAttachmentPoints()
+    wb_debug("RebuildAttachmentPoints BEGIN selected=%s visible_count=%d pending=%s all_items=%d", tostring(self.selected_point_index), #self.visible_available_items, tostring(self.point_rebuild_pending), #self.all_available_items)
+    local weapon = self:GetWeapon()
+
+    if not weapon then
+        return false
+    end
+
+    -- A delayed point rebuild can happen immediately after a placement box is
+    -- clicked. Preserve the selected physical point so the compatible module
+    -- list is not shown for one frame and then cleared by this rebuild.
+    local selected_world_pos = nil
+    local selected_point_key = nil
+    local selected_point =
+        self.selected_point_index and
+        self.attachment_points[self.selected_point_index] or nil
+
+    if selected_point then
+        selected_point_key = selected_point.key
+        selected_world_pos = {
+            x = selected_point.x,
+            y = selected_point.y,
+            z = selected_point.z
+        }
+    end
+
+    self.attachment_points = {}
+    self.selected_point_index = nil
+    self.visible_available_items = {}
+
+    local found_valid_world_position = false
+
+    for _, item in ipairs(self.all_available_items) do
+        local placement_count =
+            weapon:module_placement_count(item.section)
+
+        for placement_index = 0, placement_count - 1 do
+            local world_pos =
+                level.weapon_preview_test_placement_world(
+                    item.section,
+                    placement_index)
+
+            local valid =
+                world_pos and
+                math.abs(world_pos.x) < 1000000 and
+                math.abs(world_pos.y) < 1000000 and
+                math.abs(world_pos.z) < 1000000
+
+            if valid then
+                found_valid_world_position = true
+
+                local owner = level.weapon_preview_test_placement_owner(
+                    item.section, placement_index)
+                local owner_instance = level.weapon_preview_test_placement_owner_instance(
+                    item.section, placement_index)
+                local slot = level.weapon_preview_test_placement_slot(
+                    item.section, placement_index)
+                local entry = level.weapon_preview_test_placement_entry(
+                    item.section, placement_index)
+                local rail_start = level.weapon_preview_test_placement_start(
+                    item.section, placement_index)
+                local rail_length = level.weapon_preview_test_placement_length(
+                    item.section, placement_index)
+
+                local point_key = make_attachment_point_key(
+                    owner,
+                    owner_instance,
+                    slot,
+                    entry,
+                    rail_start,
+                    rail_length)
+
+                self:FindOrCreatePoint(
+                    point_key,
+                    world_pos,
+                    item.section,
+                    item.object_id,
+                    placement_index)
+            end
+        end
+    end
+
+    -- Installed modules occupy attachment points that are no longer returned by
+    -- module_placement_count(). Add their real resolved positions too, so an
+    -- occupied point can display the installed module icon instead of vanishing.
+    local installed_count = weapon:module_count()
+    for module_index = 0, installed_count - 1 do
+        local world_pos =
+            level.weapon_preview_test_module_world(module_index)
+        local section = weapon:module_get_section(module_index)
+
+        local valid =
+            world_pos and section and section ~= "" and
+            math.abs(world_pos.x) < 1000000 and
+            math.abs(world_pos.y) < 1000000 and
+            math.abs(world_pos.z) < 1000000
+
+        if valid then
+            found_valid_world_position = true
+            local point_key = make_attachment_point_key(
+                level.weapon_preview_test_module_slot_owner(module_index),
+                level.weapon_preview_test_module_slot_owner_instance(module_index),
+                "",
+                level.weapon_preview_test_module_slot_entry(module_index),
+                level.weapon_preview_test_module_rail_start(module_index),
+                level.weapon_preview_test_module_rail_length(module_index))
+
+            -- Available placement keys include the available slot name, while an
+            -- installed instance stores the slot owner/entry/range. Match an
+            -- existing point by those stable fields first; otherwise keep a
+            -- standalone occupied point for old saves or unavailable slot data.
+            local matched_key = nil
+            local owner = level.weapon_preview_test_module_slot_owner(module_index)
+            local owner_instance = level.weapon_preview_test_module_slot_owner_instance(module_index)
+            local entry = level.weapon_preview_test_module_slot_entry(module_index)
+            local rail_start = level.weapon_preview_test_module_rail_start(module_index)
+            local rail_length = level.weapon_preview_test_module_rail_length(module_index)
+
+            for _, existing in ipairs(self.attachment_points) do
+                local prefix = string.format(
+                    "%s|%s|",
+                    tostring(owner or ""),
+                    tostring(owner_instance or 0))
+                local suffix = string.format(
+                    "|%s|%s|%s",
+                    tostring(entry or -1),
+                    tostring(rail_start or 0),
+                    tostring(rail_length or 0))
+
+                if string.sub(existing.key, 1, #prefix) == prefix and
+                    string.sub(existing.key, -#suffix) == suffix then
+                    matched_key = existing.key
+                    break
+                end
+            end
+
+            -- Some installed modules do not preserve exactly the same owner/slot
+            -- metadata that module_placement_count() reports for the corresponding
+            -- available placement. In that case the old code created a second
+            -- callout for the same physical point. Match by the same candidate
+            -- module section and choose its nearest available placement instead.
+            if not matched_key then
+                local nearest_key = nil
+                local nearest_distance_sq = nil
+
+                for _, existing in ipairs(self.attachment_points) do
+                    local contains_same_section = false
+
+                    for _, option in ipairs(existing.options) do
+                        if option.section == section then
+                            contains_same_section = true
+                            break
+                        end
+                    end
+
+                    if contains_same_section then
+                        local dx = existing.x - world_pos.x
+                        local dy = existing.y - world_pos.y
+                        local dz = existing.z - world_pos.z
+                        local distance_sq = dx * dx + dy * dy + dz * dz
+
+                        if not nearest_distance_sq or distance_sq < nearest_distance_sq then
+                            nearest_distance_sq = distance_sq
+                            nearest_key = existing.key
+                        end
+                    end
+                end
+
+                matched_key = nearest_key
+            end
+
+            self:FindOrCreatePoint(
+                matched_key or point_key,
+                world_pos,
+                nil,
+                nil,
+                nil,
+                section,
+                module_index)
+
+            -- Once an available point becomes occupied, anchor it to the actual
+            -- installed module center rather than whichever candidate section was
+            -- encountered first while building the available-placement list.
+            if matched_key then
+                for _, existing in ipairs(self.attachment_points) do
+                    if existing.key == matched_key then
+                        existing.x = world_pos.x
+                        existing.y = world_pos.y
+                        existing.z = world_pos.z
+                        break
+                    end
+                end
+            end
+        end
+    end
+
+    -- Final canonicalization. Retry refreshes can expose the same occupied
+    -- placement through both candidate-placement metadata and installed-instance
+    -- metadata. Keep exactly one point for each installed module index, merge its
+    -- options, then order all points by stable logical identity so UI widget index
+    -- never changes randomly between refreshes.
+    local canonical_points = {}
+    local occupied_by_index = {}
+    local empty_by_key = {}
+
+    for _, point in ipairs(self.attachment_points) do
+        local existing = nil
+        if point.installed_index ~= nil then
+            existing = occupied_by_index[point.installed_index]
+        else
+            existing = empty_by_key[point.key]
+        end
+
+        if existing then
+            for _, option in ipairs(point.options or {}) do
+                local duplicate = false
+                for _, old_option in ipairs(existing.options or {}) do
+                    if old_option.object_id == option.object_id and
+                       old_option.placement_index == option.placement_index and
+                       old_option.section == option.section then
+                        duplicate = true
+                        break
+                    end
+                end
+                if not duplicate then
+                    existing.options[#existing.options + 1] = option
+                end
+            end
+
+            if point.installed_index ~= nil then
+                existing.installed_section = point.installed_section
+                existing.installed_index = point.installed_index
+                existing.x = point.x
+                existing.y = point.y
+                existing.z = point.z
+            end
+        else
+            canonical_points[#canonical_points + 1] = point
+            if point.installed_index ~= nil then
+                occupied_by_index[point.installed_index] = point
+            else
+                empty_by_key[point.key] = point
+            end
+        end
+    end
+
+
+    -- Empty Picatinny rails can expose one logical placement for every rail
+    -- position. Keep only the first empty callout for the exact same slot
+    -- provider, while preserving every installed module and every non-Picatinny
+    -- attachment point.
+    local filtered_points = {}
+    local first_empty_picatinny_by_slot = {}
+
+    local function split_attachment_point_key(key)
+        local owner, owner_instance, slot, entry, rail_start, rail_length =
+            string.match(
+                tostring(key or ""),
+                "^(.-)|(.-)|(.-)|(.-)|(.-)|(.-)$")
+
+        return owner or "",
+            owner_instance or "0",
+            slot or "",
+            entry or "-1",
+            rail_start or "0",
+            rail_length or "0"
+    end
+
+    local function is_picatinny_slot(slot)
+        local value = string.lower(tostring(slot or ""))
+        return string.find(value, "pica", 1, true) ~= nil or
+               string.find(value, "picatinny", 1, true) ~= nil
+    end
+
+    for _, point in ipairs(canonical_points) do
+        if point.installed_index ~= nil then
+            -- Installed modules are never collapsed, including nested modules.
+            filtered_points[#filtered_points + 1] = point
+        else
+            local owner, owner_instance, slot =
+                split_attachment_point_key(point.key)
+
+            if is_picatinny_slot(slot) then
+                -- rail_start/rail_length/entry distinguish individual positions
+                -- on one rail. Ignore those only for empty Picatinny callouts.
+                local rail_slot_key = string.format(
+                    "%s|%s|%s",
+                    tostring(owner),
+                    tostring(owner_instance),
+                    string.lower(tostring(slot)))
+
+                if not first_empty_picatinny_by_slot[rail_slot_key] then
+                    first_empty_picatinny_by_slot[rail_slot_key] = point
+                    filtered_points[#filtered_points + 1] = point
+                end
+            else
+                filtered_points[#filtered_points + 1] = point
+            end
+        end
+    end
+
+    canonical_points = filtered_points
+
+    table.sort(canonical_points, function(a, b)
+        local a_identity = a.installed_index ~= nil and
+            string.format("I|%08d|%s", a.installed_index, tostring(a.key)) or
+            "E|" .. tostring(a.key)
+        local b_identity = b.installed_index ~= nil and
+            string.format("I|%08d|%s", b.installed_index, tostring(b.key)) or
+            "E|" .. tostring(b.key)
+        return a_identity < b_identity
+    end)
+
+    self.attachment_points = canonical_points
+
+    for i = 1, PLACEMENT_BOXES do
+        local visible = i <= #self.attachment_points
+
+        self.placement_buttons[i]:Show(visible)
+        self.placement_buttons[i]:Enable(visible)
+        if self.placement_line_h[i] then self.placement_line_h[i]:Show(false) end
+        if self.placement_line_v[i] then self.placement_line_v[i]:Show(false) end
+        for segment_index = 1, LEADER_SEGMENTS do
+            local segment = self.placement_line_segments[i][segment_index]
+            if segment then segment:Show(false) end
+        end
+        self.placement_anchor_icons[i]:Show(false)
+        self.placement_labels[i]:Show(false)
+        self.placement_empty_icons[i]:Show(false)
+        self.placement_module_icons[i]:Show(false)
+    end
+
+    if found_valid_world_position then
+        self.point_rebuild_pending = false
+
+        -- Restore the selection by matching the rebuilt point nearest to the
+        -- previously selected world position. The same merge radius used when
+        -- grouping placement options is used here.
+        if selected_world_pos then
+            local best_index = nil
+            local best_distance_sq = 0.0004
+
+            for index, point in ipairs(self.attachment_points) do
+                if selected_point_key and point.key == selected_point_key then
+                    best_index = index
+                    break
+                end
+
+                local dx = point.x - selected_world_pos.x
+                local dy = point.y - selected_world_pos.y
+                local dz = point.z - selected_world_pos.z
+                local distance_sq = dx * dx + dy * dy + dz * dz
+
+                if distance_sq <= best_distance_sq then
+                    best_distance_sq = distance_sq
+                    best_index = index
+                end
+            end
+
+            if best_index then
+                self.selected_point_index = best_index
+                self.visible_available_items =
+                    self.attachment_points[best_index].options
+            end
+        end
+
+        self:UpdateAvailableRows()
+
+        if self.selected_point_index then
+            self:SetStatus(
+                string.format(
+                    "Attachment point %d selected — %d compatible module(s)",
+                    self.selected_point_index,
+                    #self.visible_available_items))
+        else
+            self:SetStatus(
+                string.format(
+                    "%d attachment points available — select a point",
+                    #self.attachment_points))
+        end
+
+        wb_debug("RebuildAttachmentPoints END points=%d selected=%s visible_count=%d", #self.attachment_points, tostring(self.selected_point_index), #self.visible_available_items)
+        return true
+    end
+
+    wb_debug("RebuildAttachmentPoints NO VALID POSITIONS selected=%s visible_count=%d", tostring(self.selected_point_index), #self.visible_available_items)
+    self:HideAttachmentPoints()
+
+    if #self.all_available_items == 0 then
+        -- An assembled weapon can have no compatible loose modules in the
+        -- inventory. Do not stop rebuilding while its installed attachment
+        -- transforms are still being created by the preview renderer.
+        if installed_count > 0 and self.refresh_retry_count > 0 then
+            self.point_rebuild_pending = true
+            self:SetStatus("Loading installed module positions...")
+            return false
+        end
+
+        self.point_rebuild_pending = false
+        self:SetStatus("No compatible module items in inventory")
+        return true
+    end
+
+    return false
+end
+
+function UIPhysicalWeaponWorkbench:RefreshLists(preserve_selection)
+    preserve_selection = preserve_selection == true
+
+    wb_debug("RefreshLists BEGIN preserve=%s selected=%s visible_count=%d retry_count=%d pending=%s", tostring(preserve_selection), tostring(self.selected_point_index), #self.visible_available_items, self.refresh_retry_count, tostring(self.point_rebuild_pending))
+    local weapon = self:GetWeapon()
+
+    if not weapon then
+        self:SetStatus("Weapon object is no longer available")
+        return
+    end
+
+    self.installed_sections = {}
+    self.all_available_items = {}
+
+    -- Automatic ALife/preview retry refreshes must not erase a point the user
+    -- has already selected. RebuildAttachmentPoints() will match that selected
+    -- point against the newly generated positions and replace its option list
+    -- with current inventory objects. Intentional refreshes still clear it.
+    if not preserve_selection then
+        self.visible_available_items = {}
+        self.selected_point_index = nil
+        wb_debug("RefreshLists CLEARED selection and available list")
+    else
+        wb_debug("RefreshLists PRESERVING selection for retry refresh")
+    end
+
+    local installed_count = weapon:module_count()
+
+    for index = 0, installed_count - 1 do
+        if weapon:module_can_remove_index(index) then
+            local section = weapon:module_get_section(index)
+
+            self.installed_sections[#self.installed_sections + 1] = {
+                section = section,
+                module_index = index
+            }
+        end
+    end
+
+    -- Installed modules are represented by their callout boxes. Keep the old
+    -- upper-left installed strip permanently hidden; it is now redundant.
+    for i = 1, INSTALLED_ROWS do
+        if self.installed_buttons[i] then
+            self.installed_buttons[i]:Show(false)
+            self.installed_buttons[i]:Enable(false)
+        end
+        if self.installed_icons[i] then
+            self.installed_icons[i]:Show(false)
+        end
+    end
+
+    local actor = db.actor
+
+    if actor then
+        local object_count = actor:object_count()
+
+        for index = 0, object_count - 1 do
+            local item = actor:object(index)
+
+            if item and item:id() ~= self.weapon_id then
+                local section = item:section()
+
+                if is_module_section(section) and
+                   weapon:module_can_install(section)
+                then
+                    self.all_available_items[
+                        #self.all_available_items + 1] = {
+                        object_id = item:id(),
+                        section = section
+                    }
+                end
+            end
+        end
+    end
+
+    table.sort(self.all_available_items, function(a, b)
+        if a.section == b.section then
+            return (a.object_id or 0) < (b.object_id or 0)
+        end
+        return tostring(a.section) < tostring(b.section)
+    end)
+
+    self:UpdateAvailableRows()
+    self.point_rebuild_pending = true
+    self.point_rebuild_time = 0
+    wb_debug("RefreshLists inventory_scan complete all_items=%d installed=%d", #self.all_available_items, #self.installed_sections)
+    self:RebuildAttachmentPoints()
+    wb_debug("RefreshLists END selected=%s visible_count=%d pending=%s", tostring(self.selected_point_index), #self.visible_available_items, tostring(self.point_rebuild_pending))
+end
+
+function UIPhysicalWeaponWorkbench:OnInstalledClicked(row)
+    local weapon = self:GetWeapon()
+    local entry = self.installed_sections[row]
+
+    if not weapon or not entry then
+        return
+    end
+
+    if not weapon:module_can_remove_index(entry.module_index) then
+        return
+    end
+
+    if weapon:module_remove_index(entry.module_index) then
+        local actor = db.actor
+        local server_item = nil
+
+        if actor then
+            server_item = alife():create(
+                entry.section,
+                actor:position(),
+                actor:level_vertex_id(),
+                actor:game_vertex_id(),
+                actor:id())
+        end
+
+        if not server_item then
+            weapon:module_install_placement(entry.section, 0)
+
+            self:SetStatus(
+                "Could not return " ..
+                item_display_name(entry.section) ..
+                " to inventory")
+            self:RefreshLists()
+            return
+        end
+
+        self:SetStatus(
+            "Removed " .. item_display_name(entry.section) ..
+            " and returned it to inventory")
+
+        -- Refresh both the UI rows and the physical clone while the newly
+        -- created inventory object comes online and the preview copy catches up.
+        self.refresh_retry_count = 20
+        self.refresh_retry_time = 0
+        self.point_rebuild_pending = true
+        self.point_rebuild_time = 0
+        self:RefreshLists()
+    else
+        self:SetStatus("Could not remove " .. item_display_name(entry.section))
+    end
+end
+
+function UIPhysicalWeaponWorkbench:OnPlacementClicked(point_index)
+    wb_debug("OnPlacementClicked ENTER point=%s existing_points=%d selected_before=%s visible_before=%d", tostring(point_index), #self.attachment_points, tostring(self.selected_point_index), #self.visible_available_items)
+    local point = self.attachment_points[point_index]
+
+    if not point then
+        wb_debug("OnPlacementClicked ABORT point missing")
+        return
+    end
+
+    self.selected_point_index = point_index
+    self.visible_available_items = point.options
+
+    -- Once the user has clicked a valid point, do not let a queued initial
+    -- rebuild erase that selection on the next 100 ms update tick.
+    self.point_rebuild_pending = false
+
+    self:ShowModulePopup(point_index)
+
+    self:SetStatus(
+        string.format(
+            "Attachment point %d selected — %d compatible module(s)",
+            point_index,
+            #point.options))
+
+    wb_debug("OnPlacementClicked EXIT selected=%s visible_count=%d pending=%s", tostring(self.selected_point_index), #self.visible_available_items, tostring(self.point_rebuild_pending))
+end
+
+function UIPhysicalWeaponWorkbench:OnPopupRemoveClicked()
+    local point_index = self.module_popup_point_index
+    local point = point_index and self.attachment_points[point_index] or nil
+    local weapon = self:GetWeapon()
+
+    if not weapon or not point or
+       not point.installed_section or point.installed_index == nil then
+        self:HideModulePopup()
+        return
+    end
+
+    -- Build the exact installed-instance tree from the preview clone. A child
+    -- stores the instance ID of the module that owns the slot it occupies.
+    -- Removing a parent therefore removes all descendants first, deepest to
+    -- shallowest, then the selected parent itself.
+    local module_count = weapon:module_count()
+    local root_index = point.installed_index
+    local root_instance = level.weapon_preview_test_module_instance(root_index)
+
+    if not root_instance or root_instance == 4294967295 then
+        self:SetStatus("Could not resolve the selected module instance")
+        return
+    end
+
+    local modules = {}
+    for index = 0, module_count - 1 do
+        modules[#modules + 1] = {
+            index = index,
+            section = weapon:module_get_section(index),
+            instance = level.weapon_preview_test_module_instance(index),
+            owner_instance = level.weapon_preview_test_module_slot_owner_instance(index),
+            depth = nil,
+        }
+    end
+
+    local depth_by_instance = {[root_instance] = 0}
+    local changed = true
+    while changed do
+        changed = false
+        for _, module in ipairs(modules) do
+            local parent_depth = depth_by_instance[module.owner_instance]
+            if parent_depth ~= nil and depth_by_instance[module.instance] == nil then
+                depth_by_instance[module.instance] = parent_depth + 1
+                changed = true
+            end
+        end
+    end
+
+    local removal = {}
+    for _, module in ipairs(modules) do
+        local depth = depth_by_instance[module.instance]
+        if depth ~= nil then
+            module.depth = depth
+            removal[#removal + 1] = module
+        end
+    end
+
+    table.sort(removal, function(a, b)
+        if a.depth ~= b.depth then
+            return a.depth > b.depth
+        end
+        return a.index > b.index
+    end)
+
+    local actor = db.actor
+    local removed_names = {}
+
+    -- Descendants are removed before their parent. Process equal-depth entries
+    -- by descending module index so vector erases do not invalidate indices
+    -- that still need to be removed.
+    for _, module in ipairs(removal) do
+        if not weapon:module_can_remove_index(module.index) then
+            self:SetStatus(
+                "Could not remove nested module " ..
+                item_display_name(module.section))
+            self:RefreshLists()
+            return
+        end
+
+        if not weapon:module_remove_index(module.index) then
+            self:SetStatus(
+                "Could not remove " .. item_display_name(module.section))
+            self:RefreshLists()
+            return
+        end
+
+        if actor then
+            alife():create(
+                module.section,
+                actor:position(),
+                actor:level_vertex_id(),
+                actor:game_vertex_id(),
+                actor:id())
+        end
+
+        removed_names[#removed_names + 1] = item_display_name(module.section)
+    end
+
+    local removed_count = #removed_names
+    if removed_count > 1 then
+        self:SetStatus(
+            string.format(
+                "Removed %s and %d nested module(s)",
+                item_display_name(point.installed_section),
+                removed_count - 1))
+    else
+        self:SetStatus(
+            "Removed " .. item_display_name(point.installed_section) ..
+            " and returned it to inventory")
+    end
+
+    self:HideModulePopup()
+    self.selected_point_index = nil
+    self.visible_available_items = {}
+    self.refresh_retry_count = 20
+    self.refresh_retry_time = 0
+    self.point_rebuild_pending = true
+    self.point_rebuild_time = 0
+    self:RefreshLists()
+end
+
+function UIPhysicalWeaponWorkbench:OnAvailableClicked(row)
+    wb_debug("OnAvailableClicked row=%s selected=%s visible_count=%d", tostring(row), tostring(self.selected_point_index), #self.visible_available_items)
+    local entry = self.visible_available_items[row]
+
+    if not entry then
+        return
+    end
+
+    self:InstallAvailable(entry)
+end
+
+
+function UIPhysicalWeaponWorkbench:HideTooltip()
+    if self.tooltip_panel then self.tooltip_panel:Show(false) end
+    if self.tooltip_title then self.tooltip_title:Show(false) end
+    if self.tooltip_lines then
+        for _, line in ipairs(self.tooltip_lines) do
+            line:SetText("")
+            line:Show(false)
+        end
+    end
+    self.tooltip_section = nil
+    self.tooltip_object_id = nil
+    self.module_popup_open = false
+    self.module_popup_point_index = nil
+end
+
+function UIPhysicalWeaponWorkbench:ShowWeaponStats(hover_section, mode, module_index)
+    local weapon = self:GetWeapon()
+
+    if not weapon then
+        self:HideTooltip()
+        return
+    end
+
+    local current = wb_collect_weapon_stats(weapon, nil, nil)
+    local compared = nil
+    local title = item_display_name(weapon:section())
+
+    if hover_section and mode == "available" then
+        compared = wb_collect_weapon_stats(weapon, hover_section, nil)
+        title = title .. "  |  Preview: " .. item_display_name(hover_section)
+    elseif hover_section and mode == "installed" and module_index ~= nil then
+        compared = wb_collect_weapon_stats(weapon, nil, module_index)
+        title = title .. "  |  Installed: " .. item_display_name(hover_section)
+    end
+
+    local lines = wb_stat_lines(current, compared, mode)
+
+    self.tooltip_title:SetText(title)
+
+    for i, line_window in ipairs(self.tooltip_lines or {}) do
+        local line = lines[i]
+
+        if line then
+            local text = line
+            local color = WB_COLOR_DEFAULT
+
+            if type(line) == "table" then
+                text = line.text or ""
+                color = line.color or WB_COLOR_DEFAULT
+            end
+
+            line_window:SetText(text)
+            wb_set_text_color(line_window, color)
+            line_window:Show(true)
+        else
+            line_window:SetText("")
+            wb_set_text_color(line_window, WB_COLOR_DEFAULT)
+            line_window:Show(false)
+        end
+    end
+
+    self.tooltip_panel:Show(true)
+    self.tooltip_title:Show(true)
+end
+
+function UIPhysicalWeaponWorkbench:ShowTooltip(section, object_id)
+    self:ShowWeaponStats(section, "available", nil)
+end
+
+function UIPhysicalWeaponWorkbench:UpdateTooltip()
+    -- Installed modules show their contribution to the weapon's current values.
+    for row, button in ipairs(self.installed_buttons) do
+        local entry = self.installed_sections[row]
+        if entry and button:IsShown() and button:IsCursorOverWindow() then
+            self:ShowWeaponStats(entry.section, "installed", entry.module_index)
+            return
+        end
+    end
+
+    -- Compatible inventory modules preview the values after installation.
+    for row, button in ipairs(self.available_buttons) do
+        local entry = self.visible_available_items[row]
+        if entry and button:IsShown() and button:IsCursorOverWindow() then
+            self:ShowWeaponStats(entry.section, "available", nil)
+            return
+        end
+    end
+
+    -- Occupied radial boxes show installed contribution; empty boxes preview
+    -- the first compatible option for that exact logical attachment point.
+    for point_index, button in ipairs(self.placement_buttons) do
+        local point = self.attachment_points[point_index]
+        if point and button:IsShown() and button:IsCursorOverWindow() then
+            if point.installed_section and point.installed_index ~= nil then
+                self:ShowWeaponStats(point.installed_section, "installed", point.installed_index)
+            elseif point.options and point.options[1] then
+                self:ShowWeaponStats(point.options[1].section, "available", nil)
+            else
+                self:ShowWeaponStats(nil, nil, nil)
+            end
+            return
+        end
+    end
+
+    -- The weapon panel is persistent even when nothing is hovered.
+    self:ShowWeaponStats(nil, nil, nil)
+end
+
+function UIPhysicalWeaponWorkbench:Update()
+    CUIScriptWnd.Update(self)
+
+    local now = time_global()
+
+    if MINIMAL_BASELINE then
+        self:ShowWeaponStats(nil, nil, nil)
+        return
+    end
+
+    if self.workbench_lines then
+        self.workbench_lines:ClearLines()
+    end
+
+    -- Load at most one candidate visual bound and two new miniature OGFs per
+    -- frame. This keeps the dialog responsive while content fills in.
+    self.miniature_create_budget = ENABLE_MINIATURES and 2 or 0
+    if level.weapon_preview_test_pump_visual_centers and
+       level.weapon_preview_test_pump_visual_centers(1)
+    then
+        self.point_rebuild_pending = true
+    end
+
+    local current_visible_count = #self.visible_available_items
+    if self.debug_last_selected_point ~= self.selected_point_index or
+       self.debug_last_visible_count ~= current_visible_count
+    then
+        wb_debug("STATE CHANGE selected %s -> %s, visible %d -> %d, retry=%d pending=%s", tostring(self.debug_last_selected_point), tostring(self.selected_point_index), self.debug_last_visible_count, current_visible_count, self.refresh_retry_count, tostring(self.point_rebuild_pending))
+        self.debug_last_selected_point = self.selected_point_index
+        self.debug_last_visible_count = current_visible_count
+    end
+
+    if self.point_rebuild_pending and
+       now - self.point_rebuild_time >= 100
+    then
+        wb_debug("Update triggering pending RebuildAttachmentPoints selected=%s visible_count=%d", tostring(self.selected_point_index), #self.visible_available_items)
+        self.point_rebuild_time = now
+        self:RebuildAttachmentPoints()
+    end
+
+    -- Project every physical attachment anchor first. Callout endpoints are
+    -- assigned to a stable radial ring around the weapon so all 360 degrees
+    -- are used instead of forcing every icon into left/right columns.
+    local projected_points = {}
+    local visible_entries = {}
+    local centre_x = 0
+    local centre_y = 0
+
+    for point_index, point in ipairs(self.attachment_points) do
+        local option = point.options and point.options[1] or nil
+        local world_pos = nil
+
+        if point.installed_index ~= nil then
+            world_pos = level.weapon_preview_test_module_world(point.installed_index)
+        elseif option then
+            world_pos = level.weapon_preview_test_placement_world(
+                option.section,
+                option.placement_index)
+        end
+
+        local valid_world_pos =
+            world_pos and
+            math.abs(world_pos.x) < 1000000 and
+            math.abs(world_pos.y) < 1000000 and
+            math.abs(world_pos.z) < 1000000
+
+        if valid_world_pos then
+            point.x = world_pos.x
+            point.y = world_pos.y
+            point.z = world_pos.z
+        end
+
+        local screen = nil
+        if valid_world_pos then
+            screen = game.world2ui_with_depth(
+                vector():set(point.x, point.y, point.z),
+                false,
+                false)
+        end
+
+        local visible =
+            screen and
+            screen.z > 0 and
+            screen.x >= 245 and
+            screen.x <= 779 and
+            screen.y >= 76 and
+            screen.y <= 696
+
+        projected_points[point_index] = {
+            point = point,
+            screen = screen,
+            visible = visible
+        }
+
+        if visible then
+            local layout = point.callout_layout
+            if not layout then
+                layout = self.callout_layouts[point.key] or {}
+                self.callout_layouts[point.key] = layout
+                point.callout_layout = layout
+            end
+
+            local entry = {
+                point_index = point_index,
+                point = point,
+                screen = screen,
+                layout = layout
+            }
+            table.insert(visible_entries, entry)
+            centre_x = centre_x + screen.x
+            centre_y = centre_y + screen.y
+        end
+    end
+
+    if #visible_entries > 0 then
+        centre_x = centre_x / #visible_entries
+        centre_y = centre_y / #visible_entries
+    else
+        centre_x = 512
+        centre_y = 386
+    end
+
+    -- Keep the ring centred near the preview weapon even when several anchors
+    -- are concentrated on one side of the model.
+    centre_x = math.max(430, math.min(594, centre_x))
+    centre_y = math.max(310, math.min(462, centre_y))
+
+    local radial_slot_count = 48
+    local radial_radius = 156
+
+    local function atan2(y, x)
+        if x > 0 then
+            return math.atan(y / x)
+        elseif x < 0 and y >= 0 then
+            return math.atan(y / x) + math.pi
+        elseif x < 0 and y < 0 then
+            return math.atan(y / x) - math.pi
+        elseif x == 0 and y > 0 then
+            return math.pi * 0.5
+        elseif x == 0 and y < 0 then
+            return -math.pi * 0.5
+        end
+        return 0
+    end
+
+    local function wrapped_slot_distance(a, b)
+        local d = math.abs(a - b)
+        return math.min(d, radial_slot_count - d)
+    end
+
+    -- Build a stable signature from logical point keys, independent of current
+    -- screen order. Existing slots remain untouched while the weapon rotates or
+    -- while retry refreshes rebuild the same points.
+    local signature_keys = {}
+    for _, entry in ipairs(visible_entries) do
+        signature_keys[#signature_keys + 1] = tostring(entry.point.key) .. "#" .. tostring(entry.point.installed_index or -1)
+    end
+    table.sort(signature_keys)
+    local visible_signature = table.concat(signature_keys, ";")
+
+    local visible_count = #visible_entries
+
+    -- Always calculate the current desired angular position. Key ownership keeps
+    -- icon contents stable; these values only decide when the whole ordered ring
+    -- should rotate to follow a weapon that has turned around.
+    local maximum_slot_error = 0
+    for _, entry in ipairs(visible_entries) do
+        local angle = atan2(
+            entry.screen.y - centre_y,
+            entry.screen.x - centre_x)
+        entry.anchor_angle = (angle + math.pi * 2) % (math.pi * 2)
+        entry.desired_slot = math.floor(
+            entry.anchor_angle / (math.pi * 2) * radial_slot_count + 0.5) % radial_slot_count
+
+        if entry.layout.radial_slot ~= nil then
+            maximum_slot_error = math.max(
+                maximum_slot_error,
+                wrapped_slot_distance(entry.layout.radial_slot, entry.desired_slot))
+        else
+            maximum_slot_error = radial_slot_count
+        end
+    end
+
+    -- Reassign immediately when the logical set changes. While rotating, wait
+    -- until anchors are at least four ring slots away from their old endpoints,
+    -- then debounce the reassignment. This follows a 180-degree turn without the
+    -- rapid per-frame icon swapping seen in the earlier build.
+    local set_changed = self.radial_layout_signature ~= visible_signature
+    -- Keep every callout box permanently locked to the slot assigned when the
+    -- logical point set first appears. Weapon rotation only moves the anchor end
+    -- of the leader; it never reflows or swaps the boxes.
+    local needs_assignment = visible_count > 0 and set_changed
+
+    if needs_assignment then
+        table.sort(visible_entries, function(a, b)
+            if a.anchor_angle == b.anchor_angle then
+                return tostring(a.point.key) < tostring(b.point.key)
+            end
+            return a.anchor_angle < b.anchor_angle
+        end)
+
+        local best_offset = self.radial_best_offset or 0
+        local best_cost = nil
+        local best_offset_distance = nil
+
+        for offset = 0, radial_slot_count - 1 do
+            local cost = 0
+            for ordered_index, entry in ipairs(visible_entries) do
+                local slot = math.floor(
+                    offset + (ordered_index - 1) * radial_slot_count / visible_count + 0.5) % radial_slot_count
+                local distance = wrapped_slot_distance(slot, entry.desired_slot)
+                cost = cost + distance * distance
+            end
+
+            local offset_distance = wrapped_slot_distance(offset, self.radial_best_offset or 0)
+            if best_cost == nil or cost < best_cost or
+               (cost == best_cost and offset_distance < best_offset_distance) then
+                best_cost = cost
+                best_offset = offset
+                best_offset_distance = offset_distance
+            end
+        end
+
+        for ordered_index, entry in ipairs(visible_entries) do
+            local slot = math.floor(
+                best_offset + (ordered_index - 1) * radial_slot_count / visible_count + 0.5) % radial_slot_count
+            entry.layout.radial_slot = slot
+        end
+
+        self.radial_best_offset = best_offset
+        self.radial_layout_signature = visible_signature
+        self.radial_last_assignment_time = now
+    end
+
+    -- Endpoints are generated from the persistent key-owned slots. No icon can
+    -- exchange places with another merely because two projected anchors jittered
+    -- past one another by a pixel.
+    local CALLOUT_SMOOTH_SPEED = 12.0
+    local dt = time_global() - (self._last_smooth_time or time_global())
+    self._last_smooth_time = time_global()
+    -- clamp dt чтобы не было скачка после лага
+    if dt > 0.1 then dt = 0.016 end
+
+    for _, entry in ipairs(visible_entries) do
+        local slot = entry.layout.radial_slot
+        if slot == nil then
+            slot = math.floor(#signature_keys * radial_slot_count / math.max(1, visible_count)) % radial_slot_count
+            entry.layout.radial_slot = slot
+        end
+
+        local angle = (slot / radial_slot_count) * math.pi * 2
+        local target_x = centre_x + math.cos(angle) * radial_radius
+        local target_y = centre_y + math.sin(angle) * radial_radius
+        target_x = math.max(268, math.min(756, target_x))
+        target_y = math.max(96, math.min(674, target_y))
+
+        local layout = entry.layout
+        if layout.smooth_x == nil or layout.smooth_y == nil then
+
+            layout.smooth_x = target_x
+            layout.smooth_y = target_y
+        else
+            local blend = 1.0 - math.exp(-CALLOUT_SMOOTH_SPEED * dt)
+            layout.smooth_x = layout.smooth_x + (target_x - layout.smooth_x) * blend
+            layout.smooth_y = layout.smooth_y + (target_y - layout.smooth_y) * blend
+        end
+
+        entry.end_x = layout.smooth_x
+        entry.end_y = layout.smooth_y
+    end
+
+    local endpoint_by_index = {}
+    for _, entry in ipairs(visible_entries) do
+        endpoint_by_index[entry.point_index] = entry
+    end
+
+    for point_index, point in ipairs(self.attachment_points) do
+        local projected = projected_points[point_index]
+        local visible = projected and projected.visible
+        local entry = endpoint_by_index[point_index]
+
+        if visible and entry then
+            local screen = entry.screen
+            local end_x = entry.end_x
+            local end_y = entry.end_y
+
+            if self.placement_line_h[point_index] then self.placement_line_h[point_index]:Show(false) end
+            if self.placement_line_v[point_index] then self.placement_line_v[point_index]:Show(false) end
+
+            -- Tarkov-style leader: a long diagonal from the module anchor, then
+            -- a short horizontal/vertical finishing segment into a transparent
+            -- outline box. The final four segment statics are reserved for the
+            -- four box borders; all earlier segments draw the leader itself.
+            local box_half = 16
+            local toward_anchor_x = screen.x - end_x
+            point.callout_x = end_x
+            point.callout_y = end_y
+
+            local toward_anchor_y = screen.y - end_y
+            local toward_length = math.sqrt(
+                toward_anchor_x * toward_anchor_x +
+                toward_anchor_y * toward_anchor_y)
+
+            if toward_length > 0 then
+                toward_anchor_x = toward_anchor_x / toward_length
+                toward_anchor_y = toward_anchor_y / toward_length
+            else
+                toward_anchor_x = -1
+                toward_anchor_y = 0
+            end
+
+            local target_x = end_x + toward_anchor_x * box_half
+            local target_y = end_y + toward_anchor_y * box_half
+            local delta_x = target_x - screen.x
+            local delta_y = target_y - screen.y
+            local finish_length = 12
+            local elbow_x = target_x
+            local elbow_y = target_y
+
+            if math.abs(delta_x) >= math.abs(delta_y) then
+                elbow_x = target_x - (delta_x >= 0 and finish_length or -finish_length)
+            else
+                elbow_y = target_y - (delta_y >= 0 and finish_length or -finish_length)
+            end
+
+            if self.workbench_lines then
+                self.workbench_lines:AddLine(
+                    screen.x,
+                    screen.y,
+                    elbow_x,
+                    elbow_y,
+                    LEADER_COLOR)
+                self.workbench_lines:AddLine(
+                    elbow_x,
+                    elbow_y,
+                    target_x,
+                    target_y,
+                    LEADER_COLOR)
+            end
+
+            local border_top =
+                self.placement_line_segments[point_index][3]
+            local border_bottom =
+                self.placement_line_segments[point_index][4]
+            local border_left =
+                self.placement_line_segments[point_index][5]
+            local border_right =
+                self.placement_line_segments[point_index][6]
+
+            -- Border statics stay axis-aligned.
+            border_top:SetHeading(0)
+            border_bottom:SetHeading(0)
+            border_left:SetHeading(0)
+            border_right:SetHeading(0)
+
+            border_top:SetWndPos(vector2():set(end_x - box_half, end_y - box_half))
+            border_top:SetWndSize(vector2():set(box_half * 2, 1))
+            border_top:Show(true)
+            border_bottom:SetWndPos(vector2():set(end_x - box_half, end_y + box_half - 1))
+            border_bottom:SetWndSize(vector2():set(box_half * 2, 1))
+            border_bottom:Show(true)
+            border_left:SetWndPos(vector2():set(end_x - box_half, end_y - box_half))
+            border_left:SetWndSize(vector2():set(1, box_half * 2))
+            border_left:Show(true)
+            border_right:SetWndPos(vector2():set(end_x + box_half - 1, end_y - box_half))
+            border_right:SetWndSize(vector2():set(1, box_half * 2))
+            border_right:Show(true)
+
+            self.placement_anchor_icons[point_index]:SetWndPos(
+                vector2():set(screen.x - 2, screen.y - 2))
+            self.placement_anchor_icons[point_index]:SetWndSize(
+                vector2():set(4, 4))
+            self.placement_anchor_icons[point_index]:Show(true)
+
+            self.placement_buttons[point_index]:SetWndPos(
+                vector2():set(end_x - 16, end_y - 16))
+            self.placement_buttons[point_index]:SetWndSize(
+                vector2():set(32, 32))
+            self.placement_empty_icons[point_index]:SetWndPos(
+                vector2():set(end_x - 13, end_y - 13))
+            self.placement_empty_icons[point_index]:SetWndSize(
+                vector2():set(26, 26))
+
+            -- Only installed modules get a 3D miniature. When a module is
+            -- removed, its callout box remains visible but becomes empty.
+            local miniature_section = point.installed_section
+
+            self.placement_empty_icons[point_index]:Show(false)
+            self.placement_module_icons[point_index]:Show(false)
+
+            if miniature_section and miniature_section ~= "" then
+                local loaded_section = self.miniature_sections[point_index]
+                local needs_create = loaded_section ~= miniature_section
+                if ENABLE_MINIATURES and
+                   (not needs_create or self.miniature_create_budget > 0) then
+                    level.weapon_preview_test_miniature_set(
+                        point_index,
+                        miniature_section,
+                        end_x,
+                        end_y)
+                    if needs_create then
+                        self.miniature_sections[point_index] = miniature_section
+                        self.miniature_create_budget =
+                            math.max(0, self.miniature_create_budget - 1)
+                    end
+                end
+            else
+                if ENABLE_MINIATURES and level.weapon_preview_test_miniature_clear then
+                    level.weapon_preview_test_miniature_clear(point_index)
+                end
+                self.miniature_sections[point_index] = nil
+            end
+        end
+
+        local show_point = visible and entry ~= nil
+        self.placement_buttons[point_index]:Show(show_point)
+        self.placement_buttons[point_index]:Enable(show_point)
+        if self.module_popup_open then
+            self:UpdatePlacementInputStates()
+        end
+        self.placement_labels[point_index]:Show(false)
+
+        if not show_point then
+            if self.placement_line_h[point_index] then self.placement_line_h[point_index]:Show(false) end
+            if self.placement_line_v[point_index] then self.placement_line_v[point_index]:Show(false) end
+            for segment_index = 1, LEADER_SEGMENTS do
+                local segment = self.placement_line_segments[point_index][segment_index]
+                if segment then segment:Show(false) end
+            end
+            self.placement_anchor_icons[point_index]:Show(false)
+            self.placement_empty_icons[point_index]:Show(false)
+            self.placement_module_icons[point_index]:Show(false)
+            if ENABLE_MINIATURES and level.weapon_preview_test_miniature_clear then
+                level.weapon_preview_test_miniature_clear(point_index)
+            end
+        end
+    end
+
+    if self.module_popup_open and self.module_popup_point_index then
+        local popup_point = self.attachment_points[self.module_popup_point_index]
+        if popup_point then
+            self:ShowModulePopup(self.module_popup_point_index)
+        else
+            self:HideModulePopup()
+        end
+    end
+
+    -- attachment_points can shrink after a module is removed. ipairs() stops at
+    -- the new end of the list, so miniature slots from the previous, longer list
+    -- must be explicitly destroyed or their world models remain visible.
+    for stale_index = #self.attachment_points + 1, PLACEMENT_BOXES do
+        if self.miniature_sections[stale_index] ~= nil then
+            if ENABLE_MINIATURES and level.weapon_preview_test_miniature_clear then
+                level.weapon_preview_test_miniature_clear(stale_index)
+            end
+            self.miniature_sections[stale_index] = nil
+        end
+    end
+
+    self:UpdateTooltip()
+
+    if self.refresh_retry_count <= 0 then
+        return
+    end
+
+    if now - self.refresh_retry_time < 100 then
+        return
+    end
+
+    self.refresh_retry_time = now
+    self.refresh_retry_count = self.refresh_retry_count - 1
+    wb_debug("Update triggering RETRY RefreshLists remaining=%d selected=%s visible_count=%d", self.refresh_retry_count, tostring(self.selected_point_index), #self.visible_available_items)
+    self:RefreshLists(true)
+end
+
+function UIPhysicalWeaponWorkbench:OnKeyboard(dik, keyboard_action)
+    local result =
+        CUIScriptWnd.OnKeyboard(self, dik, keyboard_action)
+
+    if result == false and
+       keyboard_action == ui_events.WINDOW_KEY_PRESSED and
+       dik == DIK_keys.DIK_ESCAPE
+    then
+        self:Close()
+        return true
+    end
+
+    return result
+end
+
+function UIPhysicalWeaponWorkbench:Close()
+    if self.closed then
+        return
+    end
+
+    self.closed = true
+    self:HideAttachmentPoints()
+
+    if self.preview_started then
+        level.weapon_preview_test_stop()
+        self.preview_started = false
+    end
+
+    self:HideDialog()
+    self:Show(false)
+
+    -- Restore the normal HUD only after the workbench dialog has released
+    -- UI ownership. Restoring it before HideDialog() can be overwritten by
+    -- the dialog shutdown path and leave the HUD hidden.
+    level.show_indicators()
+
+    -- Restore only when this window changed the value on entry. When mt_ui was
+    -- already 0, RestoreMtUi() is a no-op.
+    self:RestoreMtUi()
+
+    GUI = nil
+
+    printf("PHYSICAL WORKBENCH: closed")
+end
+
+function start(weapon)
+    if GUI and GUI:IsShown() then
+        GUI:Close()
+    end
+
+    if not weapon then
+        printf("! PHYSICAL WORKBENCH: equip a weapon first")
+        return
+    end
+
+    GUI = UIPhysicalWeaponWorkbench(weapon)
+    GUI:ShowDialog(true)
+
+    printf(
+        "PHYSICAL WORKBENCH: opened weapon=[%s] id=[%s]",
+        weapon:section(),
+        tostring(weapon:id()))
+end
+
+function start_by_id(weapon_id)
+    local weapon = level.object_by_id(weapon_id)
+
+    if not weapon then
+        printf(
+            "! PHYSICAL WORKBENCH: weapon id [%s] is unavailable",
+            tostring(weapon_id))
+        return
+    end
+
+    start(weapon)
+end
+
+function stop()
+    if GUI then
+        GUI:Close()
+    else
+        level.weapon_preview_test_stop()
+        level.show_indicators()
+    end
+end

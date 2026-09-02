@@ -1,0 +1,879 @@
+--\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\	wpn_glock \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\--
+
+[glock_trigger]:attachment_base
+kind  =  glock
+inv_ui_sign				= semi
+visual						= w_att_huds\glock_trigger
+inv_name					= glock_trigger
+inv_name_short			= glock_triggerS
+cost							= 250
+inv_weight					= 0.02
+inv_grid_x         			= 3
+inv_grid_y         		= 61
+1icon_layer = clean_lub1_ico
+attachment_point = glock_trigger|0,0,0|0,0,0
+item_tags = trigger
+override_section = glock_trigger_attributes
+
+[glock_trigger_attributes]
+
+[glock_trigger_auto]:glock_trigger
+kind  =  glock
+inv_ui_sign 				= auto
+visual 						= w_att_huds\glock_trigger_auto
+inv_name 				= glock_trigger_auto
+inv_name_short 		= glock_trigger_autoS
+cost 						= 2500
+inv_grid_x         			= 4
+override_section = glock_trigger_auto_attributes
+
+inv_weight = 0.02
+[glock_trigger_auto_attributes]
+fire_modes = -1
+[auto_trigger_attributes]
+fire_modes = -1
+
+[glock_spring]:attachment_base
+kind  =  glock
+inv_ui_sign				= glk_spr
+visual						= w_att_huds\glock_spring
+inv_name					= glock_spring
+inv_name_short			= glock_springS
+cost							= 350
+inv_weight					= 0.03
+inv_grid_x        			= 4
+inv_grid_y        			= 11
+1icon_layer = clean1_ico
+attachment_point		=	glock_spring|0,0,0|0,0,0
+attachment_slots		=	glock_muzzle|wpn_body|0,0,0|0,0,0
+item_tags =	spring
+override_section = glock_spring_attributes
+
+[glock_spring_attributes]
+
+[glock_barrel]:attachment_base
+kind  =  glock
+inv_ui_sign				= glk_bar
+visual						= w_att_huds\glock_barrel
+inv_name					= glock_barrel
+inv_name_short			= glock_barrel
+cost							= 1000
+inv_weight					= 0.09
+inv_grid_x					= 0
+inv_grid_y					= 13
+1icon_layer = clean1_ico
+attachment_point	=	glock_barrel|0,0,0|0,0,0
+attachment_slots	=	glock_zatvor|zatvor|0,0,0|0,0,0
+item_tags = barrel
+override_section =	glock_barrel_attributes
+[glock_barrel_attributes]:gsh18_barrel_att
+fire_point = 0, 0, 0.01
+bullet_speed			= 1
+fire_dispersion_base		= 0.22
+
+[glock_barrel_up]:glock_barrel
+kind  =  glock
+inv_ui_sign				= glk_bar+
+visual						= w_att_huds\glock_barrel_up
+inv_name					= glock_barrel_up
+inv_name_short			= glock_barrel_up
+cost							= 1300
+inv_weight					= 0.1
+inv_grid_x         			= 1
+attachment_slots	=	glock_zatvor|zatvor|0,0,0|0,0,0#9mm_muzzle|muzzle|0,0,0|0,0,0
+override_section			=	glock_barrel_up_attributes
+[glock_barrel_up_attributes]:glock_barrel_attributes
+fire_point						= 0, 0, 0.03
+impair_koeff = 1.1
+
+[glock_barrel_comp]:glock_barrel
+kind  =  glock
+inv_ui_sign				= glk_bar_c
+visual						= w_att_huds\glock_barrel_comp
+inv_name					= glock_barrel_comp
+inv_name_short			= glock_barrel_compS
+cost							= 2250
+inv_weight					= 0.11
+inv_grid_x					= 2
+override_section			=	glock_barrel_comp_attributes
+[glock_barrel_comp_attributes]:glock_barrel_attributes
+fire_point = 0, 0.02, -0.03
+impair_koeff = 1.1
+zoom_rotate_time = 0.03
+bullet_speed			= 0.97
+recoil_koeff            = -0.03
+fire_dispersion_base		= 0.23
+
+[glock21_barrel]:attachment_base
+kind  =  glock
+inv_ui_sign				= glk21_bar
+visual						= w_att_huds\glock21_barrel
+inv_name					= glock21_barrel
+inv_name_short			= glock21_barrel
+cost							= 1150
+inv_weight					= 0.12
+inv_grid_x					= 5
+inv_grid_y					= 61
+1icon_layer = clean1_ico
+attachment_point	=	glock21_barrel|0,0,0|0,0,0
+attachment_slots	=	glock21_zatvor|zatvor|0,0,0|0,0,0
+item_tags	= barrel
+override_section =	glock21_barrel_attributes
+[glock21_barrel_attributes]:glock_barrel_attributes
+bullet_speed				= 0.83
+k_hit_koeff						= 1.05
+fire_dispersion_base		= 0.21
+
+[glock21_barrel_comp]:glock21_barrel
+kind  =  glock
+inv_ui_sign				= glk_bar_c
+visual						= w_att_huds\glock21c_barrel
+inv_name					= glock21c_barrel
+inv_name_short			= glock21c_barrelS
+cost							= 3350
+inv_grid_x					= 6
+override_section =	glock21_barrel_comp_attributes
+inv_weight = 0.12
+[glock21_barrel_comp_attributes]:glock_barrel_comp_attributes
+bullet_speed				= 0.8
+k_hit_koeff						= 0.95
+fire_dispersion_base		= 0.23
+
+recoil_koeff = -0.1
+[glock21_barrel_up]:glock21_barrel
+kind  =  glock
+inv_ui_sign				= glk21_bar+
+visual						= w_att_huds\glock21_barrel_up
+inv_name					= glock21_barrel_up
+inv_name_short			= glock21_barrel_up
+cost							= 2500
+inv_weight					= 0.15
+inv_grid_x         			= 7
+attachment_slots		=	glock21_zatvor|zatvor|0,0,0|0,0,0#45_muzzle|muzzle|0,0,0|0,0,0
+override_section =	glock21_barrel_up_attributes
+[glock21_barrel_up_attributes]:glock21_barrel_attributes
+impair_koeff = 1.1
+
+recoil_koeff = 0.07
+[glock_spring_muzzle]:attachment_base
+kind  =  glock
+inv_ui_sign				= glk_mb
+visual						= w_att_huds\glock_spring_muzzle
+inv_name					= glock_spring_mb_strike_industries
+inv_name_short			= glock_spring_mb_strike_industriesS
+cost							= 900
+inv_weight					= 0.07
+inv_grid_x         			= 3
+inv_grid_y         			= 12
+attachment_point		=	glock_muzzle|0,0,0|0,0,0
+item_tags	=	muzzle_device
+override_section = glock_spring_muzzle_attributes
+[glock_spring_muzzle_attributes]:cz75_muzzle_att
+fire_point = 0, 0, 0.06
+
+[glock_17_zatvor]:attachment_base
+kind  =  glock
+inv_ui_sign				= glk_slide
+visual						= w_att_huds\glock_17_zatvor
+inv_name					= glock_17_zatvor
+inv_name_short			= glock_17_zatvor
+cost							= 1100
+inv_weight					= 0.13
+inv_grid_width    		 = 2
+inv_grid_x         			= 3
+inv_grid_y         			= 13
+1icon_layer = clean_lub2_ico
+attachment_point		=	glock_zatvor|0,0,0|0,0,0
+attachment_slots		=	glock_sights|zatvor|0,0,0|0,0,0#glock_trigger|zatvor|0,0,0|0,0,0
+item_tags = zatvor
+override_section	=	glock_17_zatvor_attributes
+[glock_17_zatvor_attributes]
+zoom_rotate_time = 0.07
+rpm = 1000
+impair_koeff = 0.95
+
+[glock_18_zatvor]:glock_17_zatvor
+kind  =  glock
+inv_ui_sign				= glk_bolt18
+visual						= w_att_huds\glock_18_zatvor
+inv_name					= glock_18_zatvor
+inv_name_short			= glock_18_zatvor
+cost							= 3600
+inv_weight					= 0.132
+inv_grid_x         			= 5
+override_section = glock_18_zatvor_attributes
+
+[glock_18_zatvor_attributes]
+zoom_rotate_time = 0.07
+impair_koeff = 0.95
+fire_modes = -1,1
+recoil_koeff = -0.05
+rpm = 1200
+[glock_18_zatvor_att]:glock_17_zatvor_attributes
+fire_modes = -1,1
+recoil_koeff            = -0.19
+rpm = 1200
+
+[glock_18c_zatvor]:glock_17_zatvor
+kind  =  glock
+inv_ui_sign				= glk_bolt18c
+visual						= w_att_huds\glock_18c_zatvor
+inv_name					= glock_18c_zatvor
+inv_name_short			= glock_18c_zatvor
+cost							= 4650
+inv_weight					= 0.12
+inv_grid_x         = 7
+inv_grid_y         = 13
+override_section				=	glock_18c_zatvor_attributes
+
+[glock_18c_zatvor_attributes]
+impair_koeff = 0.95
+fire_modes = -1,1
+rpm = 1200
+zoom_rotate_time = 0.05
+recoil_koeff = -0.07
+[glock_18c_zatvor_att]:glock_18_zatvor_att
+zoom_rotate_time = 0.05
+recoil_koeff            = -0.25
+
+[glock21_zatvor]:attachment_base
+kind  =  glock
+inv_ui_sign				= glk_slide
+visual						= w_att_huds\glock21_zatvor
+inv_name					= glock21_zatvor
+inv_name_short			= glock21_zatvor
+cost							= 1200
+inv_weight					= 0.26
+inv_grid_width    		 = 2
+inv_grid_x         			= 3
+inv_grid_y         			= 62
+1icon_layer = clean_lub2_ico
+attachment_point		=	glock21_zatvor|0,0,0|0,0,0
+attachment_slots		=	glock_sights|zatvor|0,0,0|0,0,0#glock_trigger|zatvor|0,0,0|0,0,0
+item_tags = zatvor
+override_section	=	glock21_zatvor_attributes
+
+[glock21_zatvor_attributes]
+zoom_rotate_time = 0.07
+impair_koeff = 0.95
+rpm = 1060
+[glock_21_zatvor_attributes]:glock_17_zatvor_attributes
+rpm = 1060
+recoil_koeff = -0.4
+
+[glock21c_zatvor]:glock21_zatvor
+kind  =  glock
+inv_ui_sign				= glk_slide_c
+visual						= w_att_huds\glock21C_zatvor
+inv_name					= glock21c_zatvor
+inv_name_short			= glock21c_zatvor
+cost							= 4800
+inv_weight					= 0.25
+inv_grid_x         = 5
+override_section	=	glock21c_zatvor_attributes
+[glock21c_zatvor_attributes]
+rpm = 1140
+recoil_koeff = -0.06
+zoom_rotate_time = 0.05
+
+[glock_sights]:attachment_base
+kind  =  glock
+inv_ui_sign				= glk_sig
+visual						= w_att_huds\glock_sights
+inv_name					= glock_sights
+inv_name_short			= glock_sightsS
+cost							= 400
+inv_weight					= 0.04
+inv_grid_x					= 4
+inv_grid_y         			= 12
+attachment_point		=	glock_sights|0,0,0|0,0,0
+override_section = glock_sights_attributes
+
+[glock_sights_attributes]
+
+[glock_sights_rail]:glock_sights				;НЕ СОВМЕСТИМ С AUTO-trigger
+kind  =  glock
+inv_ui_sign				= glk_si
+visual						= w_att_huds\glock_sights_rail
+description				= pica_5_up
+inv_name					= glock_sights_rail
+inv_name_short			= glock_sights_railS
+cost							= 2650
+inv_weight					= 0.08
+inv_grid_x        			 = 9
+inv_grid_y         			= 14
+attachment_slots	=	pica_5|zatvor|0,0.044925,-0.045349|0,0,0
+item_tags	=	rail
+
+override_section = glock_sights_attributes
+[glock21_sights]:glock_sights
+kind  =  glock
+inv_ui_sign				= glk21s
+visual						= w_att_huds\glock21_sights
+inv_name					= glock21_sights
+inv_grid_x					= 7
+inv_grid_y         			= 62
+override_section = glock21_sights_attributes
+
+[glock21_sights_attributes]
+
+[glock_sights_up]:glock_sights
+kind  =  glock
+inv_ui_sign				= glk_sig+
+visual						= w_att_huds\glock_sights_up
+inv_name					= glock_sights_up
+inv_name_short			= glock_sights_upS
+cost							= 500
+inv_grid_x         			= 5
+override_section = glock_sights_up_attributes
+
+[glock_sights_up_attributes]
+
+[glock21_sights_up]:glock21_sights
+kind  =  glock
+inv_ui_sign				= glk21s+
+visual						= w_att_huds\glock21_sights_up
+inv_name					= glock21_sights_up
+inv_name_short			= glock_sights_upS
+cost							= 550
+inv_grid_x         			= 8
+override_section = glock21_sights_up_attributes
+
+[glock21_sights_up_attributes]
+
+[glock_sights_roni_helper]:glock_sights
+kind  =  glock
+inv_ui_sign				= glk_roni
+visual						= w_att_huds\glock_sights_roni_helper
+description				= glock_sights_roni_helper_descr
+inv_name					= glock_sights_roni_helper
+inv_name_short			= glock_sights_roni_helperS
+cost							= 2300
+inv_weight					= 0.07
+inv_grid_x         			= 5
+inv_grid_y         			= 11
+attachment_slots	=	roni|wpn_body|0,0,0|0,0,0
+item_tags	=	upper
+override_section = glock_sights_roni_helper_attributes
+
+[glock_sights_roni_helper_attributes]
+
+[glock_roni]:attachment_base
+kind  =  glock
+inv_ui_sign				= glk_roni_base
+visual						= w_att_huds\glock_roni
+description				= glock_roni_descr
+inv_name					= glock_roni
+inv_name_short			= glock_roniS
+cost							= 8150
+inv_weight					= 0.65
+inv_grid_width     		= 3
+inv_grid_x         			= 6
+inv_grid_y         			= 11	
+attachment_point	=	roni|0,0,0|0,0,0					;pica17  
+attachment_slots	=	pica_14|wpn_body|0,0.0707,-0.075|0,0,0#pica_3|wpn_body|-0.02725,0.028923,0.135|0,0,-90#pica_3|wpn_body|0.02725,0.028923,0.135|0,0,90#picgrp|wpn_body|0,-0.0386,-0.072|0,0,0#sight_front|wpn_body|0,0.0707,0.101|0,0,0#sight_rear|wpn_body|0,0.0707,-0.07|0,0,0
+item_tags =	upper
+override_section = glock_roni_attributes
+[glock_roni_attributes]:c_attributes
+;hands_position					= 0.06, -0.09, -0.14
+;hands_position_16x9			= 0.06, -0.09, -0.14
+;aim_hud_offset_pos			= -0.05995, 0.0121, -0.07
+;aim_hud_offset_pos_16x9	= -0.05995, 0.0121, -0.07
+;aim_hud_offset_rot				= 0.008, 0.0058, 0
+;aim_hud_offset_rot_16x9	= 0.008, 0.0058, 0
+hands_position					= 0.08, -0.09, -0.11
+hands_position_16x9			= 0.08, -0.09, -0.11
+aim_hud_offset_pos			= -0.0801, 0.0125, -0.1
+aim_hud_offset_pos_16x9	= -0.0801, 0.0125, -0.1
+aim_hud_offset_rot				= 0.008, 0.0055, 0
+aim_hud_offset_rot_16x9	= 0.008, 0.0055, 0
+additional_hud_offset = 0, 0, -0.06
+aimpoint_offset_y = 0.10087
+fire_point = 0, 0, 0.07
+weapon_lenght = 0.35
+zoom_rotate_time = 0.07
+recoil_koeff            = -0.47
+inertia_koeff          = 0.7
+
+t_anm_bore                                 					= glock_t1_bore, idle
+t_anm_bore_empty											= glock_t1_bore_e, idle_empty
+t_anm_hide														= glock_t1_holster_e, idle
+t_anm_hide_empty											= glock_t1_holster_e, idle_empty
+t_anm_idle														= glock_t1_idle, idle
+t_anm_idle_empty											= glock_t1_idle, idle_empty
+t_anm_idle_aim												= glock_t1_idle_aim, idle
+t_anm_idle_aim_empty									= glock_t1_idle_aim, idle_empty
+t_anm_idle_aim_moving									= glock_t1_walk_aim, idle
+t_anm_idle_aim_moving_crouch						= glock_t1_walk_aim, idle
+t_anm_idle_aim_moving_crouch_empty			= glock_t1_walk_aim, idle_empty
+t_anm_idle_aim_moving_empty						= glock_t1_walk_aim, idle_empty
+t_anm_idle_moving											= glock_t1_walk, idle
+t_anm_idle_moving_crouch								= glock_t1_walk, idle, 0.7
+t_anm_idle_moving_crouch_empty					= glock_t1_walk, idle_empty, 0.7
+t_anm_idle_moving_empty								= glock_t1_walk, idle_empty
+t_anm_shot_l													= glock_t1_shoot, shoot_last
+t_anm_shots													= glock_t1_shoot, shoot
+t_anm_show													= glock_t1_show_e, idle
+t_anm_show_empty											= glock_t1_show_e, idle_empty
+t_anm_reload_misfire										= glock_t1_unjam, unjam, 1.2
+t_anm_switch_mode										= glock_t1_firemode, idle, 1.2
+t_anm_switch_mode_empty							= glock_t1_firemode_e, idle_empty, 1.2
+t_anm_mag_check											= glock_t1_check_17, check, 1.3
+t_anm_mag_check_empty								= glock_t1_check_17, check_empty, 1.3
+t_anm_reload													= glock_t1_reload_17_p1, reload_p1, 1.2
+t_anm_reload_p1												= glock_t1_reload_17_p1, reload_p1, 1.2
+t_anm_reload_p2												= glock_t1_reload_17_p2, reload_p2, 1.2
+t_anm_reload_empty										= glock_t1_reload_17_p1, reload_empty_p1, 1.2
+t_anm_reload_empty_p1									= glock_t1_reload_17_p1, reload_empty_p1, 1.2
+t_anm_reload_empty_p2									= glock_t1_reload_17e_p2, reload_empty_p2, 1.2
+17_t_anm_reload												= glock_t1_reload_17_p1, reload_p1, 1.2
+17_t_anm_reload_p1										= glock_t1_reload_17_p1, reload_p1, 1.2
+17_t_anm_reload_p2										= glock_t1_reload_17_p2, reload_p2, 1.2
+17_t_anm_reload_empty									= glock_t1_reload_17_p1, reload_empty_p1, 1.2
+17_t_anm_reload_empty_p1							= glock_t1_reload_17_p1, reload_empty_p1, 1.2
+17_t_anm_reload_empty_p2							= glock_t1_reload_17e_p2, reload_empty_p2, 1.2
+17_t_anm_mag_check										= glock_t1_check_17, check, 1.3
+17_t_anm_mag_check_empty							= glock_t1_check_17, check_empty, 1.3
+33_t_anm_reload												= glock_t1_reload_33_p1, reload_p1, 1.2
+33_t_anm_reload_p1										= glock_t1_reload_33_p1, reload_p1, 1.2
+33_t_anm_reload_p2										= glock_t1_reload_33_p2, reload_p2, 1.2
+33_t_anm_reload_empty									= glock_t1_reload_33_p1, reload_empty_p1, 1.2
+33_t_anm_reload_empty_p1							= glock_t1_reload_33_p1, reload_empty_p1, 1.2
+33_t_anm_reload_empty_p2							= glock_t1_reload_33e_p2, reload_empty_p2, 1.2
+33_t_anm_mag_check										= glock_t1_check_33, check, 1.3
+33_t_anm_mag_check_empty							= glock_t1_check_33, check_empty, 1.3
+50_t_anm_reload												= glock_t1_reload_50_p1, reload_p1, 1.2
+50_t_anm_reload_p1										= glock_t1_reload_50_p1, reload_p1, 1.2
+50_t_anm_reload_p2										= glock_t1_reload_50_p2, reload_p2, 1.2
+50_t_anm_reload_empty									= glock_t1_reload_50_p1, reload_empty_p1, 1.2
+50_t_anm_reload_empty_p1							= glock_t1_reload_50_p1, reload_empty_p1, 1.2
+50_t_anm_reload_empty_p2							= glock_t1_reload_50e_p2, reload_empty_p2, 1.2
+50_t_anm_mag_check										= glock_t1_check_50, check, 1.3
+50_t_anm_mag_check_empty							= glock_t1_check_50, check_empty, 1.3
+40_t_anm_reload												= glock_t1_reload_40_p1, reload_p1, 1.2
+40_t_anm_reload_p1										= glock_t1_reload_40_p1, reload_p1, 1.2
+40_t_anm_reload_p2										= glock_t1_reload_40_p2, reload_p2, 1.2
+40_t_anm_reload_empty									= glock_t1_reload_40_p1, reload_empty_p1, 1.2
+40_t_anm_reload_empty_p1							= glock_t1_reload_40_p1, reload_empty_p1, 1.2
+40_t_anm_reload_empty_p2							= glock_t1_reload_40e_p2, reload_empty_p2, 1.2
+40_t_anm_mag_check										= glock_t1_check_50, check, 1.3
+40_t_anm_mag_check_empty							= glock_t1_check_50, check_empty, 1.3
+r_anm_bore                                 					= glock_r1_bore, idle
+r_anm_bore_empty											= glock_r1_bore_e, idle_empty
+r_anm_hide														= glock_r1_holster_e, idle
+r_anm_hide_empty											= glock_r1_holster_e, idle_empty
+r_anm_idle														= glock_r1_idle, idle
+r_anm_idle_empty											= glock_r1_idle, idle_empty
+r_anm_idle_aim												= glock_r1_idle_aim, idle
+r_anm_idle_aim_empty									= glock_r1_idle_aim, idle_empty
+r_anm_idle_aim_moving									= glock_r1_walk_aim, idle
+r_anm_idle_aim_moving_crouch						= glock_r1_walk_aim, idle
+r_anm_idle_aim_moving_crouch_empty			= glock_r1_walk_aim, idle_empty
+r_anm_idle_aim_moving_empty						= glock_r1_walk_aim, idle_empty
+r_anm_idle_moving											= glock_r1_walk, idle
+r_anm_idle_moving_crouch								= glock_r1_walk, idle, 0.7
+r_anm_idle_moving_crouch_empty					= glock_r1_walk, idle_empty, 0.7
+r_anm_idle_moving_empty								= glock_r1_walk, idle_empty
+r_anm_shot_l													= glock_r1_shoot, shoor_last
+r_anm_shots													= glock_r1_shoot, shoot
+r_anm_show													= glock_r1_show_e, idle
+r_anm_show_empty										= glock_r1_show_e, idle_empty
+r_anm_reload_misfire										= glock_r1_unjam, unjam, 1.2
+r_anm_switch_mode										= glock_r1_firemode, idle, 1.2
+r_anm_switch_mode_empty							= glock_r1_firemode_e, idle_empty, 1.2
+r_anm_mag_check											= glock_r1_check_17, check, 1.3
+r_anm_mag_check_empty								= glock_r1_check_17, check_empty, 1.3
+r_anm_reload													= glock_r1_reload_17_p1, reload_p1, 1.2
+r_anm_reload_p1												= glock_r1_reload_17_p1, reload_p1, 1.2
+r_anm_reload_p2												= glock_r1_reload_17_p2, reload_p2, 1.2
+r_anm_reload_empty										= glock_r1_reload_17_p1, reload_empty_p1, 1.2
+r_anm_reload_empty_p1									= glock_r1_reload_17_p1, reload_empty_p1, 1.2
+r_anm_reload_empty_p2									= glock_r1_reload_17e_p2, reload_empty_p2, 1.2
+17_r_anm_reload												= glock_r1_reload_17_p1, reload_p1, 1.2
+17_r_anm_reload_p1										= glock_r1_reload_17_p1, reload_p1, 1.2
+17_r_anm_reload_p2										= glock_r1_reload_17_p2, reload_p2, 1.2
+17_r_anm_reload_empty									= glock_r1_reload_17_p1, reload_empty_p1, 1.2
+17_r_anm_reload_empty_p1							= glock_r1_reload_17_p1, reload_empty_p1, 1.2
+17_r_anm_reload_empty_p2							= glock_r1_reload_17e_p2, reload_empty_p2, 1.2
+17_r_anm_mag_check										= glock_r1_check_17, check, 1.3
+17_r_anm_mag_check_empty							= glock_r1_check_17, check_empty, 1.3
+33_r_anm_reload												= glock_r1_reload_33_p1, reload_p1, 1.2
+33_r_anm_reload_p1										= glock_r1_reload_33_p1, reload_p1, 1.2
+33_r_anm_reload_p2										= glock_r1_reload_33_p2, reload_p2, 1.2
+33_r_anm_reload_empty									= glock_r1_reload_33_p1, reload_empty_p1, 1.2
+33_r_anm_reload_empty_p1							= glock_r1_reload_33_p1, reload_empty_p1, 1.2
+33_r_anm_reload_empty_p2							= glock_r1_reload_33e_p2, reload_empty_p2, 1.2
+33_r_anm_mag_check									= glock_r1_check_33, check, 1.3
+33_r_anm_mag_check_empty						= glock_r1_check_33, check_empty, 1.3
+50_r_anm_reload											= glock_r1_reload_50_p1, reload_p1, 1.2
+50_r_anm_reload_p1									= glock_r1_reload_50_p1, reload_p1, 1.2
+50_r_anm_reload_p2									= glock_r1_reload_50_p2, reload_p2, 1.2
+50_r_anm_reload_empty								= glock_r1_reload_50_p1, reload_empty_p1, 1.2
+50_r_anm_reload_empty_p1						= glock_r1_reload_50_p1, reload_empty_p1, 1.2
+50_r_anm_reload_empty_p2						= glock_r1_reload_50e_p2, reload_empty_p2, 1.2
+50_r_anm_mag_check									= glock_r1_check_50, check, 1.3
+50_r_anm_mag_check_empty						= glock_r1_check_50, check_empty, 1.3
+40_r_anm_reload											= glock_r1_reload_40_p1, reload_p1, 1.2
+40_r_anm_reload_p1									= glock_r1_reload_40_p1, reload_p1, 1.2
+40_r_anm_reload_p2									= glock_r1_reload_40_p2, reload_p2, 1.2
+40_r_anm_reload_empty								= glock_r1_reload_40_p1, reload_empty_p1, 1.2
+40_r_anm_reload_empty_p1						= glock_r1_reload_40_p1, reload_empty_p1, 1.2
+40_r_anm_reload_empty_p2						= glock_r1_reload_40e_p2, reload_empty_p2, 1.2
+40_r_anm_mag_check									= glock_r1_check_50, check, 1.3
+40_r_anm_mag_check_empty						= glock_r1_check_50, check_empty, 1.3
+v_anm_bore                                 					= glock_t1_bore, idle
+v_anm_bore_empty											= glock_t1_bore_e, idle_empty
+v_anm_hide														= glock_t1_holster_e, idle
+v_anm_hide_empty											= glock_t1_holster_e, idle_empty
+v_anm_idle														= glock_t1_idle, idle
+v_anm_idle_empty											= glock_t1_idle, idle_empty
+v_anm_idle_aim												= glock_t1_idle_aim, idle
+v_anm_idle_aim_empty									= glock_t1_idle_aim, idle_empty
+v_anm_idle_aim_moving									= glock_t1_walk_aim, idle
+v_anm_idle_aim_moving_crouch						= glock_t1_walk_aim, idle
+v_anm_idle_aim_moving_crouch_empty			= glock_t1_walk_aim, idle_empty
+v_anm_idle_aim_moving_empty						= glock_t1_walk_aim, idle_empty
+v_anm_idle_moving											= glock_t1_walk, idle
+v_anm_idle_moving_crouch								= glock_t1_walk, idle, 0.7
+v_anm_idle_moving_crouch_empty					= glock_t1_walk, idle_empty, 0.7
+v_anm_idle_moving_empty								= glock_t1_walk, idle_empty
+v_anm_shot_l													= glock_t1_shoot, shoot_last
+v_anm_shots													= glock_t1_shoot, shoot
+v_anm_show													= glock_t1_show_e, idle
+v_anm_show_empty											= glock_t1_show_e, idle_empty
+v_anm_reload_misfire										= glock_t1_unjam, unjam, 1.2
+v_anm_switch_mode										= glock_t1_firemode, idle, 1.2
+v_anm_switch_mode_empty							= glock_t1_firemode_e, idle_empty, 1.2
+v_anm_mag_check											= glock_t1_check_17, check, 1.3
+v_anm_mag_check_empty								= glock_t1_check_17, check_empty, 1.3
+v_anm_reload													= glock_t1_reload_17_p1, reload_p1, 1.2
+v_anm_reload_p1												= glock_t1_reload_17_p1, reload_p1, 1.2
+v_anm_reload_p2												= glock_t1_reload_17_p2, reload_p2, 1.2
+v_anm_reload_empty										= glock_t1_reload_17_p1, reload_empty_p1, 1.2
+v_anm_reload_empty_p1									= glock_t1_reload_17_p1, reload_empty_p1, 1.2
+v_anm_reload_empty_p2									= glock_t1_reload_17e_p2, reload_empty_p2, 1.2
+17_v_anm_reload												= glock_t1_reload_17_p1, reload_p1, 1.2
+17_v_anm_reload_p1										= glock_t1_reload_17_p1, reload_p1, 1.2
+17_v_anm_reload_p2										= glock_t1_reload_17_p2, reload_p2, 1.2
+17_v_anm_reload_empty									= glock_t1_reload_17_p1, reload_empty_p1, 1.2
+17_v_anm_reload_empty_p1							= glock_t1_reload_17_p1, reload_empty_p1, 1.2
+17_v_anm_reload_empty_p2							= glock_t1_reload_17e_p2, reload_empty_p2, 1.2
+17_v_anm_mag_check										= glock_t1_check_17, check, 1.3
+17_v_anm_mag_check_empty							= glock_t1_check_17, check_empty, 1.3
+33_v_anm_reload												= glock_t1_reload_33_p1, reload_p1, 1.2
+33_v_anm_reload_p1										= glock_t1_reload_33_p1, reload_p1, 1.2
+33_v_anm_reload_p2										= glock_t1_reload_33_p2, reload_p2, 1.2
+33_v_anm_reload_empty									= glock_t1_reload_33_p1, reload_empty_p1, 1.2
+33_v_anm_reload_empty_p1							= glock_t1_reload_33_p1, reload_empty_p1, 1.2
+33_v_anm_reload_empty_p2							= glock_t1_reload_33e_p2, reload_empty_p2, 1.2
+33_v_anm_mag_check										= glock_t1_check_33, check, 1.3
+33_v_anm_mag_check_empty							= glock_t1_check_33, check_empty, 1.3
+50_v_anm_reload												= glock_t1_reload_50_p1, reload_p1, 1.2
+50_v_anm_reload_p1										= glock_t1_reload_50_p1, reload_p1, 1.2
+50_v_anm_reload_p2										= glock_t1_reload_50_p2, reload_p2, 1.2
+50_v_anm_reload_empty									= glock_t1_reload_50_p1, reload_empty_p1, 1.2
+50_v_anm_reload_empty_p1							= glock_t1_reload_50_p1, reload_empty_p1, 1.2
+50_v_anm_reload_empty_p2							= glock_t1_reload_50e_p2, reload_empty_p2, 1.2
+50_v_anm_mag_check										= glock_t1_check_50, check, 1.3
+50_v_anm_mag_check_empty							= glock_t1_check_50, check_empty, 1.3
+40_v_anm_reload												= glock_t1_reload_40_p1, reload_p1, 1.2
+40_v_anm_reload_p1										= glock_t1_reload_40_p1, reload_p1, 1.2
+40_v_anm_reload_p2										= glock_t1_reload_40_p2, reload_p2, 1.2
+40_v_anm_reload_empty									= glock_t1_reload_40_p1, reload_empty_p1, 1.2
+40_v_anm_reload_empty_p1							= glock_t1_reload_40_p1, reload_empty_p1, 1.2
+40_v_anm_reload_empty_p2							= glock_t1_reload_40e_p2, reload_empty_p2, 1.2
+40_v_anm_mag_check										= glock_t1_check_50, check, 1.3
+40_v_anm_mag_check_empty							= glock_t1_check_50, check_empty, 1.3
+
+[glock_roni_mod]:glock_roni
+kind  =  glock
+inv_ui_sign				= glk_roni_mod
+visual						= w_att_huds\glock_roni_mod
+inv_name					= glock_roni_mod
+inv_name_short			= glock_roni_modS
+inv_weight					= 0.58
+inv_grid_y					= 14
+override_section = glock_roni_mod_attributes
+[glock_roni_mod_attributes]:glock_roni_attributes
+fire_point = 0, 0, 0.06
+weapon_lenght = 0.33
+
+[glock_stock]:attachment_base
+kind  =  glock
+inv_ui_sign				= glk_stock
+visual						= w_att_huds\glock_stock
+inv_name					= glock_stock
+inv_name_short			= glock_stock
+cost							= 4000
+inv_weight					= 0.5
+inv_grid_width			= 2
+inv_grid_x					= 6
+inv_grid_y					= 12
+attachment_point	=	glock_stock|0,0,0|0,0,0
+attachment_slots	=	pica_3|wpn_body|0.024805,0.018325,-0.0677|0,0,90
+item_tags	=	stock
+override_section = glock_stock_attributes
+
+[glock_stock_attributes]
+weapon_lenght = 0.3
+zoom_rotate_time = 0.03
+recoil_koeff = -0.32
+inertia_koeff = 0.7
+
+[mag_wpn_glock_9x19_fmj]:mag_wpn_base,wg_wpn_glock,ag_ammo_9x19_fmj
+inv_ui_sign					= glk_17
+visual							= w_att_huds\glock_mag_17
+inv_name						= glock_mag_17
+inv_name_short				= glock_mag_17
+inv_grid_x         				= 8
+inv_grid_y         				= 12
+inv_weight						= 0.05
+cost								= 450
+max_mag_size				= 17
+mag_size						= small
+override_section				=	mag_wpn_glock_9x19_fmj_attributes
+
+[mag_wpn_glock_9x19_fmj_attributes]
+animation_prefix_mag = 17_
+[glock_mag_17_attributes]
+animation_prefix_mag	=	17_
+
+[mag_wpn_glock21_11.43x23_fmj]:mag_wpn_base,wg_wpn_glock21,ag_ammo_11.43x23_fmj
+inv_ui_sign					= glk_17
+visual							= w_att_huds\glock21_mag_13
+inv_name						= glock21_mag_13
+inv_name_short				= glock21_mag_13
+inv_grid_x         				= 8
+inv_grid_y         				= 61
+inv_weight						= 0.08
+cost								= 450
+max_mag_size				= 13
+mag_size						= small
+override_section				=	mag_wpn_glock21_11.43x23_fmj_attributes
+
+[mag_wpn_glock21_11.43x23_fmj_attributes]
+animation_prefix_mag = 17_
+
+[mag_wpn_glock_33_9x19_fmj]:mag_wpn_glock_9x19_fmj
+inv_ui_sign					= glk_33
+visual							= w_att_huds\glock_mag_33
+inv_name						= glock_mag_33
+inv_name_short				= glock_mag_33S
+inv_grid_height    			= 2
+inv_grid_x         				= 9
+inv_grid_y         				= 11
+inv_weight						= 0.08
+cost								= 850
+max_mag_size				= 33
+mag_size						= medium
+override_section				=	mag_wpn_glock_33_9x19_fmj_attributes
+
+[mag_wpn_glock_33_9x19_fmj_attributes]
+animation_prefix_mag = 33_
+[glock_mag_33_attributes]
+animation_prefix_mag	=	33_
+
+[mag_wpn_glock21_sgm_11.43x23_fmj]:mag_wpn_glock21_11.43x23_fmj
+inv_ui_sign					= glk_26
+visual							= w_att_huds\glock21_mag_26_sgm_tactical
+inv_name						= glock21_mag_26_sgm_tactical
+inv_name_short				= glock21_mag_26_sgm_tacticalS
+inv_grid_height    			= 2
+inv_grid_x         				= 9
+inv_weight						= 0.12
+cost								= 850
+max_mag_size				= 26
+override_section				=	mag_wpn_glock21_sgm_11.43x23_fmj_attributes
+
+[mag_wpn_glock21_sgm_11.43x23_fmj_attributes]
+animation_prefix_mag = 33_
+
+[mag_wpn_glock21_kriss_11.43x23_fmj]:mag_wpn_glock21_sgm_11.43x23_fmj
+inv_ui_sign					= glk_26
+visual							= w_att_huds\glock21_mag_30_kriss
+inv_name						= glock21_mag_30_kriss
+inv_grid_x         				= 10
+inv_weight						= 0.15
+cost								= 950
+max_mag_size				= 30
+override_section = mag_wpn_glock21_kriss_11.43x23_fmj_attributes
+
+[mag_wpn_glock21_kriss_11.43x23_fmj_attributes]
+animation_prefix_mag = 33_
+
+[mag_wpn_glock_50_9x19_fmj]:mag_wpn_glock_9x19_fmj
+inv_ui_sign					= glk_50
+visual							= w_att_huds\glock_mag_50
+inv_name						= glock_mag_50
+inv_name_short				= glock_mag_50S
+inv_grid_height    			= 2
+inv_grid_x         				= 10
+inv_grid_y         				= 11
+inv_weight						= 0.58
+cost								= 1600
+max_mag_size				= 50
+mag_size						= medium
+override_section				=	mag_wpn_glock_50_9x19_fmj_attributes
+
+[mag_wpn_glock_50_9x19_fmj_attributes]
+animation_prefix_mag = 50_
+[glock_mag_50_attributes]
+animation_prefix_mag	=	50_
+
+[mag_wpn_glock21_promag_11.43x23_fmj]:mag_wpn_glock21_sgm_11.43x23_fmj
+inv_ui_sign					= glk_40
+visual							= w_att_huds\glock21_mag_40_promag
+inv_name						= glock21_mag_40_promag
+inv_name_short				= glock21_mag_40_promagS
+inv_weight						= 0.65
+cost								= 1600
+inv_grid_x         				= 11
+inv_grid_y         				= 61
+max_mag_size				= 40
+mag_size						= medium
+override_section				=	mag_wpn_glock21_promag_11.43x23_fmj_attributes
+
+[mag_wpn_glock21_promag_11.43x23_fmj_attributes]
+animation_prefix_mag = 50_
+
+[mag_wpn_glock21_promag_d_11.43x23_fmj]:mag_wpn_glock21_promag_11.43x23_fmj
+visual							= w_att_huds\glock21_mag_40_promag_d
+inv_grid_x         				= 12
+override_section = mag_wpn_glock21_promag_d_11.43x23_fmj_attributes
+
+[mag_wpn_glock21_promag_d_11.43x23_fmj_attributes]
+animation_prefix_mag = 50_
+
+[mag_wpn_glock_50kci_9x19_fmj]:mag_wpn_glock_50_9x19_fmj
+visual							= w_att_huds\glock_mag_kci_50
+inv_name						= glock_mag_kci_50
+inv_name_short				= glock_mag_kci_50S
+inv_grid_x         			= 11
+inv_weight						= 0.67
+cost								= 1500
+override_section = mag_wpn_glock_50kci_9x19_fmj_attributes
+
+[mag_wpn_glock_50kci_9x19_fmj_attributes]
+animation_prefix_mag = 50_
+
+[9mm_silencer_multimount]:attachment_base
+kind = 9sil
+inv_ui_sign				= sil_9x19
+visual						= w_att_huds\9mm_silencer_multimount
+inv_name					= 9mm_silencer_multimount
+inv_name_short			= 9mm_silencer_multimountS
+cost							= 1650
+inv_weight					= 0.4
+inv_grid_width     = 2
+inv_grid_x         = 2
+inv_grid_y         = 14
+attachment_point		=	9mm_muzzle|0,0,0|0,0,0
+attachment_slots		=	b3|muzzle|0,-0.02125,0.02|0,0,0
+item_tags	=	muzzle_device
+override_section = 9mm_silencer_multimount_attributes
+
+[9mm_silencer_multimount_attributes]
+silencer_status = 1
+silencer_name = wpn_addon_silencer
+silencer_x = 1
+silencer_y = 1
+weapon_lenght = 0.16
+impair_koeff = 1.4
+zoom_rotate_time = 0.05
+recoil_koeff = -0.05
+inertia_koeff = 1.2
+
+[9mm_silencer_bnt]:9mm_silencer_multimount
+kind = 9sil
+visual						= w_att_huds\9mm_silencer_bnt
+inv_name					= 9mm_silencer_bnt
+inv_name_short			= 9mm_silencer_bntS
+cost							= 1400
+inv_weight					= 0.39
+inv_grid_width     = 2
+inv_grid_x         = 4
+inv_grid_y         = 14
+attachment_slots		=	b3|muzzle|0,-0.02125,0.015|0,0,0
+override_section = 9mm_silencer_bnt_attributes
+
+[9mm_silencer_bnt_attributes]
+silencer_status = 1
+silencer_name = wpn_addon_silencer
+silencer_x = 1
+silencer_y = 1
+weapon_lenght = 0.16
+impair_koeff = 1.4
+zoom_rotate_time = 0.05
+recoil_koeff = -0.09
+inertia_koeff = 1.2
+
+[9mm_silencer_osprey]:attachment_base
+kind = 9sil
+visual						= w_att_huds\9mm_silencer_osprey
+inv_name					= 9mm_silencer_osprey
+inv_name_short			= 9mm_silencer_ospreyS
+cost							= 1700
+inv_weight					= 0.28
+inv_grid_width     = 2
+inv_grid_x         = 0
+inv_grid_y         = 14
+attachment_point		=	9mm_muzzle|0,0,0|0,0,0
+override_section			= 9mm_silencer_osprey_attributes
+override_section = 9mm_silencer_osprey_attributes
+
+[9mm_silencer_osprey_attributes]
+silencer_status = 1
+silencer_name = wpn_addon_silencer
+silencer_x = 1
+silencer_y = 1
+weapon_lenght = 0.2
+zoom_rotate_time = 0.06
+recoil_koeff = -0.08
+inertia_koeff = 1.3
+
+[9mm_silencer_ro]:9mm_silencer_multimount
+kind = 9sil
+visual						= w_att_huds\9mm_silencer_rugged_obsidian
+inv_name					= 9mm_silencer_rugged_obsidian
+inv_name_short			= 9mm_silencer_rugged_obsidianS
+cost							= 1450
+inv_weight					= 0.36
+inv_grid_width     = 2
+inv_grid_x         = 10
+inv_grid_y         = 13
+attachment_slots		=	b3|muzzle|0,-0.02125,0.02|0,0,0	
+override_section = 9mm_silencer_ro_attributes
+
+[9mm_silencer_ro_attributes]
+silencer_status = 1
+silencer_name = wpn_addon_silencer
+silencer_x = 1
+silencer_y = 1
+weapon_lenght = 0.2
+zoom_rotate_time = 0.06
+recoil_koeff = -0.07
+inertia_koeff = 1.3
+
+[9mm_silencer_ros]:9mm_silencer_multimount
+kind = 9sil
+visual						= w_att_huds\9mm_silencer_rugged_obsidian_short
+inv_name					= 9mm_silencer_rugged_obsidian_short
+inv_name_short			= 9mm_silencer_rugged_obsidian_shortS
+cost							= 1550
+inv_weight					= 0.21
+inv_grid_width     = 1
+inv_grid_x         = 9
+inv_grid_y         = 13
+attachment_slots		=	b3|muzzle|0,-0.02125,0.02|0,0,0	
+override_section = 9mm_silencer_ros_attributes
+
+[9mm_silencer_ros_attributes]
+silencer_name = wpn_addon_silencer
+silencer_x = 1
+silencer_y = 1
+weapon_lenght = 0.15
+silencer_status = 1
+impair_koeff = 1.2
+zoom_rotate_time = 0.02
+recoil_koeff = -0.05
+inertia_koeff = 1.1

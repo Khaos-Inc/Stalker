@@ -1,331 +1,444 @@
-;------------------------------------------------------------------------------------------------
-[wpn_desert_eagle]:identity_immunities,weapon_probability,default_weapon_params,wpn_desert_eagle_sounds
-        GroupControlSection         = spawn_group
-        discovery_dependency        =
-        $npc                        = on
-        $prefetch                   = 8
-        $spawn                      = "weapons\Desert Eagle"
-        scheduled                   = off
-        cform                       = skeleton
-        
-        class                       = WP_PM
-        slot                        = 1
-        animation_slot              = 1
-        ef_weapon_type              = 5
-        hand_dependence             = 1
-        single_handed               = 1
-        
-        default_to_ruck             = false
-        sprint_allowed              = true
-        
-        inv_grid_height             = 1
-        inv_grid_width              = 2
-        inv_grid_x                  = 47
-        inv_grid_y                  = 79
-        inv_name                    = st_wpn_desert_eagle
-        inv_name_short              = st_wpn_desert_eagle
-        description                 = st_wpn_desert_eagle_descr
-        
-        kind                        = w_pistol
-        inv_weight                  = 1.897
-        cost                        = 19680
-        repair_type                 = pistol
-        
-        hud                         = wpn_desert_eagle_hud
-        visual                      = dynamics\weapons\wpn_desert_eagle\wpn_desert_eagle.ogf
-        position                    = -0.021, -0.085, 0.0
-        orientation                 = 0, 0, 0
-        fire_point                  = 0.0, 0.133, 0.22
-        ph_mass                     = 1
-        
-        flame_particles             = weapons\generic_weapon03
-        smoke_particles             = weapons\generic_shoot_00
-        
-		shell_point		 			= 0.0, 0.133, 0.047
-		shell_dir		 			= 0.0, 0.0, 0.4
-		shell_particles	 			= weapons\556x45
+[wpn_desert_eagle]:wpn_colt1911,wpn_desert_eagle_sounds
+GroupControlSection	= spawn_group
+$spawn                      	= "weapons\Desert Eagle"
+ef_weapon_type          = 8
+inv_grid_width				= 4
+inv_grid_height			= 2
+inv_grid_x					= 0
+inv_grid_y					= 44
+inv_name						= wpn_desert_eagle
+inv_name_short			= wpn_desert_eagle
+description                	 = wpn_desert_eagle_descr
+ph_mass                     	= 5
+inv_weight                  	= 1
+cost								= 33000
+npc_rpm  = 350
+ammo_class					= ammo_44_hp_mag, ammo_44_hp_mag_bad, ammo_44_fmj_mag, ammo_44_fmj_mag_bad
+ammo_mag_size			= 8
+weapon_lenght			=	0.3
+attachment_slots			= slot_magazin|magazin|0,0,0|0,0,0#deagle_trigger|wpn_body|0,0,0|0,0,0
+aimpoint_offset_y		= 0.06692
+ui_render_cam_offset	= 0.22, -0.12, 1.12
+additional_hud_offset	= 0, 0, -0.17		;-0.17 if 0.0
+visual                     		= w_att_huds\deagle.ogf
+hud                        		= wpn_deagle_hud
 
-        light_color                 = 0.6, 0.5, 0.3
-        light_range                 = 3.0
-        light_time                  = 0.2
-        light_var_color             = 0.05
-        light_var_range             = 0.5
-        
-        upgrades                    = up_gr_firstab_desert_eagle, up_gr_seconab_desert_eagle, up_gr_thirdab_desert_eagle, up_gr_fourtab_desert_eagle, up_gr_fifthab_desert_eagle
-        installed_upgrades          =
-        upgrade_scheme              = upgrade_scheme_desert_eagle
-        upgr_icon_x                 = 1150
-        upgr_icon_y                 = 1500
-        upgr_icon_width             = 150
-        upgr_icon_height            = 100
-        
-        fire_modes                  = 1
-        ammo_class                  = ammo_357_hp_mag, ammo_357_hp_mag_bad, ammo_357_hp_mag_verybad
-        ammo_elapsed                = 9
-        ammo_mag_size               = 9
-        
-        scope_status                = 0
-        scope_zoom_factor           = 0
-        
-        silencer_status             = 0
-        silencer_light_color        = 0.6, 0.5, 0.3
-        silencer_light_range        = 0.01
-        silencer_light_time         = 0.2
-        silencer_light_var_color    = 0.05
-        silencer_light_var_range    = 0.5
-        silencer_smoke_particles    = weapons\generic_shoot_00
-        
-        grenade_launcher_status     = 0
-        
-        hit_impulse                 = 45
-        hit_power                   = 0.6, 0.6, 0.6, 0.6
-        hit_type                    = fire_wound
-        fire_distance               = 500
-        bullet_speed                = 440
-        rpm                         = 110
-        rpm_empty_click             = 200
-        
-        use_aim_bullet              = false
-        time_to_aim                 = 0.0 ;  1.0
-        zoom_dof                    = -1000, 1.0, 1000
-        zoom_enabled                = true
-        zoom_rotate_time            = 0.25
-        reload_dof                  = 0.0, 0.5, 5, 1.7
-control_inertion_factor = 1.0f
-        crosshair_inertion          = 4.3
-        fire_dispersion_base        = 0.63
-        fire_dispersion_condition_factor = 0.001
-        
-        misfire_probability         = 0.005
-        misfire_start_condition     = 0.7 ;  0.85
-        misfire_start_prob          = 0.007
-        misfire_end_condition       = 0.1
-        misfire_end_prob            = 0.11
-        
-        condition_queue_shot_dec    = 0.0023
-        condition_shot_dec          = 0.0023
-        
-        cam_return                  = 0
-        cam_relax_speed             = 6
-        cam_dispersion              = 4.0
-        cam_dispersion_frac         = 0.92
-        cam_dispersion_inc          = 0.0
-        cam_max_angle               = 50.0
-        cam_max_angle_horz          = 50.0
-        cam_step_angle_horz         = 1.14
-		zoom_cam_dispersion         = 3.5
-        
-        PDM_disp_accel_factor       = 1.055
-        PDM_disp_base               = 0.85
-        PDM_disp_crouch             = 1.0
-        PDM_disp_crouch_no_acc      = 1.0
-        PDM_disp_vel_factor         = 1.05
-        
-        cam_relax_speed_ai          = 120.75
-        holder_fov_modifier         = 1.0
-        holder_range_modifier       = 1.0
-        min_radius                  = 0
-        max_radius                  = 500
-        hit_probability_gd_novice   = 1.00
-        hit_probability_gd_stalker  = 1.00
-        hit_probability_gd_veteran  = 1.00
-        hit_probability_gd_master   = 1.00
-        
-        kill_msg_x                  = 194
-        kill_msg_y                  = 123
-        kill_msg_width              = 46
-        kill_msg_height             = 27
-		weapon_lower_speed			= 0.2
-		hud_fov                     = 0.7
-;-------------------------------------------------------------------SOUNDS-----------------------------------------------------------------------------
+additional_sounds		= deagle_additional_sounds
+[deagle_additional_sounds]:glock_additional_sounds
+snd_mag_in					= weapons\main\deagle_mag_in
+snd_mag_out				= weapons\main\deagle_mag_out
+snd_mag_in_44			= weapons\main\deagle_mag_in_44
+snd_mag_out_44			= weapons\main\deagle_mag_out_44
+snd_slide_release		= weapons\main\deagle_slide_release
+snd_slide_back			= weapons\main\deagle_slide_back
 
-snd_holster				= weapons\deserteagle\deagle_holster
-snd_reload				= weapons\deserteagle\deagle_reloadtac
-snd_reload_empty		= weapons\deserteagle\deagle_reloadempty
-snd_reload_misfire		= weapons\deserteagle\deagle_jam
+[wpn_deagle_hud]:hud_base
 
-;---------------------------------------------------------------------HUD-------------------------------------------------------------------------------		
+weapon_recoil_vert         = 4.55
+weapon_recoil_vert_inc     = 0.455
+weapon_recoil_horz         = 3.2
+weapon_recoil_ret_speed    = 5.0
 
-[wpn_desert_eagle_hud]:hud_base
-        item_visual                 = anomaly_weapons\wpn_desert_eagle\wpn_desert_eagle_hud.ogf
-        attach_place_idx            = 0
-        zoom_hide_crosshair         = true
-        
-        item_position               = 0.0, 0.0, 0.0
-        item_orientation            = 0.0, 0.0, 0.0
-        
-        hands_position              = 0.0, 0.0, 0.0
-        hands_position_16x9         = 0.0, 0.0, 0.0
-        hands_orientation           = 0.0, 0.0, 0.0
-        hands_orientation_16x9      = 0.0, 0.0, 0.0
 
-		safemode_anm				= 
-		safemode_anm2				= 
+anm_reload_misfire_sounds				= 0,snd_move_in|14,snd_slide_back|22,snd_slide_release
+anm_reload_p1_sounds						= 0,snd_move_out|16,snd_mag_out
+anm_reload_p2_sounds						= 0,snd_move_in|19,snd_mag_in
+anm_reload_empty_p1_sounds			= 0,snd_move_out|16,snd_mag_out
+anm_reload_empty_p2_sounds			= 0,snd_move_in_empty|19,snd_mag_in|49,snd_slide_release
+8_anm_reload_p1_sounds					= 0,snd_move_out|16,snd_mag_out
+8_anm_reload_p2_sounds					= 0,snd_move_in|19,snd_mag_in
+8_anm_reload_empty_p1_sounds		= 0,snd_move_out|16,snd_mag_out
+8_anm_reload_empty_p2_sounds		= 0,snd_move_in_empty|19,snd_mag_in|49,snd_slide_release
+8_anm_mag_check_sounds					= 0,snd_move_out|16,snd_mag_out|30,snd_move_end|76,snd_mag_in
+8_anm_mag_check_empty_sounds		= 0,snd_move_out|16,snd_mag_out|30,snd_move_end|76,snd_mag_in
+20_anm_reload_p1_sounds					= 0,snd_move_out|16,snd_mag_out
+20_anm_reload_p2_sounds					= 0,snd_move_in|19,snd_mag_in
+20_anm_reload_empty_p1_sounds		= 0,snd_move_out|16,snd_mag_out
+20_anm_reload_empty_p2_sounds		= 0,snd_move_in_empty|19,snd_mag_in|49,snd_slide_release
+20_anm_mag_check_sounds				= 0,snd_move_out|16,snd_mag_out|30,snd_move_end|76,snd_mag_in
+20_anm_mag_check_empty_sounds	= 0,snd_move_out|16,snd_mag_out|30,snd_move_end|76,snd_mag_in
+44_anm_reload_p1_sounds					= 0,snd_move_out|16,snd_mag_out_44
+44_anm_reload_p2_sounds					= 0,snd_move_in|19,snd_mag_in_44
+44_anm_reload_empty_p1_sounds		= 0,snd_move_out|16,snd_mag_out_44
+44_anm_reload_empty_p2_sounds		= 0,snd_move_in_empty|19,snd_mag_in_44|49,snd_slide_release
+44_anm_mag_check_sounds				= 0,snd_move_out|16,snd_mag_out_44|30,snd_move_end|76,snd_mag_in_44
+44_anm_mag_check_empty_sounds	= 0,snd_move_out|16,snd_mag_out_44|30,snd_move_end|76,snd_mag_in_44
+h_anm_reload_misfire_sounds				= 0,snd_move_in|14,snd_slide_back|22,snd_slide_release
+h_anm_reload_p1_sounds						= 0,snd_move_out|16,snd_mag_out
+h_anm_reload_p2_sounds						= 0,snd_move_in|19,snd_mag_in
+h_anm_reload_empty_p1_sounds			= 0,snd_move_out|16,snd_mag_out
+h_anm_reload_empty_p2_sounds			= 0,snd_move_in_empty|19,snd_mag_in|49,snd_slide_release
+8_h_anm_reload_p1_sounds					= 0,snd_move_out|16,snd_mag_out
+8_h_anm_reload_p2_sounds					= 0,snd_move_in|19,snd_mag_in
+8_h_anm_reload_empty_p1_sounds		= 0,snd_move_out|16,snd_mag_out
+8_h_anm_reload_empty_p2_sounds		= 0,snd_move_in_empty|19,snd_mag_in|49,snd_slide_release
+8_h_anm_mag_check_sounds					= 0,snd_move_out|16,snd_mag_out|30,snd_move_end|76,snd_mag_in
+8_h_anm_mag_check_empty_sounds		= 0,snd_move_out|16,snd_mag_out|30,snd_move_end|76,snd_mag_in
+20_h_anm_reload_p1_sounds					= 0,snd_move_out|16,snd_mag_out
+20_h_anm_reload_p2_sounds					= 0,snd_move_in|19,snd_mag_in
+20_h_anm_reload_empty_p1_sounds		= 0,snd_move_out|16,snd_mag_out
+20_h_anm_reload_empty_p2_sounds		= 0,snd_move_in_empty|19,snd_mag_in|49,snd_slide_release
+20_h_anm_mag_check_sounds				= 0,snd_move_out|16,snd_mag_out|30,snd_move_end|76,snd_mag_in
+20_h_anm_mag_check_empty_sounds	= 0,snd_move_out|16,snd_mag_out|30,snd_move_end|76,snd_mag_in
+44_h_anm_reload_p1_sounds					= 0,snd_move_out|16,snd_mag_out_44
+44_h_anm_reload_p2_sounds					= 0,snd_move_in|19,snd_mag_in_44
+44_h_anm_reload_empty_p1_sounds		= 0,snd_move_out|16,snd_mag_out_44
+44_h_anm_reload_empty_p2_sounds		= 0,snd_move_in_empty|19,snd_mag_in_44|49,snd_slide_release
+44_h_anm_mag_check_sounds				= 0,snd_move_out|16,snd_mag_out_44|30,snd_move_end|76,snd_mag_in_44
+44_h_anm_mag_check_empty_sounds	= 0,snd_move_out|16,snd_mag_out_44|30,snd_move_end|76,snd_mag_in_44
+r_anm_reload_misfire_sounds					= 0,snd_move_in|14,snd_slide_back|22,snd_slide_release
+r_anm_reload_p1_sounds						= 0,snd_move_out|16,snd_mag_out
+r_anm_reload_p2_sounds						= 0,snd_move_in|19,snd_mag_in
+r_anm_reload_empty_p1_sounds			= 0,snd_move_out|16,snd_mag_out
+r_anm_reload_empty_p2_sounds			= 0,snd_move_in_empty|19,snd_mag_in|49,snd_slide_release
+8_r_anm_reload_p1_sounds					= 0,snd_move_out|16,snd_mag_out
+8_r_anm_reload_p2_sounds					= 0,snd_move_in|19,snd_mag_in
+8_r_anm_reload_empty_p1_sounds			= 0,snd_move_out|16,snd_mag_out
+8_r_anm_reload_empty_p2_sounds			= 0,snd_move_in_empty|19,snd_mag_in|49,snd_slide_release
+8_r_anm_mag_check_sounds					= 0,snd_move_out|16,snd_mag_out|30,snd_move_end|76,snd_mag_in
+8_r_anm_mag_check_empty_sounds		= 0,snd_move_out|16,snd_mag_out|30,snd_move_end|76,snd_mag_in
+20_r_anm_reload_p1_sounds					= 0,snd_move_out|16,snd_mag_out
+20_r_anm_reload_p2_sounds					= 0,snd_move_in|19,snd_mag_in
+20_r_anm_reload_empty_p1_sounds		= 0,snd_move_out|16,snd_mag_out
+20_r_anm_reload_empty_p2_sounds		= 0,snd_move_in_empty|19,snd_mag_in|49,snd_slide_release
+20_r_anm_mag_check_sounds				= 0,snd_move_out|16,snd_mag_out|30,snd_move_end|76,snd_mag_in
+20_r_anm_mag_check_empty_sounds		= 0,snd_move_out|16,snd_mag_out|30,snd_move_end|76,snd_mag_in
+44_r_anm_reload_p1_sounds					= 0,snd_move_out|16,snd_mag_out_44
+44_r_anm_reload_p2_sounds					= 0,snd_move_in|19,snd_mag_in_44
+44_r_anm_reload_empty_p1_sounds		= 0,snd_move_out|16,snd_mag_out_44
+44_r_anm_reload_empty_p2_sounds		= 0,snd_move_in_empty|19,snd_mag_in_44|49,snd_slide_release
+44_r_anm_mag_check_sounds				= 0,snd_move_out|16,snd_mag_out_44|30,snd_move_end|76,snd_mag_in_44
+44_r_anm_mag_check_empty_sounds		= 0,snd_move_out|16,snd_mag_out_44|30,snd_move_end|76,snd_mag_in_44
+t_anm_reload_misfire_sounds					= 0,snd_move_in|14,snd_slide_back|22,snd_slide_release
+t_anm_reload_p1_sounds						= 0,snd_move_out|16,snd_mag_out
+t_anm_reload_p2_sounds						= 0,snd_move_in|19,snd_mag_in
+t_anm_reload_empty_p1_sounds			= 0,snd_move_out|16,snd_mag_out
+t_anm_reload_empty_p2_sounds			= 0,snd_move_in_empty|19,snd_mag_in|49,snd_slide_release
+8_t_anm_reload_p1_sounds					= 0,snd_move_out|16,snd_mag_out
+8_t_anm_reload_p2_sounds					= 0,snd_move_in|19,snd_mag_in
+8_t_anm_reload_empty_p1_sounds			= 0,snd_move_out|16,snd_mag_out
+8_t_anm_reload_empty_p2_sounds			= 0,snd_move_in_empty|19,snd_mag_in|49,snd_slide_release
+8_t_anm_mag_check_sounds					= 0,snd_move_out|16,snd_mag_out|30,snd_move_end|76,snd_mag_in
+8_t_anm_mag_check_empty_sounds		= 0,snd_move_out|16,snd_mag_out|30,snd_move_end|76,snd_mag_in
+20_t_anm_reload_p1_sounds					= 0,snd_move_out|16,snd_mag_out
+20_t_anm_reload_p2_sounds					= 0,snd_move_in|19,snd_mag_in
+20_t_anm_reload_empty_p1_sounds		= 0,snd_move_out|16,snd_mag_out
+20_t_anm_reload_empty_p2_sounds		= 0,snd_move_in_empty|19,snd_mag_in|49,snd_slide_release
+20_t_anm_mag_check_sounds				= 0,snd_move_out|16,snd_mag_out|30,snd_move_end|76,snd_mag_in
+20_t_anm_mag_check_empty_sounds		= 0,snd_move_out|16,snd_mag_out|30,snd_move_end|76,snd_mag_in
+44_t_anm_reload_p1_sounds					= 0,snd_move_out|16,snd_mag_out_44
+44_t_anm_reload_p2_sounds					= 0,snd_move_in|19,snd_mag_in_44
+44_t_anm_reload_empty_p1_sounds		= 0,snd_move_out|16,snd_mag_out_44
+44_t_anm_reload_empty_p2_sounds		= 0,snd_move_in_empty|19,snd_mag_in_44|49,snd_slide_release
+44_t_anm_mag_check_sounds				= 0,snd_move_out|16,snd_mag_out_44|30,snd_move_end|76,snd_mag_in_44
+44_t_anm_mag_check_empty_sounds		= 0,snd_move_out|16,snd_mag_out_44|30,snd_move_end|76,snd_mag_in_44
+v_anm_reload_misfire_sounds					= 0,snd_move_in|14,snd_slide_back|22,snd_slide_release
+v_anm_reload_p1_sounds						= 0,snd_move_out|16,snd_mag_out
+v_anm_reload_p2_sounds						= 0,snd_move_in|19,snd_mag_in
+v_anm_reload_empty_p1_sounds			= 0,snd_move_out|16,snd_mag_out
+v_anm_reload_empty_p2_sounds			= 0,snd_move_in_empty|19,snd_mag_in|49,snd_slide_release
+8_v_anm_reload_p1_sounds					= 0,snd_move_out|16,snd_mag_out
+8_v_anm_reload_p2_sounds					= 0,snd_move_in|19,snd_mag_in
+8_v_anm_reload_empty_p1_sounds			= 0,snd_move_out|16,snd_mag_out
+8_v_anm_reload_empty_p2_sounds			= 0,snd_move_in_empty|19,snd_mag_in|49,snd_slide_release
+8_v_anm_mag_check_sounds					= 0,snd_move_out|16,snd_mag_out|30,snd_move_end|76,snd_mag_in
+8_v_anm_mag_check_empty_sounds		= 0,snd_move_out|16,snd_mag_out|30,snd_move_end|76,snd_mag_in
+20_v_anm_reload_p1_sounds					= 0,snd_move_out|16,snd_mag_out
+20_v_anm_reload_p2_sounds					= 0,snd_move_in|19,snd_mag_in
+20_v_anm_reload_empty_p1_sounds		= 0,snd_move_out|16,snd_mag_out
+20_v_anm_reload_empty_p2_sounds		= 0,snd_move_in_empty|19,snd_mag_in|49,snd_slide_release
+20_v_anm_mag_check_sounds				= 0,snd_move_out|16,snd_mag_out|30,snd_move_end|76,snd_mag_in
+20_v_anm_mag_check_empty_sounds		= 0,snd_move_out|16,snd_mag_out|30,snd_move_end|76,snd_mag_in
+44_v_anm_reload_p1_sounds					= 0,snd_move_out|16,snd_mag_out_44
+44_v_anm_reload_p2_sounds					= 0,snd_move_in|19,snd_mag_in_44
+44_v_anm_reload_empty_p1_sounds		= 0,snd_move_out|16,snd_mag_out_44
+44_v_anm_reload_empty_p2_sounds		= 0,snd_move_in_empty|19,snd_mag_in_44|49,snd_slide_release
+44_v_anm_mag_check_sounds				= 0,snd_move_out|16,snd_mag_out_44|30,snd_move_end|76,snd_mag_in_44
+44_v_anm_mag_check_empty_sounds		= 0,snd_move_out|16,snd_mag_out_44|30,snd_move_end|76,snd_mag_in_44
 
-        aim_hud_offset_pos          = -0.0523, 0.0268, 0.03
-        aim_hud_offset_pos_16x9     = -0.0523, 0.0268, 0.03
-        aim_hud_offset_rot          = -0.019, -0.012, -0.008
-        aim_hud_offset_rot_16x9     = -0.019, -0.012, -0.008
-        
-		lowered_hud_offset_pos		        = 0.04, -0.22, -0.06
-        lowered_hud_offset_pos_16x9	        = 0.04, -0.22, -0.06
-        lowered_hud_offset_rot		        = -0.7, 0, -0.05
-        lowered_hud_offset_rot_16x9	        = -0.7, 0, -0.05
+anm_mag_check									= deagle_m_check_8, check, 1.4
+anm_mag_check_empty						= deagle_m_check_8, check_empty, 1.4
+h_anm_mag_check									= deagle_h_check_8, check, 1.4
+h_anm_mag_check_empty						= deagle_h_check_8, check_empty, 1.4
+r_anm_mag_check									= deagle_r_check_8, check, 1.4
+r_anm_mag_check_empty						= deagle_r_check_8, check_empty, 1.4
+t_anm_mag_check									= deagle_t_check_8, check, 1.4
+t_anm_mag_check_empty						= deagle_t_check_8, check_empty, 1.4
+v_anm_mag_check									= deagle_v_check_8, check, 1.4
+v_anm_mag_check_empty						= deagle_v_check_8, check_empty, 1.4
 
-        gl_hud_offset_pos           = 0, 0, 0
-        gl_hud_offset_rot           = 0, 0, 0
-        
-        lean_hud_offset_pos         = 0, 0, 0
-        lean_hud_offset_rot         = 0, 0, 0
-        
-        anm_hide                    = deagle_sh_holster, holster
-        anm_hide_empty              = deagle_sh_holster_empty, idle_empty
-        anm_idle                    = deagle_sh_idle
-		anm_bore					= deagle_sh_idle_bore, idle, 0.9
-		anm_bore_empty				= deagle_sh_idle_bore, idle_empty, 0.9
-        anm_idle_aim                = deagle_sh_idle_aim
-        anm_idle_aim_empty          = deagle_sh_idle_aim, idle_empty
-        anm_idle_aim_moving         = deagle_sh_idle_moving, idle, 0.75
-        anm_idle_aim_moving_crouch  = deagle_sh_idle_moving, idle, 0.7
-        anm_idle_aim_moving_crouch_empty = deagle_sh_idle_moving, idle_empty, 0.7
-        anm_idle_aim_moving_empty   = deagle_sh_idle_moving, idle_empty, 0.75
-        anm_idle_empty              = deagle_sh_idle, idle_empty
-        anm_idle_moving             = deagle_sh_idle_moving, idle, 1.1
-        anm_idle_moving_crouch      = deagle_sh_idle_moving, idle, 0.87
-        anm_idle_moving_crouch_empty = deagle_sh_idle_moving, idle_empty, 0.87
-        anm_idle_moving_empty       = deagle_sh_idle_moving, idle_empty, 1.1
-        anm_idle_sprint             = deagle_sh_idle_sprint, idle, 2.0
-        anm_idle_sprint_empty       = deagle_sh_idle_sprint, idle_empty, 2.0
-        anm_reload                  = deagle_sh_reload, reload
-        anm_reload_empty            = deagle_sh_reload_empty, reload_empty
-		anm_reload_misfire          = deagle_sh_jam, jam
-        anm_shot_l                  = deagle_sh_fire, fire_empty
-        anm_shots                   = deagle_sh_fire
-        anm_show                    = deagle_sh_draw, idle, 0.9
-        anm_show_empty              = deagle_sh_draw, idle_empty, 0.9
-        
-        shell_bone                  = slide
-        shell_point                 = 0, 0, 0
-        
-        fire_bone                   = slide
-        fire_point              	= 0.0, 0.0, 0.3
- 
-;------------------------------------------------------------------------------------------------
-[wpn_desert_eagle_custom]:wpn_desert_eagle
-        inv_grid_x                  = 49
-        inv_name                    = st_wpn_desert_eagle_custom
-        inv_name_short              = st_wpn_desert_eagle_custom
-        
-        cost                        = 23580
-        
-        hud                         = wpn_desert_eagle_sk1_hud
-        visual                      = dynamics\weapons\wpn_desert_eagle\wpn_desert_eagle_sk1.ogf
-        
-        installed_upgrades          = up_thirda_desert_eagle, up_fourta_desert_eagle
-        
-        rpm                         = 112
-        
-        fire_dispersion_base        = 0.4
+item_visual                 				= w_att_huds\deagle_hud.ogf
+;hands_position						= 0.07, -0.07, -0.1
+;hands_position_16x9				= 0.07, -0.07, -0.1
+hands_orientation					= 0.3, 0.4, 0
+hands_orientation_16x9			= 0.3, 0.4, 0
+;aim_hud_offset_pos				= -0.0701, 0.0262, -0.0
+;aim_hud_offset_pos_16x9		= -0.0701, 0.0262, -0.0
+aim_hud_offset_rot					= 0.008, 0.0055, 0
+aim_hud_offset_rot_16x9		= 0.008, 0.0055, 0
+shooting_backward_offset		= 0.04,0.03
+hands_position						= 0.07, -0.07, -0.05
+hands_position_16x9				= 0.07, -0.07, -0.05
+aim_hud_offset_pos				= -0.0701, 0.0262, -0.05
+aim_hud_offset_pos_16x9		= -0.0701, 0.0262, -0.05
+anm_bore                                 				= deagle_m_bore, idle, 1.2
+anm_bore_empty									= deagle_m_bore_e, idle_empty
+anm_hide												= deagle_m_holster_e, idle
+anm_hide_empty										= deagle_m_holster_e, idle_empty
+anm_idle													= deagle_m_idle, idle
+anm_idle_empty										= deagle_m_idle, idle_empty
+anm_idle_aim											= deagle_m_idle_aim, idle
+anm_idle_aim_empty								= deagle_m_idle_aim, idle_empty
+anm_idle_aim_moving							= deagle_m_walk_aim, idle
+anm_idle_aim_moving_crouch				= deagle_m_walk_aim, idle
+anm_idle_aim_moving_crouch_empty	= deagle_m_walk_aim, idle_empty
+anm_idle_aim_moving_empty					= deagle_m_walk_aim, idle_empty
+anm_idle_moving									= deagle_m_walk, idle
+anm_idle_moving_crouch						= deagle_m_walk, idle, 0.5
+anm_idle_moving_crouch_empty			= deagle_m_walk, idle_empty, 0.5
+anm_idle_moving_empty						= deagle_m_walk, idle_empty
+anm_shot_l												= deagle_m_shoot, shoot_last
+anm_shots												= deagle_m_shoot, shoot, 1.5
+anm_show												= deagle_m_show_e, idle
+anm_show_empty									= deagle_m_show_e, idle_empty
+anm_reload_misfire									= deagle_m_unjam, unjam, 1.2
+anm_idle_sprint										= glock_m_idle_sprint, idle
+anm_idle_sprint_empty							= glock_m_idle_sprint, idle_empty
+anm_reload												= deagle_m_reload_8_p1, reload_p1, 1.4
+anm_reload_p1										= deagle_m_reload_8_p1, reload_p1, 1.4
+anm_reload_p2										= deagle_m_reload_8_p2, reload_p2, 1.4
+anm_reload_empty									= deagle_m_reload_8_p1, reload_empty_p1, 1.4
+anm_reload_empty_p1							= deagle_m_reload_8_p1, reload_empty_p1, 1.4
+anm_reload_empty_p2							= deagle_m_reload_8e_p2, reload_empty_p2, 1.4
+8_anm_reload											= deagle_m_reload_8_p1, reload_p1, 1.4
+8_anm_reload_p1									= deagle_m_reload_8_p1, reload_p1, 1.4
+8_anm_reload_p2									= deagle_m_reload_8_p2, reload_p2, 1.4
+8_anm_reload_empty								= deagle_m_reload_8_p1, reload_empty_p1, 1.4
+8_anm_reload_empty_p1						= deagle_m_reload_8_p1, reload_empty_p1, 1.4
+8_anm_reload_empty_p2						= deagle_m_reload_8e_p2, reload_empty_p2, 1.4
+8_anm_mag_check									= deagle_m_check_8, check, 1.4
+8_anm_mag_check_empty						= deagle_m_check_8, check_empty, 1.4
+20_anm_reload										= deagle_m_reload_20_p1, reload_p1, 1.4
+20_anm_reload_p1									= deagle_m_reload_20_p1, reload_p1, 1.4
+20_anm_reload_p2									= deagle_m_reload_20_p2, reload_p2, 1.4
+20_anm_reload_empty							= deagle_m_reload_20_p1, reload_empty_p1, 1.4
+20_anm_reload_empty_p1						= deagle_m_reload_20_p1, reload_empty_p1, 1.4
+20_anm_reload_empty_p2						= deagle_m_reload_20e_p2, reload_empty_p2, 1.4
+20_anm_mag_check								= deagle_m_check_20, check, 1.4
+20_anm_mag_check_empty					= deagle_m_check_20, check_empty, 1.4
+44_anm_reload										= deagle_m_reload_44_p1, reload_p1, 1.4
+44_anm_reload_p1									= deagle_m_reload_44_p1, reload_p1, 1.4
+44_anm_reload_p2									= deagle_m_reload_44_p2, reload_p2, 1.4
+44_anm_reload_empty							= deagle_m_reload_44_p1, reload_empty_p1, 1.4
+44_anm_reload_empty_p1						= deagle_m_reload_44_p1, reload_empty_p1, 1.4
+44_anm_reload_empty_p2						= deagle_m_reload_44e_p2, reload_empty_p2, 1.4
+44_anm_mag_check								= deagle_m_check_44, check, 1.4
+44_anm_mag_check_empty					= deagle_m_check_44, check_empty, 1.4
 
-        
-        misfire_start_condition     = 0.7 ;  0.77
-        misfire_start_prob          = 0.006
-        misfire_end_condition       = 0.083
-        misfire_end_prob            = 0.09
-        
-        condition_queue_shot_dec    = 0.0024
-        condition_shot_dec          = 0.0024
- 
+h_anm_bore                                 				= deagle_h_bore, idle, 1.2
+h_anm_bore_empty										= deagle_h_bore_e, idle_empty
+h_anm_hide													= deagle_h_holster_e, idle
+h_anm_hide_empty										= deagle_h_holster_e, idle_empty
+h_anm_idle													= deagle_h_idle, idle
+h_anm_idle_empty										= deagle_h_idle, idle_empty
+h_anm_idle_aim											= deagle_h_idle_aim, idle
+h_anm_idle_aim_empty								= deagle_h_idle_aim, idle_empty
+h_anm_idle_aim_moving								= deagle_h_walk_aim, idle
+h_anm_idle_aim_moving_crouch				= deagle_h_walk_aim, idle
+h_anm_idle_aim_moving_crouch_empty		= deagle_h_walk_aim, idle_empty
+h_anm_idle_aim_moving_empty					= deagle_h_walk_aim, idle_empty
+h_anm_idle_moving									= deagle_h_walk, idle
+h_anm_idle_moving_crouch						= deagle_h_walk, idle, 0.5
+h_anm_idle_moving_crouch_empty			= deagle_h_walk, idle_empty, 0.5
+h_anm_idle_moving_empty							= deagle_h_walk, idle_empty
+h_anm_shot_l												= deagle_h_shoot, shoot_last
+h_anm_shots												= deagle_h_shoot, shoot, 2
+h_anm_show												= deagle_h_show_e, idle	
+h_anm_show_empty									= deagle_h_show_e, idle_empty
+h_anm_reload_misfire									= deagle_h_unjam, unjam, 1.2
+h_anm_reload												= deagle_h_reload_8_p1, reload_p1, 1.4
+h_anm_reload_p1										= deagle_h_reload_8_p1, reload_p1, 1.4
+h_anm_reload_p2										= deagle_h_reload_8_p2, reload_p2, 1.4
+h_anm_reload_empty									= deagle_h_reload_8_p1, reload_empty_p1, 1.4
+h_anm_reload_empty_p1							= deagle_h_reload_8_p1, reload_empty_p1, 1.4
+h_anm_reload_empty_p2							= deagle_h_reload_8e_p2, reload_empty_p2, 1.4
+8_h_anm_reload											= deagle_h_reload_8_p1, reload_p1, 1.4
+8_h_anm_reload_p1									= deagle_h_reload_8_p1, reload_p1, 1.4
+8_h_anm_reload_p2									= deagle_h_reload_8_p2, reload_p2, 1.4
+8_h_anm_reload_empty								= deagle_h_reload_8_p1, reload_empty_p1, 1.4
+8_h_anm_reload_empty_p1							= deagle_h_reload_8_p1, reload_empty_p1, 1.4
+8_h_anm_reload_empty_p2							= deagle_h_reload_8e_p2, reload_empty_p2, 1.4
+8_h_anm_mag_check									= deagle_h_check_8, check, 1.4
+8_h_anm_mag_check_empty						= deagle_h_check_8, check_empty, 1.4
+20_h_anm_reload										= deagle_h_reload_20_p1, reload_p1, 1.4
+20_h_anm_reload_p1									= deagle_h_reload_20_p1, reload_p1, 1.4
+20_h_anm_reload_p2									= deagle_h_reload_20_p2, reload_p2, 1.4
+20_h_anm_reload_empty							= deagle_h_reload_20_p1, reload_empty_p1, 1.4
+20_h_anm_reload_empty_p1						= deagle_h_reload_20_p1, reload_empty_p1, 1.4
+20_h_anm_reload_empty_p2						= deagle_h_reload_20e_p2, reload_empty_p2, 1.4
+20_h_anm_mag_check									= deagle_h_check_20, check, 1.4
+20_h_anm_mag_check_empty						= deagle_h_check_20, check_empty, 1.4
+44_h_anm_reload										= deagle_h_reload_44_p1, reload_p1, 1.4
+44_h_anm_reload_p1									= deagle_h_reload_44_p1, reload_p1, 1.4
+44_h_anm_reload_p2									= deagle_h_reload_44_p2, reload_p2, 1.4
+44_h_anm_reload_empty							= deagle_h_reload_44_p1, reload_empty_p1, 1.4
+44_h_anm_reload_empty_p1						= deagle_h_reload_44_p1, reload_empty_p1, 1.4
+44_h_anm_reload_empty_p2						= deagle_h_reload_44e_p2, reload_empty_p2, 1.4
+44_h_anm_mag_check									= deagle_h_check_44, check, 1.4
+44_h_anm_mag_check_empty						= deagle_h_check_44, check_empty, 1.4
 
-[wpn_desert_eagle_sk1_hud]:wpn_desert_eagle_hud
-        item_visual                 = anomaly_weapons\wpn_desert_eagle\wpn_desert_eagle_sk1_hud.ogf
- 
-;------------------------------------------------------------------------------------------------
-[wpn_desert_eagle_modern]:wpn_desert_eagle
-        inv_grid_x                  = 51
-        inv_name                    = st_wpn_desert_eagle_modern
-        inv_name_short              = st_wpn_desert_eagle_modern
-        
-        cost                        = 22250
-        
-        hud                         = wpn_desert_eagle_sk2_hud
-        visual                      = dynamics\weapons\wpn_desert_eagle\wpn_desert_eagle_sk2.ogf
-        
-        installed_upgrades          = up_secona_desert_eagle
-        
-        rpm                         = 115
-        
-        fire_dispersion_base        = 0.47
-		ammo_elapsed                = 11
-        ammo_mag_size               = 11
-        
-        misfire_start_condition     = 0.7 ;  0.8
-        misfire_start_prob          = 0.006
-        misfire_end_condition       = 0.088
-        misfire_end_prob            = 0.09
-        
-        condition_queue_shot_dec    = 0.0023
-        condition_shot_dec          = 0.0023
-		
+r_anm_bore                                 				= deagle_r_bore, idle, 1.2
+r_anm_bore_empty										= deagle_r_bore_e, idle_empty
+r_anm_hide_empty										= deagle_r_holster_e, idle_empty
+r_anm_hide													= deagle_r_holster_e, idle	
+r_anm_idle													= deagle_r_idle, idle
+r_anm_idle_empty										= deagle_r_idle, idle_empty
+r_anm_idle_aim											= deagle_r_idle_aim, idle
+r_anm_idle_aim_empty								= deagle_r_idle_aim, idle_empty
+r_anm_idle_aim_moving								= deagle_r_walk_aim, idle
+r_anm_idle_aim_moving_crouch					= deagle_r_walk_aim, idle
+r_anm_idle_aim_moving_crouch_empty		= deagle_r_walk_aim, idle_empty
+r_anm_idle_aim_moving_empty					= deagle_r_walk_aim, idle_empty
+r_anm_idle_moving										= deagle_r_walk, idle
+r_anm_idle_moving_crouch							= deagle_r_walk, idle, 0.5
+r_anm_idle_moving_crouch_empty				= deagle_r_walk, idle_empty, 0.5
+r_anm_idle_moving_empty							= deagle_r_walk, idle_empty
+r_anm_shot_l												= deagle_r_shoot, shoot_last
+r_anm_shots												= deagle_r_shoot, shoot, 2
+r_anm_show_empty									= deagle_r_show_e, idle_empty
+r_anm_show												= deagle_r_show_e, idle	
+r_anm_reload_misfire									= deagle_r_unjam, unjam, 1.2
+r_anm_reload												= deagle_r_reload_8_p1, reload_p1, 1.4
+r_anm_reload_p1											= deagle_r_reload_8_p1, reload_p1, 1.4
+r_anm_reload_p2											= deagle_r_reload_8_p2, reload_p2, 1.4
+r_anm_reload_empty									= deagle_r_reload_8_p1, reload_empty_p1, 1.4
+r_anm_reload_empty_p1								= deagle_r_reload_8_p1, reload_empty_p1, 1.4
+r_anm_reload_empty_p2								= deagle_r_reload_8e_p2, reload_empty_p2, 1.4
+8_r_anm_reload											= deagle_r_reload_8_p1, reload_p1, 1.4
+8_r_anm_reload_p1										= deagle_r_reload_8_p1, reload_p1, 1.4
+8_r_anm_reload_p2										= deagle_r_reload_8_p2, reload_p2, 1.4
+8_r_anm_reload_empty								= deagle_r_reload_8_p1, reload_empty_p1, 1.4
+8_r_anm_reload_empty_p1							= deagle_r_reload_8_p1, reload_empty_p1, 1.4
+8_r_anm_reload_empty_p2							= deagle_r_reload_8e_p2, reload_empty_p2, 1.4
+8_r_anm_mag_check									= deagle_r_check_8, check, 1.4
+8_r_anm_mag_check_empty						= deagle_r_check_8, check_empty, 1.4
+20_r_anm_reload											= deagle_r_reload_20_p1, reload_p1, 1.4
+20_r_anm_reload_p1									= deagle_r_reload_20_p1, reload_p1, 1.4
+20_r_anm_reload_p2									= deagle_r_reload_20_p2, reload_p2, 1.4
+20_r_anm_reload_empty								= deagle_r_reload_20_p1, reload_empty_p1, 1.4
+20_r_anm_reload_empty_p1						= deagle_r_reload_20_p1, reload_empty_p1, 1.4
+20_r_anm_reload_empty_p2						= deagle_r_reload_20e_p2, reload_empty_p2, 1.4
+20_r_anm_mag_check									= deagle_r_check_20, check, 1.4
+20_r_anm_mag_check_empty						= deagle_r_check_20, check_empty, 1.4
+44_r_anm_reload											= deagle_r_reload_44_p1, reload_p1, 1.4
+44_r_anm_reload_p1									= deagle_r_reload_44_p1, reload_p1, 1.4
+44_r_anm_reload_p2									= deagle_r_reload_44_p2, reload_p2, 1.4
+44_r_anm_reload_empty								= deagle_r_reload_44_p1, reload_empty_p1, 1.4
+44_r_anm_reload_empty_p1						= deagle_r_reload_44_p1, reload_empty_p1, 1.4
+44_r_anm_reload_empty_p2						= deagle_r_reload_44e_p2, reload_empty_p2, 1.4
+44_r_anm_mag_check									= deagle_r_check_44, check, 1.4
+44_r_anm_mag_check_empty						= deagle_r_check_44, check_empty, 1.4
 
-[wpn_desert_eagle_sk2_hud]:wpn_desert_eagle_hud
-        item_visual                 = anomaly_weapons\wpn_desert_eagle\wpn_desert_eagle_sk2_hud.ogf
-		fire_point              	= 0.0, 0.0, 0.33
- 
-		anm_reload                  = deagle_sh_reload_extended, reload_extended
-        anm_reload_empty            = deagle_sh_reload_empty_extended, reload_empty_extended
-;------------------------------------------------------------------------------------------------
-[wpn_desert_eagle_nimble]:wpn_desert_eagle
-        $spawn                      = "weapons\wpn_desert_eagle_nimble"
-        
-        inv_grid_x                  = 55
-        inv_name                    = st_wpn_desert_eagle_nimble
-        description                 = st_wpn_desert_eagle_nimble_descr
-        
-        inv_weight                  = 1.925
-        cost                        = 25880
-        
-        hud                         = wpn_desert_eagle_nimble_hud
-        visual                      = dynamics\weapons\wpn_desert_eagle\wpn_desert_eagle_nimble.ogf
-        
-        upgrades                    = up_gr_firstab_desert_eagle_nimble, up_gr_seconab_desert_eagle_nimble, up_gr_thirdab_desert_eagle_nimble, up_gr_fourtab_desert_eagle_nimble, up_gr_fifthab_desert_eagle_nimble
-        
-        rpm                         = 117
-		ammo_elapsed                = 11
-        ammo_mag_size               = 11
-        
-        fire_dispersion_base        = 0.58
-        
-        misfire_probability         = 0.005
-        misfire_start_condition     = 0.7 ;  0.82
-        misfire_start_prob          = 0.007
-        misfire_end_condition       = 0.1
-        misfire_end_prob            = 0.11
-        
-        condition_queue_shot_dec    = 0.0021
-        condition_shot_dec          = 0.0021
-        
-        cam_return                  = 0
-        cam_relax_speed             = 6
-        cam_dispersion              = 4.0
-        cam_dispersion_frac         = 0.65
-        cam_dispersion_inc          = 0.0
-        cam_max_angle               = 50.0
-        cam_max_angle_horz          = 50.0
-        cam_step_angle_horz         = 1.0
-		zoom_cam_dispersion         = 3.5
-        
-        cam_relax_speed_ai          = 120.75
- 
+t_anm_bore                                 				= deagle_t_bore, idle, 1.2
+t_anm_bore_empty										= deagle_t_bore_e, idle_empty
+t_anm_hide													= deagle_t_holster_e, idle
+t_anm_hide_empty										= deagle_t_holster_e, idle_empty
+t_anm_idle													= deagle_t_idle, idle
+t_anm_idle_empty										= deagle_t_idle, idle_empty
+t_anm_idle_aim											= deagle_t_idle_aim, idle
+t_anm_idle_aim_empty								= deagle_t_idle_aim, idle_empty
+t_anm_idle_aim_moving								= deagle_t_walk_aim, idle
+t_anm_idle_aim_moving_crouch					= deagle_t_walk_aim, idle
+t_anm_idle_aim_moving_crouch_empty		= deagle_t_walk_aim, idle_empty
+t_anm_idle_aim_moving_empty					= deagle_t_walk_aim, idle_empty
+t_anm_idle_moving										= deagle_t_walk, idle
+t_anm_idle_moving_crouch							= deagle_t_walk, idle, 0.5
+t_anm_idle_moving_crouch_empty				= deagle_t_walk, idle_empty, 0.5
+t_anm_idle_moving_empty							= deagle_t_walk, idle_empty
+t_anm_shot_l												= deagle_t_shoot, shoot_last
+t_anm_shots												= deagle_t_shoot, shoot, 2
+t_anm_show_empty										= deagle_t_show_e, idle_empty
+t_anm_show												= deagle_t_show_e, idle
+t_anm_reload_misfire									= deagle_t_unjam, unjam, 1.2
+t_anm_reload												= deagle_t_reload_8_p1, reload_p1, 1.4
+t_anm_reload_p1											= deagle_t_reload_8_p1, reload_p1, 1.4
+t_anm_reload_p2											= deagle_t_reload_8_p2, reload_p2, 1.4
+t_anm_reload_empty									= deagle_t_reload_8_p1, reload_empty_p1, 1.4
+t_anm_reload_empty_p1								= deagle_t_reload_8_p1, reload_empty_p1, 1.4
+t_anm_reload_empty_p2								= deagle_t_reload_8e_p2, reload_empty_p2, 1.4
+8_t_anm_reload											= deagle_t_reload_8_p1, reload_p1, 1.4
+8_t_anm_reload_p1										= deagle_t_reload_8_p1, reload_p1, 1.4
+8_t_anm_reload_p2										= deagle_t_reload_8_p2, reload_p2, 1.4
+8_t_anm_reload_empty								= deagle_t_reload_8_p1, reload_empty_p1, 1.4
+8_t_anm_reload_empty_p1							= deagle_t_reload_8_p1, reload_empty_p1, 1.4
+8_t_anm_reload_empty_p2							= deagle_t_reload_8e_p2, reload_empty_p2, 1.4
+8_t_anm_mag_check									= deagle_t_check_8, check, 1.4
+8_t_anm_mag_check_empty						= deagle_t_check_8, check_empty, 1.4
+20_t_anm_reload											= deagle_t_reload_20_p1, reload_p1, 1.4
+20_t_anm_reload_p1									= deagle_t_reload_20_p1, reload_p1, 1.4
+20_t_anm_reload_p2									= deagle_t_reload_20_p2, reload_p2, 1.4
+20_t_anm_reload_empty								= deagle_t_reload_20_p1, reload_empty_p1, 1.4
+20_t_anm_reload_empty_p1						= deagle_t_reload_20_p1, reload_empty_p1, 1.4
+20_t_anm_reload_empty_p2						= deagle_t_reload_20e_p2, reload_empty_p2, 1.4
+20_t_anm_mag_check									= deagle_t_check_20, check, 1.4
+20_t_anm_mag_check_empty						= deagle_t_check_20, check_empty, 1.4
+44_t_anm_reload											= deagle_t_reload_44_p1, reload_p1, 1.4
+44_t_anm_reload_p1									= deagle_t_reload_44_p1, reload_p1, 1.4
+44_t_anm_reload_p2									= deagle_t_reload_44_p2, reload_p2, 1.4
+44_t_anm_reload_empty								= deagle_t_reload_44_p1, reload_empty_p1, 1.4
+44_t_anm_reload_empty_p1						= deagle_t_reload_44_p1, reload_empty_p1, 1.4
+44_t_anm_reload_empty_p2						= deagle_t_reload_44e_p2, reload_empty_p2, 1.4
+44_t_anm_mag_check									= deagle_t_check_44, check, 1.4
+44_t_anm_mag_check_empty						= deagle_t_check_44, check_empty, 1.4
 
-[wpn_desert_eagle_nimble_hud]:wpn_desert_eagle_hud
-        item_visual                 = anomaly_weapons\wpn_desert_eagle\wpn_desert_eagle_nimble_hud.ogf
-        
-		aim_hud_offset_pos          = -0.0524, 0.0164, 0.0
-		aim_hud_offset_pos_16x9     = -0.0524, 0.0164, 0.0
-		aim_hud_offset_rot          = -0.019, -0.012, -0.008
-		aim_hud_offset_rot_16x9     = -0.019, -0.012, -0.008
-		fire_point              	= 0.0, 0.0, 0.33
-		
-		anm_reload                  = deagle_sh_reload_extended, reload_extended
-        anm_reload_empty            = deagle_sh_reload_empty_extended, reload_empty_extended
+v_anm_bore                                 				= deagle_v_bore, idle, 1.2
+v_anm_bore_empty										= deagle_v_bore_e, idle_empty
+v_anm_hide													= deagle_v_holster_e, idle
+v_anm_hide_empty										= deagle_v_holster_e, idle_empty
+v_anm_idle													= deagle_v_idle, idle
+v_anm_idle_empty										= deagle_v_idle, idle_empty
+v_anm_idle_aim											= deagle_v_idle_aim, idle
+v_anm_idle_aim_empty								= deagle_v_idle_aim, idle_empty
+v_anm_idle_aim_moving								= deagle_v_walk_aim, idle
+v_anm_idle_aim_moving_crouch					= deagle_v_walk_aim, idle
+v_anm_idle_aim_moving_crouch_empty		= deagle_v_walk_aim, idle_empty
+v_anm_idle_aim_moving_empty					= deagle_v_walk_aim, idle_empty
+v_anm_idle_moving										= deagle_v_walk, idle
+v_anm_idle_moving_crouch							= deagle_v_walk, idle, 0.5
+v_anm_idle_moving_crouch_empty				= deagle_v_walk, idle_empty, 0.5
+v_anm_idle_moving_empty							= deagle_v_walk, idle_empty
+v_anm_shot_l												= deagle_v_shoot, shoot_last
+v_anm_shots												= deagle_v_shoot, shoot, 2
+v_anm_show_empty										= deagle_v_show_e, idle_empty
+v_anm_show												= deagle_v_show_e, idle
+v_anm_reload_misfire									= deagle_v_unjam, unjam, 1.2
+v_anm_reload												= deagle_v_reload_8_p1, reload_p1, 1.4
+v_anm_reload_p1											= deagle_v_reload_8_p1, reload_p1, 1.4
+v_anm_reload_p2											= deagle_v_reload_8_p2, reload_p2, 1.4
+v_anm_reload_empty									= deagle_v_reload_8_p1, reload_empty_p1, 1.4
+v_anm_reload_empty_p1								= deagle_v_reload_8_p1, reload_empty_p1, 1.4
+v_anm_reload_empty_p2								= deagle_v_reload_8e_p2, reload_empty_p2, 1.4
+8_v_anm_reload											= deagle_v_reload_8_p1, reload_p1, 1.4
+8_v_anm_reload_p1										= deagle_v_reload_8_p1, reload_p1, 1.4
+8_v_anm_reload_p2										= deagle_v_reload_8_p2, reload_p2, 1.4
+8_v_anm_reload_empty								= deagle_v_reload_8_p1, reload_empty_p1, 1.4
+8_v_anm_reload_empty_p1							= deagle_v_reload_8_p1, reload_empty_p1, 1.4
+8_v_anm_reload_empty_p2							= deagle_v_reload_8e_p2, reload_empty_p2, 1.4
+8_v_anm_mag_check									= deagle_v_check_8, check, 1.4
+8_v_anm_mag_check_empty						= deagle_v_check_8, check_empty, 1.4
+20_v_anm_reload											= deagle_v_reload_20_p1, reload_p1, 1.4
+20_v_anm_reload_p1									= deagle_v_reload_20_p1, reload_p1, 1.4
+20_v_anm_reload_p2									= deagle_v_reload_20_p2, reload_p2, 1.4
+20_v_anm_reload_empty								= deagle_v_reload_20_p1, reload_empty_p1, 1.4
+20_v_anm_reload_empty_p1						= deagle_v_reload_20_p1, reload_empty_p1, 1.4
+20_v_anm_reload_empty_p2						= deagle_v_reload_20e_p2, reload_empty_p2, 1.4
+20_v_anm_mag_check									= deagle_v_check_20, check, 1.4
+20_v_anm_mag_check_empty						= deagle_v_check_20, check_empty, 1.4
+44_v_anm_reload											= deagle_v_reload_44_p1, reload_p1, 1.4
+44_v_anm_reload_p1									= deagle_v_reload_44_p1, reload_p1, 1.4
+44_v_anm_reload_p2									= deagle_v_reload_44_p2, reload_p2, 1.4
+44_v_anm_reload_empty								= deagle_v_reload_44_p1, reload_empty_p1, 1.4
+44_v_anm_reload_empty_p1						= deagle_v_reload_44_p1, reload_empty_p1, 1.4
+44_v_anm_reload_empty_p2						= deagle_v_reload_44e_p2, reload_empty_p2, 1.4
+44_v_anm_mag_check									= deagle_v_check_44, check, 1.4
+44_v_anm_mag_check_empty						= deagle_v_check_44, check_empty, 1.4

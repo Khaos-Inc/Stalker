@@ -1,4 +1,51 @@
 [hud_base]
+
+
+;weapon_recoil_enabled      = true
+;weapon_recoil_vert         = 0.25
+;weapon_recoil_vert_inc     = 0.05
+;weapon_recoil_horz         = 0.2
+;weapon_recoil_max_vert     = 2.5
+;weapon_recoil_max_horz     = 0.8
+;weapon_recoil_ret_speed    = 1.0
+;weapon_recoil_back         = 0.001
+;weapon_recoil_back_max    = 0.006
+;weapon_recoil_pos_mult     = 0.0005
+;weapon_recoil_ads_dispersion_mult = 0.0
+;weapon_recoil_ads_mult    = 1
+;weapon_recoil_pivot = 0, 0, 0.1 ;A more positive Z moves the pivot farther toward the stock, making the muzzle/front of the weapon rise up
+
+
+weapon_recoil_enabled      = true
+weapon_recoil_vert         = 10
+weapon_recoil_vert_inc     = 1
+weapon_recoil_horz         = 10
+weapon_recoil_max_vert     = 10
+weapon_recoil_max_horz     = 10
+weapon_recoil_ret_speed    = 2.0
+weapon_recoil_back         = 0
+weapon_recoil_back_max    = 0
+weapon_recoil_pos_mult     = 0.0
+weapon_recoil_ads_dispersion_mult = 1
+weapon_recoil_ads_mult    = 1
+weapon_recoil_pivot = 0, 0, 0.1
+weapon_recoil_smooth_speed = 0
+
+
+inertion_tendto_speed          = 1.0
+inertion_tendto_aim_speed      = 1.0
+inertion_tendto_ret_speed      = 5.0
+inertion_tendto_ret_aim_speed  = 5.0
+
+inertion_offset_LRUD      = 0.120, 0.120, 0.100, 0.080
+inertion_offset_LRUD_aim  = 0.120, 0.120, 0.100, 0.080
+
+inertion_pivot      = 0, 0, 0.10
+inertion_pivot_aim  = 0, 0, 0.10
+
+inertion_angle_koeff = 0.25
+
+
 ;inertion_origin_aim_offset 	= 0.00f
 ;inertion_tendto_aim_speed 		= 0.00f
 
@@ -17,11 +64,28 @@ gl_hud_offset_rot				= 0,0,0
 lean_hud_offset_pos		= 0,0,0
 lean_hud_offset_rot		= 0,0,0
 
-lowered_hud_offset_pos			= 0.27,0.05,0
+lowered_hud_offset_pos			= 0.17,-0.01,0.01
 lowered_hud_offset_rot			= 0.1,-0.8,0.1
 
-lowered_hud_offset_pos_16x9		= 0.27,0.05,0
+lowered_hud_offset_pos_16x9		= 0.17,-0.01,0.01
 lowered_hud_offset_rot_16x9		= 0.1,-0.8,0.1
+
+attach_place_idx		= 0
+zoom_hide_crosshair	= true
+item_position								= 0, 0, 0
+item_orientation							= 0, 0, 0
+shell_bone								= gilza
+shell_point								= 0.01, -0.01, 0.25
+fire_bone									= muzzle
+;fire_bone2								= muzzle
+fire_point									= 0, 0, 0
+;fire_point2                              	= 0, 0, 0
+grenade_bone							= grenade
+;safemode_anm							= 
+;safemode_anm2						=
+freelook_z_offset_mul					= 0.5
+
+anm_idle_sprint						= pm_m_idle_sprint_zero, idle
 
 ;--< New in Anomaly 1.5 - SWM port >
 strafe_enabled                     = true
@@ -40,12 +104,12 @@ strafe_cam_limit_aim_factor        = 0.9
 strafe_cam_min_angle               = 0
 inertion_min_angle_aim             = 0
 
-shooting_hud_effect                = true
-shooting_max_LRUD                  = 0.005,0.005,0.005,0
-shooting_max_LRUD_aim              = 0.0025,0.0025,0,0
+shooting_hud_effect                = false
+shooting_max_LRUD                  = 0.005,0.005,0.005,0.005
+shooting_max_LRUD_aim              = 0.0025,0.0025,0.005,0.005
 shooting_backward_offset           = 0.02,0.015
-shooting_ret_speed                 = 7.5
-shooting_ret_aim_speed             = 15
+shooting_ret_speed                 = 4
+shooting_ret_aim_speed             = 5
 shooting_min_LRUD_power            = 0.01
 
 empty_click_anm = script\misfire.anm
@@ -69,7 +133,7 @@ inertion_offset_LRUD_aim = 0.009, 0.009, 0.009, 0.009
 [hud_movement_layers]
 ;types: 0 = aim_walk, 1 = aim_crouch, 2 = crouch, 3 = walk, 4 = run, 5 = sprint
 ;type					path  						 speed   power
-movement_layer_0		= movement\aim_walk.anm,	 1,		 0.85
+movement_layer_0		= movement\aim_walk.anm,	 1,		 0.3
 movement_layer_1		= movement\aim_walk.anm,	 0.75,	 0.5
 movement_layer_2		= movement\newwalk.anm, 	 1, 	 0.1
 movement_layer_3		= movement\newwalk.anm, 	 1, 	 0.1
@@ -250,27 +314,120 @@ hit_probability_gd_master	= 1.0
 
 
 [default_weapon_params]:identity_immunities
+use_detachable_magazines = true   ; does the weapon reload from loose ammo = true means it uses magazines = false is for bolt action rifles and shotguns
+modular_attachments = true
+
+dont_stack									= true
+light_disabled								= false
+light_color                 					= 0.6, 0.5, 0.3
+light_range                 					= 3.0
+light_time                  					= 0.2
+light_var_color             				= 0.05
+light_var_range             				= 0.5
+shell_point									= 0, 0.183, 0.07
+upgrades										= 
+installed_upgrades						=
+upgrade_scheme							= 
+upgr_icon_x									= 1300
+upgr_icon_y									= 0
+upgr_icon_width							= 150
+upgr_icon_height						= 100
+hit_impulse                 					= 0
+ammo_elapsed                			= 8
+startup_ammo								= 90
+scope_status								= 0
+scope_name								= wpn_addon_scope
+scope_x										= 0
+scope_y										= 0
+scope_zoom_factor						= 0
+silencer_status								= 0
+silencer_name								= wpn_addon_silencer
+silencer_x										= 0
+silencer_y									= 0
+silencer_light_color						= 0.6, 0.5, 0.3
+silencer_light_range					= 0.01
+silencer_light_time						= 0.2
+silencer_light_var_color				= 0.05
+silencer_light_var_range				= 0.5
+silencer_smoke_particles				= weapons\generic_shoot_00
+grenade_flame_particles				= weapons\generic_weapon01
+grenade_launcher_status			= 0
+grenade_class								= ammo_vog-25, ammo_vog-25_bad, ammo_vog-25_verybad
+grenade_launcher_name				= wpn_addon_grenade_launcher
+grenade_launcher_x					= 0
+grenade_launcher_y					= 0
+launch_speed								= 0
+fire_distance								= 999
+hit_type										= fire_wound
+hud_fov										= 0.65
+rpm_empty_click							= 100
+time_to_aim								= 0.0 ;  1.0
+zoom_dof									= -1000, 1.0, 1000
+zoom_enabled							= true
+reload_dof									= 0.0, 0.5, 5, 1.7
+control_inertion_factor				= 1.0f
+crosshair_inertion						= 2.3
+holder_fov_modifier					= 1.0
+holder_range_modifier				= 1.0
+cam_relax_speed_ai						= 360
+fire_dispersion_condition_factor	= 0.001
+cam_return                  				= 1
+cam_relax_speed_ai						= 360
+zoom_cam_relax_speed_ai			= 120.75
+min_radius									= 0
+max_radius									= 999
+misfire_probability						= 0.005
+misfire_start_condition				= 0.7
+misfire_start_prob						= 0.007
+misfire_end_condition					= 0.1
+misfire_end_prob            			= 0.11
+kill_msg_x									= 227
+kill_msg_y									= 82
+kill_msg_width								= 27
+kill_msg_height							= 23
+PDM_disp_accel_factor				= 0; 1.055	;from wpn_pm
+PDM_disp_base               			= 0;  0.6
+PDM_disp_crouch						= 0; 1.0
+PDM_disp_crouch_no_acc			= 0; 1.0
+PDM_disp_vel_factor					= 0; 1.05
 use_aim_bullet				            = false
-use_first_bullet						= false
-k_hit_critical				            = 0
-frag_hit_critical			            = 0
-hit_power								= 0.50, 0.50, 0.50, 0.50
-hit_power_critical						= 1.00, 1.00, 1.00, 1.00
-silencer_hit_power						= 0.45, 0.45, 0.45, 0.45
-hit_impulse								= 10						; size of physic impulse by bullet
-silencer_hit_impulse	 				= 9
-slot 						            = -1
-description				                = no_description
-default_to_ruck                         = false
-sprint_allowed                          = true
-control_inertion_factor                 = 1.0
-zoom_rotate_time                        = 0.25
+use_first_bullet							= false
+hit_power_critical						= 1.0
+hit_power								= 0.01
+bullet_speed                             = 0
+k_hit_critical								= 0
+frag_hit_critical							= 0
+hit_impulse									= 0;	10						; size of physic impulse by bullet
+silencer_hit_impulse					= 0;	10
+slot												= -1
+description				                	= no_description
+default_to_ruck                         	= false
+sprint_allowed                          	= true
+control_inertion_factor				= 1.0
+zoom_rotate_time						= 0.25
 snd_on_take					            = weapon
-kind						            = w_base
+kind						            			= w_base
 can_be_lowered				            = true
-weapon_lower_speed			            = 0.3
-use1_functor                            = item_weapon.menu_scope_inv
-use1_action_functor                     = item_weapon.func_scope
+weapon_lower_speed					= 0.3
+inv_icon_rotation = -90, 0, 0
+inv_icon_padding  = 1
+
+cam_dispersion              			= 1
+zoom_cam_dispersion				= 1
+cam_max_angle						= 5
+zoom_cam_max_angle			= 5
+cam_max_angle_horz				= 2
+zoom_cam_max_angle_horz	= 2
+cam_step_angle_horz				=  0.5
+zoom_cam_step_angle_horz	=  0.5
+cam_relax_speed 	=	4
+
+cam_max_angle_random = 0.5
+zoom_cam_max_angle_random = 0.5
+
+use2_functor        = module_items.menu_remove_all_modules
+use2_action_functor = module_items.remove_all_modules
+
 
 [common_ph_friction_params_on_npc_death] ; Parameters for setting change of friction at the time of the death of a character
 
@@ -292,7 +449,7 @@ ph_skeleton_skin_ddelay_after_wound = 2.0 ; Changes in the friction values time 
 ph_pelvis_factor_low_pose_detect =0.3	; Length of the beam in the collision with the ground from the center pelvisa
 										; If the collision, the character is in the lower position (or hurt) (in this case zadayutsya other options for him
 										; Friction and no pulse multiplication for the first hit)
-ph_character_have_wounded_state = false; имеет ли персонаж состояние раненый
+ph_character_have_wounded_state = false; пїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 
 [monster_base]:common_ph_friction_params_on_npc_death
 actor_hit_effect 	= effector_monster_hit

@@ -1,0 +1,162 @@
+function on_game_start()
+    RegisterScriptCallback("on_key_press", on_key_press)
+    printf("MODULE TEST: registered NUMPAD test keys (NUM6 rpm, NUM7 stats)")
+end
+
+local KEY_LIST          = DIK_keys.DIK_NUMPAD1
+local KEY_INSTALL_ROOT  = DIK_keys.DIK_NUMPAD2
+local KEY_INSTALL_CHILD = DIK_keys.DIK_NUMPAD3
+local KEY_LIST_SLOTS    = DIK_keys.DIK_NUMPAD4
+local KEY_REMOVE        = DIK_keys.DIK_NUMPAD0
+local KEY_REMOVE_ROOT_TEST = DIK_keys.DIK_NUMPAD5
+local KEY_PRINT_RPM        = DIK_keys.DIK_NUMPAD6
+local KEY_PRINT_STATS      = DIK_keys.DIK_NUMPAD7
+
+local ROOT_MODULE  = "test_module_barrel"
+local CHILD_MODULE = "test_module_muzzle"
+
+local function print_modules(wpn)
+    local count = wpn:module_count()
+    printf("MODULE TEST: equipped module count = %s", tostring(count))
+
+    if count == 0 then
+        printf("MODULE TEST: no modules installed")
+        return
+    end
+
+    for i = 0, count - 1 do
+        printf("MODULE TEST: module[%s] = %s", tostring(i), tostring(wpn:module_get_section(i)))
+    end
+end
+
+local function print_slots(wpn)
+    if not wpn.module_debug_list_slots then
+        printf("MODULE TEST: module_debug_list_slots NOT exposed")
+        return
+    end
+
+    wpn:module_debug_list_slots()
+end
+
+local function get_active_weapon()
+    local wpn = db and db.actor and db.actor:active_item()
+
+    if not wpn then
+        printf("MODULE TEST: no active item")
+        return nil
+    end
+
+    if not wpn.module_count then
+        printf("MODULE TEST: module system NOT exposed")
+        return nil
+    end
+
+    return wpn
+end
+
+local function can_remove(wpn, section)
+    if not wpn.module_can_remove then
+        printf("MODULE TEST: module_can_remove NOT exposed")
+        return false
+    end
+
+    return wpn:module_can_remove(section)
+end
+
+function on_key_press(key)
+    if key ~= KEY_LIST
+    and key ~= KEY_INSTALL_ROOT
+    and key ~= KEY_INSTALL_CHILD
+    and key ~= KEY_LIST_SLOTS
+    and key ~= KEY_REMOVE
+    and key ~= KEY_REMOVE_ROOT_TEST
+    and key ~= KEY_PRINT_RPM
+    and key ~= KEY_PRINT_STATS then
+        return
+    end
+
+    local wpn = get_active_weapon()
+    if not wpn then
+        return
+    end
+
+    printf("MODULE TEST: active weapon = %s", wpn:section())
+
+    if key == KEY_LIST then
+        printf("MODULE TEST: NUM1 LIST MODULES")
+        print_modules(wpn)
+        return
+    end
+
+    if key == KEY_INSTALL_ROOT then
+        printf("MODULE TEST: NUM2 INSTALL ROOT")
+        printf("MODULE TEST: can install %s = %s", ROOT_MODULE, tostring(wpn:module_can_install(ROOT_MODULE)))
+        printf("MODULE TEST: install %s = %s", ROOT_MODULE, tostring(wpn:module_install(ROOT_MODULE)))
+        print_modules(wpn)
+        return
+    end
+
+    if key == KEY_INSTALL_CHILD then
+        printf("MODULE TEST: NUM3 INSTALL CHILD")
+        printf("MODULE TEST: can install %s = %s", CHILD_MODULE, tostring(wpn:module_can_install(CHILD_MODULE)))
+        printf("MODULE TEST: install %s = %s", CHILD_MODULE, tostring(wpn:module_install(CHILD_MODULE)))
+        print_modules(wpn)
+        return
+    end
+
+    if key == KEY_LIST_SLOTS then
+        printf("MODULE TEST: NUM4 LIST SLOTS")
+        print_slots(wpn)
+        return
+    end
+
+    if key == KEY_REMOVE_ROOT_TEST then
+        printf("MODULE TEST: NUM5 TRY REMOVE ROOT FIRST")
+        printf("MODULE TEST: can remove %s = %s", ROOT_MODULE, tostring(can_remove(wpn, ROOT_MODULE)))
+        printf("MODULE TEST: remove %s = %s", ROOT_MODULE, tostring(wpn:module_remove(ROOT_MODULE)))
+        print_modules(wpn)
+        return
+    end
+
+
+    if key == KEY_PRINT_RPM then
+        printf("MODULE TEST: NUM6 PRINT RPM")
+
+        if wpn.module_debug_print_rpm then
+            wpn:module_debug_print_rpm()
+        else
+            printf("MODULE TEST: module_debug_print_rpm NOT exposed")
+        end
+
+        return
+    end
+
+    if key == KEY_PRINT_STATS then
+        printf("MODULE TEST: NUM7 PRINT STATS")
+
+        if wpn.module_debug_print_stats then
+            wpn:module_debug_print_stats()
+        else
+            printf("MODULE TEST: module_debug_print_stats NOT exposed")
+        end
+
+        return
+    end
+
+    if key == KEY_REMOVE then
+        printf("MODULE TEST: NUM0 REMOVE CHILD FIRST")
+
+        if wpn:module_has(CHILD_MODULE) then
+            printf("MODULE TEST: can remove %s = %s", CHILD_MODULE, tostring(can_remove(wpn, CHILD_MODULE)))
+            printf("MODULE TEST: remove %s = %s", CHILD_MODULE, tostring(wpn:module_remove(CHILD_MODULE)))
+        elseif wpn:module_has(ROOT_MODULE) then
+            printf("MODULE TEST: can remove %s = %s", ROOT_MODULE, tostring(can_remove(wpn, ROOT_MODULE)))
+            printf("MODULE TEST: remove %s = %s", ROOT_MODULE, tostring(wpn:module_remove(ROOT_MODULE)))
+        else
+            printf("MODULE TEST: nothing to remove")
+        end
+
+        print_modules(wpn)
+        return
+    end
+end

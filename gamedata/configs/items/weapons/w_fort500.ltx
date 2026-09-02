@@ -1,196 +1,185 @@
-;------------------------------------------------------------------------------------------------
-[wpn_fort500]:identity_immunities,weapon_probability,default_weapon_params,wpn_fort500_sounds
-        GroupControlSection         = spawn_group
-        $npc                        = on
-        $prefetch                   = 8
-        $spawn                      = "weapons\fort500"
-        scheduled                   = off
-        cform                       = skeleton
-        parent_section              = wpn_fort500
-        
-        class                       = WP_ASHTG
-        slot                        = 2
-        animation_slot              = 9
-        ef_main_weapon_type         = 1
-        ef_weapon_type              = 9
-        hand_dependence             = 1
-        single_handed               = 0
-        
-        inv_grid_height             = 1
-        inv_grid_width              = 5
-        inv_grid_x                  = 70
-        inv_grid_y                  = 71
-        inv_name                    = st_wpn_fort500
-        inv_name_short              = st_wpn_fort500
-        description                 = st_wpn_fort500_descr
-        
-        kind                        = w_shotgun
-        inv_weight                  = 4.30
-        cost                        = 17700
-        repair_type                 = shotgun
-        weapon_class                = shotgun
-        
-        hud                         = wpn_fort500_hud
-        visual                      = dynamics\weapons\wpn_fort500\wpn_fort500.ogf
-        position                    = -0.024, -0.097, -0.02
-        orientation                 = 1.5, -3.5, 0				; 0, -4, 0
-        fire_point                  = 0, 0.158, 0.747				; 0, 0.158, 0.647
-        fire_point2                 = 0, 0.158, 0.647
-        strap_bone0                 = bip01_spine2
-        strap_bone1                 = bip01_spine1
-        strap_position              = -0.26, -0.10, 0.05
-        strap_orientation           = -15, -9, 110
-        ph_mass                     = 3
-        
-        flame_particles             = weapons\generic_weapon05
-        smoke_particles             = amik\weapons\smoke_particles\smoke_particles_pump_00
-        
-		shell_point				    = 0, 0.180, 0.647
-		
-        light_color                 = 0.6, 0.5, 0.3
-        light_range                 = 6.0
-        light_time                  = 0.2
-        light_var_color             = 0.05
-        light_var_range             = 0.5
-        
-        upgrades                    = up_gr_firstab_wincheaster1300, up_gr_seconab_wincheaster1300, up_gr_thirdab_wincheaster1300
-        installed_upgrades          =
-        upgrade_scheme              = upgrade_scheme_toz34
-        upgr_icon_x                 = 1750
-        upgr_icon_y                 = 1850
-        upgr_icon_width             = 250
-        upgr_icon_height            = 100
-        
-        tri_state_reload            = on
-        fire_modes                  = 1
-        ammo_class                  = ammo_12x70_buck, ammo_12x70_buck_bad, ammo_12x70_buck_verybad, ammo_12x76_zhekan, ammo_12x76_zhekan_bad, ammo_12x76_zhekan_verybad, ammo_12x76_dart, ammo_12x76_dart_bad, ammo_12x76_dart_verybad, ammo_12x70_buck_self
-        ammo_current                = 30
-        ammo_elapsed                = 6
-        ammo_limit                  = 35
-        ammo_mag_size               = 6
-        startup_ammo                = 10
-        
-        scopes                      = none
-        scope_status                = 0
-        scope_zoom_factor           = 0
-        
-        silencer_status             = 0
-        
-        grenade_launcher_status     = 0
-        
-        hit_impulse                 = 40
-        hit_power                   = 0.79, 0.79, 0.79, 0.79
-        hit_type                    = fire_wound
-        fire_distance               = 300
-        bullet_speed                = 330
-        rpm                         = 60
-        rpm_empty_click             = 200
-        
-        zoom_dof                    = 0.5, 1.0, 180
-        zoom_enabled                = true
-        zoom_rotate_time            = 0.20
-control_inertion_factor = 1.0f
-        crosshair_inertion          = 6.25
-        fire_dispersion_base        = 0.53
-        fire_dispersion_condition_factor = 0.001
-        
-        misfire_probability         = 0.005
-        misfire_start_condition     = 0.7 ;  0.6
-        misfire_start_prob          = 0
-        misfire_end_condition       = 0.1
-        misfire_end_prob            = 0
-        
-        condition_queue_shot_dec    = 0.0035
-        condition_shot_dec          = 0.003
-        
-        cam_return                  = 0
-        cam_relax_speed             = 10
-        cam_dispersion              = 7.0
-        cam_dispersion_frac         = 0.7
-        cam_dispersion_inc          = 2.0
-        cam_max_angle               = 15.0
-        cam_max_angle_horz          = 15.0
-        cam_step_angle_horz         = 3.0
-        zoom_cam_relax_speed        = 10
-        zoom_cam_dispersion         = 6.0
-        zoom_cam_dispersion_frac    = 0.7
-        zoom_cam_dispersion_inc     = 2.0
-        zoom_cam_max_angle          = 15.0
-        zoom_cam_max_angle_horz     = 15.0
-        zoom_cam_step_angle_horz    = 3.0
-        
-        PDM_disp_accel_factor       = 2.0
-        PDM_disp_base               = 0.5
-        PDM_disp_crouch             = 1.0
-        PDM_disp_crouch_no_acc      = 1.0
-        PDM_disp_vel_factor         = 2.0
-        
-        cam_relax_speed_ai          = 360
-        zoom_cam_relax_speed_ai     = 120.75
-        holder_fov_modifier         = 1.0
-        holder_range_modifier       = 1.0
-        min_radius                  = 30
-        max_radius                  = 50
-        
-        kill_msg_x                  = 171
-        kill_msg_y                  = 104
-        kill_msg_width              = 75
-        kill_msg_height             = 20
- 
+[wpn_fort500]:wpn_remington870,wpn_fort500_sounds
+use_detachable_magazines = false
+inv_grid_x					= 14
+inv_grid_y					= 42
+inv_name						= wpn_fort500
+inv_name_short			= wpn_fort500
+description					= wpn_fort500_descr
+inv_weight					= 1.25
+cost								= 23500
+fire_point						= 0.0, 0.02, 0.74
+zoom_rotate_time = 0.1
+attachment_slots			=	slot_magazin|magazin|0,0,0|0,0,0#500_zatvor|zatvor|0,0,0|0,0,0#500_sight|wpn_body|0,0,0|0,0,0#500_stock|wpn_body|0,0,0|0,0,0
+aimpoint_offset_y = 0.072088
+ui_render_cam_offset	=	0.36, -0.11, 1.35
+weapon_lenght			=	0.22
+visual							= w_att_huds\500.ogf
+hud								= wpn_fort500_hud
+[wpn_fort500_hud]:wpn_870_hud
 
-[wpn_fort500_hud]:hud_base
-        item_visual                 = anomaly_weapons\wpn_fort500\wpn_fort500_hud.ogf
-        attach_place_idx            = 0
-        zoom_hide_crosshair         = true
-        
-        item_position               = 0, 0, 0
-        item_orientation            = 0, 0, 0
-        
-        hands_position              = -0.077, -0.105, -0.12
-        hands_position_16x9         = -0.077, -0.105, -0.12
-        hands_orientation           = 0.5, 0.5, 0
-        hands_orientation_16x9      = 0.5, 0.5, 0
-        
-        aim_hud_offset_pos          = -0.0712, 0.0241, -0.07
-        aim_hud_offset_pos_16x9     = -0.0712, 0.0241, -0.07
-        aim_hud_offset_rot          = 0.0067, 0.0086, 0
-        aim_hud_offset_rot_16x9     = 0.0067, 0.0086, 0
-        
-        gl_hud_offset_pos           = 0, 0, 0
-        gl_hud_offset_pos_16x9      = 0, 0, 0
-        gl_hud_offset_rot           = 0, 0, 0
-        gl_hud_offset_rot_16x9      = 0, 0, 0
-   
-		lowered_hud_offset_pos			= 0.06, -0.04, -0.02
-		lowered_hud_offset_pos_16x9		= 0.06, -0.04, -0.02
-		lowered_hud_offset_rot			= -0.1, -0.6, 0.4
-		lowered_hud_offset_rot_16x9		= -0.1, -0.6, 0.4
-   
-        lean_hud_offset_pos         = 0, 0, 0
-        lean_hud_offset_rot         = 0, 0, 0
-        
-        anm_add_cartridge           = mossberg_reload, reload
-        anm_close                   = mossberg_reload_end, reload_end
-        anm_hide                    = mossberg_holster
-        anm_idle                    = mossberg_idle
-        anm_idle_aim                = mossberg_idle_aim
-        anm_idle_aim_moving         = mossberg_idle_moving, idle, 0.75
-        anm_idle_aim_moving_crouch  = mossberg_idle_crouch
-        anm_idle_moving             = mossberg_idle_moving
-        anm_idle_moving_crouch      = mossberg_idle_crouch
-        anm_idle_sprint             = mossberg_idle_sprint
-        anm_open                    = mossberg_reload_start, reload_start
-        anm_reload                  = mossberg_reload
-        anm_shots                   = mossberg_shoot, shoot
-        anm_show                    = mossberg_draw
-        
-        shell_bone                  = gilza
-        shell_dir                   = 0, 1, 0
-        shell_point                 = 0, 0, 0
-        
-        fire_bone                   = muzzle
-        fire_bone2                  = muzzle
-        fire_point                  = 0, 0, 0
-        fire_point2                 = 0, 0, 0
- 
-		freelook_z_offset_mul		= 0.1
+weapon_recoil_vert         = 3.97
+weapon_recoil_vert_inc     = 1.68
+weapon_recoil_horz         = 5.22
+weapon_recoil_ret_speed    = 2
+
+
+item_visual					= w_att_huds\500_hud.ogf
+;hands_position				= 0.06, -0.04, -0.2
+;hands_position_16x9		= 0.06, -0.04, -0.2
+;hands_orientation			= 0.3, 0.5, 0
+;hands_orientation_16x9	= 0.3, 0.5, 0
+;aim_hud_offset_pos			= -0.06, 0.038, -0.07
+;aim_hud_offset_pos_16x9	= -0.06, 0.038, -0.07
+;aim_hud_offset_rot				= -0.008, 0.0065, 0
+;aim_hud_offset_rot_16x9	= -0.008, 0.0065, 0
+
+hands_position					= 0.08, -0.04, -0.17
+hands_position_16x9			= 0.08, -0.04, -0.17
+hands_orientation				= 0.3, 0.5, 0
+hands_orientation_16x9		= 0.3, 0.5, 0
+aim_hud_offset_pos			= -0.08, 0.038, -0.1
+aim_hud_offset_pos_16x9	= -0.08, 0.038, -0.1
+aim_hud_offset_rot				= -0.002, 0.0065, 0
+aim_hud_offset_rot_16x9	= -0.002, 0.0065, 0
+
+anm_bore                              					= 500_cs_bore, idle
+anm_hide													= 500_cs_holster, idle
+anm_show												= 500_cs_show, idle
+anm_idle													= 500_cs_idle, idle
+anm_idle_aim											= 500_cs_idle_aim, idle
+anm_idle_aim_moving							= 500_cs_walk_aim, idle
+anm_idle_aim_moving_crouch			= 500_cs_walk_aim, idle
+anm_idle_moving									= 500_cs_walk, idle, 0.85
+anm_idle_moving_crouch					= 500_cs_walk, idle, 0.7
+anm_open_empty									= 500_cs_reload_open_e, open
+anm_open												= 500_cs_reload_open, open
+anm_add_cartridge								= 500_cs_reload_add, add
+anm_add_cartridge_empty					= 500_cs_reload_add_e, add_empty
+anm_close												= 500_cs_reload_close, close
+anm_shots												= 500_cs_shoot, shoot
+anm_reload_misfire								= 500_cs_unjam, unjam
+anm_idle_sprint											= 500_cs_idle_sprint, idle
+
+cg_anm_bore                              			= 500_cg_bore, idle
+cg_anm_hide											= 500_cg_holster, idle
+cg_anm_show										= 500_cg_show, idle
+cg_anm_idle											= 500_cg_idle, idle
+cg_anm_idle_aim									= 500_cg_idle_aim, idle
+cg_anm_idle_aim_moving					= 500_cg_walk_aim, idle
+cg_anm_idle_aim_moving_crouch	= 500_cg_walk_aim, idle
+cg_anm_idle_moving							= 500_cg_walk, idle, 0.85
+cg_anm_idle_moving_crouch				= 500_cg_walk, idle, 0.7
+cg_anm_open											= 500_cg_reload_open, open
+cg_anm_open_empty							= 500_cg_reload_open_e, open
+cg_anm_add_cartridge_empty			= 500_cg_reload_add_e, add_empty
+cg_anm_close										= 500_cg_reload_close, close
+cg_anm_shots										= 500_cg_shoot, shoot
+cg_anm_reload_misfire						= 500_cg_unjam, unjam
+
+c_anm_bore											= 500_c_bore, idle
+c_anm_hide												= 500_c_holster, idle
+c_anm_show											= 500_c_show, idle
+c_anm_idle												= 500_c_idle, idle
+c_anm_idle_aim										= 500_c_idle_aim, idle
+c_anm_idle_aim_moving						= 500_c_walk_aim, idle
+c_anm_idle_aim_moving_crouch		= 500_c_walk_aim, idle
+c_anm_idle_moving								= 500_c_walk, idle, 0.85
+c_anm_idle_moving_crouch				= 500_c_walk, idle, 0.7
+c_anm_open_empty								= 500_c_reload_open, open
+c_anm_open											= 500_c_reload_open, open
+c_anm_add_cartridge							= 500_c_reload_add, add
+c_anm_add_cartridge_empty				= 500_c_reload_add_e, add_empty
+c_anm_close											= 500_c_reload_close, close
+c_anm_shots											= 500_c_shoot, shoot
+c_anm_reload_misfire							= 500_c_unjam, unjam
+c_anm_idle_sprint										= 500_c_idle_sprint, idle
+
+cp_anm_bore											= 500_cp_bore, idle
+cp_anm_hide											= 500_cp_holster, idle
+cp_anm_show										= 500_cp_show, idle
+cp_anm_idle											= 500_cp_idle, idle
+cp_anm_idle_aim									= 500_cp_idle_aim, idle
+cp_anm_idle_aim_moving					= 500_cp_walk_aim, idle
+cp_anm_idle_aim_moving_crouch	= 500_cp_walk_aim, idle
+cp_anm_idle_moving							= 500_cp_walk, idle, 0.85
+cp_anm_idle_moving_crouch				= 500_cp_walk, idle, 0.7
+cp_anm_open_empty							= 500_cp_reload_open, open
+cp_anm_open											= 500_cp_reload_open, open
+cp_anm_add_cartridge							= 500_cp_reload_add, add
+cp_anm_add_cartridge_empty			= 500_cp_reload_add_e, add_empty
+cp_anm_close										= 500_cp_reload_close, close
+cp_anm_shots										= 500_cp_shoot, shoot
+cp_anm_reload_misfire						= 500_cp_unjam, unjam
+cp_anm_idle_sprint								= 500_cp_idle_sprint, idle
+
+t_anm_bore                              				= 500_t_bore, idle
+t_anm_hide												= 500_t_holster, idle
+t_anm_show											= 500_t_show, idle
+t_anm_idle												= 500_t_idle, idle
+t_anm_idle_aim										= 500_t_idle_aim, idle
+t_anm_idle_aim_moving						= 500_t_walk_aim, idle
+t_anm_idle_aim_moving_crouch		= 500_t_walk_aim, idle
+t_anm_idle_moving								= 500_t_walk, idle, 0.85
+t_anm_idle_moving_crouch					= 500_t_walk, idle, 0.7
+t_anm_open											= 500_t_reload_open, open
+t_anm_open_empty								= 500_t_reload_open, open
+t_anm_add_cartridge							= 500_t_reload_add, add
+t_anm_add_cartridge_empty				= 500_t_reload_add_e, add_empty
+t_anm_close											= 500_t_reload_close, close
+t_anm_shots											= 500_t_shoot, shoot
+t_anm_reload_misfire							= 500_t_unjam, unjam
+t_anm_idle_sprint									= 500_t_idle_sprint, idle
+
+r_anm_bore                              				= 500_r_bore, idle
+r_anm_hide												= 500_r_holster, idle
+r_anm_show											= 500_r_show, idle
+r_anm_idle												= 500_r_idle, idle
+r_anm_idle_aim										= 500_r_idle_aim, idle
+r_anm_idle_aim_moving						= 500_r_walk_aim, idle
+r_anm_idle_aim_moving_crouch		= 500_r_walk_aim, idle
+r_anm_idle_moving								= 500_r_walk, idle, 0.85
+r_anm_idle_moving_crouch				= 500_r_walk, idle, 0.7
+r_anm_open											= 500_r_reload_open, open
+r_anm_open_empty								= 500_r_reload_open, open
+r_anm_add_cartridge							= 500_r_reload_add, add
+r_anm_add_cartridge_empty				= 500_r_reload_add_e, add_empty
+r_anm_close											= 500_r_reload_close, close
+r_anm_shots											= 500_r_shoot, shoot
+r_anm_reload_misfire							= 500_r_unjam, unjam
+r_anm_idle_sprint									= 500_r_idle_sprint, idle
+
+v_anm_bore                              				= 500_v_bore, idle
+v_anm_hide												= 500_v_holster, idle
+v_anm_show											= 500_v_show, idle
+v_anm_idle												= 500_v_idle, idle
+v_anm_idle_aim										= 500_v_idle_aim, idle
+v_anm_idle_aim_moving						= 500_v_walk_aim, idle
+v_anm_idle_aim_moving_crouch		= 500_v_walk_aim, idle
+v_anm_idle_moving								= 500_v_walk, idle, 0.85
+v_anm_idle_moving_crouch				= 500_v_walk, idle, 0.7
+v_anm_open											= 500_v_reload_open, open
+v_anm_open_empty								= 500_v_reload_open, open
+v_anm_add_cartridge							= 500_v_reload_add, add
+v_anm_add_cartridge_empty				= 500_v_reload_add_e, add_empty
+v_anm_close											= 500_v_reload_close, close
+v_anm_shots											= 500_v_shoot, shoot
+v_anm_reload_misfire							= 500_v_unjam, unjam
+v_anm_idle_sprint									= 500_v_idle_sprint, idle
+
+h_anm_bore											= 500_h_bore, idle
+h_anm_hide											= 500_h_holster, idle
+h_anm_show											= 500_h_show, idle
+h_anm_idle												= 500_h_idle, idle
+h_anm_idle_aim									= 500_h_idle_aim, idle
+h_anm_idle_aim_moving						= 500_h_walk_aim, idle
+h_anm_idle_aim_moving_crouch		= 500_h_walk_aim, idle
+h_anm_idle_moving								= 500_h_walk, idle, 0.85
+h_anm_idle_moving_crouch				= 500_h_walk, idle, 0.7
+h_anm_open											= 500_h_reload_open, open
+h_anm_open_empty								= 500_h_reload_open, open
+h_anm_add_cartridge							= 500_h_reload_add, add
+h_anm_add_cartridge_empty				= 500_h_reload_add_e, add_empty
+h_anm_close											= 500_h_reload_close, close
+h_anm_shots											= 500_h_shoot, shoot
+h_anm_reload_misfire							= 500_h_unjam, unjam
+h_anm_idle_sprint										= 500_v_idle_sprint, idle

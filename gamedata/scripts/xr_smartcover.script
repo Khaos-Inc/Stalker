@@ -93,7 +93,7 @@ function action_smartcover_activity:activate_scheme()
 	--object:set_smart_cover_target_selector()
 	self.target_enemy_id = nil
 	self.cover_name, used = get_param_string(self.st.cover_name, object)
-	printf("setting smartcover [gps] [%s] used [%s] for npc[%s]", self.cover_name , tostring(used), object:name())
+	--printf("setting smartcover [gps] [%s] used [%s] for npc[%s]", self.cover_name , tostring(used), object:name())
 
 	if self.cover_name ~= self.st.cover_name or used == false then
 		if se_smart_cover.registered_smartcovers[self.cover_name] == nil then

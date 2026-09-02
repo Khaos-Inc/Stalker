@@ -1,0 +1,340 @@
+--\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ wpn_fort500 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+[500_zatvor]:attachment_base
+kind  = fort5
+inv_ui_sign				= 500_bolt
+visual							= w_att_huds\500_zatvor	
+inv_name					= 500_zatvor
+inv_name_short		= 500_zatvorS
+cost							= 1050
+inv_weight				= 0.32
+inv_grid_width			= 2
+inv_grid_x					= 21
+inv_grid_y					= 42
+1icon_layer = clean_lub2_ico
+attachment_point	= 500_zatvor|0,0,0|0,0,0
+attachment_slots	= 500_hg|zatvor|0,0,0|0,0,0#500_barrel|wpn_body|0,0,0|0,0,0
+item_tags	=	zatvor
+override_section	=	500_zatvor_attributes
+
+[500_zatvor_attributes]
+zoom_rotate_time = 0.07
+rpm = 112
+[500_zatvor_att]
+zoom_rotate_time = 0.07
+rpm = 112
+
+[500_barrel_345]:attachment_base
+kind  = fort5
+inv_ui_sign				= 500_35cm
+visual							= w_att_huds\500_barrel_345	
+inv_name					= 500_barrel_345
+inv_name_short		= 500_barrel_345S
+cost							= 2500
+inv_weight				= 0.52
+inv_grid_width			= 2
+inv_grid_x					= 23
+inv_grid_y					= 42
+1icon_layer = clean2_ico
+attachment_point	= 500_barrel|0,0,0|0,0,0
+attachment_slots	= 500_muzzle|muzzle|0,0,0|0,0,0
+item_tags = barrel
+override_section 	= 500_barrel_345_attributes
+
+[500_barrel_345_attributes]
+zoom_rotate_time = 0.08
+recoil_koeff = -0.03
+inertia_koeff = 1.5
+bullet_speed = 0.97
+fire_dispersion_base = 4
+ammo_mag_size = +4
+weapon_lenght = 0.35
+[500_barrel_4_attributes]:12_barrel_1_1_att,12_barrel_350_att
+ammo_mag_size				= +4
+weapon_lenght				= 0.35
+
+[500_barrel_460]:500_barrel_345
+kind  = fort5
+inv_ui_sign				= 500_46cm
+visual							= w_att_huds\500_barrel_460	
+inv_name					= 500_barrel_460
+inv_name_short		= 500_barrel_460S
+cost							= 3000
+inv_weight				= 0.61
+inv_grid_width			= 3
+inv_grid_x					= 25
+1icon_layer = clean3_ico
+attachment_slots	= 500_muzzle|muzzle|0,0,0.1034|0,0,0#barrel_side|wpn_body|0,0.013,0.05|0,0,0			
+item_tags = barrel
+override_section 	= 500_barrel_460_attributes
+
+[500_barrel_460_attributes]
+zoom_rotate_time = 0.08
+recoil_koeff = -0.03
+inertia_koeff = 1.5
+bullet_speed = 1.05
+fire_dispersion_base = 3.7
+fire_point = 0, 0, 0.1
+weapon_lenght = 0.45
+ammo_mag_size = +4
+[500_barrel_4p_attributes]:12_barrel_5_att,12_barrel_470_att
+fire_point						= 0, 0, 0.1
+weapon_lenght				= 0.45
+ammo_mag_size				= +4
+
+[500_barrel_510]:500_barrel_460
+kind  = fort5
+inv_ui_sign				= 500_51cm
+visual							= w_att_huds\500_barrel_510	
+inv_name					= 500_barrel_510
+inv_name_short		= 500_barrel_510S
+cost							= 3300
+inv_weight				= 0.69
+inv_grid_x					= 28
+attachment_slots	= 500_muzzle|muzzle|0,0,0.1502|0,0,0#tubemag|wpn_body|0,0.024,0.49|0,0,0
+item_tags = barrel
+override_section 	= 500_barrel_510_attributes
+
+[500_barrel_510_attributes]
+bullet_speed = 1.11
+fire_dispersion_base = 3.5
+ammo_mag_size = +6
+fire_point = 0, 0, 0.16
+weapon_lenght = 0.5
+zoom_rotate_time = 0.11
+recoil_koeff = -0.03
+inertia_koeff = 1.6
+[500_barrel_6_attributes]:12_barrel_500_att
+ammo_mag_size			= +6
+fire_point						= 0, 0, 0.16
+weapon_lenght			= 0.5
+zoom_rotate_time = 0.11
+recoil_koeff             = -0.21
+inertia_koeff            = 1.6
+
+[500_barrel_770]:500_barrel_345
+kind  = fort5
+inv_ui_sign				= 500_77cm
+visual							= w_att_huds\500_barrel_770	
+inv_name					= 500_barrel_770
+inv_name_short		= 500_barrel_770S
+cost							= 3500
+inv_weight				= 0.87
+inv_grid_width			= 4
+inv_grid_x					= 31
+1icon_layer = clean4_ico
+attachment_slots	= barrel_side|wpn_body|0,0.0136,0.16|0,0,0#tubemag|wpn_body|0,0.024,0.49|0,0,0#choke|muzzle|0,0,0.397|0,0,0#sight_rail|wpn_body|0,-0.0085,0.082|0,0,0
+override_section 	= 500_barrel_770_attributes
+
+[500_barrel_770_attributes]
+zoom_rotate_time = 0.13
+recoil_koeff = -0.1
+inertia_koeff = 1.9
+ammo_mag_size = +6
+fire_point = 0, 0, 0.6
+weapon_lenght = 0.75
+bullet_speed = 1.32
+k_hit_koeff = 1.2
+fire_dispersion_base = 3
+impair_koeff = 0.7
+[500_barrel_6p_attributes]:12_barrel_11_att
+ammo_mag_size			= +6
+fire_point						= 0, 0, 0.6
+weapon_lenght				= 0.75
+bullet_speed				= 1.32
+k_hit_koeff						= 1.2
+fire_dispersion_base		= 3
+impair_koeff					= 0.7
+
+override_section = 12_barrel_11_att
+[12_barrel_11_att]
+zoom_rotate_time = 0.13
+recoil_koeff            = -0.3
+inertia_koeff           = 1.9
+
+[500_muzzle]:attachment_base
+kind  = fort5
+inv_ui_sign				= nut
+visual							= w_att_huds\500_muzzle	
+inv_name					= 500_muzzle
+inv_name_short		= 500_muzzleS
+cost							= 400
+inv_weight				= 0.03
+inv_grid_x					= 36
+inv_grid_y					= 42
+attachment_point	= 500_muzzle|0,0,0|0,0,0
+item_tags =	muzzle_device
+override_section = 500_muzzle_attributes
+
+[500_muzzle_attributes]
+
+[500_muzzle_choke]:500_muzzle
+kind  = fort5
+inv_ui_sign				= 500_ic
+visual							= w_att_huds\500_muzzle_choke	
+inv_name					= 500_muzzle_choke
+inv_name_short		= 500_muzzle_chokeS
+cost							= 1000
+inv_weight				= 0.09
+inv_grid_x					= 38
+override_section 	= 500_muzzle_choke_attributes
+[500_muzzle_choke_attributes]
+weapon_lenght = 0.1
+fire_dispersion_base_koeff = -0.08
+
+[500_muzzle_adapter]:500_muzzle
+kind  = fort5
+inv_ui_sign				= 500_ad
+visual							= w_att_huds\500_muzzle_adapter	
+inv_name					= 500_muzzle_adapter
+inv_name_short		= 500_muzzle_adapterS
+cost							= 850
+inv_weight				= 0.07
+inv_grid_x					= 37
+attachment_slots	= 12ga_muzzle|muzzle|0,0,0.0027|0,0,0
+override_section = 500_muzzle_adapter_attributes
+
+[500_muzzle_adapter_attributes]
+fire_dispersion_base_koeff = -0.02
+
+[500_hg]:attachment_base
+kind  = fort5
+inv_ui_sign				= 500_hg
+visual							= w_att_huds\500_hg	
+inv_name					= 500_hg
+inv_name_short		= 500_hgS
+cost							= 650
+inv_weight				= 0.26
+inv_grid_width			= 2
+inv_grid_x					= 20
+inv_grid_y					= 43
+attachment_point	= 500_hg|0,0,0|0,0,0
+override_section = 500_hg_attributes
+
+[500_hg_attributes]
+animation_prefix = c_
+zoom_rotate_time = -0.06
+
+[500_hg_caa]:500_hg
+kind  = fort5
+inv_ui_sign				= 500_hgP
+visual							= w_att_huds\500_hg_caa
+description				= pica_3_up3
+inv_name					= 500_hg_caa
+inv_name_short		= 500_hg_caaS
+cost							= 1350
+inv_weight				= 0.33
+inv_grid_x					= 22
+attachment_slots	= pica_3|zatvor|-0.0257,0.022,0.33|0,0,-90#pica_3|zatvor|0.0257,0.022,0.33|0,0,90#pica_3|zatvor|0,-0.0005,0.37|0,0,180#picgrp|zatvor|0,-0.0361,0.056|0,0,0		
+override_section = 500_hg_caa_attributes
+
+[500_hg_caa_attributes]
+zoom_rotate_time = -0.01
+inertia_koeff = 0.9
+animation_prefix = cp_
+[500_hg_caa_att]:255_hg_att,cp_attributes
+
+[500_sight_weaver]:attachment_base
+kind  = fort5
+inv_ui_sign				= 500_rail
+visual							= w_att_huds\500_sight_weaver	
+description				= pica_15_up
+inv_name					= 500_sight_weaver
+inv_name_short		= 500_sight_weaverS
+cost							= 850
+inv_weight				= 0.08
+inv_grid_x					= 35
+inv_grid_y					= 43
+attachment_point	= 500_sight|0,0,0|0,0,0
+attachment_slots	= pica_15|wpn_body|0,0.069,0.04|0,0,0		
+item_tags	=	rail
+override_section = 500_sight_weaver_attributes
+
+[500_sight_weaver_attributes]
+
+[500_stock_short]:attachment_base
+kind  = fort5
+inv_ui_sign				= 500_stk-
+visual							= w_att_huds\500_stock_short	
+inv_name					= 500_stock_short
+inv_name_short		= 500_stock_shortS
+cost							= 450
+inv_weight				= 0.17
+inv_grid_x					= 24
+inv_grid_y					= 43
+attachment_point = 500_stock|0,0,0|0,0,0
+item_tags =	stock
+override_section 	= 500_stock_short_attributes
+
+[500_stock_short_attributes]
+weapon_lenght = 0.05
+zoom_rotate_time = 0.01
+recoil_koeff = 0.12
+
+[500_stock]:500_stock_short
+kind  = fort5
+inv_ui_sign				= 500_stk
+visual							= w_att_huds\500_stock	
+inv_name					= 500_stock
+inv_name_short		= 500_stockS
+cost							= 1200
+inv_weight				= 0.6
+inv_grid_width			= 2
+inv_grid_x					= 25
+override_section = 500_stock_attributes
+
+[500_stock_attributes]
+weapon_lenght = 0.25
+zoom_rotate_time = 0.07
+recoil_koeff = -0.24
+inertia_koeff = 0.6
+
+[500_stock_grip]:500_stock_short
+kind  = fort5
+inv_ui_sign				= 500_gr
+visual							= w_att_huds\500_stock_grip	
+inv_name					= 500_stock_grip
+inv_name_short		= 500_stock_gripS
+cost							= 600
+inv_weight				= 0.18
+inv_grid_x					= 27
+inv_grid_y					= 43
+override_section 	= 500_stock_grip_attributes
+
+[500_stock_grip_attributes]
+animation_prefix_base = cg_
+zoom_rotate_time = -0.01
+recoil_koeff = 0.1
+
+[500_stock_frame]:500_stock_grip
+kind  = fort5
+inv_ui_sign				= 500_sF
+visual							= w_att_huds\500_stock_frame	
+inv_name					= 500_stock_frame
+inv_name_short		= 500_stock_frameS
+cost							= 1350
+inv_weight				= 0.4
+inv_grid_width			= 2
+inv_grid_x					= 28
+override_section 	= 500_stock_frame_attributes
+[500_stock_frame_attributes]:cg_attributes
+weapon_lenght = 0.3
+zoom_rotate_time = -0.01
+recoil_koeff            = -0.06
+inertia_koeff          = 0.7
+
+[500_stock_caa_buffer]:500_stock_frame
+kind  = fort5
+inv_ui_sign				= 500_buf
+visual							= w_att_huds\500_stock_caa_buffer	
+inv_name					= 500_stock_caa_buffer
+inv_name_short		= 500_stock_caa_bufferS
+cost							= 1100
+inv_weight				= 0.25
+inv_grid_x					= 30
+attachment_slots	= ar_stock|wpn_body|0,-0.02164,0.0068|0,0,0		
+override_section 	= 500_stock_caa_buffer_attributes
+[500_stock_caa_buffer_attributes]:cg_attributes
+weapon_lenght = 0.2
+zoom_rotate_time = -0.02
+inertia_koeff          = 0.9

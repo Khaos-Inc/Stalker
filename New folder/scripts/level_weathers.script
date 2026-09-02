@@ -1,0 +1,1301 @@
+--===============================================================================
+-- Melancholy Weathers scheduler
+-- Replaces the vanilla AtmosFear-style WeatherManager with a category-first,
+-- scheduled weather-day system driven by dynamic_weather_graphs.ltx.
+--===============================================================================
+
+local enable_debug = true
+local enable_event_debug = false
+
+local SAVE_VERSION = 1
+local DAY_START_MIN = 4 * 60
+local LOCKOUT_START_MIN = 19 * 60
+local LAST_TRANSITION_START_MIN = (18 * 60) + 30
+local TRANSITION_MINUTES = 30
+local MIN_TRANSITION_SPACING = 60
+local HISTORY_LIMIT = 10
+local EVENT_LEAD_SECONDS = 2 * 60 * 60
+local EVENT_DEBUG_INTERVAL_MS = 10 * 1000
+local MONTH_DAYS = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31}
+local TRANSITION_JITTER_MIN = 0.75
+local TRANSITION_JITTER_MAX = 1.25
+local EDGE_HISTORY_LIMIT = 8
+local EDGE_REPEAT_PENALTY = 0.45
+local EDGE_BACKTRACK_PENALTY = 0.65
+local pre_blowout_excluded_categories = {
+	clear = true,
+	partly = true,
+	cloudy_light = true,
+	dream = true,
+}
+
+local ini_weather = ini_file("environment\\dynamic_weather_graphs.ltx")
+local weather_tbl = utils_data.collect_section(ini_weather, "weather_cycles")
+
+valid_levels = {}
+bLevelUnderground = false
+
+local last_amb = {}
+local weather_manager = nil
+
+-- Fallbacks for missing/broken graph sections; keep synced with dynamic_weather_graphs.ltx.
+local default_start_weights = {
+	clear = 13,
+	partly = 12,
+	cloudy = 9,
+	cloudy_light = 11,
+	cloudy_dark = 4,
+	rain = 9,
+	storm = 4,
+	foggy = 9,
+	dream = 0,
+}
+
+local default_day_count_weights = {
+	[1] = 5,
+	[2] = 15,
+	[3] = 35,
+	[4] = 30,
+	[5] = 15,
+}
+
+local default_transition_weights = {
+	clear = {
+		partly = 7,
+		cloudy_light = 5,
+		foggy = 1,
+	},
+	partly = {
+		clear = 6,
+		cloudy_light = 4,
+		cloudy = 3,
+		foggy = 2,
+	},
+	cloudy = {
+		partly = 3,
+		cloudy_light = 4,
+		foggy = 4,
+		rain = 4,
+		cloudy_dark = 3,
+		storm = 2,
+	},
+	cloudy_light = {
+		clear = 6,
+		partly = 5,
+		cloudy = 4,
+		cloudy_dark = 1,
+		foggy = 2,
+		rain = 3,
+	},
+	cloudy_dark = {
+		cloudy_light = 3,
+		cloudy = 5,
+		rain = 6,
+		foggy = 3,
+		storm = 4,
+	},
+	rain = {
+		clear = 2,
+		partly = 2,
+		cloudy = 4,
+		cloudy_light = 5,
+		cloudy_dark = 3,
+		foggy = 3,
+		storm = 3,
+	},
+	foggy = {
+		clear = 4,
+		partly = 2,
+		cloudy = 4,
+		cloudy_dark = 2,
+		cloudy_light = 5,
+		rain = 3,
+		storm = 1,
+	},
+	storm = {
+		cloudy_dark = 3,
+		rain = 3,
+		foggy = 3,
+		cloudy_light = 5,
+		cloudy = 4,
+		dream = 1,
+	    clear = 3,
+	},
+	dream = {
+		clear = 5,
+		partly = 3,
+		cloudy = 4,
+		cloudy_light = 4,
+		cloudy_dark = 3,
+		rain = 4,
+		foggy = 4,
+	},
+}
+
+local function dbg(fmt, ...)
+	if enable_debug then
+		printf("MelWeather | " .. fmt, ...)
+	end
+end
+
+local function event_dbg(fmt, ...)
+	if enable_event_debug then
+		printf("MelWeatherEvent | " .. fmt, ...)
+	end
+end
+
+local function warn(fmt, ...)
+	printe("! MelWeather | " .. fmt, ...)
+end
+
+local function copy_array(src)
+	local out = {}
+	if src then
+		for i = 1, #src do
+			out[i] = src[i]
+		end
+	end
+	return out
+end
+
+local function copy_weights(src)
+	local out = {}
+	if src then
+		for k, v in pairs(src) do
+			out[k] = v
+		end
+	end
+	return out
+end
+
+local function contains(tbl, value)
+	if not tbl then
+		return false
+	end
+	for i = 1, #tbl do
+		if tbl[i] == value then
+			return true
+		end
+	end
+	return false
+end
+
+local function count_table(tbl)
+	local n = 0
+	if tbl then
+		for _ in pairs(tbl) do
+			n = n + 1
+		end
+	end
+	return n
+end
+
+local function valid_pre_blowout_category(category)
+	return not pre_blowout_excluded_categories[category]
+end
+
+local function trim_history(history)
+	while history and #history > HISTORY_LIMIT do
+		table.remove(history, 1)
+	end
+	return history or {}
+end
+
+local function edge_key(from_category, to_category)
+	if not (from_category and to_category) then
+		return nil
+	end
+	return tostring(from_category) .. ">" .. tostring(to_category)
+end
+
+local function trim_edge_history(history)
+	while history and #history > EDGE_HISTORY_LIMIT do
+		table.remove(history, 1)
+	end
+	return history or {}
+end
+
+local function current_minutes_raw()
+	return (level.get_time_hours() * 60) + level.get_time_minutes()
+end
+
+local function current_schedule_minute()
+	local m = current_minutes_raw()
+	if m < DAY_START_MIN then
+		return m + (24 * 60)
+	end
+	return m
+end
+
+local function calendar_day_index()
+	local g_time = game.get_game_time()
+	local Y, M, D, h, m, s, ms = 0, 0, 0, 0, 0, 0, 0
+	Y, M, D, h, m, s, ms = g_time:get(Y, M, D, h, m, s, ms)
+
+	-- level.get_time_days() wraps at month boundaries; use a stable calendar index.
+	local day = 365 * (Y - 2010) + D
+	for mm = 1, M - 1 do
+		day = day + MONTH_DAYS[mm]
+	end
+	return day
+end
+
+local function weather_day_id()
+	local day = calendar_day_index()
+	if current_minutes_raw() < DAY_START_MIN then
+		day = day - 1
+	end
+	return day
+end
+
+local function minute_to_string(minute)
+	local m = minute
+	if m >= (24 * 60) then
+		m = m - (24 * 60)
+	end
+	local h = math.floor(m / 60)
+	local mi = m - (h * 60)
+	local hs = h < 10 and ("0" .. tostring(h)) or tostring(h)
+	local ms = mi < 10 and ("0" .. tostring(mi)) or tostring(mi)
+	return hs .. ":" .. ms
+end
+
+local function valid_weather_file(preset)
+	return preset and getFS():exist("$game_config$", "environment\\weathers\\" .. preset .. ".ltx") ~= nil
+end
+
+local function weighted_pick(weights)
+	local total = 0
+	for _, w in pairs(weights or {}) do
+		if w and w > 0 then
+			total = total + w
+		end
+	end
+	if total <= 0 then
+		return nil
+	end
+	local r = math.random() * total
+	for k, w in pairs(weights) do
+		if w and w > 0 then
+			r = r - w
+			if r <= 0 then
+				return k
+			end
+		end
+	end
+	return nil
+end
+
+local function section_weights(ini, section, valid_keys, fallback, strict_counts)
+	local out = {}
+	local found = false
+	if ini and ini:section_exist(section) then
+		found = true
+		for i = 0, ini:line_count(section) - 1 do
+			local _, id, value = ini:r_line_ex(section, i, "", "")
+			local key = id
+			local weight = tonumber(value)
+			if strict_counts then
+				key = tonumber(id)
+				if not key or key < 1 or key > 5 then
+					warn("[%s] ignores out-of-range day count key '%s'", section, tostring(id))
+				elseif not weight or weight < 0 then
+					warn("[%s] ignores malformed weight '%s = %s'", section, tostring(id), tostring(value))
+				else
+					out[key] = weight
+				end
+			elseif not valid_keys[id] then
+				warn("[%s] ignores unknown category '%s'", section, tostring(id))
+			elseif not weight or weight < 0 then
+				warn("[%s] ignores malformed weight '%s = %s'", section, tostring(id), tostring(value))
+			else
+				out[key] = weight
+			end
+		end
+	end
+
+	if count_table(out) == 0 then
+		if found then
+			warn("[%s] has no usable weights; using fallback", section)
+		end
+		return copy_weights(fallback or {})
+	end
+
+	return out
+end
+
+local function make_time_table()
+	local now = game.get_game_time()
+	return now and utils_data.CTime_to_table(now) or nil
+end
+
+--------------------------------------
+class "WeatherManager"
+
+function WeatherManager:__init()
+	self.ini = ini_weather
+	if not self.ini then
+		warn("failed to open environment\\dynamic_weather_graphs.ltx")
+	end
+
+	self.category_set = {}
+	self.weather_order = {}
+	for i = 1, #weather_tbl do
+		local cat = weather_tbl[i]
+		self.category_set[cat] = true
+		self.weather_order[#self.weather_order + 1] = cat
+	end
+
+	self.presets = {}
+	self.preset_lists = {}
+	for i = 1, #self.weather_order do
+		local cat = self.weather_order[i]
+		self.presets[cat] = {}
+		self.preset_lists[cat] = {}
+		local raw = utils_data.collect_section(self.ini, "cycle_" .. cat)
+		for j = 1, #raw do
+			local preset = raw[j]
+			if valid_weather_file(preset) then
+				self.presets[cat][preset] = true
+				self.preset_lists[cat][#self.preset_lists[cat] + 1] = preset
+			else
+				warn("[cycle_%s] ignores missing preset '%s'", cat, tostring(preset))
+			end
+		end
+	end
+
+	self.start_weights = section_weights(self.ini, "mel_weather_start_weights", self.category_set, default_start_weights)
+	self.day_count_weights = section_weights(self.ini, "mel_weather_day_count_weights", self.category_set, default_day_count_weights, true)
+	self.transition_weights = {}
+	for i = 1, #self.weather_order do
+		local cat = self.weather_order[i]
+		local section = "mel_weather_transition_" .. cat
+		if self.ini and self.ini:section_exist(section) then
+			self.transition_weights[cat] = section_weights(self.ini, section, self.category_set, default_transition_weights[cat] or {})
+		else
+			warn("[%s] missing; using built-in fallback", section)
+			self.transition_weights[cat] = copy_weights(default_transition_weights[cat] or {})
+		end
+	end
+
+	self.weather_file = nil
+	self.weatherType = "[default]"
+	self.levelWeather = "[default]"
+	self.cycle = nil
+	self.preset = nil
+	self.natural_cycle = nil
+	self.natural_preset = nil
+	self.category_history = {}
+	self.edge_history = {}
+
+	self.day_id = nil
+	self.transition_budget = 0
+	self.used_transition_count = 0
+	self.day_plan = {}
+
+	self.pre_blowout = nil
+	self.pre_blowout_suppressed = false
+	self.weather_fx = nil
+	self.wfx_time = 0
+	self.wfx_was_playing = false
+	self.force_reconcile = false
+	self.event_debug_next_log = 0
+	self.event_debug_last_state = nil
+	self.___timer = nil
+	self.inited_time = game.get_game_time()
+	self.last_hour = level.get_time_hours()
+	self.next_hour = self.last_hour + 1
+	if self.next_hour > 23 then
+		self.next_hour = self.next_hour - 24
+	end
+
+	self:build_valid_levels()
+end
+
+function WeatherManager:build_valid_levels()
+	if is_not_empty(valid_levels) then
+		return
+	end
+	local gini = game_ini()
+	local levels = utils_data.collect_section(gini, "level_maps_single")
+	for i = 1, #levels do
+		local wthr = gini:r_string_ex(levels[i], "weathers")
+		if wthr == "atmosfear" then
+			valid_levels[levels[i]] = true
+		end
+	end
+end
+
+function WeatherManager:update_level_weather_type()
+	local ini = ini_file("game.ltx")
+	self.weatherType = ini:r_string_ex(level.name(), "weathers") or "[default]"
+	bLevelUnderground = valid_levels[level.name()] == nil
+	SetEvent("underground", bLevelUnderground)
+end
+
+function WeatherManager:is_outdoor_weather()
+	return self.weatherType == "atmosfear" and not bLevelUnderground
+end
+
+function WeatherManager:add_history(category, target_history)
+	if not category then
+		return
+	end
+	local h = target_history or self.category_history
+	h[#h + 1] = category
+	trim_history(h)
+end
+
+function WeatherManager:add_edge_history(from_category, to_category, target_history)
+	local key = edge_key(from_category, to_category)
+	if not key then
+		return
+	end
+	local h = target_history or self.edge_history
+	h[#h + 1] = key
+	trim_edge_history(h)
+end
+
+function WeatherManager:history_blocks(category, history)
+	local h = history or self.category_history
+	if not category or #h < HISTORY_LIMIT then
+		return false
+	end
+	local count = 0
+	for i = 1, #h do
+		if h[i] == category then
+			count = count + 1
+		end
+	end
+	return count >= 5
+end
+
+function WeatherManager:edge_penalty(from_category, to_category, edge_history)
+	local key = edge_key(from_category, to_category)
+	if not key then
+		return 1
+	end
+	local h = edge_history or self.edge_history or {}
+	local penalty = 1
+	for i = 1, #h do
+		if h[i] == key then
+			penalty = penalty * EDGE_REPEAT_PENALTY
+		end
+	end
+	if #h > 0 and h[#h] == edge_key(to_category, from_category) then
+		penalty = penalty * EDGE_BACKTRACK_PENALTY
+	end
+	return penalty
+end
+
+function WeatherManager:valid_category(category)
+	return category and self.category_set[category] and self.preset_lists[category] and #self.preset_lists[category] > 0
+end
+
+function WeatherManager:choose_preset(category, avoid_preset)
+	local list = self.preset_lists[category]
+	if not list or #list == 0 then
+		return nil
+	end
+
+	local candidates = {}
+	for i = 1, #list do
+		local preset = list[i]
+		if preset ~= avoid_preset or #list == 1 then
+			candidates[#candidates + 1] = preset
+		end
+	end
+	if #candidates == 0 then
+		candidates = list
+	end
+	return candidates[math.random(#candidates)]
+end
+
+function WeatherManager:build_day_transition_weights()
+	local out = {}
+	for i = 1, #self.weather_order do
+		local cat = self.weather_order[i]
+		out[cat] = {}
+		local weights = self.transition_weights[cat] or default_transition_weights[cat] or {}
+		for target, weight in pairs(weights) do
+			if weight and weight > 0 then
+				local jitter = TRANSITION_JITTER_MIN + (math.random() * (TRANSITION_JITTER_MAX - TRANSITION_JITTER_MIN))
+				out[cat][target] = weight * jitter
+			else
+				out[cat][target] = weight
+			end
+		end
+	end
+	return out
+end
+
+function WeatherManager:filter_candidate_weights(weights, current_category, history, ignore_history, edge_history)
+	local out = {}
+	for category, weight in pairs(weights or {}) do
+		if weight and weight > 0 and category ~= current_category and self:valid_category(category) then
+			if ignore_history or not self:history_blocks(category, history) then
+				out[category] = weight * self:edge_penalty(current_category, category, edge_history)
+			end
+		end
+	end
+	return out
+end
+
+function WeatherManager:choose_next_category(current_category, history, transition_weights, edge_history)
+	local base = (transition_weights and transition_weights[current_category]) or self.transition_weights[current_category] or default_transition_weights[current_category] or {}
+	local candidates = self:filter_candidate_weights(base, current_category, history, false, edge_history)
+	if count_table(candidates) == 0 then
+		candidates = self:filter_candidate_weights(base, current_category, history, true, edge_history)
+	end
+	local pick = weighted_pick(candidates)
+	if pick then
+		return pick
+	end
+	warn("no valid transition candidates from '%s'; keeping current weather", tostring(current_category))
+	return current_category
+end
+
+function WeatherManager:choose_initial_category()
+	local candidates = {}
+	for category, weight in pairs(self.start_weights or {}) do
+		if category ~= "dream" and weight and weight > 0 and self:valid_category(category) then
+			candidates[category] = weight
+		end
+	end
+	local pick = weighted_pick(candidates)
+	if pick then
+		return pick
+	end
+	warn("no valid start weights; falling back to first valid category")
+	for i = 1, #self.weather_order do
+		local cat = self.weather_order[i]
+		if cat ~= "dream" and self:valid_category(cat) then
+			return cat
+		end
+	end
+	return nil
+end
+
+function WeatherManager:choose_day_count()
+	local count = weighted_pick(self.day_count_weights)
+	count = tonumber(count) or 1
+	return clamp(count, 1, 5)
+end
+
+function WeatherManager:roll_transition_times(count)
+	local times = {}
+	if count <= 1 then
+		times[1] = math.random(DAY_START_MIN, LAST_TRANSITION_START_MIN)
+		return times
+	end
+
+	local span = LAST_TRANSITION_START_MIN - DAY_START_MIN + 1
+	for attempt = 1, 50 do
+		times = {}
+		for i = 1, count do
+			local slot_start = DAY_START_MIN + math.floor(((i - 1) * span) / count)
+			local slot_end = DAY_START_MIN + math.floor((i * span) / count) - 1
+			if i == count then
+				slot_end = LAST_TRANSITION_START_MIN
+			end
+			times[i] = math.random(slot_start, slot_end)
+		end
+		table.sort(times)
+		local ok = true
+		for i = 2, #times do
+			if times[i] - times[i - 1] < MIN_TRANSITION_SPACING then
+				ok = false
+				break
+			end
+		end
+		if ok then
+			return times
+		end
+	end
+
+	times = {}
+	if count == 1 then
+		times[1] = DAY_START_MIN
+	else
+		local step = math.floor((LAST_TRANSITION_START_MIN - DAY_START_MIN) / (count - 1))
+		for i = 1, count do
+			times[i] = DAY_START_MIN + ((i - 1) * step)
+		end
+	end
+	return times
+end
+
+function WeatherManager:roll_day_plan(day_id)
+	if not self:valid_category(self.natural_cycle) then
+		self.natural_cycle = self:choose_initial_category()
+		self.natural_preset = self:choose_preset(self.natural_cycle)
+		self:add_history(self.natural_cycle)
+	end
+
+	self.day_id = day_id or weather_day_id()
+	self.transition_budget = self:choose_day_count()
+	self.used_transition_count = 0
+	self.day_plan = {}
+
+	local times = self:roll_transition_times(self.transition_budget)
+	local day_transition_weights = self:build_day_transition_weights()
+	local sim_history = copy_array(self.category_history)
+	local sim_edge_history = copy_array(self.edge_history)
+	local sim_category = self.natural_cycle
+	local sim_preset = self.natural_preset
+
+	for i = 1, #times do
+		local next_category = self:choose_next_category(sim_category, sim_history, day_transition_weights, sim_edge_history)
+		local next_preset = nil
+		if next_category ~= sim_category then
+			next_preset = self:choose_preset(next_category, sim_preset)
+		end
+		if next_category and next_preset then
+			self.day_plan[#self.day_plan + 1] = {
+				start_min = times[i],
+				end_min = times[i] + TRANSITION_MINUTES,
+				from_category = sim_category,
+				category = next_category,
+				preset = next_preset,
+				consumed = false,
+			}
+			self:add_edge_history(sim_category, next_category, sim_edge_history)
+			sim_category = next_category
+			sim_preset = next_preset
+			sim_history[#sim_history + 1] = next_category
+			trim_history(sim_history)
+		end
+	end
+
+	self.transition_budget = #self.day_plan
+	self:debug_plan()
+end
+
+function WeatherManager:debug_plan()
+	dbg("rolled day=%s budget=%s current=%s/%s", tostring(self.day_id), tostring(self.transition_budget), tostring(self.natural_cycle), tostring(self.natural_preset))
+	for i = 1, #self.day_plan do
+		local tr = self.day_plan[i]
+		dbg("  #%s %s-%s -> %s/%s", tostring(i), minute_to_string(tr.start_min), minute_to_string(tr.end_min), tostring(tr.category), tostring(tr.preset))
+	end
+end
+
+function WeatherManager:ensure_current_weather()
+	if self:valid_category(self.natural_cycle) and self.natural_preset and valid_weather_file(self.natural_preset) then
+		return
+	end
+	self.natural_cycle = self:choose_initial_category()
+	self.natural_preset = self:choose_preset(self.natural_cycle)
+	self:add_history(self.natural_cycle)
+end
+
+function WeatherManager:validate_loaded_plan()
+	if not self.day_plan then
+		self.day_plan = {}
+	end
+	for i = 1, #self.day_plan do
+		local tr = self.day_plan[i]
+		if not (tr and self:valid_category(tr.category) and tr.preset and valid_weather_file(tr.preset)) then
+			warn("discarding saved day plan with invalid entry")
+			self.day_plan = {}
+			self.day_id = nil
+			return false
+		end
+	end
+	return true
+end
+
+function WeatherManager:apply_loaded_state()
+	self:update_level_weather_type()
+	if not self:is_outdoor_weather() then
+		self.levelWeather = self.weatherType
+		if self.weatherType and not weather.is_paused() then
+			level.set_weather(self.weatherType, true)
+		end
+		return
+	end
+
+	if self.weather_fx then
+		level.start_weather_fx_from_time(self.weather_fx, self.wfx_time or 0)
+		self.weather_fx = nil
+		self.wfx_time = 0
+		self.wfx_was_playing = true
+		return
+	end
+
+	if self.pre_blowout and self.pre_blowout.active then
+		if self:valid_category(self.pre_blowout.category) and self.pre_blowout.preset and valid_weather_file(self.pre_blowout.preset) then
+			self:set_visible(self.pre_blowout.category, self.pre_blowout.preset)
+			local mode = current_schedule_minute() < (self.pre_blowout.blend_end_min or 0) and "smooth" or "force"
+			self:apply_weather(self.pre_blowout.preset, mode)
+			return
+		end
+		warn("discarding invalid saved pre-blowout state")
+		self.pre_blowout = nil
+	end
+
+	self:reconcile(true, "load_state")
+end
+
+function WeatherManager:ensure_day_plan()
+	local did = weather_day_id()
+	if self.day_id ~= did or not self.day_plan or #self.day_plan == 0 then
+		self:roll_day_plan(did)
+	end
+end
+
+function WeatherManager:set_visible(category, preset)
+	self.cycle = category
+	self.preset = preset
+	self.weather_file = preset
+	self.levelWeather = category and ("atmosfear_" .. category) or self.weatherType
+end
+
+function WeatherManager:apply_weather(preset, mode)
+	if not preset then
+		warn("apply_weather called without a preset")
+		return
+	end
+	if weather.is_paused() then
+		printf("~ MelWeather: weather did not set because lerping is paused in engine")
+		return
+	end
+	if not valid_weather_file(preset) then
+		warn("refusing to apply missing weather preset '%s'", tostring(preset))
+		return
+	end
+
+	if mode == "smooth" then
+		-- set_weather_smooth can inherit the current clock lerp weight and jump
+		-- most of the way into the target preset. The non-forced engine path
+		-- waits for the normal descriptor boundary and blends from there.
+		level.set_weather(preset, false)
+	else
+		level.set_weather(preset, true)
+	end
+	dbg("apply %s weather %s", tostring(mode), tostring(preset))
+end
+
+function WeatherManager:apply_natural(mode)
+	self:set_visible(self.natural_cycle, self.natural_preset)
+	self:apply_weather(self.natural_preset, mode or "force")
+end
+
+function WeatherManager:restore_visible_weather(reason)
+	if self.pre_blowout and self.pre_blowout.active then
+		if self:valid_category(self.pre_blowout.category) and self.pre_blowout.preset and valid_weather_file(self.pre_blowout.preset) then
+			self:set_visible(self.pre_blowout.category, self.pre_blowout.preset)
+			self:apply_weather(self.pre_blowout.preset, "force")
+			dbg("restore visible pre-blowout %s/%s (%s)", tostring(self.pre_blowout.category), tostring(self.pre_blowout.preset), tostring(reason))
+			return true
+		end
+		warn("discarding invalid cached pre-blowout state during %s", tostring(reason))
+		self.pre_blowout = nil
+	end
+
+	if self.weather_file and valid_weather_file(self.weather_file) then
+		self:apply_weather(self.weather_file, "force")
+		dbg("restore visible weather %s/%s (%s)", tostring(self.cycle), tostring(self.weather_file), tostring(reason))
+		return true
+	end
+
+	if self:valid_category(self.natural_cycle) and self.natural_preset and valid_weather_file(self.natural_preset) then
+		self:apply_natural("force")
+		dbg("restore natural weather %s/%s (%s)", tostring(self.natural_cycle), tostring(self.natural_preset), tostring(reason))
+		return true
+	end
+
+	return false
+end
+
+function WeatherManager:consume_due_transitions(now_min)
+	local latest = nil
+	for i = 1, #self.day_plan do
+		local tr = self.day_plan[i]
+		if not tr.consumed and now_min >= tr.start_min then
+			local from_category = tr.from_category or self.natural_cycle
+			tr.consumed = true
+			self.used_transition_count = self.used_transition_count + 1
+			self.natural_cycle = tr.category
+			self.natural_preset = tr.preset
+			self:add_history(tr.category)
+			self:add_edge_history(from_category, tr.category)
+			latest = tr
+		end
+	end
+	return latest
+end
+
+function WeatherManager:wfx_active()
+	return level.is_wfx_playing()
+end
+
+function WeatherManager:reconcile(force_apply, reason)
+	if not self:is_outdoor_weather() then
+		return false
+	end
+
+	self:ensure_current_weather()
+	self:ensure_day_plan()
+
+	local now_min = current_schedule_minute()
+	local latest = self:consume_due_transitions(now_min)
+	local wfx_now = self:wfx_active()
+
+	if latest then
+		dbg("consume transition %s -> %s/%s (%s)", minute_to_string(latest.start_min), latest.category, latest.preset, tostring(reason))
+	end
+
+	if wfx_now then
+		return false
+	end
+
+	if self.pre_blowout and self.pre_blowout.active then
+		return false
+	end
+
+	if latest then
+		local mode = force_apply and "force" or "smooth"
+		self:apply_natural(mode)
+		return true
+	elseif force_apply then
+		self:apply_natural("smooth")
+		return true
+	end
+	return false
+end
+
+function WeatherManager:event_state()
+	local current_date = game.get_game_time()
+	local surge_due = nil
+	local psi_due = nil
+	local surge_ready = surge_manager and surge_manager.SurgeManager and surge_manager.SurgeManager.last_surge_time and surge_manager.SurgeManager._delta
+	local psi_ready = psi_storm_manager and psi_storm_manager.PsiStormManager and psi_storm_manager.PsiStormManager.last_psi_storm_time and psi_storm_manager.PsiStormManager._delta
+
+	if surge_ready then
+		surge_due = math.floor(surge_manager.SurgeManager._delta - current_date:diffSec(surge_manager.SurgeManager.last_surge_time))
+	end
+	if psi_ready then
+		psi_due = math.floor(psi_storm_manager.PsiStormManager._delta - current_date:diffSec(psi_storm_manager.PsiStormManager.last_psi_storm_time))
+	end
+
+	local emission_enabled = ui_options.get("alife/event/emission_state")
+	local psi_enabled = ui_options.get("alife/event/psi_storm_state")
+	local surge_on = surge_due and surge_due < EVENT_LEAD_SECONDS and emission_enabled
+	local psi_on = psi_due and psi_due < EVENT_LEAD_SECONDS and psi_enabled
+	local level_name = level.name()
+	local details = {
+		level_name = level_name,
+		level_valid = valid_levels[level_name] == true,
+		surge_ready = surge_ready and true or false,
+		psi_ready = psi_ready and true or false,
+		surge_due = surge_due,
+		psi_due = psi_due,
+		emission_enabled = emission_enabled,
+		psi_enabled = psi_enabled,
+		surge_started = surge_manager and surge_manager.SurgeManager and surge_manager.SurgeManager.started or false,
+		psi_started = psi_storm_manager and psi_storm_manager.PsiStormManager and psi_storm_manager.PsiStormManager.started or false,
+	}
+
+	if surge_on and psi_on then
+		if surge_due <= psi_due then
+			return true, "surge", details
+		end
+		return true, "psi_storm", details
+	elseif surge_on then
+		return true, "surge", details
+	elseif psi_on then
+		return true, "psi_storm", details
+	end
+	return false, nil, details
+end
+
+function WeatherManager:debug_event_state(event_on, event_kind, details, wfx_now)
+	if not enable_event_debug or not details then
+		return
+	end
+
+	local now_ms = time_global and time_global() or 0
+	local pre_active = self.pre_blowout and self.pre_blowout.active or false
+	local state = strformat(
+		"%s|%s|%s|%s|%s|%s|%s|%s|%s|%s|%s",
+		tostring(event_on),
+		tostring(event_kind),
+		tostring(wfx_now),
+		tostring(pre_active),
+		tostring(self.pre_blowout_suppressed),
+		tostring(details.level_valid),
+		tostring(details.emission_enabled),
+		tostring(details.psi_enabled),
+		tostring(details.surge_started),
+		tostring(details.psi_started),
+		tostring(details.level_name)
+	)
+
+	if now_ms < self.event_debug_next_log and state == self.event_debug_last_state then
+		return
+	end
+
+	self.event_debug_next_log = now_ms + EVENT_DEBUG_INTERVAL_MS
+	self.event_debug_last_state = state
+	event_dbg(
+		"state level=%s valid=%s event_on=%s kind=%s surge_due=%s psi_due=%s emission_enabled=%s psi_enabled=%s surge_ready=%s psi_ready=%s surge_started=%s psi_started=%s wfx=%s wfx_time=%s pre_active=%s pre_suppressed=%s natural=%s/%s visible=%s/%s",
+		tostring(details.level_name),
+		tostring(details.level_valid),
+		tostring(event_on),
+		tostring(event_kind),
+		tostring(details.surge_due),
+		tostring(details.psi_due),
+		tostring(details.emission_enabled),
+		tostring(details.psi_enabled),
+		tostring(details.surge_ready),
+		tostring(details.psi_ready),
+		tostring(details.surge_started),
+		tostring(details.psi_started),
+		tostring(wfx_now),
+		tostring(level.get_wfx_time and level.get_wfx_time() or nil),
+		tostring(pre_active),
+		tostring(self.pre_blowout_suppressed),
+		tostring(self.natural_cycle),
+		tostring(self.natural_preset),
+		tostring(self.cycle),
+		tostring(self.preset)
+	)
+end
+
+function WeatherManager:choose_pre_blowout()
+	local candidates = {}
+	for i = 1, #self.weather_order do
+		local cat = self.weather_order[i]
+		if valid_pre_blowout_category(cat) and self:valid_category(cat) and not self:history_blocks(cat) then
+			candidates[cat] = 1
+		end
+	end
+	if count_table(candidates) == 0 then
+		for i = 1, #self.weather_order do
+			local cat = self.weather_order[i]
+			if valid_pre_blowout_category(cat) and self:valid_category(cat) then
+				candidates[cat] = 1
+			end
+		end
+	end
+	local category = weighted_pick(candidates)
+	local preset = self:choose_preset(category, self.weather_file)
+	return category, preset
+end
+
+function WeatherManager:start_pre_blowout(event_kind, mode)
+	local category, preset = self:choose_pre_blowout()
+	if not (category and preset) then
+		warn("pre-blowout could not pick a valid graph preset")
+		return
+	end
+
+	local now = current_schedule_minute()
+	self.pre_blowout = {
+		active = true,
+		event_kind = event_kind,
+		category = category,
+		preset = preset,
+		blend_start_min = now,
+		blend_end_min = now + TRANSITION_MINUTES,
+		start_time = make_time_table(),
+	}
+	self.pre_blowout_suppressed = false
+	self:add_history(category)
+	self:set_visible(category, preset)
+	self:apply_weather(preset, mode or "smooth")
+	dbg("pre-blowout start kind=%s weather=%s/%s", tostring(event_kind), tostring(category), tostring(preset))
+	event_dbg("pre-blowout start kind=%s weather=%s/%s mode=%s", tostring(event_kind), tostring(category), tostring(preset), tostring(mode or "smooth"))
+end
+
+function WeatherManager:stop_pre_blowout()
+	if self.pre_blowout and self.pre_blowout.active then
+		dbg("pre-blowout ended")
+		event_dbg("pre-blowout ended kind=%s weather=%s/%s", tostring(self.pre_blowout.event_kind), tostring(self.pre_blowout.category), tostring(self.pre_blowout.preset))
+	end
+	self.pre_blowout = nil
+	self.pre_blowout_suppressed = false
+	if not self:reconcile(false, "pre_blowout_end") then
+		self:apply_natural("smooth")
+	end
+end
+
+function WeatherManager:update_pre_blowout()
+	local wfx_now = self:wfx_active()
+	local event_on, event_kind, event_details = self:event_state()
+
+	self:debug_event_state(event_on, event_kind, event_details, wfx_now)
+
+	if wfx_now then
+		return
+	end
+
+	if event_on then
+		if self.pre_blowout_suppressed then
+			return
+		end
+		if not (self.pre_blowout and self.pre_blowout.active) then
+			self:start_pre_blowout(event_kind, "smooth")
+		end
+	elseif self.pre_blowout and self.pre_blowout.active then
+		self:stop_pre_blowout()
+	else
+		self.pre_blowout_suppressed = false
+	end
+end
+
+function WeatherManager:update_wfx_edge()
+	local wfx_now = self:wfx_active()
+	if not self.wfx_was_playing and wfx_now then
+		event_dbg("wfx started time=%s natural=%s/%s visible=%s/%s", tostring(level.get_wfx_time and level.get_wfx_time() or nil), tostring(self.natural_cycle), tostring(self.natural_preset), tostring(self.cycle), tostring(self.preset))
+	end
+	if self.wfx_was_playing and not wfx_now then
+		event_dbg("wfx ended natural=%s/%s visible=%s/%s", tostring(self.natural_cycle), tostring(self.natural_preset), tostring(self.cycle), tostring(self.preset))
+		self.pre_blowout = nil
+		self.pre_blowout_suppressed = true
+		self:reconcile(true, "wfx_end")
+	end
+	self.wfx_was_playing = wfx_now
+end
+
+function WeatherManager:reset()
+	self:update_level_weather_type()
+	self.inited_time = game.get_game_time()
+	self.last_hour = level.get_time_hours()
+	self.next_hour = self.last_hour + 1
+	if self.next_hour > 23 then
+		self.next_hour = self.next_hour - 24
+	end
+
+	if not self:is_outdoor_weather() then
+		self.levelWeather = self.weatherType
+		if self.weatherType and not weather.is_paused() then
+			level.set_weather(self.weatherType, true)
+		end
+		return
+	end
+
+	if self.weather_fx then
+		level.start_weather_fx_from_time(self.weather_fx, self.wfx_time or 0)
+		self.weather_fx = nil
+		self.wfx_time = 0
+		self.wfx_was_playing = true
+		return
+	end
+
+	if not self:restore_visible_weather("reset") then
+		self:ensure_current_weather()
+		if not contains(self.category_history, self.natural_cycle) then
+			self:add_history(self.natural_cycle)
+		end
+		self:ensure_day_plan()
+		self:apply_natural("force")
+	end
+end
+
+function WeatherManager:update()
+	if self.___timer and time_global() < self.___timer then
+		return
+	end
+	self.___timer = time_global() + 3000
+
+	self:update_level_weather_type()
+	if not self:is_outdoor_weather() then
+		return
+	end
+
+	self:reconcile(self.force_reconcile, self.force_reconcile and "forced" or "update")
+	self.force_reconcile = false
+	self:update_wfx_edge()
+	self:update_pre_blowout()
+
+	self.last_hour = level.get_time_hours()
+	self.next_hour = self.last_hour + 1
+	if self.next_hour > 23 then
+		self.next_hour = self.next_hour - 24
+	end
+end
+
+function WeatherManager:select_weather(now)
+	self:update_level_weather_type()
+	if not self:is_outdoor_weather() then
+		self.levelWeather = self.weatherType
+		if self.weatherType and not weather.is_paused() then
+			level.set_weather(self.weatherType, now and true or false)
+		end
+		return
+	end
+	self:reconcile(now == true, "select_weather")
+end
+
+function WeatherManager:forced_weather_change()
+	self.force_reconcile = true
+	self:reconcile(true, "forced_weather_change")
+end
+
+function WeatherManager:get_curr_weather()
+	return self.cycle or self.natural_cycle
+end
+
+function WeatherManager:get_curr_weather_preset()
+	return self.preset or self.natural_preset
+end
+
+function WeatherManager:get_hour_as_string(h)
+	if h > 23 then
+		h = h - 24
+	end
+	return (h < 10 and ("0" .. tostring(h)) or tostring(h)) .. ":00:00"
+end
+
+function WeatherManager:get_curr_ambient()
+	local hr = level.get_time_hours()
+	local wthr = level.get_weather()
+	if (hr == last_amb.hr) and (wthr == last_amb.wthr) and last_amb.amb then
+		return last_amb.amb
+	end
+
+	local ini = wthr and ini_file("environment\\weathers\\" .. wthr .. ".ltx")
+	local hr_string = self:get_hour_as_string(hr)
+	local amb = ini and hr_string and ini:section_exist(hr_string) and ini:r_string_ex(hr_string, "ambient") or ""
+
+	last_amb.hr = hr
+	last_amb.wthr = wthr
+	last_amb.amb = amb
+	return amb
+end
+
+function WeatherManager:validate_history()
+	local out = {}
+	for i = 1, #(self.category_history or {}) do
+		local cat = self.category_history[i]
+		if self.category_set[cat] then
+			out[#out + 1] = cat
+		end
+	end
+	self.category_history = trim_history(out)
+end
+
+function WeatherManager:validate_edge_history()
+	local out = {}
+	for i = 1, #(self.edge_history or {}) do
+		local key = self.edge_history[i]
+		local from_category, to_category = string.match(tostring(key), "^([^>]+)>([^>]+)$")
+		if self.category_set[from_category] and self.category_set[to_category] then
+			out[#out + 1] = from_category .. ">" .. to_category
+		end
+	end
+	self.edge_history = trim_edge_history(out)
+end
+
+function WeatherManager:load_state(m_data)
+	local data = m_data and m_data.weather_manager
+	if not data then
+		return
+	end
+
+	if data.mel_scheduler_version == SAVE_VERSION then
+		self.day_id = data.day_id
+		self.transition_budget = data.transition_budget or 0
+		self.used_transition_count = data.used_transition_count or 0
+		self.day_plan = data.day_plan or {}
+		self.category_history = data.category_history or {}
+		self.edge_history = data.edge_history or {}
+		self.natural_cycle = data.natural_cycle or data.cycle
+		self.natural_preset = data.natural_preset or data.preset
+		self.pre_blowout = data.pre_blowout
+		self.cycle = data.visible_cycle or self.natural_cycle
+		self.preset = data.visible_preset or self.natural_preset
+		self.weather_file = data.weather_file or self.preset
+	elseif data.mel_scheduler_version ~= nil then
+		warn("unknown or malformed scheduler save version '%s'; repairing state", tostring(data.mel_scheduler_version))
+		self.category_history = data.category_history or data.weather_storage or {}
+		self.edge_history = data.edge_history or {}
+		self.natural_cycle = data.natural_cycle or data.cycle
+		self.natural_preset = data.natural_preset or data.preset
+		self.day_plan = {}
+		self.day_id = nil
+	else
+		self.natural_cycle = data.cycle
+		self.natural_preset = data.preset
+		self.category_history = {}
+		self.edge_history = {}
+		if self:valid_category(self.natural_cycle) then
+			self:add_history(self.natural_cycle)
+		end
+		self.day_plan = {}
+		self.day_id = nil
+	end
+
+	self:validate_history()
+	self:validate_edge_history()
+	if not (self:valid_category(self.natural_cycle) and self.natural_preset and valid_weather_file(self.natural_preset)) then
+		self.natural_cycle = nil
+		self.natural_preset = nil
+		self:ensure_current_weather()
+	end
+
+	if not self:validate_loaded_plan() then
+		self:roll_day_plan(weather_day_id())
+	end
+
+	if not bLevelUnderground then
+		self.weather_fx = data.weather_fx
+		self.wfx_time = data.weather_fx_time or 0
+	end
+	self:apply_loaded_state()
+	dbg("loaded scheduler day=%s natural=%s/%s history=%s", tostring(self.day_id), tostring(self.natural_cycle), tostring(self.natural_preset), tostring(#self.category_history))
+end
+
+function WeatherManager:save_state(m_data)
+	m_data.weather_manager = {
+		mel_scheduler_version = SAVE_VERSION,
+		day_id = self.day_id,
+		transition_budget = self.transition_budget,
+		used_transition_count = self.used_transition_count,
+		day_plan = self.day_plan,
+		category_history = self.category_history,
+		edge_history = self.edge_history,
+		natural_cycle = self.natural_cycle,
+		natural_preset = self.natural_preset,
+		visible_cycle = self.cycle,
+		visible_preset = self.preset,
+		weather_file = self.weather_file,
+		pre_blowout = self.pre_blowout,
+		-- Legacy fields kept for older debug tools and save inspection.
+		levelWeather = self.levelWeather,
+		cycle = self.cycle,
+		preset = self.preset,
+		weather_storage = self.category_history,
+	}
+
+	if not bLevelUnderground and level.is_wfx_playing() then
+		m_data.weather_manager.weather_fx = level.get_weather()
+		m_data.weather_manager.weather_fx_time = level.get_wfx_time() or 0
+	end
+end
+
+function WeatherManager:finalize()
+end
+
+-- Future-work references:
+-- Vanilla AtmosFear particles/sounds were stubbed in Melancholy assets, so the MVP
+-- omits them. If experimenting later, see vanilla level_weathers.script update
+-- calls 231-237, meteorites 583-614, distant storms 620-666, lightning 686-723.
+-- Vanilla brightness boosts are also unused by Melancholy's active graph. If
+-- experimenting later, see vanilla call 378, set_brightness_boosts 505-544, and
+-- on_option_change refresh 836-845.
+
+function get_weather_manager()
+	weather_manager = weather_manager or WeatherManager()
+	return weather_manager
+end
+
+local function update_settings()
+	-- Kept as a callback anchor for compatibility. Brightness boosts are intentionally
+	-- omitted from the Melancholy MVP; see future-work references above.
+end
+
+function on_game_start()
+	RegisterScriptCallback("on_option_change", update_settings)
+end

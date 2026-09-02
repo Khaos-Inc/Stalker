@@ -1,0 +1,70 @@
+[wpn_taurus]:wpn_desert_eagle,wpn_taurus_sounds
+use_detachable_magazines = false
+GroupControlSection				= spawn_group
+ef_weapon_type              		= 8
+class                       					= WP_ASHTG
+tri_state_reload            			= on
+inv_grid_width							= 4
+inv_grid_x								= 21
+inv_grid_y								= 65
+inv_name                    				= wpn_taurus
+inv_name_short              			= wpn_taurusS
+description                 				= wpn_taurus_descr
+position                    				= -0.021, 0.017, 0.006
+cam_relax_speed             	= 16
+npc_rpm  = 450
+zoom_cam_relax_speed		= 16
+shell_particles	 						=
+silencer_status							= 0
+ph_mass                     				= 2
+inv_weight               				= 0.7
+required_tags_shoot 				= barrel
+required_tags_cycle 				=
+ammo_mag_size						= 6
+attachment_slots						= slot_magazin|magazin|0,0,0|0,0,0#taurus_barrel|wpn_body|0,0,0|0,0,0#taurus_grip|wpn_body|0,0,0|0,0,0
+aimpoint_offset_y					= 0.063588
+ui_render_cam_offset				= 0.31, -0.12, 1.18
+visual                      				= w_att_huds\taurus
+hud                         					= wpn_taurus_hud
+
+cost                                                            =18000
+
+inv_icon_padding  = 0.7
+inv_icon_offset_x = 0.0
+inv_icon_offset_y = 0.2
+
+positive X = move right
+negative X = move left
+positive Y = move up
+negative Y = move down
+
+[wpn_taurus_hud]:wpn_python_hud
+
+weapon_recoil_vert         = 3.83
+weapon_recoil_vert_inc     = 0.383
+weapon_recoil_horz         = 2.80
+weapon_recoil_ret_speed    = 5.0
+
+item_visual                 			= w_att_huds\taurus_hud
+aim_hud_offset_pos				= -0.0606, 0.0213, -0.05
+aim_hud_offset_pos_16x9		= -0.0606, 0.0213, -0.05
+aim_hud_offset_rot					= 0.012, 0.0062, 0
+aim_hud_offset_rot_16x9		= 0.012, 0.0062, 0
+
+anm_add_cartridge					= rev_g_reload_add, add, 0.9
+anm_close								= taurus_g_reload_close, close, 1.4
+anm_shots								= taurus_g_shoot, shoot
+c_anm_bore                              		= taurus_c_bore, idle
+c_anm_hide										= taurus_c_holster, idle, 1.11
+c_anm_show									= taurus_c_show, idle, 1.11
+c_anm_idle										= taurus_c_idle, idle
+c_anm_idle_aim								= taurus_c_idle_aim, idle
+c_anm_idle_aim_moving					= taurus_c_walk_aim, idle
+c_anm_idle_aim_moving_crouch		= taurus_c_walk_aim, idle
+c_anm_idle_moving							= taurus_c_walk, idle
+c_anm_idle_moving_crouch			= taurus_c_walk, idle
+c_anm_open									= taurus_c_reload_open, open
+c_anm_open_empty						= taurus_c_reload_open_empty, open_empty
+c_anm_close									= taurus_c_reload_close, close, 1.4
+c_anm_shots									= taurus_c_shoot, shoot
+c_anm_reload_misfire						= taurus_c_unjam, unjam

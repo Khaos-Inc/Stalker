@@ -1,0 +1,387 @@
+--\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ wpn_ash12 wpn_vssk wpn_vsv \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+[ash12_barrel]:attachment_base
+kind  =  vsv
+inv_ui_sign				= ash12_brl
+visual						= w_att_huds\ash12_barrel	
+inv_name					= ash12_barrel
+inv_name_short		= ash12_barrel
+cost							= 1500
+inv_weight				= 0.3
+inv_grid_width			= 2
+inv_grid_x				= 2
+inv_grid_y				= 70
+1icon_layer = clean2_ico
+attachment_point	= shak12_barrel|0,0,0|0,0,0
+attachment_slots		= shak12_muzzle|muzzle|0,0,0|0,0,0
+item_tags = barrel
+override_section		= ash12_barrel_attributes
+
+[ash12_barrel_attributes]
+fire_point = 0, 0, 0.05
+bullet_speed = 1
+fire_dispersion_base = 0.09
+zoom_rotate_time = 0.06
+inertia_koeff = 0.9
+[shak12_barrel_att]
+fire_point						= 0, 0, 0.05
+bullet_speed				= 1
+fire_dispersion_base	= 0.09
+zoom_rotate_time		= 0.06
+recoil_koeff					= -0.25
+inertia_koeff            	= 0.9
+
+[vssk_barrel]:ash12_barrel
+kind  =  vsv
+inv_ui_sign				= vssk_brl
+visual						= w_att_huds\vssk_barrel	
+inv_name					= vssk_barrel
+inv_name_short		= vssk_barrelS
+inv_grid_y				= 69
+attachment_slots		= vssk_silencer|muzzle|0,0,0|0,0,0
+override_section		= vssk_barrel_attributes
+
+cost = 1500
+inv_weight = 0.3
+[vssk_barrel_attributes]
+fire_point = 0, 0, 0.05
+zoom_rotate_time = 0.06
+inertia_koeff = 0.9
+bullet_speed = 0.98
+fire_dispersion_base = 0.07
+recoil_koeff = -0.1
+[vssk_barrel_att]:shak12_barrel_att
+bullet_speed				= 0.98
+fire_dispersion_base	= 0.07
+recoil_koeff					= -0.22
+
+[vssk_silencer]:attachment_base
+kind  =  vsv
+inv_ui_sign				= vssk_sil
+visual						= w_att_huds\vssk_silencer	
+inv_name					= vssk_silencer
+inv_name_short		= vssk_silencerS
+cost							= 5000
+inv_weight				= 1.9
+inv_grid_width			= 3
+inv_grid_x				= 8
+inv_grid_y				= 69
+attachment_point	= vssk_silencer|0,0,0|0,0,0
+override_section		= vssk_silencer_attributes
+[vssk_silencer_attributes]:silencer_base_attributes
+weapon_lenght = 0.5
+impair_koeff = 1.2
+zoom_rotate_time = 0.13
+recoil_koeff            = -0.12
+inertia_koeff            = 1.6
+
+silencer_x = 1
+silencer_y = 1
+silencer_name = wpn_addon_silencer
+silencer_status = 1
+[vsv_barrel_520_sil]:attachment_base
+kind  =  vsv
+inv_ui_sign				= vsv_52cm_s
+visual						= w_att_huds\vsv_barrel_520_sil	
+inv_name					= vsv_barrel_520_sil
+inv_name_short		= vsv_barrel_520_silS
+cost							= 6000
+inv_weight				= 2.9
+inv_grid_width     = 5
+inv_grid_x         = 4
+inv_grid_y         = 70
+attachment_point	= vsv_barrel|0,0,0|0,0,0
+item_tags = barrel
+override_section		= vsv_barrel_520_sil_attributes
+[vsv_barrel_520_sil_attributes]:silencer_base_attributes
+fire_point						= 0, 0, 0.46
+weapon_lenght			=	0.45
+bullet_speed				= 0.98
+fire_dispersion_base 	= 0.08
+k_hit_koeff					= 0.9
+zoom_rotate_time 		= 0.12
+recoil_koeff             	= -0.17
+inertia_koeff            	= 1.8
+impair_koeff 				= 1.4
+
+silencer_x = 1
+silencer_y = 1
+silencer_name = wpn_addon_silencer
+silencer_status = 1
+[vsv_barrel_620]:vsv_barrel_520_sil 
+kind  =  vsv
+inv_ui_sign				= vsv_62cm
+visual						= w_att_huds\vsv_barrel_620	
+inv_name					= vsv_barrel_620
+inv_name_short		= vsv_barrel_620S
+cost							= 4500
+inv_weight				= 0.8
+inv_grid_width			= 4
+inv_grid_x				= 4
+inv_grid_y				= 69
+1icon_layer = clean4_ico
+attachment_slots		= shak12_muzzle|muzzle|0,0,0.276436|0,0,0
+item_tags = barrel
+override_section = vsv_barrel_620_attributes
+
+[vsv_barrel_620_attributes]
+zoom_rotate_time = 0.11
+recoil_koeff = -0.1
+inertia_koeff = 1.7
+fire_point = 0, 0, 0.3
+weapon_lenght = 0.25
+bullet_speed = 1.11
+fire_dispersion_base = 0.08
+[vsv_barrel_620_att]:ar_barrel_16_att
+fire_point					= 0, 0, 0.3
+weapon_lenght			=	0.25
+bullet_speed				= 1.11
+fire_dispersion_base	= 0.08
+
+[ash12_zatvor]:attachment_base
+kind  =  vsv
+inv_ui_sign				= ash_bolt
+visual						= w_att_huds\ash12_zatvor	
+inv_name					= ash12_zatvor
+inv_name_short		= ash12_zatvor
+cost							= 1300
+inv_weight				= 0.55
+inv_grid_width			= 2
+inv_grid_x				= 0
+inv_grid_y				= 69
+1icon_layer = clean_lub2_ico
+attachment_point	= ash12_zatvor|0,0,0|0,0,0
+item_tags =	zatvor
+override_section = ash12_zatvor_attributes
+
+[ash12_zatvor_attributes]
+rpm = 650
+animation_prefix = c_
+zoom_rotate_time = 0.02
+impair_koeff = 0.8
+[ash12_zatvor_att]:rpm_650_zatvor_att,c_attributes
+zoom_rotate_time = 0.02
+recoil_koeff = -0.15
+impair_koeff = 0.8
+
+[vssk_zatvor]:ash12_zatvor
+kind  =  vsv
+inv_ui_sign				= vssk_bolt
+visual						= w_att_huds\vssk_zatvor	
+inv_name					= vssk_zatvor
+inv_name_short		= vssk_zatvorS
+cost							= 1200
+inv_weight				= 0.66
+inv_grid_y				= 70
+attachment_point	= vssk_zatvor|0,0,0|0,0,0
+item_tags =	zatvor
+override_section = vssk_zatvor_attributes
+
+[vssk_zatvor_attributes]
+impair_koeff = 0.6
+rpm = 54
+[vssk_zatvor_att]
+impair_koeff = 0.6
+rpm = 54
+
+[vssk_upper]:attachment_base
+kind  =  vsv
+inv_ui_sign				= vssk_upper
+visual						= w_att_huds\vssk_upper	
+description				= pica_19_up
+inv_name					= vssk_upper
+inv_name_short		= vssk_upperS
+cost							= 3700
+inv_weight				= 0.75
+inv_grid_width			= 4
+inv_grid_x				= 9
+inv_grid_y				= 70
+attachment_point	=	vssk_upper|0,0,0|0,0,0
+attachment_slots		=	pica_19|wpn_body|0,0.07322,-0.1226|0,0,0#vssk_upper_sight|wpn_body|0,0,0|0,0,0#sight_rear|wpn_body|0,0.07322,-0.106|0,0,0
+item_tags				= upper
+override_section		= vssk_upper_attributes
+[vssk_upper_attributes]:c_attributes
+weapon_lenght		= 0.1
+zoom_rotate_time	= -0.03
+
+[vsv_upper]:vssk_upper
+kind  =  vsv
+inv_ui_sign				= vsv_upper
+visual						= w_att_huds\vsv_upper	
+description				= ar_hg_30
+inv_name					= vsv_upper
+inv_name_short		= vsv_upperS
+cost							= 4500
+inv_weight				= 0.7
+inv_grid_x         = 13
+attachment_slots		=	pica_30|wpn_body|0,0.07322,-0.1226|0,0,0#sight_front|wpn_body|0,0.07322,0.19|0,0,0#sight_rear|wpn_body|0,0.07322,-0.106|0,0,0#picgrp|wpn_body|0,-0.0286,-0.095|0,0,0#pica_3|wpn_body|0.01858,0.05,0.17|0,0,90
+override_section = vsv_upper_attributes
+
+[vsv_upper_attributes]
+animation_prefix = c_
+weapon_lenght = 0.1
+zoom_rotate_time = -0.03
+
+[sight_front_ash12]:attachment_base
+kind  =  vsv
+inv_ui_sign				= ash12_sf
+visual						= w_att_huds\ash12_sight_front
+inv_name					= ash12_sight_front
+inv_name_short		= ash12_sight_frontS
+inv_grid_x				= 12
+inv_grid_y				= 69
+cost							= 600
+inv_weight 				= 0.05
+attachment_point = sight_front|0,0,0|0,0,0
+override_section = sight_front_ash12_attributes
+
+[sight_front_ash12_attributes]
+
+[vssk_upper_sight]:sight_front_ash12
+kind  =  vsv
+inv_ui_sign				= vssk_sf
+visual						= w_att_huds\vssk_upper_sight
+inv_name					= vssk_upper_sight
+inv_name_short		= vssk_upper_sightS
+inv_grid_x				= 11
+attachment_point 	= vssk_upper_sight|0,0,0|0,0,0
+override_section = vssk_upper_sight_attributes
+
+[vssk_upper_sight_attributes]
+
+[sight_front_vsv]:sight_front_ash12
+kind  =  vsv
+inv_ui_sign				= vsv_sf
+visual						= w_att_huds\vsv_sight_front
+inv_name					= vsv_sight_front
+inv_name_short		= vsv_sight_frontS
+inv_grid_x				= 13
+override_section = sight_front_vsv_attributes
+
+[sight_front_vsv_attributes]
+
+[sight_rear_vssk]:attachment_base
+kind  =  vsv
+inv_ui_sign				= mb_r
+visual						= w_att_huds\vssk_sight_rear
+inv_name					= vssk_sight_rear
+inv_name_short		= vssk_sight_rearS
+inv_grid_x				= 14
+inv_grid_y				= 69
+cost							= 800
+inv_weight 				= 0.05
+attachment_point	=	sight_rear|0,0,0|0,0,0
+override_section		= sight_rear_vssk_attributes
+
+[sight_rear_vssk_attributes]
+zoom_rotate_time = -0.01
+fire_dispersion_base_koeff = -0.05
+
+[sight_rear_ash12]:sight_rear_vssk
+kind  =  vsv
+inv_ui_sign				= mb_r
+visual						= w_att_huds\ash12_sight_rear
+description				= pica_9_up
+inv_name					= ash12_sight_rear
+inv_name_short		= ash12_sight_rearS
+inv_grid_width			= 2
+inv_grid_x				= 15
+cost							= 950
+inv_weight 				= 0.1
+attachment_slots		= pica_9|wpn_body|0,0.02833,0.036|0,0,0
+override_section		= sight_rear_ash12_attributes
+
+[sight_rear_ash12_attributes]
+zoom_rotate_time = 0.01
+fire_dispersion_base_koeff = -0.02
+
+[mag_wpn_ash12_12.7x55_fmj]:mag_wpn_base,wg_wpn_ash12,ag_ammo_12.7x55
+inv_ui_sign					= ash_10
+visual							= w_att_huds\ash12_mag10
+inv_name						= ash12_mag
+inv_name_short			= ash12_magS
+inv_grid_height			= 2
+inv_grid_x					= 17
+inv_grid_y					= 69
+inv_weight					= 0.14
+cost								= 900
+max_mag_size				= 10
+mag_size						= medium
+override_section			= mag_wpn_ash12_12.7x55_fmj_attributes
+
+[mag_wpn_ash12_12.7x55_fmj_attributes]
+animation_prefix_mag = 10_
+[ash12_10_attributes]
+animation_prefix_mag		=	10_
+
+[mag_wpn_ash12_20_12.7x55_fmj]:mag_wpn_ash12_12.7x55_fmj
+inv_ui_sign					= ash_20
+visual							= w_att_huds\ash12_mag20
+inv_name						= ash12_mag20
+inv_grid_x					= 18
+inv_weight					= 0.21
+cost								= 1300
+max_mag_size				= 20
+override_section			= mag_wpn_ash12_20_12.7x55_fmj_attributes
+
+[mag_wpn_ash12_20_12.7x55_fmj_attributes]
+animation_prefix_mag = 20_
+[ash12_20_attributes]
+animation_prefix_mag		=	20_
+
+[mag_wpn_ash12_30_12.7x55_fmj]:mag_wpn_ash12_20_12.7x55_fmj
+inv_ui_sign					= ash_30
+visual							= w_att_huds\ash12_mag30
+inv_name						= ash12_mag30
+inv_grid_x					= 19
+inv_weight					= 0.27
+cost								= 1600
+max_mag_size				= 30
+override_section = mag_wpn_ash12_30_12.7x55_fmj_attributes
+
+[mag_wpn_ash12_30_12.7x55_fmj_attributes]
+animation_prefix_mag = 20_
+
+[mag_wpn_vssk_12.7x55_pt2]:mag_wpn_base,wg_wpn_vssk,ag_ammo_12.7x55_pt2
+inv_ui_sign					= vssk_5
+visual							= w_att_huds\vssk_mag
+inv_name						= vssk_mag
+inv_name_short			= vssk_magS
+inv_grid_x					= 20
+inv_grid_y					= 69
+inv_weight					= 0.14
+cost								= 750
+max_mag_size				= 5
+mag_size						= medium
+
+[mag_wpn_vssk_m_12.7x55_pt2]:mag_wpn_vssk_12.7x55_pt2
+inv_ui_sign					= vssk_10
+visual							= w_att_huds\vssk_mag10
+inv_name						= vssk_mag10
+inv_grid_height			= 2
+inv_grid_x					= 21
+inv_weight					= 0.22
+cost								= 1200
+max_mag_size				= 10
+
+[mag_wpn_vsv_magnum_300]:mag_wpn_base,wg_wpn_vsv,ag_ammo_magnum_300
+inv_ui_sign					= vsv_6
+visual							= w_att_huds\vsv_mag
+inv_name						= vsv_mag
+inv_name_short			= vsv_magS
+inv_grid_x					= 38
+inv_grid_y					= 71
+inv_weight					= 0.14
+cost								= 750
+max_mag_size				= 6
+mag_size						= medium
+
+[mag_wpn_vsv_m_magnum_300]:mag_wpn_vsv_magnum_300
+inv_ui_sign					= vsv_12
+visual							= w_att_huds\vsv_mag10
+inv_name						= vsv_magM
+inv_grid_height			= 2
+inv_grid_x					= 39
+inv_weight					= 0.22
+cost								= 1200
+max_mag_size				= 12

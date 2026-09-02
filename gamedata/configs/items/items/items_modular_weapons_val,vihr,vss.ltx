@@ -1,0 +1,1143 @@
+--\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ wpn_val \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+[val_barrel]:attachment_base_ak
+kind = val
+inv_ui_sign				= val_bar
+visual						= w_att_huds\val_barrel	
+inv_name					= val_barrel
+inv_name_short		= val_barrel
+cost							= 1200
+inv_weight					= 0.22
+inv_grid_x					= 7
+inv_grid_y					= 15
+1icon_layer = clean1_ico
+attachment_point		= val_barrel|0,0,0|0,0,0
+attachment_slots = val_hg|wpn_body|0,0,0|0,0,0#val_zatvor|zatvor|0,0,0|0,0,0
+item_tags = barrel
+override_section = val_barrel_attributes
+
+[val_barrel_attributes]
+zoom_rotate_time = 0.02
+recoil_koeff = -0.01
+inertia_koeff = 1.1
+weapon_lenght = 0.13
+bullet_speed = 1
+fire_dispersion_base = 0.12
+[val_barrel_att]:ar_barrel_2_att
+weapon_lenght				= 0.13
+bullet_speed					= 1
+fire_dispersion_base		= 0.12
+
+[vihr_barrel]:val_barrel
+kind = val
+inv_ui_sign				= vihr_bar
+visual						= w_att_huds\vihr_barrel	
+inv_name					= vihr_barrel
+inv_name_short			= vihr_barrelS
+cost							= 1450
+inv_weight					= 0.3
+inv_grid_x					= 8
+attachment_slots		= vihr_silencer|wpn_body|0,0,0|0,0,0#vihr_hg|wpn_body|0,0,0|0,0,0#val_zatvor|zatvor|0,0,0|0,0,0
+override_section			= vihr_barrel_attributes
+
+[vihr_barrel_attributes]
+zoom_rotate_time = 0.02
+recoil_koeff = -0.05
+inertia_koeff = 1.1
+weapon_lenght = 0.13
+bullet_speed = 0.95
+rpm_koeff = 0.056
+k_hit_koeff = 0.95
+fire_dispersion_base = 0.15
+impair_koeff = 0.9
+aim_hud_offset_pos = -0.07, 0.028, -0.1
+aim_hud_offset_pos_16x9 = -0.07, 0.028, -0.1
+aim_hud_offset_rot = 0.015, 0.004, 0
+aim_hud_offset_rot_16x9 = 0.015, 0.004, 0
+aimpoint_offset_y = 0.08698
+h_anm_bore = vihr_h_bore, idle
+h_anm_hide = vihr_h_holster_e, idle
+h_anm_show = vihr_h_show_e, idle
+h_anm_idle = vihr_h_idle, idle
+h_anm_idle_aim = vihr_h_idle_aim, idle
+h_anm_idle_aim_moving = vihr_h_walk_aim, idle
+h_anm_idle_aim_moving_crouch = vihr_h_walk_aim, idle
+h_anm_idle_moving = vihr_h_walk, idle
+h_anm_idle_moving_crouch = vihr_h_walk, idle
+h_anm_shots = vihr_h_shoot, shoot
+h_anm_reload_misfire = vihr_h_unjam, unjam
+h_anm_switch_mode = vihr_h_firemode, idle
+h_anm_idle_sprint = vihr_h_idle_sprint, idle
+h_anm_reload = vihr_h_reload_20_p1, reload_p1, 1.2
+h_anm_reload_p1 = vihr_h_reload_20_p1, reload_p1, 1.2
+h_anm_reload_p2 = vihr_h_reload_20_p2, reload_p2, 1.2
+h_anm_reload_empty = vihr_h_reload_20_p1, reload_empty_p1, 1.2
+h_anm_reload_empty_p1 = vihr_h_reload_20_p1, reload_empty_p1, 1.2
+h_anm_reload_empty_p2 = vihr_h_reload_20e_p2, reload_empty_p2, 1.2
+h_anm_mag_check = vihr_h_check_20, check, 1.2
+h_anm_mag_check_empty = vihr_h_check_20, check_empty, 1.2
+10_h_anm_reload = vihr_h_reload_10_p1, reload_p1, 1.2
+10_h_anm_reload_p1 = vihr_h_reload_10_p1, reload_p1, 1.2
+10_h_anm_reload_p2 = vihr_h_reload_10_p2, reload_p2, 1.2
+10_h_anm_reload_empty = vihr_h_reload_10_p1, reload_empty_p1, 1.2
+10_h_anm_reload_empty_p1 = vihr_h_reload_10_p1, reload_empty_p1, 1.2
+10_h_anm_reload_empty_p2 = vihr_h_reload_10e_p2, reload_empty_p2, 1.2
+10_h_anm_mag_check = vihr_h_check_10, check, 1.2
+10_h_anm_mag_check_empty = vihr_h_check_10, check_empty, 1.2
+20_h_anm_reload = vihr_h_reload_20_p1, reload_p1, 1.2
+20_h_anm_reload_p1 = vihr_h_reload_20_p1, reload_p1, 1.2
+20_h_anm_reload_p2 = vihr_h_reload_20_p2, reload_p2, 1.2
+20_h_anm_reload_empty = vihr_h_reload_20_p1, reload_empty_p1, 1.2
+20_h_anm_reload_empty_p1 = vihr_h_reload_20_p1, reload_empty_p1, 1.2
+20_h_anm_reload_empty_p2 = vihr_h_reload_20e_p2, reload_empty_p2, 1.2
+20_h_anm_mag_check = vihr_h_check_20, check, 1.2
+20_h_anm_mag_check_empty = vihr_h_check_20, check_empty, 1.2
+30_h_anm_reload = vihr_h_reload_20_p1, reload_p1, 1.2
+30_h_anm_reload_p1 = vihr_h_reload_20_p1, reload_p1, 1.2
+30_h_anm_reload_p2 = vihr_h_reload_30_p2, reload_p2, 1.2
+30_h_anm_reload_empty = vihr_h_reload_20_p1, reload_empty_p1, 1.2
+30_h_anm_reload_empty_p1 = vihr_h_reload_20_p1, reload_empty_p1, 1.2
+30_h_anm_reload_empty_p2 = vihr_h_reload_30e_p2, reload_empty_p2, 1.2
+30_h_anm_mag_check = vihr_h_check_20, check, 1.2
+30_h_anm_mag_check_empty = vihr_h_check_20, check_empty, 1.2
+50_h_anm_reload = vihr_h_reload_50_p1, reload_p1, 1.2
+50_h_anm_reload_p1 = vihr_h_reload_50_p1, reload_p1, 1.2
+50_h_anm_reload_p2 = vihr_h_reload_50_p2, reload_p2, 1.2
+50_h_anm_reload_empty = vihr_h_reload_50_p1, reload_empty_p1, 1.2
+50_h_anm_reload_empty_p1 = vihr_h_reload_50_p1, reload_empty_p1, 1.2
+50_h_anm_reload_empty_p2 = vihr_h_reload_50e_p2, reload_empty_p2, 1.2
+50_h_anm_mag_check = vihr_h_check_50, check, 1.2
+50_h_anm_mag_check_empty = vihr_h_check_50, check_empty, 1.2
+r_anm_bore = vihr_r_bore, idle
+r_anm_hide = vihr_r_holster_e, idle
+r_anm_show = vihr_r_show_e, idle
+r_anm_idle = vihr_r_idle, idle
+r_anm_idle_aim = vihr_r_idle_aim, idle
+r_anm_idle_aim_moving = vihr_r_walk_aim, idle
+r_anm_idle_aim_moving_crouch = vihr_r_walk_aim, idle
+r_anm_idle_moving = vihr_r_walk, idle
+r_anm_idle_moving_crouch = vihr_r_walk, idle
+r_anm_shots = vihr_r_shoot, shoot
+r_anm_reload_misfire = vihr_r_unjam, unjam
+r_anm_switch_mode = vihr_r_firemode, idle
+r_anm_idle_sprint = vihr_r_idle_sprint, idle
+r_anm_reload = vihr_r_reload_20_p1, reload_p1, 1.2
+r_anm_reload_p1 = vihr_r_reload_20_p1, reload_p1, 1.2
+r_anm_reload_p2 = vihr_r_reload_20_p2, reload_p2, 1.2
+r_anm_reload_empty = vihr_r_reload_20_p1, reload_empty_p1, 1.2
+r_anm_reload_empty_p1 = vihr_r_reload_20_p1, reload_empty_p1, 1.2
+r_anm_reload_empty_p2 = vihr_r_reload_20e_p2, reload_empty_p2, 1.2
+r_anm_mag_check = vihr_r_check_20, check, 1.2
+r_anm_mag_check_empty = vihr_r_check_20, check_empty, 1.2
+10_r_anm_reload = vihr_r_reload_10_p1, reload_p1, 1.2
+10_r_anm_reload_p1 = vihr_r_reload_10_p1, reload_p1, 1.2
+10_r_anm_reload_p2 = vihr_r_reload_10_p2, reload_p2, 1.2
+10_r_anm_reload_empty = vihr_r_reload_10_p1, reload_empty_p1, 1.2
+10_r_anm_reload_empty_p1 = vihr_r_reload_10_p1, reload_empty_p1, 1.2
+10_r_anm_reload_empty_p2 = vihr_r_reload_10e_p2, reload_empty_p2, 1.2
+10_r_anm_mag_check = vihr_r_check_10, check, 1.2
+10_r_anm_mag_check_empty = vihr_r_check_10, check_empty, 1.2
+20_r_anm_reload = vihr_r_reload_20_p1, reload_p1, 1.2
+20_r_anm_reload_p1 = vihr_r_reload_20_p1, reload_p1, 1.2
+20_r_anm_reload_p2 = vihr_r_reload_20_p2, reload_p2, 1.2
+20_r_anm_reload_empty = vihr_r_reload_20_p1, reload_empty_p1, 1.2
+20_r_anm_reload_empty_p1 = vihr_r_reload_20_p1, reload_empty_p1, 1.2
+20_r_anm_reload_empty_p2 = vihr_r_reload_20e_p2, reload_empty_p2, 1.2
+20_r_anm_mag_check = vihr_r_check_20, check, 1.2
+20_r_anm_mag_check_empty = vihr_r_check_20, check_empty, 1.2
+30_r_anm_reload = vihr_r_reload_20_p1, reload_p1, 1.2
+30_r_anm_reload_p1 = vihr_r_reload_20_p1, reload_p1, 1.2
+30_r_anm_reload_p2 = vihr_r_reload_30_p2, reload_p2, 1.2
+30_r_anm_reload_empty = vihr_r_reload_20_p1, reload_empty_p1, 1.2
+30_r_anm_reload_empty_p1 = vihr_r_reload_20_p1, reload_empty_p1, 1.2
+30_r_anm_reload_empty_p2 = vihr_r_reload_30e_p2, reload_empty_p2, 1.2
+30_r_anm_mag_check = vihr_r_check_20, check, 1.2
+30_r_anm_mag_check_empty = vihr_r_check_20, check_empty, 1.2
+50_r_anm_reload = vihr_r_reload_50_p1, reload_p1, 1.2
+50_r_anm_reload_p1 = vihr_r_reload_50_p1, reload_p1, 1.2
+50_r_anm_reload_p2 = vihr_r_reload_50_p2, reload_p2, 1.2
+50_r_anm_reload_empty = vihr_r_reload_50_p1, reload_empty_p1, 1.2
+50_r_anm_reload_empty_p1 = vihr_r_reload_50_p1, reload_empty_p1, 1.2
+50_r_anm_reload_empty_p2 = vihr_r_reload_50e_p2, reload_empty_p2, 1.2
+50_r_anm_mag_check = vihr_r_check_50, check, 1.2
+50_r_anm_mag_check_empty = vihr_r_check_50, check_empty, 1.2
+t_anm_bore = vihr_t_bore, idle
+t_anm_hide = vihr_t_holster_e, idle
+t_anm_show = vihr_t_show_e, idle
+t_anm_idle = vihr_t_idle, idle
+t_anm_idle_aim = vihr_t_idle_aim, idle
+t_anm_idle_aim_moving = vihr_t_walk_aim, idle
+t_anm_idle_aim_moving_crouch = vihr_t_walk_aim, idle
+t_anm_idle_moving = vihr_t_walk, idle
+t_anm_idle_moving_crouch = vihr_t_walk, idle
+t_anm_shots = vihr_t_shoot, shoot
+t_anm_reload_misfire = vihr_t_unjam, unjam
+t_anm_switch_mode = vihr_t_firemode, idle
+t_anm_idle_sprint = vihr_t_idle_sprint, idle
+t_anm_reload = vihr_t_reload_20_p1, reload_p1, 1.2
+t_anm_reload_p1 = vihr_t_reload_20_p1, reload_p1, 1.2
+t_anm_reload_p2 = vihr_t_reload_20_p2, reload_p2, 1.2
+t_anm_reload_empty = vihr_t_reload_20_p1, reload_empty_p1, 1.2
+t_anm_reload_empty_p1 = vihr_t_reload_20_p1, reload_empty_p1, 1.2
+t_anm_reload_empty_p2 = vihr_t_reload_20e_p2, reload_empty_p2, 1.2
+t_anm_mag_check = vihr_t_check_20, check, 1.2
+t_anm_mag_check_empty = vihr_t_check_20, check_empty, 1.2
+10_t_anm_reload = vihr_t_reload_10_p1, reload_p1, 1.2
+10_t_anm_reload_p1 = vihr_t_reload_10_p1, reload_p1, 1.2
+10_t_anm_reload_p2 = vihr_t_reload_10_p2, reload_p2, 1.2
+10_t_anm_reload_empty = vihr_t_reload_10_p1, reload_empty_p1, 1.2
+10_t_anm_reload_empty_p1 = vihr_t_reload_10_p1, reload_empty_p1, 1.2
+10_t_anm_reload_empty_p2 = vihr_t_reload_10e_p2, reload_empty_p2, 1.2
+10_t_anm_mag_check = vihr_t_check_10, check, 1.2
+10_t_anm_mag_check_empty = vihr_t_check_10, check_empty, 1.2
+20_t_anm_reload = vihr_t_reload_20_p1, reload_p1, 1.2
+20_t_anm_reload_p1 = vihr_t_reload_20_p1, reload_p1, 1.2
+20_t_anm_reload_p2 = vihr_t_reload_20_p2, reload_p2, 1.2
+20_t_anm_reload_empty = vihr_t_reload_20_p1, reload_empty_p1, 1.2
+20_t_anm_reload_empty_p1 = vihr_t_reload_20_p1, reload_empty_p1, 1.2
+20_t_anm_reload_empty_p2 = vihr_t_reload_20e_p2, reload_empty_p2, 1.2
+20_t_anm_mag_check = vihr_t_check_20, check, 1.2
+20_t_anm_mag_check_empty = vihr_t_check_20, check_empty, 1.2
+30_t_anm_reload = vihr_t_reload_20_p1, reload_p1, 1.2
+30_t_anm_reload_p1 = vihr_t_reload_20_p1, reload_p1, 1.2
+30_t_anm_reload_p2 = vihr_t_reload_30_p2, reload_p2, 1.2
+30_t_anm_reload_empty = vihr_t_reload_20_p1, reload_empty_p1, 1.2
+30_t_anm_reload_empty_p1 = vihr_t_reload_20_p1, reload_empty_p1, 1.2
+30_t_anm_reload_empty_p2 = vihr_t_reload_30e_p2, reload_empty_p2, 1.2
+30_t_anm_mag_check = vihr_t_check_20, check, 1.2
+30_t_anm_mag_check_empty = vihr_t_check_20, check_empty, 1.2
+50_t_anm_reload = vihr_t_reload_50_p1, reload_p1, 1.2
+50_t_anm_reload_p1 = vihr_t_reload_50_p1, reload_p1, 1.2
+50_t_anm_reload_p2 = vihr_t_reload_50_p2, reload_p2, 1.2
+50_t_anm_reload_empty = vihr_t_reload_50_p1, reload_empty_p1, 1.2
+50_t_anm_reload_empty_p1 = vihr_t_reload_50_p1, reload_empty_p1, 1.2
+50_t_anm_reload_empty_p2 = vihr_t_reload_50e_p2, reload_empty_p2, 1.2
+50_t_anm_mag_check = vihr_t_check_50, check, 1.2
+50_t_anm_mag_check_empty = vihr_t_check_50, check_empty, 1.2
+v_anm_bore = vihr_v_bore, idle
+v_anm_hide = vihr_v_holster_e, idle
+v_anm_show = vihr_v_show_e, idle
+v_anm_idle = vihr_v_idle, idle
+v_anm_idle_aim = vihr_v_idle_aim, idle
+v_anm_idle_aim_moving = vihr_v_walk_aim, idle
+v_anm_idle_aim_moving_crouch = vihr_v_walk_aim, idle
+v_anm_idle_moving = vihr_v_walk, idle
+v_anm_idle_moving_crouch = vihr_v_walk, idle
+v_anm_shots = vihr_v_shoot, shoot
+v_anm_reload_misfire = vihr_v_unjam, unjam
+v_anm_switch_mode = vihr_v_firemode, idle
+v_anm_idle_sprint = vihr_v_idle_sprint, idle
+v_anm_reload = vihr_v_reload_20_p1, reload_p1, 1.2
+v_anm_reload_p1 = vihr_v_reload_20_p1, reload_p1, 1.2
+v_anm_reload_p2 = vihr_v_reload_20_p2, reload_p2, 1.2
+v_anm_reload_empty = vihr_v_reload_20_p1, reload_empty_p1, 1.2
+v_anm_reload_empty_p1 = vihr_v_reload_20_p1, reload_empty_p1, 1.2
+v_anm_reload_empty_p2 = vihr_v_reload_20e_p2, reload_empty_p2, 1.2
+v_anm_mag_check = vihr_v_check_20, check, 1.2
+v_anm_mag_check_empty = vihr_v_check_20, check_empty, 1.2
+10_v_anm_reload = vihr_v_reload_10_p1, reload_p1, 1.2
+10_v_anm_reload_p1 = vihr_v_reload_10_p1, reload_p1, 1.2
+10_v_anm_reload_p2 = vihr_v_reload_10_p2, reload_p2, 1.2
+10_v_anm_reload_empty = vihr_v_reload_10_p1, reload_empty_p1, 1.2
+10_v_anm_reload_empty_p1 = vihr_v_reload_10_p1, reload_empty_p1, 1.2
+10_v_anm_reload_empty_p2 = vihr_v_reload_10e_p2, reload_empty_p2, 1.2
+10_v_anm_mag_check = vihr_v_check_10, check, 1.2
+10_v_anm_mag_check_empty = vihr_v_check_10, check_empty, 1.2
+20_v_anm_reload = vihr_v_reload_20_p1, reload_p1, 1.2
+20_v_anm_reload_p1 = vihr_v_reload_20_p1, reload_p1, 1.2
+20_v_anm_reload_p2 = vihr_v_reload_20_p2, reload_p2, 1.2
+20_v_anm_reload_empty = vihr_v_reload_20_p1, reload_empty_p1, 1.2
+20_v_anm_reload_empty_p1 = vihr_v_reload_20_p1, reload_empty_p1, 1.2
+20_v_anm_reload_empty_p2 = vihr_v_reload_20e_p2, reload_empty_p2, 1.2
+20_v_anm_mag_check = vihr_v_check_20, check, 1.2
+20_v_anm_mag_check_empty = vihr_v_check_20, check_empty, 1.2
+30_v_anm_reload = vihr_v_reload_20_p1, reload_p1, 1.2
+30_v_anm_reload_p1 = vihr_v_reload_20_p1, reload_p1, 1.2
+30_v_anm_reload_p2 = vihr_v_reload_30_p2, reload_p2, 1.2
+30_v_anm_reload_empty = vihr_v_reload_20_p1, reload_empty_p1, 1.2
+30_v_anm_reload_empty_p1 = vihr_v_reload_20_p1, reload_empty_p1, 1.2
+30_v_anm_reload_empty_p2 = vihr_v_reload_30e_p2, reload_empty_p2, 1.2
+30_v_anm_mag_check = vihr_v_check_20, check, 1.2
+30_v_anm_mag_check_empty = vihr_v_check_20, check_empty, 1.2
+50_v_anm_reload = vihr_v_reload_50_p1, reload_p1, 1.2
+50_v_anm_reload_p1 = vihr_v_reload_50_p1, reload_p1, 1.2
+50_v_anm_reload_p2 = vihr_v_reload_50_p2, reload_p2, 1.2
+50_v_anm_reload_empty = vihr_v_reload_50_p1, reload_empty_p1, 1.2
+50_v_anm_reload_empty_p1 = vihr_v_reload_50_p1, reload_empty_p1, 1.2
+50_v_anm_reload_empty_p2 = vihr_v_reload_50e_p2, reload_empty_p2, 1.2
+50_v_anm_mag_check = vihr_v_check_50, check, 1.2
+50_v_anm_mag_check_empty = vihr_v_check_50, check_empty, 1.2
+[vihr_anim_att]:ar_barrel_3_att
+weapon_lenght	=	0.13
+bullet_speed					= 0.95
+rpm_koeff						= 0.056
+k_hit_koeff						= 0.95
+fire_dispersion_base		= 0.15
+impair_koeff					= 0.9
+;aim_hud_offset_pos				= -0.06, 0.028, -0.07
+;aim_hud_offset_pos_16x9		= -0.06, 0.028, -0.07
+;aim_hud_offset_rot					= 0.015, 0.004, 0
+;aim_hud_offset_rot_16x9		= 0.015, 0.004, 0
+
+aim_hud_offset_pos				= -0.07, 0.028, -0.1
+aim_hud_offset_pos_16x9		= -0.07, 0.028, -0.1
+aim_hud_offset_rot					= 0.015, 0.004, 0
+aim_hud_offset_rot_16x9		= 0.015, 0.004, 0
+aimpoint_offset_y = 0.08698
+h_anm_bore                          					= vihr_h_bore, idle
+h_anm_hide											= vihr_h_holster_e, idle
+h_anm_show											= vihr_h_show_e, idle
+h_anm_idle												= vihr_h_idle, idle
+h_anm_idle_aim									= vihr_h_idle_aim, idle
+h_anm_idle_aim_moving						= vihr_h_walk_aim, idle
+h_anm_idle_aim_moving_crouch		= vihr_h_walk_aim, idle
+h_anm_idle_moving								= vihr_h_walk, idle
+h_anm_idle_moving_crouch				= vihr_h_walk, idle
+h_anm_shots											= vihr_h_shoot, shoot
+h_anm_reload_misfire							= vihr_h_unjam, unjam
+h_anm_switch_mode							= vihr_h_firemode, idle
+h_anm_idle_sprint							= vihr_h_idle_sprint, idle
+h_anm_reload											= vihr_h_reload_20_p1, reload_p1, 1.2
+h_anm_reload_p1									= vihr_h_reload_20_p1, reload_p1, 1.2
+h_anm_reload_p2									= vihr_h_reload_20_p2, reload_p2, 1.2
+h_anm_reload_empty							= vihr_h_reload_20_p1, reload_empty_p1, 1.2
+h_anm_reload_empty_p1					= vihr_h_reload_20_p1, reload_empty_p1, 1.2
+h_anm_reload_empty_p2					= vihr_h_reload_20e_p2, reload_empty_p2, 1.2
+h_anm_mag_check								= vihr_h_check_20, check, 1.2
+h_anm_mag_check_empty					= vihr_h_check_20, check_empty, 1.2
+10_h_anm_reload									= vihr_h_reload_10_p1, reload_p1, 1.2
+10_h_anm_reload_p1							= vihr_h_reload_10_p1, reload_p1, 1.2
+10_h_anm_reload_p2							= vihr_h_reload_10_p2, reload_p2, 1.2
+10_h_anm_reload_empty					= vihr_h_reload_10_p1, reload_empty_p1, 1.2
+10_h_anm_reload_empty_p1				= vihr_h_reload_10_p1, reload_empty_p1, 1.2
+10_h_anm_reload_empty_p2				= vihr_h_reload_10e_p2, reload_empty_p2, 1.2
+10_h_anm_mag_check							= vihr_h_check_10, check, 1.2
+10_h_anm_mag_check_empty				= vihr_h_check_10, check_empty, 1.2
+20_h_anm_reload									= vihr_h_reload_20_p1, reload_p1, 1.2
+20_h_anm_reload_p1							= vihr_h_reload_20_p1, reload_p1, 1.2
+20_h_anm_reload_p2							= vihr_h_reload_20_p2, reload_p2, 1.2
+20_h_anm_reload_empty					= vihr_h_reload_20_p1, reload_empty_p1, 1.2
+20_h_anm_reload_empty_p1				= vihr_h_reload_20_p1, reload_empty_p1, 1.2
+20_h_anm_reload_empty_p2				= vihr_h_reload_20e_p2, reload_empty_p2, 1.2
+20_h_anm_mag_check							= vihr_h_check_20, check, 1.2
+20_h_anm_mag_check_empty				= vihr_h_check_20, check_empty, 1.2
+30_h_anm_reload									= vihr_h_reload_20_p1, reload_p1, 1.2
+30_h_anm_reload_p1							= vihr_h_reload_20_p1, reload_p1, 1.2
+30_h_anm_reload_p2							= vihr_h_reload_30_p2, reload_p2, 1.2
+30_h_anm_reload_empty					= vihr_h_reload_20_p1, reload_empty_p1, 1.2
+30_h_anm_reload_empty_p1				= vihr_h_reload_20_p1, reload_empty_p1, 1.2
+30_h_anm_reload_empty_p2				= vihr_h_reload_30e_p2, reload_empty_p2, 1.2
+30_h_anm_mag_check							= vihr_h_check_20, check, 1.2
+30_h_anm_mag_check_empty				= vihr_h_check_20, check_empty, 1.2
+50_h_anm_reload								= vihr_h_reload_50_p1, reload_p1, 1.2
+50_h_anm_reload_p1							= vihr_h_reload_50_p1, reload_p1, 1.2
+50_h_anm_reload_p2							= vihr_h_reload_50_p2, reload_p2, 1.2
+50_h_anm_reload_empty					= vihr_h_reload_50_p1, reload_empty_p1, 1.2
+50_h_anm_reload_empty_p1				= vihr_h_reload_50_p1, reload_empty_p1, 1.2
+50_h_anm_reload_empty_p2				= vihr_h_reload_50e_p2, reload_empty_p2, 1.2
+50_h_anm_mag_check							= vihr_h_check_50, check, 1.2
+50_h_anm_mag_check_empty				= vihr_h_check_50, check_empty, 1.2
+50_h_anm_mag_check							= vihr_h_check_50, check, 1.2
+50_h_anm_mag_check_empty				= vihr_h_check_50, check_empty, 1.2
+r_anm_bore                          				= vihr_r_bore, idle
+r_anm_hide											= vihr_r_holster_e, idle
+r_anm_show										= vihr_r_show_e, idle
+r_anm_idle											= vihr_r_idle, idle
+r_anm_idle_aim									= vihr_r_idle_aim, idle
+r_anm_idle_aim_moving						= vihr_r_walk_aim, idle
+r_anm_idle_aim_moving_crouch			= vihr_r_walk_aim, idle
+r_anm_idle_moving								= vihr_r_walk, idle
+r_anm_idle_moving_crouch					= vihr_r_walk, idle
+r_anm_shots										= vihr_r_shoot, shoot
+r_anm_reload_misfire							= vihr_r_unjam, unjam
+r_anm_switch_mode							= vihr_r_firemode, idle
+r_anm_idle_sprint								= vihr_r_idle_sprint, idle
+r_anm_reload										= vihr_r_reload_20_p1, reload_p1, 1.2
+r_anm_reload_p1									= vihr_r_reload_20_p1, reload_p1, 1.2
+r_anm_reload_p2									= vihr_r_reload_20_p2, reload_p2, 1.2
+r_anm_reload_empty							= vihr_r_reload_20_p1, reload_empty_p1, 1.2
+r_anm_reload_empty_p1						= vihr_r_reload_20_p1, reload_empty_p1, 1.2
+r_anm_reload_empty_p2						= vihr_r_reload_20e_p2, reload_empty_p2, 1.2
+r_anm_mag_check								= vihr_r_check_20, check, 1.2
+r_anm_mag_check_empty					= vihr_r_check_20, check_empty, 1.2
+10_r_anm_reload									= vihr_r_reload_10_p1, reload_p1, 1.2
+10_r_anm_reload_p1							= vihr_r_reload_10_p1, reload_p1, 1.2
+10_r_anm_reload_p2							= vihr_r_reload_10_p2, reload_p2, 1.2
+10_r_anm_reload_empty						= vihr_r_reload_10_p1, reload_empty_p1, 1.2
+10_r_anm_reload_empty_p1				= vihr_r_reload_10_p1, reload_empty_p1, 1.2
+10_r_anm_reload_empty_p2				= vihr_r_reload_10e_p2, reload_empty_p2, 1.2
+10_r_anm_mag_check							= vihr_r_check_10, check, 1.2
+10_r_anm_mag_check_empty				= vihr_r_check_10, check_empty, 1.2
+20_r_anm_reload									= vihr_r_reload_20_p1, reload_p1, 1.2
+20_r_anm_reload_p1							= vihr_r_reload_20_p1, reload_p1, 1.2
+20_r_anm_reload_p2							= vihr_r_reload_20_p2, reload_p2, 1.2
+20_r_anm_reload_empty						= vihr_r_reload_20_p1, reload_empty_p1, 1.2
+20_r_anm_reload_empty_p1				= vihr_r_reload_20_p1, reload_empty_p1, 1.2
+20_r_anm_reload_empty_p2				= vihr_r_reload_20e_p2, reload_empty_p2, 1.2
+20_r_anm_mag_check							= vihr_r_check_20, check, 1.2
+20_r_anm_mag_check_empty				= vihr_r_check_20, check_empty, 1.2
+30_r_anm_reload									= vihr_r_reload_20_p1, reload_p1, 1.2
+30_r_anm_reload_p1							= vihr_r_reload_20_p1, reload_p1, 1.2
+30_r_anm_reload_p2							= vihr_r_reload_30_p2, reload_p2, 1.2
+30_r_anm_reload_empty						= vihr_r_reload_20_p1, reload_empty_p1, 1.2
+30_r_anm_reload_empty_p1				= vihr_r_reload_20_p1, reload_empty_p1, 1.2
+30_r_anm_reload_empty_p2				= vihr_r_reload_30e_p2, reload_empty_p2, 1.2
+30_r_anm_mag_check							= vihr_r_check_20, check, 1.2
+30_r_anm_mag_check_empty				= vihr_r_check_20, check_empty, 1.2
+50_r_anm_reload									= vihr_r_reload_50_p1, reload_p1, 1.2
+50_r_anm_reload_p1							= vihr_r_reload_50_p1, reload_p1, 1.2
+50_r_anm_reload_p2							= vihr_r_reload_50_p2, reload_p2, 1.2
+50_r_anm_reload_empty						= vihr_r_reload_50_p1, reload_empty_p1, 1.2
+50_r_anm_reload_empty_p1				= vihr_r_reload_50_p1, reload_empty_p1, 1.2
+50_r_anm_reload_empty_p2				= vihr_r_reload_50e_p2, reload_empty_p2, 1.2
+50_r_anm_mag_check							= vihr_r_check_50, check, 1.2
+50_r_anm_mag_check_empty				= vihr_r_check_50, check_empty, 1.2
+t_anm_bore                          				= vihr_t_bore, idle
+t_anm_hide											= vihr_t_holster_e, idle
+t_anm_show										= vihr_t_show_e, idle
+t_anm_idle											= vihr_t_idle, idle
+t_anm_idle_aim									= vihr_t_idle_aim, idle
+t_anm_idle_aim_moving					= vihr_t_walk_aim, idle
+t_anm_idle_aim_moving_crouch	= vihr_t_walk_aim, idle
+t_anm_idle_moving							= vihr_t_walk, idle
+t_anm_idle_moving_crouch				= vihr_t_walk, idle
+t_anm_shots										= vihr_t_shoot, shoot
+t_anm_reload_misfire						= vihr_t_unjam, unjam
+t_anm_switch_mode							= vihr_t_firemode, idle
+t_anm_idle_sprint							= vihr_t_idle_sprint, idle
+t_anm_reload										= vihr_t_reload_20_p1, reload_p1, 1.2
+t_anm_reload_p1								= vihr_t_reload_20_p1, reload_p1, 1.2
+t_anm_reload_p2								= vihr_t_reload_20_p2, reload_p2, 1.2
+t_anm_reload_empty							= vihr_t_reload_20_p1, reload_empty_p1, 1.2
+t_anm_reload_empty_p1					= vihr_t_reload_20_p1, reload_empty_p1, 1.2
+t_anm_reload_empty_p2					= vihr_t_reload_20e_p2, reload_empty_p2, 1.2
+t_anm_mag_check							= vihr_t_check_20, check, 1.2
+t_anm_mag_check_empty				= vihr_t_check_20, check_empty, 1.2
+10_t_anm_reload								= vihr_t_reload_10_p1, reload_p1, 1.2
+10_t_anm_reload_p1						= vihr_t_reload_10_p1, reload_p1, 1.2
+10_t_anm_reload_p2						= vihr_t_reload_10_p2, reload_p2, 1.2
+10_t_anm_reload_empty					= vihr_t_reload_10_p1, reload_empty_p1, 1.2
+10_t_anm_reload_empty_p1			= vihr_t_reload_10_p1, reload_empty_p1, 1.2
+10_t_anm_reload_empty_p2			= vihr_t_reload_10e_p2, reload_empty_p2, 1.2
+10_t_anm_mag_check						= vihr_t_check_10, check, 1.2
+10_t_anm_mag_check_empty			= vihr_t_check_10, check_empty, 1.2
+20_t_anm_reload								= vihr_t_reload_20_p1, reload_p1, 1.2
+20_t_anm_reload_p1						= vihr_t_reload_20_p1, reload_p1, 1.2
+20_t_anm_reload_p2						= vihr_t_reload_20_p2, reload_p2, 1.2
+20_t_anm_reload_empty					= vihr_t_reload_20_p1, reload_empty_p1, 1.2
+20_t_anm_reload_empty_p1			= vihr_t_reload_20_p1, reload_empty_p1, 1.2
+20_t_anm_reload_empty_p2			= vihr_t_reload_20e_p2, reload_empty_p2, 1.2
+20_t_anm_mag_check						= vihr_t_check_20, check, 1.2
+20_t_anm_mag_check_empty			= vihr_t_check_20, check_empty, 1.2
+30_t_anm_reload								= vihr_t_reload_20_p1, reload_p1, 1.2
+30_t_anm_reload_p1						= vihr_t_reload_20_p1, reload_p1, 1.2
+30_t_anm_reload_p2						= vihr_t_reload_30_p2, reload_p2, 1.2
+30_t_anm_reload_empty					= vihr_t_reload_20_p1, reload_empty_p1, 1.2
+30_t_anm_reload_empty_p1			= vihr_t_reload_20_p1, reload_empty_p1, 1.2
+30_t_anm_reload_empty_p2			= vihr_t_reload_30e_p2, reload_empty_p2, 1.2
+30_t_anm_mag_check						= vihr_t_check_20, check, 1.2
+30_t_anm_mag_check_empty			= vihr_t_check_20, check_empty, 1.2
+50_t_anm_reload								= vihr_t_reload_50_p1, reload_p1, 1.2
+50_t_anm_reload_p1						= vihr_t_reload_50_p1, reload_p1, 1.2
+50_t_anm_reload_p2						= vihr_t_reload_50_p2, reload_p2, 1.2
+50_t_anm_reload_empty					= vihr_t_reload_50_p1, reload_empty_p1, 1.2
+50_t_anm_reload_empty_p1			= vihr_t_reload_50_p1, reload_empty_p1, 1.2
+50_t_anm_reload_empty_p2			= vihr_t_reload_50e_p2, reload_empty_p2, 1.2
+50_t_anm_mag_check						= vihr_t_check_50, check, 1.2
+50_t_anm_mag_check_empty			= vihr_t_check_50, check_empty, 1.2
+v_anm_bore                          				= vihr_v_bore, idle
+v_anm_hide											= vihr_v_holster_e, idle
+v_anm_show										= vihr_v_show_e, idle
+v_anm_idle											= vihr_v_idle, idle
+v_anm_idle_aim									= vihr_v_idle_aim, idle
+v_anm_idle_aim_moving					= vihr_v_walk_aim, idle
+v_anm_idle_aim_moving_crouch	= vihr_v_walk_aim, idle
+v_anm_idle_moving							= vihr_v_walk, idle
+v_anm_idle_moving_crouch			= vihr_v_walk, idle
+v_anm_shots										= vihr_v_shoot, shoot
+v_anm_reload_misfire						= vihr_v_unjam, unjam
+v_anm_switch_mode						= vihr_v_firemode, idle
+v_anm_idle_sprint							= vihr_v_idle_sprint, idle
+v_anm_reload										= vihr_v_reload_20_p1, reload_p1, 1.2
+v_anm_reload_p1								= vihr_v_reload_20_p1, reload_p1, 1.2
+v_anm_reload_p2								= vihr_v_reload_20_p2, reload_p2, 1.2
+v_anm_reload_empty						= vihr_v_reload_20_p1, reload_empty_p1, 1.2
+v_anm_reload_empty_p1					= vihr_v_reload_20_p1, reload_empty_p1, 1.2
+v_anm_reload_empty_p2					= vihr_v_reload_20e_p2, reload_empty_p2, 1.2
+v_anm_mag_check							= vihr_v_check_20, check, 1.2
+v_anm_mag_check_empty				= vihr_v_check_20, check_empty, 1.2
+10_v_anm_reload								= vihr_v_reload_10_p1, reload_p1, 1.2
+10_v_anm_reload_p1						= vihr_v_reload_10_p1, reload_p1, 1.2
+10_v_anm_reload_p2						= vihr_v_reload_10_p2, reload_p2, 1.2
+10_v_anm_reload_empty					= vihr_v_reload_10_p1, reload_empty_p1, 1.2
+10_v_anm_reload_empty_p1			= vihr_v_reload_10_p1, reload_empty_p1, 1.2
+10_v_anm_reload_empty_p2			= vihr_v_reload_10e_p2, reload_empty_p2, 1.2
+10_v_anm_mag_check						= vihr_v_check_10, check, 1.2
+10_v_anm_mag_check_empty			= vihr_v_check_10, check_empty, 1.2
+20_v_anm_reload								= vihr_v_reload_20_p1, reload_p1, 1.2
+20_v_anm_reload_p1						= vihr_v_reload_20_p1, reload_p1, 1.2
+20_v_anm_reload_p2						= vihr_v_reload_20_p2, reload_p2, 1.2
+20_v_anm_reload_empty					= vihr_v_reload_20_p1, reload_empty_p1, 1.2
+20_v_anm_reload_empty_p1			= vihr_v_reload_20_p1, reload_empty_p1, 1.2
+20_v_anm_reload_empty_p2			= vihr_v_reload_20e_p2, reload_empty_p2, 1.2
+20_v_anm_mag_check						= vihr_v_check_20, check, 1.2
+20_v_anm_mag_check_empty			= vihr_v_check_20, check_empty, 1.2
+30_v_anm_reload								= vihr_v_reload_20_p1, reload_p1, 1.2
+30_v_anm_reload_p1						= vihr_v_reload_20_p1, reload_p1, 1.2
+30_v_anm_reload_p2						= vihr_v_reload_30_p2, reload_p2, 1.2
+30_v_anm_reload_empty					= vihr_v_reload_20_p1, reload_empty_p1, 1.2
+30_v_anm_reload_empty_p1			= vihr_v_reload_20_p1, reload_empty_p1, 1.2
+30_v_anm_reload_empty_p2			= vihr_v_reload_30e_p2, reload_empty_p2, 1.2
+30_v_anm_mag_check						= vihr_v_check_20, check, 1.2
+30_v_anm_mag_check_empty			= vihr_v_check_20, check_empty, 1.2
+50_v_anm_reload							= vihr_v_reload_50_p1, reload_p1, 1.2
+50_v_anm_reload_p1						= vihr_v_reload_50_p1, reload_p1, 1.2
+50_v_anm_reload_p2						= vihr_v_reload_50_p2, reload_p2, 1.2
+50_v_anm_reload_empty					= vihr_v_reload_50_p1, reload_empty_p1, 1.2
+50_v_anm_reload_empty_p1			= vihr_v_reload_50_p1, reload_empty_p1, 1.2
+50_v_anm_reload_empty_p2			= vihr_v_reload_50e_p2, reload_empty_p2, 1.2
+50_v_anm_mag_check						= vihr_v_check_50, check, 1.2
+50_v_anm_mag_check_empty			= vihr_v_check_50, check_empty, 1.2
+
+[val_zatvor]:attachment_base_ak
+kind = val
+inv_ui_sign				= val_bolt
+visual						= w_att_huds\val_zatvor	
+inv_name					= val_zatvor
+inv_name_short			= val_zatvorS
+cost							= 1050
+inv_weight					= 0.27
+inv_grid_x					= 9
+inv_grid_y					= 15
+1icon_layer = clean_lub1_ico
+attachment_point = val_zatvor|0,0,0|0,0,0
+attachment_slots = val_spring|wpn_body|0,0,0|0,0,0#ak_zatvor_rh|zatvor|-0.004,-0.0116,-0.035|0,0,0
+item_tags = zatvor
+override_section = val_zatvor_attributes
+
+[val_zatvor_attributes]
+rpm = 900
+zoom_rotate_time = 0.06
+[val_zatvor_att]:rpm_900_zatvor_att
+zoom_rotate_time = 0.06
+recoil_koeff = -0.1
+
+[val_spring]:attachment_base_ak
+kind = val
+inv_ui_sign				= val_spr
+visual						= w_att_huds\val_spring	
+inv_name					= val_spring
+inv_name_short			= val_springS
+cost							= 550
+inv_weight					= 0.1
+inv_grid_x					= 10
+inv_grid_y					= 15
+1icon_layer = clean1_ico
+attachment_point		= val_spring|0,0,0|0,0,0
+attachment_slots		= val_cover|wpn_body|0,0,0|0,0,0
+item_tags = spring
+override_section = val_spring_attributes
+
+[val_spring_attributes]
+
+[vihr_spring]:val_spring
+kind = val
+inv_ui_sign				= vihr_spr
+visual						= w_att_huds\vihr_spring	
+inv_name					= vihr_spring
+inv_name_short			= vihr_springS
+cost							= 600
+inv_grid_x					= 11
+override_section = vihr_spring_attributes
+
+[vihr_spring_attributes]
+
+[val_cover]:attachment_base_ak
+kind = val
+inv_ui_sign				= val_dc
+visual						= w_att_huds\val_cover	
+inv_name					= val_cover
+inv_name_short			= val_coverS
+cost							= 600
+inv_weight					= 0.11
+inv_grid_width			= 2
+inv_grid_x					= 12
+inv_grid_y					= 15
+attachment_point		= val_cover|0,0,0|0,0,0
+override_section = val_cover_attributes
+
+[val_cover_attributes]
+zoom_rotate_time = -0.02
+impair_koeff = 0.9
+
+[val_cover_asm]:val_cover
+kind = val
+inv_ui_sign				= val_pica
+visual						= w_att_huds\val_cover_asm	
+description				= pica_15_up
+inv_name					= val_cover_asm
+inv_name_short			= val_cover_asmS
+cost							= 1200
+inv_weight					= 0.13
+inv_grid_x					= 14
+attachment_slots		=	pica_15|wpn_body|0,0.0704,-0.026|0,0,0
+item_tags =	cover
+override_section = val_cover_asm_attributes
+
+[val_cover_asm_attributes]
+zoom_rotate_time = -0.02
+
+[val_grip]:attachment_base_ak
+kind = val
+inv_ui_sign				= val_pg
+visual						= w_att_huds\val_grip	
+inv_name					= val_grip
+inv_name_short			= val_gripS
+cost							= 600
+inv_weight					= 0.11
+inv_grid_x					= 16
+inv_grid_y					= 15
+attachment_point		= val_grip|0,0,0|0,0,0
+override_section = val_grip_attributes
+
+[val_grip_attributes]
+zoom_rotate_time = -0.02
+
+[val_grip_b]:val_grip
+kind = val
+visual						= w_att_huds\val_grip_b	
+inv_grid_x					= 17
+override_section = val_grip_b_attributes
+
+cost = 600
+inv_weight = 0.11
+[val_grip_b_attributes]
+zoom_rotate_time = -0.02
+
+[val_hg]:attachment_base_ak
+kind = val
+inv_ui_sign				= val_hg
+visual						= w_att_huds\val_hg	
+inv_name					= val_hg
+inv_name_short			= val_hg
+cost							= 600
+inv_weight					= 0.1
+inv_grid_x					= 18
+inv_grid_y					= 15
+attachment_point		= val_hg|0,0,0|0,0,0
+attachment_slots		= val_silencer|wpn_body|0,0,0|0,0,0
+override_section		=	val_hg_attributes
+
+[val_hg_attributes]
+animation_prefix = c_
+[val_hg_att]:c_attributes,hg_3_att
+
+[vintorez_hg]:val_hg
+kind = val
+inv_ui_sign				= vss_hg
+visual						= w_att_huds\vintorez_hg	
+inv_name					= vintorez_hg
+inv_name_short			= vintorez_hgS
+cost							= 650
+inv_grid_x					= 19
+override_section = vintorez_hg_attributes
+
+[vintorez_hg_attributes]
+animation_prefix = c_
+
+[val_silencer_short]:attachment_base_ak
+kind = val
+inv_ui_sign				= val_sils
+visual						= w_att_huds\val_silencer_short	
+description				= pica_3_up3
+inv_name					= val_silencer_short
+inv_name_short			= val_silencer_shortS
+cost							= 1800
+inv_weight					= 0.23
+inv_grid_x         = 22
+inv_grid_y         = 15
+attachment_point = val_silencer|0,0,0|0,0,0
+attachment_slots = pica_3|wpn_body|-0.0233,0.04678,0.295|0,0,-90#pica_3|wpn_body|0.0233,0.04678,0.295|0,0,90#pica_3|wpn_body|0,0.0222,0.251|0,0,180#picgrp|wpn_body|0,-0.0134,0.052|0,0,0
+override_section = val_silencer_short_attributes		;ar_muz_sf_mini_monster_attributes
+[val_silencer_short_attributes]										;:silencer_base_attributes
+fire_point = 0,0,0.08
+weapon_lenght = 0.12
+impair_koeff = 1.1
+zoom_rotate_time = 0.02
+recoil_koeff            = -0.07
+inertia_koeff            = 1.1
+
+[val_silencer]:val_silencer_short
+kind = val
+inv_ui_sign				= val_sil
+visual						= w_att_huds\val_silencer	
+description				= no_attributes_descr
+inv_name					= val_silencer
+inv_name_short			= val_silencerS
+cost							= 2500
+inv_weight					= 0.67
+inv_grid_width			= 2
+inv_grid_x					= 20
+attachment_slots		= b3|muzzle|0,-0.021468,0.1337|0,0,0#val_silencer_rail|wpn_body|0,0,0|0,0,0		;b3 0.042972		
+override_section = val_silencer_attributes
+
+[val_silencer_attributes]
+silencer_status = 1
+silencer_name = wpn_addon_silencer
+silencer_x = 1
+silencer_y = 1
+weapon_lenght = 0.2
+impair_koeff = 1.4
+zoom_rotate_time = 0.08
+recoil_koeff = -0.14
+inertia_koeff = 1.5
+[val_silencer_att]:silencer_base_attributes
+weapon_lenght = 0.2
+impair_koeff = 1.4
+zoom_rotate_time = 0.08
+recoil_koeff            = -0.25
+inertia_koeff            = 1.5
+
+[val_silencer_toz]:attachment_base_ak
+kind = val
+inv_ui_sign				= 6p29m
+visual						= w_att_huds\val_silencer_toz_6p29m	
+description				= pica_3_up3
+inv_name					= val_silencer_toz_6p29m
+inv_name_short			= val_silencer_toz_6p29mS
+cost							= 1300
+inv_weight					= 0.13
+inv_grid_x        			= 7
+inv_grid_y        			= 16
+attachment_point = val_silencer_rail|0,0,0|0,0,0
+attachment_slots =	pica_3|wpn_body|-0.0233,0.0454,0.295|0,0,-90#pica_3|wpn_body|0.0233,0.0456,0.251|0,0,90#pica_3|wpn_body|0,0.0222,0.251|0,0,180#picgrp|wpn_body|0,-0.0134,0.052|0,0,0
+item_tags =	rail
+override_section = val_silencer_toz_attributes
+
+[val_silencer_toz_attributes]
+zoom_rotate_time = 0.02
+inertia_koeff = 1.1
+[hg_2_att]
+zoom_rotate_time = 0.02
+recoil_koeff            = -0.09
+inertia_koeff           = 1.1
+
+[val_silencer_rail]:val_silencer_toz
+kind = val
+inv_ui_sign				= val_rail
+visual						= w_att_huds\val_silencer_grp_rail	
+description				= pica_3_up
+inv_name					= val_silencer_grp_rail
+inv_name_short			= val_silencer_grp_railS
+cost							= 700
+inv_weight					= 0.1
+inv_grid_x        			= 6
+attachment_slots = pica_3|wpn_body|0,0.0222,0.251|0,0,180#picgrp|wpn_body|0,-0.0134,0.052|0,0,0
+override_section = val_silencer_rail_attributes
+
+[val_silencer_rail_attributes]
+inertia_koeff = 1.1
+[hg_1_att]
+recoil_koeff            = -0.08
+inertia_koeff           = 1.1
+
+[val_silencer_hexa]:val_silencer_toz
+kind = val
+inv_ui_sign				= val_hexa
+visual						= w_att_huds\val_silencer_grp_hexa	
+description				= pica_3_up
+inv_name					= val_silencer_grp_hexa
+inv_name_short		= val_silencer_grp_hexaS
+cost							= 1500
+inv_weight				= 0.16
+inv_grid_width			= 2
+inv_grid_x				= 36
+inv_grid_y				= 21
+attachment_slots 	= pica_3|wpn_body|0,0.02224,0.37|0,0,180#picgrp|wpn_body|0,-0.0134,0.052|0,0,0#pica_3|wpn_body|-0.0258,0.046,0.251|0,0,-90#pica_3|wpn_body|0.0258,0.046,0.251|0,0,90
+override_section		= val_silencer_hexa_attributes
+
+[val_silencer_hexa_attributes]
+
+[val_silencer_b3]:attachment_base_ak
+kind = val
+inv_ui_sign				= zen_b3
+visual						= w_att_huds\val_silencer_zenit_b3	
+description				= pica_3_up
+inv_name					= val_silencer_zenit_b3
+inv_name_short			= val_silencer_zenit_b3S
+cost							= 550
+inv_weight					= 0.08
+inv_grid_x        			= 8
+inv_grid_y        			= 16
+attachment_point = b3|0,0,0|0,0,0
+attachment_slots = pica_3|muzzle|0,0,0|0,0,180
+item_tags =	rail
+override_section = val_silencer_b3_attributes
+
+[val_silencer_b3_attributes]
+
+[val_stock]:attachment_base_ak
+kind = val
+inv_ui_sign				= val_stk
+visual						= w_att_huds\val_stock	
+inv_name					= val_stock
+inv_name_short			= val_stock
+cost							= 1150
+inv_weight					= 0.23
+inv_grid_width			= 2
+inv_grid_x        			= 9
+inv_grid_y        			= 16
+attachment_point		= val_stock|0,0,0|0,0,0
+attachment_slots		= ak_stock_pad|wpn_body|0,-0.006 ,-0.015|0,4,0
+override_section = val_stock_attributes
+
+[val_stock_attributes]
+zoom_rotate_time = 0.01
+recoil_koeff = -0.18
+inertia_koeff = 0.8
+weapon_lenght = 0.25
+
+[val_stock_zenit_pt1]:val_stock
+kind = val
+inv_ui_sign				= val_pt1
+visual						= w_att_huds\val_stock_zenit_pt1	
+inv_name					= val_stock_zenit_pt1
+inv_name_short			= val_stock_zenit_pt1S
+cost							= 3200
+inv_weight					= 0.54
+inv_grid_x        			= 38
+inv_grid_y        			= 15
+attachment_slots		= ak_stock_pad|wpn_body|0,-0.0053,-0.0053|0,4,0
+item_tags	=	stock
+override_section = val_stock_zenit_pt1_attributes
+
+[val_stock_zenit_pt1_attributes]
+weapon_lenght = 0.25
+zoom_rotate_time = -0.01
+recoil_koeff = -0.25
+inertia_koeff = 0.8
+
+[val_stock_zenit_pt3]:val_stock
+kind = val
+inv_ui_sign				= val_pt3
+visual						= w_att_huds\val_stock_zenit_pt3
+inv_name					= val_stock_zenit_pt3
+inv_name_short		= val_stock_zenit_pt1S
+cost							= 3700
+inv_weight					= 0.48
+inv_grid_x        			= 38
+inv_grid_y        			= 14
+attachment_slots		= ak_stock_passd|wpn_body|0,-0.0053,-0.0053|0,4,0
+item_tags	=	stock
+override_section = val_stock_zenit_pt3_attributes
+
+[val_stock_zenit_pt3_attributes]
+weapon_lenght = 0.2
+zoom_rotate_time = -0.01
+recoil_koeff = -0.26
+inertia_koeff = 0.7
+
+[val_stock_buffer]:val_stock
+kind = val
+inv_ui_sign				= val_buff
+visual						= w_att_huds\val_stock_buffer	
+inv_name					= val_stock_buffer
+inv_name_short			= val_stock_bufferS
+cost							= 1250
+inv_weight					= 0.17
+inv_grid_x         = 38
+attachment_slots		= ar_stock|wpn_body|0,-0.0168,-0.0186|0,0,0
+item_tags	=	stock
+override_section = val_stock_buffer_attributes
+
+[val_stock_buffer_attributes]
+weapon_lenght = 0.15
+zoom_rotate_time = 0.02
+
+[vihr_barrel_foregrip]:attachment_base_ak
+kind = val
+inv_ui_sign				= vihr_fg
+visual						= w_att_huds\vihr_barrel_foregrip	
+inv_name					= vihr_barrel_foregrip
+inv_name_short			= vihr_barrel_foregripS
+cost							= 600
+inv_weight					= 0.1
+inv_grid_x        			= 11
+inv_grid_y        			= 16
+attachment_point		= vihr_barrel_foregrip|0,0,0|0,0,0
+override_section		=	vihr_barrel_foregrip_attributes
+
+[vihr_barrel_foregrip_attributes]
+zoom_rotate_time = -0.02
+recoil_koeff = -0.02
+inertia_koeff = 0.8
+animation_prefix = cd_
+[vihr_barrel_foregrip_att]:foregrip_folding_attributes,cd_attributes
+
+[vihr_barrel_foregrip_rail]:attachment_base_ak
+kind = val
+inv_ui_sign				= vihr_rail
+visual						= w_att_huds\vihr_barrel_foregrip_rail	
+description				= pica_3_up
+inv_name					= vihr_barrel_foregrip_rail
+inv_name_short			= vihr_barrel_foregrip_railS
+cost							= 650
+inv_weight					= 0.07
+inv_grid_x        			= 12
+inv_grid_y        			= 16
+attachment_point		= vihr_barrel_foregrip|0,0,0|0,0,0
+attachment_slots		= pica_3|wpn_body|0,0.022267,0.265|0,0,180#picgrp|wpn_body|0,-0.0133,0|0,0,0
+item_tags =	rail
+override_section = vihr_barrel_foregrip_rail_attributes
+
+[vihr_barrel_foregrip_rail_attributes]
+
+[vihr_hg]:attachment_base_ak
+kind = val
+inv_ui_sign				= vihr_hg
+visual						= w_att_huds\vihr_hg	
+inv_name					= vihr_hg
+inv_name_short			= vihr_hgS
+cost							= 650
+inv_weight					= 0.11
+inv_grid_x        			= 13
+inv_grid_y        			= 16
+attachment_point		= vihr_hg|0,0,0|0,0,0
+attachment_slots		= vihr_barrel_foregrip|wpn_body|0,0,0|0,0,0#veresk_hg_rails|wpn_body|0,0.025,0.128|0,0,0
+item_tags =	hg
+override_section =	vihr_hg_attributes
+
+[vihr_hg_attributes]
+animation_prefix = c_
+[vihr_hg_att]:c_attributes,hg_4_att
+
+[vihr_hg_mp60]:vihr_hg
+kind = val
+inv_ui_sign				= vihr_hg+
+visual						= w_att_huds\vihr_hg_mp60	
+description				= pica_5_up
+inv_name					= vihr_hg_mp60
+inv_name_short			= vihr_hg_mp60S
+cost							= 800
+inv_weight					= 0.13
+inv_grid_x        			= 14
+attachment_slots		= vihr_barrel_foregrip|wpn_body|0,0,0|0,0,0#pica_5|wpn_body|0.0148,0.0719,0.140|0,0,60#veresk_hg_rails|wpn_body|0,0.025,0.128|0,0,0
+override_section = vihr_hg_mp60_attributes
+
+[vihr_hg_mp60_attributes]
+animation_prefix = c_
+
+[vihr_silencer]:attachment_base_ak
+kind = val
+inv_ui_sign					= vihr_sil
+visual								= w_att_huds\vihr_silencer	
+inv_name						= vihr_silencer
+inv_name_short			= vihr_silencerS
+cost								= 1900
+inv_weight					= 0.48
+inv_grid_width				= 2
+inv_grid_x        				= 15
+inv_grid_y        				= 16
+attachment_point		= vihr_silencer|0,0,0|0,0,0
+attachment_slots		= vihr_silencer_mount|muzzle|0,0,0.06|0,0,0
+item_tags =	muzzle_device
+override_section = vihr_silencer_attributes
+
+[vihr_silencer_attributes]
+silencer_status = 1
+silencer_name = wpn_addon_silencer
+silencer_x = 1
+silencer_y = 1
+weapon_lenght = 0.3
+impair_koeff = 1.4
+zoom_rotate_time = 0.08
+recoil_koeff = -0.08
+inertia_koeff = 1.5
+
+[vihr_silencer_mount]:attachment_base_ak
+kind = val
+inv_ui_sign				= vihr_rail
+visual						= w_att_huds\vihr_silencer_mount	
+description				= pica_3_up2
+inv_name					= vihr_silencer_mount
+inv_name_short			= vihr_silencer_mountS
+cost							= 650
+inv_weight					= 0.48
+inv_grid_x        			= 17
+inv_grid_y        			= 16
+attachment_point = vihr_silencer_mount|0,0,0|0,0,0
+attachment_slots = pica_3|wpn_body|0,0.0237,0.3187|0,0,180#pica_3|wpn_body|0.02213,0.04575,0.2892|0,0,90
+item_tags =	rail
+override_section = vihr_silencer_mount_attributes
+
+[vihr_silencer_mount_attributes]
+
+[vintorez_stock_modern]:attachment_base_ak
+kind = val
+inv_ui_sign				= vss_stk+
+visual						= w_att_huds\vintorez_stock_modern	
+inv_name					= vintorez_stock_modern
+inv_name_short			= vintorez_stock_modernS
+cost							= 2200
+inv_weight					= 0.47
+inv_grid_width			=	2
+inv_grid_x        			= 20
+inv_grid_y        			= 16
+attachment_point		= vintorez_stock|0,0,0|0,0,0
+item_tags	=	stock
+override_section = vintorez_stock_modern_attributes
+
+[vintorez_stock_modern_attributes]
+weapon_lenght = 0.2
+zoom_rotate_time = -0.01
+recoil_koeff = -0.25
+inertia_koeff = 0.7
+
+[vintorez_stock]:vintorez_stock_modern
+kind = val
+inv_ui_sign				= vss_stk
+visual						= w_att_huds\vintorez_stock	
+inv_name					= vintorez_stock
+inv_name_short			= vintorez_stockS
+cost							= 1650
+inv_weight					= 0.55
+inv_grid_x        			= 18
+attachment_slots		= cheek|wpn_body|0,-0.024,-0.0105|0,0,0
+override_section = vintorez_stock_attributes
+
+[vintorez_stock_attributes]
+weapon_lenght = 0.25
+zoom_rotate_time = 0.07
+recoil_koeff = -0.24
+inertia_koeff = 0.6
+[vintorez_stock_att]
+weapon_lenght = 0.25
+zoom_rotate_time = 0.07
+recoil_koeff            = -0.31
+inertia_koeff          = 0.6
+
+[vintorez_stock_strap]:vintorez_stock_modern 
+kind = val
+visual						= w_att_huds\vintorez_stock_strap
+cost							= 1800
+inv_weight					= 0.64
+inv_grid_x         		= 18
+inv_grid_y         		= 21
+override_section = vintorez_stock_strap_attributes
+
+[vintorez_stock_strap_attributes]
+weapon_lenght = 0.25
+zoom_rotate_time = 0.04
+recoil_koeff = -0.23
+inertia_koeff = 0.6
+[vintorez_stock_strap_att]
+weapon_lenght = 0.25
+zoom_rotate_time = 0.04
+recoil_koeff            = -0.23
+inertia_koeff          = 0.6
+
+[mag_wpn_vintorez_9x39_pab9]:mag_wpn_base_ak,wg_wpn_val,ag_ammo_9x39_pab9
+inv_ui_sign					= vss
+visual							= w_att_huds\vintorez_mag_10
+inv_name						= vintorez_mag_10
+inv_name_short				= vintorez_mag_10S
+inv_grid_x						= 22
+inv_grid_y         				= 16
+inv_weight						= 0.1
+cost								= 400
+max_mag_size				= 10
+mag_size						= small
+override_section				= mag_wpn_vintorez_9x39_pab9_attributes
+override_section_hud			= val_10_hud_override
+
+[mag_wpn_vintorez_9x39_pab9_attributes]
+animation_prefix_mag = 10_
+[val_10_hud_override]
+snd_10_mag_in 			= weapons\main\val_10_mag_in
+snd_10_mag_out 			= weapons\main\val_10_mag_out
+[val_10_attributes]
+animation_prefix_mag	=	10_
+
+[mag_wpn_val_9x39_pab9]:mag_wpn_vintorez_9x39_pab9
+inv_ui_sign					= val
+visual							= w_att_huds\val_mag_20
+inv_name						= val_mag_20
+inv_name_short				= val_mag_20S
+inv_grid_x						= 23
+inv_grid_y         				= 15
+inv_weight						= 0.16
+cost								= 750
+max_mag_size				= 20
+override_section				= mag_wpn_val_9x39_pab9_attributes
+override_section_hud			= val_20_hud_override
+
+[mag_wpn_val_9x39_pab9_attributes]
+animation_prefix_mag = 20_
+[val_20_hud_override]
+snd_20_mag_in 			= weapons\main\val_20_mag_in
+snd_20_mag_out 			= weapons\main\val_20_mag_out
+[val_20_attributes]
+animation_prefix_mag	=	20_
+
+[mag_wpn_val_b_9x39_pab9]:mag_wpn_val_9x39_pab9
+visual							= w_att_huds\val_mag_20b
+inv_grid_y         				= 16
+override_section = mag_wpn_val_b_9x39_pab9_attributes
+
+[mag_wpn_val_b_9x39_pab9_attributes]
+animation_prefix_mag = 20_
+
+[mag_wpn_val_30_9x39_pab9]:mag_wpn_vintorez_9x39_pab9
+inv_ui_sign					= valm
+visual							= w_att_huds\val_mag_30
+inv_name						= val_mag_30
+inv_name_short				= val_mag_20S
+inv_grid_height				= 2
+inv_grid_x						= 24
+inv_grid_y         				= 15
+inv_weight						= 0.27
+cost								= 1050
+max_mag_size				= 30
+mag_size						= medium
+override_section				= mag_wpn_val_30_9x39_pab9_attributes
+override_section_hud			= val_30_std_hud_override
+
+[mag_wpn_val_30_9x39_pab9_attributes]
+animation_prefix_mag = 30_
+[val_30_std_hud_override]
+snd_30_mag_in 			= weapons\main\val_30_mag_in_std
+snd_30_mag_out 			= weapons\main\val_30_mag_out_std
+[val_30_attributes]
+animation_prefix_mag	=	30_
+
+[mag_wpn_vihr_9x39_pab9]:mag_wpn_val_30_9x39_pab9
+inv_ui_sign					= vihr
+visual							= w_att_huds\vihr_mag
+inv_name						= vihr_mag
+inv_name_short				= vihr_magS
+inv_grid_x						= 25
+cost								= 1000
+override_section_hud			= val_30_mtl_hud_override
+override_section = mag_wpn_vihr_9x39_pab9_attributes
+
+[mag_wpn_vihr_9x39_pab9_attributes]
+animation_prefix_mag = 30_
+[val_30_mtl_hud_override]
+snd_30_mag_in 			= weapons\main\val_30_mag_in_mtl
+snd_30_mag_out 			= weapons\main\val_30_mag_out_mtl
+
+[mag_wpn_vihr_50_9x39_pab9]:mag_wpn_val_30_9x39_pab9
+inv_ui_sign					= vihr_50
+visual							= w_att_huds\vihr_mag_50
+inv_name						= vihr_mag_50
+inv_name_short				= vihr_mag_50S
+description						= vihr_mag_50_descr
+inv_grid_x         				= 28
+inv_grid_y         				= 13
+inv_weight						= 0.53
+max_mag_size				= 50
+cost								= 1550
+override_section				= mag_wpn_vihr_50_9x39_pab9_attributes
+
+[mag_wpn_vihr_50_9x39_pab9_attributes]
+animation_prefix_mag = 50_

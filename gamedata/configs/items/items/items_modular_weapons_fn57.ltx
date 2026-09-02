@@ -1,0 +1,247 @@
+--\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ wpn_fn57 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+[57_trigger]:attachment_base
+kind  =  fn57
+inv_ui_sign				= 57_trig
+visual						= w_att_huds\57_trigger	
+inv_name					= 57_trigger
+inv_name_short			= 57_triggerS
+cost							= 1000
+inv_weight					= 0.07
+inv_grid_x         = 4
+inv_grid_y         = 35
+1icon_layer = clean_lub1_ico
+attachment_point	=	57_trigger|0,0,0|0,0,0
+attachment_slots	=	57_barrel|muzzle|0,0,0|0,0,0#beretta_upper|wpn_body|0,0.002,0.006|0,0,0
+item_tags =	trigger
+override_section = 57_trigger_attributes
+
+[57_trigger_attributes]
+
+[57_trigger_up]:57_trigger
+kind  =  fn57
+inv_ui_sign				= 57_trig+
+visual						= w_att_huds\57_trigger_up	
+inv_name					= 57_trigger_up
+inv_name_short			= 57_trigger_upS
+cost							= 3400
+inv_weight					= 0.08
+inv_grid_y         = 36
+override_section = 57_trigger_up_attributes
+
+[57_trigger_up_attributes]
+fire_modes = -1
+
+[57_barrel]:attachment_base
+kind  =  fn57
+inv_ui_sign				= 57_bar
+visual						= w_att_huds\pl15_barrel	
+inv_name					= 57_barrel
+inv_name_short			= 57_barrelS
+cost							= 2800
+inv_weight					= 0.09
+inv_grid_x         = 3
+inv_grid_y         = 35
+1icon_layer = clean1_ico
+attachment_point = 57_barrel|0,0,0|0,0,0
+attachment_slots	= 57_spring|zatvor|0,0,0|0,0,0
+item_tags = barrel
+override_section = 57_barrel_attributes
+
+[57_barrel_attributes]
+bullet_speed = 1
+k_hit_koeff = 0.9
+fire_dispersion_base = 0.19
+zoom_rotate_time = 0.03
+recoil_koeff = -0.03
+[57_barrel_att]
+bullet_speed              	= 1
+k_hit_koeff						= 0.9
+fire_dispersion_base		= 0.19
+zoom_rotate_time = 0.03
+recoil_koeff            = -0.17
+
+[57_barrel_up]:57_barrel
+kind  =  fn57
+inv_ui_sign				= 57_bar+
+visual						= w_att_huds\57_barrel_up	
+inv_name					= 57_barrel_up
+inv_name_short			= 57_barrel_upS
+cost							= 4150
+inv_weight					= 0.1
+inv_grid_y         = 36
+attachment_slots	=	57_spring|zatvor|0,0,0|0,0,0#57_muzzle|muzzle|0,0,0|0,0,0
+override_section = 57_barrel_up_attributes
+
+[57_barrel_up_attributes]
+bullet_speed = 1
+k_hit_koeff = 0.9
+fire_dispersion_base = 0.19
+zoom_rotate_time = 0.03
+recoil_koeff = -0.03
+impair_koeff = 1.1
+[57_barrel_up_att]:57_barrel_att
+impair_koeff = 1.1
+
+[57_spring]:attachment_base
+kind  =  fn57
+inv_ui_sign				= 57_spr
+visual						= w_att_huds\57_spring	
+inv_name					= 57_spring
+inv_name_short			= 57_springS
+cost							= 200
+inv_weight					= 0.02
+inv_grid_x         = 7
+inv_grid_y         = 35
+1icon_layer = clean1_ico
+attachment_point	=	57_spring|0,0,0|0,0,0
+attachment_slots	=	57_zatvor|zatvor|0,0,0|0,0,0
+item_tags = spring
+override_section = 57_spring_attributes
+
+[57_spring_attributes]
+
+[57_zatvor]:attachment_base
+kind  =  fn57
+inv_ui_sign				= 57_slide
+visual						= w_att_huds\57_zatvor
+inv_name					= 57_zatvor
+inv_name_short			= 57_zatvor
+cost							= 1050
+inv_weight					= 0.12
+inv_grid_width     = 2
+inv_grid_x         = 8
+inv_grid_y         = 35
+1icon_layer = clean_lub2_ico
+attachment_point = 57_zatvor|0,0,0|0,0,0
+attachment_slots = zatvor_side|zatvor|0,0.048578,-0.0154|0,0,0
+item_tags =	zatvor
+override_section = 57_zatvor_attributes
+
+[57_zatvor_attributes]
+zoom_rotate_time = 0.1
+rpm = 880
+impair_koeff = 0.8
+[57_zatvor_att]
+zoom_rotate_time = 0.1
+rpm = 880
+recoil_koeff = -0.2
+impair_koeff = 0.8
+
+[57_silencer]:attachment_base
+kind  =  fn57
+inv_ui_sign				= 57_sil
+visual						= w_att_huds\57_silencer_bnt
+inv_name					= 57_silencer_bnt
+inv_name_short			= 57_silencer_bntS
+cost								= 11250
+inv_weight					= 0.33
+inv_grid_width     		= 2
+inv_grid_x         			= 7
+inv_grid_y         			= 36
+attachment_point		=	57_muzzle|0,0,0|0,0,0
+item_tags =	muzzle_device
+override_section = 57_silencer_attributes
+
+[57_silencer_attributes]
+silencer_name = wpn_addon_silencer
+silencer_x = 1
+silencer_y = 1
+weapon_lenght = 0.15
+silencer_status = 1
+impair_koeff = 1.2
+zoom_rotate_time = 0.02
+recoil_koeff = -0.15
+inertia_koeff = 1.1
+
+[57_to_9mm_adapter]:attachment_base
+kind  =  fn57
+inv_ui_sign				= 57-to-9
+visual						= w_att_huds\57_to_9mm_adapter
+inv_name					= 57_to_9mm_adapter
+inv_name_short			= 57_to_9mm_adapterS
+cost							= 2450
+inv_weight					= 0.02
+inv_grid_width     		= 1
+inv_grid_height    		= 1
+inv_grid_x         			= 6
+inv_grid_y         			= 36
+attachment_point		=	57_muzzle|0,0,0|0,0,0
+attachment_slots		=	9mm_muzzle|muzzle|0,0,0|0,0,0
+item_tags =	muzzle_device
+override_section = 57_to_9mm_adapter_attributes
+
+[57_to_9mm_adapter_attributes]
+
+[mag_wpn_fn57_5.7x28_ss190]:mag_wpn_base,wg_wpn_fn57,ag_ammo_5.7x28_ss190
+inv_ui_sign					= 57_20
+visual							= w_att_huds\57_mag
+inv_name						= 57_mag
+inv_name_short				= 57_magS
+inv_grid_x         				= 9
+inv_grid_y         				= 36
+inv_weight						= 0.09
+cost								= 400
+max_mag_size				= 20
+mag_size						= small
+override_section				=	mag_wpn_fn57_5.7x28_ss190_attributes
+
+[mag_wpn_fn57_5.7x28_ss190_attributes]
+animation_prefix_mag = 17_
+
+[mag_wpn_fn57_30_5.7x28_ss190]:mag_wpn_fn57_5.7x28_ss190
+inv_ui_sign					= 57_30
+visual							= w_att_huds\57_mag30_mk
+inv_name						= 57_mag30_mk
+inv_name_short				= 57_mag30_mkS
+inv_grid_x         				= 10
+inv_grid_y         				= 35
+inv_weight						= 0.12
+cost								= 400
+max_mag_size				= 30
+mag_size						= small
+override_section				=	mag_wpn_fn57_30_5.7x28_ss190_attributes
+
+[mag_wpn_fn57_30_5.7x28_ss190_attributes]
+animation_prefix_mag = 33_
+
+[mag_wpn_fn57_30p_5.7x28_ss190]:mag_wpn_fn57_30_5.7x28_ss190
+visual							= w_att_huds\57_mag30_pro
+inv_name						= 57_mag30_pro
+inv_name_short				= 57_mag30_pro
+inv_grid_y         = 26
+override_section = mag_wpn_fn57_30p_5.7x28_ss190_attributes
+
+[mag_wpn_fn57_30p_5.7x28_ss190_attributes]
+animation_prefix_mag = 33_
+
+[mag_wpn_fn57_40_5.7x28_ss190]:mag_wpn_fn57_30_5.7x28_ss190
+inv_ui_sign					= 57_40
+visual							= w_att_huds\57_mag40
+inv_name						= 57_mag40
+inv_name_short				= 57_mag40S
+inv_grid_height    = 2
+inv_grid_x         = 11
+inv_weight						= 0.15
+cost								= 550
+max_mag_size				= 40
+mag_size						= medium
+override_section = mag_wpn_fn57_40_5.7x28_ss190_attributes
+
+[mag_wpn_fn57_40_5.7x28_ss190_attributes]
+animation_prefix_mag = 33_
+
+[mag_wpn_fn57_50_5.7x28_ss190]:mag_wpn_fn57_40_5.7x28_ss190
+inv_ui_sign					= 57_50
+visual							= w_att_huds\57_mag50
+inv_name						= 57_mag50
+inv_name_short			= 57_mag50S
+inv_grid_x         			= 37
+inv_weight					= 0.65
+cost								= 1750
+max_mag_size				= 55
+mag_size						= medium
+override_section			=	mag_wpn_fn57_50_5.7x28_ss190_attributes
+
+[mag_wpn_fn57_50_5.7x28_ss190_attributes]
+animation_prefix_mag = 50_

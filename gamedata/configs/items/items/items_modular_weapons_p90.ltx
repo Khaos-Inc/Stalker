@@ -1,0 +1,378 @@
+--\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ wpn_p90 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+[p90_zatvor]:attachment_base
+kind  =  p90
+inv_ui_sign				= p90_bolt
+visual						= w_att_huds\p90_zatvor	
+inv_name					= p90_zatvor
+inv_name_short			= p90_zatvor
+cost							= 1300
+inv_weight					= 0.17
+inv_grid_width			= 2
+inv_grid_x         			= 17
+inv_grid_y         			= 37
+1icon_layer = clean_lub2_ico
+attachment_point = p90_zatvor|0,0,0|0,0,0
+attachment_slots = p90_spring|wpn_body|0,0,0|0,0,0#p90_barrel|wpn_body|0,0,0|0,0,0
+item_tags = zatvor
+override_section = p90_zatvor_attributes
+
+[p90_zatvor_attributes]
+rpm = 800
+zoom_rotate_time = 0.08
+[p90_zatvor_att]:rpm_800_zatvor_att
+zoom_rotate_time = 0.08
+recoil_koeff = -0.45
+
+[p90_spring_stock]:attachment_base
+kind  =  p90
+inv_ui_sign				= p90_stock
+visual						= w_att_huds\p90_spring_stock	
+inv_name					= p90_spring_stock
+inv_name_short			= p90_spring_stockS
+cost							= 800
+inv_weight					= 0.1
+inv_grid_width			= 2
+inv_grid_x         			= 19
+inv_grid_y         			= 37
+1icon_layer = clean2_ico
+attachment_point		= p90_spring|0,0,0|0,0,0
+item_tags =	spring
+override_section = p90_spring_stock_attributes
+
+[p90_spring_stock_attributes]
+zoom_rotate_time = 0.01
+recoil_koeff = -0.05
+weapon_lenght = 0.01
+[p90_spring_stock_att]:ar_buffer_are_att
+weapon_lenght = 0.01
+
+[p90_spring_stock_ext]:p90_spring_stock
+kind  =  p90
+inv_ui_sign				= p90_stock+
+visual						= w_att_huds\p90_spring_stock_ext	
+inv_name					= p90_spring_stock_ext
+inv_name_short			= p90_spring_stock_extS
+cost							= 1300
+inv_weight					= 0.13
+inv_grid_x         			= 21
+override_section = p90_spring_stock_ext_attributes
+
+[p90_spring_stock_ext_attributes]
+weapon_lenght = 0.03
+zoom_rotate_time = -0.02
+recoil_koeff = -0.08
+inertia_koeff = 0.95
+
+[p90_barrel_ps90]:attachment_base
+kind  =  p90
+inv_ui_sign				= ps90_bar
+visual						= w_att_huds\p90_barrel_ps90	
+inv_name					= p90_barrel_ps90
+inv_name_short			= p90_barrel_ps90
+cost							= 1450
+inv_weight					= 0.22
+inv_grid_width			= 3
+inv_grid_x         			= 21
+inv_grid_y         			= 36
+1icon_layer = clean3_ico
+attachment_point = p90_barrel|0,0,0|0,0,0
+attachment_slots = p90_upper|wpn_body|0,0,0|0,0,0#p90_hg_ps90|wpn_body|0,0,0|0,0,0			;конфликт с p90_hg_echo1
+item_tags =	barrel
+override_section = p90_barrel_ps90_attributes
+
+[p90_barrel_ps90_attributes]
+fire_point = 0, 0, 0.15
+weapon_lenght = 0.18
+rpm_koeff = -0.125
+bullet_speed = 1.23
+k_hit_koeff = 1.4
+fire_dispersion_base = 0.12
+zoom_rotate_time = 0.09
+recoil_koeff = -0.05
+inertia_koeff = 1.2
+impair_koeff = 0.9
+[ps90_barrel_attributes]
+fire_point = 0, 0, 0.15
+weapon_lenght 				= 0.18
+rpm_koeff 						= -0.125
+bullet_speed              	= 1.23
+k_hit_koeff						= 1.4
+fire_dispersion_base		= 0.12
+zoom_rotate_time = 0.09
+recoil_koeff            = -0.4
+inertia_koeff            = 1.2
+impair_koeff					= 0.9
+
+[p90_hg_ps90]:attachment_base								;конфликт с p90_hg_echo1
+kind  =  p90
+inv_ui_sign				= ps90_hgP
+visual						= w_att_huds\p90_hg_ps90	
+description				= ar_hg_10
+inv_name					= p90_hg_ps90
+inv_name_short			= p90_hg_ps90S
+cost							= 850
+inv_weight					= 0.19
+inv_grid_width			= 2
+inv_grid_x					= 31
+inv_grid_y					= 37
+attachment_point		= p90_hg_ps90|0,0,0|0,0,0
+attachment_slots = pica_3|wpn_body|-0.0192,0.031,0.23|0,0,-90#pica_3|wpn_body|0.0192,0.031,0.23|0,0,90#pica_10|wpn_body|0,0.0691,0.16|0,0,0 
+item_tags	=	rail
+override_section = p90_hg_att
+[p90_hg_att]:cd_attributes,hg_16_att
+
+[p90_barrel]:p90_barrel_ps90
+kind  =  p90
+inv_ui_sign				= p90_bar
+visual						= w_att_huds\p90_barrel	
+inv_name					= p90_barrel
+inv_name_short			= p90_barrel
+cost							= 900
+inv_weight					= 0.11
+inv_grid_width			= 2
+inv_grid_x         			= 19
+1icon_layer = clean2_ico
+attachment_slots		= p90_upper|wpn_body|0,0,0|0,0,0#p90_muzzle|wpn_body|0,0,0|0,0,0
+override_section =	p90_barrel_attributes
+[p90_barrel_attributes]
+fire_point = 0, 0, 0.02
+bullet_speed              	= 1.11
+k_hit_koeff						= 1.1
+fire_dispersion_base		= 0.14
+zoom_rotate_time = 0.06
+recoil_koeff            = -0.03
+
+[p90_upper_ca]:attachment_base
+kind  =  p90
+inv_ui_sign				= p90_up_ca
+visual						= w_att_huds\p90_upper_ca	
+description				= pica_3_up2
+inv_name					= p90_upper_ca
+inv_name_short		= p90_upper_caS
+cost							= 1150
+inv_weight				= 0.25
+inv_grid_width			= 2
+inv_grid_x				= 23		
+inv_grid_y				= 37
+attachment_point	= p90_upper|0,0,0|0,0,0	
+attachment_slots		= p90_upper_ca|wpn_body|0,0,0|0,0,0#pica_3|wpn_body|-0.0211,0.0902,0.06|0,0,-90#pica_3|wpn_body|0.0211,0.0902,0.06|0,0,90#p90_hg|wpn_body|0,0,0|0,0,0			;конфликт с p90_hg_ps90
+item_tags				= upper
+override_section		= p90_upper_ca_attributes
+[p90_upper_ca_attributes]:cover_6_att
+aim_hud_offset_pos						= -0.045, 0.0265, -0.07
+aim_hud_offset_pos_16x9				= -0.045, 0.0265, -0.07
+aim_hud_offset_rot							= 0.013, 0.006, 0
+aim_hud_offset_rot_16x9				= 0.013, 0.006, 0
+
+override_section = cover_6_att
+recoil_koeff = 0
+impair_koeff = 0.8
+zoom_rotate_time = 0.01
+[cover_6_att]
+zoom_rotate_time = 0.01
+recoil_koeff            = -0.14
+impair_koeff              = 0.8
+
+[p90_hg_echo1]:attachment_base
+kind  =  p90
+inv_ui_sign				= p90_hgP
+visual						= w_att_huds\p90_hg_echo1	
+description				= ar_hg_4
+inv_name					= p90_hg_echo1
+inv_name_short		= p90_hg_echo1S
+cost							= 1200
+inv_weight				= 0.15
+inv_grid_width			= 2
+inv_grid_x				= 33
+inv_grid_y				= 37
+attachment_point	= p90_hg|0,0,0|0,0,0					
+attachment_slots		= pica_3|wpn_body|-0.0247,0.0325,0.162|0,0,-90#pica_4|wpn_body|0,0.0829,0.162|0,0,0#pica_3|wpn_body|-0.0247,0.0325,0.162|0,0,90#picgrp|wpn_body|0,-0.0262,-0.036|0,0,0
+item_tags	=	rail
+override_section = p90_hg_echo1_attributes
+
+[p90_hg_echo1_attributes]
+zoom_rotate_time = 0.02
+inertia_koeff = 1.1
+[p90_hg_echo1_att]
+zoom_rotate_time = 0.02
+recoil_koeff            = -0.09
+inertia_koeff           = 1.1
+
+[p90_upper_ca_rail]:attachment_base
+kind  =  p90
+inv_ui_sign				= p90_caP
+visual						= w_att_huds\p90_upper_ca_rail	
+description				= pica_13_up
+inv_name					= p90_upper_ca_rail
+inv_name_short			= p90_upper_ca_railS
+cost							= 700
+inv_weight					= 0.09
+inv_grid_x					= 25
+inv_grid_y					= 37
+attachment_point		=	p90_upper_ca|0,0,0|0,0,0
+attachment_slots		=	pica_13|wpn_body|0,0.115,0|0,0,0
+item_tags						= upper
+override_section			= p90_upper_ca_rail_attributes
+[p90_upper_ca_rail_attributes]
+aim_hud_offset_pos					= -0.0598, 0.022, -0.07
+aim_hud_offset_pos_16x9			= -0.0598, 0.022, -0.07
+aim_hud_offset_rot						= 0.013, 0.0052, 0
+aim_hud_offset_rot_16x9			= 0.013, 0.0052, 0
+aimpoint_offset_y = 0.10972
+
+[p90_upper_ca_reddot]:p90_upper_ca_rail
+kind  =  p90
+inv_ui_sign				= p90_caS
+visual						= w_att_huds\p90_upper_ca_reddot	
+inv_name					= p90_upper_ca_reddot
+inv_name_short			= p90_upper_ca_reddotS
+cost							= 750
+inv_weight					= 0.08
+inv_grid_x					= 26
+attachment_slots = aim_dot|wpn_body|0,0.11655,-0.07446|0,0,0			
+is_holo 						= true
+;holo_position_offset	= 0,0,0.33
+item_tags =	sights
+override_section = p90_upper_ca_reddot_attributes
+
+[p90_upper_ca_reddot_attributes]
+aim_hud_offset_pos = -0.0598, 0.022, -0.07
+aim_hud_offset_pos_16x9 = -0.0598, 0.022, -0.07
+aim_hud_offset_rot = 0.013, 0.0052, 0
+aim_hud_offset_rot_16x9 = 0.013, 0.0052, 0
+aimpoint_offset_y = 0.10972
+
+[p90_upper_tr]:p90_upper_ca
+kind  =  p90
+inv_ui_sign				= p90_up_tr
+visual						= w_att_huds\p90_upper_tr	
+description				= ar_hg_10
+inv_name					= p90_upper_tr
+inv_name_short			= p90_upper_trS
+cost							= 1300
+inv_weight					= 0.26
+inv_grid_x					= 27
+attachment_slots		= pica_3|wpn_body|-0.0175,0.0871,0.099|0,0,-90#pica_3|wpn_body|0.0175,0.0871,0.099|0,0,90#pica_10|wpn_body|0,0.09963,0.006|0,0,0#p90_hg|wpn_body|0,0,0|0,0,0												;#sight_front|wpn_body|0,0.09963,0.11|0,0,0#sight_rear|wpn_body|0,0.09963,0.006|0,0,0		
+override_section			= p90_upper_tr_attributes
+[p90_upper_tr_attributes]:p90_upper_ca_attributes
+aim_hud_offset_pos					= -0.0598, 0.03, -0.07
+aim_hud_offset_pos_16x9			= -0.0598, 0.03, -0.07
+aim_hud_offset_rot						= 0.01, 0.0052, 0
+aim_hud_offset_rot_16x9			= 0.01, 0.0052, 0
+aimpoint_offset_y = 0.10108
+
+[p90_upper_xf50]:p90_upper_ca
+kind  =  p90
+inv_ui_sign				= p90_up_xf
+visual						= w_att_huds\p90_upper_xf50	
+description				= ar_hg_9
+inv_name					= p90_upper_xf50
+inv_name_short			= p90_upper_xf50S
+cost							= 1350
+inv_weight					= 0.17
+inv_grid_x					= 29
+attachment_slots = pica_3|wpn_body|-0.0222,0.05014,0.14|0,0,-90#pica_3|wpn_body|0.0222,0.05014,0.14|0,0,90#pica_9|wpn_body|0,0.0828,0.058|0,0,0
+override_section			= p90_upper_xf50_attributes
+[p90_upper_xf50_attributes]:ar9_upper_a1_att
+aimpoint_offset_y = 0.11068
+
+[p90_muzzle]:attachment_base
+kind  =  p90
+inv_ui_sign				= p90_mb
+visual						= w_att_huds\p90_muzzle	
+inv_name					= p90_muzzle
+inv_name_short			= p90_muzzleS
+cost							= 500
+inv_weight					= 0.04
+inv_grid_x         			= 24
+inv_grid_y         			= 36
+attachment_point		= p90_muzzle|0,0,0|0,0,0
+attachment_slots		= p90_muzzle_silencer|wpn_body|0,0,0|0,0,0
+item_tags	=	muzzle_device
+override_section = p90_muzzle_attributes
+
+[p90_muzzle_attributes]
+weapon_lenght = 0.05
+recoil_koeff = -0.05
+
+[p90_muzzle_silencer]:attachment_base
+kind  =  p90
+inv_ui_sign				= p90_sil
+visual						= w_att_huds\p90_muzzle_silencer	
+inv_name					= p90_muzzle_silencer
+inv_name_short			= p90_muzzle_silencer
+cost							= 1200
+inv_weight					= 0.43
+inv_grid_width			= 2
+inv_grid_x					= 26
+inv_grid_y					= 36
+attachment_point		= p90_muzzle_silencer|0,0,0|0,0,0
+item_tags	=	muzzle_device
+override_section			= p90_muzzle_silencer_attributes
+
+[p90_muzzle_silencer_attributes]
+silencer_status = 1
+silencer_name = wpn_addon_silencer
+silencer_x = 1
+silencer_y = 1
+weapon_lenght = 0.2
+zoom_rotate_time = 0.06
+recoil_koeff = -0.11
+inertia_koeff = 1.3
+
+[p90_muzzle_nato]:p90_muzzle
+kind  =  p90
+inv_ui_sign				= p90_mN
+visual						= w_att_huds\p90_muzzle_nato	
+inv_name					= p90_muzzle_nato
+inv_name_short			= p90_muzzle_natoS
+cost							= 500
+inv_weight					= 0.02
+inv_grid_x         			= 25
+attachment_slots		= ar_muzzle|muzzle|0,0,0|0,0,0 
+override_section = p90_muzzle_nato_attributes
+
+[p90_muzzle_nato_attributes]
+weapon_lenght = 0.05
+recoil_koeff = -0.06
+
+[mag_wpn_p90_5.7x28_ss190]:mag_wpn_base,wg_wpn_p90,ag_ammo_5.7x28_ss190
+inv_ui_sign					= p90
+visual							= w_att_huds\p90_mag_r
+inv_name						= p90_mag
+inv_name_short				= p90_mag
+inv_grid_width				= 2
+inv_grid_x						= 28
+inv_grid_y						= 36
+inv_weight						= 0.15
+cost								= 650
+max_mag_size				= 50
+mag_size						= medium
+override_section				= mag_wpn_p90_5.7x28_ss190_attributes
+
+[mag_wpn_p90_5.7x28_ss190_attributes]
+animation_prefix_mag = 50_
+[p90_mag_attributes]
+animation_prefix_mag	=	50_
+
+[mag_wpn_p90_b_5.7x28_ss190]:mag_wpn_p90_5.7x28_ss190
+inv_ui_sign					= p90b
+visual							= w_att_huds\p90_mag_b
+inv_grid_x         				= 30
+override_section = mag_wpn_p90_b_5.7x28_ss190_attributes
+
+[mag_wpn_p90_b_5.7x28_ss190_attributes]
+animation_prefix_mag = 50_
+
+[mag_wpn_ar57_5.7x28_ss190]:mag_wpn_p90_5.7x28_ss190
+inv_ui_sign					= ar57
+visual							= w_att_huds\p90_mag_ar57
+inv_name						= p90_mag_ar57
+inv_name_short				= p90_mag_ar57S
+inv_grid_x         				= 32
+inv_weight						= 0.14
+override_section = mag_wpn_ar57_5.7x28_ss190_attributes
+
+[mag_wpn_ar57_5.7x28_ss190_attributes]
+animation_prefix_mag = 50_

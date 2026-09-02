@@ -4,18 +4,18 @@
 	</main_wnd>
 
 	<background x="28" y="41" width="764" height="90" stretch="1">
-		<texture>ui_inGame2_pda_buttons_background</texture>
+        <texture>ui_inGame2_pda_buttons_background</texture>
 	</background>
 
 	<line_devider x="34" y="90" width="753" height="3">
 		<auto_frameline x="0" y="0" width="208" height="3">
-			<texture>ui_inGame2_pda_map_devider</texture>
+	        <texture>ui_inGame2_pda_map_devider</texture>
 		</auto_frameline>
 		<auto_static x="208" y="0" width="337" height="3" stretch="1">
-			<texture>ui_inGame2_pda_map_devider_line</texture>
+	        <texture>ui_inGame2_pda_map_devider_line</texture>
 		</auto_static>
 		<auto_frameline x="545" y="0" width="208" height="3">
-			<texture>ui_inGame2_pda_map_devider</texture>
+	        <texture>ui_inGame2_pda_map_devider</texture>
 		</auto_frameline>
 	</line_devider>
 
@@ -33,29 +33,29 @@
 
 	<btn_second_task x="43" y="132" width="95" height="19" hint="ui_show_second_task_wnd" frame_mode="1" stretch="1">
 		<window_name>btn_second_task</window_name>
-		<texture_e>ui_inGame2_pda_missionlist_button_e</texture_e>
-		<texture_t>ui_inGame2_pda_missionlist_button_ht</texture_t>
-		<texture_h>ui_inGame2_pda_missionlist_button_ht</texture_h>
-		<text align="c" vert_align="c" x="0" y="0" width="96" height="19" font="letterica16">missions_list</text>
-		<text_color>
-			<t r="255" g="255" b="255"/>
-			<d r="255" g="255" b="255"/>
-			<e r="200" g="200" b="200"/>
-			<h r="170" g="170" b="170"/>
-		</text_color>
+        <texture_e>ui_inGame2_pda_missionlist_button_e</texture_e>
+        <texture_t>ui_inGame2_pda_missionlist_button_ht</texture_t>
+        <texture_h>ui_inGame2_pda_missionlist_button_ht</texture_h>
+        <text align="c" vert_align="c" x="0" y="0" width="96" height="19" font="letterica16">missions_list</text>
+        <text_color>
+            <t r="255" g="255" b="255"/>
+            <d r="255" g="255" b="255"/>
+            <e r="200" g="200" b="200"/>
+            <h r="170" g="170" b="170"/>
+        </text_color>
 	</btn_second_task>
 
 	<map_wnd scroll_enable="1" map_move_step="11">
 		<main_wnd x="28" y="149" width="764" height="555">
-			<auto_frameline x="0" y="0" width="764" height="555" vertical="1">
-				<texture>ui_inGame2_pda_map_background</texture>
-			</auto_frameline>
+	        <auto_frameline x="0" y="0" width="764" height="555" vertical="1">
+	            <texture>ui_inGame2_pda_map_background</texture>
+	        </auto_frameline>
 		</main_wnd>
 		<level_frame x="5" y="7" width="738" height="523" />
 		<main_map_frame x="5" y="4" width="757" height="551" dx="0" dy="3" sx="15" sy="22">
-			<auto_frameline x="0" y="0" width="739" height="526" vertical="1">
+	        <auto_frameline x="0" y="0" width="739" height="526" vertical="1">
 				<texture>ui_inGame2_pda_map_frame</texture>
-			</auto_frameline>
+	        </auto_frameline>
 		</main_map_frame>
 		<map_hint_item x="0" y="0" width="240" height="200" stretch="1">
 			<texture>ui_icons_PDA_tooltips</texture>
@@ -80,47 +80,47 @@
 
 	<filter_treasures x="186" y="132" width="143" height="19" stretch="1">
 		<window_name>filter_treasures</window_name>
-		<texture>ui_inGame2_pda_smallbutton</texture>
+        <texture>ui_inGame2_pda_smallbutton</texture>
 		<text x="-179" y="0" align="c" vert_align="c" font="letterica16">filter_treasures_text</text>
-		<text_color>
-			<t r="255" g="255" b="255"/>
-			<d r="255" g="255" b="255"/>
-			<e r="170" g="170" b="170"/>
-			<h r="255" g="255" b="255"/>
-		</text_color>
+        <text_color>
+            <t r="255" g="255" b="255"/>
+            <d r="255" g="255" b="255"/>
+            <e r="170" g="170" b="170"/>
+            <h r="255" g="255" b="255"/>
+        </text_color>
 	</filter_treasures>
 	<filter_primary_objects x="329" y="132" width="143" height="19" stretch="1">
 		<window_name>filter_primary_objects</window_name>
-		<texture>ui_inGame2_pda_smallbutton</texture>
+        <texture>ui_inGame2_pda_smallbutton</texture>
 		<text x="-179" y="0" align="c" vert_align="c" font="letterica16">filter_primary_objects_text</text>
-		<text_color>
-			<t r="255" g="255" b="255"/>
-			<d r="255" g="255" b="255"/>
-			<e r="170" g="170" b="170"/>
-			<h r="255" g="255" b="255"/>
-		</text_color>
+        <text_color>
+            <t r="255" g="255" b="255"/>
+            <d r="255" g="255" b="255"/>
+            <e r="170" g="170" b="170"/>
+            <h r="255" g="255" b="255"/>
+        </text_color>
 	</filter_primary_objects>
 	<filter_secondary_tasks x="472" y="132" width="143" height="19" stretch="1">
 		<window_name>filter_secondary_tasks</window_name>
-		<texture>ui_inGame2_pda_smallbutton</texture>
+        <texture>ui_inGame2_pda_smallbutton</texture>
 		<text x="-179" y="0" align="c" vert_align="c" font="letterica16">filter_secondary_tasks_text</text>
-		<text_color>
-			<t r="255" g="255" b="255"/>
-			<d r="255" g="255" b="255"/>
-			<e r="170" g="170" b="170"/>
-			<h r="255" g="255" b="255"/>
-		</text_color>
+        <text_color>
+            <t r="255" g="255" b="255"/>
+            <d r="255" g="255" b="255"/>
+            <e r="170" g="170" b="170"/>
+            <h r="255" g="255" b="255"/>
+        </text_color>
 	</filter_secondary_tasks>
 	<filter_quest_npcs x="616" y="132" width="143" height="19" stretch="1">
 		<window_name>filter_quest_npcs</window_name>
-		<texture>ui_inGame2_pda_smallbutton</texture>
+        <texture>ui_inGame2_pda_smallbutton</texture>
 		<text x="-179" y="0" align="c" vert_align="c" font="letterica16">filter_quest_npcs_text</text>
-		<text_color>
-			<t r="255" g="255" b="255"/>
-			<d r="255" g="255" b="255"/>
-			<e r="170" g="170" b="170"/>
-			<h r="255" g="255" b="255"/>
-		</text_color>
+        <text_color>
+            <t r="255" g="255" b="255"/>
+            <d r="255" g="255" b="255"/>
+            <e r="170" g="170" b="170"/>
+            <h r="255" g="255" b="255"/>
+        </text_color>
 	</filter_quest_npcs>
 
 	<storyline_task_item x="47" y="98" width="640" height="26">
@@ -179,9 +179,9 @@
 	<second_task_wnd x="8" y="10" width="280" height="523">
 		<background_frame x="0" y="0" width="275" height="513">
 			<texture>ui_icons_PDA_dialog</texture>
-			<auto_frameline x="12" y="33" width="253" height="3">
-				<texture>ui_inGame2_pda_map_devider</texture>
-			</auto_frameline>
+	        <auto_frameline x="12" y="33" width="253" height="3">
+	            <texture>ui_inGame2_pda_map_devider</texture>
+	        </auto_frameline>
 		</background_frame>
 		<t_caption x="12" y="15" width="64" height="14">
 			<text align="l" font="letterica16" r="128" g="128" b="128" a="160">ui_pda_secondary_task</text>
@@ -224,228 +224,127 @@
 			<window_name>task_btn_close</window_name>
 			<texture>ui_task_bt_close</texture>
 		</btn_close>
-		<legend_list x="12" y="43" width="220" height="330" item_height="25" scroll_profile="default" always_show_scroll="0">
-			
-			<!-- Primary mission -->
+		<legend_list x="12" y="43" width="220" height="350" item_height="25" scroll_profile="default" always_show_scroll="0">
 			<item x="0" y="0" width="220" height="26">
 				<image x="8" y="0" width="15" height="19" stretch="1">
-					<texture>ui_AlphaLion_PrimaryMission</texture>
+					<texture>ui_inGame2_PDA_icon_Primary_mission</texture>
 				</image>
 				<text_static x="32" y="2" width="184" height="16" complex_mode="1">
 					<text align="l" font="letterica16" r="170" g="170" b="170">st_ui_pda_legend_main_task</text>
 				</text_static>
 			</item>
-			
-			<!-- Secondary mission -->
 			<item x="0" y="0" width="220" height="26">
 				<image x="8" y="0" width="15" height="19" stretch="1">
-					<texture>ui_AlphaLion_SecondaryMission</texture>
+					<texture>ui_inGame2_PDA_icon_Secondary_mission</texture>
 				</image>
 				<text_static x="32" y="2" width="184" height="16" complex_mode="1">
 					<text align="l" font="letterica16" r="170" g="170" b="170">st_ui_pda_legend_additional_task</text>
 				</text_static>
 			</item>
-			
-			<!-- Regular stash -->
 			<item x="0" y="0" width="220" height="26">
 				<image x="8" y="0" width="15" height="19" stretch="1">
-					<texture>ui_AlphaLion_Stash-regular</texture>
+					<texture>ui_inGame2_PDA_icon_secret</texture>
 				</image>
 				<text_static x="32" y="2" width="184" height="16" complex_mode="1">
-					<text align="l" font="letterica16" r="170" g="170" b="170">Regular stash</text>
+					<text align="l" font="letterica16" r="170" g="170" b="170">st_ui_pda_legend_secrets</text>
 				</text_static>
 			</item>
-			
-			<!-- Valuable stash -->
-			<item x="0" y="0" width="220" height="26">
-				<image x="8" y="0" width="15" height="19" stretch="1">
-					<texture>ui_AlphaLion_Stash-valuable</texture>
-				</image>
-				<text_static x="32" y="2" width="184" height="16" complex_mode="1">
-					<text align="l" font="letterica16" r="170" g="170" b="170">Valuable stash</text>
-				</text_static>
-			</item>
-			
-			<!-- UNISG stash -->
-			<item x="0" y="0" width="220" height="26">
-				<image x="8" y="0" width="15" height="19" stretch="1">
-					<texture>ui_AlphaLion_Stash-UNISG</texture>
-				</image>
-				<text_static x="32" y="2" width="184" height="16" complex_mode="1">
-					<text align="l" font="letterica16" r="170" g="170" b="170">UNISG stash</text>
-				</text_static>
-			</item>
-			
-			<!-- Self stash -->
-			<item x="0" y="0" width="220" height="26">
-				<image x="8" y="0" width="15" height="19" stretch="1">
-					<texture>ui_AlphaLion_Stash-self</texture>
-				</image>
-				<text_static x="32" y="2" width="184" height="16" complex_mode="1">
-					<text align="l" font="letterica16" r="170" g="170" b="170">Player stash</text>
-				</text_static>
-			</item>
-			
-			<!-- Anomaly circle -->
 			<item x="0" y="0" width="220" height="26">
 				<image x="8" y="0" width="16" height="20" stretch="1">
-					<texture>ui_AlphaLion_Area-small</texture>
+					<texture>ui_inGame2_PDA_icon_location_legend</texture>
 				</image>
 				<text_static x="32" y="2" width="184" height="16" complex_mode="1">
 					<text align="l" font="letterica16" r="170" g="170" b="170">st_ui_pda_legend_primary_objects</text>
 				</text_static>
 			</item>
-			
-			<!-- Location pin -->
-			<item x="0" y="0" width="220" height="26">
-				<image x="10.5" y="2" width="11" height="19" stretch="1">
-					<texture>ui_AlphaLion_Location</texture>
-				</image>
-				<text_static x="32" y="2" width="184" height="16" complex_mode="1">
-					<text align="l" font="letterica16" r="170" g="170" b="170">Fast travel location</text>
-				</text_static>
-			</item>
-			
-			<!-- Map transition -->
-			<item x="0" y="0" width="220" height="26">
-				<image x="7.5" y="-2" width="17" height="23" stretch="1">
-					<texture>ui_AlphaLion_Transition</texture>
-				</image>
-				<text_static x="32" y="2" width="184" height="16" complex_mode="1">
-					<text align="l" font="letterica16" r="170" g="170" b="170">Map transition</text>
-				</text_static>
-			</item>
-			
-			<!-- Player icon -->
-			<item x="0" y="0" width="220" height="26">
-				<image x="10.5" y="2" width="11" height="14" stretch="1">
-					<texture>ui_AlphaLion_PlayerPDAtip</texture>
-				</image>
-				<text_static x="32" y="2" width="184" height="16" complex_mode="1">
-					<text align="l" font="letterica16" r="170" g="170" b="170">Player</text>
-				</text_static>
-			</item>
-			
-			<!-- Companion icon -->
 			<item x="0" y="0" width="220" height="26">
 				<image x="8" y="0" width="15" height="19" stretch="1">
-					<texture>ui_AlphaLion_Companion</texture>
-				</image>
-				<text_static x="32" y="2" width="184" height="16" complex_mode="1">
-					<text align="l" font="letterica16" r="170" g="170" b="170">Companion</text>
-				</text_static>
-			</item>
-			
-			<!-- Storage box -->
-			<item x="0" y="0" width="220" height="26">
-				<image x="8" y="0" width="15" height="19" stretch="1">
-					<texture>ui_AlphaLion_Storage-large</texture>
+					<texture color="pda_blue">ui_inGame2_PDA_icon_Actor_Box</texture>
 				</image>
 				<text_static x="32" y="2" width="184" height="16" complex_mode="1">
 					<text align="l" font="letterica16" r="170" g="170" b="170">st_ui_pda_actor_box</text>
 				</text_static>
 			</item>
-			
-			<!-- Special character -->
 			<item x="0" y="0" width="220" height="26">
 				<image x="8" y="0" width="15" height="19" stretch="1">
-					<texture>ui_AlphaLion_Special-large</texture>
+					<texture color="pda_blue">ui_inGame2_PDA_icon_Stalker_Special</texture>
 				</image>
 				<text_static x="32" y="2" width="184" height="16" complex_mode="1">
 					<text align="l" font="letterica16" r="170" g="170" b="170">st_ui_pda_legend_special</text>
 				</text_static>
 			</item>
-			
-			<!-- Trader -->
 			<item x="0" y="0" width="220" height="26">
 				<image x="8" y="0" width="15" height="19" stretch="1">
-					<texture>ui_AlphaLion_Trader-large</texture>
+					<texture color="pda_blue">ui_inGame2_PDA_icon_Stalker_Trader</texture>
 				</image>
 				<text_static x="32" y="2" width="184" height="16" complex_mode="1">
 					<text align="l" font="letterica16" r="170" g="170" b="170">st_ui_pda_legend_trader</text>
 				</text_static>
 			</item>
-			
-			<!-- Barman -->
 			<item x="0" y="0" width="220" height="26">
 				<image x="8" y="0" width="15" height="19" stretch="1">
-					<texture>ui_AlphaLion_Barman-large</texture>
+					<texture color="pda_blue">ui_inGame2_PDA_icon_Stalker_Barman</texture>
 				</image>
 				<text_static x="32" y="2" width="184" height="16" complex_mode="1">
 					<text align="l" font="letterica16" r="170" g="170" b="170">st_ui_pda_legend_barman</text>
 				</text_static>
 			</item>
-			
-			<!-- Important character-->
 			<item x="0" y="0" width="220" height="26">
 				<image x="8" y="0" width="15" height="19" stretch="1">
-					<texture>ui_AlphaLion_Important-large</texture>
+					<texture color="pda_blue">ui_inGame2_PDA_icon_Stalker_guide</texture>
 				</image>
 				<text_static x="32" y="2" width="184" height="16" complex_mode="1">
 					<text align="l" font="letterica16" r="170" g="170" b="170">st_ui_pda_legend_scout</text>
 				</text_static>
 			</item>
-			
-			<!-- Technician -->
 			<item x="0" y="0" width="220" height="26">
 				<image x="8" y="0" width="15" height="19" stretch="1">
-					<texture>ui_AlphaLion_Mechanic-large</texture>
+					<texture color="pda_blue">ui_inGame2_PDA_icon_Stalker_machanik</texture>
 				</image>
 				<text_static x="32" y="2" width="184" height="16" complex_mode="1">
 					<text align="l" font="letterica16" r="170" g="170" b="170">st_ui_pda_legend_mechanic</text>
 				</text_static>
 			</item>
-			
-			<!-- Medic -->
 			<item x="0" y="0" width="220" height="26">
 				<image x="8" y="0" width="15" height="19" stretch="1">
-					<texture>ui_AlphaLion_Medic-large</texture>
+					<texture color="pda_blue">ui_inGame2_PDA_icon_Stalker_Medic</texture>
 				</image>
 				<text_static x="32" y="2" width="184" height="16" complex_mode="1">
 					<text align="l" font="letterica16" r="170" g="170" b="170">st_ui_pda_legend_medic</text>
 				</text_static>
 			</item>
-			
-			<!-- Squad leader -->
 			<item x="0" y="0" width="220" height="26">
 				<image x="11" y="3" width="9" height="11" stretch="1">
-					<texture>ui_AlphaLion_SquadLeader</texture>
+					<texture>ui_minimap_squad_leader</texture>
 				</image>
 				<text_static x="32" y="2" width="184" height="16" complex_mode="1">
 					<text align="l" font="letterica16" r="170" g="170" b="170">st_ui_pda_legend_squad</text>
 				</text_static>
 			</item>
-			
-			<!-- Friendly squad >
 			<item x="0" y="0" width="220" height="26">
 				<image x="10" y="2" width="10" height="12" stretch="1">
-					<texture r="30" g="215" b="30">ui_AlphaLion_Squad</texture>
+					<texture r="30" g="215" b="30">ui_minimap_point</texture>
 				</image>
 				<text_static x="32" y="2" width="184" height="16" complex_mode="1">
 					<text align="l" font="letterica16" r="170" g="170" b="170">st_ui_pda_legend_friends</text>
 				</text_static>
-			</item-->
-			
-			<!-- Neutral squad-->
+			</item>
 			<item x="0" y="0" width="220" height="26">
 				<image x="10" y="2" width="10" height="12" stretch="1">
-					<texture>ui_AlphaLion_Squad</texture>
-					<!--texture r="215" g="215" b="10">ui_AlphaLion_Squad</texture-->
+					<texture r="215" g="215" b="10">ui_minimap_point</texture>
 				</image>
 				<text_static x="32" y="2" width="184" height="16" complex_mode="1">
 					<text align="l" font="letterica16" r="170" g="170" b="170">st_ui_pda_legend_neutrals</text>
 				</text_static>
 			</item>
-			
-			<!-- Enemy squad >
 			<item x="0" y="0" width="220" height="26">
 				<image x="10" y="2" width="10" height="12" stretch="1">
-					<texture r="215" g="30" b="30">ui_AlphaLion_Squad</texture>
+					<texture r="215" g="30" b="30">ui_minimap_point</texture>
 				</image>
 				<text_static x="32" y="2" width="184" height="16" complex_mode="1">
 					<text align="l" font="letterica16" r="170" g="170" b="170">st_ui_pda_legend_enemies</text>
 				</text_static>
-			</item-->
+			</item>
 		</legend_list>
 	</map_legend_wnd>
 </w>

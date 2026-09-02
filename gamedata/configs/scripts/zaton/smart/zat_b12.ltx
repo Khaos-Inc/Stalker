@@ -1,12 +1,16 @@
 [smart_terrain]
 squad_id = 47
-max_population = 2
+max_population = 1
 respawn_params = respawn@zat_b12
-respawn_idle = 57600
+respawn_idle = 86400
+ 
 
+ 
 [respawn@zat_b12]
-spawn_controller
+spawn_ztalker
 
-[spawn_controller]
-spawn_squads = simulation_controller, simulation_controller_psy, simulation_contr_5dog, simulation_contr_squad, simulation_lurker_blue
-spawn_num = {+bar_deactivate_radar_done} 1, 0
+
+
+[spawn_ztalker]
+spawn_squads = stalker_sim_squad_advanced, ecolog_sim_squad_advanced, freedom_sim_squad_advanced, zombied_sim_squad_novice, zombied_sim_squad_advanced, zombied_sim_squad_veteran
+spawn_num = {~50}1, 0

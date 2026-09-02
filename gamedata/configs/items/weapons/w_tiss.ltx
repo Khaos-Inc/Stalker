@@ -1,0 +1,25 @@
+[wpn_tiss]:wpn_ak,wpn_tiss_sounds
+GroupControlSection = spawn_group
+inv_grid_width     					= 5
+inv_grid_x         						= 0
+inv_grid_y         						= 18
+inv_name									= wpn_tiss
+inv_name_short						= wpn_tiss
+description								= wpn_tiss_descr
+inv_weight								= 1
+cost											= 125000
+shell_particles							= weapons\9x39
+ammo_class = ammo_9x39_pab9, ammo_9x39_pab9_bad, ammo_9x39_pab9_verybad, ammo_9x39_ap, ammo_9x39_ap_bad, ammo_9x39_ap_verybad, ammo_9x39_sp5, ammo_9x39_sp5_bad
+ammo_mag_size						= 20
+attachment_slots = slot_magazin|magazin|0,0,0|0,0,0#ak_trigger|wpn_body|0,0,0|0,0,0#ak9_barrel|wpn_body|0,0,0|0,0,0#ak_grip|wpn_body|0,0,0|0,0,0#dovetail_mount|wpn_body|0,0,0|0,0,0#74u_stock|wpn_body|0,0,0|0,0,0
+visual = w_att_huds\tiss.ogf
+hud = wpn_tiss_hud
+[wpn_tiss_hud]:wpn_ak_hud
+
+weapon_recoil_vert         = 0.8
+weapon_recoil_vert_inc     = 0.08
+weapon_recoil_horz         = 1.35
+weapon_recoil_ret_speed    = 2
+
+
+item_visual = w_att_huds\tiss_hud.ogf

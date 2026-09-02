@@ -395,7 +395,8 @@ function build_desc_header(obj, sec, str)  -- obj needed
 		_str = clr .. " • " .. clr_2 .. str_tbl.pwr_left .. ": " .. clr .. tostring(con) .. "%" .. "\\n \\n" .. clr_2
 		
 	-- Condition
-	elseif IsOutfit(obj)
+	elseif IsWeapon(obj)
+	or IsOutfit(obj)
 	or IsHeadgear(obj)
 	or IsItem("backpack",sec)
 	or IsItem("disassemble",sec)
@@ -407,7 +408,7 @@ function build_desc_header(obj, sec, str)  -- obj needed
 	elseif ini_sys:r_bool_ex(sec,"cond_part") then
 		local con = obj:condition()
 		con = math_floor(con*100)
-		local clr = utils_xml.get_color_con(con)
+		local clr = utils_xml.get_color_con_extended(con, obj:section())
 		_str = clr .. " • " .. clr_2 .. str_tbl.con .. ": " .. clr .. utils_xml.get_name_cond(con, nil, sec) .. "\\n \\n" .. clr_2
 	
 	-- Contained artefact

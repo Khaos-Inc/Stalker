@@ -1,0 +1,149 @@
+--\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ wpn_fnp \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+[fnp_trigger]:attachment_base
+kind  =  fnp
+inv_ui_sign					= fnp_trig
+visual							= w_att_huds\fnp_trigger	
+inv_name						= fnp_trigger
+inv_name_short			= fnp_triggerS
+cost								= 950
+inv_weight					= 0.07
+inv_grid_x         			= 3
+inv_grid_y         			= 41
+1icon_layer = clean_lub1_ico
+attachment_point	=	fnp_trigger|0,0,0|0,0,0
+attachment_slots		=	fnp_barrel|muzzle|0,0,0|0,0,0#226_spring|zatvor|0,0.00085,0.0077|0,0,0
+item_tags				=	trigger
+override_section = fnp_trigger_attributes
+
+[fnp_trigger_attributes]
+
+[fnp_trigger_up]:fnp_trigger
+kind  =  fnp
+inv_ui_sign				= fnp_trig+
+visual						= w_att_huds\fnp_trigger_up	
+inv_name					= fnp_trigger_up
+inv_name_short			= fnp_trigger_upS
+cost							= 3450
+inv_grid_x         		= 4
+override_section		=	fnp_trigger_up_attributes
+
+inv_weight = 0.07
+[fnp_trigger_up_attributes]
+fire_modes = -1
+
+[fnp_barrel]:attachment_base
+kind  =  fnp
+inv_ui_sign				= fnp_bar
+visual						= w_att_huds\fnp_barrel	
+inv_name					= fnp_barrel
+inv_name_short		= fnp_barrelS
+cost							= 900
+inv_weight				= 0.1
+inv_grid_x         		= 5
+inv_grid_y         		= 41
+1icon_layer = clean1_ico
+attachment_point	= fnp_barrel|0,0,0|0,0,0
+attachment_slots		= fnp_zatvor|zatvor|0,0,0|0,0,0#45_muzzle|muzzle|0,0,0|0,0,0
+item_tags	=	barrel
+override_section = fnp_barrel_attributes
+
+[fnp_barrel_attributes]
+bullet_speed = 1
+k_hit_koeff = 1.05
+fire_dispersion_base = 0.31
+zoom_rotate_time = 0.04
+recoil_koeff = -0.02
+[fnp_barrel_att]
+bullet_speed				= 1
+k_hit_koeff						=	1.05
+fire_dispersion_base		= 0.31
+zoom_rotate_time = 0.04
+recoil_koeff            = -0.15
+
+[fnp_zatvor]:attachment_base
+kind  =  fnp
+inv_ui_sign				= fnp_slide
+visual						= w_att_huds\fnp_zatvor
+description				= pica_4_up
+inv_name					= fnp_zatvor
+inv_name_short			= fnp_zatvor
+cost							= 1000
+inv_weight					= 0.12
+inv_grid_width     		= 2
+inv_grid_x         		= 3
+inv_grid_y        		 = 40
+1icon_layer = clean_lub2_ico
+attachment_point = fnp_zatvor|0,0,0|0,0,0
+attachment_slots =	fnp_sights|zatvor|0,0,0|0,0,0#pica_4|zatvor|0,0.0485,-0.022|0,0,0	
+item_tags	=	zatvor
+override_section = fnp_zatvor_attributes
+
+[fnp_zatvor_attributes]
+zoom_rotate_time = 0.11
+rpm = 1100
+impair_koeff = 0.9
+[fnp_zatvor_att]
+zoom_rotate_time = 0.11
+rpm = 1100
+recoil_koeff = -0.45
+impair_koeff = 0.9
+
+[fnp_sights]:attachment_base
+kind  =  fnp
+inv_ui_sign				= fnp_sig
+visual						= w_att_huds\fnp_sights
+inv_name					= fnp_sights
+inv_name_short			= fnp_sightsS
+cost							= 300
+inv_weight					= 0.03
+inv_grid_x         			= 7
+inv_grid_y         			= 40
+attachment_point		= fnp_sights|0,0,0|0,0,0
+item_tags	=	sights
+override_section = fnp_sights_attributes
+
+[fnp_sights_attributes]
+
+[fnp_sights_up]:fnp_sights
+kind  =  fnp
+inv_ui_sign				= fnp_sig+
+visual						= w_att_huds\fnp_sights_up
+inv_name					= fnp_sights_up
+inv_name_short			= fnp_sights_upS
+cost							= 500
+inv_grid_y         		= 41
+override_section = fnp_sights_up_attributes
+
+[fnp_sights_up_attributes]
+
+[mag_wpn_fnp45_11.43x23_fmj]:mag_wpn_base,wg_wpn_fnp45,ag_ammo_11.43x23_fmj
+inv_ui_sign					= fnp_15
+visual							= w_att_huds\fnp_mag
+inv_name						= fnp_mag
+inv_name_short				= fnp_magS
+inv_grid_x         				= 5
+inv_grid_y         				= 40
+inv_weight						= 0.07
+cost								= 400
+max_mag_size				= 15
+mag_size						= small
+override_section				= mag_wpn_fnp45_11.43x23_fmj_attributes
+
+[mag_wpn_fnp45_11.43x23_fmj_attributes]
+animation_prefix_mag = 17_
+
+[mag_wpn_fnp45_30_11.43x23_fmj]:mag_wpn_fnp45_11.43x23_fmj
+inv_ui_sign					= fnp_30
+visual							= w_att_huds\fnp_mag30
+inv_name						= fnp_mag30
+inv_name_short				= fnp_mag30S
+inv_grid_height    			= 2
+inv_grid_x						= 6
+inv_weight						= 0.14
+cost								= 750
+max_mag_size				= 30
+override_section				= mag_wpn_fnp45_30_11.43x23_fmj_attributes
+
+[mag_wpn_fnp45_30_11.43x23_fmj_attributes]
+animation_prefix_mag = 33_

@@ -1,0 +1,118 @@
+--\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ wpn_fort \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+[fort12_spring]:attachment_base
+kind  =  fort
+inv_ui_sign				= fort_spr
+visual						= w_att_huds\fort12_spring
+inv_name					= fort12_spring
+inv_name_short			= fort12_springS
+cost							= 200
+inv_weight					= 0.02
+inv_grid_x         = 6
+inv_grid_y         = 4
+1icon_layer = clean1_ico
+attachment_point = fort12_spring|0,0,0|0,0,0
+attachment_slots =	fort12_barrel|wpn_body|0,0,0|0,0,0
+item_tags =	spring
+override_section = fort12_spring_attributes
+
+[fort12_spring_attributes]
+
+[fort12_barrel]:attachment_base
+kind  =  fort
+inv_ui_sign				= fort_bar
+visual						= w_att_huds\fort12_barrel
+inv_name					= fort12_barrel
+inv_name_short			= fort12_barrel
+cost							= 550
+inv_weight					= 0.1
+inv_grid_x         = 2
+inv_grid_y         = 4
+1icon_layer = clean1_ico
+attachment_point = fort12_barrel|0,0,0|0,0,0
+attachment_slots	=	fort12_zatvor|zatvor|0,0,0|0,0,0
+item_tags = barrel
+override_section = fort12_barrel_attributes
+
+[fort12_barrel_attributes]
+bullet_speed = 1
+zoom_rotate_time = 0.01
+recoil_koeff = -0.05
+fire_dispersion_base = 0.24
+[fort12_barrel_att]:pm_barrel_att
+fire_dispersion_base = 0.24
+
+[fort12_barrel_up]:fort12_barrel
+kind  =  fort
+inv_ui_sign				= fort_bar+
+visual						= w_att_huds\fort12_barrel_up
+inv_name					= fort12_barrel_up
+inv_name_short			= fort12_barrel_up
+cost							= 1700
+inv_weight					= 0.105
+inv_grid_y         = 5
+attachment_slots	=	fort12_zatvor|zatvor|0,0,0|0,0,0#pm_muzzle|muzzle|0,0,0|0,0,0
+override_section = fort12_barrel_up_attributes
+
+[fort12_barrel_up_attributes]
+bullet_speed = 1
+zoom_rotate_time = 0.01
+recoil_koeff = -0.08
+fire_dispersion_base = 0.24
+impair_koeff = 1.1
+[fort12_barrel_up_att]:fort12_barrel_att
+impair_koeff = 1.1
+
+[fort12_zatvor]:attachment_base
+kind  =  fort
+inv_ui_sign				= fort_slide
+visual						= w_att_huds\fort12_zatvor
+inv_name					= fort12_zatvor
+inv_name_short			= fort12_zatvor
+cost							= 750
+inv_weight					= 0.12
+inv_grid_width     = 2
+inv_grid_x         = 6
+inv_grid_y         = 5
+1icon_layer = clean_lub2_ico
+attachment_point = fort12_zatvor|0,0,0|0,0,0
+attachment_slots =	zatvor_side|zatvor|0,0.0426,-0.006868|0,0,0
+item_tags = zatvor
+override_section = fort12_zatvor_attributes
+
+[fort12_zatvor_attributes]
+zoom_rotate_time = 0.07
+rpm = 1000
+recoil_koeff = -0.1
+impair_koeff = 0.9
+
+[mag_wpn_fort_9x18_fmj]:mag_wpn_base,wg_wpn_fort,ag_ammo_9x18_fmj
+inv_ui_sign					= fort_14
+visual							= w_att_huds\fort12_mag14
+inv_name						= fort12_mag14
+inv_name_short				= fort12_mag14
+inv_grid_x         = 4
+inv_grid_y         = 5
+inv_weight						= 0.08
+cost								= 350
+max_mag_size            = 14
+override_section				=	mag_wpn_fort_9x18_fmj_attributes
+
+[mag_wpn_fort_9x18_fmj_attributes]
+animation_prefix_mag = 17_
+
+[mag_wpn_fort_24_9x18_fmj]:mag_wpn_fort_9x18_fmj
+inv_ui_sign					= fort_24
+visual							= w_att_huds\fort12_mag24
+inv_name						= fort12_mag24
+inv_name_short				= fort12_mag24S
+inv_grid_height    = 2
+inv_grid_x         = 5
+inv_grid_y         = 4
+inv_weight						= 0.15
+cost								= 600
+max_mag_size            = 24
+override_section				=	mag_wpn_fort_24_9x18_fmj_attributes
+
+[mag_wpn_fort_24_9x18_fmj_attributes]
+animation_prefix_mag = 33_

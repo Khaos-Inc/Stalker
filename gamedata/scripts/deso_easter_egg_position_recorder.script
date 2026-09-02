@@ -1,0 +1,63 @@
+-- Desolation New Age - Easter Egg Position Recorder
+-- Standalone helper script. No other files are modified.
+-- Press Ctrl + F10 in-game to record the actor's current world position.
+-- Output is written to X-Ray's $app_data_root$ directory.
+
+local RECORD_KEY = DIK_keys.DIK_F10
+local MODIFIER_KEY = DIK_keys.DIK_LCONTROL
+local OUTPUT_FILE = "deso_easter_egg_positions.txt"
+
+local function write_line(file, text)
+    file:write(text .. "\n")
+end
+
+local function record_position()
+    if not (level.present() and db.actor) then
+        return
+    end
+
+    local actor = db.actor
+    local pos = actor:position()
+    local lvid = actor:level_vertex_id()
+    local gvid = actor:game_vertex_id()
+    local level_name = level.name()
+
+    local output_path = getFS():update_path('$app_data_root$', OUTPUT_FILE)
+    local file = io.open(output_path, "a+")
+
+    if not file then
+        printf("![DESO EASTER EGG] Failed to open output file: %s", tostring(output_path))
+        if actor_menu and actor_menu.set_msg then
+            actor_menu.set_msg(1, "Easter egg recorder: failed to write output file", 5)
+        end
+        return
+    end
+
+    write_line(file, "============================================================")
+    write_line(file, "DESO EASTER EGG POSITION")
+    write_line(file, "level            = " .. tostring(level_name))
+    write_line(file, string.format("position         = %.6f, %.6f, %.6f", pos.x, pos.y, pos.z))
+    write_line(file, "level_vertex_id  = " .. tostring(lvid))
+    write_line(file, "game_vertex_id   = " .. tostring(gvid))
+    write_line(file, "============================================================")
+    write_line(file, "")
+    file:close()
+
+    printf("[DESO EASTER EGG] saved: %s", tostring(output_path))
+    printf("[DESO EASTER EGG] level=%s position=%.6f,%.6f,%.6f lvid=%s gvid=%s",
+        tostring(level_name), pos.x, pos.y, pos.z, tostring(lvid), tostring(gvid))
+
+    if actor_menu and actor_menu.set_msg then
+        actor_menu.set_msg(1, "Easter egg position saved to $app_data_root$\\" .. OUTPUT_FILE, 6)
+    end
+end
+
+local function on_key_press(key)
+    if key == RECORD_KEY and key_state(MODIFIER_KEY) then
+        record_position()
+    end
+end
+
+function on_game_start()
+    RegisterScriptCallback("on_key_press", on_key_press)
+end

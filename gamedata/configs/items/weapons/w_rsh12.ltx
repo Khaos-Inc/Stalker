@@ -1,0 +1,144 @@
+[wpn_rsh12]:wpn_python,wpn_rsh12_sounds
+use_detachable_magazines = false
+GroupControlSection				= spawn_group
+ef_weapon_type              		= 7
+inv_grid_width							= 4
+inv_grid_height						= 2
+inv_grid_x								= 26
+inv_grid_y								= 7
+inv_name                    				= wpn_rsh12
+inv_name_short              			= wpn_rsh12
+description                 				= wpn_rsh12_descr
+position                    				= -0.021, 0.008, 0.005
+orientation                 				= 0, -5, 0
+fire_point									= 0.0, 0.02, 0.14
+silencer_status							= 2
+npc_rpm  = 450
+flame_particles                   		= weapons\generic_weapon06
+smoke_particles						= amik\weapons\smoke_particles\smoke_particles_01
+max_radius								= 200
+ph_mass                     				= 3
+weapon_lenght						=	0.4
+inv_weight               				= 2.2
+cost                        					= 40000
+rpm											= 500
+ammo_class								= ammo_12.7x55_fmj, ammo_12.7x55_fmj_bad, ammo_12.7x55_fmj_verybad, ammo_12.7x55_ap, ammo_12.7x55_ap_bad, ammo_12.7x55_ap_verybad
+silencer_smoke_particles			= amik\weapons\smoke_particles\silencer_smoke_particles_02
+ammo_mag_size    					= 5
+attachment_slots						=	slot_magazin|magazin|0,0,0|0,0,0#pica_14|wpn_body|0,0.06755,0.118|0,0,0#pica_3|wpn_body|0,0.0119,0.21|0,0,180#rsh12_barrel|base|0,0,0|0,0,0#rsh12_stock|wpn_body|0,0,0|0,0,0#rsh12_sight_front|wpn_body|0,0,0|0,0,0#picgrp|wpn_body|0,-0.0236,-0.02|0,0,0		
+aimpoint_offset_y 					= 0.07445
+ui_render_cam_offset 				= 0.25, -0.12, 1.15
+;additional_hud_offset				= 0, 0, -0.06
+visual                      					= w_att_huds\rsh12.ogf
+hud                         					= wpn_rsh12_hud
+
+inv_icon_padding  = 0.7
+inv_icon_offset_x = 0.0
+inv_icon_offset_y = 0.2
+
+positive X = move right
+negative X = move left
+positive Y = move up
+negative Y = move down
+
+[wpn_rsh12_hud]:wpn_python_hud
+
+weapon_recoil_vert         = 4.93
+weapon_recoil_vert_inc     = 0.493
+weapon_recoil_horz         = 3.4
+weapon_recoil_ret_speed    = 5.0
+
+
+item_visual                 				= w_att_huds\rsh12_hud.ogf
+;hands_position						= 0.06, -0.08, -0.1
+;hands_position_16x9				= 0.06, -0.08, -0.1
+;hands_orientation					= 0.3, 0.3, 0
+;hands_orientation_16x9			= 0.3, 0.3, 0
+;aim_hud_offset_pos				= -0.06, 0.0292, -0.0
+;aim_hud_offset_pos_16x9		= -0.06, 0.0292, -0.0
+;aim_hud_offset_rot					= 0.007, 0.0059, 0
+;aim_hud_offset_rot_16x9		= 0.007, 0.0059, 0
+hands_position						= 0.06, -0.08, -0.07
+hands_position_16x9				= 0.06, -0.08, -0.07
+hands_orientation					= 0.3, 0.3, 0
+hands_orientation_16x9			= 0.3, 0.3, 0
+aim_hud_offset_pos				= -0.06, 0.0292, -0.03
+aim_hud_offset_pos_16x9		= -0.06, 0.0292, -0.03
+aim_hud_offset_rot					= 0.007, 0.0059, 0
+aim_hud_offset_rot_16x9		= 0.007, 0.0059, 0
+
+anm_bore                              		= rsh12_g_bore, idle
+anm_hide									= rsh12_g_holster, idle
+anm_show									= rsh12_g_show, idle
+anm_idle										= rsh12_g_idle, idle
+anm_idle_aim								= rsh12_g_idle_aim, idle
+anm_idle_aim_moving				= rsh12_g_walk_aim, idle
+anm_idle_aim_moving_crouch	= rsh12_g_walk_aim, idle
+anm_idle_moving						= rsh12_g_walk, idle
+anm_idle_moving_crouch			= rsh12_g_walk, idle
+anm_open									= rsh12_g_reload_open, open
+anm_open_empty						= rsh12_g_reload_open_empty, open_empty
+anm_add_cartridge						= rsh12_g_reload_add, add, 0.7
+anm_close									= rsh12_g_reload_close, close
+anm_shots									= rsh12_g_shoot_r, shoot
+anm_reload_misfire						= rsh12_g_unjam, unjam
+
+t_anm_bore                              	= rsh12_t_bore, idle
+t_anm_hide								= rsh12_t_holster, idle
+t_anm_show								= rsh12_t_show, idle
+t_anm_idle								= rsh12_t_idle, idle
+t_anm_idle_aim							= rsh12_t_idle_aim, idle
+t_anm_idle_aim_moving				= rsh12_t_walk_aim, idle
+t_anm_idle_aim_moving_crouch	= rsh12_t_walk_aim, idle
+t_anm_idle_moving					= rsh12_t_walk, idle
+t_anm_idle_moving_crouch			= rsh12_t_walk, idle
+t_anm_open								= rsh12_t_reload_open, open
+t_anm_open_empty					= rsh12_t_reload_open_empty, open_empty
+t_anm_close								= rsh12_t_reload_close, close
+t_anm_shots								= rsh12_t_shoot_r, shoot
+t_anm_reload_misfire					= rsh12_t_unjam, unjam
+
+r_anm_bore                              	= rsh12_r_bore, idle
+r_anm_hide								= rsh12_r_holster, idle
+r_anm_show								= rsh12_r_show, idle
+r_anm_idle								= rsh12_r_idle, idle
+r_anm_idle_aim							= rsh12_r_idle_aim, idle
+r_anm_idle_aim_moving				= rsh12_r_walk_aim, idle
+r_anm_idle_aim_moving_crouch	= rsh12_r_walk_aim, idle
+r_anm_idle_moving					= rsh12_r_walk, idle
+r_anm_idle_moving_crouch			= rsh12_r_walk, idle
+r_anm_open								= rsh12_r_reload_open, open
+r_anm_open_empty					= rsh12_r_reload_open_empty, open_empty
+r_anm_close								= rsh12_r_reload_close, close
+r_anm_shots								= rsh12_r_shoot_r, shoot
+r_anm_reload_misfire					= rsh12_r_unjam, unjam
+
+v_anm_bore                              	= rsh12_v_bore, idle
+v_anm_hide								= rsh12_v_holster, idle
+v_anm_show								= rsh12_v_show, idle
+v_anm_idle								= rsh12_v_idle, idle
+v_anm_idle_aim							= rsh12_v_idle_aim, idle
+v_anm_idle_aim_moving				= rsh12_v_walk_aim, idle
+v_anm_idle_aim_moving_crouch	= rsh12_v_walk_aim, idle
+v_anm_idle_moving					= rsh12_v_walk, idle
+v_anm_idle_moving_crouch			= rsh12_v_walk, idle
+v_anm_open								= rsh12_v_reload_open, open
+v_anm_open_empty					= rsh12_v_reload_open_empty, open_empty
+v_anm_close								= rsh12_v_reload_close, close
+v_anm_shots								= rsh12_v_shoot_r, shoot
+v_anm_reload_misfire					= rsh12_v_unjam, unjam
+
+h_anm_bore                           	= rsh12_h_bore, idle
+h_anm_hide								= rsh12_h_holster, idle
+h_anm_show								= rsh12_h_show, idle
+h_anm_idle								= rsh12_h_idle, idle
+h_anm_idle_aim						= rsh12_h_idle_aim, idle
+h_anm_idle_aim_moving				= rsh12_h_walk_aim, idle
+h_anm_idle_aim_moving_crouch	= rsh12_h_walk_aim, idle
+h_anm_idle_moving					= rsh12_h_walk, idle
+h_anm_idle_moving_crouch		= rsh12_h_walk, idle
+h_anm_open								= rsh12_h_reload_open, open
+h_anm_open_empty					= rsh12_h_reload_open_empty, open_empty
+h_anm_close								= rsh12_h_reload_close, close
+h_anm_shots							= rsh12_h_shoot_r, shoot
+h_anm_reload_misfire				= rsh12_h_unjam, unjam

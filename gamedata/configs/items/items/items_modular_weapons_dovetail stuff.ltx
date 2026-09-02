@@ -1,0 +1,790 @@
+[dovetail_front_rail]:attachment_base	
+kind = dovetail
+inv_ui_sign				= las_rail
+visual						= w_att_huds\las_rail
+description				= pica_12_up
+inv_name					= las_rail
+inv_name_short			= las_railS
+cost							= 2800
+inv_weight					= 0.06
+inv_grid_x					= 28
+inv_grid_y					= 39
+attachment_point		= front_dov|0,0,0|0,0,0
+attachment_slots		= pica_12|wpn_body|0,0.0087,-0.043|0,0,0
+item_tags = rail
+override_section = dovetail_front_rail_attributes
+
+[dovetail_front_rail_attributes]
+
+[dovetail_front_kobra]:dovetail_front_rail	
+kind = dovetail
+inv_ui_sign				= las_kobra
+visual						= w_att_huds\las_sight_kobra_ekp_8-18
+description				= las_sight_kobra_ekp_8-18_descr
+inv_name					= las_sight_kobra_ekp_8-18
+inv_name_short			= las_sight_kobra_ekp_8-18S
+cost							= 3700
+inv_weight					= 0.12
+inv_grid_x					= 29
+attachment_slots		= aim_dot|wpn_body|0,0.04554,0|0,0,0
+is_holo 						= true
+holo_position_offset	= 0,0,1
+override_section = dovetail_front_kobra_attributes
+
+[dovetail_front_kobra_attributes]
+zoom_rotate_time = 0.01
+fire_dispersion_bas = -0.01
+
+[dovetail_front_rusak]:dovetail_front_rail	
+kind = dovetail
+inv_ui_sign				= las_rusak
+visual						= w_att_huds\las_sight_rusak
+description				= las_sight_rusak_descr
+inv_name					= las_sight_rusak
+inv_name_short			= las_sight_rusakS
+cost							= 2900
+inv_weight					= 0.13
+inv_grid_x					= 30
+attachment_slots		= aim_dot|wpn_body|0,0.035,0.0|0,0,0
+is_holo 						= true
+holo_position_offset = 0,0,1
+override_section = dovetail_front_rusak_attributes
+
+[dovetail_front_rusak_attributes]
+zoom_rotate_time = 0.01
+fire_dispersion_bas = -0.01
+
+[dovetail_mount]:attachment_base_ak
+kind = ak_misc
+inv_ui_sign			= dovt
+visual					= w_att_huds\dovetail_mount_ak
+inv_name				= dovetail_mount
+inv_name_short		= dovetail_mountS
+cost						= 500
+inv_weight				= 0.09
+inv_grid_x         		= 13
+inv_grid_y         		= 17
+attachment_point	= dovetail_mount|0,0,0|0,0,0
+attachment_slots	= dovetail_side|wpn_body|0,0,0|0,0,0
+override_section = dovetail_mount_attributes
+
+[dovetail_mount_attributes]
+
+[dovetail_mount_old]:dovetail_mount
+kind = ak_misc
+visual					= w_att_huds\dovetail_mount_rpk	
+inv_name				= dovetail_mount_rpk
+inv_grid_x         		= 14
+override_section = dovetail_mount_old_attributes
+
+[dovetail_mount_old_attributes]
+
+[dovetail_rail]:attachment_base_ak
+kind = ak_misc
+inv_ui_sign				= ak_rail
+visual							= w_att_huds\dovetail_rail
+description				= pica_12_up
+inv_name					= dovetail_rail
+inv_name_short		= dovetail_railS
+inv_grid_x					= 15
+inv_grid_y					= 17
+cost							= 1250
+inv_weight 				= 0.11
+attachment_point	= dovetail_side|0,0,0|0,0,0		
+attachment_slots	= pica_12|wpn_body|0,0.084,0.013|0,0,0
+item_tags	=	rail
+override_section		=	dovetail_rail_attributes
+
+[dovetail_rail_attributes]
+zoom_rotate_time = 0.01
+
+[dovetail_rail_low]:dovetail_rail
+kind = ak_misc
+inv_ui_sign				= vss
+visual						= w_att_huds\dovetail_rail_vintorez
+description				= pica_14_up
+inv_name					= dovetail_rail_low
+inv_name_short		= dovetail_rail_lowS
+inv_grid_x         		= 20
+inv_grid_y         		= 21
+cost							= 1000
+inv_weight 				= 0.12
+attachment_point	= dovetail_side_low|0,0,0|0,0,0	
+attachment_slots	= pica_14|wpn_body|-0.00659,0.07804,-0.015|0,0,0
+override_section = dovetail_rail_low_attributes
+
+[dovetail_rail_low_attributes]
+zoom_rotate_time = 0.01
+
+[dovetail_scope_1p59]:ak_pip_scope		;3-10x		;КРАСНЫЙ!
+kind = dovetail
+inv_ui_sign				= 1p59
+visual							= w_att_huds\dovetail_scope_1p59
+description					= dovetail_scope_1p59_descr
+inv_name					= dovetail_scope_1p59
+inv_name_short		= dovetail_scope_1p59S
+inv_grid_width			= 2
+inv_grid_height		= 1
+inv_grid_x					= 22
+inv_grid_y					= 17
+cost							= 13700
+inv_weight 				= 1.25
+attachment_point	= dovetail_side_low|0,0,0|0,0,0
+attachment_slots	= aim_lens_pip|wpn_body|-0.01044,0.10359,0.1|0,0,0#dovetail_scope_1p59_ec|wpn_body|0,0,0|0,0,0		
+override_section = scope_high_plus_att
+
+scope_texture          =
+scope_zoom_factor      = 10      ; strongest zoom / max magnification
+min_scope_zoom_factor  = 33.33  ; weakest zoom / low magnification
+scope_dynamic_zoom     = true
+zoom_step_count        = 5
+
+s3ds_reticle_size      = 2
+s3ds_eye_relief        = 2
+s3ds_exit_pupil        = 0.8
+s3ds_ffp               = 1
+s3ds_min_zoom_1x       = 1
+s3ds_image_type        = 0
+s3ds_reticle_type      = 5
+s3ds_dirt_intensity    = 0
+s3ds_chroma_power      = 0
+s3ds_lens_color        = lens_clear
+
+ms_count  = 2
+ms_colors = red, black
+
+[dovetail_scope_1p59_ec]:attachment_base_ak
+kind = dovetail
+inv_ui_sign				= 1p59
+visual							= w_att_huds\dovetail_scope_1p59_ec	
+description					= dovetail_scope_1p59_ec_descr
+inv_name					= dovetail_scope_1p59_ec
+inv_name_short		= dovetail_scope_1p59_ecS		
+cost							= 3500
+inv_weight				= 0.06
+inv_grid_x         		= 24
+inv_grid_y         		= 17
+attachment_point	= dovetail_scope_1p59_ec|0,0,0|0,0,0
+override_section = dovetail_scope_1p59_ec_attributes
+
+[dovetail_scope_1p59_ec_attributes]
+zoom_rotate_time = -0.02
+
+[dovetail_rail_mnt973]:dovetail_rail
+kind = ak_misc
+inv_ui_sign				= mnt
+visual							= w_att_huds\dovetail_rail_mnt973
+description				= pica_10_up
+inv_name					= dovetail_rail_mnt973
+inv_name_short		= dovetail_rail_mnt973S
+inv_grid_x					= 16
+cost							= 1600
+inv_weight 				= 0.12
+attachment_slots	= pica_10|wpn_body|0,0.08623,0.008|0,0,0#pica_3|wpn_body|-0.0284,0.067,0.0255|0,0,-90
+override_section = dovetail_rail_mnt973_attributes
+
+[dovetail_rail_mnt973_attributes]
+zoom_rotate_time = 0.01
+
+[dovetail_rail_mtk83]:dovetail_rail
+kind = ak_misc
+inv_ui_sign				= mtk
+visual							= w_att_huds\dovetail_rail_mtk83
+description				= pica_10_up
+inv_name					= dovetail_rail_mtk83
+inv_name_short		= dovetail_rail_mtk83S
+inv_grid_x					= 17
+cost							= 1150
+inv_weight 				= 0.1
+attachment_slots	= pica_10|wpn_body|0,0.08526,0.009|0,0,0
+override_section = dovetail_rail_mtk83_attributes
+
+[dovetail_rail_mtk83_attributes]
+zoom_rotate_time = 0.01
+
+[dovetail_rail_trirock]:dovetail_rail
+kind = ak_misc
+inv_ui_sign				= trirck
+visual							= w_att_huds\dovetail_rail_trirock
+description				= pica_12_up
+inv_name					= dovetail_rail_trirock
+inv_name_short		= dovetail_rail_trirockS
+inv_grid_x					= 18
+cost							= 1300
+inv_weight 				= 0.13
+attachment_slots	= pica_12|wpn_body|0,0.0862,-0.0144|0,0,0
+override_section = dovetail_rail_trirock_attributes
+
+[dovetail_rail_trirock_attributes]
+zoom_rotate_time = 0.01
+
+[dovetail_rail_zenit]:dovetail_rail
+kind = ak_misc
+inv_ui_sign				= b13
+visual							= w_att_huds\dovetail_rail_zenith_b13
+description				= pica_17_up
+inv_name					= dovetail_rail_zenith_b13
+inv_name_short		= dovetail_rail_zenith_b13S
+inv_grid_x					= 19
+cost							= 1600
+inv_weight 				= 0.16
+attachment_slots	= pica_17|wpn_body|0,0.0866,-0.0163|0,0,0
+ override_section =	dovetail_rail_zenit_attributes
+
+[dovetail_rail_zenit_attributes]
+zoom_rotate_time = 0.01
+
+[dovetail_rail_mi]:dovetail_rail
+kind = ak_misc
+inv_ui_sign				= mi
+visual						= w_att_huds\dovetail_rail_mi
+description				= pica_14_up
+inv_name					= dovetail_rail_mi
+inv_name_short		= dovetail_rail_miS
+inv_grid_x				= 31
+cost							= 1500
+inv_weight 				= 0.14
+attachment_slots	= pica_14|wpn_body|0,0.08414,-0.014|0,0,0
+override_section = dovetail_rail_mi_attributes
+
+[dovetail_rail_mi_attributes]
+zoom_rotate_time = 0.01
+
+[dovetail_rail_rsr]:dovetail_rail
+kind = ak_misc
+inv_ui_sign				= rs_regulate
+visual						= w_att_huds\dovetail_rail_rs_regulate
+description				= pica_10_up
+inv_name					= dovetail_rail_rs_regulate
+inv_name_short		= dovetail_rail_rs_regulateS
+inv_grid_x				= 25
+inv_grid_y				= 21
+cost							= 1200
+inv_weight 				= 0.13
+attachment_slots	= pica_10|wpn_body|0,0.08414,-0.00823|0,0,0
+override_section = dovetail_rail_rsr_attributes
+
+[dovetail_rail_rsr_attributes]
+zoom_rotate_time = 0.01
+
+[dovetail_sight_1p63]:ak_sight
+kind = dovetail
+inv_ui_sign				= 1p63
+visual							= w_att_huds\dovetail_sight_1p63
+description                 = dovetail_sight_1p63_descr
+inv_name					= dovetail_sight_1p63
+inv_name_short		= dovetail_sight_1p63S
+inv_grid_x         		= 25
+inv_grid_y         		= 17
+cost							= 8000
+inv_weight 				= 0.6
+attachment_point	= dovetail_side|0,0,0|0,0,0
+attachment_slots	= aim_dot|wpn_body|-0.0015,0.132,0|0,0,0
+override_section = dovetail_sight_1p63_attributes
+
+[dovetail_sight_1p63_attributes]
+zoom_rotate_time = 0.02
+fire_dispersion_base_koeff = -0.05
+
+[dovetail_sight_pk23]:ak_sight
+kind = dovetail
+inv_ui_sign				= pk23
+visual							= w_att_huds\dovetail_sight_npc_pk_23_01
+description                 = dovetail_sight_npc_pk_23_01_descr		
+inv_name					= dovetail_sight_npc_pk_23_01
+inv_name_short		= dovetail_sight_npc_pk_23_01S
+inv_grid_x         		= 40
+inv_grid_y         		= 18
+cost							= 7600
+inv_weight 				= 0.25
+attachment_point	= dovetail_side|0,0,0|0,0,0
+attachment_slots	= aim_dot|wpn_body|-0.00012,0.0984,0|0,0,0
+override_section = dovetail_sight_pk23_attributes
+
+[dovetail_sight_pk23_attributes]
+zoom_rotate_time = 0.02
+fire_dispersion_base_koeff = -0.05
+
+[dovetail_sight_okp7]:ak_sight
+kind = dovetail
+inv_ui_sign				= okp7
+visual							= w_att_huds\dovetail_sight_okp7
+description					= dovetail_sight_okp7_descr
+inv_name					= dovetail_sight_okp7
+inv_name_short		= dovetail_sight_okp7S
+inv_grid_x         		= 39
+inv_grid_y         		= 17
+cost							= 25700
+inv_weight 				= 0.33
+attachment_point	= dovetail_side|0,0,0|0,0,0
+attachment_slots	= aim_dot|wpn_body|-0.0065,0.0956,0|0,0,0
+holo_position_offset	=	0,0,0.7
+override_section = dovetail_sight_okp7_attributes
+
+[dovetail_sight_okp7_attributes]
+zoom_rotate_time = 0.01
+fire_dispersion_bas = -0.01
+
+[dovetail_sight_pk]:ak_sight 
+kind = dovetail
+inv_ui_sign				= pk-as
+visual							= w_att_huds\dovetail_sight_pk-as
+description                 = dovetail_sight_belomo_pk-as_descr
+inv_name					= dovetail_sight_belomo_pk-as
+inv_name_short		= dovetail_sight_belomo_pk-asS
+inv_grid_x         		= 40
+inv_grid_y         		= 17
+cost							= 11600
+inv_weight 				= 0.4
+attachment_point	= dovetail_side|0,0,0|0,0,0
+attachment_slots	= aim_dot|wpn_body|-0.00396,0.12555,0.01713|0,0,0
+override_section = dovetail_sight_pk_attributes
+
+[dovetail_sight_pk_attributes]
+zoom_rotate_time = 0.02
+fire_dispersion_base_koeff = -0.05
+
+[dovetail_sight_kobra]:ak_sight
+kind = dovetail
+inv_ui_sign				= ekp1c
+visual							= w_att_huds\dovetail_sight_kobra_ekp1c
+description                 = dovetail_sight_kobra_ekp1c_descr
+inv_name					= dovetail_sight_kobra_ekp1c
+inv_name_short		= dovetail_sight_kobra_ekp1cS
+inv_grid_x         		= 39
+inv_grid_y         		= 18
+cost							= 11000
+inv_weight 				= 0.4
+attachment_point	= dovetail_side|0,0,0|0,0,0
+attachment_slots	= aim_dot|wpn_body|-0.00396,0.114,0|0,0,0
+override_section = dovetail_sight_kobra_attributes
+
+[dovetail_sight_kobra_attributes]
+zoom_rotate_time = 0.01
+fire_dispersion_bas = -0.01
+
+[dovetail_scope_pso1]:ak_pip_scope		;4x
+kind = dovetail
+inv_ui_sign				= pso1
+visual							= w_att_huds\dovetail_scope_pso1
+description                 = dovetail_scope_pso1_descr
+inv_name					= dovetail_scope_pso1
+inv_name_short		= dovetail_scope_pso1S
+inv_grid_width			= 2
+inv_grid_height		= 1
+inv_grid_x					= 32
+inv_grid_y					= 17
+cost							= 14300
+inv_weight 				= 0.59
+attachment_point	= dovetail_side|0,0,0.0|0,0,0
+attachment_slots	= aim_lens_pip|wpn_body|-0.0132,0.10652,0.07|0,0,0#scope_sight|wpn_body|-0.013,0.107,0.101|0,0,45#dovetail_scope_pso1_ec|wpn_body|-0.01316,0.1065,-0.0746|0,0,0
+override_section = scope_low_att
+
+scope_texture          =
+scope_zoom_factor      = 25      ; strongest zoom / max magnification
+min_scope_zoom_factor  = 25  ; weakest zoom / low magnification
+scope_dynamic_zoom     = true
+zoom_step_count        = 5
+
+s3ds_reticle_size      = 2
+s3ds_eye_relief        = 2
+s3ds_exit_pupil        = 0.8
+s3ds_ffp               = 0
+s3ds_min_zoom_1x       = 0
+s3ds_image_type        = 0
+s3ds_reticle_type      = 1
+s3ds_dirt_intensity    = 0
+s3ds_chroma_power      = 0.1
+s3ds_lens_color        = lens_clear
+
+ms_count  = 2
+ms_colors = red, black
+
+[dovetail_scope_pso11]:dovetail_scope_pso1
+kind = dovetail
+inv_ui_sign				= pso1-1
+cost = 15200
+visual							= w_att_huds\dovetail_scope_pso11
+description                 = dovetail_scope_pso11_descr
+inv_name					= dovetail_scope_pso11
+inv_name_short		= dovetail_scope_pso11S
+inv_grid_y					= 18
+inv_weight 				= 0.6
+
+scope_texture          =
+scope_zoom_factor      = 25      ; strongest zoom / max magnification
+min_scope_zoom_factor  = 25  ; weakest zoom / low magnification
+scope_dynamic_zoom     = true
+zoom_step_count        = 5
+
+s3ds_reticle_size      = 2
+s3ds_eye_relief        = 2
+s3ds_exit_pupil        = 0.8
+s3ds_ffp               = 0
+s3ds_min_zoom_1x       = 0
+s3ds_image_type        = 0
+s3ds_reticle_type      = 1
+s3ds_dirt_intensity    = 0
+s3ds_chroma_power      = 0.1
+s3ds_lens_color        = lens_clear
+
+ms_count  = 2
+ms_colors = red, black
+
+[dovetail_scope_pso1_ec]:attachment_base_ak
+kind = dovetail
+inv_ui_sign				= pso1
+visual							= w_att_huds\dovetail_scope_pso1_ec
+description                 = dovetail_scope_pso1_ec_descr
+inv_name					= dovetail_scope_pso1_ec
+inv_name_short		= dovetail_scope_pso1_ecS
+cost							= 3350
+inv_weight				= 0.07
+inv_grid_x         		= 34
+inv_grid_y         		= 17
+attachment_point	= dovetail_scope_pso1_ec|0,0,0|0,0,0
+override_section = dovetail_scope_pso1_ec_attributes
+
+[dovetail_scope_pso1_ec_attributes]
+zoom_rotate_time = -0.02
+[pso1ec_attributes]
+zoom_rotate_time = -0.02
+
+[scope_pks07_ec]:dovetail_scope_pso1_ec,attachment_base
+kind = dovetail
+inv_ui_sign				= pks7_ec
+visual						= w_att_huds\scope_pks07_ec
+inv_name					= scope_pks07_ec
+inv_name_short		= scope_pks07_ecS
+inv_grid_x         		= 38
+inv_grid_y         		= 1
+inv_weight 				= 0.08
+override_section = scope_pks07_ec_attributes
+
+cost = 3250
+[scope_pks07_ec_attributes]
+
+[dovetail_scope_1p29]:ak_pip_scope		;4x
+kind = dovetail
+inv_ui_sign				= 1p29
+visual							= w_att_huds\dovetail_scope_1p29
+description                 = dovetail_scope_1p29_descr
+inv_name					= dovetail_scope_1p29
+inv_name_short		= dovetail_scope_1p29S
+inv_grid_x					= 20
+inv_grid_y					= 17
+cost							= 16200
+inv_weight 				= 0.7
+attachment_point	= dovetail_side|0,0,0|0,0,0
+attachment_slots	= aim_lens_pip|wpn_body|0,0.12995,0.1|0,0,0#dovetail_scope_ec|wpn_body|0,0.13,-0.0463|0,0,0
+override_section = scope_low_att
+
+scope_texture          =
+scope_zoom_factor      = 25       ; strongest zoom / max magnification
+min_scope_zoom_factor  = 25  ; weakest zoom / low magnification
+scope_dynamic_zoom     = false
+zoom_step_count        = 5
+
+s3ds_reticle_size      = 3.1
+s3ds_eye_relief        = 2
+s3ds_exit_pupil        = 0.8
+s3ds_ffp               = 0
+s3ds_min_zoom_1x       = 1
+s3ds_image_type        = 0
+s3ds_reticle_type      = 0
+s3ds_dirt_intensity    = 0
+s3ds_chroma_power      = 0
+s3ds_lens_color        = lens_clear
+
+[dovetail_scope_1p29_ec]:attachment_base_ak
+kind = dovetail
+inv_ui_sign				= 1p29
+visual							= w_att_huds\dovetail_scope_1p29_ec
+description					= dovetail_scope_1p29_ec_descr
+inv_name					= dovetail_scope_1p29_ec
+inv_name_short		= dovetail_scope_1p29_ec
+cost							= 3500
+inv_weight				= 0.06
+inv_grid_x         		= 21
+inv_grid_y         		= 17
+attachment_point	= dovetail_scope_ec|0,0,0|0,0,0
+override_section = dovetail_scope_1p29_ec_attributes
+
+[dovetail_scope_1p29_ec_attributes]
+zoom_rotate_time = -0.02
+
+[dovetail_scope_1pn93_ec]:dovetail_scope_1p29_ec
+kind = dovetail
+inv_ui_sign				= 1pn93
+visual							= w_att_huds\dovetail_scope_1pn93_ec
+inv_name					= dovetail_scope_1pn93_ec
+inv_name_short		= dovetail_scope_1pn93_ecS
+inv_grid_x         		= 27
+override_section = dovetail_scope_1pn93_ec_attributes
+
+[dovetail_scope_1pn93_ec_attributes]
+zoom_rotate_time = -0.02
+
+[dovetail_scope_1p78_ec]:dovetail_scope_1p29_ec
+kind = dovetail
+inv_ui_sign				= 1p78
+visual							= w_att_huds\dovetall_scope_1p78_ec
+inv_name					= dovetail_scope_1p78_ec
+inv_name_short		= dovetail_scope_1p78_ec
+cost							= 3300
+inv_weight				= 0.05
+inv_grid_x         		= 36
+override_section = dovetail_scope_1p78_ec_attributes
+
+[dovetail_scope_1p78_ec_attributes]
+zoom_rotate_time = -0.02
+
+[dovetail_scope_1pn93]:ak_pip_scope
+kind = dovetail
+inv_ui_sign				= 1pn93
+visual							= w_att_huds\dovetail_scope_1pn93
+description					= dovetail_scope_1pn93_descr
+inv_name					= dovetail_scope_1pn93
+inv_name_short		= dovetail_scope_1pn93
+inv_grid_x					= 26
+inv_grid_y					= 17
+cost							= 21500
+inv_weight 				= 1.0
+1icon_layer = nightvision_pn
+attachment_point	= dovetail_side|0,0,0|0,0,0
+attachment_slots	= aim_lens_pip|wpn_body|-0.01218,0.13572,0.05|0,0,0#dovetail_scope_ec|wpn_body|-0.0121,0.13571,-0.0463|0,0,0
+override_section = dovetail_scope_1pn93_attributes
+
+scope_texture          =
+scope_zoom_factor      = 25      ; strongest zoom / max magnification
+min_scope_zoom_factor  = 25  ; weakest zoom / low magnification
+scope_dynamic_zoom     = false
+zoom_step_count        = 5
+
+s3ds_reticle_size      = 2
+s3ds_eye_relief        = 2
+s3ds_exit_pupil        = 0.8
+s3ds_ffp               = 0
+s3ds_min_zoom_1x       = 1
+s3ds_image_type        = 1
+s3ds_reticle_type      = 0
+s3ds_dirt_intensity    = 0
+s3ds_chroma_power      = 0
+s3ds_lens_color        = lens_clear
+
+[dovetail_scope_1pn93_attributes]
+zoom_rotate_time = 0.04
+fire_dispersion_base_koeff = -0.07
+
+[dovetail_scope_pgo7v]:ak_pip_scope		;2.7x
+kind = dovetail
+inv_ui_sign				= pgo7v
+visual							= w_att_huds\dovetail_scope_pgo7v
+description                 = dovetail_scope_pgo7v_descr
+inv_name					= dovetail_scope_pgo7v
+inv_name_short		= dovetail_scope_pgo7vS
+inv_grid_x					= 28
+inv_grid_y					= 17
+cost							= 14500
+inv_weight 				= 0.62
+attachment_point	= dovetail_side|0,0,0|0,0,0
+attachment_slots	= aim_lens_pip|wpn_body|-0.03702,0.11208,0.12|0,0,0		
+override_section = sight_mid_plus_att
+
+scope_texture          =
+scope_zoom_factor      = 37.03      ; strongest zoom / max magnification
+min_scope_zoom_factor  = 37.03  ; weakest zoom / low magnification
+scope_dynamic_zoom     = false
+zoom_step_count        = 5
+
+s3ds_reticle_size      = 2
+s3ds_eye_relief        = 2
+s3ds_exit_pupil        = 0.8
+s3ds_ffp               = 0
+s3ds_min_zoom_1x       = 1
+s3ds_image_type        = 0
+s3ds_reticle_type      = 0
+s3ds_dirt_intensity    = 0
+s3ds_chroma_power      = 0
+s3ds_lens_color        = lens_clear
+
+[dovetail_scope_pn23]:ak_pip_scope		;2.5x
+kind = dovetail
+inv_ui_sign				= pn23
+visual							= w_att_huds\dovetail_scope_pn23
+description                 = dovetail_scope_pn23_descr
+inv_name					= dovetail_scope_pn23
+inv_name_short		= dovetail_scope_pn23S
+inv_grid_width     	= 2
+inv_grid_x         		= 29
+inv_grid_y        			= 17
+cost							= 24500
+inv_weight 				= 0.75
+1icon_layer = nightvision_ico
+attachment_point	= dovetail_side|0,0,0|0,0,0
+attachment_slots	= aim_lens_pip|wpn_body|-0.00396,0.12590,0.05|0,0,0#scope_pn23_ec|wpn_body|-0.004,0.126,-0.028|0,0,0		
+override_section = scope_low_att
+
+scope_texture          =
+scope_zoom_factor      = 40      ; strongest zoom / max magnification
+min_scope_zoom_factor  = 40  ; weakest zoom / low magnification
+scope_dynamic_zoom     = false
+zoom_step_count        = 5
+
+s3ds_reticle_size      = 1
+s3ds_eye_relief        = 2
+s3ds_exit_pupil        = 0.8
+s3ds_ffp               = 0
+s3ds_min_zoom_1x       = 1
+s3ds_image_type        = 1
+s3ds_reticle_type      = 1
+s3ds_dirt_intensity    = 0
+s3ds_chroma_power      = 0
+s3ds_lens_color        = lens_clear
+
+ms_count  = 2
+ms_colors = red, black
+
+
+[dovetail_scope_1p78]:ak_pip_scope		; 2.8x
+kind = dovetail
+inv_ui_sign				= 1p78
+visual							= w_att_huds\dovetall_scope_1p78
+description						= dovetail_scope_1p78_descr
+inv_name					= dovetail_scope_1p78
+inv_name_short		= dovetail_scope_1p78S
+inv_grid_x					= 35
+inv_grid_y					= 17
+cost							= 14400
+inv_weight 				= 0.7
+attachment_point	= dovetail_side|0,0,0|0,0,0
+attachment_slots	= aim_lens_pip|wpn_body|-0.00402,0.11022,0.05|0,0,0#dovetail_scope_ec|wpn_body|-0.004,0.1102,-0.035|0,0,0					
+override_section = scope_low_att
+
+scope_texture          =
+scope_zoom_factor      = 35.71      ; strongest zoom / max magnification
+min_scope_zoom_factor  = 35.71  ; weakest zoom / low magnification
+scope_dynamic_zoom     = false
+zoom_step_count        = 5
+
+s3ds_reticle_size      = 3
+s3ds_eye_relief        = 2
+s3ds_exit_pupil        = 0.8
+s3ds_ffp               = 0
+s3ds_min_zoom_1x       = 1
+s3ds_image_type        = 0
+s3ds_reticle_type      = 0
+s3ds_dirt_intensity    = 0.5
+s3ds_chroma_power      = 0
+s3ds_lens_color        = lens_clear
+
+[dovetail_scope_pks07]:ak_pip_scope		; 7x
+kind = dovetail
+inv_ui_sign				= pks07
+visual							= w_att_huds\dovetall_scope_pks07
+description					= dovetail_scope_pks07_descr	
+inv_name					= dovetail_scope_pks07
+inv_name_short		= dovetail_scope_pks07S
+inv_grid_width			= 2
+inv_grid_x					= 37
+inv_grid_y					= 17				
+cost							= 15000
+inv_weight 				= 0.91
+attachment_point	= dovetail_side|0,0,0|0,0,0
+attachment_slots	= aim_lens_pip|wpn_body|-0.00402,0.10426,0.08|0,0,0#dovetail_scope_pso1_ec|wpn_body|-0.003846,0.10426,-0.0621|0,0,0
+override_section = scope_mid_att
+
+scope_texture          =
+scope_zoom_factor      = 14.28      ; strongest zoom / max magnification
+min_scope_zoom_factor  = 14.28  ; weakest zoom / low magnification
+scope_dynamic_zoom     = false
+zoom_step_count        = 5
+
+s3ds_reticle_size      = 3
+s3ds_eye_relief        = 2
+s3ds_exit_pupil        = 0.9
+s3ds_ffp               = 0
+s3ds_min_zoom_1x       = 1
+s3ds_image_type        = 0
+s3ds_reticle_type      = 2
+s3ds_dirt_intensity    = 0
+s3ds_chroma_power      = 0
+s3ds_lens_color        = lens_clear
+
+ms_count  = 2
+ms_colors = red, black
+
+[dovetail_scope_nspu]:ak_pip_scope		;3.5x
+kind = dovetail
+inv_ui_sign				= nspu
+visual							= w_att_huds\dovetall_scope_nspu
+description					= dovetail_scope_nspu_descr
+inv_name					= dovetail_scope_nspu
+inv_name_short		= dovetail_scope_nspuS
+inv_grid_width			= 3
+inv_grid_x					= 34
+inv_grid_y					= 18
+cost							= 15000
+inv_weight 				= 2.2
+attachment_point	= dovetail_side|0,0,0|0,0,0
+attachment_slots	= aim_lens_pip|wpn_body|-0.00588,0.13292,0.05|0,0,0	
+1icon_layer = nightvision_ico
+scope_texture          =
+scope_zoom_factor      = 28.57     ; strongest zoom / max magnification
+min_scope_zoom_factor  = 28.57  ; weakest zoom / low magnification
+scope_dynamic_zoom     = false
+zoom_step_count        = 5
+
+s3ds_reticle_size      = 3
+s3ds_eye_relief        = 2
+s3ds_exit_pupil        = 0.8
+s3ds_ffp               = 0
+s3ds_min_zoom_1x       = 1
+s3ds_image_type        = 1
+s3ds_reticle_type      = 0
+s3ds_dirt_intensity    = 0
+s3ds_chroma_power      = 0
+s3ds_lens_color        = lens_clear
+
+
+override_section = dovetail_scope_nspu_att
+[dovetail_scope_nspu_att]
+zoom_rotate_time = 0.06
+fire_dispersion_base_koeff = -0.03
+
+[dovetail_scope_spp]:ak_pip_scope		; 3-6x
+kind = dovetail
+inv_ui_sign				= spp
+visual							= w_att_huds\dovetail_scope_spp	
+description					= dovetail_scope_spp_descr
+inv_name					= dovetail_scope_spp
+inv_name_short		= dovetail_scope_sppS
+inv_grid_width			= 2
+inv_grid_height		= 2
+inv_grid_x					= 37
+inv_grid_y					= 18				
+cost							= 12000
+inv_weight 				= 1.7
+attachment_point	= dovetail_side|0,0,0|0,0,0
+attachment_slots	= aim_lens_pip|wpn_body|-0.01572,0.13364,-0.05|0,0,0					
+override_section = scope_high_plus_att
+
+scope_texture          =
+scope_zoom_factor      = 16.66     ; strongest zoom / max magnification
+min_scope_zoom_factor  = 33.33  ; weakest zoom / low magnification
+scope_dynamic_zoom     = true
+zoom_step_count        = 5
+
+s3ds_reticle_size      = 3
+s3ds_eye_relief        = 2
+s3ds_exit_pupil        = 0.8
+s3ds_ffp               = 0
+s3ds_min_zoom_1x       = 0
+s3ds_image_type        = 0
+s3ds_reticle_type      = 1
+s3ds_dirt_intensity    = 0
+s3ds_chroma_power      = 0.1
+s3ds_lens_color        = lens_clear
+
+ms_count  = 2
+ms_colors = red, black

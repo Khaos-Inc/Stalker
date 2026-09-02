@@ -1,0 +1,289 @@
+--\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ wpn_pp2000 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+[pp2k_spring]:attachment_base
+kind  =  p2k
+inv_ui_sign				= pp2k_spr
+visual						= w_att_huds\pp2k_spring	
+inv_name					= pp2k_spring
+inv_name_short			= pp2k_springS
+cost							= 400
+inv_weight					= 0.06
+inv_grid_x         			= 30
+inv_grid_y         			= 17
+1icon_layer = clean1_ico
+attachment_point = pp2k_spring|0,0,0|0,0,0
+attachment_slots = pp2k_zatvor|zatvor|0,0,0|0,0,0
+item_tags =	spring
+override_section = pp2k_spring_attributes
+
+[pp2k_spring_attributes]
+
+[pp2k_zatvor]:attachment_base 
+kind  =  p2k
+inv_ui_sign				= pp2k_bolt
+visual						= w_att_huds\pp2k_zatvor	
+inv_name					= pp2k_zatvor
+inv_name_short			= pp2k_zatvor
+cost							= 600
+inv_weight					= 0.13
+inv_grid_x					= 29
+inv_grid_y					= 18
+1icon_layer = clean_lub1_ico
+attachment_point = pp2k_zatvor|0,0,0|0,0,0
+attachment_slots =	pp2k_barrel|wpn_body|0,0,0|0,0,0
+item_tags =	zatvor
+override_section = pp2k_zatvor_attributes
+
+[pp2k_zatvor_attributes]
+rpm = 800
+zoom_rotate_time = 0.03
+[pp2k_zatvor_att]:rpm_800_zatvor_att
+zoom_rotate_time = 0.03
+recoil_koeff = -0.4
+
+[pp2k_barrel]:attachment_base
+kind  =  p2k
+inv_ui_sign				= pp2k_bar
+visual						= w_att_huds\pp2k_barrel	
+inv_name					= pp2k_barrel
+inv_name_short			= pp2k_barrel
+cost							= 950
+inv_weight					= 0.09
+inv_grid_width			= 2
+inv_grid_x         			= 28
+inv_grid_y         			= 17
+1icon_layer = clean1_ico
+attachment_point		= pp2k_barrel|0,0,0|0,0,0
+attachment_slots		= pp2k_silencer|wpn_body|0,0,0|0,0,0#pp2k_upper|wpn_body|0,0,0|0,0,0
+item_tags =	barrel
+override_section =	pp2k_barrel_attributes
+[pp2k_barrel_attributes]
+fire_point = 0, 0, 0.02
+weapon_lenght				=	0.05
+bullet_speed				= 1.03
+k_hit_koeff						= 1.05
+fire_dispersion_base		= 0.19
+zoom_rotate_time = 0.05
+recoil_koeff            = -0.1
+inertia_koeff            = 1.1
+
+[pp2k_upper]:attachment_base
+kind  =  p2k
+inv_ui_sign				= pp2k_upper
+visual						= w_att_huds\pp2k_upper	
+description				= pica_10_up
+inv_name					= pp2k_upper
+inv_name_short		= pp2k_upperS
+cost							= 1100
+inv_weight				= 0.14
+inv_grid_width			= 2
+inv_grid_x				= 32
+inv_grid_y				= 18
+attachment_point	=	pp2k_upper|0,0,0|0,0,0
+attachment_slots 	=	pica_10|wpn_body|0,0.0696,-0.0905|0,0,0
+item_tags 				= cover
+override_section 		= pp2k_upper_attributes
+
+[pp2k_upper_attributes]
+zoom_rotate_time = -0.02
+impair_koeff = 0.9
+
+[pp2k_upper_up]:pp2k_upper
+kind  =  p2k
+inv_ui_sign				= pp2k_upper+
+visual						= w_att_huds\pp2k_upper_up	
+description				= ar_hg_18
+inv_name					= pp2k_upper_up
+inv_name_short		= pp2k_upper_upS
+cost							= 1600
+inv_weight				= 0.21
+inv_grid_y         		= 19
+attachment_slots 	= pica_18|wpn_body|0,0.0696,-0.0905|0,0,0#pica_3|wpn_body|0.01583,0.054,0.05|0,0,90
+override_section 		= pp2k_upper_up_attributes
+
+[pp2k_upper_up_attributes]
+zoom_rotate_time = -0.01
+impair_koeff = 0.8
+
+[pp2k_silencer]:attachment_base
+kind  =  p2k
+inv_ui_sign				= pp2k_sil
+visual						= w_att_huds\pp2k_silencer	
+inv_name					= pp2k_silencer
+inv_name_short			= pp2k_silencerS
+cost							= 2300
+inv_weight					= 0.47
+inv_grid_width			= 2
+inv_grid_x					= 33
+inv_grid_y					= 17
+attachment_point		=	pp2k_silencer|0,0,0|0,0,0
+attachment_slots		= b3|muzzle|0,-0.02125,0.02|0,0,0
+item_tags =	muzzle_device
+override_section = pp2k_silencer_attributes
+
+[pp2k_silencer_attributes]
+silencer_status = 1
+silencer_name = wpn_addon_silencer
+silencer_x = 1
+silencer_y = 1
+weapon_lenght = 0.2
+impair_koeff = 1.2
+zoom_rotate_time = 0.06
+recoil_koeff = -0.1
+inertia_koeff = 1.3
+[pp2k_silencer_att]:silencer_base_attributes
+weapon_lenght = 0.2
+impair_koeff = 1.2
+zoom_rotate_time = 0.06
+recoil_koeff            = -0.23
+inertia_koeff            = 1.3
+
+[pp2k_rail]:attachment_base
+kind  =  p2k
+inv_ui_sign				= pp2k_rail
+visual						= w_att_huds\pp2k_rail	
+description				= pistol_railD
+inv_name					= pp2k_rail
+inv_name_short			= pp2k_railS
+cost							= 500
+inv_weight					= 0.04
+inv_grid_x					= 31
+inv_grid_y					= 18
+attachment_point = pp2k_rail|0,0,0|0,0,0
+attachment_slots = pica_3|wpn_body|0,-0.0476,0.078|0,0,180		
+item_tags =	rail
+override_section = pp2k_rail_attributes
+
+[pp2k_rail_attributes]
+
+[pp2k_f_2c]:pp2k_rail
+kind  =  p2k
+inv_ui_sign				= pp2k_fls
+visual						= w_att_huds\pp2k_flashlight_zenit_2c	
+description				= no_attributes_descr
+inv_name					= pp2k_flashlight_zenit_2c
+inv_name_short			= pp2k_flashlight_zenit_2cS
+cost							= 850
+inv_weight					= 0.16
+inv_grid_x					= 30
+inv_grid_y					= 18
+is_torch                  = true
+is_torch_laser      = false
+light_section             = tactical_flashlight_default
+flashlight_bone           = laser
+flashlight_bone_axis      = y
+flashlight_bone_invert    = false
+1icon_layer = flashlight_ico
+override_section = pp2k_f_2c_attributes
+
+[pp2k_f_2c_attributes]
+inertia_koeff = 1.1
+
+[pp2k_stock]:attachment_base
+kind  =  p2k
+inv_ui_sign				= pp2k_stock
+visual						= w_att_huds\pp2k_stock	
+inv_name					= pp2k_stock
+inv_name_short			= pp2k_stock
+cost							= 900
+inv_weight					= 0.13
+inv_grid_width			= 2
+inv_grid_x					= 34
+inv_grid_y					= 18
+attachment_point		=	pp2k_stock|0,0,0|0,0,0
+item_tags	=	stock
+override_section			= pp2k_stock_attributes
+
+[pp2k_stock_attributes]
+zoom_rotate_time = 0.02
+recoil_koeff = -0.12
+inertia_koeff = 0.9
+weapon_lenght = 0.2
+
+[pp2k_stock_mag]:pp2k_stock
+kind  =  p2k
+inv_ui_sign				= pp2k_mag
+visual						= w_att_huds\pp2k_stock_mag
+inv_name					= pp2k_stock_mag
+inv_name_short			= pp2k_stock_magS
+cost							= 200
+inv_weight					= 0.11
+inv_grid_x					= 35
+inv_grid_y					= 17
+override_section			= pp2k_stock_mag_attributes
+
+[pp2k_stock_mag_attributes]
+weapon_lenght = 0.2
+zoom_rotate_time = 0.01
+inertia_koeff = 0.9
+[pp2k_stock_mag_att]
+weapon_lenght = 0.2
+zoom_rotate_time = 0.01
+recoil_koeff            = -0.16
+inertia_koeff          = 0.9
+
+[pp2k_stock_buffer]:pp2k_stock
+kind  =  p2k
+inv_ui_sign				= pp2k_buff
+visual						= w_att_huds\pp2k_stock_buffer	
+inv_name					= pp2k_stock_buffer
+inv_name_short			= pp2k_stock_bufferS
+cost							= 1100
+inv_weight					= 0.12
+inv_grid_x					= 36
+attachment_slots		= ar_stock|wpn_body|0,-0.006,-0.105|0,10,0
+override_section		= pp2k_stock_buffer_attributes
+
+[pp2k_stock_buffer_attributes]
+weapon_lenght = 0.15
+zoom_rotate_time = 0.03
+
+[mag_wpn_pp2000_9x19_fmj]:mag_wpn_base,wg_wpn_pp2000,ag_ammo_9x19_fmj
+inv_ui_sign					= pp2k_20
+visual							= w_att_huds\pp2k_mag20
+inv_name						= pp2k_mag20
+inv_name_short				= pp2k_mag20
+inv_grid_x         				= 37
+inv_grid_y         				= 17
+inv_weight						= 0.07
+cost								= 350
+max_mag_size				= 20
+mag_size						= small
+override_section				=	mag_wpn_pp2000_9x19_fmj_attributes
+
+[mag_wpn_pp2000_9x19_fmj_attributes]
+animation_prefix_mag = 20_
+
+[mag_wpn_pp2000_44_9x19_fmj]:mag_wpn_pp2000_9x19_fmj
+inv_ui_sign					= pp2k_44
+visual							= w_att_huds\pp2k_mag44
+inv_name						= pp2k_mag44
+inv_name_short				= pp2k_mag44S
+inv_grid_height				= 2
+inv_grid_x						= 38
+inv_weight						= 0.15
+cost								= 750
+max_mag_size				= 44
+mag_size						= medium
+override_section				=	mag_wpn_pp2000_44_9x19_fmj_attributes
+
+[mag_wpn_pp2000_44_9x19_fmj_attributes]
+animation_prefix_mag = 44_
+[pp2000_mag44_attributes]
+animation_prefix_mag			=	44_
+
+[mag_wpn_pp2000_75_9x19_fmj]:mag_wpn_pp2000_9x19_fmj
+inv_ui_sign					= pp2k_75
+visual							= w_att_huds\pp2k_mag75
+inv_name						= pp2k_mag75
+inv_name_short				= pp2k_mag75S
+inv_grid_height				= 2
+inv_grid_x						= 39
+inv_weight						= 1.12
+cost								= 1500
+max_mag_size				= 75
+mag_size						= large
+override_section				= mag_wpn_pp2000_75_9x19_fmj_attributes
+
+[mag_wpn_pp2000_75_9x19_fmj_attributes]
+animation_prefix_mag = 75_

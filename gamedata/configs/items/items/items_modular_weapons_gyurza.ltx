@@ -1,0 +1,212 @@
+--\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ wpn_gyurza \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+[gyurza_trigger]:attachment_base
+kind  =  gyurza
+inv_ui_sign				= sr1_trig
+visual						= w_att_huds\gyurza_trigger	
+inv_name					= gyurza_trigger
+inv_name_short			= gyurza_triggerS
+cost							= 1100
+inv_weight					= 0.08
+inv_grid_x         			= 12
+inv_grid_y         			= 29
+1icon_layer = clean_lub1_ico
+attachment_point	=	gyurza_trigger|0,0,0|0,0,0
+attachment_slots	=	gyurza_barrel|muzzle|0,0,0|0,0,0
+item_tags =	trigger
+override_section = gyurza_trigger_attributes
+
+[gyurza_trigger_attributes]
+
+[gyurza_trigger_up]:gyurza_trigger
+kind  =  gyurza
+inv_ui_sign = sr1_trig+
+visual = w_att_huds\gyurza_trigger_up	
+inv_name = gyurza_trigger_up
+inv_name_short = gyurza_trigger_upS
+cost = 1500
+inv_grid_y = 30
+override_section = gyurza_trigger_up_attributes
+
+[gyurza_trigger_up_attributes]
+fire_modes = -1
+
+[gyurza_barrel]:attachment_base
+kind  =  gyurza
+inv_ui_sign				= sr1_bar
+visual						= w_att_huds\gyurza_barrel	
+inv_name					= gyurza_barrel
+inv_name_short			= gyurza_barrelS
+cost							= 950
+inv_weight					= 0.08
+inv_grid_x         			= 11
+inv_grid_y         			= 29
+1icon_layer = clean1_ico
+attachment_point	=	gyurza_barrel|0,0,0|0,0,0
+attachment_slots	=	gyurza_spring|zatvor|0,0,0|0,0,0
+item_tags =	barrel
+override_section = gyurza_barrel_attributes
+
+[gyurza_barrel_attributes]
+zoom_rotate_time = 0.03
+recoil_koeff = -0.07
+bullet_speed = 0.98
+k_hit_koeff = 0.95
+fire_dispersion_base = 0.21
+[gyurza_barrel_att]:beretta_barrel_att
+bullet_speed				= 0.98
+k_hit_koeff						= 0.95
+fire_dispersion_base		= 0.21
+
+[gyurza_spring]:attachment_base
+kind  =  gyurza
+inv_ui_sign				= sr1_spr
+visual						= w_att_huds\gyurza_spring
+inv_name					= gyurza_spring
+inv_name_short			= gyurza_spring
+cost							= 350
+inv_weight					= 0.03
+inv_grid_x					= 11
+inv_grid_y					= 30
+1icon_layer = clean1_ico
+attachment_point		=	gyurza_spring|0,0,0|0,0,0
+attachment_slots		=	gyurza_zatvor|zatvor|0,0,0|0,0,0
+item_tags =	spring
+override_section = gyurza_spring_attributes
+
+[gyurza_spring_attributes]
+
+[gyurza_zatvor]:attachment_base
+kind  =  gyurza
+inv_ui_sign				= sr1_slide
+visual						= w_att_huds\gyurza_zatvor
+inv_name					= gyurza_zatvor
+inv_name_short			= gyurza_zatvor
+cost							= 1100
+inv_weight					= 0.13
+inv_grid_width     		= 2
+inv_grid_x         			= 13
+inv_grid_y         			= 30
+1icon_layer = clean_lub2_ico
+attachment_point = gyurza_zatvor|0,0,0|0,0,0
+attachment_slots = zatvor_side|zatvor|0,0.0488,-0.0175|0,0,0
+item_tags =	zatvor
+override_section = gyurza_zatvor_attributes
+
+[gyurza_zatvor_attributes]
+rpm = 900
+zoom_rotate_time = 0.1
+recoil_koeff = -0.09
+[gyurza_zatvor_att]:rpm_900_zatvor_att
+zoom_rotate_time = 0.1
+recoil_koeff = -0.16
+
+[gyurza_rail]:attachment_base
+kind  =  gyurza
+inv_ui_sign				= sr1_rail
+visual						= w_att_huds\gyurza_rail
+description				= pistol_railD
+inv_name					= gyurza_rail
+inv_name_short			= gyurza_rail
+cost							= 1600
+inv_weight					= 0.08
+inv_grid_x					= 15
+inv_grid_y					= 30
+attachment_point = gyurza_rail|0,0,0|0,0,0
+attachment_slots =	gyurza_silencer|wpn_body|0,0,0|0,0,0#pica_3|wpn_body|0,0.0105,0.097|0,0,180#usmount|wpn_body|0,0.0105,0.097|0,0,0#picgrp|wpn_body|0,-0.0251,-0.0981|0,0,0
+item_tags =	rail
+override_section = gyurza_rail_attributes
+
+[gyurza_rail_attributes]
+
+[gyurza_rail_4pos]:gyurza_rail
+kind  =  gyurza
+inv_ui_sign				= sr1_rail4p
+visual						= w_att_huds\gyurza_rail_4pos
+description				= ar_hg_4
+inv_name					= gyurza_rail_4pos
+inv_name_short			= gyurza_rail_4posS
+cost							= 2550
+inv_weight					= 0.12
+inv_grid_x					= 16	
+attachment_slots =	gyurza_silencer|wpn_body|0,0,0|0,0,0#pica_4|wpn_body|0,0.0612,0.078|0,0,0#pica_3|wpn_body|-0.0197,0.0421,0.078|0,0,-90#pica_3|wpn_body|0.0197,0.0421,0.078|0,0,90#pica_3|wpn_body|0,0.0105,0.097|0,0,180#picgrp|wpn_body|0,-0.0251,-0.0981|0,0,0
+override_section = gyurza_rail_4pos_attributes
+
+[gyurza_rail_4pos_attributes]
+recoil_koeff = -0.05
+inertia_koeff = 1.1
+
+[gyurza_rail_4pos_plus]:gyurza_rail_4pos
+kind  =  gyurza
+inv_ui_sign				= sr1_rail4p+
+visual						= w_att_huds\gyurza_rail_4pos_plus
+description				= ar_hg_9
+inv_name					= gyurza_rail_4pos_plus
+inv_name_short		= gyurza_rail_4pos_plusS
+cost							= 3800
+inv_weight				= 0.14
+inv_grid_x				= 19
+attachment_slots =	gyurza_silencer|wpn_body|0,0,0|0,0,0#pica_9|wpn_body|0,0.0612,0.034|0,0,0#pica_3|wpn_body|-0.0197,0.0421,0.078|0,0,-90#pica_3|wpn_body|0.0197,0.0421,0.078|0,0,90#pica_3|wpn_body|0,0.0105,0.097|0,0,180#picgrp|wpn_body|0,-0.0251,-0.0981|0,0,0
+override_section = gyurza_rail_4pos_plus_attributes
+
+[gyurza_rail_4pos_plus_attributes]
+recoil_koeff = -0.09
+inertia_koeff = 1.1
+
+[gyurza_silencer]:attachment_base
+kind  =  gyurza
+inv_ui_sign				= sr1_sil
+visual						= w_att_huds\gyurza_silencer
+inv_name					= gyurza_silencer
+inv_name_short			= gyurza_silencerS
+cost							= 4450
+inv_weight					= 0.19
+inv_grid_width     		= 2
+inv_grid_x					= 16
+inv_grid_y					= 29
+attachment_point = gyurza_silencer|0,0,0|0,0,0
+item_tags =	muzzle_device
+override_section = gyurza_silencer_attributes
+
+[gyurza_silencer_attributes]
+silencer_status = 1
+silencer_name = wpn_addon_silencer
+silencer_x = 1
+silencer_y = 1
+weapon_lenght = 0.16
+impair_koeff = 1.4
+zoom_rotate_time = 0.05
+recoil_koeff = -0.11
+inertia_koeff = 1.2
+
+[mag_wpn_gyurza_9x21_ps]:mag_wpn_base,wg_wpn_gyurza,ag_ammo_9x21_ps
+inv_ui_sign					= sr1_18
+visual							= w_att_huds\gyurza_mag
+inv_name						= gyurza_mag
+inv_name_short				= gyurza_magS
+inv_grid_x         				= 17
+inv_grid_y         				= 30
+inv_weight						= 0.08
+cost								= 450
+max_mag_size				= 18
+mag_size						= small
+override_section				= mag_wpn_gyurza_9x21_ps_attributes
+
+[mag_wpn_gyurza_9x21_ps_attributes]
+animation_prefix_mag = 17_
+
+[mag_wpn_gyurza_35_9x21_ps]:mag_wpn_gyurza_9x21_ps
+inv_ui_sign					= sr1_35
+visual							= w_att_huds\gyurza_mag35
+inv_name						= gyurza_mag35
+inv_name_short				= gyurza_mag35S
+inv_grid_height    			= 2
+inv_grid_x         				= 18
+inv_grid_y         				= 29
+inv_weight						= 0.15
+cost								= 950
+max_mag_size				= 35
+override_section				= mag_wpn_gyurza_35_9x21_ps_attributes
+
+[mag_wpn_gyurza_35_9x21_ps_attributes]
+animation_prefix_mag = 33_

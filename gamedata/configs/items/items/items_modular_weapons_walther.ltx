@@ -1,0 +1,155 @@
+--\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ wpn_walther \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+[walther_trigger]:attachment_base
+kind  =  walther
+inv_ui_sign				= p99_trig
+visual						= w_att_huds\walther_trigger	
+inv_name					= walther_trigger
+inv_name_short			= walther_triggerS
+cost							= 1100
+inv_weight					= 0.09
+inv_grid_x         = 3
+inv_grid_y         = 21
+1icon_layer = clean_lub1_ico
+attachment_point	=	walther_trigger|0,0,0|0,0,0
+attachment_slots	=	walther_barrel|muzzle|0,0,0|0,0,0#hpsa_spring|zatvor|0,-0.0014,-0.0143|0,0,0
+item_tags	=	trigger
+override_section = walther_trigger_attributes
+
+[walther_trigger_attributes]
+
+[walther_trigger_up]:walther_trigger
+kind  =  walther
+inv_ui_sign				= p99_trg+
+visual						= w_att_huds\walther_trigger_up	
+inv_name					= walther_trigger_up
+inv_name_short			= walther_trigger_upS
+cost							= 1250
+inv_grid_x         = 4
+override_section		=	walther_trigger_up_attributes
+
+[walther_trigger_up_attributes]
+fire_modes = -1
+
+[walther_stock]:attachment_base
+kind  =  walther
+inv_ui_sign				= p99_stk
+visual						= w_att_huds\walther_stock	
+inv_name					= walther_stock
+inv_name_short			= walther_stockS
+cost							= 1700
+inv_weight					= 0.45
+inv_grid_width     = 2
+inv_grid_x         = 7
+inv_grid_y         = 21
+attachment_point	=	walther_stock|0,0,0|0,0,0
+item_tags	=	stock
+override_section = walther_stock_attributes
+
+[walther_stock_attributes]
+weapon_lenght = 0.3
+zoom_rotate_time = 0.03
+recoil_koeff = -0.22
+inertia_koeff = 0.7
+
+[walther_barrel]:attachment_base
+kind  =  walther
+inv_ui_sign				= p99_bar
+visual						= w_att_huds\walther_barrel	
+inv_name					= walther_barrel
+inv_name_short			= walther_barrelS
+cost							= 750
+inv_weight					= 0.1
+inv_grid_x         = 3
+inv_grid_y         = 20
+1icon_layer = clean1_ico
+attachment_point	=	walther_barrel|0,0,0|0,0,0
+attachment_slots	=	walther_zatvor|zatvor|0,0,0|0,0,0
+item_tags	=	barrel
+override_section = walther_barrel_attributes
+
+[walther_barrel_attributes]
+k_hit_koeff = 1.05
+zoom_rotate_time = 0.01
+recoil_koeff = -0.08
+bullet_speed = 1
+fire_dispersion_base = 0.23
+[walther_barrel_att]:gsh18_barrel_att
+bullet_speed				= 1
+fire_dispersion_base		= 0.23
+
+[walther_barrel_up]:walther_barrel
+kind  =  walther
+inv_ui_sign				= p99_bar+
+visual						= w_att_huds\walther_barrel_up
+inv_name					= walther_barrel_up
+inv_name_short			= walther_barrel_upS
+cost							= 1000
+inv_weight					= 0.1
+inv_grid_x         = 4
+attachment_slots	=	walther_zatvor|zatvor|0,0,0|0,0,0#9mm_muzzle|muzzle|0,0,0|0,0,0
+override_section = walther_barrel_up_attributes
+
+[walther_barrel_up_attributes]
+k_hit_koeff = 1.05
+zoom_rotate_time = 0.01
+recoil_koeff = -0.08
+bullet_speed = 1
+fire_dispersion_base = 0.23
+
+[walther_zatvor]:attachment_base
+kind  =  walther
+inv_ui_sign				= p99_sld
+visual						= w_att_huds\walther_zatvor
+inv_name					= walther_zatvor
+inv_name_short			= walther_zatvorS
+cost							= 1050
+inv_weight					= 0.13
+inv_grid_width     = 2
+inv_grid_x         = 5
+inv_grid_y         = 21
+1icon_layer = clean_lub2_ico
+attachment_point = walther_zatvor|0,0,0|0,0,0
+attachment_slots =	zatvor_side|zatvor|0,0.043247,-0.0241|0,0,0#walther_sights_roni|zatvor|0,0,0|0,0,0
+item_tags =	zatvor
+override_section = walther_zatvor_attributes
+
+[walther_zatvor_attributes]
+zoom_rotate_time = 0.09
+rpm = 1140
+recoil_koeff = -0.2
+impair_koeff = 0.95
+
+[walther_zatvor_pdp]:walther_zatvor
+kind  =  walther
+inv_ui_sign				= p99_pdp
+visual						= w_att_huds\walther_zatvor_pdp
+inv_name					= walther_zatvor_pdp
+inv_name_short			= walther_zatvor_pdpS
+cost							= 1500
+inv_grid_x         		= 9
+attachment_slots =	pica_4|zatvor|0,0.040153,-0.0321|0,0,0
+override_section = walther_zatvor_pdp_attributes
+
+[walther_zatvor_pdp_attributes]
+zoom_rotate_time = 0.1
+rpm = 1100
+impair_koeff = 0.9
+
+[walther_sights_roni]:attachment_base
+kind  =  walther
+inv_ui_sign				= p99_roni
+visual						= w_att_huds\walther_sights_roni
+description				= glock_sights_roni_helper_descr
+inv_name					= walther_sights_roni
+inv_name_short		= glock_sights_roni_helperS
+cost							= 300
+inv_weight				= 0.08
+inv_grid_x         = 9
+inv_grid_y         = 20
+attachment_point = walther_sights_roni|0,0,0|0,0,0
+attachment_slots =	roni|wpn_body|0,0,0|0,0,0
+item_tags =	upper
+override_section = walther_sights_roni_attributes
+
+[walther_sights_roni_attributes]

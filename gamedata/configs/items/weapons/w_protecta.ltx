@@ -1,336 +1,189 @@
-;------------------------------------------------------------------------------------------------
-[wpn_protecta]:identity_immunities,weapon_probability,default_weapon_params,wpn_protecta_sounds
-GroupControlSection                      = spawn_group
-discovery_dependency                     =
-$npc                                     = on
-$prefetch                                = 8
-$spawn                                   = "weapons\protecta"
-scheduled                                = off
-cform                                    = skeleton
+[wpn_protecta]:wpn_toz34,wpn_mts255_sounds
+use_detachable_magazines = false
+GroupControlSection	= spawn_group
+$spawn						= "weapons\protecta"
+class							= WP_ASHTG
+animation_slot			= 9
+inv_grid_x					= 0
+inv_grid_y					= 48
+inv_name						= wpn_mts255
+inv_name_short			= wpn_mts255
+description					= wpn_mts255_descr
+inv_weight					= 1.2
+cost								= 35000
+position						= -0.021, -0.02, 0.005
+orientation					= 0, -6, 0
+fire_point						= 0.0, 0.02, 0.74
+fire_point2					= 0, 0, 0
+strap_bone0				= bip01_spine2
+strap_bone1				= bip01_spine1
+strap_position				= -0.26, -0.11, 0.15
+strap_orientation			= -15, -9, 110
+ph_mass						= 3
+ammo_mag_size			= 5
+tri_state_reload			= on
+silencer_status				= 0
+flame_particles			= weapons\generic_weapon05
+required_tags_shoot	= stock
+rpm 							= 300
+bullet_speed = 1;				= 250
+zoom_rotate_time 		= 0.12
+fire_dispersion_base	= 5.5
+attachment_slots			= slot_magazin|magazin|0,0,0|0,0,0#255_barrel|wpn_body|0,0,0|0,0,0#255_stock|wpn_body|0,0,0|0,0,0#front_dov|wpn_body|0,0.087,0.0478|0,0,0		
+aimpoint_offset_y		= 0.09715
+ui_render_cam_offset	= 0.22, -0.07, 1.06
+weapon_lenght			= 0.23
+visual                     		= w_att_huds\255.ogf
+hud                        		= wpn_255_hud
 
-class                                    = WP_ASHTG
-slot                                     = 2
-animation_slot                           = 10
-ef_main_weapon_type                      = 1
-ef_weapon_type                           = 9
-hand_dependence                          = 1
-single_handed                            = 0
+[wpn_255_hud]:hud_base
 
-inv_grid_height                          = 2
-inv_grid_width                           = 5
-inv_grid_x                               = 35
-inv_grid_y                               = 42
-inv_name                                 = st_wpn_streetsweeper
-inv_name_short                           = st_wpn_streetsweeper
-description                              = st_wpn_streetsweeper_descr
-
-kind                                     = w_shotgun
-inv_weight                               = 4.2
-cost                                     = 28550
-repair_type                              = shotgun
-weapon_class                             = shotgun
-
-hud                                      = wpn_protecta_hud
-visual                                   = dynamics\weapons\wpn_protecta\wpn_protecta
-position                                 = -0.024, -0.097, 0.0
-orientation                              = 0, -4, 0
-fire_point                               = 0.0, 0.158, 0.647
-fire_point2                              = 0.0, 0.158, 0.647
-strap_bone0                              = bip01_spine2
-strap_bone1                              = bip01_spine1
-strap_position                           = -0.26, -0.15, 0.15
-strap_orientation                        = -15, -9, 110
-ph_mass                                  = 3
-
-flame_particles                          = weapons\generic_weapon05
-smoke_particles                          = amik\weapons\smoke_particles\smoke_particles_pump_01
-
-shell_point					             = 0.0, 0.180, 0.647
-;shell_particles         				 = weapons\12ga
-
-light_color                              = 0.6, 0.5, 0.3
-light_range                              = 6.0
-light_time                               = 0.2
-light_var_color                          = 0.05
-light_var_range                          = 0.5
-
-upgrades                                 = up_gr_firstab_protecta, up_gr_seconab_protecta, up_gr_thirdab_protecta, up_gr_fourtab_protecta
-installed_upgrades                       =
-upgrade_scheme                           = upgrade_scheme_protecta
-upgr_icon_x                              = 1450
-upgr_icon_y                              = 200
-upgr_icon_width                          = 300
-upgr_icon_height                         = 100
-
-tri_state_reload                         = on
-fire_modes                               = 1
-ammo_class                               = ammo_12x70_buck, ammo_12x70_buck_bad, ammo_12x70_buck_verybad, ammo_12x76_zhekan, ammo_12x76_zhekan_bad, ammo_12x76_zhekan_verybad, ammo_12x76_dart, ammo_12x76_dart_bad, ammo_12x76_dart_verybad, ammo_12x70_buck_self
-ammo_current                             = 12
-ammo_elapsed                             = 0
-ammo_limit                               = 60
-ammo_mag_size                            = 12
-startup_ammo                             = 10
-
-scope_status                             = 0
-scope_texture                            = 
-scope_x                                  = 95
-scope_y                                  = -1
-scope_zoom_factor                        = 0
-
-silencer_status                          = 0
-
-grenade_launcher_status                  = 0
-
-hit_impulse                              = 30
-hit_power                                = 0.78, 0.78, 0.78, 0.78
-hit_type                                 = fire_wound
-fire_distance                            = 300
-bullet_speed                             = 320
-rpm                                      = 155
-rpm_empty_click                          = 200
-
-zoom_dof                                 = 0.5, 1.0, 180
-zoom_enabled                             = true
-zoom_rotate_time                         = 0.25
-control_inertion_factor = 1.0f
-crosshair_inertion                       = 6.3
-fire_dispersion_base                     = 0.53
-fire_dispersion_condition_factor         = 0.001
-
-misfire_probability                      = 0.005
-misfire_start_condition                  = 0.7 ;  0.8
-misfire_start_prob                       = 0.007
-misfire_end_condition                    = 0.11
-misfire_end_prob                         = 0.11
-
-condition_queue_shot_dec                 = 0.0021
-condition_shot_dec                       = 0.0021
-
-cam_return                               = 0
-cam_relax_speed                          = 10
-cam_dispersion                           = 6.46
-cam_dispersion_frac                      = 0.9
-cam_dispersion_inc                       = 3.44
-cam_max_angle                            = 50.0
-cam_max_angle_horz                       = 50.0
-cam_step_angle_horz                      = 2.22
-zoom_cam_relax_speed                     = 10
-zoom_cam_dispersion                      = 5.54
-zoom_cam_dispersion_frac                 = 0.7
-zoom_cam_dispersion_inc                  = 2.46
-zoom_cam_max_angle                       = 50.0
-zoom_cam_max_angle_horz                  = 50.0
-zoom_cam_step_angle_horz                 = 1.88
-
-PDM_disp_accel_factor                    = 1.35
-PDM_disp_base                            = 1.55
-PDM_disp_crouch                          = 1.0
-PDM_disp_crouch_no_acc                   = 1.0
-PDM_disp_vel_factor                      = 1.35
-
-cam_relax_speed_ai                       = 360
-zoom_cam_relax_speed_ai                  = 120.75
-holder_fov_modifier                      = 1.0
-holder_range_modifier                    = 1.0
-min_radius                               = 0
-max_radius                               = 500
-hit_probability_gd_novice                = 1.00
-hit_probability_gd_stalker               = 1.00
-hit_probability_gd_veteran               = 1.00
-hit_probability_gd_master                = 1.00
-
-kill_msg_x                               = 258
-kill_msg_y                               = 3
-kill_msg_width                           = 94
-kill_msg_height                          = 21
-
-scripted_snd_open_empty					= weapons\librarian_striker\reload_start_empty
-snd_open_weapon			                = $no_sound
-snd_add_cartridge				        = weapons\librarian_striker\insert
-snd_close_weapon				        = weapons\librarian_striker\reload_end
-snd_reload_misfire						= weapons\librarian_striker\unjam
+weapon_recoil_vert         = 3.64
+weapon_recoil_vert_inc     = 1.7
+weapon_recoil_horz         = 4.86
+weapon_recoil_ret_speed    = 2
 
 
-[wpn_protecta_hud]:hud_base
-item_visual                              = anomaly_weapons\wpn_protecta\wpn_protecta_hud
-attach_place_idx                         = 0
-zoom_hide_crosshair                      = true   
 
-item_position                            = 0, 0, 0
-item_orientation                         = 0, 0, 0
+item_visual                 = w_att_huds\255_hud.ogf
+;hands_position							= 0.06, -0.06, -0.2
+;hands_position_16x9					= 0.06, -0.06, -0.2
+;hands_orientation						= 0.3, 1, 0
+;hands_orientation_16x9				= 0.3, 1, 0
+;aim_hud_offset_pos					= -0.06, 0.031, -0.07
+;aim_hud_offset_pos_16x9			= -0.06, 0.031, -0.07
+;aim_hud_offset_rot						= 0.01, 0.006, 0
+;aim_hud_offset_rot_16x9			= 0.01, 0.006, 0
 
-        aim_hud_offset_pos               = -0.07254, 0.01734, -0.029084
-        aim_hud_offset_pos_16x9          = -0.07254, 0.01734, -0.029084
-        aim_hud_offset_rot               = 0.002698, -0.000109, 0
-        aim_hud_offset_rot_16x9          = 0.002698, -0.000109, 0
-        hands_orientation                = 0.0014, -0.001334, 0
-        hands_orientation_16x9           = 0.0014, -0.001334, 0
-        hands_position                   = -0.021278, -0.001704, 0.069038
-        hands_position_16x9              = -0.021278, -0.001704, 0.069038
-        lowered_hud_offset_pos           = 0.108906, -0.019562, -0.006751
-        lowered_hud_offset_pos_16x9      = 0.108906, -0.019562, -0.006751
-        lowered_hud_offset_rot           = 0.153453, -0.607205, -0.011383
-        lowered_hud_offset_rot_16x9      = 0.153453, -0.607205, -0.011383
-		
-anm_show								= striker_hand_draw, striker_idle
-anm_hide								= striker_hand_holster, striker_idle
-anm_idle								= striker_hand_idle, striker_idle
-anm_idle_aim							= striker_hand_idle_aim, striker_idle
-anm_idle_aim_moving						= striker_hand_moving, striker_idle, 0.75
-anm_idle_aim_moving_crouch				= striker_hand_moving, striker_idle, 0.7
-anm_idle_moving							= striker_hand_moving, striker_idle
-anm_idle_moving_crouch					= striker_hand_moving, striker_idle, 0.7
-anm_idle_sprint							= striker_hand_sprint, striker_idle, 1.1
-anm_open								= striker_hand_reload_start, striker_idle_empty
-anm_open_empty							= striker_hand_reload_start_empty, striker_reload_start_empty
-anm_add_cartridge						= striker_hand_insert, striker_insert
-anm_close								= striker_hand_reload_end, striker_idle, 0.9
-anm_reload_misfire						= striker_hand_unjam, striker_unjam
-anm_shots								= striker_hand_shoot, striker_shoot
+hands_position							= 0.08, -0.06, -0.17
+hands_position_16x9					= 0.08, -0.06, -0.17
+hands_orientation						= 0.3, 1, 0
+hands_orientation_16x9				= 0.3, 1, 0
+aim_hud_offset_pos					= -0.08, 0.031, -0.1
+aim_hud_offset_pos_16x9			= -0.08, 0.031, -0.1
+aim_hud_offset_rot						= 0.01, 0.006, 0
+aim_hud_offset_rot_16x9			= 0.01, 0.006, 0
 
-anm_hide_empty						= striker_hand_holster, striker_idle_empty
-anm_idle_empty						= striker_hand_idle, striker_idle_empty
-anm_idle_aim_empty					= striker_hand_idle_aim, striker_idle_empty
-anm_idle_aim_moving_empty			= striker_hand_moving, striker_idle_empty, 0.75
-anm_idle_aim_moving_crouch_empty	= striker_hand_moving, striker_idle_empty, 0.7
-anm_idle_moving_empty				= striker_hand_moving, striker_idle_empty
-anm_idle_sprint_empty				= striker_hand_sprint, striker_idle_empty, 1.1
-anm_shot_l							= striker_hand_shoot, striker_shoot_last
-anm_show_empty						= striker_hand_draw, striker_idle_empty
+anm_bore												= 255_g_bore, idle
+anm_hide												= 255_g_holster, idle
+anm_show											= 255_g_show, idle
+anm_idle												= 255_g_idle, idle
+anm_idle_aim										= 255_g_idle_aim, idle
+anm_idle_aim_moving						= 255_g_walk_aim, idle
+anm_idle_aim_moving_crouch		= 255_g_walk_aim, idle
+anm_idle_moving								= 255_g_walk, idle, 0.85
+anm_idle_moving_crouch				= 255_g_walk, idle, 0.7
+anm_open											= 255_g_reload_open, open
+anm_open_empty								= 255_g_reload_open_empty, open_empty
+anm_add_cartridge							= 255_g_reload_add, add, 0.75
+anm_close											= 255_g_reload_close, close
+anm_shots											= 255_g_shoot_r, shoot
+anm_reload_misfire							= 255_g_unjam, unjam
+anm_idle_sprint									= 255_g_idle_sprint, idle
 
+c_anm_bore										= 255_c_bore, idle
+c_anm_hide											= 255_c_holster, idle
+c_anm_show										= 255_c_show, idle
+c_anm_idle											= 255_c_idle, idle
+c_anm_idle_aim									= 255_c_idle_aim, idle
+c_anm_idle_aim_moving					= 255_c_walk_aim, idle
+c_anm_idle_aim_moving_crouch	= 255_c_walk_aim, idle
+c_anm_idle_moving							= 255_c_walk, idle, 0.85
+c_anm_idle_moving_crouch			= 255_c_walk, idle, 0.7
+c_anm_open										= 255_c_reload_open, open
+c_anm_open_empty							= 255_c_reload_open_empty, open_empty
+c_anm_add_cartridge						= 255_g_reload_add, add, 0.75
+c_anm_close										= 255_c_reload_close, close
+c_anm_shots										= 255_c_shoot_r, shoot
+c_anm_reload_misfire						= 255_c_unjam, unjam
+c_anm_idle_sprint									= 255_c_idle_sprint, idle
 
-;anm_reload_empty						= striker_hand_throw, striker_idle
-;anm_close_long							= striker_hand_reload_end, striker_idle
-;anm_add_cartridge_long					= striker_hand_insert_longer, striker_insert_longer
+cg_anm_bore                              		= 255_cg_bore, idle
+cg_anm_hide										= 255_cg_holster, idle
+cg_anm_show									= 255_cg_show, idle
+cg_anm_idle										= 255_cg_idle, idle
+cg_anm_idle_aim								= 255_cg_idle_aim, idle
+cg_anm_idle_aim_moving				= 255_cg_walk_aim, idle
+cg_anm_idle_aim_moving_crouch = 255_cg_walk_aim, idle
+cg_anm_idle_moving						= 255_cg_walk, idle, 0.85
+cg_anm_idle_moving_crouch			= 255_cg_walk, idle, 0.7
+cg_anm_open										= 255_cg_reload_open, open
+cg_anm_open_empty						= 255_cg_reload_open_empty, open_empty
+cg_anm_add_cartridge						= 255_g_reload_add, add, 0.75
+cg_anm_close									= 255_cg_reload_close, close
+cg_anm_shots									= 255_cg_shoot_r, shoot
+cg_anm_reload_misfire					= 255_cg_unjam, unjam
+cg_anm_idle_sprint							= 255_cg_idle_sprint, idle
 
+t_anm_bore                              			= 255_t_bore, idle
+t_anm_hide											= 255_t_holster, idle
+t_anm_show										= 255_t_show, idle
+t_anm_idle											= 255_t_idle, idle
+t_anm_idle_aim									= 255_t_idle_aim, idle
+t_anm_idle_aim_moving					= 255_t_walk_aim, idle
+t_anm_idle_aim_moving_crouch	= 255_t_walk_aim, idle
+t_anm_idle_moving							= 255_t_walk, idle, 0.85
+t_anm_idle_moving_crouch				= 255_t_walk, idle, 0.7
+t_anm_open										= 255_t_reload_open, open
+t_anm_open_empty							= 255_t_reload_open_empty, open_empty
+t_anm_add_cartridge						= 255_g_reload_add, add, 0.75
+t_anm_close										= 255_t_reload_close, close
+t_anm_shots										= 255_t_shoot_r, shoot
+t_anm_reload_misfire						= 255_t_unjam, unjam
+t_anm_idle_sprint									= 255_t_idle_sprint, idle
 
-shell_bone                               = gilza
-shell_dir                                = 0, 0, 0
-shell_point                      		 = 0, 0, -0.680394
+r_anm_bore                              			= 255_r_bore, idle
+r_anm_hide											= 255_r_holster, idle
+r_anm_show										= 255_r_show, idle
+r_anm_idle											= 255_r_idle, idle
+r_anm_idle_aim									= 255_r_idle_aim, idle
+r_anm_idle_aim_moving					= 255_r_walk_aim, idle
+r_anm_idle_aim_moving_crouch	= 255_r_walk_aim, idle
+r_anm_idle_moving							= 255_r_walk, idle, 0.85
+r_anm_idle_moving_crouch			= 255_r_walk, idle, 0.7
+r_anm_open										= 255_r_reload_open, open
+r_anm_open_empty							= 255_r_reload_open_empty, open_empty
+r_anm_add_cartridge						= 255_g_reload_add, add, 0.75
+r_anm_close										= 255_r_reload_close, close
+r_anm_shots										= 255_r_shoot_r, shoot
+r_anm_reload_misfire						= 255_r_unjam, unjam
+r_anm_idle_sprint									= 255_r_idle_sprint, idle
 
-fire_bone                                = muzzle
-fire_point                               = 0, 0, 0
+v_anm_bore                              			= 255_v_bore, idle
+v_anm_hide											= 255_v_holster, idle
+v_anm_show										= 255_v_show, idle
+v_anm_idle											= 255_v_idle, idle
+v_anm_idle_aim									= 255_v_idle_aim, idle
+v_anm_idle_aim_moving					= 255_v_walk_aim, idle
+v_anm_idle_aim_moving_crouch	= 255_v_walk_aim, idle
+v_anm_idle_moving							= 255_v_walk, idle, 0.85
+v_anm_idle_moving_crouch			= 255_v_walk, idle, 0.7
+v_anm_open										= 255_v_reload_open, open
+v_anm_open_empty							= 255_v_reload_open_empty, open_empty
+v_anm_add_cartridge						= 255_g_reload_add, add, 0.75
+v_anm_close										= 255_v_reload_close, close
+v_anm_shots										= 255_v_shoot_r, shoot
+v_anm_reload_misfire						= 255_v_unjam, unjam
+v_anm_idle_sprint									= 255_v_idle_sprint, idle
 
-freelook_z_offset_mul					 = 0.6
+h_anm_bore                           				= 255_h_bore, idle
+h_anm_hide										= 255_h_holster, idle
+h_anm_show										= 255_h_show, idle
+h_anm_idle											= 255_h_idle, idle
+h_anm_idle_aim								= 255_h_idle_aim, idle
+h_anm_idle_aim_moving					= 255_h_walk_aim, idle
+h_anm_idle_aim_moving_crouch	= 255_h_walk_aim, idle
+h_anm_idle_moving							= 255_h_walk, idle, 0.85
+h_anm_idle_moving_crouch			= 255_h_walk, idle, 0.7
+h_anm_open										= 255_h_reload_open, open
+h_anm_open_empty							= 255_h_reload_open_empty, open_empty
+h_anm_add_cartridge						= 255_g_reload_add, add, 0.75
+h_anm_close										= 255_h_reload_close, close
+h_anm_shots										= 255_h_shoot_r, shoot
+h_anm_reload_misfire						= 255_h_unjam, unjam
+h_anm_idle_sprint									= 255_h_idle_sprint, idle
 
-;------------------------------------------------------------------------------------------------
-[wpn_protecta_aim]:wpn_protecta
-inv_grid_x                               = 35
-inv_grid_y                               = 52
-inv_name                                 = st_wpn_streetsweeper_aim
-inv_name_short                           = st_wpn_streetsweeper_aim
-description                              = st_wpn_streetsweeper_aim_descr
+shell_bone						= wpn_body
 
-cost                                     = 33780
-
-hud                                      = wpn_protecta_aim_hud
-visual                                   = dynamics\weapons\wpn_protecta\wpn_protecta_aim.ogf
-fire_distance                            = 500
-rpm                                      = 150
-
-fire_dispersion_base                     = 0.53
-
-misfire_start_condition                  = 0.7 ;  0.78
-misfire_start_prob                       = 0.006
-misfire_end_condition                    = 0.093
-misfire_end_prob                         = 0.05
-
-condition_queue_shot_dec                 = 0.0022
-condition_shot_dec                       = 0.0022
-
-[wpn_protecta_aim_hud]:wpn_protecta_hud
-item_visual                              = anomaly_weapons\wpn_protecta\wpn_protecta_aim_hud.ogf
-
-
-        aim_hud_offset_pos               = -0.072275, 0.012148, -0.029084
-        aim_hud_offset_pos_16x9          = -0.072275, 0.012148, -0.029084
-        aim_hud_offset_rot               = 0.002698, -0.000109, 0
-        aim_hud_offset_rot_16x9          = 0.002698, -0.000109, 0
-
-;------------------------------------------------------------------------------------------------
-[wpn_protecta_camo]:wpn_protecta
-inv_grid_x                               = 35
-inv_grid_y                               = 44
-
-cost                                     = 33850
-
-hud                                      = wpn_protecta_sk1_hud
-visual                                   = dynamics\weapons\wpn_protecta\wpn_protecta_sk1.ogf
-
-installed_upgrades                       = up_firsta_protecta, up_secona_protecta
-
-fire_distance                            = 500
-fire_dispersion_base                     = 0.6
-
-misfire_start_condition                  = 0.7 ;  0.7
-misfire_start_prob                       = 0.004
-misfire_end_condition                    = 0.09
-misfire_end_prob                         = 0.03
-
-condition_queue_shot_dec                 = 0.00223
-condition_shot_dec                       = 0.00223
-
-
-[wpn_protecta_sk1_hud]:wpn_protecta_hud
-item_visual                              = anomaly_weapons\wpn_protecta\wpn_protecta_sk1_hud.ogf
-
-;------------------------------------------------------------------------------------------------
-[wpn_protecta_custom]:wpn_protecta
-inv_grid_y                               = 46
-
-cost                                     = 30650
-
-hud                                      = wpn_protecta_sk2_hud
-visual                                   = dynamics\weapons\wpn_protecta\wpn_protecta_sk2.ogf
-
-installed_upgrades                       = up_fourta_protecta
-
-inv_weight                               = 3.9
-rpm                                      = 168
-
-fire_dispersion_base                     = 0.62
-
-misfire_start_condition                  = 0.7 ;  0.76
-misfire_start_prob                       = 0.005
-misfire_end_condition                    = 0.09
-misfire_end_prob                         = 0.04
-
-condition_queue_shot_dec                 = 0.00211
-condition_shot_dec                       = 0.00211
-
-
-[wpn_protecta_sk2_hud]:wpn_protecta_hud
-item_visual                              = anomaly_weapons\wpn_protecta\wpn_protecta_sk2_hud.ogf
-
-;------------------------------------------------------------------------------------------------
 [wpn_protecta_nimble]:wpn_protecta
 $spawn                                   = "weapons\wpn_protecta_nimble"
-
-inv_grid_x                               = 35
-inv_grid_y                               = 54
-inv_name                                 = st_wpn_streetsweeper_nimble
-inv_name_short                           = st_wpn_streetsweeper_nimble
-description                              = st_wpn_streetsweeper_nimble_descr
-
-cost                                     = 32680
-
-hud                                      = wpn_protecta_nimble_hud
-visual                                   = dynamics\weapons\wpn_protecta\wpn_protecta_nimble
-fire_distance                            = 500
-inv_weight                               = 4.0
-rpm                                      = 191
-
-fire_dispersion_base                     = 0.63
-
-misfire_start_condition                  = 0.7 ;  0.76
-misfire_start_prob                       = 0.003
-misfire_end_condition                    = 0.09
-misfire_end_prob                         = 0.02
-
-condition_queue_shot_dec                 = 0.0022
-condition_shot_dec                       = 0.0022
-
-
-[wpn_protecta_nimble_hud]:wpn_protecta_hud
-item_visual                              = anomaly_weapons\wpn_protecta\wpn_protecta_nimble_hud
-

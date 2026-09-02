@@ -102,7 +102,7 @@ bullet_speed                             = 920
 rpm                                      = 950
 rpm_empty_click                          = 200
 
-use_aim_bullet                           = true
+use_aim_bullet = false
 time_to_aim                              = 0.0 ;  3.0
 zoom_dof                                 = 0.5, 1.0, 180
 zoom_enabled                             = true
@@ -169,25 +169,25 @@ zoom_hide_crosshair                      = true
 item_position                            = 0.0, 0.0, 0.0
 item_orientation                         = 0.0, 0.0, 0.0
 
-hands_position                           = -0.065, -0.165, -0.03
-hands_position_16x9                      = -0.065, -0.165, -0.03
-hands_orientation                        = 0.0, -1, 0.15
-hands_orientation_16x9                   = 0.0, -1, 0.15
+hands_position                           = -0.064, -0.19, 0.2055
+hands_position_16x9                      = -0.064, -0.19, 0.2055
+hands_orientation                        = 0.52, 2.409999, 0.15
+hands_orientation_16x9                   = 0.52, 2.409999, 0.15
 
-aim_hud_offset_pos                       = -0.0885, 0.0265, -0.01
-aim_hud_offset_pos_16x9                  = -0.0885, 0.0265, -0.01
-aim_hud_offset_rot                       = -0.0132, -0.0008, -0.003
-aim_hud_offset_rot_16x9                  = -0.0132, -0.0008, -0.003
+aim_hud_offset_pos                       = -0.09145, 0.06115, -0.25
+aim_hud_offset_pos_16x9                  = -0.09145, 0.06115, -0.25
+aim_hud_offset_rot                       = 0.0471, 0.0086, -0.0024
+aim_hud_offset_rot_16x9                  = 0.0471, 0.0086, -0.0024
+
+aim_hud_offset_alt_pos                   = -0.09134, 0.06112, -0.25
+aim_hud_offset_alt_rot                   = 0.0465, 0.00899, -0.003
+aim_hud_offset_alt_pos_16x9              = -0.09134, 0.06112, -0.25
+aim_hud_offset_alt_rot_16x9              = 0.0465, 0.00899, -0.003
 
 gl_hud_offset_pos                        = 0.000000, 0.000000, 0.000000
 gl_hud_offset_pos_16x9                   = 0.000000, 0.000000, 0.000000
 gl_hud_offset_rot                        = 0.000000, 0.000000, 0.000000
 gl_hud_offset_rot_16x9                   = 0.000000, 0.000000, 0.000000
-
-lowered_hud_offset_pos					= 0.06, -0.05, -0.02
-lowered_hud_offset_pos_16x9				= 0.06, -0.05, -0.02
-lowered_hud_offset_rot					= -0.08, -0.65, 0.4
-lowered_hud_offset_rot_16x9				= -0.08, -0.65, 0.4
 
 lean_hud_offset_pos                      = 0, 0, 0
 lean_hud_offset_rot                      = 0, 0, 0
@@ -209,7 +209,7 @@ shell_point                              = 0.02, 0.06, -0.099
 
 fire_bone                                = wpn_body
 fire_bone2                               = wpn_body
-fire_point                               = -0.002, 0.05, 0.47
+fire_point                               = -0.011, 0.043190, 0.438116
 fire_point2                              = 0.0, -0.028, 0.678
 
 freelook_z_offset_mul					 = 0.7
@@ -224,14 +224,13 @@ inv_weight                               = 3.95
 
 hud                                      = wpn_famas3_ac10632_hud
 visual                                   = dynamics\weapons\wpn_famas\wpn_famas3_ac10632.ogf
+use_alt_aim_hud							 = true
 
 [wpn_famas3_ac10632_hud]:wpn_famas3_hud
 item_visual                              = anomaly_weapons\wpn_famas\wpn_famas3_ac10632_hud.ogf
 
-aim_hud_offset_pos                       = -0.0885, -0.03, -0.01
-aim_hud_offset_pos_16x9                  = -0.0885, -0.03, -0.01
-aim_hud_offset_rot                       = -0.009, -0.0008, -0.003
-aim_hud_offset_rot_16x9                  = -0.009, -0.0008, -0.003
+aim_hud_offset_pos                       = -0.09205, 0.00325, -0.3
+aim_hud_offset_pos_16x9                  = -0.09205, 0.00325, -0.3
 
 ;------------------------------------------------------------------------------------------------
 [wpn_famas3_acog]:wpn_famas3
@@ -253,15 +252,11 @@ use_alt_aim_hud							 = true
 [wpn_famas3_acog_hud]:wpn_famas3_hud,hud_low_interia
 item_visual                              = anomaly_weapons\wpn_famas\wpn_famas3_acog_hud.ogf
 
-aim_hud_offset_pos                       = -0.089, -0.028, -0.082
-aim_hud_offset_pos_16x9                  = -0.089, -0.028, -0.082
-aim_hud_offset_rot                       = -0.016, -0.0004, -0.003
-aim_hud_offset_rot_16x9                  = -0.016, -0.0004, -0.003
+aim_hud_offset_pos                       = -0.09185, -0.00152, -0.35
+aim_hud_offset_pos_16x9                  = -0.09185, -0.00152, -0.35
+aim_hud_offset_rot                       = 0.03, 0.00899, -0.007
+aim_hud_offset_rot_16x9                  = 0.03, 0.00899, -0.007
 
-aim_hud_offset_alt_pos                   = -0.0885, 0.0265, 0.06
-aim_hud_offset_alt_pos_16x9              = -0.0885, 0.0265, 0.06
-aim_hud_offset_alt_rot                   = -0.0132, -0.0008, -0.003
-aim_hud_offset_alt_rot_16x9              = -0.0132, -0.0008, -0.003
 ;------------------------------------------------------------------------------------------------
 [wpn_famas3_eot]:wpn_famas3
 $spawn                                   = "weapons\famas_eot"
@@ -274,13 +269,13 @@ inv_weight                               = 4.10
 
 hud                                      = wpn_famas3_eot_hud
 visual                                   = dynamics\weapons\wpn_famas\wpn_famas3_eot.ogf
-
+use_alt_aim_hud							 = true
 
 [wpn_famas3_eot_hud]:wpn_famas3_hud
 item_visual                              = anomaly_weapons\wpn_famas\wpn_famas3_eot_hud.ogf
 
-aim_hud_offset_pos                       = -0.089, -0.03, -0.01
-aim_hud_offset_pos_16x9                  = -0.089, -0.03, -0.01
-aim_hud_offset_rot                       = -0.013, -0.0003, -0.003
-aim_hud_offset_rot_16x9                  = -0.013, -0.0003, -0.003
+aim_hud_offset_pos                       = -0.0901,0.00015,-0.2
+aim_hud_offset_pos_16x9                  = -0.0901,0.00015,-0.2
+aim_hud_offset_rot                       = 0.04, 0.006, -0.007
+aim_hud_offset_rot_16x9                  = 0.04, 0.006, -0.007
 

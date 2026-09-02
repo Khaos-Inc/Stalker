@@ -109,7 +109,8 @@ function on_game_start()
 	RegisterScriptCallback("load_state",load_state)
 end
 --------------------------------------------------------------------------------------
-math.randomseed(os.time())
+--math.randomseed(os.time())
+math.random(); math.random(); math.random()
 
 local rnd = math.random(180000,300000)
 local rnd2 = rnd - 10000
@@ -722,7 +723,8 @@ function on_game_start()
 	RegisterScriptCallback("on_game_load",on_game_load)
 end
 -------------------------------------------------------------------------------------
-math.randomseed(os.time())
+--math.randomseed(os.time())
+math.random(); math.random(); math.random()
 
 local rnd = math.random(180000,300000)
 local rnd2 = rnd - 10000

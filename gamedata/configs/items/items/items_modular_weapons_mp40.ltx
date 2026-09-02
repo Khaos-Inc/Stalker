@@ -1,0 +1,334 @@
+--\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ wpn_mp40 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+[mp40_zatvor]:attachment_base
+kind  =  mp40
+inv_ui_sign				= mp40_bolt
+visual						= w_att_huds\mp40_zatvor	
+inv_name					= mp40_zatvor
+inv_name_short			= mp40_zatvor
+cost							= 700
+inv_weight					= 0.13
+inv_grid_x         			= 21
+inv_grid_y         			= 23
+1icon_layer = clean_lub1_ico
+attachment_point = mp40_zatvor|0,0,0|0,0,0
+attachment_slots = mp40_spring|stock|0,0,0|0,0,0
+item_tags =	zatvor
+override_section = mp40_zatvor_attributes
+
+[mp40_zatvor_attributes]
+rpm = 600
+zoom_rotate_time = 0.06
+impair_koeff = 0.85
+[mp40_zatvor_att]:rpm_600_zatvor_att
+zoom_rotate_time = 0.06
+recoil_koeff = -0.14
+impair_koeff = 0.85
+
+[mp40_spring]:attachment_base
+kind  =  mp40
+inv_ui_sign				= mp40_spr
+visual						= w_att_huds\mp40_spring	
+inv_name					= mp40_spring
+inv_name_short			= mp40_springS
+cost							= 650
+inv_weight					= 0.11
+inv_grid_width			= 2
+inv_grid_x					= 17
+inv_grid_y					= 23
+1icon_layer = clean_lub2_ico
+attachment_point = mp40_spring|0,0,0|0,0,0
+attachment_slots =	mp40_lower|wpn_body|0,0,0|0,0,0	
+item_tags =	spring
+override_section = mp40_spring_attributes
+
+[mp40_spring_attributes]
+impair_koeff = 0.9
+[mp40_spring_att]
+impair_koeff = 0.9
+
+[mp40_spring_up]:mp40_spring
+kind  =  mp40
+inv_ui_sign				= mp40_spr+
+visual						= w_att_huds\mp40_spring_up	
+inv_name					= mp40_spring_up
+inv_name_short			= mp40_spring_upS
+cost							= 1000
+inv_weight					= 0.07
+inv_grid_x         			= 19
+override_section			= mp40_spring_up_attributes
+
+[mp40_spring_up_attributes]
+rpm_koeff = 0.167
+[mp40_spring_up_att]
+rpm_koeff = 0.167
+
+[mp41_lower]:attachment_base
+kind  =  mp40
+inv_ui_sign				= mp41_lower
+visual						= w_att_huds\mp40_lower	
+inv_name					= mp41_lower
+inv_name_short			= mp41_lowerS
+inv_weight					= 1.12
+inv_grid_width     		= 3
+inv_grid_x        			= 29
+inv_grid_y					= 23
+attachment_point		= mp40_lower|0,0,0|0,0,0
+item_tags =	lower
+override_section			= mp41_lower_attributes
+
+cost = 9880
+[mp41_lower_attributes]
+animation_prefix_base = mc_
+weapon_lenght = 0.3
+zoom_rotate_time = 0.08
+recoil_koeff = -0.25
+inertia_koeff = 0.6
+[mp40_lower_att]
+animation_prefix_base	= mc_
+weapon_lenght				= 0.3
+zoom_rotate_time = 0.08
+recoil_koeff            = -0.4
+inertia_koeff          = 0.6
+
+[mp40_lower_grip]:mp41_lower
+kind  =  mp40
+inv_ui_sign				= mp40_lower
+visual						= w_att_huds\mp40_lower_grip	
+inv_name					= mp40_lower_grip
+inv_name_short			= mp40_lower_gripS
+cost								= 1000
+inv_weight					= 0.9
+inv_grid_width				= 2
+inv_grid_x					= 32
+attachment_slots = mp40_stock|wpn_body|0,0,0|0,0,0
+override_section = mp40_lower_grip_attributes
+
+[mp40_lower_grip_attributes]
+zoom_rotate_time = 0.06
+recoil_koeff = -0.08
+impair_koeff = 0.8
+[mp40_lower_grip_att]
+zoom_rotate_time = 0.06
+recoil_koeff            = -0.2
+impair_koeff            = 0.8
+
+[mp40_barrel]:attachment_base
+kind  =  mp40
+inv_ui_sign				= mp40_bar
+visual						= w_att_huds\mp40_barrel	
+inv_name					= mp40_barrel
+inv_name_short			= mp40_barrel
+cost							= 700
+inv_weight					= 0.12
+inv_grid_width			= 2
+inv_grid_x					= 16
+inv_grid_y					= 24
+1icon_layer = clean2_ico
+attachment_point		= mp40_barrel|0,0,0|0,0,0
+attachment_slots		= 9mm_muzzle|muzzle|0,0,0|0,0,0#mp40_barrel_rails|wpn_body|0,0,0|0,0,0
+item_tags	=	barrel
+override_section			=	mp40_barrel_attributes
+[mp40_barrel_attributes]
+fire_point = 0, 0, 0.02
+weapon_lenght				=	0.2
+bullet_speed				= 1.29
+k_hit_koeff						= 1.15
+fire_dispersion_base		= 0.13
+zoom_rotate_time = 0.08
+recoil_koeff            = -0.02
+inertia_koeff            = 1.2
+
+[mp40_muzzle]:attachment_base
+kind  =  mp40
+inv_ui_sign				= mp40_m
+visual						= w_att_huds\mp40_muzzle	
+inv_name					= mp40_muzzle
+inv_name_short			= mp40_muzzleS
+cost							= 50
+inv_weight					= 0.01
+inv_grid_x					= 26
+inv_grid_y					= 23
+attachment_point		= 9mm_muzzle|0,0,0|0,0,0
+override_section = mp40_muzzle_attributes
+
+[mp40_muzzle_attributes]
+
+[mp40_barrel_silencer]:mp40_barrel
+kind  =  mp40
+inv_ui_sign				= mp40_SD
+visual						= w_att_huds\mp40_barrel_silencer	
+inv_name					= mp40_barrel_silencer
+inv_name_short			= mp40_barrel_silencerS
+cost							= 1100
+inv_weight					= 0.34
+inv_grid_x					= 18
+attachment_slots		= mp40_barrel_rails|wpn_body|0,0,0|0,0,0#b3|muzzle|0,-0.02125,-0.15|0,0,0
+override_section			= mp40_barrel_silencer_attributes
+
+[mp40_barrel_silencer_attributes]
+silencer_status = 1
+silencer_name = wpn_addon_silencer
+silencer_x = 1
+silencer_y = 1
+weapon_lenght = 0.18
+bullet_speed = 0.89
+k_hit_koeff = 1.1
+fire_dispersion_base = 0.17
+zoom_rotate_time = 0.09
+recoil_koeff = -0.06
+inertia_koeff = 1.2
+impair_koeff = 1.1
+[mp40_barrel_silencer_att]:silencer_base_attributes
+weapon_lenght 				= 0.18
+bullet_speed				= 0.89
+k_hit_koeff						= 1.1
+fire_dispersion_base		= 0.17
+zoom_rotate_time = 0.09
+recoil_koeff            = -0.4
+inertia_koeff            = 1.2
+impair_koeff					= 1.1
+
+[mp40_sights]:attachment_base
+kind  =  mp40
+inv_ui_sign				= mp40_sig
+visual						= w_att_huds\mp40_sight_rear	
+inv_name					= mp40_sight_rear
+inv_name_short			= mp40_sight_rear
+cost							= 150
+inv_weight					= 0.01
+inv_grid_x					= 24
+inv_grid_y					= 24
+attachment_point		= mp40_sight_rear|0,0,0|0,0,0
+item_tags	=	rail
+override_section = mp40_sights_attributes
+
+[mp40_sights_attributes]
+zoom_rotate_time = -0.01
+fire_dispersion_base_koeff = -0.05
+
+[mp40_sights_rail]:mp40_sights
+kind  =  mp40
+inv_ui_sign				= mp40_sigP+
+visual						= w_att_huds\mp40_sight_rear_rail	
+description				= pica_14_up
+inv_name					= mp40_sight_rear_rail
+inv_name_short			= mp40_sight_rear_railS
+cost							= 1200
+inv_weight					= 0.09
+inv_grid_x					= 26
+attachment_slots = pica_14|wpn_body|0,0.0943,0.025|0,0,0
+override_section = mp40_sights_rail_attributes
+
+[mp40_sights_rail_attributes]
+zoom_rotate_time = 0.01
+fire_dispersion_base_koeff = -0.02
+
+[mp40_sights_rail2]:mp40_sights
+kind  =  mp40
+inv_ui_sign				= mp40_sigP
+visual						= w_att_huds\mp40_sight_rear_rail_gsg	
+description				= ar_hg_6n5
+inv_name					= mp40_sight_rear_rail_gsg
+inv_name_short			= mp40_sight_rear_rail_gsgS
+cost							= 800
+inv_weight					= 0.07
+inv_grid_x					= 25
+attachment_slots = pica_5|wpn_body|0,0.0921,0.136|0,0,0#pica_6|wpn_body|0,0.0921,0.036|0,0,0
+override_section = mp40_sights_rail2_attributes
+
+[mp40_sights_rail2_attributes]
+zoom_rotate_time = 0.01
+fire_dispersion_base_koeff = -0.02
+
+[mp40_stock]:attachment_base
+kind  =  mp40
+inv_ui_sign				= mp40_stock
+visual						= w_att_huds\mp40_stock	
+inv_name					= mp40_stock
+inv_name_short			= mp40_stock
+cost							= 1200
+inv_weight					= 0.17
+inv_grid_width			= 2
+inv_grid_x					= 20
+inv_grid_y					= 24
+attachment_point = mp40_stock|0,0,0|0,0,0
+item_tags =	stock
+override_section =	mp40_stock_attributes
+
+[mp40_stock_attributes]
+zoom_rotate_time = 0.02
+recoil_koeff = -0.12
+inertia_koeff = 0.9
+weapon_lenght = 0.2
+
+[mp40_stock_brace]:mp40_stock
+kind  =  mp40
+inv_ui_sign				= mp40_stock+
+visual						= w_att_huds\mp40_stock_brace	
+inv_name					= mp40_stock_brace
+inv_name_short			= mp40_stock_braceS
+cost							= 1550
+inv_weight					= 0.17
+inv_grid_x					= 22
+override_section			=	mp40_stock_brace_attributes
+
+[mp40_stock_brace_attributes]
+zoom_rotate_time = -0.02
+recoil_koeff = -0.14
+inertia_koeff = 0.8
+weapon_lenght = 0.17
+
+[mp40_barrel_rails]:attachment_base
+kind  =  mp40
+inv_ui_sign				= mp40_sigP+
+visual						= w_att_huds\mp40_barrel_rails	
+description				= pica_3_up2
+inv_name					= mp40_barrel_rails
+inv_name_short			= mp40_barrel_railsS
+cost							= 600
+inv_weight					= 0.09
+inv_grid_x					= 25
+inv_grid_y					= 23
+attachment_point		= mp40_barrel_rails|0,0,0|0,0,0
+attachment_slots = pica_3|wpn_body|-0.0198,0.0806,0.315|0,0,-60#pica_3|wpn_body|0.0198,0.0806,0.315|0,0,60
+item_tags =	rail
+override_section = mp40_barrel_rails_attributes
+
+[mp40_barrel_rails_attributes]
+
+[mag_wpn_mp40_9x19_fmj]:mag_wpn_base,wg_wpn_mp40,ag_ammo_9x19_fmj
+inv_ui_sign					= mp40_32
+visual							= w_att_huds\mp40_mag
+inv_name						= mp40_mag
+inv_name_short				= mp40_mag
+inv_grid_height				= 2
+inv_grid_x						= 27
+inv_grid_y						= 23
+inv_weight						= 0.1
+cost								= 400
+max_mag_size				= 32
+mag_size						= small
+override_section				= mag_wpn_mp40_9x19_fmj_attributes
+
+[mag_wpn_mp40_9x19_fmj_attributes]
+animation_prefix_mag = 32_
+[mp40_mag_attributes]
+animation_prefix_mag	=	32_
+
+[mag_wpn_mp40_50_9x19_fmj]:mag_wpn_mp40_9x19_fmj
+inv_ui_sign					= mp40_50
+visual							= w_att_huds\mp40_mag_50
+inv_name						= mp40_mag_50
+inv_name_short				= mp40_mag_50S
+inv_grid_x						= 28
+inv_weight						= 0.55
+cost								= 1450
+max_mag_size				= 50
+mag_size						= medium
+override_section				= mag_wpn_mp40_50_9x19_fmj_attributes
+
+[mag_wpn_mp40_50_9x19_fmj_attributes]
+animation_prefix_mag = 50_
+[mp40_mag_50_attributes]
+animation_prefix_mag	=	50_

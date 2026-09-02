@@ -1,0 +1,127 @@
+--\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ wpn_rsh12 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+[rsh12_barrel]:attachment_base
+kind  =  rsh
+inv_ui_sign				= rsh_bar
+visual						= w_att_huds\rsh12_barrel	
+inv_name					= rsh12_barrel
+inv_name_short		= rsh12_barrel
+cost							= 1300
+inv_weight				= 0.15
+inv_grid_width     	= 2
+inv_grid_x         		= 30
+inv_grid_y         		= 7
+1icon_layer = clean2_ico
+attachment_point	=	rsh12_barrel|0,0,0|0,0,0
+attachment_slots		=	shak12_muzzle|muzzle|0,0,0|0,0,0
+item_tags =	barrel
+override_section = rsh12_barrel_attributes
+
+[rsh12_barrel_attributes]
+bullet_speed = 0.97
+fire_dispersion_base = 0.09
+zoom_rotate_time = 0.05
+recoil_koeff = -0.02
+inertia_koeff = 1.2
+[rsh12_barrel_att]
+bullet_speed					= 0.97
+fire_dispersion_base		= 0.09
+zoom_rotate_time = 0.05
+recoil_koeff            = -0.12
+inertia_koeff            = 1.2
+
+[shak12_muzzle]:attachment_base
+kind  =  rsh
+inv_ui_sign				= shak_mb
+visual						= w_att_huds\rsh12_muzzle	
+inv_name					= shak12_muzzle
+inv_name_short		= shak12_muzzleS
+cost							= 3750
+inv_weight				= 0.12
+inv_grid_x    			= 31
+inv_grid_y    			= 8
+attachment_point = shak12_muzzle|0,0,0|0,0,0
+item_tags =	muzzle_device
+override_section = shak12_muzzle_attributes
+
+[shak12_muzzle_attributes]
+weapon_lenght = 0.05
+zoom_rotate_time = 0.02
+recoil_koeff = -0.07
+[rsh12_muzzle_attributes]:ar_muzzle_fatman_att
+weapon_lenght = 0.05
+zoom_rotate_time = 0.02
+
+[shak12_silencer]:shak12_muzzle
+kind  =  rsh
+inv_ui_sign				= shak_sli
+visual						= w_att_huds\rsh12_silencer	
+inv_name					= shak12_silencer
+inv_name_short		= shak12_silencerS
+cost							= 7400
+inv_weight				= 0.71
+inv_grid_width			= 2
+inv_grid_x				= 32
+override_section = shak12_silencer_attributes
+
+[shak12_silencer_attributes]
+silencer_status = 1
+silencer_name = wpn_addon_silencer
+silencer_x = 1
+silencer_y = 1
+weapon_lenght = 0.17
+zoom_rotate_time = 0.08
+recoil_koeff = -0.11
+inertia_koeff = 1.3
+
+[rsh12_sight_front]:attachment_base
+kind  =  rsh
+inv_ui_sign				= rsh_fs
+visual						= w_att_huds\rsh12_sight_front
+inv_name					= rsh12_sight_front
+inv_name_short			= rsh12_sight_front
+cost							= 350
+inv_weight					= 0.02
+inv_grid_x					= 34
+inv_grid_y					= 7
+attachment_point		= rsh12_sight_front|0,0,0|0,0,0
+override_section = rsh12_sight_front_attributes
+
+[rsh12_sight_front_attributes]
+
+[rsh12_sight_front_up]:rsh12_sight_front
+kind  =  rsh
+inv_ui_sign				= rsh_fs+
+visual						= w_att_huds\rsh12_sight_front_up
+inv_name					= rsh12_sight_front_up
+inv_name_short			= rsh12_sight_front_upS
+cost							= 2450
+inv_grid_y        			= 8
+item_tags =	sights
+override_section = rsh12_sight_front_up_attributes
+
+inv_weight = 0.02
+[rsh12_sight_front_up_attributes]
+
+[rsh12_stock]:attachment_base
+kind  =  rsh
+inv_ui_sign				= rsh_stock
+visual						= w_att_huds\rsh12_stock
+inv_name					= rsh12_stock
+inv_name_short			= rsh12_stockS
+cost							= 1650
+inv_weight					= 0.6
+inv_grid_width			= 2
+inv_grid_x					= 32
+inv_grid_y					= 7
+attachment_point		= rsh12_stock|0,0,0|0,0,0
+item_tags	=	stock
+override_section = rsh12_stock_attributes
+
+[rsh12_stock_attributes]
+zoom_rotate_time = -0.04
+recoil_koeff = -0.18
+inertia_koeff = 0.8
+weapon_lenght = 0.33
+[rsh12_stock_att]:cs5_stock_att
+weapon_lenght = 0.33

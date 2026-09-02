@@ -1,0 +1,1105 @@
+[ammo_base]:identity_immunities,default_weapon_params
+slot								= -1
+cform							= skeleton
+class							= AMMO
+kind			       				= w_ammo
+inv_grid_width				= 1
+inv_grid_height			= 1
+tier								= 1
+box_size						= 1
+4to1_tracer					= false
+buck_shot					= 1
+explosive						= false
+impair							= 1
+k_bullet_speed			= 1
+k_cam_dispersion		= 1
+k_dist							= 1
+k_disp							= 1
+k_hit							= 1
+k_impulse					= 0
+tracer_color_ID			= 0	;color_0  yellow	;color_1  white	;color_2  red	;color_3  green	;color_4  blue
+tracer							= off
+wm_size						= 0.05
+k_air_resistance			= 1
+disassemble_parts		= prt_i_ammo,prt_i_ammo
+snd_on_take				= ammo
+can_stack = true
+dont_stack = false
+[ammo_deso]:ammo_base
+$spawn						= "weapons\ammo\ammo_9x19_fmj"
+discovery_dependency =
+class							= AMMO_S
+$prefetch 					= 64
+icons_texture				= ui\ui_icons_ammo
+
+[ammo_9x18_fmj]:ammo_deso
+GroupControlSection	= spawn_group
+$spawn						= "weapons\ammo\ammo_9x18_fmj"
+visual          					= w_att_huds\ammo_9x18.ogf
+cost								= 1000
+box_size						= 20
+inv_name						= ammo_9x18_pst
+inv_name_short			= ammo_9x18S
+description					= ammo_9x18_pstD
+inv_weight					= 0.2
+inv_grid_x					= 0
+inv_grid_y					= 0
+k_ap								= 0.3
+k_hit							= 35
+k_impulse					= 3.3
+1icon_layer = fmj_ico
+[ammo_9x18_fmj_bad]:ammo_9x18_fmj
+cost								= 800
+inv_grid_y					= 1
+impair							= 1.15
+[ammo_9x18_fmj_verybad]:ammo_9x18_fmj_bad
+
+[ammo_9x18_pmm]:ammo_9x18_fmj
+description					= ammo_9x18_ppe_descr
+inv_name						= ammo_9x18_ppe
+inv_grid_y					= 4
+cost								= 1200
+k_ap								= 0.2
+k_hit							= 55
+k_impulse					= 5.2
+k_bullet_speed			= 1.2
+1icon_layer = ep_ico
+[ammo_9x18_pmm_bad]:ammo_9x18_pmm
+cost								= 960
+inv_grid_y					= 5
+impair							= 1.1
+[ammo_9x18_pmm_verybad]:ammo_9x18_pmm_bad
+
+[ammo_9x18_ap]:ammo_9x18_fmj
+description					= ammo_9x18_pbmD
+inv_name						= ammo_9x18_pbm
+cost								= 1600
+inv_grid_y         			= 2
+k_ap								= 0.35
+k_hit							= 30
+k_impulse					= 2.6
+k_bullet_speed			= 1.65
+impair							= 1.2
+1icon_layer = ap_ico
+[ammo_9x18_ap_bad]:ammo_9x18_ap
+cost								= 1280
+inv_grid_y         			= 3
+impair							= 1.3
+[ammo_9x18_ap_verybad]:ammo_9x18_ap_bad
+
+[ammo_9x19_fmj]:ammo_9x18_fmj
+$spawn						= "weapons\ammo\ammo_9x19_fmj"
+visual          					= w_att_huds\ammo_9x19.ogf
+description					= ammo_9x19_fmjD
+cost								= 1400
+inv_name						= ammo_9x19_fmj
+inv_name_short			= ammo_9x19S
+inv_weight					= 0.22
+inv_grid_x					= 1
+k_ap								= 0.35
+k_hit							= 40
+k_impulse					= 3.8
+[ammo_9x19_fmj_bad]:ammo_9x19_fmj
+cost								= 1120
+inv_grid_y         			= 1
+impair							= 1.1
+[ammo_9x19_fmj_verybad]:ammo_9x19_fmj_bad
+
+[ammo_9x19_pbp]:ammo_9x19_fmj
+description					= ammo_9x19_pbpD
+inv_name						= ammo_9x19_pbp
+cost								= 2000
+inv_grid_y					= 2
+k_ap								= 0.4
+k_hit							= 30
+k_impulse					= 2.6
+k_bullet_speed			= 1.5
+impair							= 1.15
+1icon_layer = ap_ico
+[ammo_9x19_pbp_bad]:ammo_9x19_pbp
+cost								= 1600
+inv_grid_y         			= 3
+impair							= 1.2
+[ammo_9x19_pbp_verybad]:ammo_9x19_pbp_bad
+
+[ammo_9x19_ap]:ammo_9x19_fmj
+GroupControlSection	= spawn_group
+description					= ammo_9x19_ripD
+inv_name						= ammo_9x19_rip
+cost								= 1200
+inv_grid_y					= 4
+k_ap								= 0.2
+k_hit							= 60
+k_impulse					= 3.0
+wm_size						= 0.02
+impair							= 1.05
+1icon_layer = ep_ico
+[ammo_9x19_ap_bad]:ammo_9x19_ap
+cost								= 960
+inv_grid_y					= 5
+impair							= 1.15
+[ammo_9x19_ap_verybad]:ammo_9x19_ap_bad
+
+[ammo_9x21_ps]:ammo_9x19_fmj
+visual          					= w_att_huds\ammo_9x21.ogf
+description					= ammo_9x21_psD
+inv_name						= ammo_9x21_ps
+inv_name_short			= ammo_9x21S
+cost								= 1800
+inv_weight					= 0.24
+inv_grid_x         			= 2
+inv_grid_y         			= 0
+k_ap								= 0.55
+k_hit							= 50
+k_impulse					= 4.8
+[ammo_9x21_ps_bad]:ammo_9x21_ps
+cost								= 1440
+inv_grid_y         			= 1
+impair							= 1.1
+
+[ammo_9x21_pe]:ammo_9x21_ps
+inv_name						= ammo_9x21_pe
+description					= ammo_9x21_peD
+cost								= 2000
+inv_grid_y         			= 4
+k_ap								= 0.2
+k_hit							= 80
+k_impulse					= 7.7
+1icon_layer = ep_ico
+[ammo_9x21_pe_bad]:ammo_9x21_pe
+cost								= 1600
+inv_grid_y         			= 5
+impair							= 1.1
+
+[ammo_9x21_bt]:ammo_9x21_ps
+inv_name						= ammo_9x21_bt
+description					= ammo_9x21_btD
+cost								= 2400
+inv_grid_y					= 2
+k_ap								= 0.65
+k_hit							= 40
+k_impulse					= 3.8
+impair							= 1.1
+tracer							=	on
+tracer_color_ID			=	3
+1icon_layer = ap_ico
+[ammo_9x21_bt_bad]:ammo_9x21_bt
+cost								= 1920
+inv_grid_y					= 3
+impair							= 1.2
+
+[ammo_7.62x25_p]:ammo_deso
+GroupControlSection	= spawn_group
+visual          					= w_att_huds\ammo_762x25.ogf
+inv_name						= ammo_762x25_p
+inv_name_short			= ammo_762x25S
+description					= ammo_762x25_pD
+cost								= 1300
+box_size						= 20
+inv_weight					= 0.24
+inv_grid_x         			= 3
+inv_grid_y         			= 0
+k_ap								= 0.2
+k_hit							= 60
+k_impulse					= 3.6
+wm_size        				= 0.04
+1icon_layer = ep_ico
+[ammo_7.62x25_p_bad]:ammo_7.62x25_p
+cost								= 1040
+inv_grid_y         			= 1
+impair							= 1.1
+[ammo_7.62x25_p_verybad]:ammo_7.62x25_p_bad
+
+[ammo_7.62x25_ps]:ammo_7.62x25_p
+description					= ammo_762x25_pstD
+cost								= 1500
+inv_name						= ammo_762x25_pst
+inv_grid_y         			= 2
+k_ap								= 0.35
+k_hit							= 35
+k_impulse					= 5.8
+1icon_layer = fmj_ico
+[ammo_7.62x25_ps_bad]:ammo_7.62x25_ps
+cost								= 1200
+inv_grid_y         			= 3
+impair							= 1.1
+[ammo_7.62x25_ps_verybad]:ammo_7.62x25_ps_bad
+
+[ammo_11.43x23_fmj]:ammo_deso
+GroupControlSection	= spawn_group
+$spawn						= "weapons\ammo\ammo_11.43x23_fmj"
+visual          					= w_att_huds\ammo_45_acp.ogf
+inv_name						= ammo_45_acp_fmj
+inv_name_short			= ammo_45_acpS
+description					= ammo_45_acp_fmjD
+cost								= 1900
+box_size						= 20
+inv_weight					= 0.3
+inv_grid_x         			= 4
+inv_grid_y         			= 0
+k_ap								= 0.35
+k_hit							= 55
+k_impulse					= 5.3
+wm_size         				= 0.07
+1icon_layer = fmj_ico
+[ammo_11.43x23_fmj_bad]:ammo_11.43x23_fmj
+cost								= 1520
+inv_grid_y         			= 1
+[ammo_11.43x23_fmj_verybad]:ammo_11.43x23_fmj_bad
+impair							= 1.2
+
+[ammo_11.43x23_hydro]:ammo_11.43x23_fmj
+GroupControlSection	= spawn_group
+description					= ammo_45_acp_hydroD
+inv_name						= ammo_45_acp_hydro
+cost								= 2000
+inv_grid_y					= 4
+k_ap								= 0.25
+k_hit							= 90
+k_impulse					= 8.6
+wm_size         				= 0.08
+1icon_layer = ep_ico
+[ammo_11.43x23_hydro_bad]:ammo_11.43x23_hydro
+cost								= 1600
+inv_grid_y					= 5
+[ammo_11.43x23_hydro_verybad]:ammo_11.43x23_hydro_bad
+impair							= 1.15
+
+[ammo_11.43x23_ap]:ammo_11.43x23_fmj
+GroupControlSection	= spawn_group
+inv_name						= ammo_45_acp_ap
+description					= ammo_45_acp_apD
+cost								= 2300
+inv_grid_y					= 2
+k_ap								= 0.5
+k_hit							= 45
+k_impulse					= 5.3
+impair							= 1.15
+1icon_layer = ap_ico
+[ammo_11.43x23_ap_bad]:ammo_11.43x23_ap
+cost								= 1840
+inv_grid_y					= 3
+impair							= 1.2
+
+[ammo_357_hp_mag]:ammo_deso
+GroupControlSection	= spawn_group
+$spawn						= "weapons\wpn_ammo\ammo_357_hp_mag"
+visual							= w_att_huds\ammo_357_mag.ogf
+cost								= 1800
+box_size						= 12
+inv_name						= ammo_357_mag_hp
+inv_name_short			= ammo_357_magS
+description					= ammo_357_magD
+inv_weight					= 0.2
+inv_grid_x					= 5
+inv_grid_y					= 2
+k_ap								= 0.3
+k_hit							= 120
+k_impulse					= 11.4
+wm_size						= 0.06
+1icon_layer = ep_ico
+[ammo_357_hp_mag_bad]:ammo_357_hp_mag
+cost								= 1440
+inv_grid_y					= 3
+impair							= 1.05
+[ammo_357_hp_mag_verybad]:ammo_357_hp_mag_bad
+
+[ammo_357_fmj_mag]:ammo_357_hp_mag
+GroupControlSection	= spawn_group
+inv_name						= ammo_357_mag_fmj
+description					= ammo_357_mag_fmjD
+cost								= 2400
+inv_grid_y					= 0
+k_ap								= 0.6
+k_hit							= 65
+k_impulse					= 6.4
+impair							= 1.1
+1icon_layer = fmj_ico
+[ammo_357_fmj_mag_bad]:ammo_357_fmj_mag
+cost								= 1920
+inv_grid_y					= 1
+impair							= 1.15
+
+[ammo_44_hp_mag]:ammo_deso
+GroupControlSection	= spawn_group
+$spawn						= "weapons\wpn_ammo\ammo_357_hp_mag" 
+visual          					= w_att_huds\ammo_44_mag.ogf
+inv_name						= ammo_44_mag_hp
+inv_name_short			= ammo_44_magS
+description					= ammo_44_mag_hpD
+cost								= 2100
+box_size						= 10
+inv_weight					= 0.15
+inv_grid_x         			= 6
+inv_grid_y         			= 2
+k_ap								= 0.35
+k_hit							= 180
+k_impulse					= 18.5
+wm_size        				= 0.055
+1icon_layer = ep_ico
+[ammo_44_hp_mag_bad]:ammo_44_hp_mag
+cost								= 1680
+inv_grid_y         			= 3
+impair							= 1.1
+
+[ammo_44_fmj_mag]:ammo_44_hp_mag
+GroupControlSection	= spawn_group
+inv_name						= ammo_44_mag_fmj
+description					= ammo_44_mag_fmjD
+cost								= 2500
+inv_weight					= 0.170
+inv_grid_y					= 0
+k_ap								= 0.65
+k_hit							= 80
+k_impulse					= 8.4
+wm_size						= 0.044
+impair							= 1.1
+1icon_layer = fmj_ico
+[ammo_44_fmj_mag_bad]:ammo_44_fmj_mag
+cost								= 2000
+inv_grid_y					= 1
+impair							= 1.15
+
+[ammo_5.7x28_ss190]:ammo_deso
+GroupControlSection	= spawn_group
+visual							= w_att_huds\ammo_57x28.ogf
+inv_name						= ammo_57x28_ss190
+inv_name_short			= ammo_57x28S
+description					= ammo_57x28_ss190D
+cost								= 2850
+box_size						= 30
+inv_weight					= 0.38
+inv_grid_x         			= 7
+inv_grid_y         			= 2
+k_ap								= 0.7
+k_hit							= 25
+k_impulse					= 2.4
+wm_size         				= 0.02
+impair							= 1.1
+1icon_layer = ap_ico
+[ammo_5.7x28_ss190_bad]:ammo_5.7x28_ss190
+cost								= 2280
+inv_grid_y         			= 3
+impair							= 1.1
+[ammo_5.7x28_ss190_verybad]:ammo_5.7x28_ss190_bad
+
+[ammo_5.7x28_ss195]:ammo_5.7x28_ss190
+inv_name					= ammo_57x28_ss195lf
+description				= ammo_57x28_ss195lfD
+cost							= 2400
+inv_grid_y         		= 0
+k_ap								= 0.5
+k_hit							= 35
+k_impulse					= 3.1
+wm_size         			= 0.04
+1icon_layer = fmj_ico
+[ammo_5.7x28_ss195_bad]:ammo_5.7x28_ss195
+cost								= 1920
+inv_grid_y         		= 1
+impair							= 1.05
+[ammo_5.7x28_ss195_verybad]:ammo_5.7x28_ss195_bad
+
+[ammo_5.45x39_fmj]:ammo_deso
+GroupControlSection	= spawn_group
+$spawn						= "weapons\ammo\ammo_5.45x39_fmj"
+visual							= w_att_huds\ammo_545x39.ogf
+inv_name						= ammo_545x39_ps
+inv_name_short			= ammo_545x39S
+description					= ammo_545x39_psD
+cost								= 4200
+box_size						= 30
+inv_weight					= 0.36
+inv_grid_x         			= 8
+inv_grid_y         			= 0
+k_ap								= 0.7
+k_hit							= 45
+k_impulse					= 4.4
+wm_size         				= 0.03
+1icon_layer = fmj_ico
+[ammo_5.45x39_fmj_bad]:ammo_5.45x39_fmj
+cost								= 3360
+inv_grid_y         			= 1
+impair							= 1.1
+[ammo_5.45x39_fmj_verybad]:ammo_5.45x39_fmj_bad
+
+[ammo_5.45x39_ep]:ammo_5.45x39_fmj
+GroupControlSection	= spawn_group
+inv_name						= ammo_545x39_ep
+description					= ammo_545x39_epD
+cost								= 3600
+inv_grid_y					= 4
+k_ap								= 0.45
+k_hit							= 75
+k_impulse					= 6.8
+tracer							=	on
+tracer_color_ID			=	3
+1icon_layer = ep_ico
+[ammo_5.45x39_ep_bad]:ammo_5.45x39_ep
+cost								= 2280
+inv_grid_y					= 5
+impair							= 1.05
+[ammo_5.45x39_ep_verybad]:ammo_5.45x39_ep_bad
+
+[ammo_5.45x39_ap]:ammo_5.45x39_fmj
+GroupControlSection	= spawn_group
+$spawn						= "weapons\ammo\ammo_5.45x39_ap"
+inv_name						= ammo_545x39_bs
+description					= ammo_545x39_bsD
+cost								= 5100
+inv_grid_y					= 2
+k_bullet_speed			= 0.95
+k_ap								= 0.9
+k_hit							= 40
+k_impulse					= 3.6
+impair							= 1.15
+1icon_layer = ap_ico
+[ammo_5.45x39_ap_bad]:ammo_5.45x39_ap
+cost								= 4080
+inv_grid_y					= 3
+impair							= 1.2
+[ammo_5.45x39_ap_verybad]:ammo_5.45x39_ap_bad
+
+[ammo_5.56x45_fmj]:ammo_deso
+GroupControlSection	= spawn_group
+$spawn						= "weapons\ammo\ammo_5.56x45_ss190"
+visual							= w_att_huds\ammo_556x45.ogf
+inv_name						= ammo_556x45_m855
+inv_name_short			= ammo_556x45S
+description					= ammo_556x45_m855D
+cost								= 4350
+box_size						= 30
+inv_weight					= 0.36
+inv_grid_x					= 9
+inv_grid_y					= 0
+k_ap								= 0.6
+k_hit							= 50
+k_impulse					= 5.1
+1icon_layer = fmj_ico
+
+;fake_grenade_name = wpn_fake_missile2
+
+[ammo_5.56x45_fmj_bad]:ammo_5.56x45_fmj
+cost								= 3480
+inv_grid_y					= 1
+impair							= 1.05
+[ammo_5.56x45_fmj_verybad]:ammo_5.56x45_fmj_bad
+
+[ammo_5.56x45_ss190]:ammo_5.56x45_fmj
+GroupControlSection	= spawn_group
+inv_name				= ammo_556x45_m856
+description			= ammo_556x45_m856D
+cost						= 3750
+inv_grid_y         	= 4
+k_ap								= 0.3
+k_hit							= 95
+k_impulse					= 9.6
+k_bullet_speed	= 1.05
+tracer_color_ID			= 2
+tracer							= on
+1icon_layer = ep_ico
+[ammo_5.56x45_ss190_bad]:ammo_5.56x45_ss190
+cost								= 3000
+inv_grid_y         	= 5
+impair							= 1.1
+[ammo_5.56x45_ss190_verybad]:ammo_5.56x45_ss190_bad
+
+[ammo_5.56x45_ap]:ammo_5.56x45_fmj
+GroupControlSection	= spawn_group
+$spawn						= "weapons\ammo\ammo_5.56x45_ap"
+inv_name						= ammo_556x45_m855a1
+description					= ammo_556x45_m855a1D
+cost								= 5400
+inv_grid_y					= 2
+k_ap								= 1.0
+k_hit							= 35
+k_impulse					= 3.9
+impair							= 1.15
+1icon_layer = ap_ico
+[ammo_5.56x45_ap_bad]:ammo_5.56x45_ap
+cost								= 4320
+inv_grid_y					= 3
+impair							= 1.25
+[ammo_5.56x45_ap_verybad]:ammo_5.56x45_ap_bad
+
+[ammo_7.62x39_fmj]:ammo_deso
+GroupControlSection	= spawn_group
+visual							= w_att_huds\ammo_762x39.ogf
+inv_name						= ammo_762x39_ps
+inv_name_short			= ammo_762x39S
+description					= ammo_762x39_psD
+cost								= 3100
+box_size						= 20
+inv_weight					= 0.32
+inv_grid_x					= 10
+inv_grid_y					= 0
+k_ap								= 0.6
+k_hit							= 60
+k_impulse					= 5.5
+wm_size						= 0.045
+1icon_layer = fmj_ico
+[ammo_7.62x39_fmj_bad]:ammo_7.62x39_fmj
+cost								= 2480
+inv_grid_y         			= 1
+impair							= 1.1
+[ammo_7.62x39_fmj_verybad]:ammo_7.62x39_fmj_bad
+
+[ammo_7.62x39_ap]:ammo_7.62x39_fmj
+GroupControlSection	= spawn_group
+inv_name						= ammo_762x39_bp
+description					= ammo_762x39_bpD
+cost								= 3600
+inv_grid_y					= 2
+k_ap								= 0.8
+k_hit							= 50
+k_impulse					= 5.1
+k_bullet_speed			= 1.05
+impair							= 1.15
+1icon_layer = ap_ico
+[ammo_7.62x39_ap_bad]:ammo_7.62x39_ap
+cost								= 2880
+inv_grid_y         			= 3
+impair							= 1.25
+[ammo_7.62x39_ap_verybad]:ammo_7.62x39_ap_bad
+
+[ammo_7.62x39_ep]:ammo_7.62x39_fmj
+GroupControlSection	= spawn_group
+description					= ammo_762x39_epD
+inv_name						= ammo_762x39_ep
+cost								= 2900
+inv_grid_y         			= 4
+k_ap								= 0.4
+k_hit							= 80
+k_impulse					= 8.6
+tracer							=	on
+tracer_color_ID			=	3
+1icon_layer = ep_ico
+[ammo_7.62x39_ep_bad]:ammo_7.62x39_ep
+cost								= 2320
+inv_grid_y         			= 5
+impair							= 1.1
+
+[ammo_9x39_pab9]:ammo_deso
+GroupControlSection	= spawn_group
+$spawn						= "weapons\ammo\ammo_9x39_pab9"
+visual							= w_att_huds\ammo_9x39.ogf
+description					= ammo_9x39_pab9D
+inv_name						= ammo_9x39_pab9
+inv_name_short			= ammo_9x39S
+cost								= 4000
+box_size						= 20
+inv_weight					= 0.5
+inv_grid_x         			= 11
+inv_grid_y         			= 0
+k_ap								= 0.55
+k_hit							= 70
+k_impulse					= 6.9
+k_bullet_speed			= 1.6			;buuuster
+1icon_layer = fmj_ico
+[ammo_9x39_pab9_bad]:ammo_9x39_pab9
+cost								= 3200
+inv_grid_y         			= 1
+impair							= 1.1
+[ammo_9x39_pab9_verybad]:ammo_9x39_pab9_bad
+
+[ammo_9x39_ap]:ammo_9x39_pab9
+GroupControlSection	= spawn_group
+$spawn						= "weapons\ammo\ammo_9x39_ap"
+description					= ammo_9x39_sp6D
+inv_name						= ammo_9x39_sp6
+cost								= 4800
+inv_grid_y					= 2
+k_ap								= 0.75
+k_hit							= 60
+k_impulse					= 5.6
+impair							= 1.15
+1icon_layer = ap_ico
+[ammo_9x39_ap_bad]:ammo_9x39_ap
+cost								= 3840
+inv_grid_y					= 3
+impair							= 1.25
+[ammo_9x39_ap_verybad]:ammo_9x39_ap_bad
+
+[ammo_9x39_sp5]:ammo_9x39_pab9
+GroupControlSection	= spawn_group
+description					= ammo_9x39_sp5D
+inv_name						= ammo_9x39_sp5
+cost								= 3400
+inv_weight					= 0.5
+inv_grid_y					= 4
+k_ap								= 0.35
+k_hit							= 110
+k_impulse					= 11.5
+1icon_layer = ep_ico
+[ammo_9x39_sp5_bad]:ammo_9x39_sp5
+cost								= 2720
+inv_grid_y					= 5
+impair							= 1.1
+
+[ammo_7.62x51_fmj]:ammo_deso
+GroupControlSection	= spawn_group
+$spawn						= "weapons\ammo\ammo_7.62x51_fmj"
+class							= AMMO
+visual							= w_att_huds\ammo_762x51.ogf
+description					= ammo_762x51_m80D
+inv_name						= ammo_762x51_m80
+inv_name_short			= ammo_762x51S
+cost								= 3900
+box_size						= 15
+inv_weight					= 0.38
+inv_grid_x					= 12
+inv_grid_y					= 0
+k_ap								= 0.75
+k_hit							= 90
+k_impulse					= 8.2
+wm_size						= 0.045
+1icon_layer = fmj_ico
+[ammo_7.62x51_fmj_bad]:ammo_7.62x51_fmj
+cost								= 3120
+inv_grid_y					= 1
+impair							= 1.1
+[ammo_7.62x51_fmj_verybad]:ammo_7.62x51_fmj_bad
+
+[ammo_7.62x51_ap]:ammo_7.62x51_fmj
+GroupControlSection	= spawn_group
+$spawn						= "weapons\ammo\ammo_7.62x51_ap"
+description					= ammo_762x51_m61D
+inv_name						= ammo_762x51_m61
+cost					 			= 4950
+inv_grid_y					= 2
+k_ap								= 1.2
+k_hit							= 80
+k_impulse					= 6.7
+impair							= 1.2
+1icon_layer = ap_ico
+[ammo_7.62x51_ap_bad]:ammo_7.62x51_ap
+cost								= 3840
+inv_grid_y					= 3
+impair							= 1.35
+[ammo_7.62x51_ap_verybad]:ammo_7.62x51_ap_bad
+
+[ammo_7.62x54_7h1]:ammo_deso
+GroupControlSection	= spawn_group
+$spawn						= "weapons\ammo\ammo_7.62x54_7h1"
+visual							= w_att_huds\ammo_762x54r.ogf
+description					= ammo_762x54_t46D
+inv_name						= ammo_762x54_t46
+inv_name_short			= ammo_762x54S
+cost								= 2400
+box_size						= 10
+inv_weight					= 0.43
+inv_grid_x					= 13
+inv_grid_y					= 4
+k_ap								= 0.45
+k_hit							= 150
+k_impulse					= 17.2
+tracer                      = on
+tracer_color_ID             = 3
+wm_size						= 0.045
+1icon_layer = ep_ico
+[ammo_7.62x54_7h1_bad]:ammo_7.62x54_7h1
+cost								= 1920
+inv_grid_y					= 5
+impair							= 1.2
+[ammo_7.62x54_7h1_verybad]:ammo_7.62x54_7h1_bad
+
+[ammo_7.62x54_ap]:ammo_7.62x54_7h1
+GroupControlSection	= spawn_group
+$spawn						= "weapons\ammo\ammo_7.62x54_ap"
+description					= ammo_762x54_lpsD
+inv_name						= ammo_762x54_lps
+cost								= 2700
+inv_grid_y					= 0
+k_ap								= 0.95
+k_hit							= 90
+k_impulse					= 9.9
+tracer                          = off
+1icon_layer = fmj_ico
+[ammo_7.62x54_ap_bad]:ammo_7.62x54_ap
+cost								= 2160
+inv_grid_y					= 1
+impair							= 1.1
+[ammo_7.62x54_ap_verybad]:ammo_7.62x54_ap_bad
+
+[ammo_7.62x54_7h14]:ammo_7.62x54_ap
+GroupControlSection	= spawn_group
+$spawn						= "weapons\ammo\ammo_7.62x54_7h14"
+description					= ammo_762x54_snbD
+inv_name						= ammo_762x54_snb
+cost								= 3500
+inv_grid_y					= 2
+k_ap								= 1.2
+k_hit							= 100
+k_impulse					= 12.8
+impair							= 1.15
+1icon_layer = ap_ico
+[ammo_7.62x54_7h14_bad]:ammo_7.62x54_7h14
+cost								= 2800
+inv_grid_y					= 3
+impair							= 1.25
+[ammo_7.62x54_7h14_verybad]:ammo_7.62x54_7h14_bad
+
+[ammo_12.7x55_fmj]:ammo_deso
+GroupControlSection	= spawn_group
+$spawn						= "weapons\ammo\ammo_7.62x54_7h1"
+visual							= w_att_huds\ammo_127x55.ogf
+description					= ammo_127x55D
+inv_name						= ammo_127x55
+inv_name_short	        = ammo_127x55
+cost								= 1250
+box_size						= 5
+inv_weight					= 0.5
+inv_grid_x					= 15
+inv_grid_y					= 0
+k_ap								= 0.45
+k_hit							= 140
+k_impulse					= 18.0
+k_bullet_speed			= 1.6			;buuuster
+wm_size						= 0.055
+1icon_layer = fmj_ico
+[ammo_12.7x55_fmj_bad]:ammo_12.7x55_fmj
+cost								= 960
+inv_grid_y					= 1
+impair							= 1.1
+[ammo_12.7x55_fmj_verybad]:ammo_12.7x55_fmj_bad
+
+[ammo_12.7x55_ap]:ammo_12.7x55_fmj
+GroupControlSection	= spawn_group
+description					= ammo_ps12bD
+inv_name						= ammo_ps12b
+cost								= 1400
+inv_weight					= 0.6
+inv_grid_y					= 2
+k_ap								= 0.65
+k_hit							= 110
+k_impulse					= 15.3
+impair							= 1.15
+1icon_layer = ap_ico
+[ammo_12.7x55_ap_bad]:ammo_12.7x55_ap
+cost								= 1120
+inv_grid_y					= 3
+impair							= 1.3
+[ammo_12.7x55_ap_verybad]:ammo_12.7x55_ap_bad
+
+[ammo_12.7x55_pt2]:ammo_12.7x55_ap
+GroupControlSection	= spawn_group
+description					= ammo_sts130_sts130D
+inv_name						= ammo_sts130_sts130
+visual							= w_att_huds\ammo_127x55_pt2.ogf
+cost								= 1800
+inv_weight					= 0.6
+inv_grid_y					= 4
+k_ap								= 0.9
+k_hit							= 180
+[ammo_12.7x55_pt_bad]:ammo_12.7x55_pt
+cost								= 1600
+inv_grid_y					= 5
+
+[ammo_magnum_300]:ammo_deso
+GroupControlSection	= spawn_group
+$spawn						= "weapons\ammo\ammo_7.62x54_7h1"
+visual							= w_att_huds\ammo_762x67.ogf
+description					= ammo_762x67D
+inv_name						= ammo_762x67
+inv_name_short			= ammo_762x67S
+cost								= 2200
+box_size						= 5
+inv_weight					= 0.67
+inv_grid_x					= 14
+inv_grid_y					= 0
+k_ap								= 1.3
+k_hit							= 130
+k_impulse					= 14.8
+impair							= 1.2
+1icon_layer = ap_ico
+[ammo_magnum_300_bad]:ammo_magnum_300
+cost								= 1760
+inv_grid_y					= 1
+impair							= 1.1
+[ammo_magnum_300_verybad]:ammo_magnum_300_bad
+
+[ammo_12x76_zhekan]:ammo_deso
+GroupControlSection	= spawn_group
+$spawn						= "weapons\ammo\ammo_12x76_zhekan"
+visual							= w_att_huds\ammo_12x70.ogf
+description					= ammo_12x70_zhekanD
+inv_name						= ammo_12x70_zhekan
+inv_name_short			= ammo_12x70S
+cost								= 1100
+inv_weight					= 0.6
+inv_grid_x					= 16
+inv_grid_y					= 2
+box_size						= 10
+k_hit							= 170
+k_impulse					= 18.0
+k_ap								= 0.27
+wm_size						= 0.08
+k_air_resistance			= 1.1
+k_bullet_speed			= 1.05
+k_disp							= 0.3
+1icon_layer = fmj_ico
+[ammo_12x76_zhekan_bad]:ammo_12x76_zhekan
+cost								= 880
+inv_grid_y					= 3
+impair							= 1.2
+[ammo_12x76_zhekan_verybad]:ammo_12x76_zhekan_bad
+
+[ammo_12x70_buck]:ammo_12x76_zhekan
+GroupControlSection	= spawn_group
+$spawn						= "weapons\ammo\ammo_12x70_buck"
+description					= ammo_12x70_buckD
+inv_name						= ammo_12x70_buck
+cost								= 900
+inv_grid_y					= 0
+k_disp							=	1
+k_hit							= 30
+k_impulse					= 2.5
+k_ap								= 0.21
+buck_shot					= 8
+wm_size						= 0.035
+k_air_resistance			= 2.0
+k_bullet_speed			= 1
+1icon_layer = buck_ico
+[ammo_12x70_buck_self]:ammo_12x70_buck
+cost								= 800
+inv_grid_y					= 1
+impair							= 1.1
+k_bullet_speed			=	0.95
+[ammo_12x70_buck_bad]:ammo_12x70_buck
+cost								= 720
+inv_grid_y					= 1
+impair							= 1.3
+[ammo_12x70_buck_verybad]:ammo_12x70_buck_bad
+
+[ammo_12x76_dart]:ammo_12x70_buck
+GroupControlSection	= spawn_group
+description					= ammo_12x70_flechetteD
+inv_name						= ammo_12x70_flechette
+cost								= 1300
+inv_grid_y					= 4
+k_hit							= 25
+k_impulse					= 1.4
+k_ap								= 0.45	;0.38
+buck_shot					= 8
+wm_size						= 0.02
+k_bullet_speed			= 1.1
+[ammo_12x76_dart_bad]:ammo_12x76_dart
+cost								= 1040
+inv_grid_y					= 5
+impair							= 1.2
+[ammo_12x76_dart_verybad]:ammo_12x76_dart_bad
+
+[ammo_23x75_shrapnel]:ammo_deso
+GroupControlSection	= spawn_group
+$spawn				= "weapons\ammo\ammo_12x70_buck"
+visual					= w_att_huds\ammo_23x75.ogf
+description			= ammo_23x75_shrapnelD
+inv_name				= ammo_23x75_shrapnel
+inv_name_short	= ammo_23x75S
+cost						= 720
+box_size				= 4
+inv_weight			= 0.65
+inv_grid_x			= 17
+inv_grid_y			= 0
+k_hit							= 30
+k_impulse					= 3.0
+k_ap						= 0.28
+buck_shot			= 10
+k_air_resistance 	= 2.0
+1icon_layer = buck_ico
+[ammo_23x75_shrapnel_bad]:ammo_23x75_shrapnel
+cost								= 576
+inv_grid_y			= 1
+impair							= 1.2
+
+[ammo_23x75_barrikada]:ammo_23x75_shrapnel
+GroupControlSection	= spawn_group
+$spawn						= "weapons\ammo\ammo_12x76_zhekan"
+description					= ammo_23x75_barrikadaD
+inv_name						= ammo_23x75_barrikada
+cost								= 920
+inv_grid_y					= 2
+k_disp							= 0.45
+k_hit							= 250
+k_impulse					= 33.0
+k_ap								= 0.36
+buck_shot					= 1
+wm_size         				= 0.09
+k_air_resistance 			= 1.1
+k_bullet_speed			= 1.15
+1icon_layer = ap_ico
+[ammo_23x75_barrikada_bad]:ammo_23x75_barrikada
+cost								= 736
+inv_grid_y					= 3
+impair							= 1.3
+
+[ammo_23x75_rsp_bad]:ammo_23x75_barrikada
+GroupControlSection	= spawn_group
+description					= ammo_23x75_rspD
+inv_name						= ammo_23x75_rsp
+cost								= 400
+k_disp							= 0.5
+k_hit							= 7
+k_impulse					= 33.0
+k_ap								= 0.15
+k_bullet_speed			= 0.25
+tracer_color_ID			= 2
+tracer							= on
+1icon_layer = ep_ico
+
+;--------END------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+[ammo_7.92x33_fmj]:ammo_base
+GroupControlSection	= spawn_group
+discovery_dependency = 
+class			= AMMO 
+visual                  = dynamics\weapons\wpn_ammo\ammo_792x33_fmj.ogf 
+description		= ammo-7.92x33_fmj_descr
+$prefetch 		= 64
+cost			= 1980
+box_size		= 15
+inv_name		= ammo-7.92x33_fmj
+inv_name_short	        = ammo-7.92x33_fmj_s
+inv_weight		= .37
+inv_grid_width     = 2
+inv_grid_height    = 1
+inv_grid_x         = 55
+inv_grid_y         = 27
+k_ap		    = 0.45
+wm_size         = 0.066
+k_air_resistance = 0.25
+tier                                     = 4
+[ammo_7.92x33_fmj_bad]:ammo_7.92x33_fmj
+[ammo_7.92x33_fmj_verybad]:ammo_7.92x33_fmj
+[ammo_7.92x33_ap]:ammo_7.92x33_fmj
+[ammo_7.92x33_ap_bad]:ammo_7.92x33_ap
+[ammo_7.92x33_ap_verybad]:ammo_7.92x33_ap
+[ammo_50_bmg]:ammo_7.62x54_ap ; 7N13
+[ammo_50_bmg_bad]:ammo_50_bmg
+[ammo_50_bmg_verybad]:ammo_50_bmg
+[ammo_4.6x30_fmj]:ammo_base
+class			= AMMO_S
+inv_weight		= 0.2
+[ammo_4.6x30_fmj_bad]:ammo_4.6x30_fmj
+[ammo_4.6x30_fmj_verybad]:ammo_4.6x30_fmj
+
+[ammo_12x76_zhekan_heli]:ammo_12x76_zhekan ; Do not use! Fake zhekan for helicopter
+$spawn			= ;"weapons\ammo\ammo_12x76_zhekan_heli" ; option for Level Editor
+k_disp			= 1
+k_impulse		= 1
+k_ap			= 0.75
+tracer			= on
+wm_size         = 0.06
+explosive		= off
+[ammo_12x76_bull]:ammo_12x76_zhekan
+k_hit							= 121
+k_impulse					= 12.1
+k_ap								= 0.33
+wm_size						= 0.06
+k_bullet_speed			= 1.2
+
+[ammo_knife]:ammo_base
+GroupControlSection	                     = spawn_group
+discovery_dependency 	                 =
+$spawn			                         = "weapons\ammo\ammo_9x19_fmj" ; option for Level Editor
+class			                         = AMMO_S
+cform                                    = skeleton
+visual                                   = dynamics\weapons\wpn_ammo\ammo_9x19_fmj.ogf
+description		                         = st_none
+slot 			                         = -1
+$prefetch 		                         = 64
+fake_ammo								 = true
+cost			                         = 0
+inv_name			                     = st_none
+inv_name_short		                     = st_none
+inv_weight		                         = 0.001
+inv_grid_width                           = 1
+inv_grid_height                          = 1
+inv_grid_x                               = 0
+inv_grid_y                               = 0
+k_hit			                         = 19
+k_ap			                         = 0.92
+impair			                         = 1.5
+tracer			                         = off
+wm_size         	                     = 0.085
+k_air_resistance 	                     = 1.5
+[ammo_knife_2]:ammo_knife
+GroupControlSection	                     = spawn_group
+k_ap			                         = 2.45
+[ammo_knife_3]:ammo_knife
+GroupControlSection	                     = spawn_group
+k_ap			                         = 2.84
+[ammo_knife_4]:ammo_knife
+GroupControlSection	                     = spawn_group
+k_ap			                         = 1.78
+[ammo_knife_5]:ammo_knife
+GroupControlSection	                     = spawn_group
+k_ap			                         = 1.62
+
+[ammo_binoc]:ammo_base
+GroupControlSection	= spawn_group
+discovery_dependency 	=
+$spawn			= "weapons\ammo\ammo_9x19_fmj" ; option for Level Editor
+class			= AMMO_S
+cform                  = skeleton
+visual                 = dynamics\weapons\wpn_ammo\ammo_9x19_fmj.ogf
+description		= none
+$prefetch 		= 64
+fake_ammo								 = true
+cost			= 0
+box_size		= 0 ;50
+inv_name		= none
+inv_name_short	= none
+inv_weight		= 0
+inv_grid_width				= 2
+inv_grid_height				= 1
+inv_grid_x					= 14
+inv_grid_y					= 9
+k_ap			                         = 1
+wm_size                     = 0.001
+[ammo_dyno]:ammo_base
+GroupControlSection         = spawn_group
+discovery_dependency        =
+$prefetch                   = 64
+$spawn                      =
+cform                       = skeleton
+class                       = AMMO
+inv_grid_height             = 0
+inv_grid_width              = 0
+inv_grid_x                  = 33
+inv_grid_y                  = 6
+inv_name                    = -
+inv_name_short              = -
+description                 = -
+inv_weight                  = 0.0
+cost                        = 216
+visual                      = dynamics\weapons\wpn_ammo\ammo_12x76_zhekan.ogf
+tracer                      = off
+wm_size                     = 0.0000001
+
+[ammo_batteries]:ammo_base	; dummy ammo section to be diplayed in UPD UI
+GroupControlSection	= spawn_group
+discovery_dependency 	=
+$spawn			= "weapons\ammo\ammo_9x19_fmj" ; option for Level Editor
+class			= AMMO_S
+cform           = skeleton
+visual          = dynamics\weapons\wpn_ammo\ammo_9x19_fmj.ogf
+description		= st_energy_descr ; st_batteries_descr
+$prefetch 		= 64
+fake_ammo								 = true
+cost			= 0
+box_size		= 1
+inv_name		= st_energy ; st_batteries
+inv_name_short	= st_energy ; st_batteries
+inv_weight		= 0.01
+inv_grid_width		= 1
+inv_grid_height		= 1
+inv_grid_x			= 1
+inv_grid_y			= 26
+wm_size         	= 1
+[ammo_batteries_dead]:ammo_batteries
+GroupControlSection	= spawn_group
+inv_weight		= .1 ;.24
+[ammo_batteries_ccell]:ammo_batteries
+GroupControlSection	= spawn_group
+inv_weight		= .1 ;.24
+inv_grid_x			= 2
+inv_grid_y			= 26

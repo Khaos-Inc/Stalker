@@ -1,0 +1,464 @@
+--\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ wpn_veresk \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+[veresk_barrel]:attachment_base
+kind  =  veresk
+inv_ui_sign				= sr2_bar
+visual						= w_att_huds\veresk_barrel	
+inv_name					= veresk_barrel
+inv_name_short			= veresk_barrelS
+cost							= 1100
+inv_weight					= 0.1
+inv_grid_width			= 2
+inv_grid_x         			= 20
+inv_grid_y         			= 38
+1icon_layer = clean2_ico
+attachment_point = veresk_barrel|0,0,0|0,0,0
+attachment_slots = veresk_zatvor|zatvor|0,0,0|0,0,0#veresk_hg|wpn_body|0,0,0|0,0,0#veresk_muzzle|wpn_body|0,0,0|0,0,0
+item_tags =	barrel
+override_section =	veresk_barrel_attributes
+
+[veresk_barrel_attributes]
+zoom_rotate_time = 0.02
+recoil_koeff = -0.04
+inertia_koeff = 1.1
+fire_point = 0, 0, 0.025
+weapon_lenght = 0.1
+bullet_speed = 1
+k_hit_koeff = 1.1
+fire_dispersion_base = 0.28
+[sr2_barrel_attributes]:ar_barrel_2_att
+fire_point = 0, 0, 0.025
+weapon_lenght				=	0.1
+bullet_speed				= 1
+k_hit_koeff						= 1.1
+fire_dispersion_base		= 0.28
+
+[veresk_hg]:attachment_base
+kind  =  veresk
+inv_ui_sign				= sr2_hg
+visual						= w_att_huds\veresk_hg	
+inv_name					= veresk_hg
+inv_name_short			= veresk_hgS
+cost							= 500
+inv_weight					= 0.1
+inv_grid_x         			= 19
+inv_grid_y         			= 39
+attachment_point		= veresk_hg|0,0,0|0,0,0
+attachment_slots		= veresk_hg_rails|wpn_body|0,0,0|0,0,0#veresk_barrel_foregrip|wpn_body|0,0,0|0,0,0
+item_tags =	rail
+override_section = veresk_hg_attributes
+[veresk_hg_attributes]:c_attributes,hg_4_att
+
+[veresk_hg_pica]:veresk_hg
+kind  =  veresk
+inv_ui_sign				= sr2_hgP
+visual						= w_att_huds\veresk_hg_pica	
+description				= veresk_hg_pica_descr
+inv_name					= veresk_hg_pica
+inv_name_short			= veresk_hg_picaS
+cost							= 850
+inv_weight					= 0.11
+inv_grid_x         			= 20		
+attachment_slots = veresk_hg_rails|wpn_body|0,0,0|0,0,0#veresk_barrel_foregrip|wpn_body|0,0,0|0,0,0#pica_5|wpn_body|0,0.070100,0.0818|0,0,0#pica_4|wpn_body|0.0133,0.0684,0.0218|0,0,60
+override_section = veresk_hg_pica_attributes
+
+[veresk_hg_pica_attributes]
+animation_prefix = c_
+
+[veresk_barrel_foregrip]:attachment_base
+kind  =  veresk
+inv_ui_sign				= sr2_fg
+visual						= w_att_huds\veresk_barrel_foregrip	
+inv_name					= veresk_barrel_foregrip
+inv_name_short			= veresk_barrel_foregripS
+cost							= 500
+inv_weight					= 0.05
+inv_grid_x         			= 25
+inv_grid_y         			= 38
+attachment_point		= veresk_barrel_foregrip|0,0,0|0,0,0
+item_tags	=	rail	
+override_section			= veresk_barrel_foregrip_attributes
+[veresk_barrel_foregrip_attributes]:foregrip_roni_attributes,cd_attributes
+
+recoil_koeff = -0.04
+inertia_koeff = 0.8
+zoom_rotate_time = -0.03
+[veresk_barrel_foregrip_rail]:attachment_base
+kind  =  veresk
+inv_ui_sign				= sr2_rail
+visual						= w_att_huds\veresk_barrel_foregrip_rail	
+description				= pica_3_up
+inv_name					= veresk_barrel_foregrip_rail
+inv_name_short			= veresk_barrel_foregrip_railS
+cost							= 650
+inv_weight					= 0.06
+inv_grid_x         			= 26
+inv_grid_y         			= 38
+attachment_point		= veresk_barrel_foregrip|0,0,0|0,0,0
+attachment_slots		= pica_3|wpn_body|0,0.0154,0.138|0,0,180#picgrp|wpn_body|0,-0.0202,-0.087|0,0,0	
+item_tags =	rail
+override_section = veresk_barrel_foregrip_rail_attributes
+
+[veresk_barrel_foregrip_rail_attributes]
+
+[veresk_zatvor]:attachment_base
+kind  =  veresk
+inv_ui_sign				= sr2_bolt
+visual						= w_att_huds\veresk_zatvor	
+inv_name					= veresk_zatvor
+inv_name_short			= veresk_zatvorS
+cost							= 750
+inv_weight					= 0.13
+inv_grid_x         			= 19
+inv_grid_y         			= 38
+1icon_layer = clean_lub1_ico
+attachment_point = veresk_zatvor|0,0,0|0,0,0
+attachment_slots = veresk_spring|wpn_body|0,0,0|0,0,0#ak_zatvor_rh|zatvor|0.000191,-0.006872,-0.165549|0,0,0
+item_tags = zatvor
+override_section = veresk_zatvor_attributes
+
+[veresk_zatvor_attributes]
+rpm = 900
+zoom_rotate_time = 0.03
+[veresk_zatvor_att]:rpm_900_zatvor_att
+zoom_rotate_time = 0.03
+recoil_koeff = -0.4
+
+[veresk_spring]:attachment_base
+kind  =  veresk
+inv_ui_sign				= sr2_spr
+visual						= w_att_huds\veresk_spring	
+inv_name					= veresk_spring
+inv_name_short			= veresk_springS
+cost							= 600
+inv_weight					= 0.06
+inv_grid_x         			= 18
+inv_grid_y         			= 38
+1icon_layer = clean1_ico
+attachment_point = veresk_spring|0,0,0|0,0,0
+attachment_slots = veresk_cover|wpn_body|0,0,0|0,0,0#veresk_spring_recoil_buffer|wpn_body|0,0,0|0,0,0
+item_tags =	spring
+override_section = veresk_spring_attributes
+
+[veresk_spring_attributes]
+
+[veresk_spring_recoil_buffer]:attachment_base
+kind  =  veresk
+inv_ui_sign				= sr2_buff
+visual						= w_att_huds\veresk_spring_recoil_buffer	
+inv_name					= veresk_spring_recoil_buffer
+inv_name_short			= veresk_spring_recoil_bufferS
+cost							= 550
+inv_weight					= 0.05
+inv_grid_x         			= 17
+inv_grid_y         			= 39
+attachment_point		= veresk_spring_recoil_buffer|0,0,0|0,0,0
+;item_tags =	spring
+override_section = veresk_spring_recoil_buffer_attributes
+
+[veresk_spring_recoil_buffer_attributes]
+impair_koeff = 0.9
+[veresk_spring_recoil_buffer_att]
+impair_koeff = 0.9
+recoil_koeff = -0.1
+
+[veresk_spring_recoil_buffer1]:veresk_spring_recoil_buffer
+kind  =  veresk
+visual						= w_att_huds\veresk_spring_recoil_buffer1	
+inv_grid_x         			= 18
+override_section = veresk_spring_recoil_buffer1_attributes
+
+[veresk_spring_recoil_buffer1_attributes]
+impair_koeff = 0.9
+recoil_koeff = -0.1
+
+[veresk_cover]:attachment_base
+kind  =  veresk
+inv_ui_sign				= sr2_cover
+visual						= w_att_huds\veresk_cover
+inv_name					= veresk_cover
+inv_name_short			= veresk_coverS
+cost							= 650
+inv_weight					= 0.11
+inv_grid_width			= 2
+inv_grid_x					= 22
+inv_grid_y					= 39
+attachment_point		= veresk_cover|0,0,0|0,0,0
+attachment_slots		= front_dov|wpn_body|0,0.071,-0.07|0,0,0		
+item_tags =	cover
+override_section = veresk_cover_attributes
+
+[veresk_cover_attributes]
+zoom_rotate_time = -0.03
+impair_koeff = 0.8
+
+[veresk_cover_pica]:veresk_cover
+kind  =  veresk
+inv_ui_sign				= sr2_coverP
+visual						= w_att_huds\veresk_cover_pica
+description				= pica_12_up
+inv_name					= veresk_cover_pica
+inv_name_short			= veresk_cover_picaS
+cost							= 1100
+inv_weight					= 0.12
+inv_grid_x					= 24
+attachment_slots		= pica_12|wpn_body|0,0.0735,-0.1217|0,0,0
+override_section = veresk_cover_pica_attributes
+
+[veresk_cover_pica_attributes]
+zoom_rotate_time = -0.03
+impair_koeff = 0.8
+[veresk_cover_pica_d]:veresk_cover_pica
+visual						= w_att_huds\veresk_cover_pica_d
+inv_name					= veresk_cover_pica_d
+inv_grid_x					= 26
+override_section = veresk_cover_pica_d_attributes
+
+[veresk_cover_pica_d_attributes]
+zoom_rotate_time = -0.03
+impair_koeff = 0.8
+
+[veresk_hg_rails]:attachment_base	
+kind  =  veresk
+inv_ui_sign				= sr2_rails
+visual						= w_att_huds\veresk_hg_rails
+description				= pica_3_up2
+inv_name					= veresk_hg_rails
+inv_name_short		= veresk_hg_railsS
+cost							= 700
+inv_weight					= 0.06
+inv_grid_x					= 21
+inv_grid_y					= 39
+attachment_point		= veresk_hg_rails|0,0,0|0,0,0
+attachment_slots		= pica_3|wpn_body|-0.0191,0.0454,0.111|0,0,-90#pica_3|wpn_body|0.0191,0.0454,0.111|0,0,90
+item_tags = rail
+override_section = veresk_hg_rails_attributes
+
+[veresk_hg_rails_attributes]
+
+[veresk_muzzle]:attachment_base
+kind  =  veresk
+inv_ui_sign				= sr2_muz
+visual						= w_att_huds\veresk_muzzle	
+inv_name					= veresk_muzzle
+inv_name_short			= veresk_muzzleS
+cost							= 500
+inv_weight					= 0.04
+inv_grid_x					= 22
+inv_grid_y					= 38
+attachment_point		= veresk_muzzle|0,0,0|0,0,0
+item_tags	=	muzzle_device
+override_section =	veresk_muzzle_attributes
+
+[veresk_muzzle_attributes]
+weapon_lenght = 0.05
+impair_koeff = 0.8
+[veresk_muzzle_att]
+weapon_lenght = 0.05
+impair_koeff = 0.8
+
+[veresk_silencer]:veresk_muzzle
+kind  =  veresk
+inv_ui_sign				= sr2_sil
+visual						= w_att_huds\veresk_silencer
+inv_name					= veresk_silencer
+inv_name_short			= veresk_silencer
+cost							= 1300
+inv_weight					= 0.48
+inv_grid_width			= 2
+inv_grid_x					= 23
+inv_grid_y					= 38
+override_section = veresk_silencer_attributes
+
+[veresk_silencer_attributes]
+silencer_status = 1
+silencer_name = wpn_addon_silencer
+silencer_x = 1
+silencer_y = 1
+weapon_lenght = 0.2
+zoom_rotate_time = 0.08
+recoil_koeff = -0.13
+inertia_koeff = 1.3
+
+[veresk_stock]:attachment_base
+kind  =  veresk
+inv_ui_sign				= sr2_stk
+visual						= w_att_huds\veresk_stock	
+inv_name					= veresk_stock
+inv_name_short			= veresk_stockS
+cost							= 1200
+inv_weight					= 0.11
+inv_grid_width			= 2
+inv_grid_x					= 27
+inv_grid_y					= 38
+attachment_point		= veresk_stock|0,0,0|0,0,0
+item_tags	=	stock
+override_section			=	veresk_stock_attributes
+
+[veresk_stock_attributes]
+zoom_rotate_time = 0.02
+recoil_koeff = -0.18
+inertia_koeff = 0.9
+weapon_lenght = 0.2
+[veresk_stock_att]:stock_low_att
+weapon_lenght = 0.2
+
+override_section = stock_low_att
+[stock_low_att]
+zoom_rotate_time = 0.02
+recoil_koeff            = -0.18
+inertia_koeff          = 0.9
+
+[veresk_stock_buffer]:veresk_stock
+kind  =  veresk
+inv_ui_sign				= sr2_buff
+visual						= w_att_huds\veresk_stock_buffer	
+inv_name					= veresk_stock_buffer
+inv_name_short			= veresk_stock_bufferS
+cost							= 1300
+inv_weight					= 0.12
+inv_grid_x					= 29
+attachment_slots		= ar_stock|wpn_body|0,-0.0246,-0.1015|0,0,0
+override_section = veresk_stock_buffer_attributes
+
+[veresk_stock_buffer_attributes]
+weapon_lenght = 0.15
+zoom_rotate_time = 0.02
+
+[mag_wpn_veresk_9x21_ps]:mag_wpn_base,wg_wpn_veresk,ag_ammo_9x21_ps
+inv_ui_sign					= sr2_20
+visual							= w_att_huds\veresk_mag_20
+inv_name						= veresk_mag_20
+inv_name_short				= veresk_mag_20S
+inv_grid_x         				= 31
+inv_grid_y         				= 38
+inv_weight						= 0.08
+cost								= 450
+max_mag_size				= 20
+mag_size						= small
+override_section				= mag_wpn_veresk_9x21_ps_attributes
+
+[mag_wpn_veresk_9x21_ps_attributes]
+animation_prefix_mag = 20_
+
+[mag_wpn_gepard_9x21_ps]:mag_wpn_veresk_9x21_ps
+inv_ui_sign					= gp_20
+inv_name						= gepard_mag_20
+inv_name_short				= gepard_mag_20S
+override_section = mag_wpn_gepard_9x21_ps_attributes
+
+[mag_wpn_gepard_9x21_ps_attributes]
+animation_prefix_mag = 20_
+
+[mag_wpn_veresk_30_9x21_ps]:mag_wpn_veresk_9x21_ps
+inv_ui_sign					= sr2_30
+visual							= w_att_huds\veresk_mag_30
+inv_name						= veresk_mag_30
+inv_name_short				= veresk_mag_30S
+inv_grid_height				= 2
+inv_grid_x         				= 32
+inv_grid_y         				= 38
+inv_weight						= 0.1
+cost								= 650
+max_mag_size				= 30
+override_section				= mag_wpn_veresk_30_9x21_ps_attributes
+
+[mag_wpn_veresk_30_9x21_ps_attributes]
+animation_prefix_mag = 30_
+[veresk_mag_30_attributes]
+animation_prefix_mag	=	30_
+
+[mag_wpn_gepard_40_9x21_ps]:mag_wpn_veresk_30_9x21_ps
+inv_ui_sign					= gp_40
+visual							= w_att_huds\gepard_mag_40
+inv_name						= gepard_mag_40
+inv_name_short				= gepard_mag_40S
+inv_grid_x         				= 33
+inv_weight						= 0.16
+cost								= 900
+max_mag_size				= 40
+mag_size						= medium
+override_section = mag_wpn_gepard_40_9x21_ps_attributes
+
+[mag_wpn_gepard_40_9x21_ps_attributes]
+animation_prefix_mag = 30_
+
+[mag_wpn_gepard_75_9x21_ps]:mag_wpn_gepard_40_9x21_ps
+inv_ui_sign					= gp_75
+visual							= w_att_huds\veresk_mag_75
+inv_name						= gepard_mag_75
+inv_name_short				= gepard_mag_75S
+inv_grid_x         				= 36
+inv_weight						= 1.1
+cost								= 1850
+max_mag_size				= 75
+mag_size						= large
+override_section				= mag_wpn_gepard_75_9x21_ps_attributes
+
+[mag_wpn_gepard_75_9x21_ps_attributes]
+animation_prefix_mag = 75_
+[veresk_mag_75_attributes]
+animation_prefix_mag	=	75_
+
+[gepard_cover]:attachment_base_ak
+kind  =  gepard
+inv_ui_sign				= gp_dc
+visual						= w_att_huds\gepard_cover
+inv_name					= gepard_cover
+inv_name_short			= gepard_coverS
+inv_grid_width			= 2
+inv_grid_x					= 6
+inv_grid_y					= 17
+cost							= 500
+attachment_point		= gepard_cover|0,0,0|0,0,0
+attachment_slots = 74u_cover_sight_zenit_b18|wpn_body|0,0,-0.107|0,0,0
+override_section = gepard_cover_attributes
+
+inv_weight = 0.1
+[gepard_cover_attributes]
+zoom_rotate_time = -0.01
+impair_koeff = 0.8
+[cover_3_att]
+zoom_rotate_time = -0.01
+impair_koeff          = 0.8
+
+[gepard_cover_custom]:gepard_cover
+kind  =  gepard
+inv_ui_sign				= 74u_dc+
+visual						= w_att_huds\gepard_cover_custom
+description				= pica_9_up
+inv_name					= gepard_cover_custom
+inv_name_short			= gepard_cover_customS
+inv_grid_x					= 10
+cost							= 1000
+attachment_slots		= pica_9|wpn_body|0,0.0802,-0.085|0,0,0
+item_tags = cover
+override_section = gepard_cover_custom_attributes
+
+inv_weight = 0.1
+[gepard_cover_custom_attributes]
+zoom_rotate_time = -0.01
+impair_koeff = 0.8
+
+[gepard_stock]:74u_stock_buffer_ad
+kind  =  gepard
+inv_ui_sign				= gp_stk
+visual						= w_att_huds\gepard_stock
+inv_name					= gepard_stock
+inv_name_short			= gepard_stockS
+cost							= 950
+inv_weight					= 0.23
+inv_grid_width			= 2
+inv_grid_x					= 8
+inv_grid_y					= 17
+attachment_slots		= ak_stock_pad|wpn_body|0,0.0127,0.004|0,5,0
+override_section = gepard_stock_attributes
+
+[gepard_stock_attributes]
+zoom_rotate_time = 0.02
+recoil_koeff = -0.18
+inertia_koeff = 0.9
+weapon_lenght = 0.23
+[gepard_stock_att]:stock_low_att
+weapon_lenght = 0.23
+

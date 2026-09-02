@@ -1,0 +1,329 @@
+--\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ wpn_vz82 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+[vz82_spring]:attachment_base
+kind  =  vz82
+inv_ui_sign				= vz82_spr
+visual						= w_att_huds\vz82_spring	
+inv_name					= vz82_spring
+inv_name_short			= vz82_springS
+cost							= 450
+inv_weight					= 0.09
+inv_grid_x         			= 18
+inv_grid_y         			= 13
+1icon_layer = clean1_ico
+attachment_point = vz82_spring|0,0,0|0,0,0
+attachment_slots =	vz82_zatvor|zatvor|0,0,0|0,0,0
+item_tags =	spring
+override_section = vz82_spring_attributes
+
+[vz82_spring_attributes]
+
+[vz82_zatvor]:attachment_base
+kind  =  vz82
+inv_ui_sign				= vz82_bolt
+visual						= w_att_huds\vz82_zatvor	
+inv_name					= vz82_zatvor
+inv_name_short			= vz82_zatvorS
+cost							= 600
+inv_weight					= 0.15
+inv_grid_x         			= 21
+inv_grid_y         			= 14
+1icon_layer = clean_lub1_ico
+attachment_point = vz82_zatvor|0,0,0|0,0,0
+attachment_slots =	vz82_barrel|wpn_body|0,0,0|0,0,0
+item_tags =	zatvor
+override_section = vz82_zatvor_attributes
+
+[vz82_zatvor_attributes]
+zoom_rotate_time = 0.03
+rpm = 850
+impair_koeff = 1.1
+[vz82_zatvor_att]:rpm_850_zatvor_att
+impair_koeff = 1.1
+override_section = rpm_850_zatvor_att
+
+[vz82_barrel]:attachment_base
+kind  =  vz82
+inv_ui_sign				= vz82_bar
+visual						= w_att_huds\vz82_barrel	
+inv_name					= vz82_barrel
+inv_name_short			= vz82_barrelS
+cost							= 600
+inv_weight					= 0.09
+inv_grid_x         			= 16
+inv_grid_y         			= 13
+1icon_layer = clean1_ico
+attachment_point		=	vz82_barrel|0,0,0|0,0,0
+attachment_slots		=	vz82_cover|wpn_body|0,0,0|0,0,0#vz82_silencer|wpn_body|0,0,0|0,0,0
+item_tags =	barrel
+override_section = vz82_barrel_attributes
+
+[vz82_barrel_attributes]
+k_hit_koeff = 1.05
+zoom_rotate_time = 0.01
+recoil_koeff = -0.02
+weapon_lenght = 0.1
+bullet_speed = 0.91
+fire_dispersion_base = 0.22
+[vz82_barrel_att]:gsh18_barrel_att
+weapon_lenght = 0.1
+bullet_speed = 0.91
+fire_dispersion_base = 0.22
+
+[vz82_barrel_up]:vz82_barrel
+kind  =  vz82
+inv_ui_sign				= vz82_bar+
+visual						= w_att_huds\vz82_barrel_up	
+inv_name					= vz82_barrel_up
+inv_name_short			= vz82_barrel_upS
+cost							= 800
+inv_grid_x         			= 17
+attachment_slots		=	vz82_cover|wpn_body|0,0,0|0,0,0#9mm_muzzle|muzzle|0,0,0|0,0,0
+override_section = vz82_barrel_up_attributes
+
+inv_weight = 0.09
+[vz82_barrel_up_attributes]
+k_hit_koeff = 1.05
+zoom_rotate_time = 0.01
+recoil_koeff = -0.04
+weapon_lenght = 0.1
+bullet_speed = 0.91
+fire_dispersion_base = 0.22
+impair_koeff = 1.1
+[vz82_barrel_up_att]:vz82_barrel_att
+impair_koeff = 1.1
+
+[vz82_cover]:attachment_base
+kind  =  vz82
+inv_ui_sign				= vz82_cover
+visual						= w_att_huds\vz82_cover	
+inv_name					= vz82_cover
+inv_name_short			= vz82_coverS
+cost							= 800
+inv_weight					= 0.11
+inv_grid_width			= 2
+inv_grid_x					= 22
+inv_grid_y					= 14
+attachment_point = vz82_cover|0,0,0|0,0,0
+attachment_slots =	vz82_mount_grip|wpn_body|0,0,0|0,0,0#vz82_sights|wpn_body|0,0,0|0,0,0
+item_tags =	cover
+override_section = vz82_cover_attributes
+
+[vz82_cover_attributes]
+zoom_rotate_time = -0.01
+recoil_koeff = -0.02
+impair_koeff = 0.8
+
+[vz82_cover_up]:vz82_cover
+kind  =  vz82
+inv_ui_sign				= vz82_cover+
+visual						= w_att_huds\vz82_cover_up
+description				= ar_hg_8
+inv_name					= vz82_cover_up
+inv_name_short			= vz82_cover_upS
+cost							= 1150
+inv_weight					= 0.12
+inv_grid_x					= 24
+attachment_slots =	vz82_mount_grip|wpn_body|0,0,0|0,0,0#pica_4|wpn_body|0,0.07225,0.0967|0,0,0#pica_8|wpn_body|0,0.07225,-0.0223|0,0,0#pica_3|wpn_body|0.0229,0.0547,-0.009|0,0,90	
+override_section = vz82_cover_up_attributes
+
+[vz82_cover_up_attributes]
+zoom_rotate_time = 0.01
+recoil_koeff = -0.04
+
+[vz82_sights_mount]:attachment_base
+kind  =  vz82
+inv_ui_sign				= vz82_pica
+visual						= w_att_huds\vz82_sights_mount	
+description				= pica_9_up
+inv_name					= vz82_sights_mount
+inv_name_short			= vz82_sights_mountS
+cost							= 300
+inv_weight					= 0.08
+inv_grid_x					= 19
+inv_grid_y					= 14
+attachment_point		=	vz82_sights|0,0,0|0,0,0
+attachment_slots		=	pica_9|wpn_body|0,0.07835,0.0925|0,0,0
+item_tags =	rail
+override_section = vz82_sights_mount_attributes
+
+[vz82_sights_mount_attributes]
+
+[vz82_mount_grip]:attachment_base
+kind  =  vz82
+inv_ui_sign				= vz82_rail
+visual						= w_att_huds\vz82_mount_grip	
+description				= pistol_gripD
+inv_name					= vz82_mount_grip
+inv_name_short			= vz82_mount_gripS
+cost							= 550
+inv_weight					= 0.08
+inv_grid_x					= 20
+inv_grid_y					= 14
+attachment_point =	vz82_mount_grip|0,0,0|0,0,0
+attachment_slots =	pica_3|wpn_body|0,0.02426,0.148|0,0,180#picgrp|wpn_body|0,-0.0113,-0.052|0,0,0		
+item_tags	=	rail
+override_section = vz82_mount_grip_attributes
+
+[vz82_mount_grip_attributes]
+
+[vz82_grip]:attachment_base
+kind  =  vz82
+inv_ui_sign				= vz82_pg
+visual						= w_att_huds\vz82_grip	
+inv_name					= vz82_grip
+inv_name_short			= vz82_gripS
+cost							= 350
+inv_weight					= 0.08
+inv_grid_x         			= 19
+inv_grid_y         			= 13
+attachment_point		=	vz82_grip|0,0,0|0,0,0
+item_tags =	pgrip
+override_section = vz82_grip_attributes
+
+[vz82_grip_attributes]
+zoom_rotate_time = -0.02
+
+[vz82_grip_moe]:vz82_grip
+kind  =  vz82
+inv_ui_sign				= vz82_pg+
+visual						= w_att_huds\vz82_grip_moe	
+inv_name					= vz82_grip_moe
+inv_name_short			= vz82_grip_moeS
+cost							= 700
+inv_weight					= 0.07
+inv_grid_x         			= 20
+override_section = vz82_grip_moe_attributes
+
+[vz82_grip_moe_attributes]
+zoom_rotate_time = -0.04
+recoil_koeff = -0.02
+
+[vz82_silencer]:attachment_base
+kind  =  vz82
+inv_ui_sign				= vz82_sil
+visual						= w_att_huds\vz82_silencer	
+inv_name					= vz82_silencer
+inv_name_short			= vz82_silencerS
+cost							= 1350
+inv_weight					= 0.28
+inv_grid_width			= 2
+inv_grid_x					= 26
+inv_grid_y					= 14
+attachment_point		= vz82_silencer|0,0,0|0,0,0
+attachment_slots		=	b3|muzzle|0,-0.02125,0.012|0,0,0
+item_tags	=	muzzle_device
+override_section = vz82_silencer_attributes
+
+[vz82_silencer_attributes]
+silencer_status = 1
+silencer_name = wpn_addon_silencer
+silencer_x = 1
+silencer_y = 1
+weapon_lenght = 0.16
+impair_koeff = 1.4
+zoom_rotate_time = 0.05
+recoil_koeff = -0.12
+inertia_koeff = 1.2
+
+[vz82_stock_wire_dmg]:attachment_base
+kind  =  vz82
+inv_ui_sign				= vz82_stk-
+visual						= w_att_huds\vz82_stock_wire_dmg	
+inv_name					= vz82_stock_wire_dmg
+inv_name_short			= vz82_stock_wire_dmgS
+cost							= 500
+inv_weight					= 0.1
+inv_grid_width			= 2
+inv_grid_x					= 23
+inv_grid_y					= 13
+attachment_point		=	vz82_stock|0,0,0|0,0,0
+override_section = vz82_stock_wire_dmg_attributes
+
+[vz82_stock_wire_dmg_attributes]
+
+[vz82_stock_wire]:vz82_stock_wire_dmg
+kind  =  vz82
+inv_ui_sign				= vz82_stk+
+visual						= w_att_huds\vz82_stock_wire	
+inv_name					= vz82_stock_wire
+inv_name_short			= vz82_stock_wireS
+cost							= 1150
+inv_grid_x					= 25
+item_tags	=	stock
+override_section = vz82_stock_wire_attributes
+
+[vz82_stock_wire_attributes]
+zoom_rotate_time = 0.01
+recoil_koeff = -0.16
+inertia_koeff = 0.9
+weapon_lenght = 0.25
+[vz82_stock_wire_att]:pp2k_stock_mag_att
+weapon_lenght = 0.25
+
+[vz82_stock_wood]:vz82_stock_wire_dmg
+kind  =  vz82
+inv_ui_sign				= vz82_stk_w
+visual						= w_att_huds\vz82_stock_wood	
+inv_name					= vz82_stock_wood
+inv_name_short			= vz82_stock_woodS
+cost							= 1800
+inv_weight					= 0.57
+inv_grid_x         			= 28
+inv_grid_y         			= 14
+item_tags	=	stock
+override_section = vz82_stock_wood_attributes
+
+[vz82_stock_wood_attributes]
+zoom_rotate_time = 0.06
+recoil_koeff = -0.24
+inertia_koeff = 0.7
+weapon_lenght = 0.3
+[vz82_stock_wood_att]:ak_stock_att
+weapon_lenght = 0.3
+
+[vz82_stock_frame]:vz82_stock_wire_dmg
+kind  =  vz82
+inv_ui_sign				= vz82_stk_fr
+visual						= w_att_huds\vz82_stock_frame	
+inv_name					= vz82_stock_frame
+inv_name_short			= vz82_stock_frameS
+cost							= 1900
+inv_weight					= 0.4
+inv_grid_x         			= 27
+item_tags	=	stock
+override_section = vz82_stock_frame_attributes
+
+[vz82_stock_frame_attributes]
+weapon_lenght = 0.25
+recoil_koeff = -0.15
+[vz82_stock_frame_att]
+weapon_lenght = 0.25
+
+[vz82_stock_buffer_adapter]:vz82_stock_wire_dmg
+kind  =  vz82
+inv_ui_sign				= vz82_sbuff
+visual						= w_att_huds\vz82_stock_buffer_adapter	
+inv_name					= vz82_stock_buffer_adapter
+inv_name_short			= vz82_stock_buffer_adapterS
+cost							= 450
+inv_weight					= 0.09
+inv_grid_width   			= 1
+inv_grid_x         			= 21
+item_tags	=	stock
+attachment_slots		= ar_buffer|wpn_body|0,-0.003864,-0.002685|0,0,0
+override_section = vz82_stock_buffer_adapter_attributes
+
+[vz82_stock_buffer_adapter_attributes]
+
+[vz82_stock_74u_adapter]:vz82_stock_buffer_adapter
+kind  =  vz82
+inv_ui_sign				= vz82_s74u
+visual						= w_att_huds\vz82_stock_74u_adapter	
+inv_name					= vz82_stock_74u_adapter
+inv_name_short			= vz82_stock_74u_adapterS
+inv_grid_x         			= 22
+attachment_slots = 74u_stock|wpn_body|0,0.017553,0|0,0,0
+override_section = vz82_stock_74u_adapter_attributes
+
+[vz82_stock_74u_adapter_attributes]

@@ -1,0 +1,510 @@
+--\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ wpn_mp133 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+[133_zatvor]:attachment_base
+kind  =  133
+inv_ui_sign				= 133_bolt
+visual							= w_att_huds\133_zatvor	
+inv_name					= 133_zatvor
+inv_name_short		= 133_zatvor
+cost							= 1100
+inv_weight				= 0.3
+inv_grid_width			= 2
+inv_grid_x					= 13
+inv_grid_y					= 52
+1icon_layer = clean_lub2_ico
+attachment_point = 133_zatvor|0,0,0|0,0,0
+attachment_slots	= 133_hg|zatvor|0,0,0|0,0,0#133_barrel|wpn_body|0,0,0|0,0,0
+item_tags =	zatvor
+override_section = 133_zatvor_attributes
+
+[133_zatvor_attributes]
+zoom_rotate_time = 0.07
+rpm = 108
+impair_koeff = 0.8
+[133_zatvor_att]
+zoom_rotate_time = 0.07
+rpm = 108
+impair_koeff = 0.8
+
+[133_barrel_370]:attachment_base
+kind  =  133
+inv_ui_sign				= 133_37cm
+visual							= w_att_huds\133_barrel_370	
+inv_name					= 133_barrel_370
+inv_name_short		= 133_barrel_370S
+cost							= 2000
+inv_weight				= 0.22
+inv_grid_width			= 2
+inv_grid_x					= 15
+inv_grid_y					= 52
+1icon_layer = clean2_ico
+attachment_point	= 133_barrel|0,0,0|0,0,0
+attachment_slots	= 133_mag|wpn_body|0,0,0|0,0,0#choke|muzzle|0,-0.0005,0|0,0,0
+item_tags = barrel
+override_section = 133_barrel_370_attributes
+[133_barrel_370_attributes]:12_barrel_1_att,12_barrel_370_att
+weapon_lenght				= 0.04
+fire_dispersion_base = 3.9
+bullet_speed = 0.95
+recoil_koeff = -0.02
+inertia_koeff = 1.3
+zoom_rotate_time = 0.04
+[12_barrel_370_att]
+bullet_speed				= 0.95
+fire_dispersion_base		= 3.9
+
+[133_barrel_510]:133_barrel_370
+kind  =  133
+inv_ui_sign				= 133_51cm
+visual							= w_att_huds\133_barrel_510	
+inv_name					= 133_barrel_510
+inv_name_short		= 133_barrel_510S
+cost							= 2600
+inv_weight				= 0.27
+inv_grid_width			= 3
+inv_grid_x					= 17
+1icon_layer = clean3_ico
+attachment_slots	= 133_mag|wpn_body|0,0,0|0,0,0#choke|muzzle|0,-0.0005,0.1444|0,0,0
+override_section =	133_barrel_510_attributes
+[133_barrel_510_attributes]:12_barrel_6_att,12_barrel_500_att
+fire_point						= 0, 0, 0.17
+weapon_lenght				= 0.15
+
+recoil_koeff = -0.03
+bullet_speed = 1.05
+fire_dispersion_base = 3.5
+inertia_koeff = 1.4
+zoom_rotate_time = 0.08
+[133_barrel_540]:133_barrel_370
+kind  =  133
+inv_ui_sign				= 133_54cm
+visual							= w_att_huds\133_barrel_540	
+inv_name					= 133_barrel_540
+inv_name_short		= 133_barrel_540S
+cost							= 2600
+inv_weight				= 0.27
+inv_grid_width			= 3
+inv_grid_x					= 20
+1icon_layer = clean3_ico
+attachment_slots	= 133_mag|wpn_body|0,0,0|0,0,0#choke|muzzle|0,-0.0005,0.177|0,0,0#sight_rail|wpn_body|0,-0.008,0.041|0,0,0
+override_section = 133_barrel_540_attributes
+[133_barrel_540_attributes]:12_barrel_7_att,12_barrel_540_att
+fire_point					= 0, 0, 0.2
+weapon_lenght				= 0.2
+
+k_hit_koeff = 1.05
+recoil_koeff = -0.04
+bullet_speed = 1.08
+fire_dispersion_base = 3.4
+inertia_koeff = 1.5
+zoom_rotate_time = 0.09
+[12_barrel_540_att]
+bullet_speed = 1.08
+k_hit_koeff = 1.05
+fire_dispersion_base = 3.4
+
+[133_barrel_540_up]:133_barrel_540
+kind  =  133
+inv_ui_sign				= 133_54cm+
+visual							= w_att_huds\133_barrel_540_up	
+inv_name					= 133_barrel_540_up
+cost							= 2650
+inv_weight				= 0.24
+inv_grid_x					= 23
+attachment_slots	= 133_mag|wpn_body|0,0,0|0,0,0#choke|muzzle|0,-0.0005,0.177|0,0,0
+override_section = 133_barrel_540_up_attributes
+
+[133_barrel_540_up_attributes]
+recoil_koeff = -0.05
+inertia_koeff = 1.5
+bullet_speed = 1.08
+k_hit_koeff = 1.05
+fire_dispersion_base = 3.4
+fire_point = 0, 0, 0.2
+weapon_lenght = 0.2
+zoom_rotate_time = 0.08
+[133_barrel_540_up_att]:133_barrel_540_attributes
+zoom_rotate_time = 0.08
+
+[133_barrel_610]:133_barrel_370
+kind  =  133
+inv_ui_sign				= 133_61cm
+visual							= w_att_huds\133_barrel_610	
+inv_name					= 133_barrel_610
+inv_name_short		= 133_barrel_610S
+cost							= 2900
+inv_weight				= 0.31
+inv_grid_width			= 4
+inv_grid_x					= 26
+1icon_layer = clean4_ico
+attachment_slots	= 133_mag|wpn_body|0,0,0|0,0,0#choke|muzzle|0,-0.0005,0.2374|0,0,0#sight_rail|wpn_body|0,-0.008,0.041|0,0,0
+override_section			=	133_barrel_610_attributes
+[133_barrel_610_attributes]:12_barrel_8_att,12_barrel_610_att
+fire_point						= 0, 0, 0.26
+weapon_lenght				= 0.25
+impair_koeff					= 0.8
+
+override_section = 12_barrel_8_att
+k_hit_koeff = 1.07
+recoil_koeff = -0.04
+bullet_speed = 1.29
+fire_dispersion_base = 3.3
+inertia_koeff = 1.6
+zoom_rotate_time = 0.1
+[12_barrel_8_att]
+zoom_rotate_time = 0.1
+recoil_koeff             = -0.22
+inertia_koeff            = 1.6
+
+[133_barrel_660]:133_barrel_610
+kind  =  133
+inv_ui_sign				= 133_66cm
+visual							= w_att_huds\133_barrel_660	
+inv_name					= 133_barrel_660
+inv_name_short		= 133_barrel_660S
+cost							= 3250
+inv_weight				= 0.39
+inv_grid_x					= 30
+attachment_slots	= 133_mag|wpn_body|0,0,0|0,0,0#choke|muzzle|0,-0.0005,0.2832|0,0,0#sight_rail|wpn_body|0,-0.008,0.041|0,0,0
+override_section			=	133_barrel_660_attributes
+[133_barrel_660_attributes]:12_barrel_9_att,12_barrel_660_att
+fire_point						= 0, 0, 0.3
+weapon_lenght				= 0.3
+impair_koeff					= 0.8
+
+override_section = 12_barrel_660_att
+k_hit_koeff = 1.1
+recoil_koeff = -0.06
+bullet_speed = 1.31
+fire_dispersion_base = 3.2
+inertia_koeff = 1.7
+zoom_rotate_time = 0.11
+[12_barrel_660_att]
+bullet_speed				= 1.31
+k_hit_koeff						= 1.1
+fire_dispersion_base		= 3.2
+
+[133_barrel_710]:133_barrel_370
+kind  =  133
+inv_ui_sign				= 133_71cm
+visual							= w_att_huds\133_barrel_710	
+inv_name					= 133_barrel_710
+inv_name_short		= 133_barrel_710S
+cost							= 3500
+inv_weight				= 0.43
+inv_grid_width			= 4
+inv_grid_x					= 34
+1icon_layer = clean4_ico
+attachment_slots	= 133_mag|wpn_body|0,0,0|0,0,0#choke|muzzle|0,-0.0005,0.329|0,0,0#sight_rail|wpn_body|0,-0.008,0.041|0,0,0
+override_section			=	133_barrel_710_attributes
+[133_barrel_710_attributes]:1300_barrel_710_attributes
+fire_point						= 0, 0, 0.35
+
+recoil_koeff = -0.10
+inertia_koeff = 1.8
+weapon_lenght = 0.35
+k_hit_koeff = 1.15
+impair_koeff = 0.75
+fire_dispersion_base = 3.1
+bullet_speed = 1.37
+zoom_rotate_time = 0.12
+[133_mag4]:attachment_base
+kind  =  133
+inv_ui_sign				= mag4
+visual							= w_att_huds\133_mag4	
+inv_name					= 133_mag4
+inv_name_short		= 133_mag4S
+cost							= 400
+inv_weight				= 0.06
+inv_grid_x					= 19
+inv_grid_y					= 54
+attachment_point	= 133_mag|0,0,0|0,0,0
+attachment_slots	= 133_mag_att|wpn_body|0,0,0|0,0,0#
+item_tags =	mag
+override_section 	= 133_mag4_attributes
+
+[133_mag4_attributes]
+ammo_mag_size = +4
+
+[133_mag5]:133_mag4
+kind  =  133
+inv_ui_sign				= mag5
+visual							= w_att_huds\133_mag5	
+inv_name					= 133_mag5
+inv_name_short		= 133_mag5S
+cost							= 650
+inv_weight				= 0.09
+inv_grid_x					= 20
+attachment_slots	= 133_mag_att|wpn_body|0,0,0|0,0,0#tubemag|wpn_body|0,0.0245,0.496|0,0,0	
+override_section 	= 133_mag5_attributes
+
+[133_mag5_attributes]
+zoom_rotate_time = 0.01
+ammo_mag_size = +5
+
+[133_mag6]:133_mag5
+kind  =  133
+inv_ui_sign				= mag6
+visual							= w_att_huds\133_mag6	
+inv_name					= 133_mag6
+inv_name_short		= 133_mag6S
+cost							= 800
+inv_weight				= 0.11
+inv_grid_width			= 2
+inv_grid_x					= 21
+override_section 	= 133_mag6_attributes
+
+[133_mag6_attributes]
+zoom_rotate_time = 0.01
+inertia_koeff = 1.1
+ammo_mag_size = +6
+
+[133_mag7]:133_mag6
+kind  =  133
+inv_ui_sign				= mag7
+visual							= w_att_huds\133_mag7	
+inv_name					= 133_mag7
+inv_name_short		= 133_mag7S
+cost							= 950
+inv_weight				= 0.14
+inv_grid_width			= 2
+override_section 	= 133_mag7_attributes
+
+[133_mag7_attributes]
+ammo_mag_size = +7
+
+[133_mag8]:133_mag5
+kind  =  133
+inv_ui_sign				= mag8
+visual							= w_att_huds\133_mag8	
+inv_name					= 133_mag8
+inv_name_short		= 133_mag8S
+cost							= 1050
+inv_weight				= 0.18
+inv_grid_width			= 3
+inv_grid_x					= 25
+override_section 	= 133_mag8_attributes
+
+[133_mag8_attributes]
+ammo_mag_size = +8
+
+[133_mag_sprut]:attachment_base
+kind  =  133
+inv_ui_sign				= 133_hgP
+visual							= w_att_huds\133_mag_deltatech_sprut
+description				= pica_3_up3
+inv_name					= 133_mag_deltatech_sprut
+inv_name_short		= 133_mag_deltatech_sprutS
+cost							= 950
+inv_weight				= 0.1
+inv_grid_x					= 28
+inv_grid_y					= 54
+attachment_point	= 133_mag_att|0,0,0|0,0,0
+attachment_slots	= pica_3|wpn_body|-0.0098,0.431|0,0,180#pica_3|wpn_body|-0.0302,0.0426,0.431|0,0,-60#pica_3|wpn_body|0.0302,0.0426,0.431|0,0,60
+item_tags	=	rail
+override_section = 133_mag_sprut_attributes
+
+[133_mag_sprut_attributes]
+
+[133_hg]:attachment_base
+kind  =  133
+inv_ui_sign				= 133_hg
+visual							= w_att_huds\133_hg
+inv_name					= 133_hg
+inv_name_short		= 133_hgS
+cost							= 750
+inv_weight				= 0.25
+inv_grid_width			= 2
+inv_grid_x					= 0
+inv_grid_y					= 54
+attachment_point	= 133_hg|0,0,0|0,0,0
+item_tags =	hg
+override_section = 133_hg_attributes
+
+[133_hg_attributes]
+animation_prefix = c_
+zoom_rotate_time = -0.04
+
+[133_hg_custom]:133_hg
+kind  =  133
+inv_ui_sign				= 133_hgP
+visual							= w_att_huds\133_hg_custom
+description				= pica_3_up3
+inv_name					= 133_hg_custom
+inv_name_short		= 133_hg_customS
+cost							= 1300
+inv_weight				= 0.27
+inv_grid_x					= 2
+attachment_slots	= pica_3|zatvor|-0.0236,0.0332,0.379|0,0,-90#pica_3|zatvor|0.0236,0.0332,0.379|0,0,90#pica_3|zatvor|0,0.0048,0.4|0,0,180#picgrp|zatvor|0,-0.0307,0.095|0,0,0					
+override_section = 133_hg_custom_attributes
+
+[133_hg_custom_attributes]
+animation_prefix = c_
+zoom_rotate_time = -0.04
+
+[133_sight_taktikatula]:attachment_base
+kind  =  133
+inv_ui_sign				= 133_rail
+visual							= w_att_huds\133_sight_mount_taktikatula	
+description				= pica_12_up
+inv_name					= 133_sight_mount_taktikatula
+inv_name_short		= 133_sight_mount_taktikatulaS
+cost							= 900
+inv_weight				= 0.08
+inv_grid_x					= 9
+inv_grid_y					= 54
+attachment_point = 133_sight|0,0,0|0,0,0
+attachment_slots	= pica_12|wpn_body|0,0.0704,0.07|0,0,0	
+item_tags	=	rail
+override_section = 133_sight_taktikatula_attributes
+
+[133_sight_taktikatula_attributes]
+
+[133_sight_est]:133_sight_taktikatula
+kind  =  133
+inv_ui_sign				= 133_rail+
+visual							= w_att_huds\133_sight_mount_est	
+description				= pica_15_up
+inv_name					= 133_sight_mount_est
+inv_name_short		= 133_sight_mount_estS
+cost							= 1150
+inv_weight				= 0.12
+inv_grid_width			=	2
+inv_grid_x					= 10
+attachment_slots	= pica_15|wpn_body|0,0.0722,0.04|0,0,0#pica_3|wpn_body|-0.0234,0.0447,0.04|0,0,-90				
+override_section = 133_sight_est_attributes
+
+[133_sight_est_attributes]
+
+[133_stock_short]:attachment_base
+kind  =  133
+inv_ui_sign				= 133_stkS
+visual							= w_att_huds\133_stock_short	
+inv_name					= 133_stock_short
+inv_name_short		= 133_stock_shortS
+cost							= 550
+inv_weight				= 0.15
+inv_grid_x					= 12
+inv_grid_y					= 54
+attachment_point	= 133_stock|0,0,0|0,0,0
+attachment_slots	= 133_stock_mount|wpn_body|0,0,0|0,0,0
+item_tags	=	stock
+override_section = 133_stock_short_attributes
+
+[133_stock_short_attributes]
+zoom_rotate_time = -0.02
+recoil_koeff = 0.09
+
+[133_stock_rail]:attachment_base
+kind  =  133
+inv_ui_sign				= 133_grpP
+visual							= w_att_huds\133_stock_mount_taktikatula	
+description				= pica_6_up
+inv_name					= 133_stock_mount_taktikatula
+inv_name_short		= 133_stock_mount_taktikatulaS
+cost							= 750
+inv_weight				= 0.09
+inv_grid_x					= 8
+inv_grid_y					= 54
+attachment_point	= 133_stock_mount|0,0,0|0,0,0
+attachment_slots	= pica_6|wpn_body|0,0.0643,-0.024|0,0,0
+item_tags =	rail
+override_section = 133_stock_rail_attributes
+
+[133_stock_rail_attributes]
+
+[133_stock]:133_stock_short
+kind  =  133
+inv_ui_sign				= 133_stk
+visual							= w_att_huds\133_stock	
+inv_name					= 133_stock
+inv_name_short		= 133_stockS
+cost							= 1150
+inv_weight				= 0.57
+inv_grid_width			= 2
+inv_grid_x         = 13
+override_section = 133_stock_attributes
+
+[133_stock_attributes]
+weapon_lenght = 0.25
+zoom_rotate_time = 0.07
+recoil_koeff = -0.24
+inertia_koeff = 0.6
+
+[153_stock]:133_stock
+kind  =  133
+inv_ui_sign				= 153_stk
+visual							= w_att_huds\153_stock	
+inv_name					= 153_stock
+inv_name_short		= 153_stockS
+inv_weight				= 0.45
+inv_grid_x         		= 36
+inv_grid_y					= 50
+override_section			= 153_stock_attributes
+
+cost = 1150
+[153_stock_attributes]
+zoom_rotate_time = 0.04
+recoil_koeff = -0.24
+inertia_koeff = 0.6
+weapon_lenght = 0.33
+[153_stock_att]:vintorez_stock_strap_att
+weapon_lenght = 0.33
+
+[133_stock_grip]:133_stock_short
+kind  =  133
+inv_ui_sign				= 133_stkG
+visual							= w_att_huds\133_stock_grip	
+inv_name					= 133_stock_grip
+inv_name_short		= 133_stock_gripS
+cost							= 650
+inv_weight				= 0.18
+inv_grid_x					= 15
+override_section = 133_stock_grip_attributes
+
+[133_stock_grip_attributes]
+animation_prefix_base = cg_
+zoom_rotate_time = -0.01
+recoil_koeff = 0.11
+
+[133_stock_grip_folding]:133_stock_grip
+kind  =  133
+inv_ui_sign				= 133_stkF
+visual							= w_att_huds\133_stock_grip_folding	
+inv_name					= 133_stock_grip_folding
+inv_name_short		= 133_stock_grip_foldingS
+cost							= 1650
+inv_weight				= 0.54
+inv_grid_width			= 2
+inv_grid_x					= 17
+override_section			= 133_stock_grip_folding_attributes
+
+[133_stock_grip_folding_attributes]
+animation_prefix_base = cg_
+weapon_lenght = 0.27
+zoom_rotate_time = -0.01
+recoil_koeff = -0.16
+inertia_koeff = 0.7
+[133_stock_grip_folding_att]:cg_attributes
+weapon_lenght	=	0.27
+zoom_rotate_time = -0.01
+recoil_koeff            = -0.27
+inertia_koeff          = 0.7
+
+[133_stock_grip_74u]:133_stock_grip
+kind  =  133
+inv_ui_sign				= 133_stk74
+visual							= w_att_huds\133_stock_grip_74u	
+inv_name					= 133_stock_grip_74u
+inv_name_short		= 133_stock_grip_74uS
+cost							= 800
+inv_weight				= 0.19
+inv_grid_x					= 16
+attachment_slots	= 74u_stock|wpn_body|0,0,0|0,0,0		
+override_section			= 133_stock_grip_74u_attributes
+
+[133_stock_grip_74u_attributes]
+animation_prefix_base = cg_
+zoom_rotate_time = -0.03
+recoil_koeff = -0.01
+[133_stock_grip_74u_att]:cg_attributes,ak_grip_caa_att

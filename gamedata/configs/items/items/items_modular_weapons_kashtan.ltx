@@ -1,0 +1,293 @@
+--\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ wpn_kashtan \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+[kashtan_barrel]:attachment_base
+kind  =  kashtan
+inv_ui_sign				= 919k_bar
+visual						= w_att_huds\kashtan_barrel	
+inv_name					= kashtan_barrel
+inv_name_short			= kashtan_barrel
+cost							= 950
+inv_weight					= 0.1
+inv_grid_x         			= 16
+inv_grid_y         			= 19
+1icon_layer = clean1_ico
+attachment_point		= kashtan_barrel|0,0,0|0,0,0
+attachment_slots		= kashtan_silencer|wpn_body|0,0,0|0,0,0#kashtan_zatvor|zatvor|0,0,0|0,0,0
+item_tags =	barrel
+override_section			=	kashtan_barrel_attributes
+[kashtan_barrel_attributes]
+fire_point = 0, 0, 0.02
+weapon_lenght = 0.05
+bullet_speed		= 1
+k_hit_koeff						= 1.1
+fire_dispersion_base 		= 0.17
+zoom_rotate_time = 0.06
+recoil_koeff            = -0.02
+inertia_koeff            = 1.1
+
+[kashtan_silencer]:attachment_base
+kind  =  kashtan
+inv_ui_sign				= 919k_sil
+visual						= w_att_huds\kashtan_silencer	
+inv_name					= kashtan_silencer
+inv_name_short			= kashtan_silencerS
+cost							= 1350
+inv_weight					= 0.34
+inv_grid_width			= 2
+inv_grid_x					= 19
+inv_grid_y					= 20
+attachment_point		=	kashtan_silencer|0,0,0|0,0,0
+attachment_slots		=	kashtan_silencer_rail|wpn_body|0,0,0|0,0,0
+item_tags =	muzzle_device
+override_section = kashtan_silencer_attributes
+
+[kashtan_silencer_attributes]
+silencer_status = 1
+silencer_name = wpn_addon_silencer
+silencer_x = 1
+silencer_y = 1
+weapon_lenght = 0.2
+zoom_rotate_time = 0.08
+recoil_koeff = -0.05
+inertia_koeff = 1.3
+
+[kashtan_silencer_rail]:attachment_base
+kind  =  kashtan
+inv_ui_sign				= 919k_rail
+visual						= w_att_huds\kashtan_silencer_rail	
+;description				= kashtan_silencer_rail_descr
+inv_name					= kashtan_silencer_rail
+inv_name_short			= kashtan_silencer_railS
+cost							= 500
+inv_weight					= 0.09
+inv_grid_x					= 21
+inv_grid_y					= 20
+attachment_point		= kashtan_silencer_rail|0,0,0|0,0,0
+attachment_slots			= pica_3|wpn_body|-0.0274,0.0518,0.133|0,0,-90#pica_3|wpn_body|0.02744,0.0518,0.133|0,0,90#picgrp|wpn_body|0,-0.0259,-0.114|0,0,0
+item_tags = rail
+override_section = kashtan_silencer_rail_attributes
+
+[kashtan_silencer_rail_attributes]
+zoom_rotate_time = 0.02
+inertia_koeff = 1.1
+animation_prefix = m_
+[kashtan_rail_att]:hg_2_att
+animation_prefix = m_
+
+[kashtan_zatvor]:attachment_base
+kind  =  kashtan
+inv_ui_sign				= 919k_bolt
+visual						= w_att_huds\kashtan_zatvor	
+inv_name					= kashtan_zatvor
+inv_name_short			= kashtan_zatvor
+cost							= 700
+inv_weight					= 0.16
+inv_grid_width     		= 2
+inv_grid_x					= 17
+inv_grid_y					= 19
+1icon_layer = clean_lub2_ico
+attachment_point		=	kashtan_zatvor|0,0,0|0,0,0
+attachment_slots		=	kashtan_spring|wpn_body|0,0,0|0,0,0
+item_tags	=	zatvor
+override_section = kashtan_zatvor_attributes
+
+[kashtan_zatvor_attributes]
+rpm = 900
+zoom_rotate_time = 0.04
+[kashtan_zatvor_att]:rpm_900_zatvor_att
+zoom_rotate_time = 0.04
+recoil_koeff = -0.1
+
+[kashtan_spring]:attachment_base
+kind  =  kashtan
+inv_ui_sign				= 919k_spr
+visual						= w_att_huds\kashtan_spring	
+inv_name					= kashtan_spring
+inv_name_short			= kashtan_springS
+cost							= 450
+inv_weight					= 0.07
+inv_grid_x         			= 17
+inv_grid_y         			= 20
+1icon_layer = clean1_ico
+attachment_point		=	kashtan_spring|0,0,0|0,0,0
+attachment_slots		=	kashtan_cover|wpn_body|0,0,0|0,0,0
+item_tags = spring
+override_section = kashtan_spring_attributes
+
+[kashtan_spring_attributes]
+
+[kashtan_cover]:attachment_base
+kind  =  kashtan
+inv_ui_sign				= 919k_cover
+visual						= w_att_huds\kashtan_cover	
+inv_name					= kashtan_cover
+inv_name_short			= kashtan_coverS
+cost							= 500
+inv_weight					= 0.13
+inv_grid_width			= 2
+inv_grid_x					= 19
+inv_grid_y					= 19
+attachment_point = kashtan_cover|0,0,0|0,0,0
+attachment_slots = kashtan_sights|wpn_body|0,0,0|0,0,0
+item_tags =	cover
+override_section = kashtan_cover_attributes
+
+[kashtan_cover_attributes]
+zoom_rotate_time = -0.01
+impair_koeff = 0.8
+
+[kashtan_sights_pica]:attachment_base
+kind  =  kashtan
+inv_ui_sign				= 919k_rail
+visual						= w_att_huds\kashtan_sights_pica	
+description				= pica_10_up
+inv_name					= kashtan_sights_pica
+inv_name_short		= kashtan_sights_picaS
+cost							= 1000
+inv_weight					= 0.08
+inv_grid_x					= 25
+inv_grid_y					= 19
+attachment_point = kashtan_sights|0,0,0|0,0,0
+attachment_slots = pica_10|wpn_body|0,0.078835,0|0,0,0
+item_tags =	rail
+override_section = kashtan_sights_pica_attributes
+
+[kashtan_sights_pica_attributes]
+
+[kashtan_cover_up]:kashtan_cover
+kind  =  kashtan
+inv_ui_sign				= 919k_coverP
+visual						= w_att_huds\kashtan_cover_up	
+description				= ar_hg_16
+inv_name					= kashtan_cover_up
+inv_name_short			= kashtan_cover_upS
+cost							= 900
+inv_weight					= 0.17
+inv_grid_x         			= 21
+attachment_slots =	pica_16|wpn_body|0,0.0779,-0.1|0,0,0#pica_4|wpn_body|0.0191,0.0699,0.0305|0,0,70
+override_section = kashtan_cover_up_attributes
+
+[kashtan_cover_up_attributes]
+zoom_rotate_time = 0.01
+
+[kashtan_rail]:attachment_base
+kind  =  kashtan
+inv_ui_sign				= 919k_rail
+visual						= w_att_huds\kashtan_rail	
+description				= pistol_gripD
+inv_name					= kashtan_rail
+inv_name_short			= kashtan_railS
+cost							= 600
+inv_weight					= 0.05
+inv_grid_x					= 18
+inv_grid_y					= 20
+attachment_point		= kashtan_silencer|0,0,0|0,0,0
+attachment_slots = pica_3|wpn_body|0,0.0097,0.1|0,0,180#picgrp|wpn_body|0,-0.0259,-0.114|0,0,0
+item_tags =	rail
+override_section = kashtan_rail_attributes
+
+[kashtan_rail_attributes]
+zoom_rotate_time = 0.02
+inertia_koeff = 1.1
+animation_prefix = m_
+
+[kashtan_stock]:attachment_base
+kind  =  kashtan
+inv_ui_sign				= 919k_stock
+visual						= w_att_huds\kashtan_stock	
+inv_name					= kashtan_stock
+inv_name_short			= kashtan_stockS
+cost							= 1050
+inv_weight					= 0.12
+inv_grid_width			= 2
+inv_grid_x					= 22
+inv_grid_y					= 20
+attachment_point		=	kashtan_stock|0,0,0|0,0,0
+item_tags	=	stock
+override_section = kashtan_stock_attributes
+
+[kashtan_stock_attributes]
+zoom_rotate_time = 0.02
+recoil_koeff = -0.14
+inertia_koeff = 0.9
+weapon_lenght = 0.16
+[kashtan_stock_att]:stock_low_att
+weapon_lenght = 0.16
+
+[kashtan_stock_brace]:kashtan_stock
+kind  =  kashtan
+inv_ui_sign				= 919k_brace
+visual						= w_att_huds\kashtan_stock_brace	
+inv_name					= kashtan_stock_brace
+inv_name_short			= kashtan_stock_braceS
+cost							= 1450
+inv_weight					= 0.15
+inv_grid_x					= 24
+override_section			=	kashtan_stock_brace_attributes
+
+[kashtan_stock_brace_attributes]
+zoom_rotate_time = -0.02
+recoil_koeff = -0.18
+inertia_koeff = 0.8
+weapon_lenght = 0.17
+
+[mag_wpn_kashtan_9x18_fmj]:mag_wpn_base,wg_wpn_kashtan,ag_ammo_9x18_fmj
+inv_ui_sign					= 919k_20
+visual							= w_att_huds\kashtan_mag_20
+inv_name						= kashtan_mag_20
+inv_name_short				= kashtan_mag_20S
+inv_grid_x         				= 26
+inv_grid_y         				= 19
+inv_weight						= 0.09
+cost								= 350
+max_mag_size				= 20
+mag_size						= small
+override_section				=	mag_wpn_kashtan_9x18_fmj_attributes
+
+[mag_wpn_kashtan_9x18_fmj_attributes]
+animation_prefix_mag = 20_
+
+[mag_wpn_kashtan_30_9x18_fmj]:mag_wpn_kashtan_9x18_fmj
+inv_ui_sign					= 919k_30
+visual							= w_att_huds\kashtan_mag_30
+inv_name						= kashtan_mag_30
+inv_name_short				= kashtan_mag_30S
+inv_grid_height				= 2
+inv_grid_x						= 27
+inv_weight						= 0.12
+cost								= 500
+max_mag_size				= 30
+override_section				=	mag_wpn_kashtan_30_9x18_fmj_attributes
+
+[mag_wpn_kashtan_30_9x18_fmj_attributes]
+animation_prefix_mag = 30_
+
+[mag_wpn_kashtan_44_9x18_fmj]:mag_wpn_kashtan_30_9x18_fmj
+inv_ui_sign					= 919k_44
+visual							= w_att_huds\kashtan_mag_44
+inv_name						= kashtan_mag_44
+inv_name_short				= kashtan_mag_44S
+inv_grid_x         				= 28
+inv_weight						= 0.19
+cost								= 750
+max_mag_size				= 44
+mag_size						= medium
+override_section = mag_wpn_kashtan_44_9x18_fmj_attributes
+
+[mag_wpn_kashtan_44_9x18_fmj_attributes]
+animation_prefix_mag = 30_
+
+[mag_wpn_kashtan_75_9x18_fmj]:mag_wpn_kashtan_44_9x18_fmj
+inv_ui_sign					= 919k_75
+visual							= w_att_huds\kashtan_mag_75
+inv_name						= kashtan_mag_75
+inv_name_short				= kashtan_mag_75S
+inv_grid_x         				= 29
+inv_weight						= 1.06
+cost								= 1500
+max_mag_size				= 75
+mag_size						= large
+override_section				= mag_wpn_kashtan_75_9x18_fmj_attributes
+
+[mag_wpn_kashtan_75_9x18_fmj_attributes]
+animation_prefix_mag = 75_

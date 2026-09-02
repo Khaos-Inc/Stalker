@@ -1,0 +1,241 @@
+--\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ wpn_pp93 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+[pp93_barrel]:attachment_base
+kind  =  pp93
+inv_ui_sign				= pp93_bar
+visual						= w_att_huds\pp93_barrel	
+inv_name					= pp93_barrel
+inv_name_short			= pp93_barrel
+cost							= 750
+inv_weight					= 0.09
+inv_grid_x         			= 16
+inv_grid_y         			= 17
+1icon_layer = clean1_ico
+attachment_point		=	pp93_barrel|0,0,0|0,0,0
+attachment_slots		=	pp93_muzzle|wpn_body|0,0,0|0,0,0#pp93_zatvor|zatvor|0,0,0|0,0,0
+item_tags =	barrel
+override_section = pp93_barrel_attributes
+
+[pp93_barrel_attributes]
+weapon_lenght = 0.05
+bullet_speed = 1.03
+k_hit_koeff = 1.1
+fire_dispersion_base = 0.15
+zoom_rotate_time = 0.05
+recoil_koeff = -0.03
+inertia_koeff = 1.1
+[pp93_barrel_att]
+weapon_lenght = 0.05
+bullet_speed			= 1.03
+k_hit_koeff						= 1.1
+fire_dispersion_base 		= 0.15
+zoom_rotate_time = 0.05
+recoil_koeff            = -0.16
+inertia_koeff            = 1.1
+
+[pp93_barrel_up]:pp93_barrel
+kind  =  pp93
+inv_ui_sign				= pp93_bar+
+visual						= w_att_huds\pp93_barrel_up	
+inv_name					= pp93_barrel_up
+inv_name_short			= pp93_barrel_up
+cost							= 850
+inv_grid_x         			= 17
+attachment_slots		= 9mm_muzzle|muzzle|0,0,0|0,0,0#pp93_zatvor|zatvor|0,0,0|0,0,0
+inv_weight = 0.09
+override_section = pp93_barrel_up_attributes
+[pp93_barrel_up_attributes]
+weapon_lenght = 0.05
+bullet_speed			= 1.03
+k_hit_koeff						= 1.2
+fire_dispersion_base 		= 0.15
+zoom_rotate_time = 0.05
+recoil_koeff            = -0.05
+inertia_koeff            = 1.1
+
+[pp93_zatvor]:attachment_base
+kind  =  pp93
+inv_ui_sign				= pp93_bolt
+visual						= w_att_huds\pp93_zatvor	
+inv_name					= pp93_zatvor
+inv_name_short			= pp93_zatvor
+cost							= 900
+inv_weight					= 0.19
+inv_grid_width     		= 2
+inv_grid_x					= 18
+inv_grid_y					= 17
+1icon_layer = clean_lub2_ico
+attachment_point		=	pp93_zatvor|0,0,0|0,0,0
+attachment_slots		=	pp93_spring|wpn_body|0,0,0|0,0,0
+item_tags	=	zatvor
+override_section = pp93_zatvor_attributes
+
+[pp93_zatvor_attributes]
+rpm = 700
+zoom_rotate_time = 0.07
+[pp93_zatvor_att]:rpm_700_zatvor_att
+zoom_rotate_time = 0.07
+recoil_koeff = -0.22
+
+[pp93_spring]:attachment_base
+kind  =  pp93
+inv_ui_sign				= pp93_spr
+visual						= w_att_huds\pp93_spring	
+inv_name					= pp93_spring
+inv_name_short			= pp93_springS
+cost							= 500
+inv_weight					= 0.08
+inv_grid_x         			= 20
+inv_grid_y         			= 17
+1icon_layer = clean1_ico
+attachment_point = pp93_spring|0,0,0|0,0,0
+attachment_slots =	pp93_stock|wpn_body|0,0,0|0,0,0
+item_tags =	spring
+override_section = pp93_spring_attributes
+
+[pp93_spring_attributes]
+
+[pp93_barrel_rail]:attachment_base
+kind  =  pp93
+inv_ui_sign				= pp93_bP
+visual						= w_att_huds\pp93_barrel_rail	
+description				= pistol_gripD
+inv_name					= pp93_barrel_rail
+inv_name_short			= pp93_barrel_railS
+cost							= 600
+inv_weight					= 0.05
+inv_grid_x					= 18
+inv_grid_y					= 18
+attachment_point		= pp93_muzzle|0,0,0|0,0,0
+attachment_slots = pica_3|wpn_body|0,0.0097,0.09|0,0,180#picgrp|wpn_body|0,-0.0259,-0.114|0,0,0
+item_tags	=	rail
+override_section = pp93_barrel_rail_attributes
+
+[pp93_barrel_rail_attributes]
+zoom_rotate_time = 0.02
+inertia_koeff = 1.1
+animation_prefix = m_
+
+[pp93_barrel_laser]:attachment_base
+kind  =  pp93
+inv_ui_sign				= pp93_bL
+visual						= w_att_huds\pp93_barrel_laser	
+description				= tac_laserD
+inv_name					= pp93_barrel_laser
+inv_name_short		= pp93_barrel_laserS
+description				= tac_laserD
+cost							= 850
+inv_weight					= 0.07
+inv_grid_x					= 17
+inv_grid_y					= 18
+attachment_point = pp93_muzzle|0,0,0|0,0,0
+attachment_slots = tac_aim|wpn_body|0.05,0.1146,-0.15|0,0,30
+is_torch_laser                  = true
+is_torch                  = false
+laser_section             = tactical_laser_red
+laser_bone         = laser
+laser_bone_axis    = y
+laser_bone_invert  = false
+1icon_layer = red_laser_ico	
+override_section = pp93_barrel_laser_attributes
+
+[pp93_barrel_laser_attributes]
+zoom_rotate_time = 0.01
+animation_prefix = m_
+[pp93_barrel_laser_att]:ak_hg_radom_up_att
+animation_prefix	=	m_
+
+[pp93_silencer]:attachment_base
+kind  =  pp93
+inv_ui_sign				= pp93_sil
+visual						= w_att_huds\pp93_silencer	
+inv_name					= pp93_silencer
+inv_name_short			= pp93_silencerS
+cost							= 1350
+inv_weight					= 0.5
+inv_grid_width			= 2
+inv_grid_x					= 19
+inv_grid_y					= 18
+attachment_point		=	pp93_muzzle|0,0,0|0,0,0
+attachment_slots		=	pp93_silencer_rail|wpn_body|0,0,0|0,0,0#b3|muzzle|0,-0.02125,0.08|0,0,0		
+item_tags	=	muzzle_device
+override_section = pp93_silencer_attributes
+
+[pp93_silencer_attributes]
+silencer_status = 1
+silencer_name = wpn_addon_silencer
+silencer_x = 1
+silencer_y = 1
+weapon_lenght = 0.2
+zoom_rotate_time = 0.08
+recoil_koeff = -0.1
+inertia_koeff = 1.3
+
+[pp93_silencer_rail]:attachment_base
+kind  =  pp93
+inv_ui_sign				= pp93_rail
+visual						= w_att_huds\pp93_silencer_rail	
+description				= pistol_gripD
+inv_name					= pp93_silencer_rail
+inv_name_short			= pp93_silencer_railS
+cost							= 600
+inv_weight					= 0.09
+inv_grid_x					= 21
+inv_grid_y					= 18
+attachment_point		= pp93_silencer_rail|0,0,0|0,0,0	
+attachment_slots = pica_3|wpn_body|0,0.0097,0.182|0,0,180#picgrp|wpn_body|0,-0.0259,-0.114|0,0,0
+item_tags	=	rail
+override_section = pp93_silencer_rail_attributes
+
+[pp93_silencer_rail_attributes]
+
+[pp93_rail]:attachment_base
+kind  =  pp93
+inv_ui_sign				= pp93_rail
+visual						= w_att_huds\pp93_rail	
+description				= pica_15_up
+inv_name					= pp93_rail
+inv_name_short			= pp93_railS
+cost							= 850
+inv_weight					= 0.06
+inv_grid_x					= 21
+inv_grid_y					= 17
+attachment_point		=	pp93_rail|0,0,0|0,0,0
+attachment_slots =	pica_15|wpn_body|0,0.0624,-0.04|0,0,0
+item_tags	=	rail
+override_section = pp93_rail_attributes
+
+[pp93_rail_attributes]
+
+[pp93_stock_dmg]:attachment_base
+kind  =  pp93
+inv_ui_sign				= pp93_stock--
+visual						= w_att_huds\pp93_stock_dmg	
+inv_name					= pp93_stock_dmg
+inv_name_short			= pp93_stock
+cost							= 400
+inv_weight					= 0.1
+inv_grid_width			= 2
+inv_grid_x					= 22
+inv_grid_y					= 17
+attachment_point		=	pp93_stock|0,0,0|0,0,0
+override_section = pp93_stock_dmg_attributes
+
+[pp93_stock_dmg_attributes]
+[pp93_stock_dmg_att]
+
+[pp93_stock]:pp93_stock_dmg
+kind  =  pp93
+inv_ui_sign				= pp93_stock
+visual						= w_att_huds\pp93_stock	
+inv_name					= pp93_stock
+cost							= 1050
+inv_grid_y					= 18
+override_section = pp93_stock_attributes
+
+[pp93_stock_attributes]
+zoom_rotate_time = 0.02
+recoil_koeff = -0.18
+inertia_koeff = 0.9
+weapon_lenght = 0.25
+[pp93_stock_att]:stock_low_att
+weapon_lenght = 0.25

@@ -1,0 +1,273 @@
+--\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ wpn_hpsa \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+[hpsa_trigger]:attachment_base
+kind  =  hpsa
+inv_ui_sign				= hp_trig
+visual						= w_att_huds\hpsa_trigger	
+inv_name					= hpsa_trigger
+inv_name_short			= hpsa_triggerS
+cost							= 850
+inv_weight					= 0.09
+inv_grid_x         			= 5
+inv_grid_y         			= 16
+1icon_layer = clean_lub1_ico
+attachment_point	=	hpsa_trigger|0,0,0|0,0,0
+attachment_slots	=	hpsa_rail|wpn_body|0,0,0|0,0,0#hpsa_barrel|muzzle|0,0,0|0,0,0#hpsa_spring|zatvor|0,0,0|0,0,0
+item_tags =	trigger
+override_section = hpsa_trigger_attributes
+
+[hpsa_trigger_attributes]
+
+[hpsa_trigger_grip]:hpsa_trigger
+kind  =  hpsa
+inv_ui_sign				= hp_trigA
+visual						= w_att_huds\hpsa_trigger_grip	
+inv_name					= hpsa_trigger_grip
+inv_name_short			= hpsa_trigger_gripS
+cost							= 1550
+inv_weight					= 0.3
+inv_grid_x        			= 6
+attachment_point	=	hpsa_trigger|0,0,0|0,0,0
+attachment_slots	=	hpsa_barrel|muzzle|0,0,0|0,0,0#hpsa_spring|zatvor|0,0,0|0,0,0
+override_section		=	hpsa_trigger_grip_attributes
+[hpsa_trigger_grip_attributes]:keymod_foregrip_tommy_attributes,t_attributes,semi_auto_trigger_att
+
+[hpsa_grips]:attachment_base
+kind  =  hpsa
+inv_ui_sign				= hp_pg
+visual						= w_att_huds\hpsa_grips	
+inv_name					= hpsa_grips
+inv_name_short			= hpsa_gripsS
+cost							= 350
+inv_weight					= 0.06
+inv_grid_x         			= 11
+inv_grid_y         			= 16
+attachment_point	=	hpsa_grips|0,0,0|0,0,0
+attachment_slots	=	hpsa_rail|wpn_body|0,0,0|0,0,0
+override_section = hpsa_grips_attributes
+
+[hpsa_grips_attributes]
+zoom_rotate_time = -0.02
+
+[hpsa_grips_pica]:hpsa_grips
+kind  =  hpsa
+inv_ui_sign				= hp_pgP
+visual						= w_att_huds\hpsa_grips_pica	
+description				= pistol_railD
+inv_name					= hpsa_grips_pica
+inv_name_short			= hpsa_grips_picaS
+cost							= 1850
+inv_weight					= 0.1
+inv_grid_width     		= 2
+inv_grid_x         			= 10
+inv_grid_y         			= 15
+attachment_slots	=	pica_3|wpn_body|0,0.001085,0.083|0,0,180#usmount|wpn_body|0,0.001085,0.069212|0,0,0	
+item_tags =	rail
+override_section = hpsa_grips_pica_attributes
+
+[hpsa_grips_pica_attributes]
+zoom_rotate_time = -0.03
+recoil_koeff = -0.02
+
+[hpsa_rail]:hpsa_grips_pica
+kind  =  hpsa
+inv_ui_sign				= hp_rail
+visual						= w_att_huds\hpsa_rail	
+inv_name					= hpsa_rail
+inv_name_short			= hpsa_railS
+cost							= 1500
+inv_weight					= 0.05
+inv_grid_width     = 1
+inv_grid_y         = 16
+attachment_point = hpsa_rail|0,0,0|0,0,0
+override_section = hpsa_rail_attributes
+
+[hpsa_rail_attributes]
+zoom_rotate_time = -0.03
+
+[hpsa_barrel]:attachment_base
+kind  =  hpsa
+inv_ui_sign				= hp_bar
+visual						= w_att_huds\hpsa_barrel	
+inv_name					= hpsa_barrel
+inv_name_short			= hpsa_barrelS
+cost							= 700
+inv_weight					= 0.09
+inv_grid_x         			= 3
+inv_grid_y         			= 15
+1icon_layer = clean1_ico
+attachment_point = hpsa_barrel|0,0,0|0,0,0
+attachment_slots	=	hpsa_zatvor|zatvor|0,0,0|0,0,0
+item_tags =	barrel
+override_section = hpsa_barrel_attributes
+
+[hpsa_barrel_attributes]
+zoom_rotate_time = 0.03
+recoil_koeff = -0.12
+bullet_speed = 1
+fire_dispersion_base = 0.21
+[hpsa_barrel_att]:beretta_barrel_att
+bullet_speed = 1
+fire_dispersion_base = 0.21
+
+[hpsa_barrel_up]:hpsa_barrel
+kind  =  hpsa
+inv_ui_sign				= hp_bar+
+visual						= w_att_huds\hpsa_barrel_up
+inv_name					= hpsa_barrel_up
+inv_name_short			= hpsa_barrel_upS
+cost							= 1750
+inv_weight					= 0.1
+inv_grid_y         			= 16
+attachment_slots	=	hpsa_zatvor|zatvor|0,0,0|0,0,0#9mm_muzzle|muzzle|0,0,0|0,0,0
+override_section = hpsa_barrel_up_attributes
+
+[hpsa_barrel_up_attributes]
+zoom_rotate_time = 0.03
+recoil_koeff = -0.12
+bullet_speed = 1
+fire_dispersion_base = 0.21
+impair_koeff = 1.1
+[hpsa_barrel_up_att]:hpsa_barrel_att
+impair_koeff = 1.1
+
+[hpsa_spring]:attachment_base
+kind  =  hpsa
+inv_ui_sign				= hp_spr
+visual						= w_att_huds\hpsa_spring
+inv_name					= hpsa_spring
+inv_name_short			= hpsa_springS
+cost							= 250
+inv_weight					= 0.02
+inv_grid_x         			= 4
+inv_grid_y         			= 16
+1icon_layer = clean1_ico
+attachment_point = hpsa_spring|0,0,0|0,0,0
+item_tags =	spring
+override_section = hpsa_spring_attributes
+
+[hpsa_spring_attributes]
+
+[hpsa_zatvor]:attachment_base
+kind  =  hpsa
+inv_ui_sign				= hp_slide
+visual						= w_att_huds\hpsa_zatvor
+inv_name					= hpsa_zatvor
+inv_name_short			= hpsa_zatvorS
+cost							= 750
+inv_weight					= 0.13
+inv_grid_width			= 2
+inv_grid_x					= 6
+inv_grid_y					= 15
+1icon_layer = clean_lub2_ico
+attachment_point = hpsa_zatvor|0,0,0|0,0,0
+attachment_slots =	zatvor_side|zatvor|0,0.041534,-0.0197|0,0,0#beretta_upper|wpn_body|0,0,0.01|0,0,0
+item_tags =	zatvor
+override_section = hpsa_zatvor_attributes
+
+[hpsa_zatvor_attributes]
+zoom_rotate_time = 0.08
+rpm = 990
+impair_koeff = 0.9
+[hpsa_zatvor_att]
+zoom_rotate_time = 0.08
+rpm = 990
+impair_koeff = 0.9
+
+[hpsa_zatvor_p35]:hpsa_zatvor
+kind  =  hpsa
+inv_ui_sign				= hp_p35
+visual						= w_att_huds\hpsa_zatvor_p35
+inv_name					= hpsa_zatvor_p35
+cost							= 2800
+inv_weight					= 0.14
+inv_grid_x         = 29
+attachment_slots =	zatvor_side|zatvor|0,0.040781,0.0632|0,0,0
+override_section = hpsa_zatvor_p35_attributes
+
+[hpsa_zatvor_p35_attributes]
+aim_hud_offset_pos = -0.0602, 0.0395, -0.05
+aim_hud_offset_pos_16x9 = -0.0602, 0.0395, -0.05
+aim_hud_offset_rot = 0.006, 0.006, 0
+aim_hud_offset_rot_16x9 = 0.006, 0.006, 0
+zoom_rotate_time = 0.09
+rpm = 900
+impair_koeff = 0.85
+recoil_koeff = -0.05
+[hpsa_zatvor_aim_att]:rpm_900_zatvor_att
+aim_hud_offset_pos			= -0.0602, 0.0395, -0.05
+aim_hud_offset_pos_16x9	= -0.0602, 0.0395, -0.05
+aim_hud_offset_rot				= 0.006, 0.006, 0
+aim_hud_offset_rot_16x9	= 0.006, 0.006, 0
+zoom_rotate_time = 0.09
+rpm = 900
+impair_koeff = 0.85
+
+[hpsa_stock]:attachment_base
+kind  =  hpsa
+inv_ui_sign				= hp_stock
+visual						= w_att_huds\hpsa_stock
+inv_name					= hpsa_stock
+inv_name_short			= hpsa_stockS
+cost							= 1750
+inv_weight					= 0.64
+inv_grid_width     = 2
+inv_grid_height    = 1
+inv_grid_x         = 7
+inv_grid_y         = 16
+attachment_point		=	hpsa_stock|0,0,0|0,0,0
+item_tags	=	stock
+override_section = hpsa_stock_attributes
+
+[hpsa_stock_attributes]
+zoom_rotate_time = 0.08
+recoil_koeff = -0.29
+inertia_koeff = 0.7
+weapon_lenght = 0.32
+
+[mag_wpn_hpsa_9x19_fmj]:mag_wpn_base,wg_wpn_hpsa,ag_ammo_9x19_fmj
+inv_ui_sign					= hp_13
+visual							= w_att_huds\hpsa_mag
+inv_name						= hpsa_mag
+inv_name_short				= hpsa_magS
+inv_grid_x         				= 8
+inv_grid_y         				= 15
+inv_weight						= 0.06
+cost								= 350
+max_mag_size				= 13
+mag_size						= small
+override_section				=	mag_wpn_hpsa_9x19_fmj_attributes
+
+[mag_wpn_hpsa_9x19_fmj_attributes]
+animation_prefix_mag = 17_
+
+[mag_wpn_hpsa_32_9x19_fmj]:mag_wpn_hpsa_9x19_fmj
+inv_ui_sign					= hp_32
+visual							= w_att_huds\hpsa_mag32
+inv_name						= hpsa_mag32
+inv_name_short				= hpsa_mag32S
+inv_grid_height    			= 2
+inv_grid_x         				= 9
+inv_grid_y         				= 15
+inv_weight						= 0.14
+cost								= 600
+max_mag_size				= 32
+override_section				=	mag_wpn_hpsa_32_9x19_fmj_attributes
+
+[mag_wpn_hpsa_32_9x19_fmj_attributes]
+animation_prefix_mag = 33_
+
+[mag_wpn_hpsa_50_9x19_fmj]:mag_wpn_hpsa_32_9x19_fmj
+inv_ui_sign					= hp_50
+visual							= w_att_huds\hpsa_mag50
+inv_name						= hpsa_mag50
+inv_name_short				= hpsa_mag50S
+inv_grid_x         = 31
+inv_weight						= 0.6
+cost								= 1600
+max_mag_size				= 50
+mag_size						= medium
+override_section				=	mag_wpn_hpsa_50_9x19_fmj_attributes
+
+[mag_wpn_hpsa_50_9x19_fmj_attributes]
+animation_prefix_mag = 50_

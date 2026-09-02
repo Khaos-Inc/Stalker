@@ -1,0 +1,306 @@
+--\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ wpn_toz194 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+[194_zatvor]:attachment_base
+kind  =  toz194
+inv_ui_sign				= 194_bolt
+visual							= w_att_huds\194_zatvor	
+inv_name					= 194_zatvor
+inv_name_short		= 194_zatvor
+cost							= 1150
+inv_weight				= 0.32
+inv_grid_width			= 2
+inv_grid_x					= 27
+inv_grid_y					= 41
+1icon_layer = clean_lub2_ico
+attachment_point	= 194_zatvor|0,0,0|0,0,0
+attachment_slots	= 194_hg|zatvor|0,0,0|0,0,0#194_barrel|wpn_body|0,0,0|0,0,0
+item_tags =	zatvor
+override_section = 194_zatvor_attributes
+
+[194_zatvor_attributes]
+zoom_rotate_time = 0.07
+rpm = 102
+[194_zatvor_att]
+zoom_rotate_time = 0.07
+rpm = 102
+
+[194_barrel_340]:attachment_base
+kind  =  toz194
+inv_ui_sign				= 194_34cm
+visual							= w_att_huds\194_barrel_340	
+inv_name					= 194_barrel_340
+inv_name_short		= 194_barrel_340S
+cost							= 1700
+inv_weight				= 0.2
+inv_grid_width			= 2
+inv_grid_x					= 26
+inv_grid_y					= 40
+1icon_layer = clean2_ico
+attachment_point	= 194_barrel|0,0,0|0,0,0
+attachment_slots	= 194_mag|wpn_body|0,0,0|0,0,0#choke|muzzle|0,0,0|0,0,0
+item_tags = barrel
+override_section = 194_barrel_340_attributes
+
+[194_barrel_340_attributes]
+zoom_rotate_time = 0.05
+recoil_koeff = -0.03
+inertia_koeff = 1.3
+bullet_speed = 0.9
+k_hit_koeff = 0.95
+fire_dispersion_base = 4.1
+weapon_lenght = 0.05
+[194_barrel_340_att]:12_barrel_2_att,12_barrel_330_att
+weapon_lenght	= 0.05
+
+[194_barrel_540]:194_barrel_340
+kind  =  toz194
+inv_ui_sign				= 194_54cm
+visual							= w_att_huds\194_barrel_540	
+inv_name					= 194_barrel_540
+inv_name_short		= 194_barrel_540S
+cost							= 2550
+inv_weight				= 0.25
+inv_grid_width			= 3
+inv_grid_x					= 28
+1icon_layer = clean3_ico
+attachment_slots	= 194_mag|wpn_body|0,0,0|0,0,0#choke|muzzle|0,0,0.1793|0,0,0
+override_section			=	194_barrel_540_attributes
+[194_barrel_540_attributes]:12_barrel_7_att,12_barrel_540_att
+fire_point						= 0, 0, 0.2
+weapon_lenght				= 0.22
+
+k_hit_koeff = 1.05
+recoil_koeff = -0.06
+bullet_speed = 1.08
+fire_dispersion_base = 3.4
+inertia_koeff = 1.5
+zoom_rotate_time = 0.09
+[194_barrel_710]:194_barrel_340
+kind  =  toz194
+inv_ui_sign				= 194_71cm
+visual							= w_att_huds\194_barrel_710	
+inv_name					= 194_barrel_710
+inv_name_short		= 194_barrel_710S
+cost							= 3500
+inv_weight				= 0.4
+inv_grid_width			= 4
+inv_grid_x					= 31
+1icon_layer = clean4_ico
+attachment_slots	= 194_mag|wpn_body|0,0,0|0,0,0#choke|muzzle|0,0,0.3297|0,0,0
+override_section			=	194_barrel_710_attributes
+[194_barrel_710_attributes]:1300_barrel_710_attributes,12_barrel_10_att
+fire_point = 0, 0, 0.35
+weapon_lenght = 0.42
+
+recoil_koeff = -0.1
+bullet_speed = 1.2
+k_hit_koeff = 1.15
+override_section = 12_barrel_10_att
+impair_koeff = 0.75
+fire_dispersion_base = 3.1
+inertia_koeff = 1.8
+zoom_rotate_time = 0.12
+[194_mag4]:attachment_base
+kind  =  toz194
+inv_ui_sign				= mag4
+visual							= w_att_huds\194_mag4	
+inv_name					= 194_mag4
+inv_name_short		= 194_mag4S
+cost							= 400
+inv_weight				= 0.06
+inv_grid_x					= 29
+inv_grid_y					= 41
+attachment_point	= 194_mag|0,0,0|0,0,0
+item_tags	=	mag
+override_section 	= 194_mag4_attributes
+
+[194_mag4_attributes]
+ammo_mag_size = +4
+
+[194_mag6]:194_mag4
+kind  =  toz194
+inv_ui_sign				= mag6
+visual							= w_att_huds\194_mag6	
+inv_name					= 194_mag6
+inv_name_short		= 194_mag6S
+cost							= 800
+inv_weight				= 0.11
+inv_grid_width			= 2
+inv_grid_x					= 30
+attachment_slots	= tubemag|wpn_body|0,0.023,0.45|0,0,0
+override_section 	= 194_mag6_attributes
+[194_mag6_attributes]:12_mag_3_att
+ammo_mag_size	= +6
+
+override_section = 12_mag_3_att
+[12_mag_3_att]
+zoom_rotate_time = 0.02
+recoil_koeff            = -0.05
+inertia_koeff           = 1.2
+
+[194_mag8]:194_mag6
+kind  =  toz194
+inv_ui_sign				= mag8
+visual							= w_att_huds\194_mag8	
+inv_name					= 194_mag8
+inv_name_short		= 194_mag8S
+cost							= 1050
+inv_weight				= 0.18
+inv_grid_width			= 3
+inv_grid_x					= 32
+override_section 	= 194_mag8_attributes
+[194_mag8_attributes]:12_mag_4_att
+ammo_mag_size	= +8
+
+override_section = 12_mag_4_att
+[12_mag_4_att]
+zoom_rotate_time = 0.04
+recoil_koeff            = -0.08
+inertia_koeff           = 1.5
+
+[194_hg]:attachment_base
+kind  =  toz194
+inv_ui_sign				= 194_hg
+visual							= w_att_huds\194_hg
+inv_name					= 194_hg
+inv_name_short		= 194_hgS
+cost							= 600
+inv_weight				= 0.2
+inv_grid_x					= 36
+inv_grid_y					= 40
+attachment_point	= 194_hg|0,0,0|0,0,0
+item_tags =	hg
+override_section = 194_hg_attributes
+
+[194_hg_attributes]
+animation_prefix = c_
+zoom_rotate_time = -0.08
+inertia_koeff = 0.9
+
+[194_hg_poly]:194_hg
+kind  =  toz194
+visual							= w_att_huds\194_hg_poly
+inv_name					= 194_hg_poly
+inv_name_short		= 194_hg_polyS
+cost							= 650
+inv_weight				= 0.17
+inv_grid_x					= 37
+override_section = 194_hg_poly_attributes
+
+[194_hg_poly_attributes]
+animation_prefix = c_
+zoom_rotate_time = -0.04
+
+[194_hg_custom]:194_hg
+kind  =  toz194
+inv_ui_sign				= 194_hgP
+visual							= w_att_huds\194_hg_custom
+description				= pica_3_up3
+inv_name					= 194_hg_custom
+inv_name_short		= 194_hg_customS
+cost							= 1300
+inv_weight				= 0.27
+inv_grid_x					= 38
+attachment_slots	= pica_3|zatvor|-0.02596,0.02848,0.384|0,0,-90#pica_3|zatvor|0.02596,0.02848,0.384|0,0,90#pica_3|zatvor|0,0.0018,0.394|0,0,180#picgrp|zatvor|0,-0.0335,0.095|0,0,0			
+override_section = 194_hg_custom_attributes
+
+[194_hg_custom_attributes]
+animation_prefix = c_
+zoom_rotate_time = -0.08
+inertia_koeff = 0.9
+
+[194_sight_mount]:attachment_base
+kind  =  toz194
+inv_ui_sign				= 194_rail
+visual							= w_att_huds\194_sight_mount	
+description				= pica_15_up
+inv_name					= 194_sight_mount
+inv_name_short		= 194_sight_mountS
+cost							= 1100
+inv_weight				= 0.13
+inv_grid_width			=	2
+inv_grid_x					= 34
+inv_grid_y					= 39
+attachment_point	= 194_sight|0,0,0|0,0,0
+attachment_slots	= pica_15|wpn_body|0,0.0708,0.032|0,0,0
+item_tags	=	rail
+override_section = 194_sight_mount_attributes
+
+[194_sight_mount_attributes]
+
+[194_stock_short]:attachment_base
+kind  =  toz194
+inv_ui_sign				= 194_stkS
+visual							= w_att_huds\194_stock_short	
+inv_name					= 194_stock_short
+inv_name_short		= 194_stock_shortS
+cost							= 500
+inv_weight				= 0.17
+inv_grid_x					= 35
+inv_grid_y					= 41
+attachment_point	= 194_stock|0,0,0|0,0,0
+item_tags	=	stock
+override_section 	= 194_stock_short_attributes
+
+[194_stock_short_attributes]
+weapon_lenght = 0.05
+zoom_rotate_time = 0.01
+recoil_koeff = 0.1
+
+[194_stock]:194_stock_short
+kind  =  toz194
+inv_ui_sign				= 194_stk
+visual							= w_att_huds\194_stock	
+inv_name					= 194_stock
+inv_name_short		= 194_stockS
+cost							= 1200
+inv_weight				= 0.55
+inv_grid_width			= 2
+inv_grid_x         		= 36
+override_section = 194_stock_attributes
+
+[194_stock_attributes]
+weapon_lenght = 0.25
+zoom_rotate_time = 0.07
+recoil_koeff = -0.24
+inertia_koeff = 0.6
+
+[194_grip]:194_stock_short
+kind  =  toz194
+inv_ui_sign				= 194_stkG
+visual							= w_att_huds\194_stock_grip	
+inv_name					= 194_stock_grip
+inv_name_short		= 194_stock_gripS
+cost							= 650
+inv_weight				= 0.16
+inv_grid_x					= 40
+attachment_slots	= 194_stock_fold|wpn_body|0,0,0|0,0,0
+override_section 	= 194_grip_attributes
+
+[194_grip_attributes]
+animation_prefix_base = cg_
+zoom_rotate_time = -0.01
+recoil_koeff = 0.11
+
+[194_grip_stock]:attachment_base
+kind  =  toz194
+inv_ui_sign				= 194_stkF
+visual							= w_att_huds\194_stock_fold	
+inv_name					= 194_stock_fold
+inv_name_short		= 194_stock_foldS
+cost							= 1000
+inv_weight				= 0.17
+inv_grid_width			= 2
+inv_grid_x					= 38
+inv_grid_y					= 41
+attachment_point	= 194_stock_fold|0,0,0|0,0,0
+item_tags	=	stock
+override_section 	= 194_grip_stock_attributes
+
+[194_grip_stock_attributes]
+zoom_rotate_time = 0.03
+recoil_koeff = -0.15
+inertia_koeff = 0.7
+weapon_lenght = 0.2
+[194_stock_fold_att]:pernach_stock_att
+weapon_lenght = 0.2

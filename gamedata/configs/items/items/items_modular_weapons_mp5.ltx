@@ -1,0 +1,840 @@
+--\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ wpn_mp5 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+[mp5_zatvor]:attachment_base
+kind   =  mp5
+inv_ui_sign = mp5_bolt
+visual = w_att_huds\mp5_zatvor	
+inv_name = mp5_zatvor
+inv_name_short = mp5_zatvor
+cost = 800
+inv_weight = 0.15
+inv_grid_width = 2
+inv_grid_x = 18
+inv_grid_y = 31
+1icon_layer = clean_lub2_ico
+attachment_point = mp5_zatvor|0,0,0|0,0,0
+attachment_slots = mp5_spring|wpn_body|0,0,0|0,0,0
+item_tags =	zatvor
+override_section = mp5_zatvor_attributes
+
+[mp5_zatvor_attributes]
+rpm = 800
+zoom_rotate_time = 0.06
+[mp5_zatvor_att]:rpm_800_zatvor_att
+zoom_rotate_time = 0.06
+recoil_koeff = -0.1
+
+[mp5_spring]:attachment_base
+kind   =  mp5
+inv_ui_sign				= mp5_spring
+visual						= w_att_huds\mp5_spring	
+inv_name					= mp5_spring
+inv_name_short			= mp5_springS
+cost							= 650
+inv_weight					= 0.09
+inv_grid_width			= 2
+inv_grid_x					= 16
+inv_grid_y					= 31
+1icon_layer = clean2_ico
+attachment_point		= mp5_spring|0,0,0|0,0,0
+attachment_slots		= mp5_stock|wpn_body|0,0,0|0,0,0
+item_tags =	spring
+override_section = mp5_spring_attributes
+
+[mp5_spring_attributes]
+
+[mp5k_barrel]:attachment_base
+kind   =  mp5
+inv_ui_sign = mp5k_bar
+visual = w_att_huds\mp5k_barrel	
+inv_name = mp5k_barrel
+inv_name_short = mp5k_barrel
+cost = 700
+inv_weight = 0.1
+inv_grid_x = 28
+inv_grid_y = 31
+1icon_layer = clean1_ico
+attachment_point = mp5_barrel|0,0,0|0,0,0
+attachment_slots = mp5_sight_front|wpn_body|0,0,-0.0686|0,0,0#mp5k_hg|wpn_body|0,0,0|0,0,0
+item_tags =	barrel
+override_section = mp5k_barrel_attributes
+
+[mp5k_barrel_attributes]
+rpm_koeff = 0.125
+bullet_speed = 1
+fire_dispersion_base = 0.22
+zoom_rotate_time = 0.05
+recoil_koeff = -0.01
+inertia_koeff = 1.1
+[mp5k_barrel_att]
+rpm_koeff 						= 0.125
+bullet_speed				= 1
+fire_dispersion_base		= 0.22
+zoom_rotate_time = 0.05
+recoil_koeff            = -0.21
+inertia_koeff            = 1.1
+
+[mp5k_barrel_n]:mp5k_barrel																;mp5_barrel_muzzle и 9mm_muzzle не могут одноврменно работать
+kind   =  mp5
+inv_ui_sign				= mp5k_bar_n
+visual						= w_att_huds\mp5k_barrel_n	
+inv_name					= mp5k_barrel_n
+inv_name_short			= mp5k_barrel_n
+cost							= 750
+inv_grid_x					= 29
+attachment_slots		= 9mm_muzzle|muzzle|0,0,0|0,0,0#mp5_sight_front|wpn_body|0,0,-0.0686|0,0,0#mp5k_hg|wpn_body|0,0,0|0,0,0
+override_section			=	mp5k_barrel_n_att
+inv_weight = 0.1
+[mp5k_barrel_n_att]:mp5k_barrel_att
+weapon_lenght				=	0.04
+
+fire_dispersion_base = 0.22
+bullet_speed = 1
+rpm_koeff = 0.125
+recoil_koeff = -0.01
+inertia_koeff = 1.1
+zoom_rotate_time = 0.05
+[mp5_barrel]:attachment_base
+kind   =  mp5
+inv_ui_sign				= mp5_bar
+visual						= w_att_huds\mp5_barrel	
+inv_name					= mp5_barrel
+inv_name_short			= mp5_barrel
+cost							= 950
+inv_weight					= 0.13
+inv_grid_width			= 2
+inv_grid_x					= 20
+inv_grid_y					= 31
+1icon_layer = clean2_ico
+attachment_point		= mp5_barrel|0,0,0|0,0,0
+attachment_slots		= mp5_barrel_muzzle|muzzle|0,0,0.0686|0,0,0#mp5_sight_front|wpn_body|0,0,0|0,0,0#mp5_hg|wpn_body|0,0,0|0,0,0
+item_tags =	barrel
+override_section = mp5_barrel_attributes
+[mp5_barrel_attributes]
+fire_point = 0, 0, 0.1
+weapon_lenght				= 0.1
+bullet_speed				= 1.23
+k_hit_koeff						= 1.13
+fire_dispersion_base		= 0.14
+zoom_rotate_time = 0.08
+recoil_koeff            = -0.04
+inertia_koeff            = 1.2
+
+[mp5_barrel_n]:mp5_barrel
+kind   =  mp5
+inv_ui_sign				= mp5_bar_n
+visual						= w_att_huds\mp5_barrel_n	
+inv_name					= mp5_barrel_n
+inv_name_short			= mp5_barrel_n
+cost							= 1050
+inv_grid_x					= 22
+attachment_slots		= mp5_sight_front|wpn_body|0,0,0|0,0,0#mp5_hg|wpn_body|0,0,0|0,0,0#9mm_muzzle|muzzle|0,0,0.0686|0,0,0
+override_section = mp5_barrel_n_attributes
+
+inv_weight = 0.13
+[mp5_barrel_n_attributes]
+fire_point = 0, 0, 0.1
+weapon_lenght = 0.1
+bullet_speed = 1.23
+k_hit_koeff = 1.13
+fire_dispersion_base = 0.14
+zoom_rotate_time = 0.08
+recoil_koeff = -0.06
+inertia_koeff = 1.2
+
+[mp5_barrel_nf]:mp5_barrel
+kind   =  mp5
+inv_ui_sign				= mp5_bar_nf
+visual						= w_att_huds\mp5_barrel_nf	
+inv_name					= mp5_barrel_nf
+cost							= 1000
+inv_grid_x					= 24
+attachment_slots		= 9mm_muzzle|muzzle|0,0,0.0686|0,0,0#mp5_hg|wpn_body|0,0,0|0,0,0#mp5_barrel_muzzle|muzzle|0,0,0.0686|0,0,0
+override_section = mp5_barrel_nf_attributes
+inv_weight = 0.13
+[mp5_barrel_nf_attributes]:mp5_barrel_attributes
+zoom_rotate_time = 0.07
+
+fire_dispersion_base = 0.14
+k_hit_koeff = 1.13
+fire_point = 0, 0, 0.1
+bullet_speed = 1.23
+recoil_koeff = -0.05
+inertia_koeff = 1.2
+weapon_lenght = 0.1
+[mp5sd_barrel]:mp5_barrel
+kind   =  mp5
+inv_ui_sign				= mp5sd_bar
+visual						= w_att_huds\mp5sd_barrel	
+inv_name					= mp5sd_barrel
+inv_name_short			= mp5sd_barrel
+inv_weight					= 0.12
+cost							= 850
+inv_grid_x					= 26
+attachment_slots		= mp5sd_barrel_sil|wpn_body|0,0,0|0,0,0#mp5_hg|wpn_body|0,0,0|0,0,0#mp5_sight_front|wpn_body|0,0,0|0,0,0
+override_section			=	mp5sd_barrel_attributes
+[mp5sd_barrel_attributes]
+fire_point = 0, 0, 0.2
+weapon_lenght				= 0.08
+rpm_koeff						= 0.07
+k_hit_koeff					= 0.95
+bullet_speed = 0.86
+fire_dispersion_base		= 0.22
+impair_koeff					= 0.9
+zoom_rotate_time = 0.05
+recoil_koeff            = -0.06
+inertia_koeff            = 1.1
+
+[mp5sd_barrel_sil]:attachment_base
+kind   =  mp5
+inv_ui_sign				= mp5sd_sil
+visual						= w_att_huds\mp5sd_barrel_sil	
+inv_name					= mp5sd_barrel_sil
+inv_name_short			= mp5sd_barrel_sil
+cost							= 1300
+inv_weight					= 0.45
+inv_grid_width			= 2
+inv_grid_x					= 33
+inv_grid_y					= 31
+1icon_layer = clean2_ico
+attachment_point		= mp5sd_barrel_sil|0,0,0|0,0,0
+attachment_slots		= mp5sd_hg|wpn_body|0,0,0|0,0,0#b3|muzzle|0,-0.02125,0.31|0,0,0
+item_tags =	muzzle_device
+override_section = mp5sd_barrel_sil_attributes
+
+[mp5sd_barrel_sil_attributes]
+silencer_status = 1
+silencer_name = wpn_addon_silencer
+silencer_x = 1
+silencer_y = 1
+zoom_rotate_time = 0.08
+recoil_koeff = -0.09
+inertia_koeff = 1.5
+weapon_lenght = 0.15
+fire_dispersion_base_koeff = -0.1
+impair_koeff = 1.2
+[mp5sd_barrel_sil_att]:val_silencer_att
+weapon_lenght				= 0.15
+fire_dispersion_base_koeff		= -0.1
+impair_koeff					= 1.2
+
+[mp5_barrel_muzzle]:attachment_base
+kind   =  mp5
+inv_ui_sign				= mp5_mb
+visual						= w_att_huds\mp5_barrel_muzzle_bnt	
+inv_name					= mp5_barrel_muzzle_bnt
+inv_name_short			= mp5_barrel_muzzle_bntS
+cost							= 550
+inv_weight					= 0.05
+inv_grid_x					= 32
+inv_grid_y					= 31
+attachment_point		= mp5_barrel_muzzle|0,0,0|0,0,0
+item_tags	=	muzzle_device
+override_section = mp5_barrel_muzzle_attributes
+
+[mp5_barrel_muzzle_attributes]
+weapon_lenght = 0.05
+recoil_koeff = -0.02
+
+[mp5_silencer]:mp5_barrel_muzzle
+kind   =  mp5
+inv_ui_sign				= mp5_sil
+visual						= w_att_huds\mp5_barrel_muzzle_silencer	
+inv_name					= mp5_barrel_muzzle_silencer
+inv_name_short			= mp5_barrel_muzzle_silencer
+cost							= 1200
+inv_weight					= 0.37
+inv_grid_width			= 2
+inv_grid_x					= 30
+override_section			= mp5_barrel_muzzle_silencer_att
+attachment_slots		=	b3|muzzle|0,-0.02125,0.031|0,0,0
+override_section = mp5_silencer_attributes
+
+[mp5_silencer_attributes]
+silencer_status = 1
+silencer_name = wpn_addon_silencer
+silencer_x = 1
+silencer_y = 1
+weapon_lenght = 0.2
+zoom_rotate_time = 0.06
+recoil_koeff = -0.21
+inertia_koeff = 1.3
+
+[mp5_barrel_n_muzzle]:attachment_base
+kind   =  mp5
+inv_ui_sign				= mp5_muzz
+visual						= w_att_huds\mp5_barrel_n_muzzle	
+inv_name					= mp5_barrel_n_muzzle
+inv_name_short			= mp5_barrel_n_muzzleS
+cost							= 50
+inv_weight					= 0.01
+inv_grid_x					= 35
+inv_grid_y					= 31
+attachment_point		= 9mm_muzzle|0,0,0|0,0,0
+attachment_slots			= mp5_barrel_muzzle|muzzle|0,0,0.0686|0,0,0
+item_tags =	muzzle_device
+override_section = mp5_barrel_n_muzzle_attributes
+
+[mp5_barrel_n_muzzle_attributes]
+
+[mp5sd_hg]:attachment_base
+kind   =  mp5
+inv_ui_sign				= mp5sd_hg
+visual						= w_att_huds\mp5sd_hg	
+inv_name					= mp5sd_hg
+inv_name_short			= mp5sd_hg
+cost							= 550
+inv_weight					= 0.12
+inv_grid_width			= 2
+inv_grid_x					= 33
+inv_grid_y					= 32
+attachment_point		= mp5sd_hg|0,0,0|0,0,0
+item_tags	=	rail
+override_section = mp5sd_hg_attributes
+
+[mp5sd_hg_attributes]
+animation_prefix = c_
+
+[mp5sd_hg_bnt]:mp5sd_hg
+kind   =  mp5
+inv_ui_sign				= mp5sd_bnt
+visual						= w_att_huds\mp5sd_hg_bnt	
+description				= pistol_gripSD
+inv_name					= mp5sd_hg_bnt
+inv_name_short			= mp5sd_hg_bntS
+cost							= 850
+inv_weight					= 0.13
+inv_grid_x					= 35
+attachment_slots = pica_3|wpn_body|-0.020300,0.053200,0.244|0,0,-90#pica_3|wpn_body|0.020300,0.053200,0.244|0,0,90#pica_3|wpn_body|0,0.0334,0.244|0,0,180#picgrp|wpn_body|0,-0.0022,-0.017|0,0,0
+override_section = mp5sd_hg_bnt_attributes
+
+[mp5sd_hg_bnt_attributes]
+animation_prefix = c_
+
+[mp5_hg_a1]:attachment_base
+kind   =  mp5
+inv_ui_sign				= mp5_hg_a1
+visual						= w_att_huds\mp5_hg_a1	
+inv_name					= mp5_hg_a1
+inv_name_short			= mp5_hg_a1
+cost							= 500
+inv_weight					= 0.12
+inv_grid_width			= 2
+inv_grid_x					= 21
+inv_grid_y					= 32
+attachment_point		= mp5_hg|0,0,0|0,0,0
+item_tags =	rail
+override_section = mp5_hg_a1_attributes
+
+[mp5_hg_a1_attributes]
+animation_prefix = c_
+[mp5_hg_a1_att]:c_attributes,hg_3_att
+
+[mp5_hg_a2]:mp5_hg_a1
+kind   =  mp5
+inv_ui_sign				= mp5_hg_a2
+visual						= w_att_huds\mp5_hg_a2	
+inv_name					= mp5_hg_a2
+inv_name_short			= mp5_hg_a2
+inv_weight					= 0.13
+inv_grid_x					= 23
+override_section = mp5_hg_a2_attributes
+
+[mp5_hg_a2_attributes]
+animation_prefix = c_
+[mp5_hg_a2_att]:c_attributes,hg_5_att
+
+[mp5_hg_fab]:mp5_hg_a1
+kind   =  mp5
+inv_ui_sign				= mp5_hg_fd
+visual						= w_att_huds\mp5_hg_fab	
+description				= pistol_gripSD
+inv_name					= mp5_hg_fab
+inv_name_short			= mp5_hg_fabS
+inv_weight					= 0.14
+inv_grid_x					= 25
+attachment_slots = pica_3|wpn_body|-0.0153,0.0542,0.244|0,0,-90#pica_3|wpn_body|0.0153,0.0542,0.244|0,0,90#pica_3|wpn_body|0,0.03554,0.244|0,0,180#picgrp|wpn_body|0,-0.0017,-0.017|0,0,0
+override_section = mp5_hg_fab_attributes
+
+[mp5_hg_fab_attributes]
+animation_prefix = c_
+impair_koeff = 0.9
+[mp5_hg_fab_att]:c_attributes,hg_8_att
+impair_koeff = 0.9
+
+[mp5_hg_ris]:mp5sd_hg_bnt
+kind   =  mp5
+inv_ui_sign				= mp5_hg_ris
+visual						= w_att_huds\mp5_hg_ris	
+inv_name					= mp5_hg_ris
+inv_name_short			= mp5_hg_risS
+inv_weight					= 0.15
+inv_grid_x					= 27
+override_section = mp5_hg_ris_attributes
+
+[mp5_hg_ris_attributes]
+animation_prefix = c_
+[mp5_hg_ris_att]:c_attributes,hg_9_att
+
+[mp5_hg_keymod]:mp5_hg_a1
+kind   =  mp5
+inv_ui_sign					= mp5_hg_km
+visual								= w_att_huds\mp5_hg_keymod
+description					= ar_hg_keymod
+inv_name						= mp5_hg_keymod
+inv_name_short			= mp5_hg_keymodS
+inv_weight					= 0.12
+inv_grid_x						= 29			
+attachment_slots		= keymod|wpn_body|-0.021,0.0525,0.23|0,0,-90#keymod|wpn_body|0.021,0.0525,0.23|0,0,90#keymod_rail_grip|wpn_body|0,-0.0035,-0.017|0,0,0	
+override_section = mp5_hg_keymod_attributes
+
+[mp5_hg_keymod_attributes]
+animation_prefix = c_
+[mp5_hg_keymod_att]:c_attributes,hg_6_att
+
+[mp5_hg_torch]:mp5_hg_a1
+kind   =  mp5
+inv_ui_sign				= mp5_hg_fl
+visual						= w_att_huds\mp5_hg_torch	
+inv_name					= mp5_hg_torch
+inv_name_short			= mp5_hg_torchS
+cost							= 950
+inv_weight					= 0.16
+inv_grid_x					= 31
+is_torch                  = true
+is_torch_laser      = false
+light_section             = tactical_flashlight_default
+flashlight_bone           = laser
+flashlight_bone_axis      = y
+flashlight_bone_invert    = false
+1icon_layer = flashlight_ico
+override_section = mp5_hg_torch_attributes
+
+[mp5_hg_torch_attributes]
+animation_prefix = c_
+impair_koeff = 0.9
+[mp5_hg_torch_att]:c_attributes,hg_13_att
+impair_koeff = 0.9
+
+[mp5k_hg_sp89]:attachment_base
+kind   =  mp5
+inv_ui_sign				= mp5k_hg
+visual						= w_att_huds\mp5k_hg_sp89	
+inv_name					= mp5k_hg_sp89
+inv_name_short			= mp5k_hg_sp89
+cost							= 400
+inv_weight					= 0.09
+inv_grid_x					= 37
+inv_grid_y					= 32
+attachment_point		= mp5k_hg|0,0,0|0,0,0
+item_tags	=	rail
+override_section			= mp5k_hg_sp89_attributes
+
+[mp5k_hg_sp89_attributes]
+animation_prefix = c_
+zoom_rotate_time = -0.03
+inertia_koeff = 0.8
+[mp5k_hg_att_c_att]:c_attributes,mp5k_hg_fab_att
+
+[mp5k_hg_foregrip]:mp5k_hg_sp89
+kind   =  mp5
+inv_ui_sign				= mp5k_fg
+visual						= w_att_huds\mp5k_hg_foregrip	
+inv_name					= mp5k_hg_foregrip
+inv_name_short			= mp5k_hg_foregripS
+cost							= 1000
+inv_weight					= 0.12
+inv_grid_x					= 38
+override_section	=	mp5k_hg_foregrip_attributes
+
+[mp5k_hg_foregrip_attributes]
+animation_prefix = t_
+zoom_rotate_time = 0.01
+inertia_koeff = 0.8
+[mp5k_hg_foregrip_att]:foregrip_fd_tfl_attributes
+inertia_koeff           = 0.8
+
+[mp5k_hg_fab]:mp5k_hg_sp89
+kind   =  mp5
+inv_ui_sign				= mp5k_fb
+visual						= w_att_huds\mp5k_hg_fab	
+description				= pica_3_up
+inv_name					= mp5k_hg_fab
+inv_name_short			= mp5k_hg_fab
+cost							= 700
+inv_weight					= 0.1
+inv_grid_x					= 39
+attachment_slots = pica_3|wpn_body|0.0153,0.0542,0.17|0,0,90#pica_3|wpn_body|0,0.035619,0.19|0,0,180#picgrp|wpn_body|0,-0.0017,-0.017|0,0,0
+override_section = mp5k_hg_fab_attributes
+
+[mp5k_hg_fab_attributes]
+zoom_rotate_time = -0.03
+inertia_koeff = 0.8
+[mp5k_hg_fab_att]
+zoom_rotate_time = -0.03
+recoil_koeff            = -0.08
+inertia_koeff           = 0.8
+
+[mp5_rail]:attachment_base
+kind   =  mp5
+inv_ui_sign				= mp5_rail
+visual						= w_att_huds\mp5_rail	
+description				= pica_10_up
+inv_name					= mp5_rail
+inv_name_short			= mp5_railS
+cost							= 600
+inv_weight					= 0.05
+inv_grid_x					= 36
+inv_grid_y					= 31
+attachment_point		= mp5_rail|0,0,0|0,0,0
+attachment_slots			= pica_10|wpn_body|0,0.093,0.01|0,0,0		
+item_tags = rail
+override_section = mp5_rail_attributes
+
+[mp5_rail_attributes]
+
+[mp5_rail_high]:mp5_rail
+kind   =  mp5
+inv_ui_sign				= mp5_rail_h
+visual						= w_att_huds\mp5_rail_high	
+inv_name					= mp5_rail_high
+inv_name_short			= mp5_rail_highS
+cost							= 700
+inv_weight					= 0.07
+inv_grid_x					= 37
+attachment_slots		= pica_10|wpn_body|0,0.1071,0.01|0,0,0
+override_section = mp5_rail_high_attributes
+
+[mp5_rail_high_attributes]
+zoom_rotate_time = 0.01
+
+[mp5_rail_long]:mp5_rail
+kind   =  mp5
+inv_ui_sign				= mp5_rail_l
+visual						= w_att_huds\mp5_rail_long	
+description				= pica_15_up
+inv_name					= mp5_rail_long
+inv_name_short			= mp5_rail_longS
+cost							= 1100
+inv_weight					= 0.1
+inv_grid_width			= 2
+inv_grid_x					= 38
+attachment_slots		= pica_15|wpn_body|0,0.093,-0.004|0,0,0
+override_section = mp5_rail_long_attributes
+
+[mp5_rail_long_attributes]
+
+[mp5_sight_front]:attachment_base
+kind   =  mp5
+inv_ui_sign				= mp5_fs
+visual						= w_att_huds\mp5_sight_front	
+inv_name					= mp5_sight_front
+inv_name_short			= mp5_sight_front
+cost							= 150
+inv_weight					= 0.01
+inv_grid_x					= 15
+inv_grid_y					= 32
+attachment_point		= mp5_sight_front|0,0,0|0,0,0
+item_tags	=	sights
+override_section = mp5_sight_front_attributes
+
+[mp5_sight_front_attributes]
+zoom_rotate_time = -0.01
+fire_dispersion_base_koeff = -0.05
+
+[mp5_sight_front_red]:mp5_sight_front
+kind   =  mp5
+inv_ui_sign				= mp5_fsV
+visual						= w_att_huds\mp5_sight_front_red	
+inv_name					= mp5_sight_front_red
+inv_name_short			= mp5_sight_front_redS
+cost							= 305
+inv_grid_x					= 16
+override_section = mp5_sight_front_red_attributes
+
+[mp5_sight_front_red_attributes]
+zoom_rotate_time = -0.01
+fire_dispersion_base_koeff = -0.05
+
+[mp5_sight_front_up]:mp5_sight_front
+kind   =  mp5
+inv_ui_sign				= mp5_fs+
+visual						= w_att_huds\mp5_sight_front_up	
+inv_name					= mp5_sight_front_up
+inv_name_short			= mp5_sight_front_upS
+cost							= 300
+inv_grid_x					= 17
+override_section = mp5_sight_front_up_attributes
+
+[mp5_sight_front_up_attributes]
+zoom_rotate_time = -0.01
+fire_dispersion_base_koeff = -0.05
+
+[mp5k_stock]:attachment_base
+kind   =  mp5
+inv_ui_sign				= mp5k_stk
+visual						= w_att_huds\mp5k_stock	
+inv_name					= mp5k_stock
+inv_name_short			= mp5k_stockS
+cost							= 350
+inv_weight					= 0.07
+inv_grid_x					= 10
+inv_grid_y					= 33
+attachment_point		= mp5_stock|0,0,0|0,0,0
+item_tags =	stock
+override_section = mp5k_stock_attributes
+
+[mp5k_stock_attributes]
+zoom_rotate_time = -0.02
+inertia_koeff = 0.9
+[mp5k_stock_att]
+zoom_rotate_time = -0.02
+recoil_koeff = -0.03
+inertia_koeff = 0.9
+
+[mp5_stock_a2]:mp5k_stock
+kind   =  mp5
+inv_ui_sign				= mp5_stk_a2
+visual						= w_att_huds\mp5_stock_a2	
+inv_name					= mp5_stock_a2
+inv_name_short			= mp5_stockS
+cost							= 1700
+inv_weight					= 0.5
+inv_grid_width			= 2
+inv_grid_x					= 11
+override_section = mp5_stock_a2_attributes
+
+[mp5_stock_a2_attributes]
+weapon_lenght = 0.25
+zoom_rotate_time = 0.03
+recoil_koeff = -0.24
+inertia_koeff = 0.7
+
+[mp5_stock_bnt]:mp5_stock_a2
+kind   =  mp5
+inv_ui_sign				= mp5_stk_bnt
+visual						= w_att_huds\mp5_stock_bnt	
+inv_name					= mp5_stock_bnt
+cost							= 1800
+inv_weight					= 0.43
+inv_grid_x					= 18
+override_section = mp5_stock_bnt_attributes
+
+[mp5_stock_bnt_attributes]
+weapon_lenght = 0.2
+zoom_rotate_time = 0.05
+recoil_koeff = -0.22
+inertia_koeff = 0.7
+
+[mp5_stock_pdw]:mp5_stock_a2
+kind   =  mp5
+inv_ui_sign				= mp5_stk_pdw
+visual						= w_att_huds\mp5_stock_pdw	
+inv_name					= mp5_stock_pdw
+cost							= 1750
+inv_weight					= 0.45
+inv_grid_x					= 20
+override_section = mp5_stock_pdw_attributes
+
+[mp5_stock_pdw_attributes]
+weapon_lenght = 0.2
+zoom_rotate_time = 0.01
+recoil_koeff = -0.2
+inertia_koeff = 0.8
+
+[mp5_stock_brace]:mp5_stock_a2
+kind   =  mp5
+inv_ui_sign				= mp5_brace
+visual						= w_att_huds\mp5_stock_brace	
+inv_name					= mp5_stock_brace
+inv_name_short			= mp5_stock_braceS
+cost							= 1550
+inv_weight					= 0.25
+inv_grid_x					= 23
+override_section			=	mp5_stock_brace_attributes
+
+[mp5_stock_brace_attributes]
+zoom_rotate_time = -0.02
+recoil_koeff = -0.12
+inertia_koeff = 0.8
+weapon_lenght = 0.17
+[mp5_stock_brace_att]:ar_stock_cmmg_att
+weapon_lenght = 0.17
+
+[mp5_stock_ad]:mp5k_stock
+kind   =  mp5
+inv_ui_sign				= mp5_sAd
+visual						= w_att_huds\mp5_stock_ad	
+inv_name					= mp5_stock_ad
+inv_name_short			= mp5_stock_adS
+cost							= 550
+inv_weight					= 0.15
+inv_grid_x					= 13
+attachment_slots		= mp5_stock_ad|wpn_body|0,0,0|0,0,0
+override_section =	mp5_stock_ad_attributes
+
+[mp5_stock_ad_attributes]
+weapon_lenght = 0.05
+[mp5_stock_ad_att]
+weapon_lenght = 0.05
+
+[mp5_stock_ad_a1]:attachment_base
+kind   =  mp5
+inv_ui_sign				= mp5_stk_a1
+visual						= w_att_huds\mp5_stock_ad_a1	
+inv_name					= mp5_stock_ad_a1
+inv_name_short			= mp5_stock_ad_a1S
+cost							= 1000
+inv_weight					= 0.27
+inv_grid_width			= 2
+inv_grid_x					= 14
+inv_grid_y					= 33
+attachment_point		= mp5_stock_ad|0,0,0|0,0,0
+item_tags =	stock
+override_section =	mp5_stock_ad_a1_attributes
+
+[mp5_stock_ad_a1_attributes]
+zoom_rotate_time = -0.03
+recoil_koeff = -0.14
+inertia_koeff = 0.8
+weapon_lenght = 0.15
+[mp5_stock_ad_a1_att]:ar_stock_brace_att
+weapon_lenght = 0.15
+
+[mp5_stock_ad_n]:mp5_stock_ad_a1
+kind   =  mp5
+inv_ui_sign				= mp5_stk_n
+visual						= w_att_huds\mp5_stock_ad_n	
+inv_name					= mp5_stock_ad_n
+inv_name_short			= mp5_stock_ad_nS
+cost							= 1050
+inv_weight					= 0.3
+inv_grid_x					= 16
+override_section			=	mp5_stock_ad_n_attributes
+
+[mp5_stock_ad_n_attributes]
+zoom_rotate_time = -0.01
+recoil_koeff = -0.16
+inertia_koeff = 0.8
+weapon_lenght = 0.15
+[mp5_stock_ad_n_att]:ar_stock_mft_battlelink_att
+weapon_lenght = 0.15
+
+[mp5_stock_buffer]:mp5k_stock
+kind   =  mp5
+inv_ui_sign				= mp5_sbf
+visual						= w_att_huds\mp5_stock_buffer	
+inv_name					= mp5_stock_buffer
+inv_name_short			= mp5_stock_bufferS
+cost							= 500
+inv_grid_x					= 22
+attachment_slots		= ar_buffer|wpn_body|0,-0.0045,-0.0362|0,0,0
+override_section = mp5_stock_buffer_attributes
+
+[mp5_stock_buffer_attributes]
+weapon_lenght = 0.05
+[mp5_stock_buffer_att]
+weapon_lenght = 0.05
+
+[mag_wpn_mp5_15_9x19_fmj]:mag_wpn_base,wg_wpn_mp5,ag_ammo_9x19_fmj
+inv_ui_sign					= mp5_15
+visual							= w_att_huds\mp5_mag_15
+inv_name						= mp5_mag_15
+inv_name_short				= mp5_magS
+inv_grid_x						= 34
+inv_grid_y						= 9
+inv_weight						= 0.07
+cost								= 250
+max_mag_size				= 15
+mag_size						= small
+override_section				= mag_wpn_mp5_15_9x19_fmj_attributes
+
+[mag_wpn_mp5_15_9x19_fmj_attributes]
+animation_prefix_mag = 30_
+
+[mag_wpn_mp5_20_9x19_fmj]:mag_wpn_mp5_15_9x19_fmj
+inv_ui_sign					= mp5_20
+visual							= w_att_huds\mp5_mag_20
+inv_name						= mp5_mag_20
+inv_grid_x						= 35
+inv_weight						= 0.08
+cost								= 300
+max_mag_size				= 20
+override_section = mag_wpn_mp5_20_9x19_fmj_attributes
+
+[mag_wpn_mp5_20_9x19_fmj_attributes]
+animation_prefix_mag = 30_
+
+[mag_wpn_mp5_9x19_fmj]:mag_wpn_mp5_15_9x19_fmj
+inv_ui_sign					= mp5_30
+visual							= w_att_huds\mp5_mag_30
+inv_name						= mp5_magS
+inv_grid_height				= 2
+inv_grid_x						= 36
+inv_weight						= 0.1
+cost								= 400
+max_mag_size				= 30
+override_section = mag_wpn_mp5_9x19_fmj_attributes
+
+[mag_wpn_mp5_9x19_fmj_attributes]
+animation_prefix_mag = 30_
+
+[mag_wpn_mp5_w_9x19_fmj]:mag_wpn_mp5_9x19_fmj
+visual							= w_att_huds\mp5_mag_30w
+inv_name						= mp5_mag_30w
+inv_grid_x						= 37
+override_section = mag_wpn_mp5_w_9x19_fmj_attributes
+
+[mag_wpn_mp5_w_9x19_fmj_attributes]
+animation_prefix_mag = 30_
+
+[mag_wpn_mp5_40_9x19_fmj]:mag_wpn_mp5_9x19_fmj
+inv_ui_sign					= mp5_40
+visual							= w_att_huds\mp5_mag_40
+inv_name						= mp5_mag_40
+inv_name_short				= mp5_mag_40S
+inv_grid_x						= 38
+inv_weight						= 0.13
+cost								= 600
+max_mag_size				= 40
+mag_size						= medium
+override_section = mag_wpn_mp5_40_9x19_fmj_attributes
+
+[mag_wpn_mp5_40_9x19_fmj_attributes]
+animation_prefix_mag = 30_
+
+[mag_wpn_mp5_50_9x19_fmj]:mag_wpn_mp5_9x19_fmj
+inv_ui_sign					= mp5_50
+visual							= w_att_huds\mp5_mag_50
+inv_name						= mp5_mag_50
+inv_name_short				= mp5_mag_50S
+inv_grid_x						= 39
+inv_weight						= 0.27
+cost								= 1100
+max_mag_size				= 50
+mag_size						= medium
+override_section				= mag_wpn_mp5_50_9x19_fmj_attributes
+
+[mag_wpn_mp5_50_9x19_fmj_attributes]
+animation_prefix_mag = 50_
+
+[mag_wpn_mp5_100_9x19_fmj]:mag_wpn_mp5_9x19_fmj
+inv_ui_sign					= mp5_c-mag
+visual							= w_att_huds\mp5_mag_100
+inv_name						= mp5_mag_100
+inv_name_short				= mp5_mag_50S
+inv_grid_width				= 2
+inv_grid_height				= 1
+inv_grid_x						= 34
+inv_grid_y						= 10
+inv_weight						= 1.07
+cost								= 1900
+max_mag_size				= 100
+mag_size						= large
+override_section				= mag_wpn_mp5_100_9x19_fmj_attributes
+
+[mag_wpn_mp5_100_9x19_fmj_attributes]
+animation_prefix_mag = 100_
+[mp5_mag100_attributes]
+animation_prefix_mag	= 100_
+

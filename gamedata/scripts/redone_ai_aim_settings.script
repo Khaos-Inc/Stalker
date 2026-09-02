@@ -12,16 +12,42 @@ local level = level
 ---------------------------
 local last_global_aim_id = nil
 local last_global_set_time = 0
+local last_actor_aim_check_time = 0
 local NPC_UPDATE_MIN_INTERVAL = 0.5
+local ACTOR_AIM_CHECK_INTERVAL = 0.5
 local redone_ai_aim = stealth_mcm.get_config("redone_ai_aim")
+local uninstall_mode = stealth_mcm.get_config("uninstall_mode")
 local DEBUG_NPC_AIM = stealth_mcm.get_config("debug_aim")
 --------------------------------------------------------------------------
 -- BASE AIM
 --------------------------------------------------------------------------
+local aim_defaults_restored = false
+local _last = {}
+
 local hardcore_max_angle    = 20.0
 local hardcore_min_angle    = 15.0
 local hardcore_min_speed    = 17.0
 local hardcore_predict_time = 0.12
+
+local function safe_exec(cmd)
+        if level and level.exec_console_cmd then
+                level.exec_console_cmd(cmd)
+        elseif exec_console_cmd then
+                exec_console_cmd(cmd)
+        end
+end
+
+local function restore_default_aim()
+        _last.max     = "0.785400"
+        _last.min     = "0.196350"
+        _last.speed   = "0.240000"
+        _last.predict = "0.400000"
+
+        safe_exec("ai_aim_max_angle 0.7854")
+        safe_exec("ai_aim_min_angle 0.19635")
+        safe_exec("ai_aim_min_speed 0.24")
+        safe_exec("ai_aim_predict_time 0.4")
+end
 
 --------------------------------------------------------------------------
 -- RANK MAP
@@ -51,14 +77,6 @@ local npc_rank_coeff = {
 --------------------------------------------------------------------------
 -- UTILS
 --------------------------------------------------------------------------
-local function safe_exec(cmd)
-        if level and level.exec_console_cmd then
-                level.exec_console_cmd(cmd)
-        elseif exec_console_cmd then
-                exec_console_cmd(cmd)
-        end
-end
-
 local function clamp(v, a, b)
         if v ~= v then return a end
         if v < a then return a end
@@ -70,14 +88,19 @@ local function fmt(v)
         return string.format("%.6f", tonumber(v) or 0)
 end
 
+local function deg_to_rad(deg)
+        return deg * math.pi / 180
+end
+
 --------------------------------------------------------------------------
 -- AIM SYSTEM
 --------------------------------------------------------------------------
-local _last = {}
-
 local function set_aim(max_a, min_a, speed, predict)
-        max_a   = fmt(clamp(max_a, 0, 180))
-        min_a   = fmt(clamp(min_a, 0, 180))
+        max_a = deg_to_rad(clamp(max_a, 0, 180))
+        min_a = deg_to_rad(clamp(min_a, 0, 180))
+        max_a = fmt(max_a)
+        min_a = fmt(min_a)
+
         speed   = fmt(clamp(speed, 0.001, 31.416))
         predict = fmt(clamp(predict, 0, 10))
 
@@ -128,6 +151,32 @@ end
 -- ACTOR ON UPDATE
 --------------------------------------------------------------------------
 function actor_on_update()
+        if uninstall_mode or not redone_ai_aim then
+                return
+        end
+
+        local now = time_global() / 1000
+        if (now - last_actor_aim_check_time) < ACTOR_AIM_CHECK_INTERVAL then
+                return
+        end
+        last_actor_aim_check_time = now
+
+        if not last_global_aim_id then
+                return
+        end
+
+        local npc = level.object_by_id(last_global_aim_id)
+        local enemy = npc and npc.alive and npc:alive() and redone_ai_combat.get_combat_enemy(npc) or nil
+        local still_targeting_actor = enemy and enemy.alive and enemy:alive()
+                and db.actor and enemy:id() == db.actor:id()
+                and npc.see and npc:see(enemy)
+
+        if still_targeting_actor then
+                return
+        end
+
+        last_global_aim_id = nil
+        last_global_set_time = now
         set_aim(
                 hardcore_max_angle,
                 hardcore_min_angle,
@@ -136,8 +185,6 @@ function actor_on_update()
         )
 end
 
-
-
 --------------------------------------------------------------------------
 -- DEBUG
 local function d(...)
@@ -145,12 +192,20 @@ local function d(...)
                 printf(...)
         end
 end
-
 --------------------------------------------------------------------------
 -- NPC UPDATE
 --------------------------------------------------------------------------
 function npc_on_update(npc)
-        if not redone_ai_aim then return end
+        if uninstall_mode or not redone_ai_aim then
+                if not aim_defaults_restored then
+                        restore_default_aim()
+                        aim_defaults_restored = true
+                end
+        return
+        end
+
+        aim_defaults_restored = false
+
         if not (npc and npc.alive and npc:alive()) then return end
 
         local enemy = redone_ai_combat.get_combat_enemy(npc)
@@ -214,6 +269,21 @@ function on_level_changing()
 end
 
 function actor_on_first_update()
+        if uninstall_mode then
+                restore_default_aim()
+                safe_exec("cfg_save")
+                aim_defaults_restored = true
+                last_global_aim_id = nil
+                return
+        end
+
+        if not redone_ai_aim then
+                restore_default_aim()
+                aim_defaults_restored = true
+                last_global_aim_id = nil
+                return
+        end
+
         set_aim(
                 hardcore_max_angle,
                 hardcore_min_angle,
@@ -227,7 +297,21 @@ end
 -----------------------------------------------------------------------------
 function on_option_change()
         redone_ai_aim = stealth_mcm.get_config("redone_ai_aim")
+        uninstall_mode = stealth_mcm.get_config("uninstall_mode")
         DEBUG_NPC_AIM = stealth_mcm.get_config("debug_aim")
+
+        if uninstall_mode then
+                restore_default_aim()
+                safe_exec("cfg_save")
+                aim_defaults_restored = true
+                last_global_aim_id = nil
+        elseif not redone_ai_aim then
+                restore_default_aim()
+                aim_defaults_restored = true
+                last_global_aim_id = nil
+        else
+                aim_defaults_restored = false
+        end
 end
 
 --------------------------------------------------------------------------
@@ -240,4 +324,5 @@ function on_game_start()
         RegisterScriptCallback("actor_on_update", actor_on_update)
         RegisterScriptCallback("npc_on_update", npc_on_update)
         RegisterScriptCallback("on_level_changing", on_level_changing)
+        RegisterScriptCallback("on_option_change", on_option_change)
 end

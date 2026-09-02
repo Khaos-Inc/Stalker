@@ -34,7 +34,8 @@ local defaults = {
 	["panic_tab/cover_time"] = 12,
 	["panic_tab/smoke_enabled"] = false,
 	-- COMBAT
-	--["combat_tab/combat_tab_settings/redone_ai_wpn"] = true,
+	["uninstall_tab/uninstall_mode"] = false,
+	["combat_tab/combat_tab_settings/redone_ai_wpn"] = true,
 	["combat_tab/combat_tab_settings/redone_ai_danger"] = true,
 	["combat_tab/combat_tab_settings/redone_ai_target"] = true,
 	["combat_tab/combat_tab_settings/redone_ai_aim"] = true,
@@ -43,14 +44,14 @@ local defaults = {
 	["combat_tab/combat_tab_settings/enable_ai_suicide"] = true,
 	["combat_tab/combat_tab_settings/enable_xr_meet"] = false,
 	["combat_tab/combat_tab_settings/redone_ai_detection"] = true,
-	["combat_tab/combat_tab_settings/detection_Sniper_combat"] = true,
-	["combat_tab/combat_tab_settings/detection_foggy_combat"] = true,
+	["combat_tab/combat_tab_settings/detection_sniper_combat"] = 1,
+	["combat_tab/combat_tab_settings/detection_foggy_combat"] = 1,
 	["combat_tab/combat_tab_settings/detection_rank_enabled"] = true,
 	["combat_tab/combat_tab_settings/detection_rank_mult"] = 1.0,
 	["combat_tab/combat_tab_settings/detection_weather_enabled"] = true,
 	["combat_tab/combat_tab_settings/detection_weather_mult"] = 1.0,
 	["combat_tab/combat_tab_settings/redone_ai_sound"] = true,
-	["combat_tab/combat_tab_settings/sound_combat_enabled"] = true,
+	["combat_tab/combat_tab_settings/sound_combat_enabled"] = 1,
 	["combat_tab/combat_tab_settings/sound_limit"] = 2.0,
 	["combat_tab/combat_tab_settings/sound_DNG_mult"] = 2.5,
 	["combat_tab/combat_tab_settings/sound_WPN_mult"] = 2.0,
@@ -170,8 +171,8 @@ function on_mcm_load()
 		{id= "combat_tab", text="ui_mcm_menu_combat_tab", gr = {
 			{id= "combat_tab_settings", sh = true, text = "ui_mcm_menu_combat_tab_settings", gr = {
 				{id = "title", 				type = "slide", link = "ui_options_slider_gameplay_diff", text = "ui_mcm_combat_title", size = {512,50}, spacing = 20},
-                                {id = "title", 				type = "title", text = "ui_mcm_combat_header_main", size = {512,50}, spacing = 20},
-                                --{id = "redone_ai_wpn", 		type = "check", val = 1, def = true},
+                                {id = "title",                          type = "title", text = "ui_mcm_combat_header_main", size = {512,50}, spacing = 20},
+                                {id = "redone_ai_wpn", 			type = "check", val = 1, def = true},
                                 {id = "redone_ai_target", 		type = "check", val = 1, def = true},
                                 {id = "redone_ai_danger", 		type = "check", val = 1, def = true},
                                 {id = "redone_ai_aim", 			type = "check", val = 1, def = true},
@@ -182,7 +183,7 @@ function on_mcm_load()
                                 {id = "enable_xr_meet", 		type = "check", val = 1, def = false},
                                 {id = "title", 				type = "slide", link = "ui_options_slider_disguise", text = "ui_mcm_detection_settings_title", size = {512,50}, spacing = 20},
                                 {id = "redone_ai_detection", 		type = "check", val = 1, def = true},
-                                {id = "detection_Sniper_combat", 	type = "list", val= 2, def = 1, content= { {1, "Enable Sniper Detection"} , {2, "Disable Sniper Detection"}} , no_str = true},
+                                {id = "detection_sniper_combat", 	type = "list", val= 2, def = 1, content= { {1, "Enable Sniper Detection"} , {2, "Disable Sniper Detection"}} , no_str = true},
                                 {id = "detection_foggy_combat", 	type = "list", val= 2, def = 1, content= { {1, "Enable Fog Detection"} , {2, "Disable Fog Detection"}} , no_str = true},
                                 {id = "title",				type = "title", text = "", size = {512,50}, spacing = 20},
                                 {id = "detection_rank_enabled", 	type = "check", val = 1, def = true},
@@ -264,6 +265,13 @@ function on_mcm_load()
 			{id = "debug_enemy", 		type = "list",  val = 2, def = 1, content= { {1, "Disable Enemy Debug ID"} , {2, "Enable Enemy Debug Clean ID"}, {3, "Enable Enemy Debug Raw ID"}} , no_str = true},
 			{id = "debug_danger", 		type = "list",  val = 2, def = 1, content= { {1, "Disable Danger Debug ID"} , {2, "Enable Danger Debug Clean ID"}, {3, "Enable Danger Debug Raw ID"}} , no_str = true},
 			{id = "title",	 	  	type = "title", text= "", size = {512,50}, spacing = 20},
+			}
+		},
+		{id = "uninstall_tab", sh = true, text = "ui_mcm_menu_uninstall_tab", gr = {
+			{id = "title", type = "slide", link = "ui_options_slider_gameplay_diff", text = "ui_mcm_combat_uninstall_header", size = {512,50}, spacing = 20},
+			{id = "title", type = "desc", text = "ui_mcm_combat_uninstall_warning", align = "l", clr = {255,255,180,80}},
+			{id = "uninstall_mode", type = "check", val = 1, def = false},
+			{id = "title", type = "title", text = "", size = {512,50}, spacing = 20},
 			}
 		}
 		}

@@ -4,7 +4,7 @@ local disable_hud_fps_fix_tmr = 0.2			-- sec
 ------------------------ SETTINGS ------------------------
 local healingitems=true -- Enable healing items
 local regen=0 -- Automatic blue health regeneration on each limb. Setting it to 90000 would mean each 90 seconds 1 health point restores
-local damagescale=0.85 -- Damage scale to body parts from recieved damage; 0.5 means half of normal limbs do have 50 hp, torso has 100 hp and head has 50 hp
+local damagescale=1.0 -- Damage scale to body parts from recieved damage; 0.5 means half of normal limbs do have 50 hp, torso has 100 hp and head has 50 hp
 local easyhealing=false -- If easy healing is enabled, you wont need to use post healing items and first aid items would restore blue health
 local hud_vertical_spacing=25--27 -- How low hitbox hud will be drown. The higher the number, the lower the HUD. 0 is default ~in the middle of screen.
 
@@ -20,7 +20,6 @@ local effects_mult = 1 -- Divide this by maxhp and damagescale multipliers. Exam
 local prev_time = nil
 local head_tbl = {}
 local tinnitus_play = false
-local chance_damage_on_footstep = zzz_player_injuries_mcm.get_config("chance_damage_on_footstep")
 
 function save_state(m_data)
     m_data.head_tbl = head_tbl
@@ -35,24 +34,18 @@ local rightleg_anm = {"med1","med4"}
 local leftleg_anm = {"med2","med3"}
 local bothlegs_anm = {"strong1","strong2","strong4"}
 
-local HUD_TOGGLE_KEYBIND = zzz_player_injuries_mcm.get_config("hud_toggle_key_bind")
-
 function on_option_change()
-	HUD_TOGGLE_KEYBIND = zzz_player_injuries_mcm.get_config("hud_toggle_key_bind")
 	if r(head_tbl.volume) ~= r(ui_options.get("sound/general/master_volume")) then
 		head_tbl.volume = (ui_options.get("sound/general/master_volume"))
 	end
-	chance_damage_on_footstep = zzz_player_injuries_mcm.get_config("chance_damage_on_footstep")
 end
 
 -- shameful steal from arti
 local speeds = {}
 
 function actor_on_first_update()
-	options_vol = ui_options.get("sound/general/master_volume")
+	local options_vol = ui_options.get("sound/general/master_volume")
 	if not (head_tbl.volume) then head_tbl.volume = options_vol end
-	exec_console_cmd("snd_volume_eff " .. options_vol)
-	volume_sound_x = get_console_cmd(2,"snd_volume_eff")
     speeds[0] = db.actor:get_actor_run_coef()
     speeds[1] = db.actor:get_actor_runback_coef()
     speeds[2] = db.actor:get_actor_sprint_koef()
@@ -113,7 +106,7 @@ preview.bonus.leftleg=nil
 preview.bonus.rightleg=nil
 
 
-timedhp ={}
+timedhp={}
 timedhp.head=0
 timedhp.torso=0
 timedhp.leftarm=0
@@ -135,34 +128,50 @@ medkits.lastregen=time_global()
 medkits.timedhealth=60000
 medkits.morphine={head=8,torso=5,rightleg=4,leftleg=4,rightarm=4,leftarm=4,timeregen=60000}
 medkits.rebirth={head=11,torso=11,rightleg=5,leftleg=5,rightarm=5,leftarm=5,timeregen=60000}
-medkits.adrenalin={head=10,torso=10,rightleg=5,leftleg=5,rightarm=5,leftarm=5,timeregen=60000}
-medkits.cocaine={head=3,torso=3,timeregen=60000}
-medkits.analgetic={head=4,torso=4,rightleg=2,leftleg=2,rightarm=2,leftarm=2,timeregen=60000}
-medkits.salicidic_acid={head=2,torso=2,rightleg=2,leftleg=2,rightarm=2,leftarm=2,timeregen=60000}
-medkits.stimpack={head=5,torso=5,rightleg=3,leftleg=3,rightarm=3,leftarm=3,timeregen=60000}
-medkits.stimpack_army={head=5,torso=7,rightleg=3,leftleg=3,rightarm=3,leftarm=3,timeregen=60000}
-medkits.stimpack_scientic={head=6,torso=9,rightleg=4,leftleg=4,rightarm=4,leftarm=4,timeregen=60000}
-medkits.medkit={head=5,torso=5,rightleg=2,leftleg=2,rightarm=2,leftarm=2,timeregen=60000}
-medkits.medkit_army={head=7,torso=7,rightleg=3,leftleg=3,rightarm=3,leftarm=3,timeregen=60000}
-medkits.medkit_scientic={head=9,torso=9,rightleg=4,leftleg=4,rightarm=4,leftarm=4,timeregen=60000}
-medkits.jgut={torso=5,rightleg=5,leftleg=5,rightarm=5,leftarm=5,timeregen=60000}
-medkits.survival_kit={torso=11,rightleg=3,leftleg=3,rightarm=3,leftarm=3,timeregen=60000}
-medkits.bandage={torso=3,rightleg=3,leftleg=3,rightarm=3,leftarm=3,timeregen=40000}
-
+medkits.adrenalin={head=10,torso=10,rightleg=5,leftleg=5,rightarm=5,leftarm=5,timeregen=80000}
+medkits.cocaine={harming=true,head=8,torso=4,rightleg=3,leftleg=3,rightarm=3,leftarm=3,timeregen=180000}
+medkits.analgetic={head=3,torso=3,rightleg=2,leftleg=2,rightarm=2,leftarm=2,timeregen=60000}
+medkits.salicidic_acid={harming=true,head=5,torso=5,rightleg=3,leftleg=3,rightarm=3,leftarm=3,timeregen=40000}
+medkits.stimpack={head=5,torso=5,rightleg=3,leftleg=3,rightarm=3,leftarm=3,timeregen=50000}
+medkits.stimpack_army={head=5,torso=7,rightleg=3,leftleg=3,rightarm=3,leftarm=3,timeregen=65000}
+medkits.stimpack_scientic={head=6,torso=9,rightleg=4,leftleg=4,rightarm=4,leftarm=4,timeregen=75000}
+medkits.medkit={head=5,torso=5,rightleg=2,leftleg=2,rightarm=2,leftarm=2,timeregen=30000}
+medkits.medkit_army={head=7,torso=8,rightleg=3,leftleg=3,rightarm=3,leftarm=3,timeregen=40000}
+medkits.medkit_scientic={head=10,torso=8,rightleg=4,leftleg=4,rightarm=4,leftarm=4,timeregen=50000}
+medkits.jgut={rightleg=5,leftleg=5,rightarm=5,leftarm=5,timeregen=40000}
+medkits.survival_kit={torso=11,rightleg=3,leftleg=3,rightarm=3,leftarm=3,timeregen=100000}
+medkits.bandage={torso=2,torso=2,rightleg=3,leftleg=3,rightarm=3,leftarm=3,timeregen=40000}
 
 healhelp={}
-healhelp.drug_anabiotic	= {head=11,torso=11,rightleg=11,leftleg=11,rightarm=11,leftarm=11}
-healhelp.rebirth	= {head=8,torso=8,rightleg=5,leftleg=5,rightarm=5,leftarm=5}
-healhelp.survival_kit	= {head=5,torso=5,rightleg=3,leftleg=3,rightarm=3,leftarm=3}
-healhelp.tetanus	= {head=3,torso=3,rightleg=3,leftleg=3,rightarm=3,leftarm=3}
-healhelp.akvatab	= {rightleg=4,leftleg=4,rightarm=4,leftarm=4}
-healhelp.yadylin	= {head=4,torso=4,rightleg=2,leftleg=2,rightarm=2,leftarm=2}
-healhelp.antibio_chlor	= {rightarm=1,leftarm=1}
-healhelp.antibio_sulfad	= {rightleg=1,leftleg=1}
-healhelp.drug_antidot	= {head=3,torso=3}
-healhelp.drug_coagulant	= {torso=4}
-healhelp.stimpack_army	=  {head=2,torso=2,rightleg=1,leftleg=1,rightarm=1,leftarm=1}
-healhelp.stimpack_scientic={head=4,torso=4,rightleg=1,leftleg=1,rightarm=1,leftarm=1}
+--healhelp.bandage={rightleg=2,leftleg=2,rightarm=2,leftarm=2}
+healhelp.caffeine={head=3}
+healhelp.drug_psy_blockade={head=5,rightleg=2,leftleg=2,rightarm=2,leftarm=2}
+healhelp.drug_sleepingpills={head=8}
+healhelp.drug_booster={torso=6}
+healhelp.drug_anabiotic={head=11,torso=11,rightleg=11,leftleg=11,rightarm=11,leftarm=11}
+healhelp.rebirth={head=8,torso=8,rightleg=4,leftleg=4,rightarm=4,leftarm=4}
+healhelp.glucose_s={head=2,torso=2,rightleg=2,leftleg=2,rightarm=2,leftarm=2}
+healhelp.glucose={head=4,torso=4,rightleg=3,leftleg=3,rightarm=3,leftarm=3}
+healhelp.medkit_army={rightleg=1,leftleg=1,rightarm=1,leftarm=1}
+healhelp.medkit_scientic={rightleg=2,leftleg=2,rightarm=2,leftarm=2}
+healhelp.salicidic_acid={rightleg=2,leftleg=2,rightarm=2,leftarm=2}
+healhelp.analgetic={torso=2,rightleg=1,leftleg=1,rightarm=1,leftarm=1}
+healhelp.stimpack_army={head=2,torso=2,rightleg=1,leftleg=1,rightarm=1,leftarm=1}
+healhelp.stimpack_scientic={head=3,torso=6,rightleg=1,leftleg=1,rightarm=1,leftarm=1}
+healhelp.tetanus={head=3,rightleg=2,leftleg=2,rightarm=2,leftarm=2}
+healhelp.drug_coagulant={torso=3}
+healhelp.yadylin={head=4,torso=4,rightleg=2,leftleg=2,rightarm=2,leftarm=2}
+healhelp.survival_kit={torso=11,rightleg=3,leftleg=3,rightarm=3,leftarm=3}
+healhelp.akvatab={rightleg=4,leftleg=4,rightarm=4,leftarm=4}
+healhelp.vinca={torso=3}
+healhelp.antibio_chlor={head=1,torso=2}
+healhelp.antibio_sulfad={torso=2,rightarm=1,leftarm=1}
+healhelp.antiemetic={head=2,rightleg=1,leftleg=1}
+healhelp.antirad={head=1,torso=2,rightleg=2,leftleg=2,rightarm=2,leftarm=2}
+healhelp.antirad_cystamine={head=3,torso=3}
+healhelp.antirad_kalium={head=1,torso=1,rightleg=1,leftleg=1,rightarm=1,leftarm=1}
+healhelp.drug_antidot={head=4,torso=2}
+healhelp.drug_radioprotector={head=1,rightleg=1,leftleg=1,rightarm=1,leftarm=1}
 
 
 if easyhealing then
@@ -255,12 +264,12 @@ local function SaveHealthStatus()
 	utils_obj.save_var(db.actor,"timedhp.leftleg",timedhp.leftleg)
 end
 local function LoadHealthStatus()
-	health.head=utils_obj.load_var(db.actor,"health.head") --or maxhp.head
-	health.torso=utils_obj.load_var(db.actor,"health.torso") --or maxhp.torso
-	health.rightarm=utils_obj.load_var(db.actor,"health.rightarm") --or maxhp.rightarm
-	health.leftarm=utils_obj.load_var(db.actor,"health.leftarm") --or maxhp.leftarm
-	health.rightleg=utils_obj.load_var(db.actor,"health.rightleg") --or maxhp.rightleg
-	health.leftleg=utils_obj.load_var(db.actor,"health.leftleg") --or maxhp.leftleg
+	health.head=utils_obj.load_var(db.actor,"health.head") or maxhp.head
+	health.torso=utils_obj.load_var(db.actor,"health.torso") or maxhp.torso
+	health.rightarm=utils_obj.load_var(db.actor,"health.rightarm") or maxhp.rightarm
+	health.leftarm=utils_obj.load_var(db.actor,"health.leftarm") or maxhp.leftarm
+	health.rightleg=utils_obj.load_var(db.actor,"health.rightleg") or maxhp.rightleg
+	health.leftleg=utils_obj.load_var(db.actor,"health.leftleg") or maxhp.leftleg
 	
 	timedhp.head=utils_obj.load_var(db.actor,"timedhp.head") or 0
 	timedhp.torso=utils_obj.load_var(db.actor,"timedhp.torso") or 0
@@ -394,28 +403,23 @@ function shaking_hands()
 	local max_arms_sum = (maxhp.rightarm + maxhp.leftarm) * effects_mult
 
 	if arms_sum < (max_arms_sum * (zzz_player_injuries_mcm.get_config("arm_penalty_minimum_hp") * 0.1)) then
-		cam_power = 0.65 * weight / arms_sum
-		cam_power = (body_state == "crouch") and (0.60 * weight / arms_sum) or cam_power
-		cam_power = (body_state == "low_crouch") and (0.55 * weight / arms_sum) or cam_power
+		if (left_arm < right_arm / 1.5) or (right_arm < left_arm / 1.5) then
+			cam_power = 1.15 * weight / arms_sum
+			cam_power = (body_state == "crouch") and (0.8 * weight / arms_sum) or cam_power
+			cam_power = (body_state == "low_crouch") and (0.4 * weight / arms_sum) or cam_power
+		else
+			cam_power = 0.8 * weight / arms_sum
+			cam_power = (body_state == "crouch") and (0.55 * weight / arms_sum) or cam_power
+			cam_power = (body_state == "low_crouch") and (0.3 * weight / arms_sum) or cam_power
+		end
 
 		cam_power = clamp(cam_power, 0, 3)
 		cam_power = cam_power * (zzz_player_injuries_mcm.get_config("arm_animation_power"))
-		local cam_power_scope = cam_power * 0.33
+		local cam_power_scope = cam_power * 0.2
 		if item_in_slot:weapon_is_scope() then
 			cam_power = cam_power_scope
 		end
 		-- play anm
-		level.add_cam_effector("camera_effects\\" .. aim_anm[math.random(#aim_anm)] .. ".anm", 9921, true, "", 0, true, cam_power)
-	else
-		cam_power = 0.19 * weight / max_arms_sum
-		cam_power = (body_state == "crouch") and (0.18 * weight / max_arms_sum) or cam_power
-		cam_power = (body_state == "low_crouch") and (0.17 * weight / max_arms_sum) or cam_power
-		cam_power = clamp(cam_power, 0, 3)
-		cam_power = cam_power * (zzz_player_injuries_mcm.get_config("arm_animation_power"))
-		local cam_power_scope = cam_power * 0.33
-		if item_in_slot:weapon_is_scope() then
-			cam_power = cam_power_scope
-		end
 		level.add_cam_effector("camera_effects\\" .. aim_anm[math.random(#aim_anm)] .. ".anm", 9921, true, "", 0, true, cam_power)
 	end
 	--	news_manager.send_tip(db.actor, r(cam_power), 0, nil, 1500)
@@ -491,8 +495,7 @@ function torso_penalty()
 	local t_cap = 1 - t_diff * 0.035
 
 	if (t_diff > 0) and (db.actor.health > t_cap) then
---		db.actor.health = t_cap
-		t_cap = t_cap
+		db.actor.health = t_cap
 	end
 
 end
@@ -511,6 +514,7 @@ function bhs_concussion()
 	local current = health.head * effects_mult
 	if not (head_tbl.previous) then head_tbl.previous = current end
 	local previous = head_tbl.previous
+	local volume_sound_x = get_console_cmd(2,"snd_volume_eff")
 	local volume_sound_x_fade = 0.01
 
 	local anm_damage_threshold = 2
@@ -524,7 +528,7 @@ function bhs_concussion()
 --	actor_menu.set_msg(1, strformat("head.tbl.volume: %s, console_volume: %s, stage: %s", r(head_tbl.volume), r(get_console_cmd(2,"snd_volume_eff")), r(head_tbl.stage)))
 
 	-- removing effects if hp between previous and current yellow or blue (or dead)
-	if head_tbl.stage ~= 0 and ((previous == current) or (current <= 0)) then
+	if (previous == current) or (current <= 0) then
 		exec_console_cmd("snd_volume_eff " .. head_tbl.volume)
 		level.remove_pp_effector(99133)
 		head_tbl.stage = 0
@@ -534,7 +538,7 @@ function bhs_concussion()
 	if (head_tbl.stage == 1) then
 		level.add_pp_effector("concussion_bhs.ppe", 99123, false)
 		exec_console_cmd("snd_volume_eff " .. volume_sound_x_fade)
-		CreateTimeEvent(0, "set_stage_two", 1, set_stage_two)
+		CreateTimeEvent(0, "set_stage_two", 10, set_stage_two)
 	end
 	-- stage 2 xd
 	if (head_tbl.stage == 2) and (tg > tg_stage_2_effects) then
@@ -546,7 +550,7 @@ function bhs_concussion()
 		end
 		-- random chance for head shake
 		if (damage_taken > anm_damage_threshold) and (rnd <= effector_k * 10) then
-			level.add_cam_effector("camera_effects\\wake_up.anm", 96872, false, "", 0, true, effector_power * 0.2)
+			level.add_cam_effector("camera_effects\\wake_up.anm", 96872, false, "", 0, true, effector_power)
 		end
 		level.add_pp_effector("concussion_post_bhs.ppe", 99133, false)
 		tg_stage_2_effects = tg + tg_stage_2_effects_delay
@@ -623,46 +627,26 @@ hitboxes[4]="leftleg"
 hitboxes[7]="rightleg"
 hitboxes[8]="rightleg"
 
-function actor_on_hit_callback(bone_id)
-    --printf("! actor got hit in %s", bone_id)
+local function actor_on_hit_callback(obj, amount, local_direction, who, bone_id)
+    printf("! actor got hit in %s", bone_id)
 
-    if bone_id == 65535 then -- toxic anomalies and radiation. It was hitting head or torso be redirected to arms or torso instead
-        rand = math.random(1,5)
-        if rand == 1 or rand == 2 or rand == 3 then
-            bone_id = 12
-		elseif rand == 4 then
-            bone_id = 20
-		elseif rand == 5 then
-			bone_id = 33	
+    if bone_id == 65535 then -- toxic anomalies and radiation
+        bone_id = math.random(1,2)
+        if bone_id == 1 then
+            bone_id = 19
+	else
+            bone_id = 13
         end
     end
 
     if bone_id == 0 then -- attributes fall damage to left or right leg
-        rand = math.random(1,2)
-        if rand == 1 then
+        bone_id = math.random(1,2)
+        if bone_id == 1 then
             bone_id = 3
 	else
             bone_id = 7
         end
     end
-	
-	if hitboxes[bone_id] == "leftarm" or hitboxes[bone_id] == "rightarm" then
-		rand = math.random(1,100)
-		if rand >= 92 then
-			bone_id = 13
-		end
-	end
-	
-	if ((hitboxes[bone_id] == "leftleg" or hitboxes[bone_id] == "rightleg") and math.random(1,100) <= 25) then
-		rand = math.random(1,3)
-		if rand == 1 then
-			bone_id = 12
-		elseif rand == 2 then
-			bone_id = 20
-		else
-			bone_id = 33	
-		end
-	end
 
     if hitboxes[bone_id] then
         last_damaged_hitbox=hitboxes[bone_id]
@@ -670,24 +654,20 @@ function actor_on_hit_callback(bone_id)
     else  -- if an unknown bone is hit, arms or torso are hit
         bone_id = math.random(1,3)
         if     bone_id == 1 then
-            bone_id = 35
-		elseif bone_id == 2 then
-			bone_id = 23
+            bone_id = 33
+        elseif bone_id == 2 then
+            bone_id = 23
 		elseif bone_id == 3 then
 			bone_id = 11
-		end
+        end
         last_damaged_hitbox=hitboxes[bone_id]
         text=hitboxes[bone_id]
     end
 
-    printf("! actor got hit in %s, id %s",text, bone_id)
+    --printf("! actor got hit in %s, id %s",text, bone_id)
 end
 
-function recieved_damage(amount, bone_id)
-	if grok_progressive_rad_damages.grok_rads == 1 then return end
-	
-	actor_on_hit_callback(bone_id)
-
+local function recieved_damage(amount)
 	local index=0
 	for k,v in pairs(health) do
 		index=index+1
@@ -720,13 +700,9 @@ function recieved_damage(amount, bone_id)
 	
 	
 	if choosen_hitbox=="head" then
-		if damage_head >= 8 then
-			damage_head = 7
-		end
-		
 		hud_blink_timer.head=time_global()
 		health.head=health.head-damage_head
---		if health.head<=0 then health.head=0 actor_menu.set_msg(1, "Head fatally damaged!", 8) end
+		if health.head<=0 then health.head=0 actor_menu.set_msg(1, "Head fatally damaged!", 8) end
 		utils_obj.save_var(db.actor,"health.head",health.head)
 		-- xcvb
 		if damage_head > (zzz_player_injuries_mcm.get_config("head_penalty_minimum_hp") - 1) then
@@ -735,56 +711,41 @@ function recieved_damage(amount, bone_id)
 		-------
 		
 	elseif choosen_hitbox=="torso" then
-		if damage >= 8 then
-			damage = 7
-		end
 		hud_blink_timer.torso=time_global()
 		health.torso=health.torso-damage
---		if health.torso<=0 then health.torso=0 actor_menu.set_msg(1, "Torso fatally damaged!", 8) end
+		if health.torso<=0 then health.torso=0 actor_menu.set_msg(1, "Torso fatally damaged!", 8) end
 		utils_obj.save_var(db.actor,"health.torso",health.torso)
 		
 	elseif choosen_hitbox=="leftarm" then
-		if damage >= 4 then
-			damage = 3
-		end
 		hud_blink_timer.leftarm=time_global()
 		health.leftarm=health.leftarm-damage
---		if health.leftarm<=0 then health.leftarm=0 actor_menu.set_msg(1, "Right arm damaged!", 8) end
+		if health.leftarm<=0 then health.leftarm=0 actor_menu.set_msg(1, "Right arm damaged!", 8) end
 		utils_obj.save_var(db.actor,"health.leftarm",health.leftarm)
 		
 	elseif choosen_hitbox=="rightarm" then
-		if damage >= 4 then
-			damage = 3
-		end
 		hud_blink_timer.rightarm=time_global()
 		health.rightarm=health.rightarm-damage
---		if health.rightarm<=0 then health.rightarm=0 actor_menu.set_msg(1, "Left arm damaged!", 8) end
+		if health.rightarm<=0 then health.rightarm=0 actor_menu.set_msg(1, "Left arm damaged!", 8) end
 		utils_obj.save_var(db.actor,"health.rightarm",health.rightarm)
 		
 	elseif choosen_hitbox=="leftleg" then
-		if damage >= 4 then
-			damage = 3
-		end
 		hud_blink_timer.leftleg=time_global()
 		health.leftleg=health.leftleg-damage
---		if health.leftleg<=0 then 
---			if health.rightleg>0 then
---				health.leftleg=0 actor_menu.set_msg(1, "Right leg damaged!", 8) 
---			end
---		end
+		if health.leftleg<=0 then 
+			if health.rightleg>0 then
+				health.leftleg=0 actor_menu.set_msg(1, "Right leg damaged!", 8) 
+			end
+		end
 		utils_obj.save_var(db.actor,"health.leftleg",health.leftleg)
 		
 	elseif choosen_hitbox=="rightleg" then
-		if damage >= 4 then
-			damage = 3
-		end
 		hud_blink_timer.rightleg=time_global()
 		health.rightleg=health.rightleg-damage
---		if health.rightleg<=0 then 
---			if health.leftleg>0 then
---				health.rightleg=0 actor_menu.set_msg(1, "Left leg damaged!", 8) 
---			end
---		end
+		if health.rightleg<=0 then 
+			if health.leftleg>0 then
+				health.rightleg=0 actor_menu.set_msg(1, "Left leg damaged!", 8) 
+			end
+		end
 		utils_obj.save_var(db.actor,"health.rightleg",health.rightleg)
 		
 	end
@@ -808,7 +769,6 @@ local progress_health_rightleg_time=nil
 local progress_health_leftleg_time=nil
 
 local scuffed_fix = false	
-local xml = nil
 local function HUDUpdate()
 	if showtexthud>=1 then --text
 		local staticname="body_health_system_text"
@@ -870,15 +830,15 @@ local function HUDUpdate()
 				if class=="main" and showparts then
 					str = str..colors[GetConditionFromFloat(health[array]/maxhp[array],array)]
 					for i=1,(preview.health[array] or health[array])-(preview.bonus[array] or timedhp[array]) do
-						str=str.."Â•"
+						str=str.."•"
 					end
 					str=str..colors.good
 					for i=1,(preview.bonus[array] or timedhp[array]) do
-						str=str.."Â•"
+						str=str.."•"
 					end
 					str=str..colors.blank
 					for i=1,maxhp[array]-(preview.health[array] or health[array]) do
-						str=str.."Â•"
+						str=str.."•"
 					end
 					local whatcolor="grey"
 					if health[array]<=4 then whatcolor="critical" end
@@ -900,11 +860,11 @@ local function HUDUpdate()
 					if db.actor.health>=1.0 then hp_in_ints=11 end
 					if db.actor.health<=0.0 then hp_in_ints=0 end
 					for i=1,hp_in_ints do
-						str=str.."Â•"
+						str=str.."•"
 					end
 					str=str..colors.blank
 					for i=1,11-hp_in_ints do
-						str=str.."Â•"
+						str=str.."•"
 					end
 					local whatcolor="grey"
 					if db.actor.health<=0.4 then whatcolor="critical" end
@@ -917,11 +877,11 @@ local function HUDUpdate()
 					if db.actor.power>0.98 then hp_in_ints=11 end
 					if db.actor.power<=0.0 then hp_in_ints=0 end
 					for i=1,hp_in_ints do
-						str=str.."Â•"
+						str=str.."•"
 					end
 					str=str..colors.blank
 					for i=1,11-hp_in_ints do
-						str=str.."Â•"
+						str=str.."•"
 					end
 					local whatcolor="grey"
 					-- if db.actor.power<=0.4 then whatcolor="critical" end
@@ -932,38 +892,38 @@ local function HUDUpdate()
 				if class=="limbs" and showparts then
 					str = str..colors[GetConditionFromFloat(health[array]/maxhp[array],array)]
 					for i=1,(preview.health[array] or health[array])-(preview.bonus[array] or timedhp[array]) do
-						str=str.."Â•"
+						str=str.."•"
 					end
 					str=str..colors.good
 					for i=1,(preview.bonus[array] or timedhp[array]) do
-						str=str.."Â•"
+						str=str.."•"
 					end
 					str=str..colors.blank
 					for i=1,maxhp[array]-(preview.health[array] or health[array]) do
-						str=str.."Â•"
+						str=str.."•"
 					end
 					str=str.." "
 					if (preview.health[array2] or health[array2])<maxhp[array2] then
 						str=str..colors.blank
 						for i=1,maxhp[array2]-(preview.health[array2] or health[array2]) do
-							str=str.."Â•"
+							str=str.."•"
 						end
 						str=str..colors.good
 						for i=1,(preview.bonus[array2] or timedhp[array2]) do
-							str=str.."Â•"
+							str=str.."•"
 						end
 						str = str..colors[GetConditionFromFloat(health[array2]/maxhp[array2],array2)]
 						for i=1,(preview.health[array2] or health[array2])-(preview.bonus[array2] or timedhp[array2]) do
-							str=str.."Â•"
+							str=str.."•"
 						end
 					else
 						str=str..colors.good
 						for i=1,(preview.bonus[array2] or timedhp[array2]) do
-							str=str.."Â•"
+							str=str.."•"
 						end
 						for i=1,(preview.health[array2] or health[array2])-(preview.bonus[array2] or timedhp[array2]) do
 							str = str..colors[GetConditionFromFloat(health[array2]/maxhp[array2],array2)]
-							str=str.."Â•"
+							str=str.."•"
 						end
 					end
 					local whatcolor="grey"
@@ -1054,17 +1014,9 @@ local function HUDUpdate()
 		end
 		
 		::otherhudparts::
-        if (xml == nil) then
-            xml = CScriptXmlInit()
-            xml:ParseFile("ui_body_health.xml")
-        end
 
 		local function ParamBar(barhandler,customstatic,barname,param,param_max,showbg)
-			local cs_name = hud:GetCustomStatic(customstatic) 
-    		if (cs_name ~= nil and barhandler == nil) then
-        		hud:RemoveCustomStatic(customstatic)
-        		cs_name = nil -- Force the creation block below to run
-    		end
+		
 			---- minimal bgs ----
 			local staticname 
 			if showbg then
@@ -1120,6 +1072,8 @@ local function HUDUpdate()
 			if (cs_name == nil) then 
 				if not (scuffed_fix) then
 					hud:AddCustomStatic(customstatic, true)
+					local xml = CScriptXmlInit()
+					xml:ParseFile("ui_body_health.xml")
 					cs_name = hud:GetCustomStatic(customstatic)
 					local w = cs_name:wnd()
 					barhandler = xml:InitProgressBar(barname, w)		
@@ -1190,7 +1144,7 @@ function worst_possible_fix()
 end
 
 local function on_key_press(dik)
-	if dik == HUD_TOGGLE_KEYBIND then
+	if dik == DIK_keys.DIK_H then
 		 -- if healthstatus then
 				-- healthstatus=false
 				-- xr_sound.set_sound_play(db.actor:id(), "pda_tips")
@@ -1286,9 +1240,23 @@ local function actor_on_footstep(material,power,hud_view,flags)
 		hit_power = (l_leg_power + r_leg_power) / 2
 
 	--	printf("hit_power: " .. (hit_power))
-		local chance_to_damage = math.random(1,100)
-		if (hit_power > 0) and (state_cooldown < time_global()) and (chance_to_damage <= chance_damage_on_footstep) then
-			play_actor_on_footstep_voice_over()
+		local file
+		local sound_play = math.random(1,100)
+		if (hit_power > 0) and (state_cooldown < time_global()) and (sound_play <= 13) then
+			if zzz_player_injuries_mcm.get_config("new_voice_sounds") then
+				local helmet = (db.actor:item_in_slot(12) or db.actor:get_current_outfit())
+				if helmet then
+					muffle = "m_"
+				else
+					muffle = ""
+				end
+				file = "bhs\\" .. muffle .. "pain_" .. sound_play
+			else
+				file = "actor\\pain_" .. sound_play
+			end
+
+			file_to_say = sound_object( file )
+			file_to_say:play(db.actor,0,sound_object.s2d)
 
 			level.add_pp_effector("blur_bhs.ppe", math.random(655808, 655820), false)
 
@@ -1301,24 +1269,6 @@ local function actor_on_footstep(material,power,hud_view,flags)
 	end
 
 
-end
-
-function play_actor_on_footstep_voice_over()
-	local sound_play = math.random(1,13)
-	if not zzz_player_injuries_mcm.get_config("new_voice_sounds") then
-		file = "actor\\pain_" .. sound_play
-	else
-		local helmet = (db.actor:item_in_slot(12) or db.actor:get_current_outfit())
-		if helmet then
-			muffle = "m_"
-		else
-			muffle = ""
-		end
-		file =  "bhs\\" .. muffle .. "pain_" .. sound_play
-	end
-
-	file_to_say = sound_object( file )
-	file_to_say:play(db.actor,0,sound_object.s2d)
 end
 ------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------
@@ -1499,104 +1449,104 @@ end
 
 function actor_on_update()
 	--actor_menu.set_msg("width:"..device().width.." height:"..device().height)
-		local newhealth=db.actor.health
-		local amount=myhealth-newhealth
---		if amount>0.0293 then
---			recieved_damage(amount)
---			--printf("! %s",amount
---			-- trace_this("Amount"..amount.."\n")
---		end
+	
+	local newhealth=db.actor.health
+	local amount=myhealth-newhealth
+	if amount>0.0293 then
+		recieved_damage(amount)
+		--printf("! %s",amount
+		-- trace_this("Amount"..amount.."\n")
+	end
 
-		
-		myhealth=db.actor.health
-		for k,v in pairs(health) do
-			if v>maxhp[k] then health[k]=maxhp[k] end
-			if v<=0 then health[k]=0 end
-			if health[k]<timedhp[k] then timedhp[k]=health[k] end
-		end
-		for k,v in pairs(preview.health) do
-			if v>maxhp[k] then preview.health[k]=maxhp[k] end
-			if v<=0 then preview.health[k]=0 end
-			if preview.health[k]<preview.bonus[k] then preview.bonus[k]=health[k] end
-		end
-		if time_global()-medkits.lastregen>medkits.timedhealth then
-			medkits.lastregen=time_global()
-			for k,v in pairs(timedhp) do
-				if v>0 then 
-					timedhp[k]=timedhp[k]-1
-					health[k]=health[k]-1
-				end
-				if v<0 then
-					timedhp[k]=0
-				end
+	
+	myhealth=db.actor.health
+	for k,v in pairs(health) do
+		if v>maxhp[k] then health[k]=maxhp[k] end
+		if v<=0 then health[k]=0 end
+		if health[k]<timedhp[k] then timedhp[k]=health[k] end
+	end
+	for k,v in pairs(preview.health) do
+		if v>maxhp[k] then preview.health[k]=maxhp[k] end
+		if v<=0 then preview.health[k]=0 end
+		if preview.health[k]<preview.bonus[k] then preview.bonus[k]=health[k] end
+	end
+	if time_global()-medkits.lastregen>medkits.timedhealth then
+		medkits.lastregen=time_global()
+		for k,v in pairs(timedhp) do
+			if v>0 then 
+				timedhp[k]=timedhp[k]-1
+				health[k]=health[k]-1
 			end
+			if v<0 then
+				timedhp[k]=0
+			end
+		end
+		SaveHealthStatus()
+	end
+	if regen>0 and init then
+		
+		if time_global()-timeregen>regen then
+			if health.head~=maxhp.head 				then health.head=health.head+1 end
+			if health.torso~=maxhp.torso 			then health.torso=health.torso+1 end
+			if health.rightarm~=maxhp.rightarm 		then health.rightarm=health.rightarm+1 end
+			if health.leftarm~=maxhp.leftarm 		then health.leftarm=health.leftarm+1 end
+			if health.rightleg~=maxhp.rightleg		then health.rightleg=health.rightleg+1 end
+			if health.leftleg~=maxhp.leftleg 		then health.leftleg=health.leftleg+1 end
 			SaveHealthStatus()
+			timeregen=time_global()
 		end
-		if regen>0 and init then
-			
-			if time_global()-timeregen>regen then
-				if health.head~=maxhp.head 				then health.head=health.head+1 end
-				if health.torso~=maxhp.torso 			then health.torso=health.torso+1 end
-				if health.rightarm~=maxhp.rightarm 		then health.rightarm=health.rightarm+1 end
-				if health.leftarm~=maxhp.leftarm 		then health.leftarm=health.leftarm+1 end
-				if health.rightleg~=maxhp.rightleg		then health.rightleg=health.rightleg+1 end
-				if health.leftleg~=maxhp.leftleg 		then health.leftleg=health.leftleg+1 end
-				SaveHealthStatus()
-				timeregen=time_global()
-			end
-		end
-		if not init then
+	end
+	if not init then
+	
+		display_width=device().width
+		display_height=device().height
+		local currentratio=display_width/display_height
 		
-			display_width=device().width
-			display_height=device().height
-			local currentratio=display_width/display_height
-			
-			local closest=999
-			local closestkey=999
-			for k,v in pairs(display.types) do
-				local d=math.abs(currentratio-v)
-				if d<closest then closest=d closestkey=k end
-			end
-			display_ratio=closestkey
-			--actor_menu.set_msg(display_ratio,1)
-			
-			LoadHealthStatus()
-			init=true
+		local closest=999
+		local closestkey=999
+		for k,v in pairs(display.types) do
+			local d=math.abs(currentratio-v)
+			if d<closest then closest=d closestkey=k end
 		end
+		display_ratio=closestkey
+		--actor_menu.set_msg(display_ratio,1)
 		
-		-- trace_this("Entre\n")
-		if not (zzz_player_injuries_mcm.get_config("TEXT_BASED_PATCH")) then
-			local hidehudonce=false
-			if hide_default_hud and not hidehudonce then
-				local maingameui = ActorMenu.get_maingame()
-				maingameui.m_ui_hud_states.m_ui_health_bar_show = false
-				maingameui.m_ui_hud_states.m_ui_stamina_bar_show = false
-				-- maingameui.m_ui_hud_states.m_ui_psy_bar_show = false
-				hidehudonce=true
-			end
+		LoadHealthStatus()
+		init=true
+	end
+	
+	-- trace_this("Entre\n")
+	if not (zzz_player_injuries_mcm.get_config("TEXT_BASED_PATCH")) then
+		local hidehudonce=false
+		if hide_default_hud and not hidehudonce then
+			local maingameui = ActorMenu.get_maingame()
+			maingameui.m_ui_hud_states.m_ui_health_bar_show = false
+			maingameui.m_ui_hud_states.m_ui_stamina_bar_show = false
+			-- maingameui.m_ui_hud_states.m_ui_psy_bar_show = false
+			hidehudonce=true
 		end
+	end
 
-		local speedvector=db.actor:get_movement_speed()
-		local movementspeed=(speedvector.x*speedvector.x)+(speedvector.y*speedvector.y)+(speedvector.z*speedvector.z)
+	local speedvector=db.actor:get_movement_speed()
+	local movementspeed=(speedvector.x*speedvector.x)+(speedvector.y*speedvector.y)+(speedvector.z*speedvector.z)
 
-		-- xcvb ---
-		limp_speed_slow()
-		torso_penalty()
-		bhs_concussion()
-		local curr_time = game.get_game_time()
-		if (prev_time == nil) then prev_time = curr_time end
-		if (curr_time:diffSec(prev_time) > 3) then
-			prev_time = curr_time
-			legs_limp()
-		end
-		----------------------------
-		HUDUpdate()
-		PartialDamage()
+	-- xcvb ---
+	limp_speed_slow()
+	torso_penalty()
+	bhs_concussion()
+	local curr_time = game.get_game_time()
+	if (prev_time == nil) then prev_time = curr_time end
+	if (curr_time:diffSec(prev_time) > 3) then
+		prev_time = curr_time
+		legs_limp()
+	end
+	----------------------------
+	HUDUpdate()
+	PartialDamage()
 end
 
 local function actor_on_before_death()
 	HUDUpdate()
-	--[[
 	health.head=maxhp.head
 	health.torso=maxhp.torso
 	health.rightarm=maxhp.rightarm
@@ -1609,11 +1559,7 @@ local function actor_on_before_death()
 	timedhp.leftarm=0
 	timedhp.rightleg=0
 	timedhp.leftleg=0
-	]]
 	SaveHealthStatus()
-	if volume_sound_x then
-		exec_console_cmd("snd_volume_eff " .. volume_sound_x)
-	end
 end
 
 -- base_notify = actor_menu.set_notification
@@ -1850,7 +1796,7 @@ function on_game_start()
 	RegisterScriptCallback("actor_on_weapon_zoom_out",actor_on_weapon_zoom_out) 	-- xcvb
 	RegisterScriptCallback("actor_on_footstep",actor_on_footstep)									-- xcvb
 	RegisterScriptCallback("actor_on_sleep",actor_on_sleep)
---	RegisterScriptCallback("actor_on_before_hit",actor_on_hit_callback)
+	RegisterScriptCallback("actor_on_hit_callback",actor_on_hit_callback)
 	RegisterScriptCallback("actor_on_update",actor_on_update)
 	RegisterScriptCallback("actor_on_before_death",actor_on_before_death)
 	RegisterScriptCallback("actor_on_item_use",actor_on_item_use)

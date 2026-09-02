@@ -189,7 +189,7 @@ utils_ui.UIInfoItem.Update = function(self, obj, sec, flags)
 			for idx, ci in pairs(self.CC["part"].cell) do
 				if ci:IsShown() then
 					local con = utils_item.get_cond_static(ci.flags.info)
-					local clr = utils_xml.get_color_con(ci.flags.info, true)
+					local clr = utils_xml.get_color_con_extended(ci.flags.info, ci.section, true)
 					ci:Add_CustomText( con, nil, nil, clr, fnt)
 				end
 			end

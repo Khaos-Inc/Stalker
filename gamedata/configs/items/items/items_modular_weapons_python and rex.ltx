@@ -1,0 +1,373 @@
+--\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ wpn_python \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+[python_barrel_101]:attachment_base
+kind  =  python
+inv_ui_sign				= pyt_bar
+visual						= w_att_huds\python_barrel_101	
+inv_name					= python_barrel_101
+inv_name_short			= python_barrel_101
+cost							= 700
+inv_weight					= 0.08
+inv_grid_x         = 15
+inv_grid_y         = 7
+1icon_layer = clean1_ico
+attachment_point = python_barrel|0,0,0|0,0,0
+attachment_slots =	rev_rail|wpn_body|0,0,0|0,0,0#barrel_rail|wpn_body|0,0,0|0,0,0
+item_tags =	barrel
+override_section = python_barrel_101_attributes
+[python_barrel_101_attributes]:pb_barrel_att
+fire_point = 0, 0, 0.02
+weapon_lenght				= 0.05
+rpm 								= 500
+bullet_speed				= 0.97
+k_hit_koeff						= 0.95
+fire_dispersion_base		= 0.23
+
+[python_barrel_152]:python_barrel_101
+kind  =  python
+inv_ui_sign				= pyt_bar+
+visual						= w_att_huds\python_barrel_152	
+inv_name					= python_barrel_152
+inv_name_short			= python_barrel_152
+cost							= 2900
+inv_weight					= 0.1
+inv_grid_x         = 16
+override_section			=	python_barrel_152_attributes
+[python_barrel_152_attributes]
+fire_point						= 0, 0, 0.07
+weapon_lenght				=	0.1
+rpm 								= 500
+bullet_speed				= 1.05
+fire_dispersion_base		= 0.18
+zoom_rotate_time = 0.06
+recoil_koeff            = -0.1
+inertia_koeff            = 1.1
+
+[python_barrel_152_pica]:python_barrel_152			;!!!!
+kind  =  python
+inv_ui_sign				= pyt_barP
+visual						= w_att_huds\python_barrel_203_pica
+description				= pica_8_up
+inv_name					= python_barrel_152_pica
+inv_name_short		= python_barrel_152_picaS
+cost							= 3500
+inv_weight				= 0.14
+inv_grid_y				= 8
+attachment_slots = pica_8|wpn_body|0,0.05424,0.096|0,0,0		;pica_14|wpn_body|0,0.053,0.096|0,0,0 _old203
+override_section =	python_barrel_152_pica_attributes
+[python_barrel_152_pica_attributes]:python_barrel_152_attributes
+rpm 								= 500
+bullet_speed				= 1.03
+fire_dispersion_base		= 0.16
+impair_koeff					= 0.8
+recoil_koeff            = -0.11
+
+[python_barrel_152_gts]:python_barrel_152
+kind  =  python
+inv_ui_sign				= pyt_gts
+visual						= w_att_huds\python_barrel_152_korth_gts
+description				= ar_hg_5n4
+inv_name					= python_barrel_152_korth_gts
+inv_name_short		= python_barrel_152_korth_gtsS
+cost							= 3300
+inv_weight				= 0.14
+inv_grid_width			= 2
+inv_grid_x				= 17
+inv_grid_y				= 8
+1icon_layer = clean2_ico
+attachment_slots = pica_6|wpn_body|0,0.0575,0.0371|0,0,0#pica_4|wpn_body|0,0.0575,0.155|0,0,0#pica_3|wpn_body|0,0.02616,0.17|0,0,180
+override_section =	python_barrel_152_gts_attributes
+
+[python_barrel_152_gts_attributes]
+fire_point = 0, 0, 0.07
+weapon_lenght = 0.1
+bullet_speed = 1.05
+zoom_rotate_time = 0.06
+recoil_koeff = -0.12
+inertia_koeff = 1.1
+rpm = 500
+fire_dispersion_base = 0.14
+[python_barrel_152_korth_gts_attributes]:python_barrel_152_attributes
+rpm								= 500
+fire_dispersion_base	= 0.14
+
+[python_barrel_152_stx]:python_barrel_152_gts
+kind  =  python
+inv_ui_sign				= pyt_stx
+visual						= w_att_huds\python_barrel_152_korth_stx
+description				= ar_hg_4
+inv_name					= python_barrel_152_korth_stx
+inv_name_short		= python_barrel_152_korth_stxS
+inv_weight				= 0.18
+inv_grid_width			= 2
+inv_grid_x				= 19
+attachment_slots = pica_4|wpn_body|0,0.05384,0.0958|0,0,0#pica_3|wpn_body|-0.01078,0.037877,0.18|0,0,-90#pica_3|wpn_body|0.01078,0.037877,0.18|0,0,90
+override_section =	python_barrel_152_stx_attributes
+
+cost = 4000
+[python_barrel_152_stx_attributes]
+fire_point = 0, 0, 0.07
+weapon_lenght = 0.1
+rpm = 500
+zoom_rotate_time = 0.06
+inertia_koeff = 1.1
+fire_dispersion_base = 0.13
+recoil_koeff = -0.13
+bullet_speed = 1.13
+k_hit_koeff = 1.05
+[python_barrel_152_korth_stx_attributes]:python_barrel_152_attributes
+fire_dispersion_base	= 0.13
+recoil_koeff            		= -0.4
+bullet_speed				= 1.13
+k_hit_koeff						= 1.05
+
+[python_barrel_203]:python_barrel_152
+kind  =  python
+inv_ui_sign				= pyt_barL+
+visual						= w_att_huds\python_barrel_203	
+inv_name					= python_barrel_203
+inv_name_short			= python_barrel_203
+cost							= 4500
+inv_weight					= 0.13
+inv_grid_x         			= 17
+inv_grid_y         			= 7
+override_section	=	python_barrel_203_attributes
+[python_barrel_203_attributes]
+fire_point						= 0, 0, 0.12
+weapon_lenght				=	0.15
+rpm 								= 500
+bullet_speed				= 1.13
+k_hit_koeff						= 1.05
+fire_dispersion_base		= 0.15
+zoom_rotate_time = 0.08
+recoil_koeff            = -0.15
+inertia_koeff            = 1.2
+
+[python_undb_rail]:attachment_base
+kind  =  python
+inv_ui_sign				= pyt_rail
+visual						= w_att_huds\python_barrel_rail
+description				= pica_3_up
+inv_name					= python_barrel_rail
+inv_name_short			= python_barrel_rail
+inv_grid_x         			= 15
+inv_grid_y         			= 8
+inv_weight 				= 0.04
+cost							= 1350
+attachment_point = barrel_rail|0,0,0|0,0,0
+attachment_slots = pica_3|wpn_body|0,0.0234,0.152|0,0,180
+item_tags =	rail
+override_section = python_undb_rail_attributes
+
+[python_undb_rail_attributes]
+
+[python_rail]:attachment_base
+kind  =  python
+inv_ui_sign				= rail_rev
+visual						= w_att_huds\rail_pica_python
+description				= pica_15_up
+inv_name					= rail_pica_python
+inv_name_short		= rail_pica_pythonS
+inv_grid_x         		= 19
+inv_grid_y         		= 7
+inv_weight 				= 0.08
+cost							= 1400
+attachment_point = rev_rail|0,0,0|0,0,0
+attachment_slots = pica_14|wpn_body|0,0.060627,0.029102|0,0,0		
+item_tags =	rail
+override_section = python_rail_attributes
+
+[python_rail_attributes]
+
+[python_scope]:python_rail
+kind  =  python
+inv_ui_sign				= lpld_m8
+visual						= w_att_huds\rail_scope_leupold_m8
+description				= rail_scope_leupold_m8_descr
+inv_name					= rail_scope_leupold_m8
+inv_name_short		= rail_scope_leupold_m8S 
+inv_grid_width			= 2
+inv_grid_x				= 20
+inv_weight 				= 0.24
+cost							= 14500
+attachment_slots		= aim_lens_pip|wpn_body|0,0.08433,0.072825|0,0,0#scope_sight|wpn_body|0,0.085975,0.120623|0,0,0		
+
+scope_texture          =
+scope_zoom_factor      = 50       ; strongest zoom / max magnification
+min_scope_zoom_factor  = 50  ; weakest zoom / low magnification
+scope_dynamic_zoom     = false
+zoom_step_count        = 5
+
+s3ds_reticle_size      = 1
+s3ds_eye_relief        = 1
+s3ds_exit_pupil        = 0.3
+s3ds_ffp               = 0
+s3ds_min_zoom_1x       = 1
+s3ds_image_type        = 0
+s3ds_reticle_type      = 0
+s3ds_dirt_intensity    = 0
+s3ds_chroma_power      = 0
+s3ds_lens_color        = lens_clear
+
+override_section		=	python_scope_attributes
+
+[python_scope_attributes]
+zoom_rotate_time = 0.02
+fire_dispersion_base_koeff = -0.05
+
+[python_grip]:attachment_base
+kind  =  python
+inv_ui_sign				= pyt_pg
+visual						= w_att_huds\python_grip
+inv_name					= python_grip
+inv_name_short			= python_gripS
+cost							= 350
+inv_weight					= 0.09
+inv_grid_x         			= 21
+inv_grid_y         			= 8
+attachment_point		= python_grip|0,0,0|0,0,0
+item_tags =	pgrip
+override_section = python_grip_attributes
+
+[python_grip_attributes]
+zoom_rotate_time = -0.03
+
+[python_grip_gts]:python_grip
+kind  =  python
+inv_ui_sign				= gts_pg
+visual						= w_att_huds\python_grip_korth_gts
+inv_name					= python_grip_korth_gts
+inv_name_short		= python_grip_korth_gtsS
+inv_weight				= 0.12
+inv_grid_x         		= 22
+override_section = python_grip_gts_attributes
+
+cost = 350
+[python_grip_gts_attributes]
+zoom_rotate_time = -0.03
+
+[python_grip_stx]:python_grip_gts
+kind  =  python
+inv_ui_sign				= gts_pg
+visual						= w_att_huds\python_grip_korth_stx
+inv_name					= python_grip_korth_stx
+inv_name_short		= python_grip_korth_stxS
+inv_weight				= 0.15
+inv_grid_x         		= 23
+override_section = python_grip_stx_attributes
+
+cost = 2350
+[python_grip_stx_attributes]
+zoom_rotate_time = -0.01
+recoil_koeff = -0.05
+
+[python_grip_sw]:python_grip
+kind  =  python
+inv_ui_sign				= gts_pg
+visual						= w_att_huds\python_grip_sw689
+inv_name					= python_grip_sw689
+inv_name_short		= python_grip_sw689S
+inv_weight				= 0.07
+inv_grid_x         		= 22
+inv_grid_y         		= 7
+override_section = python_grip_sw_attributes
+
+cost = 2500
+[python_grip_sw_attributes]
+zoom_rotate_time = -0.04
+recoil_koeff = -0.07
+
+[python_stock]:python_grip
+kind  =  python
+inv_ui_sign				= pyt_stock
+visual						= w_att_huds\python_stock
+inv_name					= python_stock
+inv_name_short			= python_stockS
+cost							= 4650
+inv_weight					= 0.55
+inv_grid_width     		= 2
+inv_grid_x         			= 24
+inv_grid_y         			= 7
+override_section = python_stock_attributes
+
+[python_stock_attributes]
+weapon_lenght = 0.35
+zoom_rotate_time = 0.03
+recoil_koeff = -0.3
+inertia_koeff = 0.6
+[python_stock_att]
+weapon_lenght = 0.35
+zoom_rotate_time = 0.03
+recoil_koeff            = -0.3
+inertia_koeff          = 0.6
+
+[python_stock_wood]:python_stock
+kind  =  python
+inv_ui_sign				= pyt_stk_W
+visual						= w_att_huds\python_stock_wood
+inv_name					= python_stock_wood
+inv_name_short			= python_stock_woodS
+inv_weight					= 0.66
+inv_grid_y         			= 8
+override_section = python_stock_wood_attributes
+
+cost = 3650
+[python_stock_wood_attributes]
+zoom_rotate_time = 0.07
+recoil_koeff = -0.22
+inertia_koeff = 0.6
+weapon_lenght = 0.35
+[python_stock_wood_att]:vintorez_stock_att
+weapon_lenght = 0.35
+
+[rex_barrel_102]:attachment_base
+kind  =  rex
+inv_ui_sign				= rex_bar
+visual						= w_att_huds\rex_barrel_102	
+inv_name					= rex_barrel_102
+inv_name_short		= rex_barrelS
+cost							= 700
+inv_weight				= 0.09
+inv_grid_x         		= 15
+inv_grid_y         		= 11
+1icon_layer = clean1_ico
+attachment_point = rex_barrel|0,0,0|0,0,0
+attachment_slots =	rev_rail|wpn_body|0,-0.00387,-0.01|0,0,0#rex_rail|wpn_body|0,0,0|0,0,0
+item_tags =	barrel
+override_section = rex_barrel_102_attributes
+[rex_barrel_102_attributes]:python_barrel_101_attributes
+rpm 								= 500
+fire_dispersion_base		= 0.22
+
+[rex_barrel_152]:rex_barrel_102
+kind  =  rex
+inv_ui_sign				= rex_bar+
+visual						= w_att_huds\rex_barrel_152	
+inv_name					= rex_barrel_152
+inv_name_short		= rex_barrel_152S
+cost							= 900
+inv_weight					= 0.12
+inv_grid_y         			= 12
+attachment_slots =	rev_rail|wpn_body|0,-0.004621,-0.002266|0,0,0#rex_rail|wpn_body|0,0,0.041|0,0,0
+override_section = rex_barrel_152_attributes
+[rex_barrel_152_attributes]:python_barrel_152_attributes
+rpm 								= 500
+fire_dispersion_base		= 0.17
+
+[rex_rail]:attachment_base
+kind  =  rex
+inv_ui_sign				= rex_rail
+visual						= w_att_huds\rex_rail
+description				= pica_3_up
+inv_name					= rex_rail
+inv_name_short		= rex_railS
+cost							= 500
+inv_weight				= 0.05
+inv_grid_x				= 16
+inv_grid_y				= 11
+attachment_point 	= rex_rail|0,0,0|0,0,0
+attachment_slots 	= pica_3|wpn_body|0,0.0091,0.147|0,0,180
+item_tags =	rail
+override_section = rex_rail_attributes
+
+[rex_rail_attributes]

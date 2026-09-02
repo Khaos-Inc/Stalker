@@ -1,0 +1,6394 @@
+--\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ wpn_ak \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+[ak_trigger]:attachment_base_ak
+kind  = ak_misc
+inv_ui_sign			= ak_trig
+visual					= w_att_huds\ak_trigger	
+inv_name				= ak_trigger
+inv_name_short	= ak_triggerS
+cost						= 1100
+inv_weight				= 0.12
+inv_grid_x         		= 6
+inv_grid_y         		= 0
+1icon_layer = clean_lub1_ico
+attachment_point	= ak_trigger|0,0,0|0,0,0
+item_tags = trigger
+override_section = ak_trigger_attributes
+
+[ak_trigger_attributes]
+fire_modes = -1, 1
+
+[ak_trigger_semi]:ak_trigger
+kind  = ak_misc
+inv_ui_sign			= ak_trigS
+visual					= w_att_huds\ak_trigger_semi	
+inv_name				= ak_trigger_semi
+inv_name_short		= ak_trigger_semiS
+cost						= 750
+inv_grid_x         		= 7
+override_section = ak_trigger_semi_attributes
+
+[ak_trigger_semi_attributes]
+zoom_rotate_time = -0.01
+
+[ak_zatvor]:attachment_base_ak
+kind  = ak_misc
+inv_ui_sign				= ak_bolt
+visual							= w_att_huds\ak_zatvor	
+inv_name					= ak_zatvor
+inv_name_short			= ak_zatvorS
+cost							= 1250
+inv_weight					= 0.33
+inv_grid_width			= 2
+inv_grid_x					= 13
+inv_grid_y					= 0
+1icon_layer = clean_lub2_ico
+attachment_point		= ak_zatvor|0,0,0|0,0,0
+attachment_slots		= ak_zatvor_rh|zatvor|0,0,0|0,0,0
+item_tags =	zatvor
+override_section = ak_zatvor_attributes
+
+[ak_zatvor_attributes]
+rpm = 600
+zoom_rotate_time = 0.09
+
+[ak_zatvor_gopak]:attachment_base_ak
+kind  = ak_misc
+inv_ui_sign				= gpk_bolt
+visual						= w_att_huds\ak_zatvor_gopak	
+inv_name					= ak_zatvor_gopak
+inv_name_short		= ak_zatvor_gopak
+cost							= 900
+inv_weight				= 0.24
+inv_grid_x         		= 39
+inv_grid_y         		= 19
+1icon_layer = clean_lub1_ico
+attachment_point	= ak_zatvor_gopak|0,0,0|0,0,0
+item_tags =	zatvor
+override_section = ak_zatvor_gopak_attributes
+[ak_zatvor_gopak_attributes]
+zoom_rotate_time = 0.08
+rpm = 160
+
+[ak_zatvor_old]:ak_zatvor
+kind  = ak_misc
+inv_ui_sign				= ak_bolt
+visual						= w_att_huds\ak_zatvor	
+inv_name					= ak_zatvor_old
+cost							= 1200
+inv_weight				= 0.34
+inv_grid_x				= 15
+override_section = ak_zatvor_old_attributes
+
+[ak_zatvor_old_attributes]
+zoom_rotate_time = 0.09
+rpm = 615
+
+[ak_zatvor_m]:ak_zatvor
+kind  = ak_misc
+inv_ui_sign				= akm_bolt
+visual						= w_att_huds\ak_zatvor_m	
+inv_name					= ak_zatvor_m
+inv_name_short		= ak_zatvor_m
+cost							= 1250
+inv_weight				= 0.31
+inv_grid_x         		= 10
+inv_grid_y         		= 21
+override_section = ak_zatvor_m_attributes
+
+[ak_zatvor_m_attributes]
+rpm = 600
+zoom_rotate_time = 0.09
+
+[308_zatvor]:ak_zatvor
+kind = saiga308
+inv_ui_sign				= 308_bolt
+visual						= w_att_huds\308_zatvor	
+inv_name					= 308_zatvor
+inv_name_short		= 308_zatvor
+cost							= 1250
+inv_weight					= 0.35
+inv_grid_x					= 15
+attachment_point		= 308_zatvor|0,0,0|0,0,0
+override_section = 308_zatvor_attributes
+
+[308_zatvor_attributes]
+rpm = 700
+zoom_rotate_time = 0.09
+
+[vpo123_zatvor]:ak_zatvor
+kind  = vpo123
+inv_ui_sign				= V54_bolt
+visual						= w_att_huds\vpo123_zatvor	
+inv_name					= vpo123_zatvor
+inv_name_short		= vpo123_zatvor
+cost							= 1400
+inv_weight				= 0.4
+inv_grid_y         		= 20
+attachment_point	= vpo123_zatvor|0,0,0|0,0,0
+override_section = vpo123_zatvor_attributes
+
+[vpo123_zatvor_attributes]
+rpm = 600
+zoom_rotate_time = 0.09
+
+[74_zatvor]:ak_zatvor
+kind  =  74_misc
+inv_ui_sign				= 74_bolt
+visual						= w_att_huds\74-105_zatvor	
+inv_name					= 74-105_zatvor
+inv_name_short			= 74-105_zatvorS
+inv_weight					= 0.31
+inv_grid_x					= 8
+attachment_point		= 74_zatvor|0,0,0|0,0,0
+override_section = 74_zatvor_attributes
+
+cost = 1250
+[74_zatvor_attributes]
+rpm = 650
+zoom_rotate_time = 0.08
+
+[rpm_650_zatvor_att]
+rpm = 650
+
+[74u_zatvor]:ak_zatvor
+kind  =  74_misc
+inv_ui_sign				= 74u_bolt
+visual						= w_att_huds\74u-ak9-gp_zatvor
+inv_name					= 74u-ak9-gp_zatvor
+inv_name_short			= 74u-ak9-gp_zatvorS
+inv_weight					= 0.26
+inv_grid_width			= 1
+inv_grid_x					= 10
+attachment_point		= 74u_zatvor|0,0,0|0,0,0
+override_section = 74u_zatvor_attributes
+
+cost = 1250
+[74u_zatvor_attributes]
+rpm = 700
+zoom_rotate_time = 0.08
+
+[pp19_zatvor]:ak_zatvor
+kind  =  vityaz
+inv_ui_sign				= pp19_bolt
+visual						= w_att_huds\bizon_zatvor
+inv_name					= pp19_zatvor
+inv_name_short			= pp19_zatvorS
+inv_weight					= 0.24
+inv_grid_width			= 1
+inv_grid_x					= 17
+attachment_point		= pp19_zatvor|0,0,0|0,0,0
+attachment_slots		= ak_zatvor_rh|zatvor|0,0,-0.044|0,0,0
+override_section = pp19_zatvor_attributes
+
+cost = 1250
+[pp19_zatvor_attributes]
+rpm = 700
+zoom_rotate_time = 0.07
+
+[saiga12_zatvor]:ak_zatvor
+kind  =  saiga12
+inv_ui_sign				= s12k_bolt
+visual						= w_att_huds\saiga12_zatvor	
+inv_name					= saiga12_zatvor
+inv_name_short			= saiga12_zatvorS
+cost							= 1400
+inv_weight					= 0.37
+inv_grid_x					= 18
+attachment_point		= saiga12_zatvor|0,0,0|0,0,0
+attachment_slots		= ak_zatvor_rh|zatvor|0.00137,0,0.00065|0,0,0
+override_section = saiga12_zatvor_attributes
+
+[saiga12_zatvor_attributes]
+rpm = 600
+zoom_rotate_time = 0.09
+
+[vepr12_zatvor]:saiga12_zatvor
+kind  =  vepr12
+inv_ui_sign				= vepr_bolt
+visual						= w_att_huds\vepr12_zatvor	
+inv_name					= vepr12_zatvor
+inv_name_short			= vepr12_zatvorS
+inv_weight					= 0.36
+inv_grid_x					= 20
+attachment_slots		= ak_zatvor_rh|zatvor|0,0,0|0,0,0
+override_section = vepr12_zatvor_attributes
+
+[vepr12_zatvor_attributes]
+rpm = 600
+zoom_rotate_time = 0.09
+
+[ak_spring_dmg]:attachment_base_ak
+kind  =  ak_misc
+inv_ui_sign				= spr_dmg
+visual						= w_att_huds\ak_spring_dmg	
+inv_name					= ak_spring_dmg
+inv_name_short			= ak_spring_dmgS
+cost							= 10
+inv_weight					= 0.1
+inv_grid_x         			= 39
+inv_grid_y         			= 13
+attachment_point		= ak_spring|0,0,0|0,0,0
+override_section = ak_spring_dmg_attributes
+
+[ak_spring_dmg_attributes]
+
+[ak_spring]:attachment_base_ak
+kind  =  ak_misc
+inv_ui_sign				= ak_spring
+visual						= w_att_huds\ak_spring	
+inv_name					= ak_spring
+inv_name_short			= ak_springS
+cost							= 500
+inv_weight					= 0.1
+inv_grid_width			= 2
+inv_grid_x					= 22
+inv_grid_y					= 0
+1icon_layer = clean2_ico
+attachment_point		= ak_spring|0,0,0|0,0,0
+attachment_slots		= ak_spring_recoil_buffer|wpn_body|0,0,0|0,0,0
+item_tags	=	spring
+override_section = ak_spring_attributes
+
+[ak_spring_attributes]
+
+[ak_spring_200]:ak_spring
+kind  =  ak_misc
+inv_ui_sign				= ak200_spr
+visual						= w_att_huds\ak_spring_ak200	
+inv_name					= ak_spring_ak200
+inv_weight				= 0.09
+inv_grid_x				= 37
+inv_grid_y				= 13
+attachment_point	= ak_spring_ak200|0,0,0|0,0,0
+attachment_slots		= ak_spring_recoil_buffer|wpn_body|0,0,0|0,0,0#ak_cover_ak200|wpn_body|0,0,0|0,0,0
+override_section = ak_spring_200_attributes
+
+[ak_spring_200_attributes]
+
+[ak_spring_100]:ak_spring
+kind  =  ak_misc
+inv_ui_sign				= 100_spring
+visual						= w_att_huds\ak_spring_100	
+inv_name					= ak_spring_100
+inv_grid_x					= 26
+override_section = ak_spring_100_attributes
+
+[ak_spring_100_attributes]
+
+[ak_spring_308]:ak_spring
+kind = saiga308
+inv_ui_sign				= 308_spring
+visual						= w_att_huds\ak_spring_308	
+inv_name					= ak_spring_308
+inv_grid_x					= 28
+override_section = ak_spring_308_attributes
+
+[ak_spring_308_attributes]
+
+[ak_spring_rpk]:ak_spring
+kind  =  ak_misc
+inv_ui_sign				= rpk_spring
+visual						= w_att_huds\ak_spring_rpk	
+inv_name					= ak_spring_rpk
+inv_grid_x					= 30
+override_section = ak_spring_rpk_attributes
+
+[ak_spring_rpk_attributes]
+
+[ak_spring_vepr12]:ak_spring
+inv_ui_sign				= vepr_spring
+visual						= w_att_huds\ak_spring_vepr12	
+inv_name					= ak_spring_vepr12
+inv_grid_x					= 32
+override_section = ak_spring_vepr12_attributes
+
+[ak_spring_vepr12_attributes]
+
+[ak_spring_rbb]:attachment_base_ak
+kind  =  ak_misc
+inv_ui_sign				= ak_buff
+visual						= w_att_huds\ak_spring_rbb	
+inv_name					= ak_spring_recoil_buffer
+inv_name_short			= ak_spring_recoil_bufferS
+cost							= 500
+inv_weight					= 0.05
+inv_grid_x					= 34
+inv_grid_y					= 0
+attachment_point = ak_spring_recoil_buffer|0,0,0|0,0,0
+item_tags	=	spring
+override_section = ak_spring_rbb_attributes
+
+[ak_spring_rbb_attributes]
+rpm_koeff = 0.08
+
+[ak_spring_rbg]:ak_spring_rbb
+visual						= w_att_huds\ak_spring_rbg	
+inv_grid_x					= 35
+override_section = ak_spring_rbg_attributes
+
+[ak_spring_rbg_attributes]
+rpm_koeff = 0.08
+
+[ak_spring_rbr]:ak_spring_rbb
+visual						= w_att_huds\ak_spring_rbr	
+inv_grid_x					= 36
+override_section = ak_spring_rbr_attributes
+
+[ak_spring_rbr_attributes]
+rpm_koeff = 0.08
+
+[ak_spring_rby]:ak_spring_rbb
+visual						= w_att_huds\ak_spring_rby	
+inv_grid_x					= 37
+override_section = ak_spring_rby_attributes
+
+[ak_spring_rby_attributes]
+rpm_koeff = 0.08
+
+[ak_zatvor_rh]:attachment_base_ak 
+kind  = ak_misc
+inv_ui_sign				= ak_rh
+visual						= w_att_huds\ak_zatvor_rh	
+inv_name					= ak_zatvor_rh
+inv_name_short			= ak_zatvor_rhS
+cost							= 500
+inv_weight					= 0.02
+inv_grid_x					= 38
+inv_grid_y					= 0
+attachment_point		= ak_zatvor_rh|0,0,0|0,0,0
+item_tags	=	zatvor
+override_section = ak_zatvor_rh_attributes
+
+[ak_zatvor_rh_attributes]
+zoom_rotate_time = -0.01
+
+[ak_zatvor_rh_armacon]:ak_zatvor_rh
+kind  = ak_misc
+inv_ui_sign				= ak_rh+
+visual						= w_att_huds\ak_zatvor_rh_armacon	
+inv_name					= ak_zatvor_rh_armacon
+cost							= 550
+inv_grid_x					= 39
+override_section = ak_zatvor_rh_armacon_attributes
+
+[ak_zatvor_rh_armacon_attributes]
+zoom_rotate_time = -0.01
+
+[ak_zatvor_rh_zenit]:ak_zatvor_rh
+kind  = ak_misc
+inv_ui_sign				= ak_rh+
+visual						= w_att_huds\ak_zatvor_rh_zenit_rp-1	
+inv_name					= ak_zatvor_rh_zenit_rp-1
+inv_name_short			= ak_zatvor_rh_zenit_rp-1S
+cost							= 600
+inv_grid_x					= 40
+override_section = ak_zatvor_rh_zenit_attributes
+
+[ak_zatvor_rh_zenit_attributes]
+zoom_rotate_time = -0.01
+
+[74_barrel]:attachment_base_ak
+kind  =  74_barrels
+inv_ui_sign				= 74_bar
+visual						= w_att_huds\74-101-3_barrel	
+inv_name					= 74_barrel
+inv_name_short			= 74_barrelS
+cost							= 1300
+inv_weight					= 0.25
+inv_grid_width			= 2
+inv_grid_x					= 6
+inv_grid_y					= 1
+1icon_layer = clean2_ico
+attachment_point = 74_barrel|0,0,0|0,0,0
+attachment_slots = 74_zatvor|zatvor|0,0,0|0,0,0#ak_gas_tube|wpn_body|0,0,0|0,0,0#74_front_sight_block|wpn_body|0,0,0|0,0,0#ak_hg_old|wpn_body|0,0,0|0,0,0#ak_rear_sight|wpn_body|0,0,0|0,0,0#ak_barrel_rod_|wpn_body|0,0,0|0,0,0#ak_cover|wpn_body|0,0,0|0,0,0#tac_mount|muzzle|0,0,-0.15|0,0,0#gp25|wpn_body|0,0,0|0,0,0#ak_spring|wpn_body|0,0,0|0,0,0
+item_tags = barrel
+override_section =	74_barrel_attributes
+[74_barrel_attributes]:ar_barrel_11_att
+fire_point	= 0, 0, 0.04
+weapon_lenght				=	0.3
+bullet_speed				= 1.1
+fire_dispersion_base		= 0.09
+
+recoil_koeff = -0.01
+inertia_koeff = 1.4
+zoom_rotate_time = 0.06
+[200_barrel]:74_barrel
+kind = ak_100_p
+inv_ui_sign				= ak200_bar
+visual						= w_att_huds\74-101-3_barrel_ak200
+inv_name					= 74_barrel_ak200
+inv_name_short		= 74_barrel_ak200S
+cost							= 1400
+inv_grid_y				= 21	
+attachment_slots		= 74_zatvor|zatvor|0,0,0|0,0,0#ak_gas_tube|wpn_body|0,0,0|0,0,0#74_front_sight_block|wpn_body|0,0,0|0,0,0#ak_hg_old|wpn_body|0,0,0|0,0,0#ak_rear_sight_night|wpn_body|0,0,0|0,0,0#ak_barrel_rod_|wpn_body|0,0,0|0,0,0#tac_mount|muzzle|0,0,-0.15|0,0,0#gp25|wpn_body|0,0,0|0,0,0#ak_spring_ak200|wpn_body|0,0,0|0,0,0
+override_section		= 200_barrel_attributes
+
+inv_weight = 0.25
+[200_barrel_attributes]
+fire_point = 0, 0, 0.04
+weapon_lenght = 0.3
+bullet_speed = 1.1
+fire_dispersion_base = 0.09
+zoom_rotate_time = 0.06
+recoil_koeff = -0.02
+inertia_koeff = 1.4
+rpm_koeff = 0.016
+
+[gepard_barrel]:74u_barrel
+kind  =  gepard
+inv_ui_sign					= gp_bar
+visual								= w_att_huds\gepard_barrel
+inv_name						= gepard_barrel
+inv_name_short			= gepard_barrelS
+attachment_point		= gepard_barrel|0,0,0|0,0,0
+attachment_slots		= 74u_zatvor|zatvor|0,0,-0.1102|0,0,0#74u_gas_tube|wpn_body|0,0,-0.1102|0,0,0#74u_hg_old|wpn_body|0,0,-0.1102|0,0,0#gepard_cover|wpn_body|0,0,0|0,0,0#74_muzzle|muzzle|0,0,0|0,0,0#ak_spring|wpn_body|0,0,-0.067|0,0,0
+item_tags = barrel
+override_section			=	gepard_barrel_attributes
+cost = 800
+inv_weight = 0.16
+[gepard_barrel_attributes]:ar_barrel_2_att 
+fire_point = 0, 0, 0.04
+weapon_lenght				=	0.2
+rpm_koeff						= 0.15
+bullet_speed				= 0.56
+k_hit_koeff						= 1.15
+fire_dispersion_base		= 0.15
+recoil_koeff             = -0.02
+
+[74u_barrel]:74_barrel
+inv_ui_sign				= 74u_bar
+visual						= w_att_huds\74u_barrel
+inv_name					= 74u_barrel
+inv_name_short			= 74u_barrelS
+cost							= 800
+inv_weight					= 0.16
+inv_grid_width			= 1
+inv_grid_x					= 8
+1icon_layer = clean1_ico
+attachment_slots = 74u_zatvor|zatvor|0,0,0|0,0,0#74u_gas_tube|wpn_body|0,0,0|0,0,0#74u_hg_old|wpn_body|0,0,0|0,0,0#74_muzzle|muzzle|0,0,-0.183|0,0,0#74u_cover|wpn_body|0,0,0|0,0,0#ak_spring|wpn_body|0,0,0|0,0,0
+override_section = 74u_barrel_attributes
+[74u_barrel_attributes]:aksu_aim_attributes,ar_barrel_2_att
+fire_point								= 0, 0, -0.14
+weapon_lenght					= 0.2
+bullet_speed              	= 0.94
+k_hit_koeff						= 0.85
+fire_dispersion_base		= 0.15
+
+aim_hud_offset_pos = -0.08, 0.0316, -0.1
+inertia_koeff = 1.1
+aim_hud_offset_rot = 0.01, 0.004, 0
+aimpoint_offset_y = 0.089140
+aim_hud_offset_rot_16x9 = 0.01, 0.004, 0
+recoil_koeff = -0.01
+zoom_rotate_time = 0.02
+aim_hud_offset_pos_16x9 = -0.08, 0.0316, -0.1
+[74_barrel_rpk]:74_barrel
+kind  =  74_barrels
+inv_ui_sign				= rpk74_bar
+visual						= w_att_huds\74_barrel_rpk
+inv_name					= 74_barrel_rpk
+inv_name_short			= 74_barrel_rpkS
+cost							= 1650
+inv_weight					= 0.6
+inv_grid_width			= 3
+inv_grid_x					= 9
+1icon_layer = clean3_ico
+attachment_point		= 74_barrel_rpk|0,0,0|0,0,0
+attachment_slots		= 74_zatvor|zatvor|0,0,0|0,0,0#ak_gas_tube|wpn_body|0,0,0|0,0,0#ak_hg_old|wpn_body|0,0,0|0,0,0#ak_rear_sight|wpn_body|0,0,0|0,0,0#ak_barrel_rod_rpk_|wpn_body|0,0,0|0,0,0#ak_front_sight_night|wpn_body|0,0,0.159|0,0,0#ak_cover|wpn_body|0,0,0|0,0,0#ak_barrel_rpk_bipods|wpn_body|0,0,0|0,0,0#ak_muzzle|muzzle|0,0,0.158|0,0,0#tac_mount|muzzle|0,0,-0.15|0,0,0#ak_spring|wpn_body|0,0,0|0,0,0
+override_section			=	74_barrel_rpk_attributes
+[74_barrel_rpk_attributes]:ar_barrel_16_att
+fire_point						= 0, 0, 0.18
+weapon_lenght				=	0.6
+rpm_koeff						= -0.076
+bullet_speed              	= 1.21
+k_hit_koeff						= 1.2
+fire_dispersion_base		= 0.06
+
+override_section = 05_muzzle_lenght_attributes
+recoil_koeff = -0.02
+inertia_koeff = 1.7
+zoom_rotate_time = 0.11
+[101_barrel]:74_barrel
+kind = ak_100_p
+inv_ui_sign					= 101_bar
+inv_name						= 101_barrel
+inv_name_short			= 101_barrelS
+cost								= 1350
+inv_weight					= 0.26
+attachment_point		= 100_barrel|0,0,0|0,0,0
+override_section			=	101_barrel_attributes
+[101_barrel_attributes]:74_barrel_attributes
+bullet_speed				= 1.13
+
+zoom_rotate_time = 0.06
+fire_point = 0, 0, 0.04
+recoil_koeff = -0.01
+fire_dispersion_base = 0.09
+inertia_koeff = 1.4
+weapon_lenght = 0.3
+[101_barrel_sag]:101_barrel
+kind = ak_100_p
+inv_ui_sign				= 101_bar
+visual						= w_att_huds\101_barrel_415_sag
+inv_name					= 101_barrel_415_sag
+inv_name_short		= 101_barrel_415_sagS
+inv_grid_x				= 11
+inv_grid_y				= 22
+cost							= 1400
+inv_weight				= 0.3
+attachment_slots		= 74_zatvor|zatvor|0,0,0|0,0,0#ak_hg_sag|wpn_body|0,0,0|0,0,0#ar_muzzle|muzzle|0,0,0|0,0,0#ak_spring|wpn_body|0,0,0|0,0,0#tac_mount|muzzle|0,0,-0.16|0,0,0	
+item_tags = barrel, gas
+override_section		=	101_barrel_sag_attributes
+[101_barrel_sag_attributes]:74_barrel_attributes
+rpm_koeff				= 0.08
+
+zoom_rotate_time = 0.06
+inertia_koeff = 1.4
+fire_point = 0, 0, 0.04
+recoil_koeff = -0.01
+fire_dispersion_base = 0.09
+bullet_speed = 1.1
+weapon_lenght = 0.3
+[ak_hg_mk3]:attachment_base_ak
+kind = ak_hg_short
+inv_ui_sign				= `````````ak_sag3
+visual						= w_att_huds\ak_hg_sag_mk3
+description				= ar_hg_20n17_mlok
+inv_name					= ak_hg_sag_mk3
+inv_name_short		= ak_hg_sag_mk3S
+inv_grid_width			= 2
+inv_grid_x				= 15
+inv_grid_y				= 22
+cost							= 3400
+inv_weight				= 0.66
+attachment_point 	= ak_hg_sag|0,0,0|0,0,0
+attachment_slots		= mlok|wpn_body|-0.0186,0.053,0.34|0,0,-90#mlok|wpn_body|0.0186,0.053,0.34|0,0,90#mlok_rail_grip|wpn_body|0,-0.012,0.038|0,0,0#pica_20|wpn_body|0,0.08363,-0.005|0,0,0#pica_17|wpn_body|0,0.08363,0.2|0,0,0#lock_bipods|wpn_body|0,0.023637,0.336|0,0,0
+override_section		= ak_hg_mk3_attributes
+[ak_hg_mk3_attributes]:c_attributes
+zoom_rotate_time	= 0.02
+recoil_koeff				= -0.02
+inertia_koeff			= 0.9
+
+[201_barrel]:200_barrel
+kind = ak_100_p
+inv_ui_sign					= ak201_bar
+inv_name						= 101_barrel_ak200
+inv_name_short			= 101_barrel_ak200S
+inv_weight					= 0.26
+attachment_point		= 100_barrel|0,0,0|0,0,0
+override_section			= 201_barrel_attributes
+
+cost = 1400
+[201_barrel_attributes]
+zoom_rotate_time = 0.06
+recoil_koeff = -0.02
+inertia_koeff = 1.4
+fire_point = 0, 0, 0.04
+weapon_lenght = 0.3
+fire_dispersion_base = 0.09
+bullet_speed = 1.14
+
+[102_barrel]:101_barrel
+kind = ak_100_p
+inv_ui_sign				= 102_bar
+visual						= w_att_huds\102-4-5_barrel
+inv_name					= 102_barrel
+inv_name_short		= 102_barrelS
+cost							= 900
+inv_weight				= 0.21
+inv_grid_x				= 12
+attachment_slots = 74_zatvor|zatvor|0,0,0|0,0,0#102_front_sight_block|wpn_body|0,0,0|0,0,0#ak_hg_old|wpn_body|0,0,0|0,0,0#ak_rear_sight|wpn_body|0,0,0|0,0,0#ak_barrel_rod_s_|wpn_body|0,0,0|0,0,0#ak_cover|wpn_body|0,0,0|0,0,0#tac_mount|muzzle|0,0,-0.16|0,0,0#gp25|wpn_body|0,0,0|0,0,0#ak_spring|wpn_body|0,0,0|0,0,0
+override_section = 102_barrel_attributes
+[102_barrel_attributes]:105_barrel_attributes
+bullet_speed              	= 1.06
+
+fire_point = 0, 0, -0.04
+recoil_koeff = -0.01
+inertia_koeff = 1.3
+weapon_lenght = 0.2
+k_hit_koeff = 0.9
+rpm_koeff = 0.047
+fire_dispersion_base = 0.12
+zoom_rotate_time = 0.05
+[102_barrel_sag]:102_barrel
+kind = ak_100_p
+inv_ui_sign				= 102_bar
+visual						= w_att_huds\101_barrel_315_sag
+inv_name					= 102_barrel_315_sag
+inv_name_short		= 102_barrel_315_sagS
+cost							= 1050
+inv_weight				= 0.26
+inv_grid_x				= 13
+inv_grid_y				= 22
+attachment_slots		= 74_zatvor|zatvor|0,0,0|0,0,0#ak_hg_sag|wpn_body|0,0,0|0,0,0#ar_muzzle|muzzle|0,0,-0.095|0,0,0#ak_spring|wpn_body|0,0,0|0,0,0
+item_tags = barrel, gas
+override_section 		= 102_barrel_sag_attributes
+[102_barrel_sag_attributes]:ar_barrel_8_att
+fire_point = 0, 0, -0.04
+weapon_lenght 					= 0.2
+rpm_koeff						= 0.154
+bullet_speed              	= 1.06
+k_hit_koeff						= 0.9
+fire_dispersion_base		= 0.12
+recoil_koeff             = -0.01
+
+inertia_koeff = 1.3
+zoom_rotate_time = 0.05
+[202_barrel]:102_barrel
+kind = ak_100_p
+inv_ui_sign				= ak202_bar
+visual						= w_att_huds\102-4-5_barrel_ak200
+inv_name					= 102_barrel_ak200
+inv_name_short		= 102_barrel_ak200S
+cost							= 950
+inv_grid_y				= 21		
+attachment_slots		= 74_zatvor|zatvor|0,0,0|0,0,0#102_front_sight_block|wpn_body|0,0,0|0,0,0#ak_hg_old|wpn_body|0,0,0|0,0,0#ak_rear_sight_night|wpn_body|0,0,0|0,0,0#ak_barrel_rod_s_|wpn_body|0,0,0|0,0,0#tac_mount|muzzle|0,0,-0.16|0,0,0#gp25|wpn_body|0,0,0|0,0,0#ak_spring_ak200|wpn_body|0,0,0|0,0,0
+override_section		= 202_barrel_attributes
+
+inv_weight = 0.21
+[202_barrel_attributes]
+fire_point = 0, 0, -0.04
+weapon_lenght = 0.2
+k_hit_koeff = 0.9
+fire_dispersion_base = 0.12
+bullet_speed = 1.06
+zoom_rotate_time = 0.05
+recoil_koeff = -0.02
+inertia_koeff = 1.3
+rpm_koeff = 0.077
+
+[100_barrel_rpk]:74_barrel_rpk
+kind = ak_100_p
+inv_ui_sign				= rpk201_bar
+inv_name					= 100_barrel_rpk
+inv_name_short		= 100_barrel_rpkS
+cost							= 1600
+attachment_point	= 100_barrel_rpk|0,0,0|0,0,0
+override_section		=	100_barrel_rpk_attributes
+[100_barrel_rpk_attributes]:74_barrel_rpk_attributes
+rpm_koeff				= -0.038
+bullet_speed			= 1.26
+
+[105_barrel]:102_barrel
+kind = ak_100_p
+inv_ui_sign				= 105_bar
+inv_name					= 105_barrel
+inv_name_short			= 105_barrelS
+cost							= 850
+inv_weight					= 0.2
+attachment_point		= 74_barrel|0,0,0|0,0,0
+attachment_slots		= 74_zatvor|zatvor|0,0,0|0,0,0#102_front_sight_block|wpn_body|0,0,0|0,0,0#ak_hg_old|wpn_body|0,0,0|0,0,0#ak_rear_sight|wpn_body|0,0,0|0,0,0#ak_barrel_rod_s_|wpn_body|0,0,0|0,0,0#ak_cover|wpn_body|0,0,0|0,0,0#tac_mount|muzzle|0,0,-0.16|0,0,0#gp25|wpn_body|0,0,0|0,0,0#ak_spring|wpn_body|0,0,0|0,0,0
+override_section = 105_barrel_attributes
+[105_barrel_attributes]:ar_barrel_8_att
+fire_point = 0, 0, -0.04
+weapon_lenght 					= 0.2
+rpm_koeff						= 0.047
+bullet_speed              	= 1.04
+k_hit_koeff						= 0.9
+fire_dispersion_base		= 0.12
+
+recoil_koeff = -0.01
+inertia_koeff = 1.3
+zoom_rotate_time = 0.05
+[205_barrel]:105_barrel
+kind = ak_100_p
+inv_ui_sign				= ak205_bar
+inv_name					= 74_barrel_ak205
+inv_name_short		= 74_barrel_ak205S
+cost							= 900
+attachment_slots		= 74_zatvor|zatvor|0,0,0|0,0,0#102_front_sight_block|wpn_body|0,0,0|0,0,0#ak_hg_old|wpn_body|0,0,0|0,0,0#ak_rear_sight_night|wpn_body|0,0,0|0,0,0#ak_barrel_rod_s_|wpn_body|0,0,0|0,0,0#tac_mount|muzzle|0,0,-0.16|0,0,0#gp25|wpn_body|0,0,0|0,0,0#ak_spring_ak200|wpn_body|0,0,0|0,0,0
+override_section		= 205_barrel_attributes
+
+inv_weight = 0.2
+[205_barrel_attributes]
+fire_point = 0, 0, -0.04
+weapon_lenght = 0.2
+rpm_koeff = 0.047
+bullet_speed = 1.04
+k_hit_koeff = 0.9
+zoom_rotate_time = 0.05
+recoil_koeff = -0.01
+inertia_koeff = 1.3
+fire_dispersion_base = 0.11
+
+[308_barrel_310]:74_barrel
+kind = saiga308
+inv_ui_sign				= s308_310mm
+visual						= w_att_huds\308_barrel_310
+inv_name					= 308_barrel_310
+inv_name_short			= 308_barrel_310S
+cost							= 1100
+inv_weight					= 0.23
+inv_grid_x					= 14
+attachment_point = 308_barrel|0,0,0|0,0,0
+attachment_slots = 308_zatvor|zatvor|0,0,0|0,0,0#102_front_sight_block|wpn_body|0,0,0|0,0,0#ak_hg_old|wpn_body|0,0,0|0,0,0#ak_rear_sight|wpn_body|0,0,0|0,0,0#ak_cover|wpn_body|0,0,0|0,0,0#tac_mount|wpn_body|0,0.045278,0.375|0,0,0#ak_spring|wpn_body|0,0,0|0,0,0
+override_section = 308_barrel_310_attributes
+[308_barrel_310_attributes]:ar_barrel_9_att
+fire_point = 0, 0, -0.04
+weapon_lenght 				= 0.2
+bullet_speed				= 0.88
+k_hit_koeff						= 0.8
+fire_dispersion_base		= 0.12
+
+recoil_koeff = -0.06
+inertia_koeff = 1.3
+zoom_rotate_time = 0.05
+[308_barrel_370]:308_barrel_310
+kind = saiga308
+inv_ui_sign				= s308_370mm
+visual						= w_att_huds\308_barrel_370
+inv_name					= 308_barrel_370
+inv_name_short			= 308_barrel_370S
+cost							= 1200
+inv_weight					= 0.3
+inv_grid_x					= 16
+attachment_slots		= 308_zatvor|zatvor|0,0,0|0,0,0#ak_gas_tube|wpn_body|0,0,0|0,0,0#ak_muzzle|muzzle|0,0,-0.037|0,0,0#ak_hg_old|wpn_body|0,0,0|0,0,0#ak_rear_sight|wpn_body|0,0,0|0,0,0#ak_cover|wpn_body|0,0,0|0,0,0#tac_mount|muzzle|0,0,-0.16|0,0,0#ak_spring|wpn_body|0,0,0|0,0,0
+override_section			=	308_barrel_370_attributes
+[308_barrel_370_attributes]:ar_barrel_11_att
+fire_point						= 0, 0, -0.01
+weapon_lenght				=	0.3
+rpm_koeff						= -0.03
+bullet_speed				= 0.89
+k_hit_koeff						= 0.85
+fire_dispersion_base		= 0.12
+
+recoil_koeff = -0.07
+inertia_koeff = 1.4
+zoom_rotate_time = 0.06
+[308_barrel_415]:308_barrel_310
+kind = saiga308
+inv_ui_sign				= s308_415mm
+visual						= w_att_huds\308_barrel_415
+inv_name					= 308_barrel_415
+inv_name_short			= 308_barrel_415S
+cost							= 1400
+inv_weight					= 0.32
+inv_grid_x					= 18
+attachment_slots		= 308_zatvor|zatvor|0,0,0|0,0,0#ak_gas_tube|wpn_body|0,0,0|0,0,0#74_front_sight_block|wpn_body|0,0,0|0,0,0#ak_hg_old|wpn_body|0,0,0|0,0,0#ak_rear_sight|wpn_body|0,0,0|0,0,0#ak_cover|wpn_body|0,0,0|0,0,0#tac_mount|wpn_body|0,0.045278,0.375|0,0,0#ak_spring|wpn_body|0,0,0|0,0,0
+override_section			=	308_barrel_415_attributes
+[308_barrel_415_attributes]:ar_barrel_12_1_att
+fire_point	= 0, 0, 0.04
+weapon_lenght				=	0.3
+rpm_koeff						= -0.07
+bullet_speed				= 0.93
+k_hit_koeff						= 0.9
+fire_dispersion_base		= 0.09
+
+recoil_koeff = -0.08
+inertia_koeff = 1.4
+zoom_rotate_time = 0.07
+[308_barrel_550]:308_barrel_310
+kind = saiga308
+inv_ui_sign				= s308_550mm
+visual						= w_att_huds\308_barrel_550
+inv_name					= 308_barrel_550
+inv_name_short			= 308_barrel_550S
+cost							= 1650
+inv_weight					= 0.59
+inv_grid_width			= 3
+inv_grid_x					= 20
+1icon_layer = clean3_ico
+attachment_slots		= 308_zatvor|zatvor|0,0,0|0,0,0#ak_gas_tube|wpn_body|0,0,0|0,0,0#ak_muzzle|muzzle|0,0,0.125|0,0,0#ak_hg_old|wpn_body|0,0,0|0,0,0#ak_rear_sight|wpn_body|0,0,0|0,0,0#ak_front_sight_night|wpn_body|0,0,0.1255|0,0,0#ak_cover|wpn_body|0,0,0|0,0,0#tac_mount|muzzle|0,0,-0.16|0,0,0#ak_spring|wpn_body|0,0,0|0,0,0
+override_section			=	308_barrel_550_attributes
+[308_barrel_550_attributes]:ar_barrel_16_att
+fire_point						= 0, 0, 0.16
+weapon_lenght				=	0.55
+rpm_koeff						= -0.14
+bullet_speed				= 1
+fire_dispersion_base		= 0.07
+
+override_section = 05_muzzle_lenght_attributes
+recoil_koeff = -0.09
+inertia_koeff = 1.7
+zoom_rotate_time = 0.11
+[308_barrel_650]:308_barrel_310
+kind = saiga308
+inv_ui_sign				= s308_650mm
+visual						= w_att_huds\308_barrel_650
+inv_name					= 308_barrel_650_vepr_super
+inv_name_short			= 308_barrel_650_vepr_superS
+cost							= 1950
+inv_weight					= 0.74
+inv_grid_width     		= 3
+inv_grid_x         			= 12
+inv_grid_y         			= 20
+1icon_layer = clean3_ico
+attachment_slots		= 308_zatvor|zatvor|0,0,0|0,0,0#ak_gas_tube|wpn_body|0,0,0|0,0,0#ak_muzzle|muzzle|0,0,0.215|0,0,0#ak_hg_old|wpn_body|0,0,0|0,0,0#ak_rear_sight|wpn_body|0,0,0|0,0,0#ak_cover|wpn_body|0,0,0|0,0,0#tac_mount|muzzle|0,0,-0.16|0,0,0#ak_spring|wpn_body|0,0,0|0,0,0
+override_section			=	308_barrel_650_attributes
+[308_barrel_650_attributes]:ar_barrel_17_att
+fire_point						= 0, 0, 0.25
+weapon_lenght				=	0.65
+rpm_koeff						= -0.2
+bullet_speed				= 1.06
+k_hit_koeff						= 1.05
+fire_dispersion_base		= 0.05
+
+override_section = ar_barrel_17_att
+recoil_koeff = -0.1
+inertia_koeff = 1.7
+zoom_rotate_time = 0.11
+[ar_barrel_17_att]
+zoom_rotate_time = 0.11
+recoil_koeff             = -0.37
+inertia_koeff            = 1.7
+
+[vpo123_barrel_415]:74_barrel
+kind  = vpo123
+inv_ui_sign				= vpo123_415mm
+visual						= w_att_huds\vpo123_barrel_415
+inv_name					= vpo123_barrel_415
+inv_name_short		= vpo123_barrelS
+cost							= 1800
+inv_weight				= 0.4
+inv_grid_x         		= 17
+inv_grid_y				= 20
+attachment_point	= vpo123_barrel|0,0,0|0,0,0
+attachment_slots		= vpo123_zatvor|zatvor|0,0,0|0,0,0#ak_gas_tube|wpn_body|0,0,0|0,0,0#ak_muzzle|muzzle|0,0,0|0,0,0#ak_hg_old|wpn_body|0,0,0|0,0,0#ak_rear_sight|wpn_body|0,0,0|0,0,0#ak_front_sight_night|wpn_body|0,0,0|0,0,0#vpo123_cover|wpn_body|0,0,0|0,0,0#tac_mount|muzzle|0,0,-0.16|0,0,0#ak_spring|wpn_body|0,0,0|0,0,0
+override_section		=	vpo123_barrel_415_attributes
+[vpo123_barrel_415_attributes]:ar_barrel_13_att
+fire_point	= 0, 0, 0.04
+weapon_lenght				=	0.3
+bullet_speed				= 0.94
+k_hit_koeff						= 0.85
+fire_dispersion_base		= 0.09
+
+recoil_koeff = -0.06
+inertia_koeff = 1.5
+zoom_rotate_time = 0.08
+[vpo123_barrel_520]:vpo123_barrel_415
+kind  = vpo123
+inv_ui_sign				= vpo123_520mm
+visual						= w_att_huds\vpo123_barrel_520
+inv_name					= vpo123_barrel_520
+cost							= 2150
+inv_weight				= 0.55
+inv_grid_width     	= 3
+inv_grid_x         		= 19
+1icon_layer = clean3_ico
+attachment_slots		= vpo123_zatvor|zatvor|0,0,0|0,0,0#ak_gas_tube|wpn_body|0,0,0|0,0,0#ak_muzzle|muzzle|0,0,0.098|0,0,0#ak_hg_old|wpn_body|0,0,0|0,0,0#ak_rear_sight|wpn_body|0,0,0|0,0,0#vpo123_cover|wpn_body|0,0,0|0,0,0#tac_mount|wpn_body|0,0.045278,0.375|0,0,0#ak_spring|wpn_body|0,0,0|0,0,0
+override_section			=	vpo123_barrel_520_attributes
+[vpo123_barrel_520_attributes]:ar_barrel_16_att
+fire_point					= 0, 0, 0.13
+weapon_lenght				=	0.45
+rpm_koeff						= -0.1
+bullet_speed				= 0.98
+k_hit_koeff						= 0.95
+fire_dispersion_base		= 0.07
+
+override_section = 05_muzzle_lenght_attributes
+recoil_koeff = -0.07
+inertia_koeff = 1.7
+zoom_rotate_time = 0.11
+[vpo123_barrel_590]:vpo123_barrel_520
+kind  = vpo123
+inv_ui_sign				= vpo123_520mm
+visual						= w_att_huds\vpo123_barrel_590
+inv_name					= vpo123_barrel_590
+cost							= 2400
+inv_weight				= 0.64
+inv_grid_x         		= 22
+attachment_slots		= vpo123_zatvor|zatvor|0,0,0|0,0,0#ak_gas_tube|wpn_body|0,0,0|0,0,0#ak_muzzle|muzzle|0,0,0.1578|0,0,0#ak_hg_old|wpn_body|0,0,0|0,0,0#ak_rear_sight|wpn_body|0,0,0|0,0,0#vpo123_cover|wpn_body|0,0,0|0,0,0#tac_mount|muzzle|0,0,-0.16|0,0,0#ak_spring|wpn_body|0,0,0|0,0,0
+override_section		=	vpo123_barrel_590_attributes
+[vpo123_barrel_590_attributes]:ar_barrel_17_att
+fire_point						= 0, 0, 0.18
+weapon_lenght				=	0.6
+rpm_koeff						= -0.15
+bullet_speed				= 1.01
+fire_dispersion_base		= 0.06
+
+recoil_koeff = -0.08
+inertia_koeff = 1.7
+zoom_rotate_time = 0.11
+[vpo123_barrel_700]:vpo123_barrel_520
+kind  = vpo123
+inv_ui_sign				= vpo123_700mm
+visual						= w_att_huds\vpo123_barrel_700
+inv_name					= vpo123_barrel_700
+cost							= 2750
+inv_weight				= 0.85
+inv_grid_x         		= 25
+attachment_slots		= vpo123_zatvor|zatvor|0,0,0|0,0,0#ak_gas_tube|wpn_body|0,0,0|0,0,0#ak_muzzle|muzzle|0,0,0.2605|0,0,0#ak_hg_old|wpn_body|0,0,0|0,0,0#ak_rear_sight|wpn_body|0,0,0|0,0,0#vpo123_cover|wpn_body|0,0,0|0,0,0#tac_mount|wpn_body|0,0.045278,0.375|0,0,0#ak_spring|wpn_body|0,0,0|0,0,0
+override_section		=	vpo123_barrel_700_attributes
+[vpo123_barrel_700_attributes]:ar_barrel_18_att
+fire_point						= 0, 0, 0.29
+weapon_lenght			=	0.73
+rpm_koeff						= -0.25
+bullet_speed				= 1.06
+k_hit_koeff						= 1.1
+fire_dispersion_base		= 0.04
+
+recoil_koeff = -0.1
+[ak_barrel]:74_barrel
+kind  = ak_barrels
+inv_ui_sign				= ak_bar
+visual						= w_att_huds\ak_barrel
+inv_name					= ak_barrel
+inv_name_short			= ak_barrelS
+cost							= 1350
+inv_weight					= 0.3
+inv_grid_x					= 23
+attachment_point		= ak_barrel|0,0,0|0,0,0
+attachment_slots = ak_zatvor|zatvor|0,0,0|0,0,0#ak_gas_tube|wpn_body|0,0,0|0,0,0#ak_muzzle|muzzle|0,0,0|0,0,0#ak_hg_old|wpn_body|0,0,0|0,0,0#ak_rear_sight|wpn_body|0,0,0|0,0,0#ak_front_sight_night|wpn_body|0,0,0|0,0,0#ak_barrel_rod_|wpn_body|0,0,0|0,0,0#ak_cover|wpn_body|0,0,0|0,0,0#tac_mount|muzzle|0,0,-0.16|0,0,0#gp25|wpn_body|0,0,0|0,0,0#ak_spring|wpn_body|0,0,0|0,0,0
+override_section = ak_barrel_attributes
+[ak_barrel_attributes]:ar_barrel_12_1_att
+fire_point	= 0, 0, 0.04
+weapon_lenght				=	0.3
+bullet_speed				= 0.89
+fire_dispersion_base		= 0.1
+
+recoil_koeff = -0.01
+inertia_koeff = 1.4
+zoom_rotate_time = 0.07
+[ak_barrel_gopak]:ak_barrel
+kind  = ak_barrels
+inv_ui_sign				= gopak
+visual						= w_att_huds\ak_barrel_gopak
+inv_name					= ak_barrel_gopak
+inv_name_short		= ak_barrel_gopakS
+cost							= 3400
+inv_weight				= 2.03
+inv_grid_width     	= 3
+inv_grid_x         		= 35
+inv_grid_y         		= 20
+1icon_layer = clean3_ico
+attachment_slots = ak_zatvor_gopak|zatvor|0,0,0|0,0,0#ak_rear_sight|wpn_body|0,0,0|0,0,0#ak_barrel_gopak_bipods|wpn_body|0,0,0|0,0,0#ak_cover|wpn_body|0,0,0|0,0,0#ak_spring|wpn_body|0,0,0|0,0,0
+override_section =	ak_barrel_gopak_attributes
+[ak_barrel_gopak_attributes]:silencer_base_attributes,ar_barrel_18_att
+fire_point					= 0, 0, 0.12
+weapon_lenght				=	0.55
+bullet_speed				= 1
+k_hit_koeff						= 2.0
+fire_dispersion_base		= 0.07
+zoom_rotate_time = 0.07
+
+silencer_x = 1
+silencer_y = 1
+silencer_name = wpn_addon_silencer
+silencer_status = 1
+[ak_barrel_m]:ak_barrel
+inv_ui_sign				= akm_bar
+visual						= w_att_huds\ak_barrel_m
+inv_name					= ak_barrel_m
+inv_name_short			= ak_barrel_mS
+inv_weight					= 0.29
+inv_grid_x					= 25
+override_section			=	ak_barrel_m_attributes
+cost = 1350
+[ak_barrel_m_attributes]:ak_barrel_attributes,ar_barrel_12_att
+fire_dispersion_base		= 0.09
+
+override_section = ar_barrel_12_att
+zoom_rotate_time = 0.06
+fire_point = 0, 0, 0.04
+inertia_koeff = 1.4
+recoil_koeff = -0.01
+bullet_speed = 0.89
+weapon_lenght = 0.3
+[ar_barrel_12_att]
+zoom_rotate_time = 0.06
+recoil_koeff             = -0.28
+inertia_koeff            = 1.4
+
+[ak_barrel_zastava]:ak_barrel_m
+inv_ui_sign				= m05_bar
+inv_name					= ak_barrel_zastava
+inv_name_short		= ak_barrel_zastavaS
+inv_weight					= 0.3
+attachment_point		= ak_barrel_rpk|0,0,0|0,0,0
+override_section			=	ak_barrel_zastava_attributes
+cost = 1350
+[ak_barrel_zastava_attributes]:ak_barrel_attributes
+bullet_speed	= 0.9
+fire_dispersion_base		= 0.09
+
+fire_point = 0, 0, 0.04
+zoom_rotate_time = 0.07
+recoil_koeff = -0.01
+inertia_koeff = 1.4
+weapon_lenght = 0.3
+[ak_barrel_amd65]:ak_barrel
+inv_ui_sign				= md65_bar
+visual						= w_att_huds\ak_barrel_amd65
+inv_name					= ak_barrel_amd65
+inv_name_short			= ak_barrel_amd65S
+cost							= 1200
+inv_weight					= 0.27
+inv_grid_x					= 27
+attachment_slots		= 74u_zatvor|zatvor|0,0,0|0,0,0#74u_gas_tube|wpn_body|0,0,0.0257|0,0,0#ak_muzzle|muzzle|0,0,-0.0893|0,0,0#ak_hg_old|wpn_body|0,0,0|0,0,0#ak_rear_sight|wpn_body|0,0,0|0,0,0#ak_front_sight_night|wpn_body|0,0,-0.0888|0,0,0#ak_barrel_rod_s_|wpn_body|0,0,0|0,0,0#ak_cover|wpn_body|0,0,0|0,0,0#ak_spring|wpn_body|0,0,0|0,0,0
+override_section			=	ak_barrel_amd65_attributes
+[ak_barrel_amd65_attributes]:ar_barrel_9_att
+fire_point = 0, 0, -0.04
+weapon_lenght 					= 0.2
+rpm_koeff						= -0.057
+bullet_speed				= 0.84
+k_hit_koeff						= 0.97
+fire_dispersion_base		= 0.13
+
+recoil_koeff = -0.01
+inertia_koeff = 1.3
+zoom_rotate_time = 0.05
+[ak_barrel_amd65_ns]:ak_barrel_amd65
+visual						= w_att_huds\ak_barrel_amd65_ns
+inv_name					= ak_barrel_amd65_ns
+cost							= 1100
+inv_weight					= 0.24
+inv_grid_y         = 21
+attachment_slots		= 74u_zatvor|zatvor|0,0,0|0,0,0#74u_gas_tube|wpn_body|0,0,0.0257|0,0,0#ak_muzzle|muzzle|0,0,-0.0893|0,0,0#ak_hg_old|wpn_body|0,0,0|0,0,0#ak_rear_sight|wpn_body|0,0,0|0,0,0#ak_barrel_rod_s_|wpn_body|0,0,0|0,0,0#ak_cover|wpn_body|0,0,0|0,0,0#ak_spring|wpn_body|0,0,0|0,0,0
+override_section = ak_barrel_amd65_ns_attributes
+
+[ak_barrel_amd65_ns_attributes]
+zoom_rotate_time = 0.05
+recoil_koeff = -0.01
+inertia_koeff = 1.3
+fire_point = 0, 0, -0.04
+weapon_lenght = 0.2
+rpm_koeff = -0.057
+bullet_speed = 0.84
+k_hit_koeff = 0.97
+fire_dispersion_base = 0.13
+
+[ak_barrel_msu]:74u_barrel
+kind  = ak_barrels
+inv_ui_sign				= 7.62_su
+inv_name					= akmsu_barrel
+inv_name_short			= akmsu_barrelS
+cost							= 950
+inv_weight					= 0.18
+attachment_point = ak_barrel|0,0,0|0,0,0
+override_section = ak_barrel_msu_attributes
+[ak_barrel_msu_attributes]:74u_barrel_attributes
+rpm_koeff						= 0.1
+bullet_speed					= 0.69
+k_hit_koeff						= 0.9
+
+fire_point = 0, 0, -0.14
+aim_hud_offset_pos = -0.08, 0.0316, -0.1
+inertia_koeff = 1.1
+weapon_lenght = 0.2
+aimpoint_offset_y = 0.089140
+zoom_rotate_time = 0.02
+aim_hud_offset_pos_16x9 = -0.08, 0.0316, -0.1
+recoil_koeff = -0.01
+fire_dispersion_base = 0.15
+aim_hud_offset_rot = 0.01, 0.004, 0
+aim_hud_offset_rot_16x9 = 0.01, 0.004, 0
+[103_barrel]:74_barrel
+kind = ak_100_p
+inv_ui_sign				= 103_bar
+inv_name					= 103_barrel
+inv_name_short			= 103_barrelS
+inv_weight					= 0.29
+attachment_point		= ak_barrel|0,0,0|0,0,0
+attachment_slots		= ak_zatvor|zatvor|0,0,0|0,0,0#ak_gas_tube|wpn_body|0,0,0|0,0,0#74_front_sight_block|wpn_body|0,0,0|0,0,0#ak_hg_old|wpn_body|0,0,0|0,0,0#ak_rear_sight|wpn_body|0,0,0|0,0,0#ak_barrel_rod_|wpn_body|0,0,0|0,0,0#ak_cover|wpn_body|0,0,0|0,0,0#tac_mount|muzzle|0,0,-0.16|0,0,0#gp25|wpn_body|0,0,0|0,0,0#ak_spring|wpn_body|0,0,0|0,0,0
+override_section = 103_barrel_attributes
+cost = 1300
+[103_barrel_attributes]:ak_barrel_attributes,ar_barrel_12_att
+rpm_koeff 		= 0.084
+fire_dispersion_base		= 0.09
+
+zoom_rotate_time = 0.06
+fire_point = 0, 0, 0.04
+inertia_koeff = 1.4
+recoil_koeff = -0.01
+bullet_speed = 0.89
+weapon_lenght = 0.3
+[203_barrel]:200_barrel
+kind = ak_100_p
+inv_ui_sign				= ak203_bar
+inv_name					= 103_barrel_ak200
+inv_name_short		= 103_barrel_ak200S
+inv_weight				= 0.29
+attachment_point	= ak_barrel|0,0,0|0,0,0
+attachment_slots		= ak_zatvor|zatvor|0,0,0|0,0,0#ak_gas_tube|wpn_body|0,0,0|0,0,0#74_front_sight_block|wpn_body|0,0,0|0,0,0#ak_hg_old|wpn_body|0,0,0|0,0,0#ak_rear_sight_night|wpn_body|0,0,0|0,0,0#ak_barrel_rod_|wpn_body|0,0,0|0,0,0#tac_mount|muzzle|0,0,-0.16|0,0,0#gp25|wpn_body|0,0,0|0,0,0#ak_spring_ak200|wpn_body|0,0,0|0,0,0
+override_section		= 203_barrel_attributes
+
+cost = 1400
+[203_barrel_attributes]
+fire_point = 0, 0, 0.04
+weapon_lenght = 0.3
+zoom_rotate_time = 0.06
+recoil_koeff = -0.02
+inertia_koeff = 1.4
+rpm_koeff = 0.084
+bullet_speed = 0.9
+fire_dispersion_base = 0.17
+
+[104_barrel]:102_barrel
+kind = ak_100_p
+inv_ui_sign				= 104_bar
+inv_name					= 104_barrel
+inv_name_short			= 104_barrelS
+inv_weight					= 0.22
+attachment_point		= ak_barrel|0,0,0|0,0,0
+attachment_slots = ak_zatvor|zatvor|0,0,0|0,0,0#102_front_sight_block|wpn_body|0,0,0|0,0,0#ak_hg_old|wpn_body|0,0,0|0,0,0#ak_rear_sight|wpn_body|0,0,0|0,0,0#ak_barrel_rod_s_|wpn_body|0,0,0|0,0,0#ak_cover|wpn_body|0,0,0|0,0,0#tac_mount|muzzle|0,0,-0.16|0,0,0#gp25|wpn_body|0,0,0|0,0,0#ak_spring|wpn_body|0,0,0|0,0,0
+override_section = 104_barrel_attributes
+cost = 900
+[104_barrel_attributes]:ak_barrel_amd65_attributes
+rpm_koeff 						= 0.135
+fire_dispersion_base	= 0.12
+
+zoom_rotate_time = 0.05
+k_hit_koeff = 0.97
+fire_point = 0, 0, -0.04
+inertia_koeff = 1.3
+recoil_koeff = -0.01
+bullet_speed = 0.84
+weapon_lenght = 0.2
+[204_barrel]:104_barrel
+kind = ak_100_p
+inv_ui_sign				= ak204_bar
+inv_name					= 104_barrel_ak200
+inv_name_short			= 104_barrel_ak200S
+attachment_point		= ak_barrel|0,0,0|0,0,0
+attachment_slots		= ak_zatvor|zatvor|0,0,0|0,0,0#102_front_sight_block|wpn_body|0,0,0|0,0,0#ak_hg_old|wpn_body|0,0,0|0,0,0#ak_rear_sight_night|wpn_body|0,0,0|0,0,0#ak_barrel_rod_s_|wpn_body|0,0,0|0,0,0#tac_mount|muzzle|0,0,-0.16|0,0,0#gp25|wpn_body|0,0,0|0,0,0#ak_spring_ak200|wpn_body|0,0,0|0,0,0
+override_section			=	204_barrel_attributes
+
+cost = 900
+inv_weight = 0.22
+[204_barrel_attributes]
+zoom_rotate_time = 0.05
+recoil_koeff = -0.01
+inertia_koeff = 1.3
+fire_point = 0, 0, -0.04
+weapon_lenght = 0.2
+k_hit_koeff = 0.97
+rpm_koeff = 0.14
+bullet_speed = 0.84
+fire_dispersion_base = 0.2
+
+[ak_barrel_rpk]:ak_barrel
+inv_ui_sign				= rpk_bar
+visual							= w_att_huds\74_barrel_rpk
+inv_name					= ak_barrel_rpk
+inv_name_short		= ak_barrel_rpkS
+cost							= 1700
+inv_weight					= 0.63
+inv_grid_width			= 3
+inv_grid_x					= 29
+1icon_layer = clean3_ico
+attachment_point		= ak_barrel_rpk|0,0,0|0,0,0
+attachment_slots		= ak_zatvor|zatvor|0,0,0|0,0,0#ak_gas_tube|wpn_body|0,0,0|0,0,0#ak_hg_old|wpn_body|0,0,0|0,0,0#ak_rear_sight|wpn_body|0,0,0|0,0,0#ak_barrel_rod_rpk_|wpn_body|0,0,0|0,0,0#ak_front_sight_night|wpn_body|0,0,0.159|0,0,0#ak_cover|wpn_body|0,0,0|0,0,0#ak_barrel_rpk_bipods|wpn_body|0,0,0|0,0,0#ak_muzzle|muzzle|0,0,0.1578|0,0,0#tac_mount|muzzle|0,0,-0.16|0,0,0#ak_spring|wpn_body|0,0,0|0,0,0
+override_section			=	ak_barrel_rpk_attributes
+[ak_barrel_rpk_attributes]:ar_barrel_17_att
+fire_point						= 0, 0, 0.18
+weapon_lenght				=	0.6
+bullet_speed				= 0.95
+k_hit_koeff						= 1.1
+fire_dispersion_base		= 0.06
+recoil_koeff				= -0.01
+
+inertia_koeff = 1.7
+zoom_rotate_time = 0.11
+[ak_barrel_sok_415]:ak_barrel
+inv_ui_sign				= sok94_42mm
+visual						= w_att_huds\ak_barrel_sok_415
+inv_name					= ak_barrel_sok_415
+inv_name_short			= ak_barrel_sok_415S
+cost							= 1200
+inv_weight					= 0.3
+inv_grid_x         		= 24
+inv_grid_y         		= 0
+attachment_point		= ak_barrel_rpk|0,0,0|0,0,0
+attachment_slots		= ak_zatvor|zatvor|0,0,0|0,0,0#ak_gas_tube|wpn_body|0,0,0|0,0,0#ak_muzzle|muzzle|0,0,0|0,0,0#ak_hg_old|wpn_body|0,0,0|0,0,0#ak_rear_sight|wpn_body|0,0,0|0,0,0#ak_front_sight_night|wpn_body|0,0,0|0,0,0#ak_cover|wpn_body|0,0,0|0,0,0#tac_mount|muzzle|0,0,-0.16|0,0,0#ak_spring|wpn_body|0,0,0|0,0,0
+override_section			=	ak_barrel_sok_415_attributes
+
+[ak_barrel_sok_415_attributes]
+zoom_rotate_time = 0.06
+inertia_koeff = 1.4
+fire_point = 0, 0, 0.04
+weapon_lenght = 0.3
+bullet_speed = 0.9
+rpm_koeff = 0.075
+fire_dispersion_base = 0.09
+recoil_koeff = -0.01
+
+[ak_barrel_sok_520]:ak_barrel_rpk
+inv_ui_sign				= sok94_520mm
+visual							= w_att_huds\ak_barrel_sok
+inv_name					= ak_barrel_sok_520
+inv_name_short		= ak_barrel_sok_520S
+cost							= 1450
+inv_weight					= 0.5
+inv_grid_x					= 32
+attachment_slots		= ak_zatvor|zatvor|0,0,0|0,0,0#ak_gas_tube|wpn_body|0,0,0|0,0,0#ak_muzzle|muzzle|0,0,0.098|0,0,0#ak_hg_old|wpn_body|0,0,0|0,0,0#ak_rear_sight|wpn_body|0,0,0|0,0,0#ak_front_sight_night|wpn_body|0,0,0.0986|0,0,0#ak_cover|wpn_body|0,0,0|0,0,0#tac_mount|muzzle|0,0,-0.16|0,0,0#ak_spring|wpn_body|0,0,0|0,0,0
+override_section			=	ak_barrel_sok_520_attributes
+[ak_barrel_sok_520_attributes]:ar_barrel_15_att
+fire_point					= 0, 0, 0.13
+weapon_lenght				=	0.45
+bullet_speed				= 0.92
+k_hit_koeff						= 1.05
+fire_dispersion_base		= 0.07
+
+recoil_koeff = -0.01
+inertia_koeff = 1.7
+zoom_rotate_time = 0.1
+[ak_barrel_sok_590]:ak_barrel_sok_520
+inv_ui_sign				= sok94_590mm
+visual							= w_att_huds\ak_barrel_sok_590
+inv_name					= ak_barrel_sok_590
+inv_name_short		= ak_barrel_sok_590S
+cost							= 1600
+inv_weight				= 0.61
+inv_grid_x					= 32
+attachment_slots		= ak_zatvor|zatvor|0,0,0|0,0,0#ak_gas_tube|wpn_body|0,0,0|0,0,0#ak_hg_old|wpn_body|0,0,0|0,0,0#ak_rear_sight|wpn_body|0,0,0|0,0,0#ak_front_sight_night|wpn_body|0,0,0.159|0,0,0#ak_cover|wpn_body|0,0,0|0,0,0#ak_muzzle|muzzle|0,0,0.1578|0,0,0#tac_mount|muzzle|0,0,-0.16|0,0,0#ak_spring|wpn_body|0,0,0|0,0,0
+override_section			=	ak_barrel_sok_590_attributes
+
+[ak_barrel_sok_590_attributes]
+zoom_rotate_time = 0.11
+recoil_koeff = -0.01
+inertia_koeff = 1.7
+fire_point = 0, 0, 0.18
+weapon_lenght = 0.6
+rpm_koeff = 0.0167
+bullet_speed = 0.96
+k_hit_koeff = 1.1
+fire_dispersion_base = 0.06
+
+[ak_barrel_sok_700]:ak_barrel_sok_520
+inv_ui_sign				= sok94_700mm
+visual							= w_att_huds\ak_barrel_sok_700
+inv_name					= ak_barrel_sok_700
+inv_name_short		= ak_barrel_sok_700S
+cost							= 2200
+inv_weight					= 0.8
+inv_grid_x         		= 37
+inv_grid_y         		= 2
+attachment_slots		= ak_zatvor|zatvor|0,0,0|0,0,0#ak_gas_tube|wpn_body|0,0,0|0,0,0#ak_hg_old|wpn_body|0,0,0|0,0,0#ak_rear_sight|wpn_body|0,0,0|0,0,0#ak_front_sight_night|wpn_body|0,0,0.2605|0,0,0#ak_cover|wpn_body|0,0,0|0,0,0#ak_muzzle|muzzle|0,0,0.2605|0,0,0#tac_mount|muzzle|0,0,-0.16|0,0,0#ak_spring|wpn_body|0,0,0|0,0,0
+override_section			=	ak_barrel_sok_700_attributes
+
+[ak_barrel_sok_700_attributes]
+zoom_rotate_time = 0.12
+recoil_koeff = -0.01
+inertia_koeff = 1.8
+fire_point = 0, 0, 0.29
+weapon_lenght = 0.73
+rpm_koeff = -0.083
+bullet_speed = 0.98
+k_hit_koeff = 1.15
+fire_dispersion_base = 0.04
+
+[ak9_barrel]:74_barrel
+kind = tiss
+inv_ui_sign				= ak9_bar
+visual						= w_att_huds\ak9_barrel
+inv_name					= ak9_barrel
+inv_name_short			= ak9_barrelS
+cost							= 800
+inv_weight					= 0.19
+inv_grid_width			= 1
+inv_grid_x					= 35
+1icon_layer = clean1_ico
+attachment_point	= ak9_barrel|0,0,0|0,0,0
+attachment_slots		= 74u_zatvor|zatvor|0,0,0|0,0,0#ak_hg_up|wpn_body|0,0,-0.0223|0,0,0#ak_muzzle|muzzle|0,0,0|0,0,0#ak_hg|wpn_body|0,0,0|0,0,0#ak_rear_sight|wpn_body|0,0,-0.0239|0,0,0#ak_cover|wpn_body|0,0,0|0,0,0#ak_spring|wpn_body|0,0,0|0,0,0
+item_tags = barrel, gas
+override_section		=	ak9_barrel_attributes
+[ak9_barrel_attributes]:ar_barrel_3_att
+fire_point					= 0, 0, 0.03
+weapon_lenght				=	0.15
+bullet_speed					= 1
+rpm_koeff						= 0.143
+fire_dispersion_base		=	0.12
+
+recoil_koeff = -0.03
+inertia_koeff = 1.1
+zoom_rotate_time = 0.02
+[ak9_barrel_tiss]:ak9_barrel
+kind = tiss
+inv_ui_sign				= tiss_bar
+visual						= w_att_huds\ak9_barrel_tiss
+inv_name					= ak9_barrel_tiss
+inv_name_short			= ak9_barrel_tissS
+inv_grid_x					= 36
+attachment_slots		= 74u_zatvor|zatvor|0,0,0|0,0,0#74u_gas_tube|wpn_body|0,0,0|0,0,0#tiss_muzzle|muzzle|0,0,0|0,0,0#74u_hg_old|wpn_body|0,0,0|0,0,0#74u_cover|wpn_body|0,0,0|0,0,0#ak_spring|wpn_body|0,0,0|0,0,0
+override_section			=	ak9_barrel_tiss_attributes
+cost = 800
+inv_weight = 0.19
+[ak9_barrel_tiss_attributes]:aksu_aim_attributes,ar_barrel_6_att
+fire_point								= 0, 0, 0.03
+weapon_lenght					=	0.15
+bullet_speed					= 1.05
+rpm_koeff							= 0.072
+fire_dispersion_base			=	0.13
+
+override_section = aksu_aim_attributes
+aim_hud_offset_pos = -0.08, 0.0316, -0.1
+inertia_koeff = 1.2
+aim_hud_offset_rot = 0.01, 0.004, 0
+aimpoint_offset_y = 0.089140
+aim_hud_offset_rot_16x9 = 0.01, 0.004, 0
+recoil_koeff = -0.04
+zoom_rotate_time = 0.03
+aim_hud_offset_pos_16x9 = -0.08, 0.0316, -0.1
+[aksu_aim_attributes]
+;aim_hud_offset_pos			= -0.06, 0.0275, -0.07
+;aim_hud_offset_pos_16x9	= -0.06, 0.0275, -0.07
+;aim_hud_offset_rot				= -0.006, 0.004, 0
+;aim_hud_offset_rot_16x9	= -0.006, 0.004, 0
+aim_hud_offset_pos			= -0.08, 0.0316, -0.1
+aim_hud_offset_pos_16x9	= -0.08, 0.0316, -0.1
+aim_hud_offset_rot				= 0.01, 0.004, 0
+aim_hud_offset_rot_16x9	= 0.01, 0.004, 0
+aimpoint_offset_y = 0.089140
+
+[ak9_barrel_tiss_old]:ak9_barrel_tiss
+kind = tiss
+inv_ui_sign				= tiss_bar_old
+visual						= w_att_huds\ak9_barrel_tiss_old
+inv_name					= ak9_barrel_tiss_old
+inv_name_short			= ak9_barrel_tiss_oldS		muzzle|0,0,-0.16
+inv_grid_width			= 2
+inv_grid_x					= 37
+1icon_layer = clean2_ico
+attachment_slots		= 74u_zatvor|zatvor|0,0,0|0,0,0#74u_gas_tube|wpn_body|0,0,0|0,0,0#ak_muzzle|muzzle|0,0,0.059|0,0,0#74u_hg_old|wpn_body|0,0,0|0,0,0#74u_cover|wpn_body|0,0,0|0,0,0#tac_mount|muzzle|0,0,0|0,0,0#ak_spring|wpn_body|0,0,0|0,0,0
+override_section			=	ak9_barrel_tiss_old_attributes
+cost = 800
+inv_weight = 0.19
+[ak9_barrel_tiss_old_attributes]:aksu_aim_attributes,ar_barrel_7_att
+fire_point						= 0, 0, 0.09
+weapon_lenght				=	0.2
+bullet_speed					= 1.12
+k_hit_koeff						= 1.05
+fire_dispersion_base		= 0.1
+
+aim_hud_offset_pos = -0.08, 0.0316, -0.1
+inertia_koeff = 1.3
+aim_hud_offset_rot = 0.01, 0.004, 0
+aimpoint_offset_y = 0.089140
+aim_hud_offset_rot_16x9 = 0.01, 0.004, 0
+recoil_koeff = -0.02
+zoom_rotate_time = 0.05
+aim_hud_offset_pos_16x9 = -0.08, 0.0316, -0.1
+[bizon_barrel]:74_barrel
+kind  =  bizon
+inv_ui_sign				= bizon_bar
+visual						= w_att_huds\bizon_barrel
+inv_name					= bizon_barrel
+inv_name_short			= bizon_barrelS
+cost							= 700
+inv_weight					= 0.11
+inv_grid_width			= 1
+inv_grid_x					= 39
+1icon_layer = clean1_ico
+attachment_point		= bizon_barrel|0,0,0|0,0,0	
+attachment_slots		= pp19_zatvor|zatvor|0,0,0|0,0,0#ak_muzzle|muzzle|0,0,0|0,0,0#bizon_hg|wpn_body|0,0,0|0,0,0#ak_spring|wpn_body|0,0,0|0,0,0
+override_section			=	bizon_barrel_attributes
+[bizon_barrel_attributes]:ar_barrel_3_att
+fire_point = 0, 0, 0.03
+weapon_lenght 				= 0.05
+bullet_speed			= 0.9
+k_hit_koeff						= 1.15
+fire_dispersion_base 		= 0.14
+
+recoil_koeff = -0.03
+inertia_koeff = 1.1
+zoom_rotate_time = 0.02
+[vityaz_barrel]:74_barrel
+kind  =  vityaz
+inv_ui_sign				= vityaz_bar
+visual						= w_att_huds\vityaz_barrel
+inv_name					= vityaz_barrel
+inv_name_short			= vityaz_barrelS
+cost							= 750
+inv_weight					= 0.14
+inv_grid_width			= 1
+inv_grid_x					= 6
+inv_grid_y					= 2
+1icon_layer = clean1_ico
+attachment_point	= vityaz_barrel|0,0,0|0,0,0
+attachment_slots		= pp19_zatvor|zatvor|0,0,0|0,0,0#ak_hg_up|wpn_body|0,0,-0.0312|0,0,0#ak_muzzle|muzzle|0,0,0|0,0,0#ak_hg|wpn_body|0,0,-0.031|0,0,0#vityaz_cover|wpn_body|0,0,0|0,0,0#ak_spring|wpn_body|0,0,0|0,0,0
+override_section		=	vityaz_barrel_attributes
+[vityaz_barrel_attributes]:ar_barrel_6_att
+fire_point = 0, 0, 0.03
+weapon_lenght				=	0.2
+bullet_speed				= 1.16
+k_hit_koeff						= 1.15
+fire_dispersion_base		= 0.14
+
+recoil_koeff = -0.06
+inertia_koeff = 1.2
+zoom_rotate_time = 0.03
+[vityaz_barrel_saiga9]:vityaz_barrel
+kind  =  vityaz
+inv_ui_sign				= saiga9_bar
+visual						= w_att_huds\vityaz_barrel_saiga9
+inv_name					= vityaz_barrel_saiga9
+inv_name_short			= vityaz_barrel_saiga9S
+cost							= 1000
+inv_weight					= 0.21
+inv_grid_width			= 2
+inv_grid_x					= 7
+inv_grid_y					= 2
+1icon_layer = clean2_ico
+attachment_slots = pp19_zatvor|zatvor|0,0,0|0,0,0#ak_hg_up|wpn_body|0,0,-0.0312|0,0,0#ak_muzzle|muzzle|0,0,0.0977|0,0,0#ak_hg|wpn_body|0,0,-0.031|0,0,0#vityaz_cover|wpn_body|0,0,0|0,0,0#tac_mount|muzzle|0,0,0|0,0,0#ak_spring|wpn_body|0,0,0|0,0,0
+override_section =	vityaz_barrel_saiga9_attributes
+[vityaz_barrel_saiga9_attributes]:ar_barrel_9_att
+fire_point = 0, 0, 0.14
+weapon_lenght				=	0.3
+rpm_koeff						= -0.1
+bullet_speed				= 1.4
+k_hit_koeff						= 1.25
+fire_dispersion_base		= 0.1
+
+recoil_koeff = -0.08
+inertia_koeff = 1.3
+zoom_rotate_time = 0.05
+[saiga12_barrel_330]:74_barrel
+kind  =  saiga12
+inv_ui_sign				= s12_barS
+visual						= w_att_huds\saiga12_barrel_330
+inv_name					= saiga12_barrel_330
+inv_name_short			= saiga12_barrel_330S
+cost							= 1750
+inv_weight					= 0.22
+inv_grid_x					= 9
+inv_grid_y					= 2
+attachment_point		= saiga12_barrel|0,0,0|0,0,0
+attachment_slots = saiga12_zatvor|zatvor|0,0,0|0,0,0#saiga12_gas_tube|wpn_body|0,0,0|0,0,0#saiga12_hg|wpn_body|0,0,0|0,0,0#12ga_muzzle|muzzle|0,0,-0.0835|0,0,0#ak_spring|wpn_body|0,0,0|0,0,0
+override_section = saiga12_barrel_330_attributes
+
+[saiga12_barrel_330_attributes]
+aim_hud_offset_pos = -0.08, 0.038, -0.1
+aim_hud_offset_pos_16x9 = -0.08, 0.038, -0.1
+aim_hud_offset_rot = 0.005, 0.004, 0
+aim_hud_offset_rot_16x9 = 0.005, 0.004, 0
+zoom_rotate_time = 0.05
+recoil_koeff = -0.03
+inertia_koeff = 1.3
+bullet_speed = 0.88
+k_hit_koeff = 0.95
+fire_dispersion_base = 4.1
+fire_point = 0, 0, -0.05
+weapon_lenght = 0.35
+rpm_koeff = -0.2
+
+[saiga12_barrel_430]:saiga12_barrel_330
+kind  =  saiga12
+inv_ui_sign				= s12_barM
+visual						= w_att_huds\saiga12_barrel_430
+inv_name					= saiga12_barrel_430
+inv_name_short			= saiga12_barrel_430S
+cost							= 2350
+inv_weight					= 0.27
+inv_grid_x					= 11
+attachment_slots = saiga12_zatvor|zatvor|0,0,0|0,0,0#saiga12_gas_tube|wpn_body|0,0,0|0,0,0#12ga_muzzle|muzzle|0,0,0.006|0,0,0#saiga12_hg|wpn_body|0,0,0|0,0,0#ak_spring|wpn_body|0,0,0|0,0,0
+override_section = saiga12_barrel_430_attributes
+
+[saiga12_barrel_430_attributes]
+aim_hud_offset_pos = -0.08, 0.038, -0.1
+aim_hud_offset_pos_16x9 = -0.08, 0.038, -0.1
+aim_hud_offset_rot = 0.005, 0.004, 0
+aim_hud_offset_rot_16x9 = 0.005, 0.004, 0
+zoom_rotate_time = 0.07
+recoil_koeff = -0.04
+inertia_koeff = 1.4
+bullet_speed = 0.95
+fire_dispersion_base = 3.8
+fire_point = 0, 0, 0.04
+weapon_lenght = 0.4
+rpm_koeff = -0.25
+
+[saiga12_barrel_580]:saiga12_barrel_330
+kind  =  saiga12
+inv_ui_sign				= s12_barL
+visual						= w_att_huds\saiga12_barrel_580
+inv_name					= saiga12_barrel_580
+inv_name_short			= saiga12_barrel_580S
+cost							= 2700
+inv_weight					= 0.34
+inv_grid_width			= 3
+inv_grid_x					= 13
+1icon_layer = clean3_ico
+attachment_slots		= saiga12_zatvor|zatvor|0,0,0|0,0,0#saiga12_gas_tube|wpn_body|0,0,0|0,0,0#12ga_muzzle|muzzle|0,0,0.1418|0,0,0#saiga12_hg|wpn_body|0,0,0|0,0,0#ak_spring|wpn_body|0,0,0|0,0,0
+override_section = saiga12_barrel_580_attributes
+
+[saiga12_barrel_580_attributes]
+aim_hud_offset_pos = -0.08, 0.038, -0.1
+aim_hud_offset_pos_16x9 = -0.08, 0.038, -0.1
+aim_hud_offset_rot = 0.005, 0.004, 0
+aim_hud_offset_rot_16x9 = 0.005, 0.004, 0
+zoom_rotate_time = 0.1
+recoil_koeff = -0.06
+inertia_koeff = 1.7
+bullet_speed = 1.07
+k_hit_koeff = 1.05
+fire_dispersion_base = 3.3
+fire_point = 0, 0, 0.17
+weapon_lenght = 0.55
+rpm_koeff = -0.33
+
+[vepr12_barrel_305]:saiga12_barrel_330
+kind  =  vepr12
+inv_ui_sign				= vepr12_barS
+visual						= w_att_huds\vepr12_barrel_305
+inv_name					= vepr12_barrel_305
+inv_name_short			= vepr12_barrel_305S
+inv_grid_x					= 16
+attachment_point		= vepr12_barrel|0,0,0|0,0,0
+attachment_slots = saiga12_zatvor|zatvor|0,0,0|0,0,0#vepr12_gas_tube|wpn_body|0,0,0|0,0,0#12ga_muzzle|muzzle|0,0,-0.1061|0,0,0#ak_hg_old|wpn_body|0,0,0|0,0,0#ak_rear_sight|wpn_body|0,0,0|0,0,0#vepr12_cover|wpn_body|0,0,0|0,0,0#pica_3|wpn_body|0,0.0331,0.36|0,0,180#ak_spring|wpn_body|0,0,0|0,0,0
+override_section = vepr12_barrel_305_attributes
+
+cost = 1750
+inv_weight = 0.22
+[vepr12_barrel_305_attributes]
+zoom_rotate_time = 0.05
+recoil_koeff = -0.03
+inertia_koeff = 1.3
+fire_point = 0, 0, -0.07
+weapon_lenght = 0.3
+rpm_koeff = -0.15
+bullet_speed = 0.81
+k_hit_koeff = 0.95
+fire_dispersion_base = 4.3
+
+[vepr12_barrel_430]:vepr12_barrel_305
+kind  =  vepr12
+inv_ui_sign				= vepr12_barM
+visual						= w_att_huds\vepr12_barrel_430
+inv_name					= vepr12_barrel_430
+inv_name_short			= vepr12_barrel_430S
+inv_grid_x					= 18
+attachment_slots = saiga12_zatvor|zatvor|0,0,0|0,0,0#vepr12_gas_tube|wpn_body|0,0,0|0,0,0#12ga_muzzle|muzzle|0,0,0.006|0,0,0#ak_hg_old|wpn_body|0,0,0|0,0,0#ak_rear_sight|wpn_body|0,0,0|0,0,0#vepr12_cover|wpn_body|0,0,0|0,0,0#pica_3|wpn_body|0,0.0331,0.36|0,0,180#ak_spring|wpn_body|0,0,0|0,0,0
+override_section = vepr12_barrel_430_attributes
+
+cost = 1750
+inv_weight = 0.22
+[vepr12_barrel_430_attributes]
+zoom_rotate_time = 0.07
+recoil_koeff = -0.05
+inertia_koeff = 1.4
+bullet_speed = 0.91
+fire_dispersion_base = 3.8
+fire_point = 0, 0, 0.04
+weapon_lenght = 0.4
+rpm_koeff = -0.25
+
+[vepr12_barrel_570]:vepr12_barrel_305
+kind  =  vepr12
+inv_ui_sign				= vepr12_barL
+visual						= w_att_huds\vepr12_barrel_570
+inv_name					= vepr12_barrel_570
+inv_name_short			= vepr12_barrel_570S
+inv_grid_width			= 3
+inv_grid_x					= 20
+1icon_layer = clean3_ico
+attachment_slots = saiga12_zatvor|zatvor|0,0,0|0,0,0#vepr12_gas_tube|wpn_body|0,0,0|0,0,0#12ga_muzzle|muzzle|0,0,0.1213|0,0,0#ak_hg_old|wpn_body|0,0,0|0,0,0#ak_rear_sight|wpn_body|0,0,0|0,0,0#vepr12_cover|wpn_body|0,0,0|0,0,0#pica_3|wpn_body|0,0.0331,0.36|0,0,180#ak_spring|wpn_body|0,0,0|0,0,0
+override_section =	vepr12_barrel_570_attributes
+
+cost = 1750
+inv_weight = 0.22
+[vepr12_barrel_570_attributes]
+zoom_rotate_time = 0.11
+recoil_koeff = -0.05
+inertia_koeff = 1.7
+bullet_speed = 1.02
+k_hit_koeff = 1.05
+fire_dispersion_base = 3.3
+fire_point = 0, 0, 0.165
+weapon_lenght = 0.53
+rpm_koeff = -0.333
+
+[ak_barrel_rpk_bipods]:attachment_base_ak
+kind  = ak_misc
+inv_ui_sign				= rpk_bpd
+visual						= w_att_huds\ak_barrel_rpk_bipods
+inv_name					= ak_barrel_rpk_bipods
+inv_name_short			= ak_barrel_rpk_bipods
+cost							= 900
+inv_weight					= 0.18
+inv_grid_width			= 2
+inv_grid_x					= 23
+inv_grid_y					= 2
+attachment_point		= ak_barrel_rpk_bipods|0,0,0|0,0,0
+override_section = ak_barrel_rpk_bipods_attributes
+
+[ak_barrel_rpk_bipods_attributes]
+zoom_rotate_time = 0.15
+recoil_koeff = -0.1
+inertia_koeff = 1.1
+
+[ak_barrel_gopak_bipods]:attachment_base_ak
+kind  = ak_misc
+inv_ui_sign				= gopak_bpd
+visual						= w_att_huds\ak_barrel_gopak_bipods
+inv_name					= ak_barrel_gopak_bipods
+inv_name_short		= ak_barrel_gopak_bipodsS
+cost							= 900
+inv_weight				= 0.18
+inv_grid_width			= 2
+inv_grid_x				= 38
+inv_grid_y				= 20
+attachment_point	= ak_barrel_gopak_bipods|0,0,0|0,0,0
+override_section		= ak_barrel_gopak_bipods_attributes
+[ak_barrel_gopak_bipods_attributes]:ak_barrel_rpk_bipods_att
+animation_prefix	=	s_
+
+recoil_koeff = -0.1
+zoom_rotate_time = 0.15
+[ak_barrel_gopak_rail]:ak_barrel_gopak_bipods
+kind  = ak_misc
+inv_ui_sign				= gopak_rail
+visual						= w_att_huds\ak_barrel_gopak_rail
+inv_name					= ak_barrel_gopak_rail
+inv_name_short		= ak_barrel_gopak_railS
+cost							= 600
+inv_weight				= 0.1
+inv_grid_width			= 1
+inv_grid_x				= 40
+attachment_slots		= pica_3|wpn_body|0.028846,0.045168,0.197257|0,0,90
+item_tags = rail
+override_section = ak_barrel_gopak_rail_attributes
+
+[ak_barrel_gopak_rail_attributes]
+animation_prefix = s_
+
+[gp25]:attachment_base_ak
+inv_ui_sign				= gp25
+visual						= w_att_huds\gp25	
+description					= gp25_descr
+inv_name					= gp25
+inv_name_short		= gp25
+cost							= 0
+inv_weight				= 1.5
+inv_grid_width     	= 2
+inv_grid_x         		= 35
+inv_grid_y         		= 19
+attachment_point = gp25|0,0,0|0,0,0
+override_section = gp25_attributes
+
+[gp25_attributes]
+animation_prefix = gl_
+zoom_rotate_time = 0.04
+recoil_koeff = -0.25
+inertia_koeff = 1.1
+
+[74_front_trunnion]:attachment_base_ak
+kind  =  74_misc
+inv_ui_sign				= 74_ft
+visual						= w_att_huds\74_front_trunnion
+inv_name					= 74_front_trunnion
+inv_name_short			= 74_front_trunnionS
+cost							= 750
+inv_weight					= 0.2
+inv_grid_x					= 31
+inv_grid_y					= 2
+attachment_point = 74_front_trunnion|0,0,0|0,0,0
+attachment_slots = 74_barrel|wpn_body|0,0,0|0,0,0
+item_tags = rail
+override_section = 74_front_trunnion_attributes
+
+[74_front_trunnion_attributes]
+
+[100_front_trunnion]:74_front_trunnion
+kind = ak_100_p
+inv_ui_sign				= 101_ft
+visual							= w_att_huds\100_front_trunnion
+inv_name					= 100_front_trunnion
+inv_name_short		= 100_front_trunnionS
+inv_weight				= 0.21
+inv_grid_x					= 32
+attachment_point = 100_front_trunnion|0,0,0|0,0,0
+attachment_slots	= 100_barrel|wpn_body|0,0,0|0,0,0
+override_section = 100_front_trunnion_attributes
+
+[100_front_trunnion_attributes]
+
+[ak_front_trunnion]:74_front_trunnion
+kind  = ak_misc
+inv_ui_sign					= ak_ft
+visual								= w_att_huds\ak_front_trunnion
+inv_name						= ak_front_trunnion
+inv_name_short			= ak_front_trunnionS
+inv_weight					= 0.23
+inv_grid_x						= 33
+attachment_point = ak_front_trunnion|0,0,0|0,0,0
+attachment_slots = ak_barrel|wpn_body|0,0,0|0,0,0
+override_section = ak_front_trunnion_attributes
+
+[ak_front_trunnion_attributes]
+
+[ak_front_trunnion_rpk]:ak_front_trunnion
+kind  = ak_misc
+inv_ui_sign				= rpk_ft
+visual						= w_att_huds\ak_front_trunnion_rpk
+inv_name					= ak_front_trunnion_rpk
+inv_name_short			= ak_front_trunnion_rpkS
+cost							= 800
+inv_weight					= 0.25
+inv_grid_x					= 34
+attachment_slots = ak_barrel_rpk|wpn_body|0,0,0|0,0,0
+override_section = ak_front_trunnion_rpk_attributes
+
+[ak_front_trunnion_rpk_attributes]
+fire_dispersion_base_koeff = -0.05
+
+[74_front_trunnion_rpk]:ak_front_trunnion_rpk
+kind  =  74_misc
+inv_ui_sign				= rpk74_ft
+inv_name					= 74_front_trunnion_rpk
+inv_name_short			= 74_front_trunnion_rpkS
+inv_weight					= 0.24
+attachment_point = 74_front_trunnion|0,0,0|0,0,0
+attachment_slots = 74_barrel_rpk|wpn_body|0,0,0|0,0,0
+override_section = 74_front_trunnion_rpk_attributes
+
+[74_front_trunnion_rpk_attributes]
+fire_dispersion_base_koeff = -0.05
+
+[100_front_trunnion_rpk]:74_front_trunnion_rpk
+kind = ak_100_p
+inv_ui_sign					= rpk201_ft
+inv_name						= 100_front_trunnion_rpk
+inv_name_short			= 100_front_trunnion_rpkS
+attachment_point = 100_front_trunnion|0,0,0|0,0,0
+attachment_slots = 100_barrel_rpk|wpn_body|0,0,0|0,0,0
+override_section = 100_front_trunnion_rpk_attributes
+
+[100_front_trunnion_rpk_attributes]
+fire_dispersion_base_koeff = -0.05
+
+[saiga12_front_trunnion]:74_front_trunnion
+kind  =  saiga12
+inv_ui_sign				= s12_ft
+visual						= w_att_huds\saiga12_front_trunnion
+inv_name					= saiga12_front_trunnion
+inv_name_short			= saiga12_front_trunnionS
+cost							= 650
+inv_weight					= 0.22
+inv_grid_x					= 35
+attachment_point = saiga12_front_trunnion|0,0,0|0,0,0
+attachment_slots = saiga12_barrel|wpn_body|0,0,0|0,0,0
+override_section = saiga12_front_trunnion_attributes
+
+[saiga12_front_trunnion_attributes]
+
+[vepr12_front_trunnion]:saiga12_front_trunnion
+kind  =  vepr12
+inv_ui_sign				= vepr_ft
+visual						= w_att_huds\vepr12_front_trunnion
+inv_name					= vepr12_front_trunnion
+inv_name_short			= vepr12_front_trunnionS
+cost							= 700
+inv_weight					= 0.25
+inv_grid_x					= 36
+attachment_slots = vepr12_barrel|wpn_body|0,0,0|0,0,0
+override_section = vepr12_front_trunnion_attributes
+
+[vepr12_front_trunnion_attributes]
+fire_dispersion_base_koeff = -0.05
+
+[74u_gas_tube_amd65]:attachment_base_ak
+kind  =  74u_gastubes
+inv_ui_sign				= amd_gt
+visual							= w_att_huds\74u_gas_tube_amd65
+inv_name					= 74u_gas_tube_amd65
+inv_name_short		= 74u_gas_tube_amd65S
+cost							= 350
+inv_weight				= 0.05
+inv_grid_x        			= 36
+inv_grid_y        			= 3
+1icon_layer = clean1_ico
+attachment_point 	= 74u_gas_tube|0,0,0|0,0,0
+attachment_slots		= ak_hg_up123|wpn_body|0,0,0|0,0,0#74u_hg_full|wpn_body|0,0,0|0,0,0
+item_tags = gas, gtube
+override_section = 74u_gas_tube_amd65_attributes
+
+[74u_gas_tube_amd65_attributes]
+zoom_rotate_time = -0.01
+
+[74u_gas_tube]:74u_gas_tube_amd65
+inv_ui_sign				= gast_s
+visual						= w_att_huds\74u_gas_tube
+inv_name					= 74u_gas_tube
+inv_name_short			= 74u_gas_tubeS
+cost							= 450
+inv_weight					= 0.07
+inv_grid_x					= 6
+attachment_slots		= ak_hg_up|wpn_body|0,0,-0.0256|0,0,0#74u_hg|wpn_body|0,0,0|0,0,0
+override_section = 74u_gas_tube_attributes
+
+[74u_gas_tube_attributes]
+zoom_rotate_time = -0.01
+
+[74u_gas_tube_troy]:74u_gas_tube								; не совместима с оптикой
+inv_ui_sign				= gasP
+visual						= w_att_huds\74u_gas_tube_troy
+description				= pica_7_up
+inv_name					= 74u_gas_tube_troy
+inv_name_short			= 74u_gas_tube_troyS
+cost							= 1000
+inv_weight					= 0.08
+inv_grid_x					= 7
+attachment_point		= 74u_gas_tube|0,0,0|0,0,0
+attachment_slots		= pica_7|wpn_body|0,0.0756,0.211|0,0,0#74u_hg|wpn_body|0,0,0|0,0,0
+override_section = gas_tube_2_att
+[gas_tube_2_att]
+zoom_rotate_time = 0.01
+
+[ak_gas_tube_clear]:attachment_base_ak
+kind  = ak_gastubes
+inv_ui_sign				= gast-
+visual						= w_att_huds\ak_gas_tube_clear
+inv_name					= ak_gas_tube_clear
+inv_name_short			= ak_gas_tube_clearS
+cost							= 450
+inv_weight					= 0.08
+inv_grid_x					= 9
+inv_grid_y					= 3
+1icon_layer = clean1_ico
+attachment_point	= ak_gas_tube|0,0,0|0,0,0
+attachment_slots		= ak_hg_up123|wpn_body|0,0,0|0,0,0#ak_hg_full|wpn_body|0,0,0|0,0,0
+item_tags = gas, gtube
+override_section = ak_gas_tube_clear_attributes
+
+[ak_gas_tube_clear_attributes]
+zoom_rotate_time = 0.01
+
+[ak_gas_tube_sok]:ak_gas_tube_clear
+visual						= w_att_huds\ak_gas_tube_sok
+inv_name					= ak_gas_tube_sok
+inv_grid_x					= 10
+override_section = ak_gas_tube_sok_attributes
+
+[ak_gas_tube_sok_attributes]
+zoom_rotate_time = 0.01
+
+[ak_gas_tube]:ak_gas_tube_clear
+inv_ui_sign				= gast
+visual						= w_att_huds\ak_gas_tube
+inv_name					= ak_gas_tube
+inv_name_short			= ak_gas_tubeS
+cost							= 500
+inv_weight					= 0.09
+inv_grid_x					= 8
+inv_grid_y					= 3
+attachment_slots		= ak_hg_up|wpn_body|0,0,0|0,0,0#ak_hg|wpn_body|0,0,0|0,0,0
+override_section = ak_gas_tube_attributes
+
+[ak_gas_tube_attributes]
+[gas_tube_3_att]
+;zoom_rotate_time = 0.01
+recoil_koeff             = -0.03
+
+[ak_gas_tube_troy]:ak_gas_tube_clear								; не совместима с оптикой
+inv_ui_sign				= gastP
+visual						= w_att_huds\ak_gas_tube_troy
+description				= pica_12_up
+inv_name					= ak_gas_tube_troy
+inv_name_short			= ak_gas_tube_troyS
+cost							= 1050
+inv_weight					= 0.1
+inv_grid_x					= 11
+attachment_slots		= pica_12|wpn_body|0,0.0756,0.245|0,0,0#ak_hg|wpn_body|0,0,0|0,0,0
+override_section = gas_tube_4_att
+[gas_tube_4_att]
+zoom_rotate_time = 0.02
+
+[ak_gas_tube_ultimak]:ak_gas_tube_troy
+inv_ui_sign				= gastP
+visual						= w_att_huds\ak_gas_tube_ultimak
+description				= pica_15_up
+inv_name					= ak_gas_tube_ultimak
+inv_name_short			= ak_gas_tube_ultimakS
+cost							= 1100
+inv_grid_x					= 12
+attachment_slots		= pica_15|wpn_body|0,0.0776,0.23|0,0,0#ak_hg|wpn_body|0,0,0|0,0,0
+override_section = gas_tube_5_att
+inv_weight = 0.1
+[gas_tube_5_att]
+zoom_rotate_time = 0.03
+
+[saiga12_gas_tube]:ak_gas_tube_clear
+kind  =  saiga12
+inv_ui_sign				= s12_gas
+visual						= w_att_huds\saiga12_gas_tube
+inv_name					= saiga12_gas_tube
+inv_name_short			= saiga12_gas_tubeS
+cost							= 800
+inv_weight					= 0.09
+inv_grid_x					= 13
+inv_grid_y					= 3
+attachment_point	= saiga12_gas_tube|0,0,0|0,0,0
+attachment_slots		= saiga12_cover|wpn_body|0,0,0|0,0,0#
+item_tags	=	gas
+override_section = saiga12_gas_tube_attributes
+
+[saiga12_gas_tube_attributes]
+
+[saiga12_gas_tube_pica]:saiga12_gas_tube
+kind  =  saiga12
+inv_ui_sign				= s12_gas+
+visual						= w_att_huds\saiga12_gas_tube_pica
+description				= pica_15_up
+inv_name					= saiga12_gas_tube_pica
+inv_name_short			= saiga12_gas_tube_picaS
+cost							= 1000
+inv_weight					= 0.1
+inv_grid_x					= 14
+attachment_slots		= saiga12_cover|wpn_body|0,0,0|0,0,0#pica_15|wpn_body|0,0.0806,0.182|0,0,0
+item_tags	=	gas, gtube
+override_section = saiga12_gas_tube_pica_attributes
+
+[saiga12_gas_tube_pica_attributes]
+zoom_rotate_time = 0.03
+
+[vepr12_gas_tube]:ak_gas_tube_clear 
+kind  =  vepr12
+inv_ui_sign				= v12_gas
+visual						= w_att_huds\vepr12_gas_tube
+inv_name					= vepr12_gas_tube
+inv_name_short		= vepr12_gas_tubeS
+cost							= 600
+inv_weight				= 0.08
+inv_grid_x				= 33
+attachment_point	= vepr12_gas_tube|0,0,0|0,0,0
+attachment_slots		= ak_hg_up|wpn_body|0,0,0|0,0,0#ak_hg|wpn_body|0,0,0|0,0,0
+override_section = vepr12_gas_tube_attributes
+
+[vepr12_gas_tube_attributes]
+
+[74_front_sight_block]:attachment_base_ak
+kind  =  74_misc
+inv_ui_sign				= 74_fs_b
+visual						= w_att_huds\74_front_sight_block
+inv_name					= 74_front_sight_block
+inv_name_short			= 74_front_sight_blockS
+cost							= 450
+inv_weight					= 0.1
+inv_grid_x					= 15
+inv_grid_y					= 3
+attachment_point = 74_front_sight_block|0,0,0|0,0,0
+item_tags = sights
+attachment_slots = ak_front_sight_night|wpn_body|0,0,0|0,0,0#74_muzzle|muzzle|0,0,0|0,0,0
+override_section = 74_front_sight_block_attributes
+
+[74_front_sight_block_attributes]
+zoom_rotate_time = 0.01
+impair_koeff = 0.8
+
+[74_front_sight_block_ns]:74_front_sight_block
+kind  =  74_misc
+visual						= w_att_huds\100_front_sight_block_ns
+inv_name					= 74_front_sight_block_ns
+inv_grid_x				= 20
+attachment_slots 	= 74_muzzle|muzzle|0,0,0|0,0,0
+override_section = 74_front_sight_block_ns_attributes
+
+cost = 450
+inv_weight = 0.1
+[74_front_sight_block_ns_attributes]
+zoom_rotate_time = 0.01
+impair_koeff = 0.8
+
+[100_front_sight_block]:74_front_sight_block
+kind = ak_100_p
+inv_ui_sign				= 101-3_fs_b
+visual							= w_att_huds\101_front_sight_block
+inv_name					= 101-3_front_sight_block
+inv_name_short		= 101-3_front_sight_blockS
+inv_grid_x					= 16
+attachment_slots	= ak_front_sight_night|wpn_body|0,0,0|0,0,0#100_muzzle|muzzle|0,0,0|0,0,0
+override_section = 100_front_sight_block_attributes
+
+cost = 450
+inv_weight = 0.1
+[100_front_sight_block_attributes]
+zoom_rotate_time = 0.01
+impair_koeff = 0.8
+
+[100_front_sight_block_ns]:100_front_sight_block
+kind = ak_100_p
+visual						= w_att_huds\100_front_sight_block_ns
+inv_name					= 101-3_front_sight_block_ns
+inv_grid_x				= 20
+attachment_slots 	= 100_muzzle|muzzle|0,0,0|0,0,0
+override_section = 100_front_sight_block_ns_attributes
+
+cost = 450
+inv_weight = 0.1
+[100_front_sight_block_ns_attributes]
+zoom_rotate_time = 0.01
+impair_koeff = 0.8
+
+[102_front_sight_block]:74_front_sight_block
+kind = ak_100_p
+inv_ui_sign					= 102_fs_b
+visual								= w_att_huds\102_front_sight_block
+inv_name						= 102_front_sight_block
+inv_name_short			= 102_front_sight_blockS
+inv_grid_x						= 17
+1icon_layer = clean1_ico
+attachment_point	= 102_front_sight_block|0,0,0|0,0,0
+attachment_slots		= ak_gas_tube|wpn_body|0,0,0|0,0,0#100_muzzle|muzzle|0,0,-0.095|0,0,0
+override_section = 102_front_sight_block_attributes
+
+cost = 450
+inv_weight = 0.1
+[102_front_sight_block_attributes]
+zoom_rotate_time = 0.01
+impair_koeff = 0.8
+
+[100s_front_sight_block_ns]:102_front_sight_block
+kind = ak_100_p
+inv_ui_sign					= 102-4_fsb
+visual								= w_att_huds\102_front_sight_block_ns
+inv_name						= 106_front_sight_block_ns
+inv_name_short			= 106_front_sight_block_nsS
+inv_grid_x						= 21
+inv_weight					= 0.09
+override_section = 100s_front_sight_block_ns_attributes
+
+cost = 450
+[100s_front_sight_block_ns_attributes]
+zoom_rotate_time = 0.01
+impair_koeff = 0.8
+
+[104_front_sight_block]:102_front_sight_block
+kind = ak_100_p
+inv_ui_sign					= 104_fs_b
+visual								= w_att_huds\104_front_sight_block
+inv_name						= 104_front_sight_block
+inv_name_short			= 104_front_sight_blockS
+inv_grid_x						= 18
+override_section = 104_front_sight_block_attributes
+
+cost = 450
+inv_weight = 0.1
+[104_front_sight_block_attributes]
+zoom_rotate_time = 0.01
+impair_koeff = 0.8
+
+[105_front_sight_block]:102_front_sight_block
+kind = ak_100_p
+inv_ui_sign				= 105_fs_b
+visual							= w_att_huds\105_front_sight_block
+inv_name					= 105_front_sight_block
+inv_name_short		= 105_front_sight_blockS
+inv_grid_x					= 19
+attachment_slots		= ak_gas_tube|wpn_body|0,0,0|0,0,0#74_muzzle|muzzle|0,0,-0.095|0,0,0
+override_section = 105_front_sight_block_attributes
+
+cost = 450
+inv_weight = 0.1
+[105_front_sight_block_attributes]
+zoom_rotate_time = 0.01
+impair_koeff = 0.8
+
+[105_front_sight_block_ns]:105_front_sight_block
+kind = ak_100_p
+visual								= w_att_huds\102_front_sight_block_ns
+inv_name						= 105_front_sight_block_ns
+inv_grid_x						= 21
+override_section = 105_front_sight_block_ns_attributes
+
+cost = 450
+inv_weight = 0.1
+[105_front_sight_block_ns_attributes]
+zoom_rotate_time = 0.01
+impair_koeff = 0.8
+
+[ak_front_sight_night]:attachment_base_ak
+kind  = ak_misc
+inv_ui_sign				= ak_fsN
+visual						= w_att_huds\ak_front_sight_night
+inv_name					= ak_front_sight_night
+inv_name_short			= ak_front_sight_nightS
+inv_grid_x					= 22
+inv_grid_y					= 3
+inv_weight					= 0.05
+attachment_point		= ak_front_sight_night|0,0,0|0,0,0
+item_tags =	sights
+override_section = ak_front_sight_night_attributes
+
+[ak_front_sight_night_attributes]
+
+[ak_rear_sight]:attachment_base_ak
+kind  = ak_misc
+inv_ui_sign				= ak_rs
+visual						= w_att_huds\ak_rear_sight
+inv_name					= ak_rear_sight
+inv_name_short			= ak_rear_sight
+cost							= 300
+inv_grid_x					= 23
+inv_grid_y					= 3
+inv_weight					= 0.05
+attachment_point = ak_rear_sight|0,0,0|0,0,0
+attachment_slots = ak_rear_sight_night|wpn_body|0,0,0|0,0,0
+override_section = ak_rear_sight_attributes
+
+[ak_rear_sight_attributes]
+zoom_rotate_time = -0.01
+fire_dispersion_base_koeff = -0.05
+
+[ak_rear_sight_rpk]:attachment_base_ak
+kind  = ak_misc
+inv_ui_sign				= rpk_rs
+visual						= w_att_huds\ak_rear_sight_rpk
+inv_name					= ak_rear_sight_rpk
+inv_name_short			= ak_rear_sight_rpk
+cost							= 300
+inv_grid_x					= 24
+inv_grid_y					= 3
+inv_weight					= 0.05
+attachment_point = ak_rear_sight|0,0,0|0,0,0
+override_section = ak_rear_sight_rpk_attributes
+
+[ak_rear_sight_rpk_attributes]
+zoom_rotate_time = -0.01
+fire_dispersion_base_koeff = -0.05
+
+[ak_rear_sight_rpk74m]:ak_rear_sight_rpk
+kind  = ak_misc
+inv_ui_sign				= rpk74m_rs
+visual						= w_att_huds\ak_rear_sight_rpk74m
+inv_name					= ak_rear_sight_rpk74m
+inv_name_short			= ak_rear_sight_rpk74m
+cost							= 350
+inv_grid_x					= 25
+override_section = ak_rear_sight_rpk74m_attributes
+
+[ak_rear_sight_rpk74m_attributes]
+zoom_rotate_time = -0.01
+fire_dispersion_base_koeff = -0.05
+
+[ak_rear_sight_night]:attachment_base_ak
+kind  = ak_misc
+inv_ui_sign				= ak_rsN
+visual						= w_att_huds\ak_rear_sight_night
+inv_name					= ak_rear_sight_night
+inv_name_short			= ak_rear_sight_nightS
+cost							= 450
+inv_grid_x					= 27
+inv_grid_y					= 3
+inv_weight					= 0.05
+attachment_point		= ak_rear_sight_night|0,0,0|0,0,0
+item_tags	=	sights
+override_section = ak_rear_sight_night_attributes
+
+[ak_rear_sight_night_attributes]
+
+[ak_rear_sight_hephaestus]:ak_rear_sight										;конфликт с пикатини крышкой
+kind  = ak_misc
+inv_ui_sign				= ak_rsP
+visual						= w_att_huds\ak_rear_sight_hephaestus
+description				= ar_hg_8
+inv_name					= ak_rear_sight_hephaestus
+inv_name_short			= ak_rear_sight_hephaestusS
+cost							= 1100
+inv_grid_x					= 28
+inv_weight					= 0.12
+attachment_slots		= pica_8|wpn_body|0,0.0859,0.104|0,0,0	
+item_tags	=	rail
+override_section = ak_rear_sight_pica_att
+
+[ak_rear_sight_ohhunt]:ak_rear_sight											;конфликт с пикатини крышкой
+kind  = ak_misc
+inv_ui_sign				= ak_rsP
+visual						= w_att_huds\ak_rear_sight_ohhunt
+description				= pica_13_up
+inv_name					= ak_rear_sight_ohhunt
+inv_name_short			= ak_rear_sight_ohhuntS
+cost							= 1150
+inv_grid_x					= 29
+inv_weight					= 0.14
+attachment_slots		= pica_13|wpn_body|0,0.0926,0.093|0,0,0
+item_tags	=	rail
+override_section		=	ohhunt_aim_att
+[ohhunt_aim_att]
+;aim_hud_offset_pos				= -0.06, 0.03, -0.07
+;aim_hud_offset_pos_16x9		= -0.06, 0.03, -0.07
+aim_hud_offset_pos				= -0.08, 0.03, -0.1
+aim_hud_offset_pos_16x9		= -0.08, 0.03, -0.1
+aimpoint_offset_y = 0.09274
+zoom_rotate_time = 0.01
+
+[ak_cover_zmey]:attachment_base_ak								;конфликт с пикатини крышкой \ вепрь12 ствол ак200
+kind  =  ak_covers
+inv_ui_sign				= ak_rsP+
+visual						= w_att_huds\ak_rear_sight_zmey_pica
+description				= pica_17_up
+inv_name					= ak_rear_sight_zmey_pica
+inv_name_short		= ak_rear_sight_zmey_picaS
+cost							= 1450
+inv_grid_x				= 30
+inv_grid_y				= 3
+inv_weight					= 0.11
+attachment_point 	= ak_cover_mount|0,0,0|0,0,0
+attachment_slots 	= pica_17|wpn_body|0,0.082,-0.018|0,0,0
+item_tags =	rail
+override_section = ak_rear_sight_pica_att
+
+[ak_cover_radom]:ak_cover_zmey				;РАДОМ
+inv_ui_sign				= ak_fb-r
+visual						= w_att_huds\ak_cover_up_fb_radom
+inv_name					= ak_cover_up_fb_radom
+inv_name_short		= ak_cover_up_fb_radomS
+inv_grid_width			= 2
+inv_grid_x         		= 21
+inv_grid_y         		= 21
+inv_weight				= 0.13
+cost							= 1350
+attachment_slots		= pica_17|wpn_body|0,0.0849,-0.022|0,0,0
+
+[bizon_rear_sight]:attachment_base_ak
+kind  =  bizon
+inv_ui_sign				= pp19_rs
+visual						= w_att_huds\vityaz_rear_sight
+inv_name					= vityaz_rear_sight
+inv_name_short		= vityaz_rear_sightS
+cost							= 250
+inv_grid_x					= 31
+inv_grid_y					= 3
+inv_weight					= 0.05
+attachment_point		= bizon_rear_sight|0,0,0|0,0,0
+override_section = bizon_rear_sight_attributes
+
+[bizon_rear_sight_attributes]
+zoom_rotate_time = -0.01
+fire_dispersion_base_koeff = -0.05
+
+[74u_cover_b18]:attachment_base_ak
+kind  =  74u_covers
+inv_ui_sign				= 74u_rsP
+visual						= w_att_huds\74u_cover_sight_zenit_b18
+description				= pica_8_up
+inv_name					= 74u_cover_b18
+inv_name_short		= 74u_cover_b18S
+cost							= 750
+inv_grid_x					= 35
+inv_grid_y					= 3
+inv_weight					= 0.05
+attachment_point = 74u_cover_sight_zenit_b18|0,0,0|0,0,0
+attachment_slots = pica_8|wpn_body|0,0.10075,0.09|0,0,0
+item_tags =	rail
+override_section = 74u_cover_b18_attributes
+
+[74u_cover_b18_attributes]
+
+[bm1]:attachment_base_ak
+kind = ak_misc
+inv_ui_sign				= bar_pic
+visual							= w_att_huds\rs_regulate_bm1
+description				= pica_3_up
+inv_name					= rs_regulate_bm1
+inv_name_short		= rs_regulate_bm1S
+cost							= 600
+inv_grid_x					= 40
+inv_grid_y					= 1
+inv_weight					= 0.05
+attachment_point = tac_mount|0,0,0|0,0,0
+attachment_slots	= pica_3|muzzle|-0.01264,0,0.01264|0,0,-90
+item_tags	=	rail
+override_section = bm1_attributes
+
+[bm1_attributes]
+
+[74u_hg]:attachment_base_ak
+kind  =  74u_hgs
+inv_ui_sign				= 74u_hg
+visual						= w_att_huds\74u_hg
+inv_name					= 74u_hg
+inv_name_short			= 74u_hg
+cost							= 550
+inv_grid_x					= 6
+inv_grid_y					= 4
+inv_weight					= 0.12
+attachment_point		= 74u_hg|0,0,0|0,0,0
+override_section		= 74u_hg_attributes
+[74u_hg_attributes]:c_attributes,hg_4_att
+
+[74u_hg_fab]:74u_hg
+inv_ui_sign				= 74u_fd
+visual						= w_att_huds\74u_hg_fab
+description				= pica_3_up
+inv_name					= 74u_hg_fab
+inv_name_short			= 74u_hg_fabS
+cost							= 950
+inv_grid_x					= 7
+inv_weight					= 0.11
+attachment_slots		= pica_3|wpn_body|0,0.0231,0.28|0,0,180#picgrp|wpn_body|0,-0.0126,0.038|0,0,0
+override_section		= 74u_hg_fab_attributes
+[74u_hg_fab_attributes]:c_attributes,hg_3_att
+
+[74u_hg_100]:74u_hg_fab
+inv_ui_sign				= 74ba
+visual						= w_att_huds\74u_hg_100
+description				= pica_3_up
+inv_name					= 74u_hg_100
+inv_name_short		= 74u_hg_100S
+inv_grid_x         		= 14
+inv_grid_y         		= 21
+cost							= 850
+inv_weight					= 0.1
+attachment_slots		= pica_3|wpn_body|0,0.0258,0.27|0,0,180#picgrp|wpn_body|0,-0.0098,0.038|0,0,0
+override_section = 74u_hg_100_attributes
+
+[74u_hg_100_attributes]
+animation_prefix = c_
+
+[ak_hg_up]:attachment_base_ak
+kind			= ak_hg_short
+inv_ui_sign				= ak_up
+visual						= w_att_huds\ak_hg_up
+inv_name					= ak_hg_up
+inv_name_short			= ak_hg_upS
+cost							= 300
+inv_grid_x					= 13
+inv_grid_y					= 4
+inv_weight					= 0.05
+attachment_point		= ak_hg_up|0,0,0|0,0,0
+item_tags =	cover
+override_section = ak_hg_up_attributes
+
+[ak_hg_up_attributes]
+zoom_rotate_time = -0.01
+
+[ak_hg_up_dmg]:ak_hg_up
+visual							= w_att_huds\ak_hg_up_dmg
+inv_name						= ak_hg_up_dmg
+cost								= 50
+inv_grid_x					= 9
+inv_grid_y					= 21
+override_section = ak_hg_up_dmg_attributes
+
+inv_weight = 0.05
+[ak_hg_up_dmg_attributes]
+[ak_hg_up_dmg_att]
+recoil_koeff = -0.04
+
+[ak_hg_fab_up]:ak_hg_up
+inv_ui_sign				= 74u_up
+visual						= w_att_huds\ak_hg_fab_up
+description				= ar_hg_6
+inv_name					= ak_hg_fab_up
+inv_name_short			= ak_hg_fab_upS				
+cost							= 550
+inv_grid_x					= 8
+attachment_slots		= pica_6|wpn_body|0,0.0864,0.235|0,0,0#pica_3|wpn_body|-0.0199,0.0662,0.3|0,0,-90#pica_3|wpn_body|0.0199,0.0662,0.3|0,0,90
+override_section = ak_hg_fab_up_attributes
+
+inv_weight = 0.05
+[ak_hg_fab_up_attributes]
+zoom_rotate_time = 0.01
+
+[74u_hg_keymod]:74u_hg
+inv_ui_sign				= 74u_km		
+visual						= w_att_huds\74u_hg_keymod
+description				= ar_hg_8_keymod
+inv_name					= 74u_hg_keymod
+inv_name_short			= 74u_hg_keymodS
+cost							= 950
+inv_grid_x					= 9
+inv_weight					= 0.14
+attachment_point		= 74u_hg_full|0,0,0|0,0,0
+attachment_slots		= pica_8|wpn_body|0,0.0792,0.21|0,0,0#keymod_rail_grip|wpn_body|0,-0.0167,0.038|0,0,0#keymod|wpn_body|0.01925,0.0458,0.268|0,0,90
+override_section = 74u_hg_keymod_attributes
+[74u_hg_keymod_attributes]:c_attributes
+zoom_rotate_time = -0.02
+recoil_koeff            = -0.01
+inertia_koeff           = 0.9
+
+[74u_hg_pla]:74u_hg
+inv_ui_sign				= gp_hg
+visual						= w_att_huds\74u_hg_pla
+inv_name					= 74u_hg_pla
+inv_name_short			= 74u_hg_plaS
+cost							= 600
+inv_grid_x					= 10
+inv_weight					= 0.11
+override_section		= 74u_hg_pla_attributes
+
+[74u_hg_pla_attributes]
+animation_prefix = c_
+
+[ak_hg_pla_up]:ak_hg_up
+inv_ui_sign				= gp_up
+visual						= w_att_huds\ak_hg_pla_up 
+inv_name					= 74u_hg_pla_up
+inv_name_short			= 74u_hg_pla_upS
+cost							= 350
+inv_grid_x					= 11
+override_section = ak_hg_pla_up_attributes
+
+[ak_hg_pla_up_attributes]
+zoom_rotate_time = -0.01
+
+[74u_hg_zenit_b11yn]:74u_hg
+inv_ui_sign				= 74u_b119n
+visual						= w_att_huds\74u_hg_zenit_b11y+b19n
+description				= ar_hg_8
+inv_name					= 74u_hg_zenit_b11y+b19n
+inv_name_short		= 74u_hg_zenit_b11y+b19nS
+cost							= 1250
+inv_grid_x				= 12
+inv_weight				= 0.22
+attachment_point	= 74u_hg_full|0,0,0|0,0,0
+attachment_slots 	= pica_8|wpn_body|0,0.0787,0.219|0,0,0#pica_3|wpn_body|0,0.0248,0.28|0,0,180#picgrp|wpn_body|0,-0.0108,0.038|0,0,0
+override_section 		= 74u_hg_zenit_b11yn_attributes
+
+[74u_hg_zenit_b11yn_attributes]
+animation_prefix = c_
+zoom_rotate_time = -0.02
+recoil_koeff = -0.01
+inertia_koeff = 0.9
+
+[74u_hg_zenit_b11y]:74u_hg_fab
+inv_ui_sign				= 74u_b11y
+visual						= w_att_huds\74u_hg_zenit_b11y
+description				= pica_3_up
+inv_name					= 74u_hg_zenit_b11y
+inv_name_short		= 74u_hg_zenit_b11yS
+cost							= 900
+inv_grid_x         		= 10
+inv_grid_y         		= 22
+attachment_slots		= pica_3|wpn_body|0,0.0248,0.28|0,0,180#picgrp|wpn_body|0,-0.0108,0.038|0,0,0
+override_section = 74u_hg_zenit_b11y_attributes
+
+[74u_hg_zenit_b11y_attributes]
+animation_prefix = c_
+
+[74u_hg_dong]:74u_hg 
+inv_ui_sign				= 74u_dng
+visual						= w_att_huds\74u_hg_dong
+inv_name					= 74u_hg_dong
+inv_name_short			= 74u_hg_dongS
+inv_grid_x         = 24
+inv_grid_y         = 21
+cost							= 800
+inv_weight				= 0.17
+override_section = 74u_hg_dong_attributes
+[74u_hg_dong_attributes]:ak_hg_amd65_attributes,v_attributes
+
+[ak_hg_dmg]:attachment_base_ak
+kind			= ak_hg_short
+inv_ui_sign				= ak_hg
+visual						= w_att_huds\ak_hg_dmg
+inv_name					= ak_hg_dmg
+inv_name_short			= ak_hg
+cost							= 100
+inv_grid_x         		= 8
+inv_grid_y         		= 21
+inv_weight				= 0.105
+attachment_point = ak_hg|0,0,0|0,0,0
+override_section = ak_hg_dmg_attributes
+
+[ak_hg_dmg_attributes]
+animation_prefix = c_
+
+[ak_hg]:ak_hg_dmg
+kind			= ak_hg_short
+visual						= w_att_huds\ak_hg
+inv_name					= ak_hg
+cost							= 600
+inv_grid_x					= 14
+inv_grid_y					= 4
+item_tags = hg
+inv_weight				= 0.11
+override_section = ak_hg_attributes
+[ak_hg_attributes]:c_attributes,hg_7_att
+
+[ak_hg_rpk]:ak_hg
+kind			= ak_hg_short
+inv_ui_sign				= rpk_hg
+visual						= w_att_huds\ak_hg_rpk
+inv_name					= ak_hg_rpk
+inv_name_short		= ak_hg_rpk
+cost							= 700
+inv_grid_x         = 37
+inv_grid_y         = 5
+inv_weight				= 0.12
+override_section = ak_hg_rpk_attributes
+
+[ak_hg_rpk_attributes]
+animation_prefix = c_
+
+[ak_hg_74_up]:ak_hg_up
+kind			= ak_hg_short
+inv_ui_sign				= 74_up
+visual						= w_att_huds\ak_hg_74_up
+inv_name					= ak_hg_74_up
+inv_name_short			= ak_hg_74_upS
+inv_grid_x					= 15
+override_section = ak_hg_74_up_attributes
+
+cost = 300
+inv_weight = 0.05
+[ak_hg_74_up_attributes]
+zoom_rotate_time = -0.01
+
+[ak_hg_74]:ak_hg
+kind			= ak_hg_short
+inv_ui_sign				= 74_hg
+visual						= w_att_huds\ak_hg_74
+inv_name					= ak_hg_74
+inv_name_short			= ak_hg_74
+cost							= 650
+inv_grid_x					= 16
+override_section = ak_hg_74_attributes
+
+[ak_hg_74_attributes]
+animation_prefix = c_
+
+[ak_hg_m_up]:ak_hg_up
+kind			= ak_hg_short
+inv_ui_sign				= akm_up
+visual						= w_att_huds\ak_hg_m_up
+inv_name					= ak_hg_m_up
+inv_name_short		= ak_hg_m_upS
+inv_grid_x					= 17
+override_section = ak_hg_m_up_attributes
+
+cost = 300
+inv_weight = 0.05
+[ak_hg_m_up_attributes]
+zoom_rotate_time = -0.01
+
+[ak_hg_m]:ak_hg
+kind			= ak_hg_short
+inv_ui_sign				= akm_hg
+visual						= w_att_huds\ak_hg_m
+inv_name					= ak_hg_m
+inv_name_short			= ak_hg_m
+cost							= 650
+inv_grid_x					= 18
+override_section = ak_hg_m_attributes
+
+[ak_hg_m_attributes]
+animation_prefix = c_
+
+[ak_hg_74m]:ak_hg
+kind			= ak_hg_short
+inv_ui_sign				= 74m_hg
+visual						= w_att_huds\ak_hg_74m
+inv_name					= ak_hg_74m
+inv_name_short			= ak_hg_74m
+cost							= 700
+inv_grid_x					= 19
+override_section = ak_hg_74m_attributes
+[ak_hg_74m_attributes]:c_attributes,hg_4_att
+
+[ak_hg_74_plum]:ak_hg_74m
+inv_ui_sign				= 74_plm
+visual						= w_att_huds\ak_hg_74_plum
+inv_name					= ak_hg_74_plum
+inv_name_short			= ak_hg_74_plum
+inv_grid_x					= 35
+inv_grid_y					= 5
+override_section = ak_hg_74_plum_attributes
+
+[ak_hg_74_plum_attributes]
+animation_prefix = c_
+
+[ak_hg_100]:ak_hg
+inv_ui_sign				= 100_hg
+visual						= w_att_huds\ak_hg_100
+description				= pica_3_up2
+inv_name					= ak_hg_100
+inv_name_short			= ak_hg_100S
+inv_grid_x					= 20
+cost							= 1150
+attachment_slots		= pica_3|wpn_body|0,0.0258,0.28|0,0,180#pica_3|wpn_body|0.0195,0.0462,0.295|0,0,90#picgrp|wpn_body|0,-0.0098,0.038|0,0,0
+override_section		= ak_hg_100_attributes
+[ak_hg_100_attributes]:c_attributes,hg_5_att
+
+[ak_hg_200]:ak_hg_100
+inv_ui_sign				= ak200_hg
+visual						= w_att_huds\ak_hg_ak200
+description				= pica_10_up
+inv_name					= ak_hg_ak200
+inv_name_short		= ak_hg_ak200S
+inv_grid_x         		= 33
+inv_grid_y         		= 20
+cost							= 1350
+inv_weight				= 0.16
+attachment_point = ak_hg_full|0,0,0|0,0,0
+attachment_slots		= pica_10|wpn_body|0,0.081,0.23|0,0,0#pica_3|wpn_body|-0.02356,0.062,0.27|0,0,-90#pica_3|wpn_body|0.02356,0.062,0.27|0,0,90#picgrp|wpn_body|0,-0.0098,0.038|0,0,0
+override_section		= ak_hg_200_attributes
+
+[ak_hg_200_attributes]
+animation_prefix = c_
+
+recoil_koeff = -0.01
+[ak_hg_74m_up]:ak_hg_up
+inv_ui_sign				= 74m_up
+visual						= w_att_huds\ak_hg_74m_up
+inv_name					= ak_hg_74m_up
+inv_name_short			= ak_hg_74m_upS
+cost							= 350
+inv_grid_x					= 21
+override_section = ak_hg_74m_up_attributes
+
+inv_weight = 0.05
+[ak_hg_74m_up_attributes]
+zoom_rotate_time = -0.01
+
+[ak_hg_74_plum_up]:ak_hg_74m_up
+inv_ui_sign				= 74p_up
+visual						= w_att_huds\ak_hg_74_plum_up
+inv_name					= ak_hg_74_plum_up
+inv_name_short			= ak_hg_74_plum_upS
+inv_grid_x					= 36
+inv_grid_y					= 5
+override_section = ak_hg_74_plum_up_attributes
+
+cost = 350
+inv_weight = 0.05
+[ak_hg_74_plum_up_attributes]
+zoom_rotate_time = -0.01
+
+[ak_hg_up_type_88]:ak_hg_74m_up
+inv_ui_sign				= tp88_up
+visual						= w_att_huds\ak_hg_up_type_88
+inv_name					= ak_hg_up_type_88
+inv_name_short		= ak_hg_up_type_88S
+inv_grid_x         		= 15
+inv_grid_y         		= 21
+override_section = ak_hg_up_type_88_attributes
+
+cost = 350
+inv_weight = 0.05
+[ak_hg_up_type_88_attributes]
+zoom_rotate_time = -0.01
+
+[ak_hg_vepr12]:ak_hg		
+inv_ui_sign				= v12_hg
+visual						= w_att_huds\ak_hg_vepr12
+description				= pica_3_up3
+inv_name					= ak_hg_vepr12
+inv_name_short			= ak_hg_vepr12S		
+cost							= 1200
+inv_grid_x					= 22
+attachment_slots		= pica_3|wpn_body|0,0.0216,0.28|0,0,180#pica_3|wpn_body|-0.0223,0.048,0.288|0,0,-90#pica_3|wpn_body|0.0223,0.048,0.288|0,0,90#picgrp|wpn_body|0,-0.0139,0.038|0,0,0	
+override_section		= ak_hg_vepr12_attributes
+[ak_hg_vepr12_attributes]:c_attributes,hg_5_att
+
+[ak_hg_vepr12_up]:ak_hg_pla_up
+inv_ui_sign				= v12_up
+visual						= w_att_huds\ak_hg_vepr12_up
+inv_name					= ak_hg_vepr12_up
+inv_name_short			= ak_hg_vepr12_upS
+inv_grid_x					= 23
+override_section = ak_hg_vepr12_up_attributes
+
+[ak_hg_vepr12_up_attributes]
+zoom_rotate_time = -0.01
+
+[ak_hg_amd65]:ak_hg
+inv_ui_sign				= md65_hg
+visual						= w_att_huds\ak_hg_amd65
+inv_name					= ak_hg_amd65
+inv_name_short			= ak_hg_amd65S
+inv_grid_x					= 24
+cost							= 900
+inv_weight				= 0.28
+override_section =	ak_hg_amd65_attributes
+[ak_hg_amd65_attributes]:cd_attributes
+zoom_rotate_time = 0.01
+recoil_koeff            = -0.02
+inertia_koeff           = 0.9
+
+[ak_hg_dong]:ak_hg_amd65
+inv_ui_sign				= ak_dong
+visual						= w_att_huds\ak_hg_dong
+inv_name					= ak_hg_dong
+inv_name_short		= ak_hg_dongS
+inv_grid_x				= 25
+cost							= 800
+inv_weight				= 0.2
+override_section		= ak_hg_dong_attributes
+[ak_hg_dong_attributes]:keymod_foregrip_tommy_attributes,cd_attributes
+
+recoil_koeff = -0.01
+inertia_koeff = 1.1
+zoom_rotate_time = 0.15
+[ak_hg_dong_mlok]:ak_hg_amd65
+inv_ui_sign				= ak_dg+
+visual						= w_att_huds\ak_hg_dong_mlok
+description				= ar_hg_0_mlok
+inv_name					= ak_hg_dong_mlok
+inv_name_short			= ak_hg_dong_mlokS
+inv_grid_x					= 26
+cost							= 1000
+inv_weight				= 0.17
+attachment_slots		= mlok|wpn_body|0.0179,0.0435,0.242|0,0,90	
+override_section		= ak_hg_dong_mlok_attributes
+
+[ak_hg_dong_mlok_attributes]
+zoom_rotate_time = 0.03
+recoil_koeff = -0.01
+inertia_koeff = 1.1
+animation_prefix = cd_
+
+[ak_hg_radom]:ak_hg
+inv_ui_sign				= ak_fd
+visual						= w_att_huds\ak_hg_fb_radom
+description				= pica_3_up3
+inv_name					= ak_hg_fb_radom
+inv_name_short			= ak_hg_fb_radomS
+inv_grid_x					= 27
+cost							= 1150
+inv_weight				= 0.18
+attachment_slots		= pica_3|wpn_body|0,0.0223,0.28|0,0,180#pica_3|wpn_body|-0.0185,0.0435,0.284|0,0,-90#pica_3|wpn_body|0.0185,0.0435,0.284|0,0,90#picgrp|wpn_body|0,-0.0136,0.038|0,0,0
+override_section		= ak_hg_radom_attributes		
+[ak_hg_radom_attributes]:c_attributes,hg_9_att
+
+[ak_hg_radom_up]:ak_hg_up
+inv_ui_sign				= ak_fd
+visual						= w_att_huds\ak_hg_fb_radom_up
+description				= pica_9_up
+inv_name					= ak_hg_fb_radom_up
+inv_name_short			= ak_hg_fb_radom_upS
+inv_grid_x					= 28
+cost							= 550
+inv_weight				= 0.08
+attachment_slots		= pica_9|wpn_body|0,0.0849,0.235|0,0,0
+override_section = ak_hg_radom_up_attributes
+
+[ak_hg_radom_up_attributes]
+zoom_rotate_time = 0.01
+[ak_hg_radom_up_att]
+zoom_rotate_time = 0.01
+recoil_koeff            = -0.05
+
+[ak_hg_krebs]:ak_hg
+inv_ui_sign				= ak_kr
+visual						= w_att_huds\ak_hg_krebs
+description				= ar_hg_8_keymod
+inv_name					= ak_hg_krebs
+inv_name_short			= ak_hg_krebsS
+inv_grid_x					= 29
+cost							= 1050
+inv_weight				= 0.2
+attachment_point = ak_hg_full|0,0,0|0,0,0
+attachment_slots		= pica_8|wpn_body|0,0.0822,0.235|0,0,0#keymod_rail_grip|wpn_body|0,-0.0137,0.038|0,0,0#keymod|wpn_body|-0.0193,0.049,0.294|0,0,-90#keymod|wpn_body|0.0193,0.049,0.294|0,0,90#keymod|wpn_body|0,0.0219,0.294|0,0,180
+override_section		= ak_hg_krebs_attributes
+[ak_hg_krebs_attributes]:c_attributes,hg_10_att
+
+recoil_koeff = -0.01
+inertia_koeff = 0.9
+zoom_rotate_time = -0.02
+[ak_hg_krebs_long]:ak_hg_krebs			;не совсместимо с оптикой
+inv_ui_sign				= ak_krL
+visual						= w_att_huds\ak_hg_krebs_long
+description				= ar_hg_22_keymod		
+inv_name					= ak_hg_krebs_long
+inv_grid_width			= 2
+inv_grid_x				= 30
+cost							= 1450
+inv_weight				= 0.32
+attachment_slots		= pica_22|wpn_body|0,0.0822,0.235|0,0,0#keymod_rail_grip|wpn_body|0,-0.0137,0.038|0,0,0#keymod|wpn_body|-0.0193,0.049,0.294|0,0,-90#keymod|wpn_body|0.0193,0.049,0.294|0,0,90#keymod|wpn_body|0,0.0219,0.35|0,0,180#lock_bipods|wpn_body|0,0.02172,0.4246|0,0,0
+override_section = ak_hg_dn_arms_km_attributes
+
+[ak_hg_lhv47]:ak_hg
+inv_ui_sign				= ak_lhv47
+visual						= w_att_huds\ak_hg_lhv47
+description				= pica_3_up3
+inv_name					= ak_hg_lhv47
+inv_name_short			= ak_hg_lhv47S
+inv_grid_x					= 32
+cost							= 1200
+inv_weight				= 0.17
+attachment_slots		= pica_3|wpn_body|-0.0214,0.048,0.29|0,0,-90#pica_3|wpn_body|0.0214,0.048,0.29|0,0,90#pica_3|wpn_body|0,0.0214,0.29|0,0,180#picgrp|wpn_body|0,-0.0141,0.038|0,0,0		
+override_section		= ak_hg_lhv47_attributes
+[ak_hg_lhv47_attributes]:c_attributes,hg_8_att
+
+
+
+[ak_hg_lhv47_up]:ak_hg_up
+inv_ui_sign				= ak_lhv47
+visual						= w_att_huds\ak_hg_lhv47_up
+description				= pica_9_up
+inv_name					= ak_hg_lhv47_up
+inv_name_short			= ak_hg_lhv47_upS
+inv_grid_x					= 33
+cost							= 450
+inv_weight				= 0.08
+attachment_slots		= pica_9|wpn_body|0,0.0851,0.231|0,0,0
+override_section = ak_hg_lhv47_up_attributes
+
+[ak_hg_lhv47_up_attributes]
+zoom_rotate_time = 0.01
+
+[ak_hg_tdi_mlok]:ak_hg
+inv_ui_sign				= ak_tdi
+visual						= w_att_huds\ak_hg_tdi_mlok		
+description				= ar_hg_0_mlok
+inv_name					= ak_hg_tdi_mlok
+inv_name_short			= ak_hg_tdi_mlokS
+inv_grid_x					= 34
+cost							= 900
+inv_weight				= 0.1		
+attachment_slots		= mlok|wpn_body|-0.0198,0.0434,0.288|0,0,-90#mlok|wpn_body|0.0198,0.0434,0.288|0,0,90#mlok_rail_grip|wpn_body|0,-0.0158,0.038|0,0,0		
+override_section		= ak_hg_tdi_mlok_attributes
+[ak_hg_tdi_mlok_attributes]:c_attributes,hg_6_att
+
+[ak_hg_mlok_long]:ak_hg
+inv_ui_sign				= ak_ml	
+visual						= w_att_huds\ak_hg_mlok_long
+description				= ar_hg_0_mlok
+inv_name					= ak_hg_mlok_long
+inv_name_short			= ak_hg_mlok_longS
+inv_grid_width			= 2
+inv_grid_x					= 35
+cost							= 1100	
+inv_weight				= 0.12
+attachment_slots		= mlok|wpn_body|-0.0198,0.0434,0.305|0,0,-90#mlok|wpn_body|0.0198,0.0434,0.288|0,0,90#mlok|wpn_body|-0.0151,0.0261,0.356|0,0,-127#mlok|wpn_body|0.0151,0.0261,0.356|0,0,127#mlok|wpn_body|0,0.0199,0.32|0,0,180#mlok_rail_grip|wpn_body|0,-0.0158,0.038|0,0,0#lock_bipods|wpn_body|0,0.01978,0.36586|0,0,0
+override_section		= ak_hg_mlok_long_attributes
+
+[ak_hg_mlok_long_attributes]
+animation_prefix = c_
+
+[ak_hg_mlok_long_red]:ak_hg_mlok_long
+inv_ui_sign				= ak_ml+
+visual						= w_att_huds\ak_hg_mlok_long_red
+inv_grid_x					= 37
+cost							= 1050
+override_section = ak_hg_mlok_long_red_attributes
+
+[ak_hg_mlok_long_red_attributes]
+animation_prefix = c_
+
+[ak_hg_moe]:ak_hg	
+inv_ui_sign				= ak_moe
+visual						= w_att_huds\ak_hg_mp_moe
+description				= ar_hg_0_mlok
+inv_name					= ak_hg_mp_moe
+inv_name_short			= ak_hg_mp_moeS
+inv_grid_x					= 39
+cost							= 1200
+inv_weight				= 0.12
+attachment_slots = mlok|wpn_body|0.0213,0.051,0.277|0,0,90#mlok_rail_grip|wpn_body|0,-0.0146,0.038|0,0,0
+override_section = ak_hg_moe_attributes
+[ak_hg_moe_attributes]:c_attributes,hg_6_att
+
+[ak_hg_moe_up]:ak_hg_up
+inv_ui_sign				= ak_moe
+visual						= w_att_huds\ak_hg_mp_moe_up
+inv_name					= ak_hg_mp_moe_up
+inv_name_short			= ak_hg_mp_moe_upS
+inv_grid_x					= 40
+cost							= 450
+inv_weight				= 0.06
+override_section = ak_hg_moe_up_attributes
+
+[ak_hg_moe_up_attributes]
+zoom_rotate_time = -0.01
+
+[ak_hg_zhukov]:ak_hg			; !!! не совместим с накладками и боковыми планками
+inv_ui_sign				= ak_zh
+visual						= w_att_huds\ak_hg_mp_zhukov
+description				= ar_hg_0_mlok
+inv_name					= ak_hg_mp_zhukov
+inv_name_short			= ak_hg_mp_zhukovS
+inv_grid_width			= 2			
+inv_grid_x					= 6
+inv_grid_y					= 5
+cost							= 1450
+inv_weight				= 0.27
+attachment_slots		= mlok|wpn_body|-0.0221,0.06,0.346|0,0,-90#mlok|wpn_body|0.0221,0.06,0.346|0,0,90#mlok|wpn_body|0,0.021,0.35|0,0,180#mlok_rail_grip|wpn_body|0,-0.0147,0.038|0,0,0#lock_bipods|wpn_body|0,0.021,0.358|0,0,0
+override_section		= ak_hg_zhukov_attributes
+[ak_hg_zhukov_attributes]:c_attributes
+zoom_rotate_time = -0.02
+inertia_koeff           = 0.9
+
+[ak_hg_zhukov_up]:ak_hg_moe_up
+inv_ui_sign				= ak_zh
+visual						= w_att_huds\ak_hg_mp_zhukov_up
+inv_name					= ak_hg_mp_zhukov_up
+inv_name_short			= ak_hg_mp_zhukov_upS
+inv_grid_x					= 8
+inv_grid_y					= 5
+override_section = ak_hg_zhukov_up_attributes
+
+[ak_hg_zhukov_up_attributes]
+zoom_rotate_time = -0.01
+
+[ak_hg_mk21]:ak_hg				;	не совместим с обычными газовыми трубками
+inv_ui_sign				= ak_sag
+visual						= w_att_huds\ak_hg_sag_mk21
+description				= ar_hg_8_mlok
+inv_name					= ak_hg_sag_mk21
+inv_name_short			= ak_hg_sag_mk21S
+inv_grid_width			= 2
+inv_grid_x         		= 9
+inv_grid_y         		= 5
+cost							= 1650
+inv_weight				= 0.61
+attachment_point = ak_hg_full|0,0,0|0,0,0
+attachment_slots		= mlok|wpn_body|-0.0217,0.05,0.31|0,0,-90#mlok|wpn_body|0.0217,0.05,0.31|0,0,90#mlok|wpn_body|0,0.0223,0.328|0,0,180#mlok_rail_grip|wpn_body|0,-0.0134,0.038|0,0,0#pica_8|wpn_body|0,0.0852,0.081|0,0,0#mlok_front|wpn_body|0,0.0836,0.25|0,0,0#lock_bipods|wpn_body|0,0.0223,0.37|0,0,0
+override_section		= ak_hg_mk21_attributes
+[ak_hg_mk21_attributes]:c_attributes,hg_15_att
+
+recoil_koeff = -0.02
+zoom_rotate_time = +0.05
+[ak_hg_sok]:ak_hg													;	не совместим с обычными газовыми трубками
+inv_ui_sign				= ak_sok
+visual						= w_att_huds\ak_hg_sok
+inv_name					= ak_hg_sok
+inv_name_short			= ak_hg_sokS
+cost							= 750
+inv_grid_width     = 2
+inv_grid_x         = 13
+inv_grid_y         = 5
+inv_weight				= 0.22
+attachment_point = ak_hg_full|0,0,0|0,0,0
+override_section	= ak_hg_sok_attributes
+[ak_hg_sok_attributes]:c_attributes,hg_12_att
+
+[ak_hg_vpo123]:ak_hg_sok											;	не совместим с обычными газовыми трубками
+inv_ui_sign				= ak_vpo
+visual						= w_att_huds\ak_hg_vpo123
+inv_name					= ak_hg_vpo123
+inv_name_short		= ak_hg_vpo123
+cost							= 850
+inv_grid_x         		= 29
+inv_grid_y         		= 20
+attachment_slots		= veresk_hg_rails|wpn_body|0,0.008,0.246|0,0,0
+
+[ak_hg_keymod]:ak_hg_zhukov				;	не совместим с обычными газовыми трубками
+inv_ui_sign				= ak_da
+visual							= w_att_huds\ak_hg_dn_arms_km
+description				= ar_hg_14_keymod
+inv_name					= ak_hg_dn_arms_km
+inv_name_short		= ak_hg_dn_arms_kmS
+inv_grid_x					= 38
+cost							= 1950
+inv_weight				= 0.37
+attachment_point = ak_hg_full|0,0,0|0,0,0
+attachment_slots	= keymod|wpn_body|-0.0189,0.045673,0.359464|0,0,-90#keymod|wpn_body|0.0189,0.045673,0.359464|0,0,90#keymod|wpn_body|0,0.0223,0.44|0,0,180#keymod_rail_grip|wpn_body|0,-0.0128,0.038|0,0,0#pica_14|wpn_body|0,0.0831,0.229|0,0,0#pica_3|wpn_body|0,0.0743,0.415|0,0,0#lock_bipods|wpn_body|0,0.0223,0.4425|0,0,0
+override_section = ak_hg_dn_arms_km_attributes
+[ak_hg_dn_arms_km_attributes]:c_attributes,hg_17_att
+
+recoil_koeff = -0.02
+zoom_rotate_time = 0.05
+[ak_hg_slr]:ak_hg_zhukov				;	не совместим с газовыми трубками, имеет сосбственную
+inv_ui_sign				= ak_slr
+visual						= w_att_huds\ak_hg_slr
+description				= ar_hg_10_mlok
+inv_name					= ak_hg_slr
+inv_name_short		= ak_hg_slrS
+inv_grid_x         		= 11
+cost							= 1700
+inv_weight				= 0.25
+attachment_point 	= ak_hg_full|0,0,0|0,0,0
+attachment_slots		= mlok|wpn_body|-0.0224,0.043,0.318|0,0,-90#mlok|wpn_body|0.0224,0.043,0.318|0,0,90#picgrp|wpn_body|0,-0.0155,0.038|0,0,0#pica_10|wpn_body|0,0.0766,0.23|0,0,0#pica_3|wpn_body|0,0.02,0.357|0,0,180#bipods|wpn_body|0,0.019935,0.344|0,0,0
+override_section 		= ak_hg_zenit_b31c_attributes
+
+[ak_hg_troy_short]:ak_hg_zhukov 
+inv_ui_sign				= ak_try
+visual						= w_att_huds\ak_hg_troy_short
+description				= ar_hg_0_mlok
+inv_name					= ak_hg_troy_short
+inv_name_short			= ak_hg_troy_shortS
+inv_grid_x					= 15
+cost							= 1100
+inv_weight				= 0.23
+attachment_slots		= mlok|wpn_body|-0.0223,0.0448,0.345|0,0,-90#mlok|wpn_body|0.0223,0.0448,0.345|0,0,90#mlok|wpn_body|0,0.0211,0.367|0,0,-180#mlok_rail_grip|wpn_body|0,-0.0145,0.038|0,0,0#lock_bipods|wpn_body|0,0.0211,0.3725|0,0,0
+override_section		= ak_hg_troy_short_attributes
+[ak_hg_troy_short_attributes]:c_attributes,hg_12_att
+
+
+
+[ak_hg_zastava]:ak_hg
+inv_ui_sign				= ak_m05
+visual						= w_att_huds\ak_hg_zastava
+description				= pica_3_up
+inv_name					= ak_hg_zastava
+inv_name_short			= ak_hg_zastavaS
+inv_grid_x					= 17
+inv_grid_y					= 5
+cost							= 1050
+inv_weight				= 0.17
+attachment_slots		= pica_3|wpn_body|0,0.02385,0.29|0,0,180#picgrp|wpn_body|0,-0.01175,0.038|0,0,0
+override_section		= ak_hg_zastava_attributes
+[ak_hg_zastava_attributes]:c_attributes,hg_5_att
+
+[ak_hg_zastava_up]:ak_hg_up
+inv_ui_sign				= ak_m05
+visual						= w_att_huds\ak_hg_zastava_up
+description				= pica_9_up
+inv_name					= ak_hg_zastava_up
+inv_name_short			= ak_hg_zastava_upS
+inv_grid_x					= 18
+inv_grid_y					= 5
+cost							= 350
+inv_weight				= 0.09
+attachment_slots		= pica_9|wpn_body|0,0.0837,0.235|0,0,0
+override_section = ak_hg_zastava_up_attributes
+
+[ak_hg_zastava_up_attributes]
+zoom_rotate_time = 0.01
+
+[ak_hg_xrs47yg]:ak_hg												;конфликт с любыми пикатинни газ турбками 
+inv_ui_sign				= ak_xrs
+visual						= w_att_huds\ak_hg_xrs47yg
+description				= ar_hg_12_13_keymod
+inv_name					= ak_hg_xrs47yg
+inv_name_short			= ak_hg_xrs47ygS
+inv_grid_width			= 2
+inv_grid_x					= 19
+inv_grid_y					= 5
+cost							= 2450
+inv_weight				= 0.51
+attachment_point 	= ak_hg_full|0,0,0|0,0,0
+attachment_slots		= keymod|wpn_body|-0.019,0.0668,0.293|0,0,-90#keymod|wpn_body|0.019,0.0668,0.293|0,0,90#pica_12|wpn_body|0,0.0864,0.227|0,0,0#pica_13|wpn_body|0,0.0864,0.0305|0,0,0#keymod_rail_grip|wpn_body|0,-0.0153,0.038|0,0,0		
+override_section		= ak_hg_xrs47yg_attributes
+[ak_hg_xrs47yg_attributes]:c_attributes,hg_15_att
+
+[ak_hg_vfr]:ak_hg_xrs47yg								;конфликт с любыми пикатинни газ турбками 
+inv_ui_sign				= ak_b31c
+visual						= w_att_huds\ak_hg_fd_vfr-ak
+description				= ar_hg_10_14
+inv_name					= ak_hg_fd_vfr-ak
+inv_name_short		= ak_hg_fd_vfr-akS
+inv_grid_width			= 2
+inv_grid_x         		= 31
+inv_grid_y         		= 20
+cost							= 2500
+inv_weight				= 0.59
+attachment_slots		= pica_3|wpn_body|0.019,0.04478,0.293|0,0,90#pica_3|wpn_body|-0.019,0.04478,0.293|0,0,-90#pica_10|wpn_body|0,0.0864,0.23|0,0,0#pica_14|wpn_body|0,0.0864,0.024|0,0,0#picgrp|wpn_body|0,-0.0119,0.038|0,0,0
+override_section		= ak_hg_fd_vfr_attributes
+[ak_hg_fd_vfr_attributes]:c_attributes,hg_19_att
+inertia_koeff           = 1.1
+
+[ak_hg_zenit_b10]:ak_hg_zastava
+inv_ui_sign				= ak_b10
+visual						= w_att_huds\ak_hg_zenit_b10
+description				= pica_3_up2
+inv_name					= ak_hg_zenit_b10
+inv_name_short			= ak_hg_zenit_b10S
+inv_grid_x					= 21
+cost							= 1250
+inv_weight				= 0.14
+attachment_slots		= pica_3|wpn_body|0,0.0241,0.29|0,0,-180#pica_3|wpn_body|0.0205,0.0507,0.287|0,0,90#picgrp|wpn_body|0,-0.0115,0.038|0,0,0
+override_section		= ak_hg_zenit_b10_attributes
+[ak_hg_zenit_b10_attributes]:c_attributes,hg_9_att
+
+[ak_hg_zenit_b10m]:ak_hg_zenit_b10
+inv_ui_sign				= ak_b10m
+visual						= w_att_huds\ak_hg_zenit_b10m
+description				= pica_3_up3
+inv_name					= ak_hg_zenit_b10m
+inv_name_short		= ak_hg_zenit_b10mS
+inv_grid_x         		= 33
+inv_grid_y         		= 21
+cost							= 1350
+inv_weight				= 0.17
+attachment_slots		= pica_3|wpn_body|0,0.0241,0.29|0,0,-180#pica_3|wpn_body|-0.019,0.0463,0.28|0,0,-90#pica_3|wpn_body|0.019,0.0463,0.28|0,0,90#picgrp|wpn_body|0,-0.0115,0.038|0,0,0
+override_section = ak_hg_zenit_b10m_attributes
+
+[ak_hg_zenit_b10m_attributes]
+animation_prefix = c_
+
+[ak_hg_zenit_b10mb]:ak_hg_zenit_b10m
+inv_ui_sign				= ak_b10m
+visual						= w_att_huds\ak_hg_zenit_b10mb
+description				= ar_hg_9
+inv_name					= ak_hg_zenit_b10m_b19
+inv_name_short		= ak_hg_zenit_b10m_b19S
+inv_grid_x         		= 35
+cost							= 1650
+inv_weight				= 0.25
+attachment_point 	= ak_hg_full|0,0,0|0,0,0
+attachment_slots		= pica_3|wpn_body|0,0.0241,0.29|0,0,-180#pica_3|wpn_body|-0.019,0.0463,0.28|0,0,-90#pica_3|wpn_body|0.019,0.0463,0.28|0,0,90#pica_9|wpn_body|0,0.08236,0.236|0,0,0#picgrp|wpn_body|0,-0.0115,0.038|0,0,0
+override_section		= ak_hg_zenit_b10mb_attributes
+[ak_hg_zenit_b10mb_attributes]:c_attributes,hg_13_att
+
+[ak_hg_zenit_b10b]:ak_hg_zenit_b10
+inv_ui_sign				= ak_b10+
+visual						= w_att_huds\ak_hg_zenit_b10+b12
+description				= ar_hg_7
+inv_name					= ak_hg_zenit_b10+b12
+inv_name_short			= ak_hg_zenit_b10+b12S
+inv_grid_x					= 22
+cost							= 1550
+inv_weight				= 0.18
+attachment_slots		= pica_3|wpn_body|0,0.0241,0.29|0,0,-180#pica_7|wpn_body|0,0.085212,0.233|0,0,0#pica_3|wpn_body|0.02725,0.0591,0.2771 m|0,0,90#picgrp|wpn_body|0,-0.0115,0.038|0,0,0		
+override_section		= ak_hg_zenit_b10b_attributes
+
+[ak_hg_zenit_b10b_attributes]
+animation_prefix = c_
+
+[ak_hg_zenit_b10yn]:ak_hg_zenit_b10
+inv_ui_sign				= ak_b10y+
+visual						= w_att_huds\ak_hg_zenit_b10y+b19n
+description				= ar_hg_7
+inv_name					= ak_hg_zenit_b10y+b19n
+inv_name_short		= ak_hg_zenit_b10y+b19nS
+inv_grid_x				= 23
+cost							= 1400
+inv_weight				= 0.2
+attachment_point 	= ak_hg_full|0,0,0|0,0,0
+attachment_slots		= pica_3|wpn_body|0,0.0247,0.29|0,0,-180#pica_7|wpn_body|0,0.0786,0.248|0,0,0#picgrp|wpn_body|0,-0.0108,0.038|0,0,0
+override_section		= ak_hg_zenit_b10yn_attributes
+
+[ak_hg_zenit_b10yn_attributes]
+animation_prefix = c_
+zoom_rotate_time = -0.02
+inertia_koeff = 0.9
+
+[ak_hg_zenit_b31c]:ak_hg_zenit_b10
+inv_ui_sign				= ak_b31c
+visual						= w_att_huds\ak_hg_zenit_b31c
+description				= ar_hg_8
+inv_name					= ak_hg_zenit_b31c
+inv_name_short		= ak_hg_zenit_b31cS
+inv_grid_width			= 2
+inv_grid_x				= 24
+cost							= 1900
+inv_weight				= 0.37
+attachment_point 	= ak_hg_full|0,0,0|0,0,0
+attachment_slots		= pica_3|wpn_body|-0.01896,0.0464,0.342|0,0,-90#pica_3|wpn_body|0.01896,0.0464,0.342|0,0,90#pica_4|wpn_body|0,0.08234,0.34|0,0,0#pica_8|wpn_body|0,0.08234,0.23785|0,0,0#pica_3|wpn_body|0,0,0|0,0,0#picgrp|wpn_body|0,-0.0117,0.038|0,0,0#bipods|wpn_body|0,0.024,0.38|0,0,0
+override_section		= ak_hg_zenit_b31c_attributes
+[ak_hg_zenit_b31c_attributes]:c_attributes,hg_16_att
+
+[ak_hg_hexa]:ak_hg
+inv_ui_sign				= ak_hexa
+visual						= w_att_huds\ak_hg_hexa
+description				= pica_3_up2
+inv_name					= ak_hg_hexa
+inv_name_short		= ak_hg_hexaS
+inv_grid_width     	= 2
+inv_grid_x         		= 29
+inv_grid_y         		= 21
+cost							= 1650
+inv_weight				= 0.15
+attachment_slots		= pica_3|wpn_body|-0.0295,0.0462,0.367|0,0,-90#pica_3|wpn_body|0.0295,0.0462,0.367|0,0,90#picgrp|wpn_body|0,-0.0142,0.038|0,0,0		
+override_section = ak_hg_hexa_attributes
+
+[ak_hg_hexa_attributes]
+animation_prefix = c_
+
+recoil_koeff = -0.01
+zoom_rotate_time = -0.02
+[ak_hg_cmrd]:ak_hg_zhukov
+inv_ui_sign				= ak_cmrd
+visual						= w_att_huds\ak_hg_vltor_cmrd
+description				= ar_hg_8_keymod
+inv_name					= ak_hg_vltor_cmrd
+inv_name_short		= ak_hg_vltor_cmrdS
+inv_grid_x         		= 31
+inv_grid_y         		= 21
+cost							= 1700
+inv_weight				= 0.4
+attachment_point 	= ak_hg_full|0,0,0|0,0,0
+attachment_slots		= keymod|wpn_body|-0.0194,0.0446,0.434|0,0,-90#keymod|wpn_body|0.0194,0.0446,0.434|0,0,90#keymod|wpn_body|0,0.0219,0.435|0,0,180#keymod_rail_grip|wpn_body|0,-0.01375,0.038|0,0,0#pica_8|wpn_body|0,0.08532,0.24|0,0,0#picx_8|wpn_body|0,0.0884,0.24|0,0,0#lock_bipods|wpn_body|0,0.022,0.38|0,0,0
+override_section 		= ak_hg_dn_arms_km_attributes
+
+[bizon_hg]:attachment_base_ak
+kind  =  bizon
+inv_ui_sign				= bz_hg
+visual						= w_att_huds\bizon_hg
+inv_name					= bizon_hg
+inv_name_short			= bizon_hgS
+inv_grid_x					= 26
+inv_grid_y					= 5
+cost							= 400
+inv_weight				= 0.11
+attachment_point	= bizon_hg|0,0,0|0,0,0
+override_section = bizon_hg_attributes
+
+[bizon_hg_attributes]
+inertia_koeff = 0.9
+[bizon_hg_att]
+recoil_koeff = -0.01
+inertia_koeff = 0.9
+
+[bizon_hg_pica]:bizon_hg
+kind  =  bizon
+inv_ui_sign				= bz_ml
+visual						= w_att_huds\bizon_hg_mlok
+description				= ar_hg_5n4
+inv_name					= bizon_hg_pica
+inv_name_short		= bizon_hg_picaS
+inv_grid_x				= 27
+cost							= 950
+attachment_slots = pica_4|wpn_body|0,0.0802,0.186|0,0,0#pica_5|wpn_body|0.013264,0.078495,0.237645|0,0,60#veresk_hg_rails|wpn_body|0,0.01,0.075|0,0,0
+override_section = bizon_hg_pica_attributes
+
+inv_weight = 0.11
+[bizon_hg_pica_attributes]
+inertia_koeff = 0.8
+
+[saiga12_hg]:attachment_base_ak
+kind  =  saiga12
+inv_ui_sign				= s12_hg
+visual						= w_att_huds\saiga12_hg
+inv_name					= saiga12_hg
+inv_name_short			= saiga12_hg
+inv_grid_x					= 29
+inv_grid_y					= 5
+cost							= 750
+inv_weight				= 0.16
+attachment_point		= saiga12_hg|0,0,0|0,0,0
+override_section		= saiga12_hg_attributes
+[saiga12_hg_attributes]:c_attributes,hg_12_att
+
+[saiga12_hg_rs12]:saiga12_hg
+kind  =  saiga12
+inv_ui_sign				= rs12_hg
+visual						= w_att_huds\saiga12_hg_rs12
+description				= pica_3_up3
+inv_name					= saiga12_hg_rs12
+inv_name_short			= saiga12_hg_rs12S
+inv_grid_x					= 30
+cost							= 1100
+inv_weight				= 0.18
+attachment_slots		= pica_3|wpn_body|-0.0195,0.0598,0.312|0,0,-90#pica_3|wpn_body|0.0195,0.0598,0.312|0,0,90#pica_3|wpn_body|0,0.0222,0.331|0,0,-180#picgrp|wpn_body|0,-0.0134,0.038|0,0,0
+override_section = saiga12_hg_rs12_attributes
+
+[saiga12_hg_rs12_attributes]
+animation_prefix = c_
+
+[saiga12_hg_hdc]:saiga12_hg
+kind  =  saiga12
+inv_ui_sign				= s12_hdc
+visual						= w_att_huds\saiga12_hg_hdc
+description				= ar_hg_12
+inv_name					= saiga12_hg_hdc
+inv_name_short			= saiga12_hg_hdcS
+inv_grid_width			= 2
+inv_grid_x					= 31
+cost							= 1500
+inv_weight				= 0.6
+attachment_slots		= pica_3|wpn_body|-0.0179,0.0478,0.312|0,0,-90#pica_3|wpn_body|0.0179,0.0478,0.312|0,0,90#pica_3|wpn_body|0,0.02,0.352|0,0,-180#pica_12|wpn_body|0,0.0849,0.0757|0,0,0#picgrp|wpn_body|0,-0.0155,0.038|0,0,0
+override_section		= saiga12_hg_hdc_attributes
+[saiga12_hg_hdc_attributes]:c_attributes,hg_19_att
+
+[saiga12_hg_utg_pro]:saiga12_hg_hdc
+kind  =  saiga12
+inv_ui_sign				= s12_utg
+visual						= w_att_huds\saiga12_hg_utg_pro
+inv_name					= saiga12_hg_utg_pro
+inv_name_short			= saiga12_hg_utg_proS
+inv_grid_x					= 33
+cost							= 1650
+inv_weight				= 0.57
+attachment_slots		= pica_3|wpn_body|-0.01691,0.0509,0.312|0,0,-90#pica_3|wpn_body|0.01691,0.0509,0.312|0,0,90#pica_3|wpn_body|0,0,0|0,0,-180#pica_12|wpn_body|0,0.0873,0.0172|0,0,0#picgrp|wpn_body|0,-0.0131,0.038|0,0,0
+override_section = saiga12_hg_utg_pro_attributes
+
+[saiga12_hg_utg_pro_attributes]
+animation_prefix = c_
+
+[ak_cover]:attachment_base_ak
+kind = ak_covers
+inv_ui_sign				= ak_dc
+visual						= w_att_huds\ak_cover
+inv_name					= ak_cover
+inv_name_short		= ak_coverS
+inv_grid_width			= 2
+inv_grid_x				= 6
+inv_grid_y				= 6
+cost							= 600
+inv_weight				= 0.09
+attachment_point	= ak_cover|0,0,0|0,0,0
+attachment_slots		= ak_cover_mount|wpn_body|0,0,0|0,0,0
+override_section 		= ak_cover_attributes
+
+[ak_cover_attributes]
+zoom_rotate_time = -0.02
+
+[ak_cover_holo]:ak_cover
+inv_ui_sign				= ak_dcP
+visual						= w_att_huds\ak_cover_holo
+description				= pica_5_up
+inv_name					= ak_cover_holo
+inv_name_short			= ak_cover_holoS
+inv_grid_x					= 8
+cost							= 1200
+inv_weight				= 0.11
+attachment_slots		= pica_5|wpn_body|0.011,0.07513,0.0087|0,0,45
+item_tags =	cover
+override_section = ak_cover_holo_attributes
+
+[ak_cover_holo_attributes]
+zoom_rotate_time = -0.01
+impair_koeff = 0.8
+
+[vpo123_cover]:attachment_base_ak
+kind  = vpo123
+inv_ui_sign				= v54_dc
+visual						= w_att_huds\vpo123_cover
+inv_name					= vpo123_cover
+inv_name_short		= vpo123_coverS
+inv_grid_width     	= 2
+inv_grid_x				= 6
+inv_grid_y         		= 20
+cost							= 700
+inv_weight				= 0.09
+attachment_point	= vpo123_cover|0,0,0|0,0,0
+attachment_slots		= ak_cover_mount|wpn_body|0,0,0|0,0,0
+item_tags				=	cover
+override_section = vpo123_cover_attributes
+
+[vpo123_cover_attributes]
+zoom_rotate_time = -0.02
+
+[vpo123_cover_custom]:vpo123_cover
+kind  = vpo123
+inv_ui_sign				= v54_dcc
+visual						= w_att_huds\vpo123_cover_custom
+description				= pica_10_up
+inv_name					= vpo123_cover_custom
+inv_name_short			= vpo123_cover_customS
+inv_grid_x					= 8
+cost							= 1400
+inv_weight				= 0.15
+attachment_slots		= pica_10|wpn_body|0,0.0824,-0.0155|0,0,0
+override_section = vpo123_cover_custom_attributes
+
+[vpo123_cover_custom_attributes]
+zoom_rotate_time = -0.01
+impair_koeff = 0.8
+
+[vpo123_cover_mod12]:vpo123_cover_custom
+kind  = vpo123
+inv_ui_sign				= v54_dcc+
+visual						= w_att_huds\vpo123_cover_mod12
+description				= pica_15_up
+inv_name					= vpo123_cover_mod12
+inv_grid_x         		= 10
+cost							= 1850
+inv_weight				= 0.16
+attachment_slots		= pica_15|wpn_body|0,0.0803,0.011|0,0,0
+override_section = vpo123_cover_mod12_attributes
+
+[vpo123_cover_mod12_attributes]
+zoom_rotate_time = 0.01
+
+[ak_cover_m]:ak_cover
+inv_ui_sign				= akm_dc
+visual						= w_att_huds\ak_cover_m
+inv_name					= ak_cover_m
+inv_name_short			= ak_cover_mS
+cost							= 650
+inv_grid_x					= 10
+override_section = ak_cover_m_attributes
+
+inv_weight = 0.09
+[ak_cover_m_attributes]
+zoom_rotate_time = -0.02
+
+[ak_cover_74]:ak_cover_m
+inv_ui_sign				= 74_dc
+visual						= w_att_huds\ak_cover_74
+inv_name					= ak_cover_74
+inv_name_short			= ak_cover_74S
+inv_grid_x					= 12
+override_section = ak_cover_74_attributes
+
+cost = 650
+inv_weight = 0.09
+[ak_cover_74_attributes]
+zoom_rotate_time = -0.02
+
+[ak_cover_74m]:ak_cover_m
+inv_ui_sign				= 74m_dc
+visual						= w_att_huds\ak_cover_74m
+inv_name					= ak_cover_74m
+inv_name_short			= ak_cover_74mS
+inv_grid_x					= 14
+override_section = ak_cover_74m_attributes
+
+cost = 650
+inv_weight = 0.09
+[ak_cover_74m_attributes]
+zoom_rotate_time = -0.02
+
+[ak_cover_100]:ak_cover_m
+inv_ui_sign				= 100_dc
+visual						= w_att_huds\ak_cover_100
+inv_name					= ak_cover_100
+inv_name_short			= ak_cover_100S
+inv_grid_x					= 16
+override_section = ak_cover_100_attributes
+
+cost = 650
+inv_weight = 0.09
+[ak_cover_100_attributes]
+zoom_rotate_time = -0.02
+
+[ak_cover_custom]:ak_cover
+inv_ui_sign				= ak_dcP
+visual						= w_att_huds\ak_cover_custom
+description				= pica_16_up
+inv_name					= ak_cover_custom
+inv_name_short			= ak_cover_customS
+inv_grid_x					= 18
+cost							= 1600
+inv_weight				= 0.17
+attachment_slots		= pica_16|wpn_body|0,0.0802,-0.019|0,0,0		
+item_tags =	cover
+override_section = ak_cover_custom_attributes
+
+[ak_cover_custom_attributes]
+zoom_rotate_time = 0.01
+recoil_koeff = -0.01
+
+[ak_cover_pdc]:ak_cover_custom
+inv_ui_sign				= ak_pdc
+visual						= w_att_huds\ak_cover_fab_pdc
+description				= pica_18_up
+inv_name					= ak_cover_fab_pdc
+inv_name_short		= ak_cover_fab_pdcS
+inv_grid_x				= 20
+cost							= 2100
+inv_weight				= 0.2
+attachment_slots		= pica_18|wpn_body|0,0.0812,-0.028|0,0,0
+override_section = ak_cover_pdc_attributes
+
+[ak_cover_pdc_attributes]
+zoom_rotate_time = 0.01
+recoil_koeff = -0.01
+
+[ak_cover_tws]:ak_cover_custom
+inv_ui_sign				= ak_dcP
+visual						= w_att_huds\ak_cover_tws
+inv_name					= ak_cover_tws
+inv_name_short			= ak_cover_twsS
+cost							= 1950
+inv_grid_x					= 22
+inv_weight				= 0.19
+override_section = ak_cover_tws_attributes
+
+[ak_cover_tws_attributes]
+zoom_rotate_time = 0.01
+recoil_koeff = -0.01
+
+[ak_cover_bastion]:ak_cover_custom
+inv_ui_sign				= ak_bast
+visual						= w_att_huds\ak_cover_bastion
+description				= pica_18_up
+inv_name					= ak_cover_bastion
+inv_name_short		= ak_cover_bastionS
+cost							= 2100
+inv_grid_x				= 38
+inv_grid_y				= 21
+inv_weight				= 0.23
+attachment_slots		= pica_18|wpn_body|0,0.08222,-0.0146|0,0,0
+override_section = ak_cover_bastion_attributes
+
+[ak_cover_bastion_attributes]
+zoom_rotate_time = 0.02
+recoil_koeff = -0.01
+
+[ak_cover_zenit]:ak_cover_custom				;ЗЕНИТ
+inv_ui_sign				= ak_b33
+visual						= w_att_huds\ak_cover_zenit_b33
+inv_name					= ak_cover_zenit_b33
+inv_name_short			= ak_cover_zenit_b33S
+inv_grid_x					= 24
+cost							= 1500
+inv_weight				= 0.21
+override_section = cover_5_att
+
+[ak_cover_200]:ak_cover_zenit
+inv_ui_sign				= ak_dcP
+visual						= w_att_huds\ak_cover_ak200
+description				= pica_16_up
+inv_name					= ak_cover_ak200
+inv_name_short		= ak_cover_ak200S
+inv_grid_x				= 28
+inv_grid_y				= 7
+cost							= 1500
+inv_weight				= 0.17
+attachment_point	= ak_cover_ak200|0,0,0|0,0,0
+attachment_slots		= pica_16|wpn_body|0,0.08095,-0.014|0,0,0
+override_section = ak_cover_200_attributes	
+[ak_cover_200_attributes]
+recoil_koeff = -0.01
+zoom_rotate_time = -0.01
+
+[bizon_cover]:attachment_base_ak
+kind  =  bizon
+inv_ui_sign				= bizon_dc
+visual						= w_att_huds\bizon_cover
+inv_name					= bizon_cover
+inv_name_short			= bizon_coverS
+inv_grid_width			= 2
+inv_grid_x					= 28
+inv_grid_y					= 6
+cost							= 450
+inv_weight				= 0.08
+attachment_point		= bizon_cover|0,0,0|0,0,0
+override_section = bizon_cover_attributes
+
+[bizon_cover_attributes]
+zoom_rotate_time = -0.02
+impair_koeff = 0.9
+
+[bizon_cover_custom]:bizon_cover
+kind  =  bizon
+inv_ui_sign				= bizon_dcP
+visual						= w_att_huds\bizon_cover_custom
+description				= pica_14_up
+inv_name					= bizon_cover_custom
+inv_name_short			= bizon_cover_customS
+inv_grid_x					= 30
+cost							= 900
+inv_weight				= 0.11
+attachment_slots		= pica_14|wpn_body|0,0.0802,-0.019|0,0,0	
+item_tags	=	cover
+override_section = bizon_cover_custom_attributes
+
+[bizon_cover_custom_attributes]
+zoom_rotate_time = -0.01
+impair_koeff = 0.8
+
+[vityaz_cover]:attachment_base_ak
+kind  =  vityaz
+inv_ui_sign				= saiga_dc
+visual						= w_att_huds\vityaz_cover
+inv_name					= vityaz_cover
+inv_name_short			= vityaz_coverS
+inv_grid_width			= 2
+inv_grid_x					= 38
+inv_grid_y					= 6
+cost							= 600
+inv_weight				= 0.08
+attachment_point		= vityaz_cover|0,0,0|0,0,0
+override_section = vityaz_cover_attributes
+
+[vityaz_cover_attributes]
+zoom_rotate_time = -0.02
+impair_koeff = 0.9
+
+[vityaz_cover_pica]:vityaz_cover
+kind  =  vityaz
+inv_ui_sign				= vityaz_dc
+visual						= w_att_huds\vityaz_cover_pica
+description				= pica_14_up
+inv_name					= vityaz_cover_pica
+inv_name_short		= vityaz_cover_picaS
+inv_grid_x					= 32
+cost							= 850
+inv_weight				= 0.12
+attachment_slots		= pica_14|wpn_body|0,0.0803,-0.014|0,0,0
+override_section = vityaz_cover_pica_attributes
+
+[vityaz_cover_pica_attributes]
+zoom_rotate_time = -0.01
+recoil_koeff = -0.02
+impair_koeff = 0.8
+
+[saiga12_cover]:attachment_base_ak
+kind  =  saiga12
+inv_ui_sign				= s12k_dc
+visual						= w_att_huds\saiga12_cover
+inv_name					= saiga12_cover
+inv_name_short			= saiga12_coverS
+inv_grid_width			= 2
+inv_grid_x					= 34
+inv_grid_y					= 6
+cost							= 550
+inv_weight				= 0.09
+attachment_point		= saiga12_cover|0,0,0|0,0,0
+override_section = saiga12_cover_attributes
+
+[saiga12_cover_attributes]
+zoom_rotate_time = -0.02
+
+[vepr12_cover]:attachment_base_ak
+kind  =  vepr12
+inv_ui_sign				= vepr_dc
+visual						= w_att_huds\vepr12_cover
+description				= pica_16_up
+inv_name					= vepr12_cover
+inv_name_short			= vepr12_coverS
+inv_grid_width			= 2
+inv_grid_x					= 36
+inv_grid_y					= 6
+cost							= 1000
+inv_weight				= 0.16
+attachment_point		= vepr12_cover|0,0,0|0,0,0
+attachment_slots		= pica_16|wpn_body|0,0.0803,-0.008|0,0,0
+override_section = vepr12_cover_attributes
+
+[vepr12_cover_attributes]
+zoom_rotate_time = 0.01
+
+[74u_cover_b]:attachment_base_ak					;не совместим с ak_cover_mount
+kind  = 74u_covers
+inv_ui_sign				= 74ub_dc
+visual							= w_att_huds\74u_cover_b
+inv_name					= 74u_cover_b
+inv_name_short		= 74u_cover_bS
+inv_grid_width			= 2
+inv_grid_x					= 30
+inv_grid_y					= 7
+cost							= 550
+inv_weight				= 0.12
+attachment_point		= 74u_cover|0,0,0|0,0,0
+override_section = cover_3_att
+
+[74u_cover]:74u_cover_b									;не совместим с ak_cover_mount
+inv_ui_sign				= 74u_dc
+visual						= w_att_huds\74u_cover
+inv_name					= 74u_cover
+inv_name_short			= 74u_coverS
+inv_grid_width			= 2
+inv_grid_x					= 32
+inv_grid_y					= 7
+cost							= 600
+attachment_point = 74u_cover|0,0,0|0,0,0
+attachment_slots = 74u_cover_sight_zenit_b18|wpn_body|0,0,0|0,0,0
+
+override_section = cover_3_att
+inv_weight = 0.12
+[74u_cover_tiss]:74u_cover_b						;не совместим с ak_cover_mount
+kind = tiss
+inv_ui_sign				= tiss_dc
+visual						= w_att_huds\74u_cover_tiss
+inv_name					= 74u_cover_tiss
+inv_name_short			= 74u_cover_tissS
+inv_grid_x					= 34
+attachment_slots		= 74u_cover_sight_zenit_b18|wpn_body|0,0,0.01586|0,0,0#74u_cover_sight_zenit_b18|wpn_body|0,0.00128,-0.0869|0,0,0
+
+[74u_cover_custom]:74u_cover_b					;не совместим с ak_cover_mount
+inv_ui_sign				= 74u_dc+
+visual						= w_att_huds\74u_cover_custom
+description				= pica_14_up
+inv_name					= 74u_cover_custom
+inv_name_short		= 74u_cover_customS
+inv_grid_x				= 36
+cost							= 1200
+inv_weight				= 0.15
+attachment_slots		= pica_14|wpn_body|0,0.0802,-0.013|0,0,0
+item_tags	=	cover
+override_section = cover_4_att
+
+[74u_cover_ris]:74u_cover_custom								;не совместим с ak_cover_mount
+inv_ui_sign				= 74u_ris
+visual						= w_att_huds\74u_cover_ris
+inv_name					= 74u_cover_ris
+inv_name_short		= 74u_cover_risS
+inv_grid_x				= 38
+inv_grid_y				= 7
+cost							= 1250
+
+[74u_cover_zenit]:74u_cover_custom
+inv_ui_sign				= 74u_b33
+visual						= w_att_huds\74u_cever_zenit_b33
+inv_name					= 74u_cever_zenit_b33
+inv_name_short			= 74u_cever_zenit_b33S
+inv_grid_x         = 26
+inv_grid_y         = 6
+cost							= 1450
+inv_weight				= 0.19
+override_section = cover_5_att
+[cover_5_att]
+zoom_rotate_time = 0.02
+
+[ak_grip]:attachment_base_ak
+kind  = ak_grips
+inv_ui_sign				= ak_pg
+visual						= w_att_huds\ak_grip
+inv_name					= ak_grip
+inv_name_short		= ak_gripS
+inv_grid_x				= 6
+inv_grid_y				= 7
+cost							= 500
+inv_weight				= 0.07
+attachment_point = ak_grip|0,0,0|0,0,0
+override_section = ak_grip_attributes
+
+[ak_grip_attributes]
+zoom_rotate_time = -0.01
+[ak_grip_att]
+zoom_rotate_time = -0.01
+recoil_koeff            = -0.1
+
+[ak_grip_74]:ak_grip
+inv_ui_sign				= 74_pg
+visual						= w_att_huds\ak_grip_74
+inv_name					= ak_grip_74
+inv_name_short			= ak_grip_74S
+inv_grid_x					= 7
+cost							= 600
+override_section = ak_grip_74_attributes
+
+inv_weight = 0.07
+[ak_grip_74_attributes]
+zoom_rotate_time = -0.02
+
+[ak_grip_74m]:ak_grip_74
+inv_ui_sign				= 74m_pg
+visual						= w_att_huds\ak_grip_74m
+inv_name					= ak_grip_74m
+inv_name_short			= ak_grip_74mS
+inv_grid_x					= 8
+inv_weight				= 0.05
+override_section = ak_grip_74m_attributes
+
+cost = 600
+[ak_grip_74m_attributes]
+zoom_rotate_time = -0.02
+
+[ak_grip_74_plum]:ak_grip_74
+visual						= w_att_huds\ak_grip_74_plum
+inv_name					= ak_grip_74_plum
+inv_name_short			= ak_grip_74_plumS
+inv_grid_x					= 20
+inv_weight				= 0.05
+override_section = ak_grip_74_plum_attributes
+
+cost = 600
+[ak_grip_74_plum_attributes]
+zoom_rotate_time = -0.02
+
+[ak_grip_amd65]:ak_grip
+inv_ui_sign				= md65_pg
+visual						= w_att_huds\ak_grip_amd65
+inv_name					= ak_grip_amd65
+inv_name_short			= ak_grip_amd65S
+inv_grid_x					= 9
+cost							= 700
+inv_weight				= 0.06
+override_section = ak_grip_amd65_attributes
+
+[ak_grip_amd65_attributes]
+zoom_rotate_time = -0.02
+
+[ak_grip_caa]:ak_grip
+inv_ui_sign				= caa_pg
+visual						= w_att_huds\ak_grip_caa
+inv_name					= ak_grip_caa
+inv_name_short			= ak_grip_caaS
+inv_grid_x					= 10
+cost							= 1100
+item_tags	=	pgrip
+inv_weight				= 0.08
+item_tags = pgrip
+override_section = ak_grip_caa_attributes
+
+[ak_grip_caa_attributes]
+zoom_rotate_time = -0.04
+
+[ak_grip_caa_g47]:ak_grip_caa
+inv_ui_sign				= g47_pg
+visual						= w_att_huds\ak_grip_caa_g47
+inv_name					= ak_grip_caa_g47
+inv_name_short		= ak_grip_caa_g47S
+inv_grid_x					= 21
+cost							= 1150
+override_section = ak_grip_caa_g47_attributes
+
+inv_weight = 0.08
+[ak_grip_caa_g47_attributes]
+zoom_rotate_time = -0.05
+
+recoil_koeff = -0.01
+[ak_grip_rub_des]:ak_grip_caa
+inv_ui_sign				= ak_pgd
+visual						= w_att_huds\ak_grip_rub_des
+inv_name					= ak_grip_rub_des
+inv_name_short			= ak_grip_rub_desS
+inv_grid_x         		= 22
+override_section = ak_grip_rub_des_attributes
+
+cost = 1100
+inv_weight = 0.08
+[ak_grip_rub_des_attributes]
+zoom_rotate_time = -0.03
+
+[ak_grip_magpul]:ak_grip_caa
+inv_ui_sign				= mp_pg
+visual						= w_att_huds\ak_grip_magpul
+inv_name					= ak_grip_magpul
+inv_name_short			= ak_grip_magpulS
+inv_grid_x					= 11
+cost							= 1250
+inv_weight				= 0.08
+override_section = ak_grip_magpul_attributes
+
+[ak_grip_magpul_attributes]
+zoom_rotate_time = -0.03
+
+[ak_grip_rpk]:ak_grip_caa
+inv_ui_sign				= rpk_pg
+visual						= w_att_huds\ak_grip_rpk
+inv_name					= ak_grip_rpk
+inv_name_short			= ak_grip_rpkS
+inv_grid_x					= 12
+inv_weight				= 0.07
+override_section = ak_grip_rpk_attributes
+
+cost = 1100
+[ak_grip_rpk_attributes]
+zoom_rotate_time = -0.01
+
+[ak_grip_rpk74m]:ak_grip_caa
+inv_ui_sign				= rpk_pg+
+visual						= w_att_huds\ak_grip_rpk74m
+inv_name					= ak_grip_rpk74m
+inv_name_short			= ak_grip_rpk74mS
+inv_grid_x					= 13
+cost							= 700
+inv_weight				= 0.05
+override_section = ak_grip_rpk74m_attributes
+
+[ak_grip_rpk74m_attributes]
+zoom_rotate_time = -0.03
+[ak_grip_rpk74m_att]
+zoom_rotate_time = -0.04
+recoil_koeff            = -0.07
+
+[ak_grip_rub]:ak_grip_caa
+inv_ui_sign				= akr_pg
+visual						= w_att_huds\ak_grip_rub
+inv_name					= ak_grip_rub
+inv_name_short			= ak_grip_rubS
+inv_grid_x					= 14
+cost							= 1050
+override_section = ak_grip_rub_attributes
+
+inv_weight = 0.08
+[ak_grip_rub_attributes]
+zoom_rotate_time = -0.03
+
+[ak_grip_vepr12]:ak_grip_caa
+inv_ui_sign				= vepr_pg
+visual						= w_att_huds\ak_grip_vepr12
+inv_name					= ak_grip_vepr12
+inv_name_short			= ak_grip_vepr12S
+inv_grid_x					= 15
+cost							= 750
+inv_weight				= 0.05
+override_section = ak_grip_vepr12_attributes
+
+[ak_grip_vepr12_attributes]
+zoom_rotate_time = -0.04
+
+[ak_grip_vityaz]:ak_grip_caa
+inv_ui_sign				= vitz_pg
+visual						= w_att_huds\ak_grip_vityaz
+inv_name					= ak_grip_vityaz
+inv_name_short			= ak_grip_vityazS
+inv_grid_x					= 16
+cost							= 750
+inv_weight				= 0.06
+override_section = ak_grip_vityaz_attributes
+
+[ak_grip_vityaz_attributes]
+zoom_rotate_time = -0.01
+
+[ak_grip_x1]:ak_grip_caa
+inv_ui_sign				= ak_x1
+visual						= w_att_huds\ak_grip_x1
+inv_name					= ak_grip_x1
+inv_name_short			= ak_grip_x1S
+inv_grid_x					= 17
+cost							= 1250
+inv_weight				= 0.1
+override_section = ak_grip_x1_attributes
+
+[ak_grip_x1_attributes]
+zoom_rotate_time = -0.05
+
+[ak_grip_rk3]:ak_grip_caa
+inv_ui_sign				= ak_rk3
+visual						= w_att_huds\ak_grip_zanit_rk3
+inv_name					= ak_grip_zanit_rk3
+inv_name_short			= ak_grip_zanit_rk3S
+inv_grid_x					= 18
+cost							= 1200
+inv_weight				= 0.18
+override_section = ak_grip_rk3_attributes
+
+[ak_grip_rk3_attributes]
+zoom_rotate_time = -0.06
+recoil_koeff = -0.02
+
+[ak_grip_zastava]:ak_grip_caa
+inv_ui_sign				= ak_m05
+visual						= w_att_huds\ak_grip_zastava
+inv_name					= ak_grip_zastava
+inv_name_short			= ak_grip_zastavaS
+inv_grid_x					= 19
+cost							= 650
+inv_weight				= 0.1
+override_section = ak_grip_zastava_attributes
+
+[ak_grip_zastava_attributes]
+zoom_rotate_time = -0.05
+recoil_koeff = -0.01
+
+[ak_grip_saw]:ak_grip_caa
+inv_ui_sign				= ak_saw
+visual						= w_att_huds\ak_grip_saw
+inv_name					= ak_grip_saw
+inv_name_short		= ak_grip_sawS
+inv_grid_x         		= 25
+inv_grid_y				= 7
+cost							= 700
+inv_weight				= 0.09
+override_section = ak_grip_saw_attributes
+
+[ak_grip_saw_attributes]
+zoom_rotate_time = -0.01
+inertia_koeff = 0.9
+[ak_grip_saw_att]
+zoom_rotate_time = -0.01
+recoil_koeff            = -0.09
+inertia_koeff		= 0.9
+
+[ak_grip_agr47]:ak_grip_caa
+inv_ui_sign				= ak_agr
+visual						= w_att_huds\ak_grip_fb_agr-47
+inv_name					= ak_grip_fb_agr-47
+inv_name_short			= ak_grip_fb_agr-47S
+inv_grid_x					= 23
+cost							= 1100
+override_section = ak_grip_agr47_attributes
+
+inv_weight = 0.08
+[ak_grip_agr47_attributes]
+zoom_rotate_time = -0.03
+
+recoil_koeff = -0.02
+[ak_grip_200]:ak_grip_caa
+inv_ui_sign				= ak-200
+visual						= w_att_huds\ak_grip_ak200
+inv_name					= ak_grip_ak200
+inv_name_short		= ak_grip_ak200S
+inv_grid_x				= 24
+cost							= 800
+inv_weight				= 0.09
+override_section = ak_grip_200_attributes
+
+[ak_grip_200_attributes]
+zoom_rotate_time = -0.02
+recoil_koeff = -0.02
+[ak_grip_ak200_att]
+zoom_rotate_time = -0.02
+recoil_koeff            = -0.09
+
+[ak_stock_ad_akm]:attachment_base_ak
+kind  =  ak_stocks
+inv_ui_sign				= akm_rt
+visual						= w_att_huds\ak_stock_ad_akm
+inv_name					= ak_stock_ad_akm
+inv_name_short			= ak_stock_ad_akm
+cost							= 400
+inv_weight					= 0.1
+inv_grid_width     = 1
+inv_grid_height    = 1
+inv_grid_x         = 15
+inv_grid_y         = 8
+attachment_point		= ak_stock_ad|0,0,0|0,0,0
+attachment_slots		= ak_stock|wpn_body|0,0,0|0,0,0#ak_cover_mount_old|wpn_body|0,0,0|0,0,0
+override_section = ak_stock_ad_akm_attributes
+
+[ak_stock_ad_akm_attributes]
+
+[ak_stock_ad_74]:ak_stock_ad_akm
+inv_ui_sign				= 74_rt
+visual						= w_att_huds\ak_stock_ad_74
+inv_name					= ak_stock_ad_74
+inv_grid_x         = 14
+override_section = ak_stock_ad_74_attributes
+
+[ak_stock_ad_74_attributes]
+
+[ak_stock_ad_amd65]:ak_stock_ad_akm
+inv_ui_sign				= ty88_stk
+visual						= w_att_huds\ak_stock_ad_amd65
+inv_name					= ak_stock_ad_amd65
+inv_name_short			= ak_stock_ad_amd65
+cost							= 1550
+inv_grid_width			= 2
+inv_grid_x					= 6
+inv_weight				= 0.23
+attachment_slots		= ak_stock_pad|wpn_body|0,0,-0.008|0,2,0
+override_section = ak_stock_ad_amd65_attributes
+
+[ak_stock_ad_amd65_attributes]
+zoom_rotate_time = 0.02
+recoil_koeff = -0.16
+inertia_koeff = 0.9
+weapon_lenght = 0.25
+
+[ak_stock_ad_type_88]:ak_stock_ad_amd65
+inv_ui_sign				= ty88_stk
+visual						= w_att_huds\ak_stock_ad_type_88
+inv_name					= ak_stock_ad_type_88-2
+inv_name_short			= ak_stock_ad_type_88-2
+cost							= 1600
+inv_grid_x					= 8
+inv_weight				= 0.24
+attachment_slots		= ak_stock_pad|wpn_body|0,-0.006,0.009|0,0,0
+override_section = ak_stock_ad_type_88_attributes
+
+[ak_stock_ad_type_88_attributes]
+zoom_rotate_time = 0.02
+recoil_koeff = -0.18
+inertia_koeff = 0.9
+weapon_lenght = 0.2
+
+[ak_stock_zastava]:ak_stock_ad_amd65
+inv_ui_sign				= m05_stk
+visual						= w_att_huds\ak_stock_zastava
+inv_name					= ak_stock_zastava
+inv_name_short			= ak_stock_zastava
+cost							= 1700
+inv_grid_x					= 10
+inv_weight				= 0.24
+attachment_slots		= ak_stock_pad|wpn_body|0,-0.006,-0.01|0,-3,0
+override_section = ak_stock_zastava_attributes
+
+[ak_stock_zastava_attributes]
+weapon_lenght = 0.25
+zoom_rotate_time = -0.01
+recoil_koeff = -0.24
+inertia_koeff = 0.8
+
+[aks_stock]:attachment_base_ak
+kind  =  ak_stocks
+inv_ui_sign				= aks_stock
+visual						= w_att_huds\aks_stock	
+inv_name					= aks_stock
+inv_name_short			= aks_stock
+cost							= 1300
+inv_grid_width			= 2
+inv_grid_x					= 12
+inv_grid_y					= 8
+inv_weight				= 0.32
+attachment_point		= aks_stock|0,0,0|0,0,0
+attachment_slots		= ak_stock_pad|wpn_body|0,-0.008,0.008|0,5,0
+override_section = aks_stock_attributes
+
+[aks_stock_attributes]
+zoom_rotate_time = 0.02
+recoil_koeff = -0.18
+inertia_koeff = 0.9
+weapon_lenght = 0.2
+
+[ak_stock_buffer_ad]:attachment_base_ak
+kind  = ak_stocks
+inv_ui_sign				= ak-ar-t
+visual						= w_att_huds\ak_stock_rd_buffer	
+inv_name					= ak_stock_rd_buffer
+inv_name_short			= ak_stock_rd_buffer
+cost							= 550
+inv_grid_x					= 16
+inv_grid_y					= 8
+inv_weight				= 0.09
+attachment_point		= ak_stock|0,0,0|0,0,0
+attachment_slots		= ar_buffer|wpn_body|0,-0.01772,-0.0173|0,0,0
+item_tags =	stock
+override_section = ak_stock_buffer_ad_attributes
+
+[ak_stock_buffer_ad_attributes]
+
+[ak_stock]:ak_stock_buffer_ad
+kind  = ak_stocks
+inv_ui_sign				= ak_stk
+visual						= w_att_huds\ak_stock	
+inv_name					= ak_stock
+inv_name_short			= ak_stock
+cost							= 1200
+inv_grid_width			= 2
+inv_grid_x					= 17
+inv_weight				= 0.4
+attachment_slots		= ak_stock_pad|wpn_body|0,0.016,0|0,10,0
+override_section = ak_stock_attributes
+
+[ak_stock_attributes]
+weapon_lenght = 0.25
+zoom_rotate_time = 0.06
+recoil_koeff = -0.21
+inertia_koeff = 0.7
+
+[ak_stock_buffer_fa]:ak_stock
+inv_ui_sign					= ak-ar-buff
+visual							= w_att_huds\ak_stock_fa_buffer	
+inv_name						= ak_stock_fa_buffer
+inv_name_short			= ak_stock_fa_bufferS
+cost								= 1400
+inv_weight					= 0.18
+inv_grid_x         			= 8
+inv_grid_y					= 22
+attachment_slots			= ar_stock|wpn_body|0,-0.0177,-0.031|0,0,0
+override_section 			= ak_stock_buffer_fa_attributes
+
+[ak_stock_buffer_fa_attributes]
+weapon_lenght = 0.15
+zoom_rotate_time = 0.02
+recoil_koeff = -0.01
+
+[ak_stock_jgut]:ak_stock
+inv_ui_sign				= ak_jgt
+visual						= w_att_huds\ak_stock_jgut	
+inv_name					= ak_stock_jgut
+cost							= 1250
+inv_grid_x         		= 21
+inv_grid_y         		= 9
+inv_weight				= 0.47
+override_section = ak_stock_jgut_attributes
+
+[ak_stock_jgut_attributes]
+weapon_lenght = 0.25
+zoom_rotate_time = 0.06
+recoil_koeff = -0.22
+inertia_koeff = 0.7
+
+[ak_stock_74]:ak_stock
+inv_ui_sign				= 74_stk
+visual						= w_att_huds\ak_stock_74	
+inv_name					= ak_stock_74
+inv_name_short			= ak_stock_74
+cost							= 1250
+inv_grid_x					= 19
+attachment_slots		= ak_stock_pad|wpn_body|0,0,0.0|0,0,0
+inv_weight				= 0.37
+override_section = ak_stock_74_attributes
+
+[ak_stock_74_attributes]
+weapon_lenght = 0.25
+zoom_rotate_time = 0.06
+recoil_koeff = -0.21
+inertia_koeff = 0.7
+
+[ak_stock_74p]:ak_stock_74
+inv_ui_sign				= 74_stk_b
+visual						= w_att_huds\ak_stock_74p	
+inv_name					= ak_stock_74p
+cost							= 1450
+inv_weight					= 0.27
+inv_grid_x					= 21
+override_section = ak_stock_74p_attributes
+
+[ak_stock_74p_attributes]
+weapon_lenght = 0.25
+zoom_rotate_time = 0.03
+recoil_koeff = -0.21
+inertia_koeff = 0.7
+
+[ak_stock_74_plum]:ak_stock_74p
+inv_ui_sign				= 74_stk_p
+visual						= w_att_huds\ak_stock_74_plum	
+inv_name					= ak_stock_74_plum
+inv_grid_x					= 23
+override_section = ak_stock_74_plum_attributes
+
+cost = 1450
+inv_weight = 0.27
+[ak_stock_74_plum_attributes]
+weapon_lenght = 0.25
+zoom_rotate_time = 0.03
+recoil_koeff = -0.21
+inertia_koeff = 0.7
+
+[ak_stock_m]:ak_stock_74
+inv_ui_sign				= akm_stk
+visual						= w_att_huds\ak_stock_m	
+inv_name					= ak_stock_m
+inv_name_short			= ak_stock_m
+cost							= 1250
+inv_grid_x					= 25
+override_section = ak_stock_m_attributes
+
+inv_weight = 0.37
+[ak_stock_m_attributes]
+weapon_lenght = 0.25
+zoom_rotate_time = 0.06
+recoil_koeff = -0.22
+inertia_koeff = 0.7
+
+[ak_stock_h]:ak_stock_74
+inv_ui_sign				= akm_stk
+visual						= w_att_huds\ak_stock_h	
+inv_name					= ak_stock_h
+inv_name_short			= ak_stock_m
+cost							= 1300
+inv_grid_x         = 31
+inv_grid_y         = 9
+inv_weight				= 0.32
+attachment_slots		= ak_stock_pad|wpn_body|0,0,0|0,0,0#cheek|wpn_body|0,-0.0111,-0.01434|0,0,0
+override_section = ak_stock_h_attributes
+
+[ak_stock_h_attributes]
+zoom_rotate_time = 0.05
+recoil_koeff = -0.22
+inertia_koeff = 0.8
+weapon_lenght = 0.25
+
+[ak_stock_ms]:ak_stock_m
+visual						= w_att_huds\ak_stock_ms
+inv_grid_x         		= 27
+inv_grid_y         		= 9
+inv_weight				= 0.44
+override_section = ak_stock_ms_attributes
+
+cost = 1250
+[ak_stock_ms_attributes]
+weapon_lenght = 0.25
+zoom_rotate_time = 0.06
+recoil_koeff = -0.21
+inertia_koeff = 0.7
+
+[ak_stock_cqr]:attachment_base_ak							;блокировка рукоятки
+kind  =  ak_stocks
+inv_ui_sign				= ak_cqr
+visual						= w_att_huds\ak_stock_cqr	
+inv_name					= ak_stock_cqr
+inv_name_short			= ak_stock_cqrS
+cost							= 3300
+inv_weight					= 0.5
+inv_grid_width			= 2
+inv_grid_x					= 27
+inv_grid_y					= 8
+attachment_point		= ak_stock|0,0,0|0,0,0
+item_tags	=	stock
+override_section = ak_stock_cqr_att
+[ak_stock_cqr_att]:ar_stock_cqr_att
+weapon_lenght = 0.25
+zoom_rotate_time = 0.02
+
+[ak_stock_mp_moe]:ak_stock_cqr
+inv_ui_sign				= akm_moe
+visual						= w_att_huds\ak_stock_mp_moe	
+inv_name					= ak_stock_mp_moe
+inv_name_short			= ak_stock_mp_moeS
+cost							= 3200
+inv_weight					= 0.37
+inv_grid_x					= 29
+item_tags	=	stock
+override_section = ak_stock_mp_moe_att
+[ak_stock_mp_moe_att]
+weapon_lenght = 0.25
+zoom_rotate_time = -0.01
+recoil_koeff            = -0.23
+inertia_koeff          = 0.8
+
+[ak_stock_sok]:ak_stock_cqr
+inv_ui_sign				= sok_stk
+visual						= w_att_huds\ak_stock_sok	
+inv_name					= ak_stock_sok
+inv_name_short			= ak_stock_sok
+cost							= 1850
+inv_weight					= 0.52
+inv_grid_x					= 35
+override_section = ak_stock_sok_att
+[ak_stock_sok_att]
+weapon_lenght = 0.3
+zoom_rotate_time = 0.07
+recoil_koeff            = -0.21
+inertia_koeff          = 0.6
+
+[ak_stock_vpo123]:ak_stock_sok
+inv_ui_sign				= vpo_stk
+visual						= w_att_huds\ak_stock_vpo123	
+inv_name					= ak_stock_vpo123
+inv_name_short			= ak_stock_vpo123
+cost							= 2000
+inv_weight					= 0.5
+inv_grid_x         = 23
+inv_grid_y         = 9
+attachment_slots		= ak_stock_pad|wpn_body|0,-0.012,-0.012|0,4,0#cheek|wpn_body|0,-0.0056,0.027|0,5,0
+override_section = vintorez_stock_strap_att
+
+[ak_stock_gopak]:ak_stock_buffer_ad
+inv_ui_sign				= ak-gpk
+visual						= w_att_huds\ak_stock_gopak
+inv_name					= ak_stock_gopak
+inv_name_short		= ak_stock_gopakS
+cost							= 1550
+inv_weight				= 0.35
+inv_grid_width     	= 2
+inv_grid_x         		= 29
+inv_grid_y         		= 9
+attachment_slots		= cheek|wpn_body|0,0,-0.0047|0,4,0
+override_section = ak_stock_gopak_attributes
+
+[ak_stock_gopak_attributes]
+weapon_lenght = 0.25
+zoom_rotate_time = 0.06
+recoil_koeff = -0.22
+inertia_koeff = 0.7
+
+[ak_stock_mp_zhukov]:ak_stock_cqr
+inv_ui_sign				= ak_zhk
+visual						= w_att_huds\ak_stock_mp_zhukov	
+inv_name					= ak_stock_mp_zhukov
+inv_name_short			= ak_stock_mp_zhukovS
+cost							= 3300
+inv_weight					= 0.43
+inv_grid_x					= 31
+override_section = ak_stock_mp_zhukov_att
+[ak_stock_mp_zhukov_att]
+weapon_lenght = 0.25
+zoom_rotate_time = 0.02
+recoil_koeff            = -0.25
+inertia_koeff          = 0.7
+
+[ak_stock_rpk]:ak_stock
+inv_ui_sign				= rpk_stk
+visual						= w_att_huds\ak_stock_rpk	
+inv_name					= ak_stock_rpk
+inv_name_short			= ak_stock_rpk
+cost							= 1300
+inv_weight					= 0.38
+inv_grid_x					= 33
+attachment_slots		= ak_stock_pad|wpn_body|0,0,0.027|0,4,0
+override_section = ak_stock_rpk_attributes
+
+[ak_stock_rpk_attributes]
+weapon_lenght = 0.2
+zoom_rotate_time = 0.05
+recoil_koeff = -0.23
+inertia_koeff = 0.8
+[rpk_stock_att]
+weapon_lenght = 0.2
+zoom_rotate_time = 0.05
+recoil_koeff            = -0.29
+inertia_koeff          = 0.8
+
+[ak_stock_tantal]:ak_stock_cqr
+inv_ui_sign				= tntl_stk
+visual						= w_att_huds\ak_stock_tantal	
+inv_name					= ak_stock_tantal
+inv_name_short			= ak_stock_tantal
+cost							= 1550
+inv_weight					= 0.26
+inv_grid_x					= 37
+override_section = ak_stock_tantal_att
+[ak_stock_tantal_att]:ar_buffer_troy_pdw_stock_att
+weapon_lenght = 0.25
+
+recoil_koeff = -0.16
+inertia_koeff = 0.8
+zoom_rotate_time = 0.01
+[ak_stock_pad]:attachment_base_ak
+kind = ak_stocks
+inv_ui_sign				= ak_pad
+visual						= w_att_huds\ak_stock_pad	
+inv_name					= ak_stock_pad
+inv_name_short			= ak_stock_padS
+cost							= 1050
+inv_weight					= 0.12
+inv_grid_x					= 39
+inv_grid_y					= 8
+attachment_point		= ak_stock_pad|0,0,0|0,0,0
+item_tags	=	stock
+override_section = ak_stock_pad_attributes
+
+[ak_stock_pad_attributes]
+weapon_lenght = 0.03
+zoom_rotate_time = -0.02
+recoil_koeff = -0.03
+inertia_koeff = 0.95
+[ak_stock_pad_att]
+weapon_lenght = 0.03
+zoom_rotate_time = -0.02
+recoil_koeff            = -0.08
+inertia_koeff          = 0.95
+
+[74u_stock_buffer_ad]:attachment_base_ak
+kind  =  74u_stocks
+inv_ui_sign				= aks-ar-t
+visual						= w_att_huds\74u_stock_adapter_buffer_5ku	
+inv_name					= 74u_stock_adapter_buffer_5ku
+inv_name_short			= 74u_stock_adapter_buffer_5ku
+cost								= 350
+inv_weight					= 0.08
+inv_grid_x					= 6
+inv_grid_y					= 9
+attachment_point		= 74u_stock|0,0,0|0,0,0
+attachment_slots		= ar_buffer|wpn_body|0,-0.015,-0.02|0,0,0
+item_tags =	stock
+override_section = 74u_stock_buffer_ad_attributes
+
+[74u_stock_buffer_ad_attributes]
+
+[74u_stock]:74u_stock_buffer_ad
+inv_ui_sign				= 74u_stk
+visual						= w_att_huds\74u_stock	
+inv_name					= 74u_stock
+inv_name_short			= 74u_stock
+cost							= 1050
+inv_weight					= 0.22
+inv_grid_width			= 2
+inv_grid_x					= 7
+attachment_slots		= ak_stock_pad|wpn_body|0,0,0.002|0,2,0
+override_section = 74u_stock_attributes
+
+[74u_stock_attributes]
+zoom_rotate_time = 0.01
+recoil_koeff = -0.21
+inertia_koeff = 0.8
+weapon_lenght = 0.25
+[74u_stock_att]:ar_buffer_troy_pdw_stock_att
+weapon_lenght = 0.25
+
+[74u_stock_74m]:74u_stock
+inv_ui_sign				= 74m_stk
+visual						= w_att_huds\74u_stock_74m	
+inv_name					= 74u_stock_74m
+inv_name_short			= 74u_stock_74m
+cost							= 1300
+inv_weight					= 0.29
+inv_grid_x					= 9
+attachment_slots		= ak_stock_pad|wpn_body|0,0,-0.002|0,0,0
+override_section = 74u_stock_74m_attributes
+
+[74u_stock_74m_attributes]
+weapon_lenght = 0.25
+zoom_rotate_time = 0.03
+recoil_koeff = -0.22
+inertia_koeff = 0.7
+[74m_stock_att]
+weapon_lenght = 0.25
+zoom_rotate_time = 0.03
+recoil_koeff            = -0.27
+inertia_koeff          = 0.7
+
+[74u_stock_rpk74m]:74u_stock
+inv_ui_sign				= r74m_stk
+visual						= w_att_huds\74u_stock_rpk74m
+inv_name					= 74u_stock_rpk74m
+inv_name_short			= 74u_stock_rpk74m
+cost							= 1300
+inv_weight					= 0.26
+inv_grid_x					= 11
+attachment_slots		= ak_stock_pad|wpn_body|0,0,0.019|0,1.7,0
+override_section = 74u_stock_rpk74m_attributes
+
+[74u_stock_rpk74m_attributes]
+weapon_lenght = 0.2
+zoom_rotate_time = 0.03
+recoil_koeff = -0.23
+inertia_koeff = 0.8
+[74u_stock_rpk74m_att]
+weapon_lenght = 0.2
+zoom_rotate_time = 0.03
+recoil_koeff            = -0.27
+inertia_koeff          = 0.8
+
+[74u_stock_rpks]:74u_stock
+inv_ui_sign				= rpks_stk
+visual						= w_att_huds\74u_stock_rpks
+inv_name					= 74u_stock_rpks
+inv_name_short			= 74u_stock_rpks
+cost							= 1250
+inv_weight					= 0.33
+inv_grid_x					= 13
+attachment_slots		= ak_stock_pad|wpn_body|0,0,0.028|0,4,0
+override_section = 74u_stock_rpks_attributes
+
+[74u_stock_rpks_attributes]
+weapon_lenght = 0.2
+zoom_rotate_time = 0.05
+recoil_koeff = -0.22
+inertia_koeff = 0.8
+
+[74u_stock_vepr12]:attachment_base_ak
+kind  =  74u_stocks
+inv_ui_sign				= vepr_stk
+visual							= w_att_huds\74u_stock_vepr12	
+inv_name					= 74u_stock_vepr12
+inv_name_short			= 74u_stock_vepr12
+cost							= 2900
+inv_weight					= 0.3
+inv_grid_width			= 2
+inv_grid_x					= 15
+inv_grid_y					= 9
+attachment_point		= 74u_stock|0,0,0|0,0,0
+item_tags	=	stock
+override_section = 74u_stock_vepr12_attributes
+
+[74u_stock_vepr12_attributes]
+weapon_lenght = 0.25
+zoom_rotate_time = 0.01
+recoil_koeff = -0.19
+inertia_koeff = 0.7
+[74u_stock_vepr12_att]
+weapon_lenght = 0.25
+zoom_rotate_time = 0.01
+recoil_koeff            = -0.26
+inertia_koeff          = 0.7
+
+[74u_stock_pt1]:74u_stock
+inv_ui_sign				= aks_pt1
+visual						= w_att_huds\74u_stock_zenit_pt1	
+inv_name					= 74u_stock_zenit_pt1
+inv_name_short			= 74u_stock_zenit_pt1S
+cost							= 3000
+inv_weight					= 0.5
+inv_grid_x					= 17
+attachment_slots		= ak_stock_pad|wpn_body|0,0.012,0|0,0,0
+item_tags	=	stock
+override_section = 74u_stock_pt1_attributes
+
+[74u_stock_pt1_attributes]
+weapon_lenght = 0.25
+zoom_rotate_time = -0.01
+recoil_koeff = -0.25
+inertia_koeff = 0.8
+[74u_stock_zenit_pt1_att]
+weapon_lenght = 0.25
+zoom_rotate_time = -0.01
+recoil_koeff            = -0.26
+inertia_koeff          = 0.8
+
+[74u_stock_pt3]:74u_stock
+inv_ui_sign				= aks_pt3
+visual						= w_att_huds\74u_stock_zenit_pt3	
+inv_name					= 74u_stock_zenit_pt3
+inv_name_short			= 74u_stock_zenit_pt1S
+cost							= 3500
+inv_weight					= 0.55
+inv_grid_x					= 19
+attachment_slots		= ak_stock_pad_xui|wpn_body|0,0.012,0|0,0,0
+item_tags	=	stock
+override_section = 74u_stock_pt3_attributes
+
+[74u_stock_pt3_attributes]
+weapon_lenght = 0.2
+zoom_rotate_time = -0.01
+recoil_koeff = -0.26
+inertia_koeff = 0.7
+[74u_stock_zenit_pt3_att]
+weapon_lenght = 0.2
+zoom_rotate_time = -0.01
+recoil_koeff            = -0.28
+inertia_koeff          = 0.7
+
+[74u_stock_buffer_ak200]:74u_stock 
+inv_ui_sign				= ak200_buf
+visual						= w_att_huds\74u_stock_buffer_ak200	
+inv_name					= 74u_stock_buffer_ak200
+inv_name_short		= 74u_stock_buffer_ak200S
+cost							= 1150
+inv_weight				= 0.12
+inv_grid_x				= 25
+item_tags				=	stock
+attachment_slots		= ar_stock|wpn_body|0,-0.0269,-0.0093|0,0,0
+override_section 		= 74u_stock_buffer_ak200_attributes
+
+[74u_stock_buffer_ak200_attributes]
+weapon_lenght = 0.15
+zoom_rotate_time = 0.01
+recoil_koeff = -0.01
+
+[74u_stock_buffer_caa]:74u_stock_buffer_ak200 
+inv_ui_sign				= 74u_caa
+visual						= w_att_huds\74u_stock_buffer_caa	
+inv_name					= 74u_stock_buffer_caa
+inv_name_short		= 74u_stock_buffer_caaS
+cost							= 1300
+inv_weight				= 0.2
+inv_grid_x         		= 6
+inv_grid_y         		= 22
+attachment_slots		= ar_stock|wpn_body|0,-0.0229,-0.02|0,0,0
+override_section 		= 74u_stock_buffer_caa_attributes
+
+[74u_stock_buffer_caa_attributes]
+weapon_lenght = 0.15
+zoom_rotate_time = 0.02
+recoil_koeff = -0.01
+
+[74u_stock_evo]:74u_stock
+inv_ui_sign				= aks_pt3
+visual						= w_att_huds\74u_stock_evo	
+inv_name					= 74u_stock_evo
+inv_name_short		= 74u_stock_evoS
+cost							= 3500
+inv_weight				= 0.55
+inv_grid_x				= 17
+inv_grid_y				= 22
+attachment_slots		= ak_stock_pad_off|wpn_body|0,0,0|0,0,0
+override_section = 74u_stock_evo_attributes
+
+[74u_stock_evo_attributes]
+weapon_lenght = 0.25
+zoom_rotate_time = 0.02
+recoil_koeff = -0.24
+inertia_koeff = 0.7
+
+[12ga_muzzle_saiga12]:attachment_base_ak
+kind  =  12gamuzz
+inv_ui_sign				= s12_mb
+visual						= w_att_huds\12ga_muzzle_saiga12	
+inv_name					= 12ga_muzzle_saiga12
+inv_name_short			= 12ga_muzzle_saiga12
+cost							= 150
+inv_weight					= 0.05
+inv_grid_x					= 9
+inv_grid_y					= 10
+attachment_point		= 12ga_muzzle|0,0,0|0,0,0
+override_section = 12ga_muzzle_saiga12_attributes
+
+[12ga_muzzle_saiga12_attributes]
+[muzzle_att]
+
+[12ga_muzzle_hdc]:12ga_muzzle_saiga12
+kind  =  12gamuzz
+inv_ui_sign				= hdc_mb
+visual						= w_att_huds\12ga_muzzle_hdc	
+inv_name					= 12ga_muzzle_hdc
+inv_name_short			= 12ga_muzzle_hdcS
+cost							= 850
+inv_weight					= 0.1
+inv_grid_x					= 8
+item_tags	=	muzzle_device
+override_section = 12ga_muzzle_hdc_attributes
+
+[12ga_muzzle_hdc_attributes]
+weapon_lenght = 0.05
+recoil_koeff = -0.08
+[12ga_muzzle_hdc_att]:05_muzzle_lenght_attributes
+recoil_koeff = -0.08
+
+[12ga_silencer_hexagon]:12ga_muzzle_saiga12
+kind  =  12gamuzz
+inv_ui_sign				= hex12_sil
+visual						= w_att_huds\12ga_hexagon	
+inv_name					= 12ga_hexagon
+inv_name_short			= 12ga_hexagonS
+cost							= 2300
+inv_weight					= 0.6
+inv_grid_width			= 2
+inv_grid_x					= 6
+item_tags =	muzzle_device
+override_section = 12ga_silencer_hexagon_attributes
+
+[12ga_silencer_hexagon_attributes]
+silencer_status = 1
+silencer_name = wpn_addon_silencer
+silencer_x = 1
+silencer_y = 1
+weapon_lenght = 0.2
+fire_dispersion_base_koeff = -0.05
+zoom_rotate_time = 0.09
+recoil_koeff = -0.05
+inertia_koeff = 1.3
+[12ga_silencer_hexagon_att]:silencer_base_attributes
+weapon_lenght = 0.2
+fire_dispersion_base_koeff = -0.05
+zoom_rotate_time = 0.09
+recoil_koeff            = -0.36
+inertia_koeff            = 1.3
+
+[12ga_silencer_salvo]:attachment_base
+kind  =  12gamuzz
+inv_ui_sign				= Salvo_12
+visual							= w_att_huds\12ga_silencer_salvo	
+inv_name					= 12ga_silencer_salvo
+inv_name_short		= 12ga_silencer_salvoS
+cost							= 1900
+inv_weight				= 0.45
+inv_grid_width			= 2
+inv_grid_x					= 19
+inv_grid_y					= 49
+attachment_point	= 12ga_muzzle|0,0,0|0,0,0
+item_tags	=	muzzle_device
+override_section = 12ga_silencer_salvo_attributes
+
+[12ga_silencer_salvo_attributes]
+silencer_status = 1
+silencer_name = wpn_addon_silencer
+silencer_x = 1
+silencer_y = 1
+weapon_lenght = 0.17
+zoom_rotate_time = 0.08
+recoil_koeff = -0.09
+inertia_koeff = 1.3
+
+[12ga_muzzle_vepr12]:12ga_muzzle_saiga12
+kind  =  12gamuzz
+inv_ui_sign				= vepr_mb
+visual						= w_att_huds\12ga_muzzle_vepr12	
+inv_name					= 12ga_muzzle_vepr12
+inv_name_short			= 12ga_muzzle_vepr12S
+cost							= 400
+inv_weight					= 0.07
+inv_grid_x					= 10
+override_section = 12ga_muzzle_vepr12_attributes
+
+[12ga_muzzle_vepr12_attributes]
+weapon_lenght = 0.05
+zoom_rotate_time = 0.01
+recoil_koeff = -0.07
+[12ga_muzzle_vepr12_att]:05_muzzle_lenght_attributes
+zoom_rotate_time = 0.01
+recoil_koeff = -0.07
+
+[74_muzzle]:attachment_base_ak
+kind  =  74_muzzles
+inv_ui_sign				= 74_mb
+visual						= w_att_huds\74_muzzle	
+inv_name					= 74_muzzle
+inv_name_short			= 74_muzzleS
+cost							= 450
+inv_weight					= 0.05
+inv_grid_x					= 11
+inv_grid_y					= 10
+attachment_point		= 74_muzzle|0,0,0|0,0,0
+override_section = 74_muzzle_attributes
+
+[74_muzzle_attributes]
+weapon_lenght = 0.05
+recoil_koeff = -0.03
+
+[74_muzzle_dtk1]:74_muzzle
+inv_ui_sign				= 74_dtk1
+visual						= w_att_huds\74_muzzle_dtk1	
+inv_name					= 74_muzzle_dtk1
+inv_name_short			= 74_muzzle_dtk1S
+cost							= 750
+inv_weight					= 0.08
+inv_grid_x					= 12
+item_tags	=	muzzle_device
+override_section = 74_muzzle_dtk1_attributes
+
+[74_muzzle_dtk1_attributes]
+weapon_lenght = 0.05
+zoom_rotate_time = 0.01
+recoil_koeff = -0.1
+inertia_koeff = 1.1
+[74_muzzle_dtk1_att]:05_muzzle_lenght_attributes
+zoom_rotate_time = 0.01
+recoil_koeff            = -0.18
+inertia_koeff          = 1.1
+
+[74_muzzle_dtk2]:74_muzzle
+inv_ui_sign				= 74_dtk2
+visual						= w_att_huds\74_muzzle_dtk2	
+inv_name					= 74_muzzle_dtk2
+inv_name_short			= 74_muzzle_dtk2S
+cost							= 800
+inv_weight					= 0.07
+inv_grid_x					= 13
+item_tags	=	muzzle_device
+override_section = 74_muzzle_dtk2_attributes
+
+[74_muzzle_dtk2_attributes]
+weapon_lenght = 0.05
+zoom_rotate_time = 0.01
+recoil_koeff = -0.11
+inertia_koeff = 1.1
+[74_muzzle_dtk2_att]:05_muzzle_lenght_attributes
+zoom_rotate_time = 0.01
+recoil_koeff            = -0.17
+inertia_koeff          = 1.1
+
+[74_muzzle_dtk3]:74_muzzle
+inv_ui_sign				= 74_dtk3
+visual						= w_att_huds\74_muzzle_dtk3	
+inv_name					= 74_muzzle_dtk3
+inv_name_short			= 74_muzzle_dtk3S
+cost							= 850
+inv_weight					= 0.09
+inv_grid_x					= 14
+item_tags	=	muzzle_device
+override_section = 74_muzzle_dtk3_attributes
+
+[74_muzzle_dtk3_attributes]
+weapon_lenght = 0.05
+recoil_koeff = -0.13
+zoom_rotate_time = 0.01
+[ar_muzzle_10_att]:05_muzzle_lenght_attributes
+recoil_koeff = -0.14
+zoom_rotate_time = 0.01
+
+[74_silencer_dtk4m]:74_muzzle
+inv_ui_sign				= 74_dtk4m
+visual							= w_att_huds\74_muzzle_dtk4m	
+inv_name					= 74_silencer_dtk4m
+inv_name_short		= 74_silencer_dtk4mS
+cost							= 3900
+inv_weight				= 0.47
+inv_grid_width			= 2
+inv_grid_x					= 15
+item_tags	=	muzzle_device
+override_section = 74_silencer_dtk4m_attributes
+
+[74_silencer_dtk4m_attributes]
+silencer_status = 1
+silencer_name = wpn_addon_silencer
+silencer_x = 1
+silencer_y = 1
+weapon_lenght = 0.13
+zoom_rotate_time = 0.06
+recoil_koeff = -0.07
+inertia_koeff = 1.2
+[74_muzzle_dtk4m_attributes]:silencer_base_attributes
+weapon_lenght = 0.13
+zoom_rotate_time = 0.06
+recoil_koeff            = -0.25
+inertia_koeff            = 1.2
+
+[74_silencer_hexagon]:74_muzzle
+inv_ui_sign				= 74_hexa
+visual							= w_att_huds\74_muzzle_hexagon	
+inv_name					= 74_silencer_hexagon
+inv_name_short		= 74_silencer_hexagonS
+cost							= 4150
+inv_weight					= 0.34
+inv_grid_x					= 17
+item_tags	=	muzzle_device
+override_section = 74_silencer_hexagon_attributes
+
+[74_silencer_hexagon_attributes]
+silencer_status = 1
+silencer_name = wpn_addon_silencer
+silencer_x = 1
+silencer_y = 1
+weapon_lenght = 0.12
+impair_koeff = 1.4
+zoom_rotate_time = 0.04
+recoil_koeff = -0.08
+inertia_koeff = 1.1
+
+[74_silencer_tgpa]:74_muzzle
+inv_ui_sign				= 74_tgpa
+visual							= w_att_huds\74_muzzle_tgpa	
+inv_name					= 74_silencer_tgpa
+inv_name_short		= 74_silencer_tgpaS
+cost							= 3800
+inv_weight				= 0.39
+inv_grid_width			= 2
+inv_grid_x					= 18
+item_tags	=	muzzle_device
+override_section = 74_silencer_tgpa_attributes
+[74_silencer_tgpa_attributes]:silencer_base_attributes
+weapon_lenght = 0.2
+zoom_rotate_time = 0.06
+recoil_koeff            = -0.07
+inertia_koeff            = 1.3
+
+[ak_silencer_wrap]:74_silencer_tgpa
+kind  = ak_muzzles
+inv_ui_sign				= sil_hm
+visual						= w_att_huds\ak_silencer_wrap	
+inv_name					= ak_silencer_wrap
+inv_name_short		= ak_silencer_wrapS
+cost							= 3800
+inv_weight				= 0.39
+inv_grid_x         		= 16
+inv_grid_y         		= 21
+attachment_point	= ak_muzzle|0,0,0|0,0,0
+override_section = ak_silencer_wrap_attributes
+
+[ak_silencer_wrap_attributes]
+silencer_status = 1
+silencer_name = wpn_addon_silencer
+silencer_x = 1
+silencer_y = 1
+weapon_lenght = 0.2
+zoom_rotate_time = 0.06
+recoil_koeff = -0.04
+inertia_koeff = 1.3
+
+[74_muzzle_u]:74_muzzle
+inv_ui_sign				= 74u_mb
+visual						= w_att_huds\74_muzzle_u	
+inv_name					= 74_muzzle_u
+inv_name_short			= 74_muzzle_uS
+cost							= 350
+inv_grid_x					= 20
+override_section = 74_muzzle_u_attributes
+
+inv_weight = 0.05
+[74_muzzle_u_attributes]
+weapon_lenght = 0.05
+recoil_koeff = -0.04
+impair_koeff = 0.9
+
+[74_muzzle_akmsu]:74_muzzle
+inv_ui_sign				= 74msu
+visual						= w_att_huds\74_muzzle_akmsu	
+inv_name					= 74_muzzle_akmsu
+inv_name_short			= 74_muzzle_akmsuS
+cost							= 500
+inv_weight					= 0.09
+inv_grid_x         = 23
+inv_grid_y         = 21
+override_section = 74_muzzle_akmsu_attributes
+
+[74_muzzle_akmsu_attributes]
+recoil_koeff = -0.04
+weapon_lenght = 0.08
+[74_muzzle_akmsu_att]:ar_muzzle_5_att,08_muzzle_lenght_attributes
+
+[74_silencer_pbs4]:74_muzzle
+inv_ui_sign				= 74_pbs4
+visual							= w_att_huds\74_muzzle_pbs4	
+inv_name					= 74_silencer_pbs4
+inv_name_short		= 74_silencer_pbs4S
+cost							= 4100
+inv_weight				= 0.55
+inv_grid_width			= 2
+inv_grid_x					= 21
+item_tags	=	muzzle_device
+override_section = 74_silencer_pbs4_attributes
+[74_silencer_pbs4_attributes]:silencer_base_attributes
+weapon_lenght = 0.2
+zoom_rotate_time = 0.08
+recoil_koeff            = -0.08
+inertia_koeff            = 1.3
+
+[74_muzzle_105]:74_muzzle
+inv_ui_sign				= 105_mb
+visual						= w_att_huds\100_muzzle	
+inv_name					= 74_muzzle_105
+inv_name_short			= 74_muzzle_105S
+cost							= 400
+inv_grid_x					= 23
+override_section = 74_muzzle_105_attributes
+
+inv_weight = 0.05
+[74_muzzle_105_attributes]
+weapon_lenght = 0.05
+recoil_koeff = -0.04
+impair_koeff = 0.9
+
+[100_muzzle]:74_muzzle
+kind = ak_100_p
+inv_ui_sign					= 101-3_mb
+inv_name						= 101-3_muzzle
+inv_name_short			= 101-3_muzzleS
+attachment_point		= 100_muzzle|0,0,0|0,0,0
+override_section = 100_muzzle_attributes
+
+cost = 450
+inv_weight = 0.05
+[100_muzzle_attributes]
+weapon_lenght = 0.05
+recoil_koeff = -0.06
+impair_koeff = 0.9
+
+[200_muzzle]:100_muzzle
+kind = ak_100_p
+inv_ui_sign					= 200_mb
+visual							= w_att_huds\100_muzzle_ak200	
+inv_name						= 100_muzzle_ak200
+inv_name_short			= 100_muzzle_ak200S
+cost							= 500
+override_section = 200_muzzle_attributes
+
+inv_weight = 0.05
+[200_muzzle_attributes]
+weapon_lenght = 0.05
+recoil_koeff = -0.04
+
+[100_muzzle_s]:74_muzzle_105
+kind = ak_100_p
+inv_ui_sign					= 102-4_mb
+inv_name						= 102-4_muzzle
+inv_name_short			= 102-4_muzzleS
+attachment_point		= 100_muzzle|0,0,0|0,0,0
+override_section = 100_muzzle_s_attributes
+
+cost = 400
+inv_weight = 0.05
+[100_muzzle_s_attributes]
+weapon_lenght = 0.05
+recoil_koeff = -0.04
+impair_koeff = 0.9
+
+[100_silencer_atg]:100_muzzle
+kind = ak_100_p
+inv_ui_sign				= 100_atg
+visual							= w_att_huds\100_muzzle_atg
+inv_name					= 100_silencer_atg
+inv_name_short		= 100_silencer_atgS
+cost							= 1900
+inv_weight				= 0.8
+inv_grid_width			= 2
+inv_grid_x					= 24
+item_tags	=	muzzle_device
+override_section = 100_silencer_atg_attributes
+
+[100_silencer_atg_attributes]
+silencer_status = 1
+silencer_name = wpn_addon_silencer
+silencer_x = 1
+silencer_y = 1
+weapon_lenght = 0.17
+zoom_rotate_time = 0.08
+recoil_koeff = -0.12
+inertia_koeff = 1.3
+[100_muzzle_atg_attributes]:silencer_base_attributes
+weapon_lenght = 0.17
+zoom_rotate_time = 0.08
+recoil_koeff            = -0.3
+inertia_koeff            = 1.3
+
+[100_muzzle_pws_cqb]:100_muzzle
+kind = ak_100_p
+inv_ui_sign				= 100_pws
+visual							= w_att_huds\100_muzzle_pws_cqb	
+inv_name					= 100_muzzle_pws_cqb
+inv_name_short		= 100_muzzle_pws_cqbS
+cost							= 1200
+inv_grid_x					= 26
+item_tags			=	muzzle_device
+override_section = 100_muzzle_pws_cqb_attributes
+
+inv_weight = 0.05
+[100_muzzle_pws_cqb_attributes]
+weapon_lenght = 0.05
+zoom_rotate_time = 0.02
+recoil_koeff = -0.14
+inertia_koeff = 1.1
+impair_koeff = 0.8
+
+[100_muzzle_cnc_warrior]:100_muzzle
+kind = ak_100_p
+inv_ui_sign				= cnc
+visual							= w_att_huds\100_muzzle_cnc_warrior	
+inv_name					= 100_muzzle_cnc_warrior
+inv_name_short		= 100_muzzle_cnc_warriorS
+cost							= 800
+inv_grid_x					= 27
+attachment_slots		= ak_muzzle|muzzle|0,0,0.0214|0,0,0
+override_section = 100_muzzle_cnc_warrior_attributes
+
+inv_weight = 0.05
+[100_muzzle_cnc_warrior_attributes]
+weapon_lenght = 0.05
+impair_koeff = 0.9
+
+[ak_muzzle]:attachment_base_ak
+kind  = ak_muzzles
+inv_ui_sign				= ak_nut
+visual							= w_att_huds\ak_muzzle	
+inv_name					= ak_muzzle
+inv_name_short		= ak_muzzle
+cost							= 150
+inv_weight					= 0.02
+inv_grid_x					= 28
+inv_grid_y					= 10
+attachment_point		= ak_muzzle|0,0,0|0,0,0
+override_section = ak_muzzle_attributes
+
+[ak_muzzle_attributes]
+
+[ak_muzzle_to_74]:ak_muzzle_m
+inv_ui_sign				= ak-to-74
+visual							= w_att_huds\ak_muzzle_to_74	
+inv_name						= ak_muzzle_to_74
+inv_name_short			= ak_muzzle_to_74S
+cost								= 750
+inv_weight					= 0.2
+inv_grid_x         			= 38
+inv_grid_y         			= 9
+attachment_slots			= 74_muzzle|muzzle|0,0,0|0,0,0
+override_section = ak_muzzle_to_74_attributes
+
+[ak_muzzle_to_74_attributes]
+
+[ak_muzzle_m]:ak_muzzle
+inv_ui_sign				= akm_mb
+visual						= w_att_huds\ak_muzzle_m	
+inv_name					= ak_muzzle_m
+inv_name_short			= ak_muzzle_mS
+cost							= 300
+inv_weight					= 0.03
+inv_grid_x					= 29
+item_tags =	muzzle_device
+override_section = ak_muzzle_m_attributes
+
+[ak_muzzle_m_attributes]
+recoil_koeff = -0.06
+[ak_muzzle_m_att]
+recoil_koeff = -0.06
+
+[ak_muzzle_rpk]:ak_muzzle
+inv_ui_sign				= rpk_mb
+visual						= w_att_huds\ak_muzzle_rpk	
+inv_name					= ak_muzzle_rpk
+inv_name_short			= ak_muzzle_rpkS
+cost							= 300
+inv_weight					= 0.04
+inv_grid_x					= 30
+override_section = ak_muzzle_rpk_attributes
+
+[ak_muzzle_rpk_attributes]
+weapon_lenght = 0.05
+recoil_koeff = -0.06
+
+[ak_muzzle_amd65]:ak_muzzle_m
+inv_ui_sign				= md65_mb
+visual						= w_att_huds\ak_muzzle_amd65	
+inv_name					= ak_muzzle_amd65
+inv_name_short			= ak_muzzle_amd65S
+cost							= 500
+inv_weight					= 0.08
+inv_grid_x					= 31
+override_section = ak_muzzle_amd65_attributes
+
+[ak_muzzle_amd65_attributes]
+weapon_lenght = 0.05
+recoil_koeff = -0.11
+
+[ak_muzzle_bizon]:ak_muzzle
+inv_ui_sign				= biz_mb
+visual						= w_att_huds\ak_muzzle_bizon	
+inv_name					= ak_muzzle_bizon
+inv_name_short			= ak_muzzle_bizonS
+cost							= 300
+inv_weight					= 0.05
+inv_grid_x					= 32
+override_section = ak_muzzle_bizon_attributes
+
+[ak_muzzle_bizon_attributes]
+weapon_lenght = 0.05
+recoil_koeff = -0.04
+
+[ak_muzzle_vityaz]:ak_muzzle_bizon
+inv_ui_sign				= vit_mb
+visual						= w_att_huds\ak_muzzle_vityaz	
+inv_name					= ak_muzzle_vityaz
+inv_name_short			= ak_muzzle_vityazS
+inv_grid_x					= 33
+override_section = ak_muzzle_vityaz_attributes
+
+[ak_muzzle_vityaz_attributes]
+weapon_lenght = 0.05
+recoil_koeff = -0.05
+
+[ak_muzzle_dtk1l]:ak_muzzle_m
+inv_ui_sign				= ak_dtk1l
+visual						= w_att_huds\ak_muzzle_dtk1l	
+inv_name					= ak_muzzle_dtk1l
+inv_name_short			= ak_muzzle_dtk1lS
+cost							= 750
+inv_weight					= 0.08
+inv_grid_x					= 34
+override_section = ak_muzzle_dtk1l_attributes
+
+[ak_muzzle_dtk1l_attributes]
+weapon_lenght = 0.05
+zoom_rotate_time = 0.01
+recoil_koeff = -0.11
+inertia_koeff = 1.1
+
+[ak_muzzle_dtk2l]:ak_muzzle_dtk1l
+inv_ui_sign				= ak_dtk2l
+visual						= w_att_huds\ak_muzzle_dtk2l	
+inv_name					= ak_muzzle_dtk2l
+inv_name_short			= ak_muzzle_dtk2lS
+cost							= 800
+inv_weight					= 0.07
+inv_grid_x					= 35
+override_section = ak_muzzle_dtk2l_attributes
+
+[ak_muzzle_dtk2l_attributes]
+weapon_lenght = 0.05
+zoom_rotate_time = 0.01
+recoil_koeff = -0.12
+inertia_koeff = 1.1
+
+[ak_muzzle_ubs]:ak_muzzle_m
+inv_ui_sign				= ak_ubs
+visual							= w_att_huds\ak_muzzle_ur77	
+inv_name					= ak_muzzle_ur77
+inv_name_short		= ak_muzzle_ur77S
+cost							= 950
+inv_weight				= 0.13
+inv_grid_x					= 40
+inv_grid_y					= 9
+override_section = ak_muzzle_ubs_attributes
+
+[ak_muzzle_ubs_attributes]
+recoil_koeff = -0.12
+zoom_rotate_time = 0.01
+weapon_lenght = 0.08
+[ak_muzzle_ur77_att]:ar_muzzle_8_att,08_muzzle_lenght_attributes
+
+[ak_muzzle_vpo123]:ak_muzzle_m
+inv_ui_sign				= vpo_m
+visual							= w_att_huds\ak_muzzle_vpo123	
+inv_name					= ak_muzzle_vpo123
+inv_name_short		= ak_muzzle_vpo123S
+cost							= 550
+inv_weight				= 0.09
+inv_grid_x         = 37
+inv_grid_y         = 9
+override_section = ak_muzzle_vpo123_attributes
+
+[ak_muzzle_vpo123_attributes]
+weapon_lenght = 0.08
+recoil_koeff = -0.06
+[ak_muzzle_vpo123_att]:08_muzzle_lenght_attributes,ak_muzzle_m_att
+
+[ak_muzzle_jmac]:ak_muzzle_m
+inv_ui_sign				= ak_jmac
+visual						= w_att_huds\ak_muzzle_jmac	
+inv_name					= ak_muzzle_jmac
+inv_name_short		= ak_muzzle_jmacS
+cost							= 1050
+inv_weight				= 0.08
+inv_grid_x         		= 34
+inv_grid_y         		= 9
+override_section = ak_muzzle_jmac_attributes
+
+[ak_muzzle_jmac_attributes]
+weapon_lenght = 0.05
+recoil_koeff = -0.14
+
+[74_muzzle_jmac]:ak_muzzle_jmac
+kind  =  74_muzzles
+inv_ui_sign				= ak_jmac
+visual						= w_att_huds\74_muzzle_jmac	
+inv_name					= 74_muzzle_jmac
+inv_weight				= 0.09
+inv_grid_x        		= 35
+override_section = 74_muzzle_jmac_attributes
+
+cost = 1050
+[74_muzzle_jmac_attributes]
+weapon_lenght = 0.05
+recoil_koeff = -0.14
+
+[ak_silencer_hexagon]:ak_muzzle_m
+inv_ui_sign				= ak_hexa
+visual						= w_att_huds\ak_muzzle_hexagon	
+inv_name					= ak_silencer_hexagon
+inv_name_short		= ak_silencer_hexagonS
+cost							= 2100
+inv_weight					= 0.66
+inv_grid_width			= 2
+inv_grid_x					= 36
+override_section = ak_silencer_hexagon_attributes
+
+[ak_silencer_hexagon_attributes]
+silencer_status = 1
+silencer_name = wpn_addon_silencer
+silencer_x = 1
+silencer_y = 1
+weapon_lenght = 0.2
+zoom_rotate_time = 0.08
+recoil_koeff = -0.05
+inertia_koeff = 1.3
+
+[ak_muzzle_lantac]:ak_muzzle_m
+inv_ui_sign				= ak_ld
+visual						= w_att_huds\ak_muzzle_lantac_drakon	
+inv_name					= ak_muzzle_lantac_drakon
+inv_name_short			= ak_muzzle_lantac_drakonS
+cost							= 950
+inv_weight					= 0.09
+inv_grid_x         		= 38
+override_section = ak_muzzle_lantac_attributes
+
+[ak_muzzle_lantac_attributes]
+weapon_lenght = 0.05
+recoil_koeff = -0.12
+
+[ak_silencer_pbs1]:ak_silencer_hexagon
+inv_ui_sign				= ak_pbs1
+visual							= w_att_huds\ak_muzzle_pbs1	
+inv_name					= ak_silencer_pbs1
+inv_name_short		= ak_silencer_pbs1S
+cost							= 1950
+inv_weight				= 0.41
+inv_grid_x					= 39
+attachment_slots	= b3|muzzle|0,-0.02125,0.05|0,0,0
+override_section = ak_silencer_pbs1_attributes
+
+[ak_silencer_pbs1_attributes]
+silencer_status = 1
+silencer_name = wpn_addon_silencer
+silencer_x = 1
+silencer_y = 1
+weapon_lenght = 0.16
+impair_koeff = 1.4
+zoom_rotate_time = 0.05
+recoil_koeff = -0.06
+inertia_koeff = 1.2
+
+[tiss_muzzle]:attachment_base_ak
+kind = tiss
+inv_ui_sign				= tiss_mb
+visual							= w_att_huds\tiss_muzzle	
+inv_name					= tiss_muzzle
+inv_name_short		= tiss_muzzleS
+cost							= 250
+inv_weight				= 0.06
+inv_grid_x					= 39
+inv_grid_y					= 9
+attachment_point	= tiss_muzzle|0,0,0|0,0,0
+override_section		=	tiss_muzzle_attributes
+
+[tiss_muzzle_attributes]
+recoil_koeff = -0.06
+
+[mag_wpn_ak74_5.45x39_fmj]:mag_wpn_base_ak,wg_wpn_ak74,ag_ammo_5.45x39
+inv_ui_sign					= 74_30
+visual							= w_att_huds\74_mag_30
+inv_name						= 74_mag_30
+inv_name_short				= 74_mag_30
+inv_grid_height				= 2
+inv_grid_x         				= 7
+inv_grid_y         				= 11
+inv_weight						= 0.23
+cost								= 700
+max_mag_size				= 30
+mag_size						= medium
+override_section				= mag_wpn_ak74_5.45x39_fmj_attributes
+override_section_hud 			= ak_30_std_hud_override
+
+[mag_wpn_ak74_5.45x39_fmj_attributes]
+animation_prefix_mag = 30_
+[ak_30_std_hud_override]
+snd_30_mag_in 			= weapons\main\ak_30_mag_in_std
+snd_30_mag_out 			= weapons\main\ak_30_mag_out_std
+
+[mag_wpn_ak74u_5.45x39_fmj]:mag_wpn_ak74_5.45x39_fmj
+inv_grid_x         				= 8
+visual							= w_att_huds\74_mag_30_1
+override_section = mag_wpn_ak74u_5.45x39_fmj_attributes
+
+[mag_wpn_ak74u_5.45x39_fmj_attributes]
+animation_prefix_mag = 30_
+
+[mag_wpn_ak74_20_5.45x39_fmj]:mag_wpn_ak74_5.45x39_fmj
+inv_ui_sign					= 74_20
+visual							= w_att_huds\74_mag_20
+inv_name						= 74_mag_20
+inv_name_short				= 74_mag_20
+inv_grid_height				= 1
+inv_grid_x         				= 6
+inv_weight						= 0.15
+cost								= 500
+max_mag_size				= 20
+mag_size						= small
+override_section_hud 			= ak_20_std_hud_override
+override_section = mag_wpn_ak74_20_5.45x39_fmj_attributes
+
+[mag_wpn_ak74_20_5.45x39_fmj_attributes]
+animation_prefix_mag = 30_
+[ak_20_std_hud_override]
+snd_30_mag_in 			= weapons\main\ak_20_mag_in_std
+snd_30_mag_out 			= weapons\main\ak_20_mag_out_std								
+
+[mag_wpn_ak74m_30_5.45x39_fmj]:mag_wpn_ak74_5.45x39_fmj
+inv_ui_sign					= 74m_30
+inv_name						= 74m_mag
+inv_name_short			= 74m_mag
+inv_grid_x         				= 9
+visual							= w_att_huds\74_mag_30_m
+override_section = mag_wpn_ak74m_30_5.45x39_fmj_attributes
+
+[mag_wpn_ak74m_30_5.45x39_fmj_attributes]
+animation_prefix_mag = 30_
+
+[mag_wpn_ak74_plum_5.45x39_fmj]:mag_wpn_ak74_5.45x39_fmj
+inv_ui_sign					= 74p_30
+inv_name						= 74_mag_plum
+inv_grid_x         				= 10
+visual							= w_att_huds\74_mag_30_plum
+override_section = mag_wpn_ak74_plum_5.45x39_fmj_attributes
+
+[mag_wpn_ak74_plum_5.45x39_fmj_attributes]
+animation_prefix_mag = 30_
+
+[mag_wpn_ak74_pmag_30_5.45x39_fmj]:mag_wpn_ak74_5.45x39_fmj
+inv_ui_sign					= 74pm_30
+inv_name						= 74_pmag
+inv_name_short			= 74_pmagS
+inv_grid_x         				= 11
+visual							= w_att_huds\74_mag_30_pmag
+override_section_hud 			= ak_30_tac_hud_override
+override_section = mag_wpn_ak74_pmag_30_5.45x39_fmj_attributes
+
+[mag_wpn_ak74_pmag_30_5.45x39_fmj_attributes]
+animation_prefix_mag = 30_
+[ak_30_tac_hud_override]
+snd_30_mag_in 			= weapons\main\ak_30_mag_in_tac
+snd_30_mag_out 			= weapons\main\ak_30_mag_out_tac
+
+[mag_wpn_ar74_5.45x39_fmj]:mag_wpn_ak74_5.45x39_fmj
+inv_ui_sign						= 74t_30
+inv_name							= 74t_pmag
+inv_grid_x         				= 12
+visual							= w_att_huds\74_mag_30_tac
+override_section = mag_wpn_ar74_5.45x39_fmj_attributes
+
+[mag_wpn_ar74_5.45x39_fmj_attributes]
+animation_prefix_mag = 30_
+[mag_wpn_ar74_b_5.45x39_fmj]:mag_wpn_ar74_5.45x39_fmj
+inv_grid_x         				= 13
+visual							= w_att_huds\74_mag_30_tac_b
+override_section = mag_wpn_ar74_b_5.45x39_fmj_attributes
+
+[mag_wpn_ar74_b_5.45x39_fmj_attributes]
+animation_prefix_mag = 30_
+[mag_wpn_ar74_g_30_5.45x39_fmj]:mag_wpn_ar74_5.45x39_fmj
+inv_grid_x         				= 14
+visual							= w_att_huds\74_mag_30_tac_g
+override_section = mag_wpn_ar74_g_30_5.45x39_fmj_attributes
+
+[mag_wpn_ar74_g_30_5.45x39_fmj_attributes]
+animation_prefix_mag = 30_
+[mag_wpn_ak74_y_30_5.45x39_fmj]:mag_wpn_ar74_5.45x39_fmj
+inv_grid_x         				= 15
+visual							= w_att_huds\74_mag_30_tac_y
+override_section = mag_wpn_ak74_y_30_5.45x39_fmj_attributes
+
+[mag_wpn_ak74_y_30_5.45x39_fmj_attributes]
+animation_prefix_mag = 30_
+
+[mag_wpn_rpk74_45_5.45x39_fmj]:mag_wpn_ak74_5.45x39_fmj
+inv_ui_sign					= 74_45
+visual							= w_att_huds\74_mag_45_rpk
+inv_name						= 74_mag_45_rpk
+inv_name_short				= 74_mag_45_rpk
+inv_grid_x         				= 16
+inv_weight						= 0.32
+cost								= 900
+max_mag_size				= 45
+override_section = mag_wpn_rpk74_45_5.45x39_fmj_attributes
+
+[mag_wpn_rpk74_45_5.45x39_fmj_attributes]
+animation_prefix_mag = 30_
+
+[mag_wpn_rpk74m_45_5.45x39_fmj]:mag_wpn_rpk74_45_5.45x39_fmj
+inv_ui_sign					= 74_45
+visual							= w_att_huds\74_mag_45_rpk74m
+inv_name						= 74_mag_45_rpk74m
+inv_name_short				= 74_mag_45_rpk74mS
+inv_grid_x         				= 17
+override_section = mag_wpn_rpk74m_45_5.45x39_fmj_attributes
+
+[mag_wpn_rpk74m_45_5.45x39_fmj_attributes]
+animation_prefix_mag = 30_
+
+[mag_wpn_ak74_60_5.45x39_fmj]:mag_wpn_ak74_5.45x39_fmj
+inv_ui_sign					= 74_60
+visual							= w_att_huds\74_mag_60_6l31
+inv_name						= 74_mag_60_6l31
+inv_name_short				= 74_mag_60_6l31S
+inv_grid_x         				= 18
+inv_weight						= 0.41
+cost								= 1500
+max_mag_size				= 60
+override_section_hud 			= ak_4row_hud_override
+override_section = mag_wpn_ak74_60_5.45x39_fmj_attributes
+
+[mag_wpn_ak74_60_5.45x39_fmj_attributes]
+animation_prefix_mag = 30_
+[ak_4row_hud_override]
+snd_30_mag_in 			= weapons\main\ak_4row_mag_in
+snd_30_mag_out 			= weapons\main\ak_4row_mag_out
+
+[mag_wpn_ak74_60p_5.45x39_fmj]:mag_wpn_ak74_60_5.45x39_fmj
+visual							= w_att_huds\74_mag_60_pufgun
+inv_name						= 74_mag_60_pufgun
+inv_grid_x         				= 19
+inv_weight						= 0.42
+cost								= 1550
+override_section = mag_wpn_ak74_60p_5.45x39_fmj_attributes
+
+[mag_wpn_ak74_60p_5.45x39_fmj_attributes]
+animation_prefix_mag = 30_
+
+[mag_wpn_rpk16_95_5.45x39_fmj]:mag_wpn_ak74_5.45x39_fmj
+inv_ui_sign					= 74_95
+visual							= w_att_huds\74_mag_95_rpk16
+inv_name						= 74_mag_95_rpk16
+inv_name_short				= 74_mag_95_rpk16S
+inv_grid_x         				= 20
+inv_weight						= 0.68
+cost								= 2100
+max_mag_size				= 95
+mag_size						= large
+override_section				= mag_wpn_rpk16_95_5.45x39_fmj_attributes
+override_section_hud 			= ak_75_plm_hud_override
+
+[mag_wpn_rpk16_95_5.45x39_fmj_attributes]
+animation_prefix_mag = 75_
+[ak_75_plm_hud_override]
+snd_75_mag_in 			= weapons\main\ak_75_mag_in_plm
+snd_75_mag_out 			= weapons\main\ak_75_mag_out_plm
+[ak_drum_attributes]
+animation_prefix_mag	= 75_
+
+[mag_wpn_ak200_5.45x39_fmj]:mag_wpn_ak74_5.45x39_fmj
+inv_ui_sign						= ak200
+inv_name							= 74_mag_ak200
+inv_grid_x         				= 21
+visual								= w_att_huds\74_mag_ak200
+override_section = mag_wpn_ak200_5.45x39_fmj_attributes
+
+[mag_wpn_ak200_5.45x39_fmj_attributes]
+animation_prefix_mag = 30_
+
+[mag_wpn_abakan_5.45x39_fmj]:mag_wpn_base_ak,wg_wpn_ak100,ag_ammo_5.45x39
+inv_ui_sign					= type-88
+visual							= w_att_huds\74_mag_100_type88
+inv_name						= 74_mag_100_type88
+inv_name_short			= 74_mag_100_type88S
+inv_grid_width				= 3
+inv_grid_height			= 1
+inv_grid_x					= 34
+inv_grid_y					= 13
+inv_weight					= 0.12
+cost								= 2550
+max_mag_size				= 110
+mag_size						= large
+override_section			= mag_wpn_abakan_5.45x39_fmj_attributes
+
+[mag_wpn_abakan_5.45x39_fmj_attributes]
+animation_prefix_mag = 100_
+[ak74_cringe_attributes]
+animation_prefix_mag	=	100_
+
+[mag_wpn_abakan_p_5.45x39_fmj]:mag_wpn_abakan_5.45x39_fmj
+visual							= w_att_huds\74_mag_100_type88
+inv_grid_y					= 14
+inv_weight					= 0.1
+max_mag_size				= 100
+override_section = mag_wpn_abakan_p_5.45x39_fmj_attributes
+
+[mag_wpn_abakan_p_5.45x39_fmj_attributes]
+animation_prefix_mag = 100_
+
+[mag_wpn_ak101_5.56x45_fmj]:mag_wpn_base_ak,wg_wpn_ak101,ag_ammo_5.56x45
+inv_ui_sign					= 101_30
+visual							= w_att_huds\101_mag_30
+inv_name						= 101_mag_30
+inv_name_short				= 101_mag_30
+inv_grid_height				= 2
+inv_grid_x         				= 24
+inv_grid_y         				= 11
+inv_weight						= 0.23
+cost								= 700
+max_mag_size				= 30
+mag_size						= medium
+override_section				= mag_wpn_ak101_5.56x45_fmj_attributes
+override_section_hud 			= ak_30_std_hud_override
+
+[mag_wpn_ak101_5.56x45_fmj_attributes]
+animation_prefix_mag = 30_
+
+[mag_wpn_ak101_pro_5.56x45_fmj]:mag_wpn_ak101_5.56x45_fmj
+visual							= w_att_huds\101_mag_30_promag
+inv_name						= 101_mag_30_promag
+inv_name_short				= 101_mag_30_promagS
+inv_grid_x         				= 25
+cost								= 750
+override_section_hud 			= ak_30_tac_hud_override
+override_section = mag_wpn_ak101_pro_5.56x45_fmj_attributes
+
+[mag_wpn_ak101_pro_5.56x45_fmj_attributes]
+animation_prefix_mag = 30_
+
+[mag_wpn_rpk201_45_5.56x45_fmj]:mag_wpn_ak101_5.56x45_fmj
+inv_ui_sign					= 101_45
+visual							= w_att_huds\101_mag_45_rpk201
+inv_name						= 101_mag_45_rpk201
+inv_name_short				= 101_mag_45_rpk201
+inv_grid_x         				= 26
+inv_weight						= 0.32
+cost								= 900
+max_mag_size				= 45
+override_section = mag_wpn_rpk201_45_5.56x45_fmj_attributes
+
+[mag_wpn_rpk201_45_5.56x45_fmj_attributes]
+animation_prefix_mag = 30_
+
+[mag_wpn_zastava_95_5.56x45_fmj]:mag_wpn_ak101_5.56x45_fmj
+inv_ui_sign					= 101_95
+visual							= w_att_huds\101_mag_95_zastava
+inv_name						= 101_mag_95_zastava
+inv_name_short				= 101_mag_95_zastavaS
+inv_grid_x         				= 27
+inv_weight						= 0.68
+cost								= 2050
+max_mag_size				= 95
+mag_size						= large
+override_section				= mag_wpn_zastava_95_5.56x45_fmj_attributes
+override_section_hud 			= ak_75_mtl_hud_override
+
+[mag_wpn_zastava_95_5.56x45_fmj_attributes]
+animation_prefix_mag = 75_
+[ak_75_mtl_hud_override]
+snd_75_mag_in 			= weapons\main\ak_75_mag_in_mtl
+snd_75_mag_out 			= weapons\main\ak_75_mag_out_mtl
+
+[mag_wpn_saiga308_7.62x51_fmj]:mag_wpn_base_ak,wg_wpn_saiga308,ag_ammo_7.62x51
+inv_ui_sign					= s308_10
+visual							= w_att_huds\308_mag_10
+inv_name						= 308_mag_10
+inv_name_short				= 308_mag_10
+inv_grid_x         				= 28
+inv_grid_y         				= 11
+inv_weight						= 0.11
+cost								= 450
+max_mag_size				= 10
+mag_size						= small
+override_section				= mag_wpn_saiga308_7.62x51_fmj_attributes
+override_section_hud 			= ak_10_std_hud_override
+
+[mag_wpn_saiga308_7.62x51_fmj_attributes]
+animation_prefix_mag = 10_
+[ak_10_std_hud_override]
+snd_10_mag_in 			= weapons\main\ak_10_mag_in_std
+snd_10_mag_out 			= weapons\main\ak_10_mag_out_std
+[saiga308_10_attributes]
+animation_prefix_mag	=	10_
+
+[mag_wpn_saiga308_20_7.62x51_fmj]:mag_wpn_saiga308_7.62x51_fmj
+inv_ui_sign					= s308_20
+visual							= w_att_huds\308_mag_20
+inv_name						= 308_mag_20
+inv_grid_height				= 2
+inv_grid_x						= 29
+inv_weight						= 0.22
+cost								= 800
+max_mag_size				= 20
+mag_size						= medium
+override_section				= mag_wpn_saiga308_20_7.62x51_fmj_attributes
+override_section_hud = ak_20_std_hud_override
+
+[mag_wpn_saiga308_20_7.62x51_fmj_attributes]
+animation_prefix_mag = 30_
+
+[mag_wpn_saiga308_25_7.62x51_fmj]:mag_wpn_saiga308_20_7.62x51_fmj
+inv_ui_sign					= s308_20
+visual							= w_att_huds\308_mag_25_pufgun
+inv_name						= 308_mag_25_pufgun
+inv_name_short			= 308_mag_25_pufgunS
+inv_grid_x         			= 23
+inv_weight					= 0.27
+cost								= 1100
+max_mag_size				= 25
+override_section_hud = ak_30_tac_hud_override
+override_section = mag_wpn_saiga308_25_7.62x51_fmj_attributes
+
+[mag_wpn_saiga308_25_7.62x51_fmj_attributes]
+animation_prefix_mag = 30_
+
+[mag_wpn_saiga308_50_7.62x51_fmj]:mag_wpn_saiga308_20_7.62x51_fmj
+inv_ui_sign					= s308_50
+visual							= w_att_huds\308_mag_50
+inv_name						= 308_mag_50_xprod
+inv_name_short			= 308_mag_50_xprodS
+inv_grid_x					= 33
+inv_grid_y					= 13
+inv_weight					= 0.8
+cost								= 3100
+max_mag_size				= 50
+mag_size						= large
+override_section	= mag_wpn_saiga308_50_7.62x51_fmj_attributes
+override_section_hud = ak_75_plm_hud_override
+
+[mag_wpn_saiga308_50_7.62x51_fmj_attributes]
+animation_prefix_mag = 50_
+
+[mag_wpn_vpo123_7.62x54_7h1]:mag_wpn_base_ak,wg_wpn_vpo123,ag_ammo_7.62x54
+inv_ui_sign					= vpo_5
+visual							= w_att_huds\vpo123_mag_5
+inv_name						= vpo123_mag_5
+inv_name_short			= vpo123_mag_5
+inv_grid_x					= 29
+inv_grid_y					= 13
+inv_weight					= 0.1
+cost								= 400
+max_mag_size				= 5
+mag_size						= small
+override_section			= mag_wpn_vpo123_7.62x54_7h1_attributes
+override_section_hud	= ak_10_std_hud_override
+
+[mag_wpn_vpo123_7.62x54_7h1_attributes]
+animation_prefix_mag = 10_
+
+[mag_wpn_vpo123_10_7.62x54_7h1]:mag_wpn_vpo123_7.62x54_7h1
+inv_ui_sign					= vpo_10
+visual							= w_att_huds\vpo123_mag_10
+inv_name						= vpo123_mag_10
+inv_grid_height			= 2
+inv_grid_x					= 30
+inv_weight					= 0.2
+cost								= 700
+max_mag_size				= 10
+mag_size						= medium
+override_section_hud	= ak_10_tac_hud_override
+override_section = mag_wpn_vpo123_10_7.62x54_7h1_attributes
+
+[mag_wpn_vpo123_10_7.62x54_7h1_attributes]
+animation_prefix_mag = 10_
+
+[mag_wpn_vpo123_15_7.62x54_7h1]:mag_wpn_vpo123_10_7.62x54_7h1
+inv_ui_sign					= vpo_15
+visual							= w_att_huds\mag_vpo123_15
+inv_name						= vpo123_mag_15
+inv_grid_x					= 31
+inv_weight					= 0.28
+cost								= 1000
+max_mag_size				= 15
+override_section = mag_wpn_vpo123_15_7.62x54_7h1_attributes
+
+[mag_wpn_vpo123_15_7.62x54_7h1_attributes]
+animation_prefix_mag = 10_
+
+[mag_wpn_vpo123_40_7.62x54_7h1]:mag_wpn_vpo123_10_7.62x54_7h1
+inv_ui_sign					= vpo_40
+visual							= w_att_huds\mag_vpo123_40
+inv_name						= vpo123_mag_40_xprod
+inv_name_short			= vpo123_mag_40_xprodS
+inv_grid_x         			= 32
+inv_weight					= 0.85
+cost								= 3000
+max_mag_size				= 40
+mag_size						= large
+override_section	= mag_wpn_vpo123_40_7.62x54_7h1_attributes
+override_section_hud = ak_75_plm_hud_override
+
+[mag_wpn_vpo123_40_7.62x54_7h1_attributes]
+animation_prefix_mag = 50_
+
+[mag_wpn_ak_7.62x39_fmj]:mag_wpn_base_ak,wg_wpn_ak,ag_ammo_7.62x39
+inv_ui_sign					= ak_30
+visual							= w_att_huds\ak_mag_30
+inv_name						= ak_mag_30
+inv_name_short				= ak_mag_30
+inv_grid_height				= 2
+inv_grid_x         				= 33
+inv_grid_y         				= 11
+inv_weight						= 0.35
+cost								= 700
+max_mag_size				= 30
+mag_size						= medium
+override_section				= mag_wpn_ak_7.62x39_fmj_attributes
+override_section_hud 			= ak_30_mtl_hud_override
+
+[mag_wpn_ak_7.62x39_fmj_attributes]
+animation_prefix_mag = 30_
+[ak_30_mtl_hud_override]
+snd_30_mag_in 			= weapons\main\ak_30_mag_in_mtl
+snd_30_mag_out 			= weapons\main\ak_30_mag_out_mtl
+[ak_30_attributes]
+animation_prefix_mag	=	30_
+
+;[ak_test_mag]:attachment_base_ak
+;inv_ui_sign				= ak_30
+;visual							= w_att_huds\ak_mag_30	
+;inv_name					= ak_mag_30
+;inv_name_short		= ak_mag_30
+;cost							= 700
+;inv_weight				= 0.35
+;inv_grid_height			= 2
+;inv_grid_x					= 33
+;inv_grid_y					= 11
+;attachment_point		= ak_mag|0,0,0|0,0,0	
+;override_section_hud	= ak_30_mtl_hud_override
+;override_section 			= ak_mag_attributes
+;[ak_mag_attributes]
+;animation_prefix_mag	=	30_
+;ammo_mag_size	= 30
+
+[mag_wpn_aks_7.62x39_fmj]:mag_wpn_ak_7.62x39_fmj
+
+[mag_wpn_ak_10_7.62x39_fmj]:mag_wpn_base_ak,wg_wpn_ak,ag_ammo_7.62x39 
+inv_ui_sign					= ak_10
+visual							= w_att_huds\ak_mag_10
+inv_name						= ak_mag_10
+inv_name_short				= ak_mag_30
+inv_grid_x							= 31
+inv_grid_y							= 11
+inv_weight						= 0.1
+cost								= 350
+max_mag_size				= 10
+mag_size						= small
+override_section				= mag_wpn_ak_10_7.62x39_fmj_attributes
+override_section_hud 			= ak_10_std_hud_override
+
+[mag_wpn_ak_10_7.62x39_fmj_attributes]
+animation_prefix_mag = 10_
+[ak_10_attributes]
+animation_prefix_mag	=	10_
+
+[mag_wpn_ak_10al_7.62x39_fmj]:mag_wpn_ak_10_7.62x39_fmj
+visual							= w_att_huds\ak_mag_10_m
+inv_name						= ak_mag_10_m
+inv_grid_y         				= 12
+inv_weight						= 0.09
+cost								= 300
+override_section_hud 			= ak_10_mtl_hud_override
+override_section = mag_wpn_ak_10al_7.62x39_fmj_attributes
+
+[mag_wpn_ak_10al_7.62x39_fmj_attributes]
+animation_prefix_mag = 10_
+[ak_10_mtl_hud_override]
+snd_10_mag_in 			= weapons\main\ak_30_mag_in_mtl
+snd_10_mag_out 			= weapons\main\ak_30_mag_out_mtl
+
+[mag_wpn_ak_10pm_7.62x39_fmj]:mag_wpn_ak_10_7.62x39_fmj
+visual							= w_att_huds\ak_mag_10_pmag
+inv_name						= ak_mag_10_pmag
+inv_grid_x         				= 30
+override_section_hud 			= ak_10_tac_hud_override
+override_section = mag_wpn_ak_10pm_7.62x39_fmj_attributes
+
+[mag_wpn_ak_10pm_7.62x39_fmj_attributes]
+animation_prefix_mag = 10_
+[ak_10_tac_hud_override]
+snd_10_mag_in 			= weapons\main\ak_10_mag_in_tac
+snd_10_mag_out 			= weapons\main\ak_10_mag_out_tac
+
+[mag_wpn_ak_10pro_7.62x39_fmj]:mag_wpn_ak_10_7.62x39_fmj
+visual							= w_att_huds\ak_mag_10_promag
+inv_name						= ak_mag_10_promag
+inv_grid_x        				= 30
+inv_grid_y        				= 12
+override_section_hud 			= ak_10_tac_hud_override
+override_section = mag_wpn_ak_10pro_7.62x39_fmj_attributes
+
+[mag_wpn_ak_10pro_7.62x39_fmj_attributes]
+animation_prefix_mag = 10_
+
+[mag_wpn_ak_20pm_7.62x39_fmj]:mag_wpn_ak_7.62x39_fmj
+inv_ui_sign					= ak_20
+visual							= w_att_huds\ak_mag_20_pmag
+inv_name						= ak_mag_20_pmag
+inv_name_short				= ak_mag_20_pmagS
+inv_grid_height				= 1
+inv_grid_x         				= 32
+inv_weight						= 0.14
+cost								= 500
+max_mag_size				= 20
+mag_size						= small
+override_section_hud 			= ak_20_tac_hud_override
+override_section = mag_wpn_ak_20pm_7.62x39_fmj_attributes
+
+[mag_wpn_ak_20pm_7.62x39_fmj_attributes]
+animation_prefix_mag = 30_
+[ak_20_tac_hud_override]
+snd_30_mag_in 			= weapons\main\ak_20_mag_in_tac
+snd_30_mag_out 			= weapons\main\ak_20_mag_out_tac
+
+[mag_wpn_ak_20pro_7.62x39_fmj]:mag_wpn_ak_20pm_7.62x39_fmj
+visual							= w_att_huds\ak_mag_20_promag
+inv_name						= ak_mag_20_promag
+inv_name_short				= ak_mag_20_promagS
+inv_grid_y         				= 12
+override_section_hud 			= ak_20_tac_hud_override
+override_section = mag_wpn_ak_20pro_7.62x39_fmj_attributes
+
+[mag_wpn_ak_20pro_7.62x39_fmj_attributes]
+animation_prefix_mag = 30_
+
+[mag_wpn_ak103_7.62x39_fmj]:mag_wpn_ak_7.62x39_fmj
+inv_ui_sign					= 103_30
+visual							= w_att_huds\ak_mag_30_103
+inv_name						= ak_mag_30_103
+inv_name_short				= ak_mag_30_103
+inv_grid_x         				= 34
+inv_weight						= 0.33
+cost								= 750
+override_section_hud 			= ak_30_std_hud_override
+override_section = mag_wpn_ak103_7.62x39_fmj_attributes
+
+[mag_wpn_ak103_7.62x39_fmj_attributes]
+animation_prefix_mag = 30_
+
+[mag_wpn_akms_7.62x39_fmj]:mag_wpn_ak_7.62x39_fmj
+inv_ui_sign					= akmsl_30
+visual							= w_att_huds\ak_mag_30_akmsl
+inv_name						= ak_mag_30_akms
+inv_name_short				= ak_mag_30_akms
+inv_grid_x         				= 36
+inv_weight						= 0.31
+cost								= 750
+override_section = mag_wpn_akms_7.62x39_fmj_attributes
+
+[mag_wpn_akms_7.62x39_fmj_attributes]
+animation_prefix_mag = 30_
+
+[mag_wpn_akms_p_7.62x39_fmj]:mag_wpn_akms_7.62x39_fmj
+inv_ui_sign					= akms_30
+visual							= w_att_huds\ak_mag_30_akms						  								   
+inv_grid_x         				= 35
+inv_weight						= 0.32
+cost								= 700
+override_section_hud 			= ak_30_std_hud_override
+override_section = mag_wpn_akms_p_7.62x39_fmj_attributes
+
+[mag_wpn_akms_p_7.62x39_fmj_attributes]
+animation_prefix_mag = 30_
+
+[mag_wpn_akm_7.62x39_fmj]:mag_wpn_ak_7.62x39_fmj
+inv_ui_sign					= akm_30
+visual							= w_att_huds\ak_mag_30_m
+inv_name						= ak_mag_30_m
+inv_name_short				= ak_mag_30_m
+inv_grid_x         				= 37
+override_section = mag_wpn_akm_7.62x39_fmj_attributes
+
+[mag_wpn_akm_7.62x39_fmj_attributes]
+animation_prefix_mag = 30_
+
+[mag_wpn_akm_ba_7.62x39_fmj]:mag_wpn_ak_7.62x39_fmj
+visual							= w_att_huds\ak_mag_ms
+inv_name						= ak_mag_ms
+inv_grid_x         				= 40
+override_section = mag_wpn_akm_ba_7.62x39_fmj_attributes
+
+[mag_wpn_akm_ba_7.62x39_fmj_attributes]
+animation_prefix_mag = 30_
+
+[mag_wpn_mk47_7.62x39_fmj]:mag_wpn_ak_7.62x39_fmj
+visual							= w_att_huds\ak_mag_30_pmag
+inv_name						= ak_mag_30_pmag
+inv_grid_x         				= 38
+override_section_hud 			= ak_30_tac_hud_override
+override_section = mag_wpn_mk47_7.62x39_fmj_attributes
+
+[mag_wpn_mk47_7.62x39_fmj_attributes]
+animation_prefix_mag = 30_
+
+[mag_wpn_ak_30pro_7.62x39_fmj]:mag_wpn_ak_7.62x39_fmj
+visual							= w_att_huds\ak_mag_30_promag
+inv_name						= ak_mag_30_promag
+inv_grid_x         				= 39
+override_section_hud 			= ak_30_tac_hud_override
+override_section = mag_wpn_ak_30pro_7.62x39_fmj_attributes
+
+[mag_wpn_ak_30pro_7.62x39_fmj_attributes]
+animation_prefix_mag = 30_
+
+[mag_wpn_ak_30fd_7.62x39_fmj]:mag_wpn_ak_7.62x39_fmj
+visual							= w_att_huds\ak_mag_30_fd_ultimag
+inv_name						= ak_mag_30_fd_ultimag
+inv_grid_x         				= 22
+override_section_hud 			= ak_30_tac_hud_override
+override_section = mag_wpn_ak_30fd_7.62x39_fmj_attributes
+
+[mag_wpn_ak_30fd_7.62x39_fmj_attributes]
+animation_prefix_mag = 30_
+
+[mag_wpn_ak_40_7.62x39_fmj]:mag_wpn_ak_7.62x39_fmj
+inv_ui_sign					= ak_40
+visual							= w_att_huds\ak_mag_40_rpk
+inv_name						= ak_mag_40_rpk
+inv_name_short				= ak_mag_40_rpk
+inv_grid_x         				= 6
+inv_grid_y         				= 13
+inv_weight						= 0.45
+cost								= 900
+max_mag_size				= 40
+override_section = mag_wpn_ak_40_7.62x39_fmj_attributes
+
+[mag_wpn_ak_40_7.62x39_fmj_attributes]
+animation_prefix_mag = 30_
+
+[mag_wpn_ak_50_7.62x39_fmj]:mag_wpn_ak_7.62x39_fmj
+inv_ui_sign					= ak_50
+visual							= w_att_huds\ak_mag_50_quad
+inv_name						= ak_mag_50_quad
+inv_name_short				= ak_mag_50_quadS
+inv_grid_x         				= 7
+inv_grid_y         				= 13
+inv_weight						= 0.52
+cost								= 1200
+max_mag_size				= 50
+override_section_hud 			= ak_4row_hud_override
+override_section = mag_wpn_ak_50_7.62x39_fmj_attributes
+
+[mag_wpn_ak_50_7.62x39_fmj_attributes]
+animation_prefix_mag = 30_
+
+[mag_wpn_ak_50d_7.62x39_fmj]:mag_wpn_ak_50_7.62x39_fmj
+visual							= w_att_huds\ak_mag_50_xprod
+inv_name						= ak_mag_50_xprod
+inv_name_short				= ak_mag_50_xprodS
+inv_grid_x         				= 8
+inv_weight						= 0.5
+cost								= 1350
+override_section				= mag_wpn_ak_50d_7.62x39_fmj_attributes
+override_section_hud 			= ak_50_hud_override
+
+[mag_wpn_ak_50d_7.62x39_fmj_attributes]
+animation_prefix_mag = 50_
+[ak_50_hud_override]
+snd_50_mag_in 			= weapons\main\ak_50_mag_in
+snd_50_mag_out 			= weapons\main\ak_50_mag_out
+[ak_50_attributes]
+animation_prefix_mag	=	50_
+
+[mag_wpn_ak_73_7.62x39_fmj]:mag_wpn_ak_7.62x39_fmj
+inv_ui_sign					= ak_73
+visual							= w_att_huds\ak_mag_73_promag
+inv_name						= ak_mag_73_promag
+inv_name_short				= ak_mag_73_promagS
+inv_grid_x         				= 9
+inv_grid_y         				= 13
+inv_weight						= 0.7
+cost								= 2250
+max_mag_size				= 73
+mag_size						= large
+override_section				= mag_wpn_ak_73_7.62x39_fmj_attributes
+override_section_hud 			= ak_75_plm_hud_override
+
+[mag_wpn_ak_73_7.62x39_fmj_attributes]
+animation_prefix_mag = 75_
+
+[mag_wpn_ak_75_7.62x39_fmj]:mag_wpn_ak_73_7.62x39_fmj
+inv_ui_sign					= ak_75
+visual							= w_att_huds\ak_mag_75_rpk
+inv_name						= ak_mag_75_rpk
+inv_name_short			= ak_mag_75_rpkS
+inv_grid_x         			= 10
+inv_weight					= 0.69
+cost								= 2150
+max_mag_size				= 75
+override_section_hud	= ak_75_mtl_hud_override
+override_section = mag_wpn_ak_75_7.62x39_fmj_attributes
+
+[mag_wpn_ak_75_7.62x39_fmj_attributes]
+animation_prefix_mag = 75_
+
+[mag_wpn_ak_us_7.62x39_fmj]:mag_wpn_ak_7.62x39_fmj
+visual							= w_att_huds\ak_mag_us_palm
+inv_name						= ak_mag_us_palm
+inv_grid_x					= 40
+inv_grid_y         			= 13
+inv_weight					= 0.29
+override_section_hud	= ak_20_std_hud_override
+override_section = mag_wpn_ak_us_7.62x39_fmj_attributes
+
+[mag_wpn_ak_us_7.62x39_fmj_attributes]
+animation_prefix_mag = 30_
+
+[mag_wpn_tiss_9x39_pab9]:mag_wpn_base_ak,wg_wpn_tiss,ag_ammo_9x39_pab9
+inv_ui_sign					= tiss_20
+visual							= w_att_huds\tiss_mag_20
+inv_name						= tiss_mag_20
+inv_name_short				= tiss_mag_20S
+inv_grid_x						= 11
+inv_grid_y         				= 14
+inv_weight						= 0.14
+cost								= 450
+max_mag_size				= 20
+mag_size						= small
+override_section				= mag_wpn_tiss_9x39_pab9_attributes
+override_section_hud 			= ak_20_mtl_hud_override
+
+[mag_wpn_tiss_9x39_pab9_attributes]
+animation_prefix_mag = 30_
+[ak_20_mtl_hud_override]
+snd_30_mag_in 			= weapons\main\ak_20_mag_in_mtl
+snd_30_mag_out 			= weapons\main\ak_20_mag_out_mtl				
+[mag_wpn_groza_9x39_pab9]:mag_wpn_tiss_9x39_pab9				
+
+[mag_wpn_ak9_9x39_pab9]:mag_wpn_tiss_9x39_pab9
+inv_ui_sign					= ak9_20
+visual							= w_att_huds\ak9_mag_20
+inv_name						= ak9_mag_20
+inv_name_short				= ak9_mag_20
+inv_grid_y         				= 13
+inv_weight						= 0.15
+override_section_hud 			= ak_20_std_hud_override												
+override_section = mag_wpn_ak9_9x39_pab9_attributes
+
+[mag_wpn_ak9_9x39_pab9_attributes]
+animation_prefix_mag = 30_
+
+[mag_wpn_ak9_30_9x39_pab9]:mag_wpn_ak9_9x39_pab9
+inv_ui_sign					= ak9_30
+visual							= w_att_huds\ak9_mag_30
+inv_name						= ak9_mag_30
+inv_name_short				= ak9_mag_20
+inv_grid_height    			= 2
+inv_grid_x         				= 12
+inv_grid_y        					 = 13
+inv_weight						= 0.35
+cost								= 800
+max_mag_size				= 30
+mag_size						= medium
+override_section_hud 			= ak_30_mtl_hud_override												
+override_section = mag_wpn_ak9_30_9x39_pab9_attributes
+
+[mag_wpn_ak9_30_9x39_pab9_attributes]
+animation_prefix_mag = 30_
+
+[mag_wpn_ak9_50_9x39_pab9]:mag_wpn_ak9_30_9x39_pab9
+inv_ui_sign					= ak9_50
+visual							= w_att_huds\ak9_mag_50_xprod
+description					= ak9_mag_50_xprod_descr
+inv_name						= ak9_mag_50_xprod
+inv_name_short				= ak9_mag_50_xprodS
+inv_grid_x						= 13
+inv_weight						= 0.51
+cost								= 1400
+max_mag_size				= 50
+override_section				= mag_wpn_ak9_50_9x39_pab9_attributes
+override_section_hud 			= ak_50_hud_override											
+
+[mag_wpn_ak9_50_9x39_pab9_attributes]
+animation_prefix_mag = 50_
+
+[mag_wpn_bizon_9x18_fmj]:mag_wpn_base_ak,wg_wpn_bizon,ag_ammo_9x18_fmj
+inv_ui_sign					= bizon
+visual							= w_att_huds\bizon_mag_64
+inv_name						= bizon_mag_64
+inv_name_short				= bizon_mag_64S
+inv_grid_width				= 2
+inv_grid_x						= 14
+inv_grid_y         				= 13
+inv_weight						= 0.58
+cost								= 1500
+max_mag_size				= 64
+mag_size						= medium
+override_section				= mag_wpn_bizon_9x18_fmj_attributes
+override_section_hud 			= bizon_mtl_hud_override	
+
+[mag_wpn_bizon_9x18_fmj_attributes]
+animation_prefix_mag = 64_
+[bizon_mtl_hud_override]
+snd_mag_in 					= weapons\main\bizon_mag_in_mtl
+snd_mag_out 				= weapons\main\bizon_mag_out_mtl
+[bizon_mag_attributes]
+animation_prefix_mag	=	64_
+
+[mag_wpn_ar9b_9x18_fmj]:mag_wpn_bizon_9x18_fmj
+visual							= w_att_huds\bizon_mag_64_poly
+inv_grid_y         				= 14
+inv_weight						= 0.61
+override_section_hud 			= bizon_plm_hud_override
+override_section = mag_wpn_ar9b_9x18_fmj_attributes
+
+[mag_wpn_ar9b_9x18_fmj_attributes]
+animation_prefix_mag = 64_
+[bizon_plm_hud_override]
+snd_mag_in 					= weapons\main\bizon_mag_in_plm
+snd_mag_out 				= weapons\main\bizon_mag_out_plm
+
+[mag_wpn_saiga12_12x70_buck]:mag_wpn_base_ak,wg_wpn_12ga,ag_ammo_12x70
+inv_ui_sign					= s12k_5
+visual							= w_att_huds\saiga12_mag_5
+inv_name						= saiga12_mag_5
+inv_name_short				= saiga12_mag_5
+inv_grid_height				= 2
+inv_grid_x						= 16
+inv_grid_y         				= 13
+inv_weight						= 0.14
+cost								= 400
+max_mag_size				= 5
+mag_size						= medium
+override_section				= mag_wpn_saiga12_12x70_buck_attributes
+override_section_hud			= vepr_5_hud_override
+
+[mag_wpn_saiga12_12x70_buck_attributes]
+animation_prefix_mag = 8_
+[vepr_5_hud_override]
+snd_v_8_mag_in 			= weapons\main\vepr_5_mag_in
+snd_v_8_mag_out 		= weapons\main\vepr_5_mag_out
+snd_s_8_mag_in 			= weapons\main\saiga_5_mag_in
+snd_s_8_mag_out 		= weapons\main\saiga_5_mag_out							
+[saiga_mag_attributes]
+animation_prefix_mag	=	8_
+
+[mag_wpn_saiga12_5pro_12x70_buck]:mag_wpn_saiga12_12x70_buck
+visual							= w_att_huds\saiga12_mag_5_promag
+inv_name						= saiga12_mag_5_promag
+inv_grid_x						= 17
+inv_weight						= 0.13
+cost								= 450
+override_section_hud			= vepr_5_hud_override											
+override_section = mag_wpn_saiga12_5pro_12x70_buck_attributes
+
+[mag_wpn_saiga12_5pro_12x70_buck_attributes]
+animation_prefix_mag = 8_
+
+[mag_wpn_saiga12_8_12x70_buck]:mag_wpn_saiga12_12x70_buck
+inv_ui_sign					= s12k_8
+visual							= w_att_huds\saiga12_mag_8
+inv_name						= saiga12_mag_8
+inv_grid_x						= 18
+inv_weight						= 0.29
+cost								= 600
+max_mag_size				= 8
+override_section_hud			= vepr_8_hud_override
+override_section = mag_wpn_saiga12_8_12x70_buck_attributes
+
+[mag_wpn_saiga12_8_12x70_buck_attributes]
+animation_prefix_mag = 8_
+[vepr_8_hud_override]
+snd_v_8_mag_in 			= weapons\main\vepr_8_mag_in
+snd_v_8_mag_out 		= weapons\main\vepr_8_mag_out
+snd_s_8_mag_in 			= weapons\main\saiga_8_mag_in
+snd_s_8_mag_out 		= weapons\main\saiga_8_mag_out								
+
+[mag_wpn_saiga12_10_12x70_buck]:mag_wpn_saiga12_12x70_buck
+inv_ui_sign					= s12k_10
+visual							= w_att_huds\saiga12_mag_10_promag
+inv_name						= saiga12_mag_10_promag
+inv_grid_x						= 19
+inv_weight						= 0.4
+cost								= 750
+max_mag_size				= 10
+override_section_hud			= vepr_10_hud_override
+override_section = mag_wpn_saiga12_10_12x70_buck_attributes
+
+[mag_wpn_saiga12_10_12x70_buck_attributes]
+animation_prefix_mag = 8_
+[vepr_10_hud_override]
+snd_v_8_mag_in 			= weapons\main\vepr_10_mag_in
+snd_v_8_mag_out 		= weapons\main\vepr_10_mag_out
+snd_s_8_mag_in 			= weapons\main\saiga_10_mag_in
+snd_s_8_mag_out 		= weapons\main\saiga_10_mag_out							 
+
+[mag_wpn_vepr12_5_12x70_buck]:mag_wpn_saiga12_12x70_buck
+inv_ui_sign					= v12k_5
+visual							= w_att_huds\vepr12_mag_5
+inv_name						= vepr12_mag_5
+inv_name_short				= vepr12_mag_5
+inv_grid_x						= 20
+inv_weight						= 0.15
+override_section_hud			= vepr_5_hud_override											
+override_section = mag_wpn_vepr12_5_12x70_buck_attributes
+
+[mag_wpn_vepr12_5_12x70_buck_attributes]
+animation_prefix_mag = 8_
+
+[mag_wpn_vepr12_12x70_buck]:mag_wpn_saiga12_8_12x70_buck
+inv_ui_sign					= v12k_8
+visual							= w_att_huds\vepr12_mag_8
+inv_name						= vepr12_mag_8
+inv_name_short				= vepr12_mag_5
+inv_grid_x						= 21
+inv_weight						= 0.3
+override_section_hud			= vepr_8_hud_override
+override_section = mag_wpn_vepr12_12x70_buck_attributes
+
+[mag_wpn_vepr12_12x70_buck_attributes]
+animation_prefix_mag = 8_
+
+[mag_wpn_vepr12_10_12x70_buck]:mag_wpn_saiga12_10_12x70_buck
+inv_ui_sign					= v12k_10
+visual							= w_att_huds\vepr12_mag_10
+inv_name						= vepr12_mag_10
+inv_name_short				= vepr12_mag_10S
+inv_grid_x						= 22
+inv_weight						= 0.39
+override_section_hud			= vepr_10_hud_override
+override_section = mag_wpn_vepr12_10_12x70_buck_attributes
+
+[mag_wpn_vepr12_10_12x70_buck_attributes]
+animation_prefix_mag = 8_
+
+[mag_wpn_vepr12_15_12x70_buck]:mag_wpn_saiga12_10_12x70_buck
+inv_ui_sign					= v12k_15
+visual							= w_att_huds\vepr12_mag_15
+inv_name						= vepr12_mag_15
+inv_grid_height			= 3
+inv_grid_x					= 34
+inv_grid_y					= 19
+inv_weight					= 0.52
+max_mag_size				= 15
+override_section = mag_wpn_vepr12_15_12x70_buck_attributes
+
+[mag_wpn_vepr12_15_12x70_buck_attributes]
+animation_prefix_mag = 8_
+
+[mag_wpn_vepr12_20_12x70_buck]:mag_wpn_saiga12_12x70_buck
+inv_ui_sign					= v12k_20+
+visual							= w_att_huds\vepr12_mag_22
+inv_name						= vepr12_mag_22
+inv_name_short				= vepr12_mag_22S
+inv_grid_x						= 23
+inv_weight						= 0.94
+max_mag_size				= 21
+mag_size						= large
+cost								= 1600
+override_section				= mag_wpn_vepr12_20_12x70_buck_attributes
+override_section_hud			= vepr_21_hud_override
+
+[mag_wpn_vepr12_20_12x70_buck_attributes]
+animation_prefix_mag = 20_
+[vepr_21_hud_override]
+snd_v_20_mag_in 		= weapons\main\vepr_21_mag_in
+snd_v_20_mag_out 		= weapons\main\vepr_21_mag_out
+snd_s_20_mag_in 		= weapons\main\saiga_21_mag_in
+snd_s_20_mag_out 		= weapons\main\saiga_21_mag_out
+[saiga_mag22_attributes]
+animation_prefix_mag	=	20_
+
+[mag_wpn_vityaz_9x19_fmj]:mag_wpn_base_ak,wg_wpn_vityaz,ag_ammo_9x19_fmj
+inv_ui_sign					= vtz
+visual							= w_att_huds\vityaz_mag_30
+inv_name						= vityaz_mag_30
+inv_name_short				= vityaz_mag_30
+inv_grid_height				= 2
+inv_grid_x						= 25
+inv_grid_y         				= 13
+inv_weight						= 0.1
+cost								= 600
+max_mag_size				= 30
+mag_size						= small
+override_section				= mag_wpn_vityaz_9x19_fmj_attributes
+override_section_hud			= vityaz_30_hud_override
+
+[mag_wpn_vityaz_9x19_fmj_attributes]
+animation_prefix_mag = 30_
+[vityaz_30_hud_override]
+snd_30_mag_in 			= weapons\main\vityaz_30_mag_in
+snd_30_mag_out 			= weapons\main\vityaz_30_mag_out
+[vityaz_30_attributes]
+animation_prefix_mag	=	30_
+
+[mag_wpn_vityaz_20_9x19_fmj]:mag_wpn_vityaz_9x19_fmj
+inv_ui_sign					= s20
+visual							= w_att_huds\vityaz_mag_20_saiga
+inv_name						= vityaz_mag_20_saiga
+inv_name_short				= vityaz_mag_20_saigaS
+inv_grid_height				= 1
+inv_grid_width				= 1
+inv_grid_x						= 24
+inv_weight						= 0.06
+cost								= 350
+max_mag_size				= 20
+override_section_hud			= vityaz_30_hud_override
+override_section = mag_wpn_vityaz_20_9x19_fmj_attributes
+
+[mag_wpn_vityaz_20_9x19_fmj_attributes]
+animation_prefix_mag = 30_
+
+[mag_wpn_vityaz_50_9x19_fmj]:mag_wpn_vityaz_9x19_fmj
+inv_ui_sign					= v50
+visual							= w_att_huds\vityaz_mag_50
+inv_name						= vityaz_mag_50
+inv_name_short				= vityaz_mag_50S
+inv_grid_x						= 26
+inv_weight						= 0.64
+cost								= 1350
+max_mag_size				= 50
+mag_size						= medium
+override_section				= mag_wpn_vityaz_50_9x19_fmj_attributes
+override_section_hud			= vityaz_50_hud_override
+
+[mag_wpn_vityaz_50_9x19_fmj_attributes]
+animation_prefix_mag = 50_
+[vityaz_50_hud_override]
+snd_50_mag_in 			= weapons\main\vityaz_50_mag_in
+snd_50_mag_out 			= weapons\main\vityaz_50_mag_out
+[vityaz_50_attributes]
+animation_prefix_mag	=	50_
+
+[mag_wpn_vityaz_75_9x19_fmj]:mag_wpn_vityaz_9x19_fmj
+inv_ui_sign					= v75
+visual							= w_att_huds\vityaz_mag_75
+inv_name						= vityaz_mag_75
+inv_name_short				= vityaz_mag_75S
+inv_grid_x						= 27
+inv_weight						= 1.04
+cost								= 1800
+max_mag_size				= 75
+mag_size						= large
+override_section				= mag_wpn_vityaz_75_9x19_fmj_attributes
+override_section_hud			= vityaz_75_hud_override
+
+[mag_wpn_vityaz_75_9x19_fmj_attributes]
+animation_prefix_mag = 75_
+[vityaz_75_hud_override]
+snd_75_mag_in 			= weapons\main\vityaz_75_mag_in
+snd_75_mag_out 			= weapons\main\vityaz_75_mag_out
+[vityaz_75_attributes]
+animation_prefix_mag	=	75_

@@ -1,0 +1,40 @@
+--\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ wpn_kobalt \\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+[kobalt_barrel]:attachment_base
+kind  =  kobalt
+inv_ui_sign				= kob_bar
+visual						= w_att_huds\kobalt_barrel
+inv_name					= kobalt_barrel
+inv_name_short			= kobalt_barrelS
+cost							= 450
+inv_weight					= 0.09
+inv_grid_x         = 2
+inv_grid_y         = 8
+1icon_layer = clean1_ico
+attachment_point = kobalt_barrel|0,0,0|0,0,0
+item_tags = barrel
+override_section = kobalt_barrel_attributes
+[kobalt_barrel_attributes]:pm_barrel_att
+fire_point = 0, 0, 0.01
+weapon_lenght = 0.05
+rpm = 500
+bullet_speed = 0.86
+fire_dispersion_base = 0.26
+
+[kobalt_barrel_long]:kobalt_barrel
+kind  =  kobalt
+inv_ui_sign				= kob_bar+
+visual						= w_att_huds\kobalt_barrel_long
+inv_name					= kobalt_barrel_long
+inv_name_short			= kobalt_barrel_longS
+cost							= 600
+inv_weight					= 0.1
+inv_grid_x         = 3
+attachment_slots	=	rev_rail|wpn_body|0,-0.008269,0.011421|0,0,0
+override_section =	kobalt_barrel_long_attributes
+[kobalt_barrel_long_attributes]:pb_barrel_att
+fire_point = 0, 0, 0.07
+weapon_lenght = 0.1
+rpm = 500
+bullet_speed = 0.9
+fire_dispersion_base = 0.23

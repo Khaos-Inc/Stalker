@@ -1,65 +1,95 @@
-[wpn_vintorez]:wpn_vintorez_n1
-parent_section	= wpn_vintorez
-[wpn_vintorez_kobra]:wpn_vintorez_n1_kobra
-parent_section	= wpn_vintorez
-[wpn_vintorez_okp]:wpn_vintorez_n1_okp
-parent_section	= wpn_vintorez
-[wpn_vintorez_ekp8_02]:wpn_vintorez_n1_ekp8_02
-parent_section	= wpn_vintorez
-[wpn_vintorez_1p76]:wpn_vintorez_n1_1p76
-parent_section	= wpn_vintorez
-[wpn_vintorez_pka]:wpn_vintorez_n1_pka
-parent_section	= wpn_vintorez
-[wpn_vintorez_1p63]:wpn_vintorez_n1_1p63
-parent_section	= wpn_vintorez
-[wpn_vintorez_1p29]:wpn_vintorez_n1_1p29
-parent_section	= wpn_vintorez
-[wpn_vintorez_usp1]:wpn_vintorez_n1_usp1
-parent_section	= wpn_vintorez
-[wpn_vintorez_1pn93]:wpn_vintorez_n1_1pn93
-parent_section	= wpn_vintorez
-[wpn_vintorez_ps01]:wpn_vintorez_n1_ps01
-parent_section	= wpn_vintorez
-[wpn_vintorez_pso2]:wpn_vintorez_n1_pso2
-parent_section	= wpn_vintorez
-[wpn_vintorez_1p59]:wpn_vintorez_n1_1p59
-parent_section	= wpn_vintorez
-[wpn_vintorez_pso1m21]:wpn_vintorez_n1_pso1m21
-parent_section	= wpn_vintorez
-[wpn_vintorez_1p78gs]:wpn_vintorez_n1_1p78gs
-parent_section	= wpn_vintorez
-[wpn_vintorez_1pn93n2_1gs]:wpn_vintorez_n1_1pn93n2_1gs
-parent_section	= wpn_vintorez
+[wpn_vintorez]:wpn_val
+GroupControlSection	= spawn_group
+$spawn						= "weapons\vintorez"
+ef_main_weapon_type	= 2
+ef_weapon_type			= 8
+inv_grid_x					= 32
+inv_name						= wpn_vintorez
+inv_name_short			= wpn_vintorez
+description					= wpn_vintorez_descr
+ammo_mag_size			= 10
+cost								= 80000
+attachment_slots			=	slot_magazin|magazin|0,0,0|0,0,0#val_barrel|wpn_body|0,0,0|0,0,0#vintorez_stock|wpn_body|0,0,0|0,0,0#dovetail_side|wpn_body|0.00623,0.00533,0.029|0,0,0#dovetail_side_low|wpn_body|0.00623,0.00533,0.029|0,0,0
+visual							= w_att_huds\vintorez.ogf
+hud								= wpn_vintorez_hud
 
-[wpn_vintorez_nimble]:wpn_vintorez_n1
-parent_section	= wpn_vintorez_nimble
-[wpn_vintorez_nimble_kobra]:wpn_vintorez_n1_kobra
-parent_section	= wpn_vintorez_nimble
-[wpn_vintorez_nimble_okp]:wpn_vintorez_n1_okp
-parent_section	= wpn_vintorez_nimble
-[wpn_vintorez_nimble_ekp8_02]:wpn_vintorez_n1_ekp8_02
-parent_section	= wpn_vintorez_nimble
-[wpn_vintorez_nimble_1p76]:wpn_vintorez_n1_1p76
-parent_section	= wpn_vintorez_nimble
-[wpn_vintorez_nimble_pka]:wpn_vintorez_n1_pka
-parent_section	= wpn_vintorez_nimble
-[wpn_vintorez_nimble_1p63]:wpn_vintorez_n1_1p63
-parent_section	= wpn_vintorez_nimble
-[wpn_vintorez_nimble_1p29]:wpn_vintorez_n1_1p29
-parent_section	= wpn_vintorez_nimble
-[wpn_vintorez_nimble_usp1]:wpn_vintorez_n1_usp1
-parent_section	= wpn_vintorez_nimble
-[wpn_vintorez_nimble_1pn93]:wpn_vintorez_n1_1pn93
-parent_section	= wpn_vintorez_nimble
-[wpn_vintorez_nimble_ps01]:wpn_vintorez_n1_ps01
-parent_section	= wpn_vintorez_nimble
-[wpn_vintorez_nimble_pso2]:wpn_vintorez_n1_pso2
-parent_section	= wpn_vintorez_nimble
-[wpn_vintorez_nimble_1p59]:wpn_vintorez_n1_1p59
-parent_section	= wpn_vintorez_nimble
-[wpn_vintorez_nimble_pso1m21]:wpn_vintorez_n1_pso1m21
-parent_section	= wpn_vintorez_nimble
-[wpn_vintorez_nimble_1p78gs]:wpn_vintorez_n1_1p78gs
-parent_section	= wpn_vintorez_nimble
-[wpn_vintorez_nimble_1pn93n2_1gs]:wpn_vintorez_n1_1pn93n2_1gs
-parent_section	= wpn_vintorez_nimble
+[wpn_vintorez_hud]:wpn_val_hud
+
+weapon_recoil_vert         = 0.8
+weapon_recoil_vert_inc     = 0.08
+weapon_recoil_horz         = 1.35
+weapon_recoil_ret_speed    = 2
+
+
+anm_reload_p1_sounds					= 0,snd_10_move_out|15,snd_10_mag_out
+anm_reload_p2_sounds		 			= 0,snd_10_move_in|16,snd_10_mag_in
+anm_reload_empty_p1_sounds		= 0,snd_10_move_out|15,snd_10_mag_out
+anm_reload_empty_p2_sounds 		= 0,snd_10_move_in_empty|16,snd_10_mag_in|47,snd_charging_handle
+c_anm_reload_p1_sounds					= 0,snd_10_move_out|15,snd_10_mag_out
+c_anm_reload_p2_sounds		 			= 0,snd_10_move_in|16,snd_10_mag_in
+c_anm_reload_empty_p1_sounds		= 0,snd_10_move_out|15,snd_10_mag_out
+c_anm_reload_empty_p2_sounds 		= 0,snd_10_move_in_empty|16,snd_10_mag_in|47,snd_charging_handle
+cd_anm_reload_p1_sounds					= 0,snd_10_move_out|15,snd_10_mag_out
+cd_anm_reload_p2_sounds		 			= 0,snd_10_move_in|16,snd_10_mag_in
+cd_anm_reload_empty_p1_sounds		= 0,snd_10_move_out|15,snd_10_mag_out
+cd_anm_reload_empty_p2_sounds 		= 0,snd_10_move_in_empty|16,snd_10_mag_in|47,snd_charging_handle
+h_anm_reload_p1_sounds				= 0,snd_10_move_out|15,snd_10_mag_out
+h_anm_reload_p2_sounds		 		= 0,snd_10_move_in|16,snd_10_mag_in
+h_anm_reload_empty_p1_sounds	= 0,snd_10_move_out|15,snd_10_mag_out
+h_anm_reload_empty_p2_sounds 	= 0,snd_10_move_in_empty|16,snd_10_mag_in|47,snd_charging_handle
+r_anm_reload_p1_sounds					= 0,snd_10_move_out|15,snd_10_mag_out
+r_anm_reload_p2_sounds		 			= 0,snd_10_move_in|16,snd_10_mag_in
+r_anm_reload_empty_p1_sounds		= 0,snd_10_move_out|15,snd_10_mag_out
+r_anm_reload_empty_p2_sounds 		= 0,snd_10_move_in_empty|16,snd_10_mag_in|47,snd_charging_handle
+t_anm_reload_p1_sounds				= 0,snd_10_move_out|15,snd_10_mag_out
+t_anm_reload_p2_sounds		 		= 0,snd_10_move_in|16,snd_10_mag_in
+t_anm_reload_empty_p1_sounds	= 0,snd_10_move_out|15,snd_10_mag_out
+t_anm_reload_empty_p2_sounds 	= 0,snd_10_move_in_empty|16,snd_10_mag_in|47,snd_charging_handle
+v_anm_reload_p1_sounds					= 0,snd_10_move_out|15,snd_10_mag_out
+v_anm_reload_p2_sounds		 			= 0,snd_10_move_in|16,snd_10_mag_in
+v_anm_reload_empty_p1_sounds		= 0,snd_10_move_out|15,snd_10_mag_out
+v_anm_reload_empty_p2_sounds 		= 0,snd_10_move_in_empty|16,snd_10_mag_in|47,snd_charging_handle
+
+item_visual                 			= w_att_huds\vintorez_hud.ogf
+anm_reload								= val_m_reload_10_p1, reload_p1, 1.2
+anm_reload_p1						= val_m_reload_10_p1, reload_p1, 1.2
+anm_reload_p2						= val_m_reload_10_p2, reload_p2, 1.2
+anm_reload_empty				= val_m_reload_10_p1, reload_empty_p1, 1.2
+anm_reload_empty_p1			= val_m_reload_10_p1, reload_empty_p1, 1.2
+anm_reload_empty_p2			= val_m_reload_10e_p2, reload_empty_p2, 1.2
+c_anm_reload							= val_c_reload_10_p1, reload_p1, 1.2
+c_anm_reload_p1					= val_c_reload_10_p1, reload_p1, 1.2
+c_anm_reload_p2					= val_c_reload_10_p2, reload_p2, 1.2
+c_anm_reload_empty			= val_c_reload_10_p1, reload_empty_p1, 1.2
+c_anm_reload_empty_p1		= val_c_reload_10_p1, reload_empty_p1, 1.2
+c_anm_reload_empty_p2		= val_c_reload_10e_p2, reload_empty_p2, 1.2
+cd_anm_reload						= val_c_reload_10_p1, reload_p1, 1.2
+cd_anm_reload_p1					= val_c_reload_10_p1, reload_p1, 1.2
+cd_anm_reload_p2					= val_c_reload_10_p2, reload_p2, 1.2
+cd_anm_reload_empty			= val_c_reload_10_p1, reload_empty_p1, 1.2
+cd_anm_reload_empty_p1		= val_c_reload_10_p1, reload_empty_p1, 1.2
+cd_anm_reload_empty_p2		= val_c_reload_10e_p2, reload_empty_p2, 1.2
+h_anm_reload							= val_h_reload_10_p1, reload_p1, 1.2
+h_anm_reload_p1					= val_h_reload_10_p1, reload_p1, 1.2
+h_anm_reload_p2					= val_h_reload_10_p2, reload_p2, 1.2
+h_anm_reload_empty			= val_h_reload_10_p1, reload_empty_p1, 1.2
+h_anm_reload_empty_p1	= val_h_reload_10_p1, reload_empty_p1, 1.2
+h_anm_reload_empty_p2	= val_h_reload_10e_p2, reload_empty_p2, 1.2
+r_anm_reload							= val_r_reload_10_p1, reload_p1, 1.2
+r_anm_reload_p1					= val_r_reload_10_p1, reload_p1, 1.2
+r_anm_reload_p2					= val_r_reload_10_p2, reload_p2, 1.2
+r_anm_reload_empty			= val_r_reload_10_p1, reload_empty_p1, 1.2
+r_anm_reload_empty_p1		= val_r_reload_10_p1, reload_empty_p1, 1.2
+r_anm_reload_empty_p2		= val_r_reload_10e_p2, reload_empty_p2, 1.2
+t_anm_reload							= val_t_reload_10_p1, reload_p1, 1.2
+t_anm_reload_p1					= val_t_reload_10_p1, reload_p1, 1.2
+t_anm_reload_p2					= val_t_reload_10_p2, reload_p2, 1.2
+t_anm_reload_empty				= val_t_reload_10_p1, reload_empty_p1, 1.2
+t_anm_reload_empty_p1		= val_t_reload_10_p1, reload_empty_p1, 1.2
+t_anm_reload_empty_p2		= val_t_reload_10e_p2, reload_empty_p2, 1.2
+v_anm_reload							= val_v_reload_10_p1, reload_p1, 1.2
+v_anm_reload_p1					= val_v_reload_10_p1, reload_p1, 1.2
+v_anm_reload_p2					= val_v_reload_10_p2, reload_p2, 1.2
+v_anm_reload_empty			= val_v_reload_10_p1, reload_empty_p1, 1.2
+v_anm_reload_empty_p1		= val_v_reload_10_p1, reload_empty_p1, 1.2
+v_anm_reload_empty_p2		= val_v_reload_10e_p2, reload_empty_p2, 1.2

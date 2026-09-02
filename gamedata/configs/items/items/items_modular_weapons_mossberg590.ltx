@@ -1,0 +1,470 @@
+--\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ wpn_mossberg590 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+[590_zatvor]:attachment_base
+kind  =  moss
+inv_ui_sign				= 590_bolt
+visual							= w_att_huds\590_zatvor	
+inv_name					= 590_zatvor
+inv_name_short		= 590_zatvorS
+cost							= 1100
+inv_weight				= 0.31
+inv_grid_width			= 2
+inv_grid_x					= 7
+inv_grid_y					= 55
+1icon_layer = clean_lub2_ico
+attachment_point = 590_zatvor|0,0,0|0,0,0
+attachment_slots	= 590_hg|zatvor|0,0,0|0,0,0#590_barrel|wpn_body|0,0,0|0,0,0
+item_tags =	zatvor
+override_section = 590_zatvor_attributes
+
+[590_zatvor_attributes]
+zoom_rotate_time = 0.07
+rpm = 116
+[590_zatvor_att]
+zoom_rotate_time = 0.07
+rpm = 116
+
+[590_barrel_350]:attachment_base
+kind  =  moss
+inv_ui_sign				= 590_35cm
+visual							= w_att_huds\590_barrel_350	
+inv_name					= 590_barrel_350
+inv_name_short		= 590_barrel_350S
+cost							= 2650
+inv_weight				= 0.51
+inv_grid_width			= 2
+inv_grid_x					= 9
+inv_grid_y					= 55
+1icon_layer = clean2_ico
+attachment_point	= 590_barrel|0,0,0|0,0,0
+attachment_slots	= choke|muzzle|0,0,0|0,0,0
+item_tags = barrel
+override_section 	= 590_barrel_350_attributes
+
+[590_barrel_350_attributes]
+zoom_rotate_time = 0.08
+recoil_koeff = -0.03
+inertia_koeff = 1.5
+bullet_speed = 0.93
+fire_dispersion_base = 4
+ammo_mag_size = +4
+fire_point = 0, 0, 0.03
+weapon_lenght = 0.33
+[590_barrel_4_attributes]:12_barrel_1_1_att,12_barrel_350_att
+ammo_mag_size	= +4
+fire_point						= 0, 0, 0.03
+weapon_lenght				= 0.33
+
+override_section = 12_barrel_1_1_att
+[12_barrel_1_1_att]
+zoom_rotate_time = 0.08
+recoil_koeff             = -0.15
+inertia_koeff            = 1.5
+
+[590_barrel_470]:590_barrel_350
+kind  =  moss
+inv_ui_sign				= 590_47cm
+visual							= w_att_huds\590_barrel_470	
+inv_name					= 590_barrel_470
+inv_name_short		= 590_barrel_470S
+cost							= 3100
+inv_weight				= 0.65
+inv_grid_width			= 3
+inv_grid_x					= 11	
+1icon_layer = clean3_ico
+attachment_slots	= choke|muzzle|0,0,0.1135|0,0,0#tubemag|wpn_body|0,0.02385,0.46|0,0,0#590_barrel_cover|wpn_body|0,0,0|0,0,0#590_sight_front|wpn_body|0,0,0|0,0,0	
+override_section 	= 590_barrel_470_attributes
+
+[590_barrel_470_attributes]
+bullet_speed = 1
+fire_dispersion_base = 3.7
+fire_point = 0, 0, 0.12
+ammo_mag_size = +5
+weapon_lenght = 0.45
+zoom_rotate_time = 0.1
+recoil_koeff = -0.03
+inertia_koeff = 1.6
+[590_barrel_5_attributes]:12_barrel_470_att
+fire_point						= 0, 0, 0.12
+ammo_mag_size				= +5
+weapon_lenght				= 0.45
+zoom_rotate_time = 0.1
+recoil_koeff             = -0.19
+inertia_koeff            = 1.6
+
+[590_barrel_540]:590_barrel_470
+kind  =  moss
+inv_ui_sign				= 590_54cm
+visual							= w_att_huds\590_barrel_540	
+inv_name					= 590_barrel_540
+inv_name_short		= 590_barrel_540S
+cost							= 3500
+inv_weight				= 0.73
+inv_grid_x					= 14
+attachment_slots	= choke|muzzle|0,0,0.175|0,0,0#tubemag|wpn_body|0,0.02385,0.47|0,0,0#590_barrel_cover|wpn_body|0,0,0|0,0,0#590_sight_front|wpn_body|0,0,0.062|0,0,0	
+override_section 	= 590_barrel_540_attributes
+
+[590_barrel_540_attributes]
+bullet_speed = 1.08
+k_hit_koeff = 1.05
+fire_dispersion_base = 3.4
+fire_point = 0, 0, 0.2
+ammo_mag_size = +7
+weapon_lenght = 0.52
+zoom_rotate_time = 0.12
+recoil_koeff = -0.04
+inertia_koeff = 1.7
+[590_barrel_7_attributes]:12_barrel_540_att
+fire_point					= 0, 0, 0.2
+ammo_mag_size				= +7
+weapon_lenght				= 0.52
+zoom_rotate_time = 0.12
+recoil_koeff             = -0.24
+inertia_koeff            = 1.7
+
+[590_barrel_660]:590_barrel_470
+kind  =  moss
+inv_ui_sign				= 590_66cm
+visual							= w_att_huds\590_barrel_660	
+inv_name					= 590_barrel_660		
+inv_name_short		= 590_barrel_660S
+cost							= 4000
+inv_weight				= 0.78
+inv_grid_width			= 4
+inv_grid_x					= 17
+1icon_layer = clean4_ico
+attachment_slots	= choke|muzzle|0,0,0.2813|0,0,0#tubemag|wpn_body|0,0.02385,0.47|0,0,0#barrel_side|wpn_body|0,0.0143,0.2|0,0,0#590_barrel_cover|wpn_body|0,0,0|0,0,0#590_sight_front|wpn_body|0,0,0.167|0,0,0
+item_tags = barrel
+override_section 	= 590_barrel_660_attributes
+
+[590_barrel_660_attributes]
+bullet_speed = 1.15
+k_hit_koeff = 1.1
+fire_dispersion_base = 3.2
+fire_point = 0, 0, 0.3
+ammo_mag_size = +7
+weapon_lenght = 0.64
+impair_koeff = 0.8
+zoom_rotate_time = 0.14
+recoil_koeff = -0.06
+inertia_koeff = 1.9
+[590_barrel_7p_attributes]:12_barrel_660_att
+fire_point						= 0, 0, 0.3
+ammo_mag_size				= +7
+weapon_lenght				= 0.64
+impair_koeff					= 0.8
+zoom_rotate_time = 0.14
+recoil_koeff            = -0.3
+inertia_koeff           = 1.9
+
+[590_barrel_710]:590_barrel_660
+kind  =  moss
+inv_ui_sign				= 590_71cm
+visual							= w_att_huds\590_barrel_710	
+inv_name					= 590_barrel_710
+inv_name_short		= 590_barrel_710S
+cost							= 4250
+inv_weight				= 0.9
+inv_grid_x					= 21
+attachment_slots	= choke|muzzle|0,0,0.3282|0,0,0#tubemag|wpn_body|0,0.02385,0.553|0,0,0#barrel_side|wpn_body|0,0.0143,0.2|0,0,0#sight_rail|wpn_body|0,-0.0073,0.034|0,0,0		
+override_section = 590_barrel_710_attributes
+[590_barrel_710_attributes]:12_barrel_700_att
+fire_point						= 0, 0, 0.35
+ammo_mag_size				= +7
+weapon_lenght				= 0.7
+impair_koeff					= 0.75
+zoom_rotate_time = 0.15
+recoil_koeff            = -0.10
+inertia_koeff           = 2.0
+
+[590_barrel_cover]:attachment_base
+kind  =  moss
+inv_ui_sign				= 590_cover
+visual							= w_att_huds\590_barrel_cover	
+inv_name					= 590_barrel_cover
+inv_name_short		= 590_barrel_coverS
+cost							= 550
+inv_weight				= 0.08
+inv_grid_width			= 2
+inv_grid_x					= 6
+inv_grid_y					= 56
+attachment_point = 590_barrel_cover|0,0,0|0,0,0
+item_tags =	cover
+override_section = 590_barrel_cover_attributes
+
+[590_barrel_cover_attributes]
+impair_koeff = 0.95
+[590_barrel_cover_att]
+impair_koeff = 0.95
+
+[590_barrel_cover_rail]:590_barrel_cover		;сильынй конфликт с tubemag, 590_sight_front
+kind  =  moss
+inv_ui_sign				= 590_cover_pic
+visual							= w_att_huds\590_barrel_cover_rail	
+description				= ar_hg_15_8_8
+inv_name					= 590_barrel_cover_rail
+inv_name_short		= 590_barrel_cover_railS
+cost							= 2000
+inv_weight				= 0.25
+inv_grid_width			= 3
+inv_grid_x					= 8
+attachment_slots	= pica_15|wpn_body|0,0.0747,0.07|0,0,0#pica_8|wpn_body|0,0.0747,0.23|0,0,0#pica_8|wpn_body|0,0.0747,0.35|0,0,0#pica_3|wpn_body|0,0.0022,0.45|0,0,180#sight_front|wpn_body|0,0.0747,0.46|0,0,0#sight_rear|wpn_body|0,0.0747,0.08|0,0,0
+override_section = 590_rail_aim_attributes
+[590_rail_aim_attributes]
+aimpoint_offset_y				= 0.105494
+;aim_hud_offset_pos			= -0.0597, 0.007, -0.07
+;aim_hud_offset_pos_16x9	= -0.0597, 0.007, -0.07
+;aim_hud_offset_rot				= 0.015, 0.0065, 0
+;aim_hud_offset_rot_16x9	= 0.015, 0.0065, 0
+aim_hud_offset_pos			= -0.0797, 0.007, -0.1
+aim_hud_offset_pos_16x9	= -0.0797, 0.007, -0.1
+aim_hud_offset_rot				= 0.015, 0.0065, 0
+aim_hud_offset_rot_16x9	= 0.015, 0.0065, 0
+zoom_rotate_time = 0.03
+recoil_koeff            = -0.02
+inertia_koeff           = 1.1
+
+[590_hg]:attachment_base
+kind  =  moss
+inv_ui_sign				= 590_hg
+visual							= w_att_huds\590_hg	
+inv_name					= 590_hg
+inv_name_short		= 590_hgS
+cost							= 650
+inv_weight				= 0.26
+inv_grid_width			= 2
+inv_grid_x					= 11
+inv_grid_y					= 56
+attachment_point	= 590_hg|0,0,0|0,0,0
+item_tags	=	hg
+override_section = 590_hg_attributes
+
+[590_hg_attributes]
+animation_prefix = c_
+zoom_rotate_time = -0.06
+
+[590_hg_foregrip]:590_hg
+kind  =  moss
+inv_ui_sign				= 590_fg
+visual							= w_att_huds\590_hg_foregrip	
+inv_name					= 590_hg_foregrip
+inv_name_short		= 590_hg_foregripS
+cost							= 1000
+inv_weight				= 0.31
+inv_grid_x					= 19
+override_section		= 590_hg_foregrip_attributes
+[590_hg_foregrip_attributes]:cd_attributes
+zoom_rotate_time = 0.02
+recoil_koeff            = -0.05
+inertia_koeff           = 0.8
+
+[590_hg_surefire]:590_hg
+kind  =  moss
+inv_ui_sign				= 590_hgF
+visual							= w_att_huds\590_hg_surefire_dsf	
+inv_name					= 590_hg_surefire_dsf
+inv_name_short		= 590_hg_surefire_dsfS
+cost							= 1400
+inv_weight				= 0.35
+inv_grid_x					= 17
+is_torch 					= true
+is_torch_laser			= false
+light_section			= flashlight_definition_white
+override_section		= 590_hg_surefire_attributes
+
+[590_hg_surefire_attributes]
+animation_prefix = c_
+zoom_rotate_time = -0.01
+inertia_koeff = 1.1
+[590_hg_fl_attributes]:c_attributes
+zoom_rotate_time = -0.01
+recoil_koeff            = -0.26
+inertia_koeff           = 1.1
+
+[590_hg_fab]:590_hg
+kind  =  moss
+inv_ui_sign				= 590_hgP
+visual							= w_att_huds\590_hg_fab_def
+description				= pica_3_up2
+inv_name					= 590_hg_fab_def
+inv_name_short		= 590_hg_fab_defS
+cost							= 1350
+inv_weight				= 0.33
+inv_grid_x					= 13
+attachment_slots	= pica_3|zatvor|-0.0236,0.034,0.403|0,0,-90#pica_3|zatvor|-0.0236,0.034,0.403|0,0,90#picgrp|zatvor|0,-0.0297,0.095|0,0,0
+override_section = 590_hg_fab_attributes
+
+[590_hg_fab_attributes]
+animation_prefix = c_
+zoom_rotate_time = -0.04
+
+[590_hg_magpul]:590_hg
+kind  =  moss
+inv_ui_sign				= 590_hgP+
+visual							= w_att_huds\590_hg_magpul	
+description				= pica_3_up3
+inv_name					= 590_hg_magpul
+inv_name_short		= 590_hg_magpulS
+cost							= 1050
+inv_weight				= 0.22
+inv_grid_x					= 15
+attachment_slots	= pica_3|zatvor|-0.0222,0.0418,0.4|0,0,-90#pica_3|zatvor|0.0222,0.0418,0.395|0,0,90#pica_3|zatvor|0,0.0058,0.401|0,0,180#picgrp|zatvor|0,-0.0297,0.095|0,0,0
+override_section = 590_hg_magpul_attributes
+
+[590_hg_magpul_attributes]
+animation_prefix = c_
+zoom_rotate_time = -0.04
+inertia_koeff = 0.9
+
+[590_sight_front]:attachment_base		;конфликт с 590_barrel_cover_rail
+kind  =  moss
+inv_ui_sign				= 590_isf
+visual							= w_att_huds\590_sight_front	
+inv_name					= 590_sight_front
+inv_name_short		= 590_sight_frontS
+cost							= 450
+inv_weight				= 0.04
+inv_grid_x					= 27
+inv_grid_y					= 55
+attachment_point	= 590_sight_front|0,0,0|0,0,0
+item_tags	=	sights
+override_section		= 590_alt_aim_attributes
+[590_alt_aim_attributes]
+aimpoint_offset_y = 0.0742
+;aim_hud_offset_pos				= -0.0599, 0.035, -0.07
+;aim_hud_offset_pos_16x9		= -0.0599, 0.035, -0.07
+;aim_hud_offset_rot					= 0.002, 0.0065, 0
+;aim_hud_offset_rot_16x9		= 0.002, 0.0065, 0
+aim_hud_offset_pos				= -0.0799, 0.035, -0.1
+aim_hud_offset_pos_16x9		= -0.0799, 0.035, -0.1
+aim_hud_offset_rot					= 0.002, 0.0065, 0
+aim_hud_offset_rot_16x9		= 0.002, 0.0065, 0
+
+[590_sight_rear]:attachment_base
+kind  =  moss
+inv_ui_sign				= 590_isR
+visual							= w_att_huds\590_sight_rear	
+inv_name					= 590_sight_rear
+inv_name_short		= 590_sight_rearS
+cost							= 450
+inv_weight				= 0.05
+inv_grid_x					= 28
+inv_grid_y					= 55
+attachment_point	= 590_sight_rear|0,0,0|0,0,0	
+item_tags	=	rail
+override_section = 590_sight_rear_attributes
+
+[590_sight_rear_attributes]
+
+[590_sight_rear_pica]:590_sight_rear
+kind  =  moss
+inv_ui_sign				= 590_rail
+visual							= w_att_huds\590_sight_rear_pica	
+description				= pica_13_up
+inv_name					= 590_sight_rear_pica
+inv_name_short		= 590_sight_rear_picaS
+cost							= 850
+inv_weight				= 0.08
+inv_grid_x					= 29
+inv_grid_y					= 55
+attachment_slots	= pica_13|wpn_body|0,0.069,0.0333|0,0,0			
+override_section = 590_sight_rear_pica_attributes
+
+[590_sight_rear_pica_attributes]
+
+[590_stock_short]:attachment_base
+kind  =  moss
+inv_ui_sign				= 590_stk-
+visual							= w_att_huds\590_stock_shockwave_rg500_raptor	
+inv_name					= 590_stock_shockwave_rg500_raptor
+inv_name_short		= 590_stock_shockwave_rg500_raptorS
+cost							= 650
+inv_weight				= 0.17
+inv_grid_x					= 21
+inv_grid_y					= 56
+attachment_point = 590_stock|0,0,0|0,0,0
+item_tags =	stock
+override_section = 590_stock_short_attributes
+
+[590_stock_short_attributes]
+zoom_rotate_time = -0.02
+recoil_koeff = 0.09
+
+[590_stock]:590_stock_short
+kind  =  moss
+inv_ui_sign				= 590_stk
+visual							= w_att_huds\590_stock	
+inv_name					= 590_stock
+inv_name_short		= 590_stockS
+cost							= 1250
+inv_weight				= 0.57
+inv_grid_width			= 2
+inv_grid_x					= 22
+override_section 	= 590_stock_attributes
+
+[590_stock_attributes]
+zoom_rotate_time = 0.04
+recoil_koeff = -0.23
+inertia_koeff = 0.6
+weapon_lenght = 0.33
+[590_stock_att]:vintorez_stock_strap_att
+weapon_lenght = 0.33
+
+[590_stock_magpul]:590_stock_short
+kind  =  moss
+inv_ui_sign				= 590_stk
+visual							= w_att_huds\590_stock	
+inv_name					= 590_stock_magpul_sga
+inv_name_short		= 590_stock_magpul_sgaS
+cost							= 1750
+inv_weight				= 0.62
+inv_grid_width			= 2
+inv_grid_x					= 24
+override_section 	= 590_stock_magpul_attributes
+
+[590_stock_magpul_attributes]
+weapon_lenght = 0.33
+zoom_rotate_time = 0.01
+recoil_koeff = -0.29
+inertia_koeff = 0.6
+[590_stock_magpul_sga_att]
+weapon_lenght = 0.33
+zoom_rotate_time = 0.01
+recoil_koeff            = -0.3
+inertia_koeff          = 0.6
+
+[590_stock_grip]:590_stock_short
+kind  =  moss
+inv_ui_sign				= 590_gr
+visual							= w_att_huds\590_stock_grip
+inv_name					= 590_stock_grip
+inv_name_short		= 590_stock_gripS
+cost							= 600
+inv_weight				= 0.16
+inv_grid_x					= 26
+override_section 	= 590_stock_grip_attributes
+
+[590_stock_grip_attributes]
+animation_prefix_base = cg_
+zoom_rotate_time = -0.01
+recoil_koeff = 0.11
+[590_stock_pistol_grip_att]:cg_attributes
+zoom_rotate_time = -0.01
+recoil_koeff            = -0.11
+
+[590_stock_buffer]:590_stock_grip
+kind  =  moss
+inv_ui_sign				= 590_buff
+visual							= w_att_huds\590_stock_fab_buffer	
+inv_name					= 590_stock_fab_buffer
+inv_name_short		= 590_stock_fab_bufferS
+cost							= 950
+inv_weight				= 0.21
+inv_grid_x					= 27
+attachment_slots	= ar_buffer|wpn_body|0,-0.024553,-0.002166|0,0,0
+override_section 	= 590_stock_buffer_attributes
+
+[590_stock_buffer_attributes]
+animation_prefix_base = cg_
+zoom_rotate_time = -0.03
+[590_stock_buffer_att]:cg_attributes,ak_grip_caa_att

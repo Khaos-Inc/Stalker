@@ -1,11 +1,14 @@
 ;------------------------------------------------------------------------------------------------
 [grenade_rgd5]:identity_immunities,weapon_probability,default_weapon_params,grenade_rgd5_sounds
+modular_attachments = false
         GroupControlSection         = spawn_group
         discovery_dependency        =
         $prefetch                   = 128
         $spawn                      = "weapons\grenades\rgd5"
         cform                       = skeleton
         
+		dont_stack                    = false
+		
         class                       = G_RGD5_S
         slot                        = 3
         animation_slot              = 7
@@ -112,7 +115,6 @@
         lean_hud_offset_pos         = 0, 0, 0
         lean_hud_offset_rot         = 0, 0, 0
         
-        anm_bore                    = lancew_rgd5_no_reload
         anm_hide                    = lancew_rgd5_holster
         anm_idle                    = lancew_rgd5_idle
         anm_idle_moving             = lancew_rgd5_moving, moving

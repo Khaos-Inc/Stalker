@@ -2,6 +2,9 @@ local M = {}
 
 local PATCH_ID = "zhopa2_runtime"
 local installed = setmetatable({}, { __mode = "k" })
+M._installed_methods = setmetatable({}, { __mode = "k" })
+M._direct_exports = setmetatable({}, { __mode = "k" })
+M._global_exports = {}
 local current_patch_reason = nil
 
 local RUNTIME_READY_WARMUP_MS = 5000
@@ -10,6 +13,7 @@ local RUNTIME_READY_RECHECK_MS = 500
 local ZHOPA2_RUNTIME_MODULES = {
 	"zhopa2_index",
 	"zhopa2_topology",
+	"zhopa2_task_scoring",
 	"zhopa2_loot",
 	"zhopa2_economy",
 	"zhopa2_smart_service_slot_doctor",
@@ -18,6 +22,9 @@ local ZHOPA2_RUNTIME_MODULES = {
 	"zhopa2_artifacts",
 	"zhopa2_story_psy_watchdog",
 	"zhopa2_story_north_migration",
+	"zhopa2_npc_quests",
+	"zhopa2_squad_dialogue",
+	"zhopa2_debug_hud",
 }
 
 local ZHOPA2_RUNTIME_PATCHES = {
@@ -55,6 +62,31 @@ local function safe_require(name)
 		pcall(require, name)
 	end
 	return rawget(_G, name)
+end
+
+function M.task_scoring()
+	return safe_require("zhopa2_task_scoring")
+end
+
+function M.notify_task_scoring(event, ...)
+	local scoring = M.task_scoring()
+	if scoring and type(scoring[event]) == "function" then
+		pcall(scoring[event], ...)
+	end
+end
+
+function M.master_enabled()
+	if rawget(_G, "zhopa2_runtime_disabled") == true then
+		return false
+	end
+	local fn = rawget(_G, "zhopa2_master_enabled")
+	if type(fn) == "function" then
+		local ok, enabled = pcall(fn)
+		if ok then
+			return enabled == true
+		end
+	end
+	return true
 end
 
 local function class_candidate(candidate, required_method)
@@ -144,6 +176,14 @@ local function server_object(id)
 		end
 	end
 	return nil
+end
+
+local function simboard_squad_object(id, stored)
+	local kind = type(stored)
+	if kind == "table" or kind == "userdata" then
+		return stored
+	end
+	return server_object(id)
 end
 
 function M.zhopa2_online_object_by_id(id)
@@ -437,6 +477,9 @@ end
 local zhopa2_started_modules = {}
 
 local function start_zhopa_module(name)
+	if not M.master_enabled() then
+		return false
+	end
 	if zhopa2_started_modules[name] then
 		mark_runtime_item("module", name, true, "already_started", "-")
 		return true
@@ -465,6 +508,9 @@ local function start_zhopa_module(name)
 end
 
 function M.ensure_zhopa_modules()
+	if not M.master_enabled() then
+		return false
+	end
 	local ok = true
 	for i = 1, #ZHOPA2_RUNTIME_MODULES do
 		ok = start_zhopa_module(ZHOPA2_RUNTIME_MODULES[i]) and ok
@@ -505,9 +551,38 @@ local function set_upvalue(fn, name, value)
 	return false
 end
 
+function M.function_chain_contains(fn, target, depth, seen)
+	if fn == target then
+		return true
+	end
+	if depth <= 0 or type(fn) ~= "function" or type(target) ~= "function"
+		or not (debug and type(debug.getupvalue) == "function")
+	then
+		return false
+	end
+	seen = seen or {}
+	if seen[fn] then
+		return false
+	end
+	seen[fn] = true
+	for i = 1, 32 do
+		local ok, name, value = pcall(debug.getupvalue, fn, i)
+		if not ok or not name then
+			break
+		end
+		if type(value) == "function" and M.function_chain_contains(value, target, depth - 1, seen) then
+			return true
+		end
+	end
+	return false
+end
+
 function M.patch_method(owner, method, patch_id, wrapper_factory)
 	if not (owner and method and patch_id and type(wrapper_factory) == "function") then
 		return false, "bad_args"
+	end
+	if not M.master_enabled() then
+		return false, "master_disabled"
 	end
 	local ok_get, current = pcall(function() return owner[method] end)
 	if not ok_get then
@@ -528,22 +603,35 @@ function M.patch_method(owner, method, patch_id, wrapper_factory)
 		if ok_cur and current_owner_method == rec.wrapper then
 			return true, "already_patched"
 		end
+		if ok_cur and M.function_chain_contains(current_owner_method, rec.wrapper, 8) then
+			rec.retained = true
+			return true, "already_chained"
+		end
 	end
-	local wrapper = wrapper_factory(current)
-	if type(wrapper) ~= "function" then
+	local patched = wrapper_factory(current)
+	if type(patched) ~= "function" then
 		return false, "bad_wrapper"
+	end
+	local wrapper = function(...)
+		if not M.master_enabled() then
+			return current(...)
+		end
+		return patched(...)
 	end
 	local ok_set = pcall(function() owner[method] = wrapper end)
 	if not ok_set then
 		return false, "set_failed"
 	end
-	by_owner[key] = { original = current, wrapper = wrapper }
+	by_owner[key] = { method = method, original = current, wrapper = wrapper }
 	return true, "patched"
 end
 
 local function install_class_method(cls, name, fn)
 	if not (cls and name and type(fn) == "function") then
 		return false, "bad_args"
+	end
+	if not M.master_enabled() then
+		return false, "master_disabled"
 	end
 	local ok_get, current = pcall(function() return cls[name] end)
 	if ok_get and type(current) == "function" then
@@ -553,7 +641,54 @@ local function install_class_method(cls, name, fn)
 	if not ok_set then
 		return false, "set_failed"
 	end
+	local by_owner = M._installed_methods[cls]
+	if not by_owner then
+		by_owner = {}
+		M._installed_methods[cls] = by_owner
+	end
+	by_owner[name] = { original = ok_get and current or nil, installed = fn }
 	return true, "installed"
+end
+
+function M.restore_runtime_patches()
+	for _ = 1, 8 do
+		local changed = false
+		for owner, records in pairs(installed) do
+			for _, rec in pairs(records) do
+				local ok, current = pcall(function() return owner[rec.method] end)
+				if ok and current == rec.wrapper then
+					pcall(function() owner[rec.method] = rec.original end)
+					rec.retained = false
+					changed = true
+				elseif ok then
+					rec.retained = M.function_chain_contains(current, rec.wrapper, 8)
+				end
+			end
+		end
+		if not changed then
+			break
+		end
+	end
+	for owner, records in pairs(M._installed_methods) do
+		for name, rec in pairs(records) do
+			local ok, current = pcall(function() return owner[name] end)
+			if ok and current == rec.installed then
+				pcall(function() owner[name] = rec.original end)
+			end
+		end
+	end
+	for mod, records in pairs(M._direct_exports) do
+		for name, rec in pairs(records) do
+			if mod[name] == rec.wrapper then
+				mod[name] = rec.original
+			end
+		end
+	end
+	for name, rec in pairs(M._global_exports) do
+		if rawget(_G, name) == rec.wrapper then
+			rawset(_G, name, rec.original)
+		end
+	end
 end
 
 local function patch_required_method(owner, method, patch_id, wrapper_factory, surface)
@@ -574,10 +709,13 @@ local ZHOPA2 = {
 	TASK_PATROL = "PATROL",
 	TASK_NIGHT_REST = "NIGHT_REST",
 	TASK_ARTEFACT = "ARTEFACT",
+	TASK_QUEST = "QUEST",
 	TASK_HUNT = "HUNT",
 	TASK_REVENGE = "REVENGE",
 	NIL = "nil",
 }
+
+local MUTANT_CYCLE_MIGRATION_VERSION = 13
 
 local function game_time()
 	return game and game.get_game_time and game.get_game_time() or nil
@@ -743,6 +881,7 @@ local function task_invalid_for_monster(squad, task)
 		task == ZHOPA2.TASK_POPULATE
 		or task == ZHOPA2.TASK_NIGHT_REST
 		or task == ZHOPA2.TASK_ARTEFACT
+		or task == ZHOPA2.TASK_QUEST
 	)
 end
 
@@ -852,6 +991,7 @@ function squad_methods.zhopa2_reset_state(self)
 	self.zhopa2_managed = false
 	self.zhopa2_hunt_prepared_target = nil
 	self.zhopa2_hunt_prepared_target_signature = nil
+	self.zhopa2_hunt_prey = nil
 end
 
 function squad_methods.zhopa2_task_requires_rush(self)
@@ -879,6 +1019,27 @@ function squad_methods.zhopa2_sync_task_rush(self)
 end
 
 function squad_methods.zhopa2_clear_task(self, reason)
+	if self.zhopa2_task == ZHOPA2.TASK_QUEST then
+		zhopa2_debug_printf(
+			"~ ZHOPA2 npc quest | stage [task_clear] squad [%s:%s] quest [%s] target [%s] assigned [%s] current [%s] action [%s] reason [%s]",
+			tostring(object_debug_name(self)),
+			tostring(self.id or "-"),
+			tostring(self.zhopa2_npc_quest_id or "-"),
+			tostring(self.zhopa2_target or "-"),
+			tostring(self.assigned_target_id or "-"),
+			tostring(self.current_target_id or "-"),
+			tostring(self.current_action or "-"),
+			tostring(reason or "quest_task_clear")
+		)
+		local quests = safe_require("zhopa2_npc_quests")
+		if quests and type(quests.on_squad_task_clear) == "function" then
+			pcall(quests.on_squad_task_clear, self, reason or "quest_task_clear")
+		end
+	end
+	if self.zhopa2_task ~= nil and tostring(self.zhopa2_task) ~= "" then
+		self.zhopa2_previous_task = self.zhopa2_task
+		self.zhopa2_previous_target = tonumber(self.zhopa2_target)
+	end
 	if self.zhopa2_task == ZHOPA2.TASK_REVENGE then
 		self:zhopa2_release_revenge_hostility()
 	elseif self.zhopa2_task == ZHOPA2.TASK_ARTEFACT then
@@ -901,6 +1062,7 @@ function squad_methods.zhopa2_clear_task(self, reason)
 	self.zhopa2_managed = false
 	self.zhopa2_hunt_prepared_target = nil
 	self.zhopa2_hunt_prepared_target_signature = nil
+	self.zhopa2_hunt_prey = nil
 	self.zhopa2_artifact_id = nil
 	self.zhopa2_artifact_smart = nil
 	self.zhopa2_artifact_zone = nil
@@ -924,6 +1086,55 @@ function squad_methods.zhopa2_clear_task(self, reason)
 	self:zhopa2_release_task_rush()
 	self:zhopa2_sync_base_camping_registry()
 	self:zhopa2_cleanup_debug()
+end
+
+function squad_methods.zhopa2_reconcile_mutant_cycle(self)
+	local p = perception()
+	if not (p and type(p.is_monster_squad) == "function" and p.is_monster_squad(self) == true) then
+		return false
+	end
+	if not (type(p.mutant_cycle_active) == "function" and p.mutant_cycle_active(self) ~= true) then
+		return false
+	end
+
+	local task = self.zhopa2_task
+	local target = tonumber(self.zhopa2_target) or self.zhopa2_target
+	local self_id = tonumber(self.id) or self.id
+	local legacy_parked = (tonumber(self.zhopa2_state_version) or 0) < MUTANT_CYCLE_MIGRATION_VERSION
+		and self.forced_online_status == false
+		and tostring(self.assigned_target_id) == tostring(self_id)
+		and tostring(self.current_target_id) == tostring(self_id)
+		and tonumber(self.current_action) == 0
+	if task and type(self.zhopa2_clear_task) == "function" then
+		self:zhopa2_clear_task("mutant_cycle_inactive")
+	end
+	if target and (tostring(self.assigned_target_id) == tostring(target) or tostring(self.current_target_id) == tostring(target)) then
+		self.assigned_target_id = nil
+		self.current_target_id = nil
+		self.task_target_id = nil
+		self.current_action = nil
+	end
+	self.zhopa2_resume_task = nil
+	self.zhopa2_resume_target = nil
+	self.zhopa2_resume_until = nil
+	self.zhopa2_resume_patrol = nil
+	self.zhopa2_resume_patrol_idx = nil
+	self.zhopa2_resume_reason = nil
+
+	if (tonumber(self.zhopa2_state_version) or 0) < MUTANT_CYCLE_MIGRATION_VERSION then
+		if legacy_parked then
+			self.forced_online_status = nil
+			self.assigned_target_id = nil
+			self.current_target_id = nil
+			self.task_target_id = nil
+			self.current_action = nil
+			if tostring(self.scripted_target) == tostring(self_id) then
+				self.scripted_target = nil
+			end
+		end
+		self.zhopa2_state_version = MUTANT_CYCLE_MIGRATION_VERSION
+	end
+	return true
 end
 
 function squad_methods.zhopa2_sanitize_task_owner(self, reason)
@@ -972,6 +1183,10 @@ function squad_methods.zhopa2_can_manage(self)
 	if not representative_id then
 		return false
 	end
+	local p = perception()
+	if p and type(p.quest_protected_squad) == "function" and p.quest_protected_squad(self) then
+		return false
+	end
 	if self.player_id == "actor" then
 		return false
 	end
@@ -994,6 +1209,9 @@ function squad_methods.zhopa2_can_manage(self)
 		return false
 	end
 	if is_monster_squad(self) then
+		if p and type(p.mutant_cycle_active) == "function" and p.mutant_cycle_active(self) ~= true then
+			return false, "mutant_cycle_inactive"
+		end
 		return cfg_bool("mutant_movement_enabled", true) == true
 	end
 	if cfg_bool("stalker_movement_enabled", true) ~= true then
@@ -1003,9 +1221,23 @@ function squad_methods.zhopa2_can_manage(self)
 end
 
 function squad_methods.zhopa2_assign_task(self, task, target_id, duration_sec, reason, patrol)
+	local old_task = self.zhopa2_task
+	local old_target = self.zhopa2_target
+	local old_quest_id = self.zhopa2_npc_quest_id
 	if zhopa2_surge_active() then
 		self.zhopa2_last_reason = "surge_assignment_blocked"
 		self.zhopa2_last_result = "surge_assignment_blocked"
+		return false
+	end
+	local p = perception()
+	if p and type(p.quest_protected_squad) == "function" and p.quest_protected_squad(self) then
+		self.zhopa2_last_reason = "quest_protected"
+		self.zhopa2_last_result = "quest_protected"
+		return false
+	end
+	if is_monster_squad(self) and p and type(p.mutant_cycle_active) == "function" and p.mutant_cycle_active(self) ~= true then
+		self.zhopa2_last_reason = "mutant_cycle_inactive"
+		self.zhopa2_last_result = "mutant_cycle_inactive"
 		return false
 	end
 	if task_invalid_for_monster(self, task) then
@@ -1016,7 +1248,6 @@ function squad_methods.zhopa2_assign_task(self, task, target_id, duration_sec, r
 	end
 	self.zhopa2_task = task
 	self.zhopa2_target = target_id or self.id
-	local p = perception()
 	self.zhopa2_started = p and p.game_time and p.game_time() or game_time()
 	self.zhopa2_until = tonumber(duration_sec) or 0
 	self.zhopa2_patrol = patrol
@@ -1025,6 +1256,7 @@ function squad_methods.zhopa2_assign_task(self, task, target_id, duration_sec, r
 	self.zhopa2_managed = true
 	self.zhopa2_hunt_prepared_target = nil
 	self.zhopa2_hunt_prepared_target_signature = nil
+	self.zhopa2_hunt_prey = nil
 	self.zhopa2_rest_trade_state = nil
 	self.zhopa2_rest_trade_reason = nil
 	self.zhopa2_rest_trade_result = nil
@@ -1046,12 +1278,28 @@ function squad_methods.zhopa2_assign_task(self, task, target_id, duration_sec, r
 		self.current_target_id = nil
 		self.current_action = 0
 	end
+	if old_task == ZHOPA2.TASK_QUEST
+		or task == ZHOPA2.TASK_QUEST
+		or (task == ZHOPA2.TASK_REST and self.zhopa2_previous_task == ZHOPA2.TASK_QUEST)
+	then
+		zhopa2_debug_printf(
+			"~ ZHOPA2 npc quest | stage [task_assign] squad [%s:%s] old_task [%s] old_target [%s] old_quest [%s] new_task [%s] target [%s] reason [%s]",
+			tostring(object_debug_name(self)),
+			tostring(self.id or "-"),
+			tostring(old_task or "-"),
+			tostring(old_target or "-"),
+			tostring(old_quest_id or "-"),
+			tostring(task or "-"),
+			tostring(self.zhopa2_target or "-"),
+			tostring(reason or task or "-")
+		)
+	end
 	return true
 end
 
 function squad_methods.zhopa2_assign_rest(self, reason)
 	local hours = is_monster_squad(self) and cfg_num("mutant_rest_duration_game_hours", 0.25) or cfg_num("rest_duration_game_hours", 0.25)
-	self:zhopa2_assign_task(ZHOPA2.TASK_REST, self.id, math.max(60, hours * 3600), reason or "rest")
+	self:zhopa2_assign_task(ZHOPA2.TASK_REST, self.id, math.max(1, hours * 3600), reason or "rest")
 end
 
 function squad_methods.zhopa2_reached_target(self)
@@ -1147,6 +1395,9 @@ function squad_methods.zhopa2_target_is_alive(self)
 end
 
 function squad_methods.zhopa2_update_task(self)
+	if type(self.zhopa2_reconcile_mutant_cycle) == "function" and self:zhopa2_reconcile_mutant_cycle() then
+		return false
+	end
 	if type(self.zhopa2_purge_global_level_blacklist) == "function" and self:zhopa2_purge_global_level_blacklist("global_level_blacklisted") then
 		return false
 	end
@@ -1212,7 +1463,19 @@ function squad_methods.zhopa2_get_script_target(self)
 end
 
 function squad_methods.zhopa2_prepare_hunt_target(self, script_target_id)
-	if not (script_target_id and (self.zhopa2_task == ZHOPA2.TASK_HUNT or self.zhopa2_task == ZHOPA2.TASK_REVENGE)) then
+	local quest_direct = false
+	if self.zhopa2_task == ZHOPA2.TASK_QUEST then
+		local quests = safe_require("zhopa2_npc_quests")
+		if quests and type(quests.allows_direct_target) == "function" then
+			local ok, allowed = pcall(quests.allows_direct_target, self, script_target_id)
+			quest_direct = ok and allowed == true
+		end
+	end
+	if not (script_target_id and (self.zhopa2_task == ZHOPA2.TASK_HUNT or self.zhopa2_task == ZHOPA2.TASK_REVENGE or quest_direct)) then
+		return
+	end
+	local p = perception()
+	if is_monster_squad(self) and p and type(p.mutant_cycle_active) == "function" and p.mutant_cycle_active(self) ~= true then
 		return
 	end
 	local se_target = alife_object(script_target_id)
@@ -1232,7 +1495,9 @@ function squad_methods.zhopa2_prepare_hunt_target(self, script_target_id)
 	self.current_action = 0
 	self.zhopa2_hunt_prepared_target = script_target_id
 	self.zhopa2_hunt_prepared_target_signature = target_signature
-	self.zhopa2_last_reason = self.zhopa2_task == ZHOPA2.TASK_REVENGE and "revenge_direct_squad" or "hunt_direct_squad"
+	self.zhopa2_last_reason = self.zhopa2_task == ZHOPA2.TASK_REVENGE and "revenge_direct_squad"
+		or self.zhopa2_task == ZHOPA2.TASK_QUEST and "npc_quest_direct_squad"
+		or "hunt_direct_squad"
 	if SIMBOARD and type(SIMBOARD.setup_squad_and_group) == "function" then
 		for k in self:squad_members() do
 			local se_obj = alife_object(k.id)
@@ -1398,6 +1663,9 @@ function M.patch_sim_squad_scripted()
 	end, "sim_squad_scripted")
 	patch_required_method(cls, "update", PATCH_ID .. "_squad_after_update", function(original)
 		return function(self, ...)
+			if type(self.zhopa2_reconcile_mutant_cycle) == "function" then
+				self:zhopa2_reconcile_mutant_cycle()
+			end
 			local prev_inside = self.zhopa2_inside_squad_update
 			self.zhopa2_inside_squad_update = true
 			self.zhopa2_get_target_task_updated = nil
@@ -1478,30 +1746,6 @@ function M.patch_sim_squad_scripted()
 				self:zhopa2_cleanup_debug()
 			end
 			return wrapped_returns(original, self, ...)
-		end
-	end, "sim_squad_scripted")
-	patch_required_method(cls, "check_online_status", PATCH_ID .. "_squad_day_night", function(original)
-		return function(self, ...)
-			local result = { original(self, ...) }
-			if not (get_object_story_id(self.id) or self.force_online or self.__lock or IsSurvivalMode()) then
-				local player_id = squad_player_id(self)
-				if self.online ~= true and (is_squad_monster[self.player_id] or is_squad_monster[player_id]) then
-					local hour = level and level.get_time_hours and level.get_time_hours() or 12
-					local force_offline = false
-					if player_id == "monster_predatory_day" or player_id == "monster_zombied_day" then
-						force_offline = hour <= 5 or hour >= 22
-					elseif player_id == "monster_predatory_night" or player_id == "monster_zombied_night" then
-						force_offline = hour >= 6 and hour <= 18
-					end
-					if force_offline then
-						self.forced_online_status = false
-						self.assigned_target_id = self.id
-						self.current_target_id = self.id
-						self.current_action = 0
-					end
-				end
-			end
-			return unpack(result)
 		end
 	end, "sim_squad_scripted")
 	patch_required_method(cls, "switch_online", PATCH_ID .. "_squad_revenge_online", function(original)
@@ -1961,6 +2205,7 @@ function board_methods.zhopa2_ensure_buckets(self)
 	self.zhopa2_trade_smarts_by_level = self.zhopa2_trade_smarts_by_level or {}
 	self.zhopa2_trade_smart_level = self.zhopa2_trade_smart_level or {}
 	self.zhopa2_trade_smart_flags = self.zhopa2_trade_smart_flags or {}
+	self.zhopa2_bucket_revision = tonumber(self.zhopa2_bucket_revision) or 0
 	if should_rebuild and type(self.zhopa2_rebuild_buckets) == "function" then
 		self:zhopa2_rebuild_buckets()
 	end
@@ -1970,25 +2215,38 @@ function board_methods.zhopa2_register_trade_smart(self, smart)
 	if not (smart and smart.id) then
 		return false
 	end
+	self.zhopa2_trade_smart_flags = self.zhopa2_trade_smart_flags or {}
+	self.zhopa2_bucket_revision = tonumber(self.zhopa2_bucket_revision) or 0
+	self.zhopa2_trade_smart_level = self.zhopa2_trade_smart_level or {}
+	self.zhopa2_trade_smarts_by_level = self.zhopa2_trade_smarts_by_level or {}
+	if M.trade_smart_blacklisted(smart) then
+		if type(self.zhopa2_unregister_trade_smart) == "function" then
+			self:zhopa2_unregister_trade_smart(smart)
+		end
+		return false
+	end
+	local loaded_jobs = type(smart.stalker_jobs) == "table" and #smart.stalker_jobs > 0
+	local previous = self.zhopa2_trade_smart_flags[smart.id]
+	if previous and (previous.loaded_jobs == true or loaded_jobs ~= true) then
+		return previous.trade_route == true
+	end
 	if type(self.zhopa2_unregister_trade_smart) == "function" then
 		self:zhopa2_unregister_trade_smart(smart)
-	end
-	if M.trade_smart_blacklisted(smart) then
-		return false
 	end
 	local level_name = obj_level(smart)
 	if not level_name then
 		return false
 	end
-	local flags = { provider = false, customer = false }
-	scan_loaded_trade_jobs(smart, flags)
-	scan_smart_ini_trade_jobs(smart, flags)
+	local flags = { provider = false, customer = false, loaded_jobs = loaded_jobs }
+	if loaded_jobs then
+		scan_loaded_trade_jobs(smart, flags)
+	else
+		scan_smart_ini_trade_jobs(smart, flags)
+	end
 	scan_beh_trade_jobs(smart, flags)
 	flags.trade_route = flags.provider == true and flags.customer == true
-	if flags.provider == true or flags.customer == true then
-		self.zhopa2_trade_smart_level[smart.id] = level_name
-		self.zhopa2_trade_smart_flags[smart.id] = flags
-	end
+	self.zhopa2_trade_smart_level[smart.id] = level_name
+	self.zhopa2_trade_smart_flags[smart.id] = flags
 	if flags.trade_route == true then
 		local bucket = level_bucket(self.zhopa2_trade_smarts_by_level, level_name)
 		if bucket then
@@ -2037,6 +2295,8 @@ function board_methods.zhopa2_register_smart(self, obj)
 		end
 	end
 	self:zhopa2_register_trade_smart(obj)
+	self.zhopa2_bucket_revision = (tonumber(self.zhopa2_bucket_revision) or 0) + 1
+	M.notify_task_scoring("on_smart_registered", self, obj)
 end
 
 function board_methods.zhopa2_unregister_smart(self, obj)
@@ -2055,6 +2315,8 @@ function board_methods.zhopa2_unregister_smart(self, obj)
 		end
 	end
 	self.zhopa2_smart_level[obj.id] = nil
+	self.zhopa2_bucket_revision = (tonumber(self.zhopa2_bucket_revision) or 0) + 1
+	M.notify_task_scoring("on_smart_unregistered", self, obj)
 end
 
 function board_methods.zhopa2_update_squad_level(self, squad, level_name)
@@ -2069,6 +2331,8 @@ function board_methods.zhopa2_update_squad_level(self, squad, level_name)
 			self.zhopa2_squads_by_level[old_level][squad.id] = nil
 		end
 		self.zhopa2_squad_level[squad.id] = nil
+		self.zhopa2_bucket_revision = (tonumber(self.zhopa2_bucket_revision) or 0) + 1
+		M.notify_task_scoring("on_squad_unregistered", squad, old_level)
 		if type(squad.zhopa2_purge_global_level_blacklist) == "function" then
 			squad:zhopa2_purge_global_level_blacklist("global_level_blacklisted")
 		end
@@ -2093,6 +2357,8 @@ function board_methods.zhopa2_update_squad_level(self, squad, level_name)
 			bucket[squad.id] = squad
 		end
 	end
+	self.zhopa2_bucket_revision = (tonumber(self.zhopa2_bucket_revision) or 0) + 1
+	M.notify_task_scoring("on_squad_level_changed", squad, old_level, level_name)
 end
 
 function board_methods.zhopa2_unregister_squad(self, squad)
@@ -2105,6 +2371,12 @@ function board_methods.zhopa2_unregister_squad(self, squad)
 		self.zhopa2_squads_by_level[old_level][squad.id] = nil
 	end
 	self.zhopa2_squad_level[squad.id] = nil
+	self.zhopa2_bucket_revision = (tonumber(self.zhopa2_bucket_revision) or 0) + 1
+	local task_module = tasks()
+	if task_module and type(task_module.task_update_budget) == "table" then
+		task_module.task_update_budget[squad.id] = nil
+	end
+	M.notify_task_scoring("on_squad_unregistered", squad, old_level)
 end
 
 function board_methods.zhopa2_rebuild_buckets(self)
@@ -2133,6 +2405,8 @@ function board_methods.zhopa2_rebuild_buckets(self)
 			end
 		end
 	end
+	self.zhopa2_bucket_revision = (tonumber(self.zhopa2_bucket_revision) or 0) + 1
+	M.notify_task_scoring("on_buckets_rebuilt", self)
 end
 
 local function install_board_methods(cls)
@@ -2158,6 +2432,7 @@ function M.patch_sim_board()
 			self.zhopa2_trade_smarts_by_level = {}
 			self.zhopa2_trade_smart_level = {}
 			self.zhopa2_trade_smart_flags = {}
+			self.zhopa2_bucket_revision = 0
 			self.zhopa2_buckets_ready = true
 			return unpack(result)
 		end
@@ -2845,7 +3120,11 @@ local function direct_monster_update(self)
 		return false
 	end
 	local squad = se_obj.group_id and se_obj.group_id ~= 65535 and sim:object(se_obj.group_id)
-	if not (squad and squad.current_action and squad.current_action == 0) then
+	if not (squad and squad.zhopa2_managed == true and squad.zhopa2_task and squad.current_action and squad.current_action == 0) then
+		return false
+	end
+	local p = perception()
+	if p and type(p.mutant_cycle_active) == "function" and p.mutant_cycle_active(squad) ~= true then
 		return false
 	end
 	local assigned_target_id = tonumber(squad.assigned_target_id)
@@ -3031,9 +3310,27 @@ local function export_script_function(mod, name, fn)
 		return
 	end
 	if mod then
+		local records = M._direct_exports[mod]
+		if not records then
+			records = {}
+			M._direct_exports[mod] = records
+		end
+		local previous = records[name]
+		if previous and mod[name] ~= previous.wrapper
+			and M.function_chain_contains(mod[name], previous.wrapper, 8)
+		then
+			previous.retained = true
+			return
+		end
+		if not previous or mod[name] ~= previous.wrapper then
+			records[name] = { original = mod[name], wrapper = fn }
+		end
 		mod[name] = fn
 	end
 	if type(name) == "string" and string.sub(name, 1, 7) == "zhopa2_" then
+		if not M._global_exports[name] or rawget(_G, name) ~= M._global_exports[name].wrapper then
+			M._global_exports[name] = { original = rawget(_G, name), wrapper = fn }
+		end
 		rawset(_G, name, fn)
 	end
 end
@@ -3951,7 +4248,7 @@ function M.zhopa2_smart_for_online_npc(npc)
 	return smart, squad
 end
 
-function M.zhopa2_clear_pickup_state(npc)
+function M.zhopa2_reapply_current_smart_job(npc)
 	local npc_id = object_id(npc)
 	if not npc_id then
 		return false
@@ -3962,14 +4259,21 @@ function M.zhopa2_clear_pickup_state(npc)
 		return false
 	end
 	info.begin_job = true
-	if db and db.offline_objects and db.offline_objects[npc_id] then
-		clear_table(db.offline_objects[npc_id])
+	local offline_state = db and db.offline_objects and db.offline_objects[npc_id] or nil
+	if type(offline_state) == "table" then
+		for key in pairs(offline_state) do
+			offline_state[key] = nil
+		end
 	end
 	local ok = pcall(smart.setup_logic, smart, npc)
 	return ok == true
 end
 
-function M.zhopa2_refresh_meet_after_pickup(npc)
+function M.zhopa2_clear_pickup_state(npc)
+	return M.zhopa2_reapply_current_smart_job(npc)
+end
+
+function M.zhopa2_refresh_npc_meet(npc)
 	local npc_id = object_id(npc)
 	if not npc_id then
 		return false, false
@@ -3999,6 +4303,58 @@ function M.zhopa2_refresh_meet_after_pickup(npc)
 		talk_enabled = npc:is_talk_enabled() == true
 	end)
 	return true, talk_enabled
+end
+
+function M.zhopa2_refresh_meet_after_pickup(npc)
+	return M.zhopa2_refresh_npc_meet(npc)
+end
+
+function M.zhopa2_mark_service_logic_refresh(npc, reason)
+	local npc_id = object_id(npc)
+	if not npc_id then
+		return false
+	end
+	local now = time_global and time_global() or 0
+	M.service_logic_refresh_pending = M.service_logic_refresh_pending or {}
+	M.service_logic_refresh_pending[npc_id] = {
+		reason = reason or "service_completed",
+		expires = now > 0 and (now + 10000) or 0,
+		next_check = 0,
+		attempts = 0,
+		logic_applied = false,
+	}
+	return true
+end
+
+function M.zhopa2_watch_service_logic_refresh()
+	local pending = M.service_logic_refresh_pending
+	if type(pending) ~= "table" or next(pending) == nil then
+		return
+	end
+	local now = time_global and time_global() or 0
+	for npc_id, entry in pairs(pending) do
+		local npc = M.zhopa2_online_object_by_id(npc_id)
+		local alive = npc ~= nil
+		if alive and type(npc.alive) == "function" then
+			local ok_alive, is_alive = pcall(npc.alive, npc)
+			alive = ok_alive and is_alive == true
+		end
+		if not alive then
+			pending[npc_id] = nil
+		elseif now > 0 and tonumber(entry.expires or 0) > 0 and now > tonumber(entry.expires) then
+			pending[npc_id] = nil
+		elseif now <= 0 or now >= tonumber(entry.next_check or 0) then
+			entry.next_check = now > 0 and (now + 500) or 0
+			entry.attempts = (tonumber(entry.attempts) or 0) + 1
+			if entry.logic_applied ~= true then
+				entry.logic_applied = M.zhopa2_reapply_current_smart_job(npc) == true
+			end
+			local refreshed, talk_enabled = M.zhopa2_refresh_npc_meet(npc)
+			if talk_enabled or (entry.logic_applied and not refreshed) or entry.attempts >= 20 then
+				pending[npc_id] = nil
+			end
+		end
+	end
 end
 
 function M.zhopa2_mark_ground_gather_meet_refresh(npc)
@@ -4405,6 +4761,12 @@ end
 
 local function zhopa2_gather_item_replacement(original, force_selected, force_reason)
 	return function(npc, ...)
+		if not M.master_enabled() then
+			if original then
+				return original(npc, ...)
+			end
+			return
+		end
 		if zhopa2_surge_active() then
 			return
 		end
@@ -4854,6 +5216,9 @@ function M.patch_xr_gather_items()
 	local original_near_actor = gather_original_func(mod, "near_actor")
 	if type(original_near_actor) == "function" and mod.near_actor ~= mod.zhopa2_wrapped_near_actor then
 		mod.zhopa2_wrapped_near_actor = function(obj, npc, ...)
+			if not M.master_enabled() then
+				return original_near_actor(obj, npc, ...)
+			end
 			npc = npc or mod.zhopa2_current_gather_npc
 			if npc and zhopa2_loot_active(npc) then
 				return false
@@ -5133,6 +5498,12 @@ end
 
 local function zhopa2_get_all_from_corpse_replacement(original)
 	return function(npc, ...)
+		if not M.master_enabled() then
+			if original then
+				return original(npc, ...)
+			end
+			return
+		end
 		local id = npc and npc.id and npc:id() or nil
 		local st = id and db and db.storage and db.storage[id] and db.storage[id].corpse_detection or nil
 		local corpse_id = st and tonumber(st.selected_corpse_id) or nil
@@ -5395,6 +5766,9 @@ function M.patch_xr_corpse_detection()
 	local original_near_actor = corpse_original_func(mod, "near_actor")
 	if type(original_near_actor) == "function" and mod.near_actor ~= mod.zhopa2_wrapped_near_actor then
 		mod.zhopa2_wrapped_near_actor = function(obj, npc, ...)
+			if not M.master_enabled() then
+				return original_near_actor(obj, npc, ...)
+			end
 			if npc and zhopa2_loot_active(npc) then
 				return false
 			end
@@ -5440,7 +5814,178 @@ local function run_runtime_patch(patch)
 	return true
 end
 
+M.SQUAD_RUNTIME_FIELDS = {
+	"zhopa2_task", "zhopa2_target", "zhopa2_started", "zhopa2_until", "zhopa2_patrol", "zhopa2_patrol_idx",
+	"zhopa2_last_reason", "zhopa2_last_result", "zhopa2_managed", "zhopa2_previous_task", "zhopa2_previous_target",
+	"zhopa2_npc_quest_id", "zhopa2_npc_quest_handoff_id",
+	"zhopa2_resume_task", "zhopa2_resume_target",
+	"zhopa2_hunt_prey",
+	"zhopa2_cached_npc_count",
+	"zhopa2_resume_until", "zhopa2_resume_patrol", "zhopa2_resume_patrol_idx", "zhopa2_resume_reason",
+	"zhopa2_recent_smarts", "zhopa2_recent_targets", "zhopa2_loot_count", "zhopa2_loot_value",
+	"zhopa2_artifact_cargo_count", "zhopa2_artifact_cargo_value", "zhopa2_artifact_cargo_sections",
+	"zhopa2_artifact_cargo_last_id", "zhopa2_artifact_id", "zhopa2_artifact_smart", "zhopa2_artifact_zone",
+	"zhopa2_artifact_section", "zhopa2_artifact_task_collected_id", "zhopa2_artifact_collect_started",
+	"zhopa2_virtual_loot_count", "zhopa2_virtual_loot_value", "zhopa2_virtual_loot_sections", "zhopa2_virtual_money",
+	"zhopa2_post_guide_rest_pending", "zhopa2_post_guide_rest_target", "zhopa2_post_guide_rest_reason",
+	"zhopa2_post_guide_rest_npc", "zhopa2_post_guide_rest_marked_tg", "zhopa2_revenge_actor_community",
+	"zhopa2_revenge_actor_community_goodwill", "zhopa2_revenge_actor_personal_goodwill",
+	"zhopa2_revenge_actor_revenge_goodwill", "zhopa2_revenge_actor_member_ids", "zhopa2_state_version",
+	"zhopa2_section_name", "zhopa2_service_filler", "zhopa2_service_smart_id", "zhopa2_service_role",
+	"zhopa2_artifact_approach_last_id", "zhopa2_artifact_approach_npc_id", "zhopa2_artifact_approach_sent_at",
+	"zhopa2_artifact_approach_vid", "zhopa2_artifact_arrived_idle_since", "zhopa2_artifact_contested_since",
+	"zhopa2_artifact_debug_key", "zhopa2_artifact_debug_time", "zhopa2_artifact_force_attempts",
+	"zhopa2_artifact_force_item", "zhopa2_artifact_force_owner", "zhopa2_artifact_force_since",
+	"zhopa2_artifact_inventory_wait_since", "zhopa2_artifact_pickup_last_x", "zhopa2_artifact_pickup_last_y",
+	"zhopa2_artifact_pickup_last_z", "zhopa2_artifact_pickup_npc_id", "zhopa2_artifact_pickup_stall_since",
+	"zhopa2_base_trade_next_tg", "zhopa2_base_trade_result", "zhopa2_hunt_prepared_target",
+	"zhopa2_hunt_prepared_target_signature", "zhopa2_inside_squad_update", "zhopa2_get_target_task_updated",
+	"zhopa2_invalid_script_target_sig",
+	"zhopa2_last_offline_hunt", "zhopa2_last_trade_reason", "zhopa2_last_trade_result", "zhopa2_last_trade_smart",
+	"zhopa2_last_trade_time", "zhopa2_no_target_task", "zhopa2_no_target_until", "zhopa2_revenge_hostility_actor",
+	"zhopa2_revenge_hostility_target", "zhopa2_runtime_wait_reason", "zhopa2_surge_paused",
+	"zhopa2_target_valid_key", "zhopa2_target_valid_until", "zhopa2_task_rush_active", "zhopa2_trade_detail",
+	"zhopa2_trade_next_tg", "zhopa2_trade_prepared_job_section", "zhopa2_trade_prepared_npc_id",
+	"zhopa2_trade_prepared_reason", "zhopa2_trade_prepared_smart_id", "zhopa2_trade_prepared_trader_id",
+	"zhopa2_trade_prepared_until", "zhopa2_trade_queue_reason", "zhopa2_trade_queue_smart",
+	"zhopa2_trade_queue_state", "zhopa2_trade_route_next_tg", "zhopa2_trade_route_result", "zhopa2_trade_route_state",
+	"zhopa2_rest_trade_next_tg", "zhopa2_rest_trade_reason", "zhopa2_rest_trade_result",
+	"zhopa2_rest_trade_started_tg", "zhopa2_rest_trade_state",
+}
+
+function M.clear_prefixed_table(tbl)
+	if type(tbl) ~= "table" then
+		return false
+	end
+	local keys = {}
+	local managed = false
+	for key in pairs(tbl) do
+		if type(key) == "string" and (string.sub(key, 1, 7) == "zhopa2_" or string.sub(key, 1, 6) == "zhopa_") then
+			keys[#keys + 1] = key
+			managed = true
+		end
+	end
+	for i = 1, #keys do
+		tbl[keys[i]] = nil
+	end
+	return managed
+end
+
+function M.purge_squad_state(squad)
+	local kind = type(squad)
+	if kind ~= "table" and kind ~= "userdata" then
+		return
+	end
+	local owned_target = squad.zhopa2_task ~= nil and squad.zhopa2_target ~= nil
+		and tostring(squad.scripted_target) == tostring(squad.zhopa2_target)
+	if type(squad.zhopa2_clear_task) == "function" then
+		pcall(squad.zhopa2_clear_task, squad, "master_disabled")
+	elseif owned_target then
+		squad.scripted_target = nil
+	end
+	local memory = safe_require("zhopa2_memory")
+	if memory and type(memory.reset_squad) == "function" then
+		memory.reset_squad(squad)
+	end
+	for i = 1, #M.SQUAD_RUNTIME_FIELDS do
+		squad[M.SQUAD_RUNTIME_FIELDS[i]] = nil
+	end
+end
+
+function M.purge_runtime_state()
+	local failures = {}
+	local squads = SIMBOARD and SIMBOARD.squads
+	if type(squads) == "table" then
+		for id, stored in pairs(squads) do
+			local squad = simboard_squad_object(id, stored)
+			if squad then
+				local ok, err = pcall(M.purge_squad_state, squad)
+				if not ok then
+					failures[#failures + 1] = "squad:" .. tostring(id) .. ":" .. tostring(err)
+				end
+			end
+		end
+	end
+	if db and type(db.storage) == "table" then
+		for _, storage in pairs(db.storage) do
+			if type(storage) == "table" then
+				local managed = M.clear_prefixed_table(storage)
+				managed = M.clear_prefixed_table(storage.gather_items) or managed
+				managed = M.clear_prefixed_table(storage.corpse_detection) or managed
+				if managed then
+					storage.has_items_to_sell = nil
+					storage.trade_items = nil
+				end
+			end
+		end
+	end
+	if alife_storage_manager and type(alife_storage_manager.get_state) == "function" then
+		local ok, state = pcall(alife_storage_manager.get_state)
+		if ok and type(state) == "table" then
+			state.zhopa2_virtual_artifacts = nil
+			state.zhopa2_story_north_migration = nil
+			state.zhopa2_npc_quests = nil
+		end
+	end
+	if SIMBOARD then
+		SIMBOARD.zhopa2_buckets_ready = nil
+		SIMBOARD.zhopa2_smarts_by_level = nil
+		SIMBOARD.zhopa2_smarts_by_level_kind = nil
+		SIMBOARD.zhopa2_smart_level = nil
+		SIMBOARD.zhopa2_squads_by_level = nil
+		SIMBOARD.zhopa2_squad_level = nil
+		SIMBOARD.zhopa2_trade_smarts_by_level = nil
+		SIMBOARD.zhopa2_trade_smart_level = nil
+		SIMBOARD.zhopa2_trade_smart_flags = nil
+		SIMBOARD.zhopa2_bucket_revision = nil
+		local smarts = SIMBOARD.smarts
+		if type(smarts) == "table" then
+			local fields = {
+				"zhopa2_artefact_available", "zhopa2_base_pull_squad_id", "zhopa2_blacklist_name",
+				"zhopa2_job_capacity_monster", "zhopa2_job_capacity_stalker", "zhopa2_ownership_owner",
+				"zhopa2_ownership_state", "zhopa2_presence_count", "zhopa2_presence_state",
+				"zhopa2_service_allowed_roles", "zhopa2_service_count", "zhopa2_service_missing_count",
+				"zhopa2_service_missing_roles", "zhopa2_service_native_roles", "zhopa2_service_needs_fill",
+				"zhopa2_service_owner", "zhopa2_stalker_job_nonexclusive_sections",
+			}
+			for _, entry in pairs(smarts) do
+				local smart = entry and (entry.smrt or entry) or nil
+				if smart then
+					for i = 1, #fields do
+						smart[fields[i]] = nil
+					end
+				end
+			end
+		end
+	end
+	return #failures == 0, table.concat(failures, ",")
+end
+
+function M.unregister_runtime_callbacks()
+	if UnregisterScriptCallback then
+		pcall(UnregisterScriptCallback, "on_game_load", M._on_game_load)
+		pcall(UnregisterScriptCallback, "actor_on_first_update", M._actor_on_first_update)
+		pcall(UnregisterScriptCallback, "actor_on_update", M._actor_on_update)
+	end
+	runtime_ready_state.callbacks_registered = false
+end
+
+function M.reset_runtime_ready_state()
+	runtime_ready_state.items = {}
+	runtime_ready_state.errors = {}
+	runtime_ready_state.count = 0
+	runtime_ready_state.complete = false
+	runtime_ready_state.callbacks_registered = false
+	runtime_ready_state.actor_first_update = false
+	runtime_ready_state.warmup_until = nil
+	runtime_ready_state.next_recheck_tg = 0
+	zhopa2_started_modules = {}
+end
+
 function M.ensure_all(reason)
+	if not M.master_enabled() then
+		return false
+	end
 	local prev_patch_reason = current_patch_reason
 	current_patch_reason = reason
 	M.ensure_zhopa_modules()
@@ -5454,13 +5999,24 @@ function M.ensure_all(reason)
 end
 
 function M._on_game_load()
+	if not M.master_enabled() then
+		return
+	end
 	M.ground_gather_release_pending = {}
 	M.ground_gather_meet_refresh_pending = {}
+	M.service_logic_refresh_pending = {}
+	local task_module = tasks()
+	if task_module then
+		task_module.task_update_budget = {}
+	end
 	M.ensure_all("on_game_load")
 	M.zhopa2_sync_existing_anomaly_zones("on_game_load")
 end
 
 function M._actor_on_first_update()
+	if not M.master_enabled() then
+		return
+	end
 	runtime_ready_state.actor_first_update = true
 	if runtime_ready_state.warmup_until == nil then
 		local now = runtime_time_ms()
@@ -5471,11 +6027,15 @@ function M._actor_on_first_update()
 end
 
 function M._actor_on_update()
+	if not M.master_enabled() then
+		return
+	end
 	if M._runtime_recheck_due("actor_on_update") then
 		M.ensure_all("actor_on_update")
 	end
 	M.zhopa2_watch_ground_gather_release()
 	M.zhopa2_watch_ground_gather_meet_refresh()
+	M.zhopa2_watch_service_logic_refresh()
 end
 
 function M._runtime_recheck_due(reason)
@@ -5502,6 +6062,9 @@ function M.runtime_not_ready_reason()
 end
 
 function M.runtime_ready(reason)
+	if not M.master_enabled() then
+		return false
+	end
 	if M._runtime_recheck_due(reason) then
 		M.ensure_all(reason or "runtime_ready")
 	else
@@ -5515,6 +6078,9 @@ function M.runtime_gate_ready(reason)
 end
 
 function M.on_game_start()
+	if not M.master_enabled() then
+		return M.on_master_disable("disabled_on_game_start")
+	end
 	M.ensure_all("on_game_start")
 	if RegisterScriptCallback then
 		if UnregisterScriptCallback then
@@ -5529,6 +6095,22 @@ function M.on_game_start()
 		runtime_mark_context()
 	end
 	return true
+end
+
+function M.on_master_disable()
+	M.unregister_runtime_callbacks()
+	M.ground_gather_release_pending = {}
+	M.ground_gather_meet_refresh_pending = {}
+	M.service_logic_refresh_pending = {}
+	local ok, detail = M.purge_runtime_state()
+	M.restore_runtime_patches()
+	M.reset_runtime_ready_state()
+	return ok, detail
+end
+
+function M.on_master_enable()
+	M.reset_runtime_ready_state()
+	return M.on_game_start()
 end
 
 function on_game_start()

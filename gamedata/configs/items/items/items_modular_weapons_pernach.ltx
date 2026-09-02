@@ -1,0 +1,219 @@
+--\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\	wpn_pernach \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\--
+
+[pernach_barrel]:attachment_base
+kind  =  pernach
+inv_ui_sign				= ots33_bar
+visual						= w_att_huds\pernach_barrel
+inv_name					= pernach_barrel
+inv_name_short			= pernach_barrelS
+cost							= 900
+inv_weight					= 0.13
+inv_grid_x         = 3
+inv_grid_y         = 9
+1icon_layer = clean_lub1_ico
+attachment_point = pernach_barrel|0,0,0|0,0,0
+attachment_slots = pernach_spring|zatvor|0,0,0|0,0,0
+item_tags = barrel
+override_section = pernach_barrel_attributes
+
+[pernach_barrel_attributes]
+bullet_speed = 0.97
+k_hit_koeff = 1.05
+fire_dispersion_base = 0.19
+zoom_rotate_time = 0.05
+recoil_koeff = -0.13
+inertia_koeff = 1.1
+[pernach_barrel_att]
+bullet_speed = 0.97
+k_hit_koeff = 1.05
+fire_dispersion_base = 0.19
+zoom_rotate_time = 0.05
+recoil_koeff            = -0.21
+inertia_koeff            = 1.1
+
+[pernach_barrel_up]:pernach_barrel
+kind  =  pernach
+inv_ui_sign				= ots33_bar+
+visual						= w_att_huds\pernach_barrel_up
+inv_name					= pernach_barrel_up
+inv_name_short			= pernach_barrel_upS
+cost							= 3150
+inv_weight					= 0.14
+inv_grid_x         = 4
+attachment_slots	=	pernach_spring|zatvor|0,0,0|0,0,0#aps_muzzle|muzzle|0,0,0|0,0,0
+override_section = pernach_barrel_up_attributes
+
+[pernach_barrel_up_attributes]
+fire_point = 0, 0, 0.02
+bullet_speed = 0.99
+k_hit_koeff = 1.05
+fire_dispersion_base = 0.29
+impair_koeff = 1.1
+zoom_rotate_time = 0.05
+recoil_koeff = -0.15
+inertia_koeff = 1.1
+[pernach_barrel_up_att]
+fire_point = 0, 0, 0.02
+bullet_speed = 0.99
+k_hit_koeff = 1.05
+fire_dispersion_base = 0.29
+impair_koeff = 1.1
+zoom_rotate_time = 0.05
+recoil_koeff            = -0.16
+inertia_koeff            = 1.1
+
+[pernach_spring]:attachment_base
+kind  =  pernach
+inv_ui_sign				= ots33_spr
+visual						= w_att_huds\pernach_spring
+inv_name					= pernach_spring
+inv_name_short			= pernach_springS
+cost							= 300
+inv_weight					= 0.03
+inv_grid_x         = 4
+inv_grid_y         = 10
+1icon_layer = clean1_ico
+attachment_point = pernach_spring|0,0,0|0,0,0
+attachment_slots =	pernach_zatvor|zatvor|0,0,0|0,0,0
+item_tags =	spring
+override_section = pernach_spring_attributes
+
+[pernach_spring_attributes]
+
+[pernach_zatvor]:attachment_base
+kind  =  pernach
+inv_ui_sign				= ots33_slide
+visual						= w_att_huds\pernach_zatvor
+inv_name					= pernach_zatvor
+inv_name_short			= pernach_zatvorS
+cost							= 900
+inv_weight					= 0.14
+inv_grid_width     = 2
+inv_grid_height    = 1
+inv_grid_x         = 7
+inv_grid_y         = 9
+1icon_layer = clean_lub2_ico
+attachment_point = pernach_zatvor|0,0,0|0,0,0
+item_tags = zatvor
+override_section = pernach_zatvor_attributes
+
+[pernach_zatvor_attributes]
+rpm = 900
+zoom_rotate_time = 0.05
+recoil_koeff = -0.1
+[pernach_zatvor_att]:rpm_900_zatvor_att
+zoom_rotate_time = 0.05
+recoil_koeff            = -0.1
+
+[pernach_rail_grip]:attachment_base
+kind  =  pernach
+inv_ui_sign				= ots33_rail
+visual						= w_att_huds\pernach_rail_grip
+description				= pistol_grip_mountD
+inv_name					= pernach_rail_grip
+inv_name_short			= pernach_rail_gripS
+cost							= 1800
+inv_weight					= 0.1
+inv_grid_x         = 6		
+inv_grid_y         = 10
+attachment_point	=	pernach_rail|0,0,0|0,0,0	
+attachment_slots	=	pica_3|wpn_body|0,0.00508,0.0782|0,0,180#picgrp|wpn_body|0,-0.0305,-0.0981|0,0,0#usmount|wpn_body|0,0.00508,0.073|0,0,0				;или тот или тот слот доступен		
+item_tags = rail
+override_section = pernach_rail_grip_attributes
+
+[pernach_rail_grip_attributes]
+
+[pernach_stock]:attachment_base
+kind  =  pernach
+inv_ui_sign				= ots33_stk
+visual						= w_att_huds\pernach_stock
+inv_name					= pernach_stock
+inv_name_short			= pernach_stockS
+cost							= 3900
+inv_weight					= 0.6
+inv_grid_width			= 2
+inv_grid_x					= 7
+inv_grid_y					= 10
+attachment_point		=	pernach_stock|0,0,0|0,0,0
+item_tags =	stock
+override_section = pernach_stock_attributes
+
+[pernach_stock_attributes]
+weapon_lenght = 0.3
+zoom_rotate_time = 0.03
+recoil_koeff = -0.22
+inertia_koeff = 0.7
+[pernach_stock_att]
+weapon_lenght = 0.3
+zoom_rotate_time = 0.03
+recoil_koeff            = -0.22
+inertia_koeff          = 0.7
+
+[mag_wpn_pernach_9x18_fmj]:mag_wpn_base,wg_wpn_pernach,ag_ammo_9x18_fmj
+inv_ui_sign					= ots33_18
+visual							= w_att_huds\pernach_mag18
+inv_name						= pernach_mag18
+inv_name_short				= pernach_mag18S
+inv_grid_x         				= 9
+inv_grid_y         				= 9
+inv_weight						= 0.11
+cost								= 350
+max_mag_size				= 18
+mag_size						= small
+override_section				=	mag_wpn_pernach_9x18_fmj_attributes
+
+[mag_wpn_pernach_9x18_fmj_attributes]
+animation_prefix_mag = 18_
+[pernach_mag18_attributes]
+animation_prefix_mag			=	18_
+
+[mag_wpn_pernach_27_9x18_fmj]:mag_wpn_pernach_9x18_fmj
+inv_ui_sign					= ots33_27
+visual							= w_att_huds\pernach_mag27
+inv_name						= pernach_mag27
+inv_name_short				= pernach_mag27S
+inv_grid_height				= 2
+inv_grid_x						= 10
+inv_grid_y						= 9
+inv_weight						= 0.15
+cost								= 600
+max_mag_size				= 27
+override_section				=	mag_wpn_pernach_27_9x18_fmj_attributes
+
+[mag_wpn_pernach_27_9x18_fmj_attributes]
+animation_prefix_mag = 27_
+[pernach_mag27_attributes]
+animation_prefix_mag =	27_
+
+[mag_wpn_pernach_35_9x18_fmj]:mag_wpn_pernach_27_9x18_fmj
+inv_ui_sign					= ots33_35
+visual							= w_att_huds\pernach_mag35
+inv_name						= pernach_mag35
+inv_name_short				= pernach_mag35S
+inv_grid_height  			  	= 2
+inv_grid_x         				= 11
+inv_grid_y         				= 9
+inv_weight						= 0.18
+cost								= 750
+max_mag_size				= 35
+override_section = mag_wpn_pernach_35_9x18_fmj_attributes
+
+[mag_wpn_pernach_35_9x18_fmj_attributes]
+animation_prefix_mag = 27_
+
+[mag_wpn_pernach_75_9x18_fmj]:mag_wpn_pernach_35_9x18_fmj
+inv_ui_sign					= ots33_75
+visual							= w_att_huds\pernach_mag75
+inv_name						= pernach_mag75
+inv_name_short				= pernach_mag75S
+inv_grid_y       				  = 7
+inv_weight						= 1.12
+cost								= 1700
+max_mag_size				= 75
+mag_size						= large
+override_section				=	mag_wpn_pernach_75_9x18_fmj_attributes
+
+[mag_wpn_pernach_75_9x18_fmj_attributes]
+animation_prefix_mag = 75_
+[pernach_mag75_attributes]
+animation_prefix_mag			=	75_

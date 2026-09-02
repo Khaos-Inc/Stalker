@@ -1,0 +1,435 @@
+--\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ wpn_ppsh41 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+[ppsh_spring]:attachment_base
+kind  =  ppsh
+inv_ui_sign				= ppsh_spr
+visual						= w_att_huds\ppsh_spring	
+inv_name					= ppsh_spring
+inv_name_short			= ppsh_springS
+cost							= 550
+inv_weight					= 0.09
+inv_grid_x					= 30
+inv_grid_y					= 26
+1icon_layer = clean1_ico
+attachment_point = ppsh_spring|0,0,0|0,0,0
+attachment_slots =	ppsh_zatvor|zatvor|0,0,0|0,0,0
+item_tags =	spring
+override_section = ppsh_spring_attributes
+
+[ppsh_spring_attributes]
+[ppsh_spring_att]
+recoil_koeff = -0.09
+
+[ppsh_spring_k50m]:ppsh_spring
+kind  =  ppsh
+inv_ui_sign				= k50m_spr+
+visual						= w_att_huds\ppsh_spring_k50m	
+inv_name					= ppsh_spring_k50m
+inv_name_short			= ppsh_spring_k50mS
+inv_weight					= 0.1
+inv_grid_x         			= 31
+override_section = ppsh_spring_k50m_attributes
+
+cost = 550
+[ppsh_spring_k50m_attributes]
+rpm_koeff = -0.05
+[ppsh_spring_up_att]
+recoil_koeff = -0.11
+rpm_koeff = -0.05
+
+[ppsh_zatvor]:attachment_base
+kind  =  ppsh
+inv_ui_sign				= ppsh_bolt
+visual						= w_att_huds\ppsh_zatvor	
+inv_name					= ppsh_zatvor
+inv_name_short			= ppsh_zatvorS
+cost							= 750
+inv_weight					= 0.600
+inv_grid_x         			= 32
+inv_grid_y         			= 26
+1icon_layer = clean_lub1_ico
+attachment_point		= ppsh_zatvor|0,0,0|0,0,0
+attachment_slots		= ppsh_barrel|wpn_body|0,0,0|0,0,0
+item_tags =	zatvor
+override_section = ppsh_zatvor_attributes
+
+[ppsh_zatvor_attributes]
+rpm = 1000
+impair_koeff = 0.85
+zoom_rotate_time = 0.08
+[ppsh_zatvor_att]:rpm_1000_zatvor_att
+zoom_rotate_time = 0.08
+
+[ppsh_barrel_n]:attachment_base
+kind  =  ppsh
+inv_ui_sign				= ppsh_barrel_n
+visual						= w_att_huds\ppsh_barrel_n	
+inv_name					= ppsh_barrel_n
+inv_name_short			= ppsh_barrel_nS
+cost							= 4450
+inv_weight					= 1.2
+inv_grid_width			= 3
+inv_grid_x					= 18
+inv_grid_y					= 25
+1icon_layer = clean_lub3_ico
+attachment_point = ppsh_barrel|0,0,0|0,0,0
+attachment_slots = ppsh_barrel_n_sight|wpn_body|0,0,0|0,0,0#ppsh_barrel_rails|wpn_body|0,0,0|0,0,0
+item_tags =	barrel
+override_section			=	ppsh_barrel_n_attributes
+[ppsh_barrel_n_attributes]
+fire_point = 0, 0, 0.17
+weapon_lenght				=	0.25
+bullet_speed				= 1
+k_hit_koeff						= 1.15
+fire_dispersion_base		= 0.15
+zoom_rotate_time = 0.1
+recoil_koeff            = -0.05
+inertia_koeff            = 1.4
+impair_koeff					= 1.2
+
+[ppsh_barrel_n_k50m]:ppsh_barrel_n
+kind  =  ppsh
+inv_ui_sign				= k50m_barrel_n
+visual						= w_att_huds\ppsh_barrel_n_k50m	
+inv_name					= ppsh_barrel_n_k50m
+inv_name_short			= ppsh_barrel_n_k50mS
+cost							= 4650
+inv_weight					= 0.95
+inv_grid_x					= 21
+attachment_slots		= ppsh_barrel_n_sight|wpn_body|0,0,0|0,0,0#ppsh_barrel_rails|wpn_body|0,0,0|0,0,0#ak_muzzle|muzzle|0,0,0.137|0,0,0#tac_mount|muzzle|0,0,0.075|0,0,0
+override_section			=	ppsh_barrel_n_k50m_attributes
+[ppsh_barrel_n_k50m_attributes]
+fire_point = 0, 0, 0.17
+weapon_lenght	=	0.23
+rpm_koeff						= -0.2
+bullet_speed				= 1.04
+k_hit_koeff						= 1.2
+fire_dispersion_base		= 0.13
+zoom_rotate_time = 0.09
+recoil_koeff            = -0.04
+inertia_koeff            = 1.3
+
+[ppsh_barrel_n_up]:ppsh_barrel_n_k50m
+kind  =  ppsh
+inv_ui_sign				= ppsh_barrel_n+
+visual						= w_att_huds\ppsh_barrel_n_up	
+inv_name					= ppsh_barrel_n_up
+inv_name_short			= ppsh_barrel_n_upS
+cost							= 4600
+inv_weight					= 1.05
+inv_grid_x					= 24
+override_section			=	ppsh_barrel_n_up_attributes
+[ppsh_barrel_n_up_attributes]:ppsh_barrel_n_attributes
+weapon_lenght				= 0.23
+recoil_koeff            = -0.06
+inertia_koeff            = 1.3
+
+fire_dispersion_base = 0.15
+k_hit_koeff = 1.15
+fire_point = 0, 0, 0.17
+bullet_speed = 1
+impair_koeff = 1.2
+zoom_rotate_time = 0.1
+[ppsh_barrel_n_short]:ppsh_barrel_n
+kind  =  ppsh
+inv_ui_sign				= ppsh_barrel_n_s
+visual						= w_att_huds\ppsh_barrel_n_short	
+inv_name					= ppsh_barrel_n_short
+inv_name_short			= ppsh_barrel_n_shortS
+cost							= 4050
+inv_weight					= 0.8
+inv_grid_width			= 2
+inv_grid_x					= 27
+1icon_layer = clean2_ico
+attachment_slots		= ppsh_barrel_n_sight|wpn_body|0,0,0|0,0,0#ak_muzzle|muzzle|0,0,0|0,0,0
+override_section = ppsh_barrel_n_short_attributes
+
+[ppsh_barrel_n_short_attributes]
+weapon_lenght = 0.1
+bullet_speed = 0.84
+rpm_koeff = 0.1
+fire_dispersion_base = 0.22
+zoom_rotate_time = 0.05
+recoil_koeff = -0.03
+inertia_koeff = 1.1
+
+[ppsh_barrel_n_short_alt]:ppsh_barrel_n_short
+visual						= w_att_huds\ppsh_barrel_n_short0	
+cost							= 3950
+inv_weight					= 0.75
+inv_grid_x					= 29
+override_section = ppsh_barrel_n_short_alt_attributes
+
+[ppsh_barrel_n_short_alt_attributes]
+weapon_lenght = 0.1
+bullet_speed = 0.84
+rpm_koeff = 0.1
+fire_dispersion_base = 0.22
+zoom_rotate_time = 0.05
+recoil_koeff = -0.03
+inertia_koeff = 1.1
+
+[ppsh_barrel_n_sight_pica]:attachment_base
+kind  =  ppsh
+inv_ui_sign				= ppsh_rail_n
+visual						= w_att_huds\ppsh_barrel_n_sight_pica	
+description				= pica_12_up
+inv_name					= ppsh_barrel_n_sight_pica
+inv_name_short			= ppsh_barrel_n_sight_picaS
+cost							= 900
+inv_weight					= 0.09
+inv_grid_x					= 32
+inv_grid_y					= 25
+attachment_point		= ppsh_barrel_n_sight|0,0,0|0,0,0
+attachment_slots = pica_12|wpn_body|0,0.0927,0.03|0,0,0	
+item_tags =	rail
+override_section = ppsh_barrel_n_sight_pica_attributes
+
+[ppsh_barrel_n_sight_pica_attributes]
+
+[ppsh_barrel_o]:ppsh_barrel_n
+kind  =  ppsh
+inv_ui_sign				= ppsh_barrel_o
+visual						= w_att_huds\ppsh_barrel_o	
+inv_name					= ppsh_barrel_o
+inv_name_short			= ppsh_barrel_oS
+inv_grid_y					= 26
+attachment_slots		= ppsh_barrel_o_sight|wpn_body|0,0,0|0,0,0#ppsh_barrel_rails|wpn_body|0,0,0|0,0,0
+override_section			=	ppsh_barrel_o_attributes
+[ppsh_barrel_o_attributes]:ppsh_barrel_n_attributes 
+impair_koeff = 1.25
+
+[ppsh_barrel_o_up]:ppsh_barrel_o
+kind  =  ppsh
+inv_ui_sign				= ppsh_barrel_o+
+visual						= w_att_huds\ppsh_barrel_o_up	
+inv_name					= ppsh_barrel_o_up
+inv_name_short			= ppsh_barrel_o_upS
+cost							= 4600
+inv_weight					= 1.03
+inv_grid_x					= 21
+attachment_slots		= ppsh_barrel_o_sight|wpn_body|0,0,0|0,0,0#ppsh_barrel_rails|wpn_body|0,0,0|0,0,0#ak_muzzle|muzzle|0,0,0|0,0,0
+override_section			=	ppsh_barrel_o_up_attributes
+
+[ppsh_barrel_o_up_attributes]
+fire_point = 0, 0, 0.17
+bullet_speed = 1
+k_hit_koeff = 1.15
+fire_dispersion_base = 0.15
+zoom_rotate_time = 0.1
+impair_koeff = 1.2
+weapon_lenght = 0.23
+recoil_koeff = -0.06
+inertia_koeff = 1.3
+
+[ppsh_barrel_o_short]:ppsh_barrel_o
+kind  =  ppsh
+inv_ui_sign				= ppsh_barrel_o_s
+visual						= w_att_huds\ppsh_barrel_o_short	
+inv_name					= ppsh_barrel_o_short
+inv_name_short			= ppsh_barrel_o_shortS
+cost							= 4050
+inv_weight					= 0.8
+inv_grid_width			= 2
+inv_grid_x					= 24
+1icon_layer = clean2_ico
+attachment_slots		= ppsh_barrel_o_sight|wpn_body|0,0,0|0,0,0#ak_muzzle|muzzle|0,0,0|0,0,0
+override_section = ppsh_barrel_o_short_attributes
+
+[ppsh_barrel_o_short_attributes]
+weapon_lenght = 0.1
+bullet_speed = 0.84
+rpm_koeff = 0.1
+fire_dispersion_base = 0.22
+zoom_rotate_time = 0.05
+recoil_koeff = -0.04
+inertia_koeff = 1.1
+[ppsh_barrel_o_short_att]
+weapon_lenght				=	0.1
+bullet_speed					= 0.84
+rpm_koeff						= 0.1
+fire_dispersion_base		= 0.22
+zoom_rotate_time = 0.05
+recoil_koeff            = -0.35
+inertia_koeff            = 1.1
+
+[ppsh_barrel_o_sight_pica]:attachment_base
+kind  =  ppsh
+inv_ui_sign				= ppsh_rail_o
+visual						= w_att_huds\ppsh_barrel_o_sight_pica	
+description				= pica_14_up
+inv_name					= ppsh_barrel_o_sight_pica
+inv_name_short			= ppsh_barrel_o_sight_picaS
+cost							= 1000
+inv_weight					= 0.1
+inv_grid_x					= 27
+inv_grid_y					= 26
+attachment_point		= ppsh_barrel_o_sight|0,0,0|0,0,0
+attachment_slots = pica_14|wpn_body|0,0.09122,0.022|0,0,0
+item_tags =	rail
+override_section = ppsh_barrel_o_sight_pica_attributes
+
+[ppsh_barrel_o_sight_pica_attributes]
+
+[ppsh_lower]:attachment_base
+kind  =  ppsh
+inv_ui_sign				= ppsh_lower
+visual						= w_att_huds\ppsh_lower	
+inv_name					= ppsh_lower
+inv_name_short			= ppsh_lowerS
+cost							= 1350
+inv_weight					= 1.05
+inv_grid_width			= 3
+inv_grid_x					= 33
+inv_grid_y					= 25
+attachment_point = ppsh_lower|0,0,0|0,0,0
+attachment_slots = dovetail_mount|wpn_body|-0.00857,0.00517,0.01387|0,0,0
+item_tags =	stock
+override_section = ppsh_lower_attributes
+
+[ppsh_lower_attributes]
+zoom_rotate_time = 0.06
+recoil_koeff = -0.22
+inertia_koeff = 0.6
+weapon_lenght = 0.25
+[ppsh_lower_att]:deagle_grip_carabine_att
+weapon_lenght = 0.25
+
+[ppsh_lower_k50m]:ppsh_lower_grip
+kind  =  ppsh
+inv_ui_sign				= ppsh_lower_k50m
+visual						= w_att_huds\ppsh_lower_k50m	
+inv_name					= ppsh_lower_k50m
+inv_name_short			= ppsh_lower_k50mS
+cost							= 1600
+inv_weight					= 0.65
+inv_grid_height			= 2
+inv_grid_x					= 38
+inv_grid_y					= 25
+override_section			= ppsh_lower_k50m_attributes
+[ppsh_lower_k50m_attributes]:ppsh_lower_grip_attributes
+weapon_lenght = 0.2
+zoom_rotate_time = 0.03
+recoil_koeff            = -0.19
+inertia_koeff          = 0.8
+
+[ppsh_lower_short]:ppsh_lower
+kind  =  ppsh
+inv_ui_sign				= ppsh_lower_s
+visual						= w_att_huds\ppsh_lower_short	
+inv_name					= ppsh_lower_short
+inv_name_short			= ppsh_lower_shortS
+cost							= 700
+inv_weight					= 0.37
+inv_grid_width			= 2
+inv_grid_x					= 36
+override_section = ppsh_lower_short_attributes
+
+[ppsh_lower_short_attributes]
+weapon_lenght = 0.05
+zoom_rotate_time = 0.02
+recoil_koeff = 0.15
+
+[ppsh_lower_grip]:attachment_base
+kind  =  ppsh
+inv_ui_sign				= ppsh_lower_g
+visual						= w_att_huds\ppsh_lower_grip	
+inv_name					= ppsh_lower_grip
+inv_name_short			= ppsh_lower_gripS
+cost							= 900
+inv_weight					= 0.35
+inv_grid_width			= 2
+inv_grid_x					= 33
+inv_grid_y					= 26
+attachment_point		= ppsh_lower|0,0,0|0,0,0
+item_tags =	stock
+override_section = ppsh_lower_grip_attributes
+
+[ppsh_lower_grip_attributes]
+animation_prefix_base = cg_
+recoil_koeff = 0.11
+zoom_rotate_time = 0.01
+
+[ppsh_lower_grip_aks]:ppsh_lower_grip
+kind  =  ppsh
+inv_ui_sign				= ppsh_lower_g+
+visual						= w_att_huds\ppsh_lower_grip_aks	
+inv_name					= ppsh_lower_grip_aks
+inv_name_short			= ppsh_lower_grip_aksS
+cost							= 950
+inv_weight					= 0.33
+inv_grid_x					= 35
+attachment_slots		= aks_stock|wpn_body|0,-0.018,-0.012|0,-12,0
+override_section = ppsh_lower_grip_aks_attributes
+
+[ppsh_lower_grip_aks_attributes]
+animation_prefix_base = cg_
+recoil_koeff = 0.11
+zoom_rotate_time = 0.01
+
+[ppsh_barrel_rails]:attachment_base
+kind  =  ppsh
+inv_ui_sign				= ppsh_rails
+visual						= w_att_huds\ppsh_barrel_rails	
+description				= ar_hg_8
+inv_name					= ppsh_barrel_rails
+inv_name_short			= ppsh_barrel_railsS
+cost							= 900
+inv_weight					= 0.1
+inv_grid_x					= 28
+inv_grid_y					= 26
+attachment_point = ppsh_barrel_rails|0,0,0|0,0,0
+attachment_slots = pica_3|wpn_body|0,0.0377,0.28|0,0,180#pica_8|wpn_body|0,0.0799,0.241|0,0,0#picgrp|wpn_body|0,0.0022,0.081|0,0,0
+item_tags = rail
+override_section = ppsh_barrel_rails_attributes
+
+[ppsh_barrel_rails_attributes]
+
+[mag_wpn_ppsh41_7.62x25_p]:mag_wpn_base,wg_wpn_ppsh41,ag_ammo_7.62x25_p
+inv_ui_sign					= ppsh_35
+visual							= w_att_huds\ppsh_mag_35
+inv_name						= ppsh_mag_35
+inv_name_short				= ppsh_mag_35
+inv_grid_height				= 2
+inv_grid_x						= 37
+inv_grid_y						= 23
+inv_weight						= 0.12
+cost								= 400
+max_mag_size				= 35
+mag_size						= small
+override_section				= mag_wpn_ppsh41_7.62x25_p_attributes
+
+[mag_wpn_ppsh41_7.62x25_p_attributes]
+animation_prefix_mag = 35_
+[ppsh_mag_35_att]
+animation_prefix_mag	=	35_
+
+[mag_wpn_ppsh41_k50m_7.62x25_p]:mag_wpn_ppsh41_7.62x25_p
+inv_ui_sign					= k50m_35
+visual							= w_att_huds\ppsh_mag_35_k50m
+inv_name						= ppsh_mag_35_k50m
+inv_name_short				= ppsh_mag_35_k50mS
+inv_grid_x						= 39
+inv_weight						= 0.115
+override_section = mag_wpn_ppsh41_k50m_7.62x25_p_attributes
+
+[mag_wpn_ppsh41_k50m_7.62x25_p_attributes]
+animation_prefix_mag = 35_
+
+[mag_wpn_ppsh41_71_7.62x25_p]:mag_wpn_ppsh41_7.62x25_p
+inv_ui_sign					= ppsh_71
+visual							= w_att_huds\ppsh_mag_71
+inv_name						= ppsh_mag_71
+inv_name_short				= ppsh_mag_71S
+inv_grid_height				= 2
+inv_grid_x						= 38
+inv_weight						= 1.02
+cost								= 1300
+max_mag_size				= 71
+mag_size						= large
+override_section				= mag_wpn_ppsh41_71_7.62x25_p_attributes
+
+[mag_wpn_ppsh41_71_7.62x25_p_attributes]
+animation_prefix_mag = 71_
+[ppsh_mag_71_att]
+animation_prefix_mag	=	71_

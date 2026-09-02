@@ -10,11 +10,11 @@ spawn_greh
 
 [spawn_monolith]
 spawn_squads =  monolith_sim_squad_veteran, monolith_sim_squad_veteran, monolith_sim_squad_advanced, monolith_sim_squad_sniper
-spawn_num = {+bar_deactivate_radar_done} 3, 0
+spawn_num = 3
 
 [spawn_greh]
-spawn_squads = greh_sim_squad_veteran
-spawn_num = {=is_warfare} 0,{+ms_decisive_blow} 1, {+mortal_sin} 3, 2
+spawn_squads = greh_sim_squad_advanced, greh_sim_squad_veteran
+spawn_num = {=is_warfare} 0,{+ms_decisive_blow} 1, {+mortal_sin} 3, 0
 
 [exclusive]
 gen_greh_sabaoth = generators\gen_greh_sabaoth.ltx

@@ -1,0 +1,291 @@
+--\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ wpn_benelli \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+[1014_zatvor]:attachment_base
+kind  = benelli
+inv_ui_sign				= m4_bolt
+visual							= w_att_huds\1014_zatvor	
+inv_name					= 1014_zatvor
+inv_name_short		= 1014_zatvor
+cost							= 900
+inv_weight				= 0.26
+inv_grid_x					= 26
+inv_grid_y					= 44
+1icon_layer = clean_lub1_ico
+attachment_point	= 1014_zatvor|0,0,0|0,0,0
+attachment_slots	= 1014_barrel|wpn_body|0,0,0|0,0,0
+item_tags	=	zatvor
+override_section = 1014_zatvor_attributes
+
+[1014_zatvor_attributes]
+zoom_rotate_time = 0.06
+rpm = 1000
+
+[1014_barrel_470]:attachment_base
+kind  = benelli
+inv_ui_sign				= m4_47cm
+visual							= w_att_huds\1014_barrel_470	
+inv_name					= 1014_barrel_470
+inv_name_short		= 1014_barrel_470S
+cost							= 4500
+inv_weight				= 0.62
+inv_grid_width			= 3
+inv_grid_x					= 27
+inv_grid_y					= 44
+1icon_layer = clean3_ico
+attachment_point = 1014_barrel|0,0,0|0,0,0
+attachment_slots	= 1014_sights|wpn_body|0,0,0|0,0,0#tubemag|wpn_body|0,0.0269,0.529|0,0,0#1014_hg|wpn_body|0,0,0|0,0,0#choke|muzzle|0,0,0|0,0,0
+item_tags = barrel
+override_section = 1014_barrel_470_attributes
+
+[1014_barrel_470_attributes]
+bullet_speed = 1
+fire_dispersion_base = 3.7
+animation_prefix = cs_
+fire_point = 0, 0, 0.02
+ammo_mag_size = +6
+weapon_lenght = 0.45
+zoom_rotate_time = 0.12
+recoil_koeff = -0.07
+inertia_koeff = 1.7
+[1014_barrel_6_attributes]:12_barrel_470_att
+animation_prefix	= cs_
+fire_point					= 0, 0, 0.02
+ammo_mag_size				= +6
+weapon_lenght				= 0.45
+zoom_rotate_time = 0.12
+recoil_koeff             = -0.23
+inertia_koeff            = 1.7
+
+override_section = 12_barrel_470_att
+[12_barrel_470_att]
+bullet_speed = 1
+fire_dispersion_base = 3.7
+
+[1014_hg]:attachment_base
+kind  = benelli
+inv_ui_sign				= m4_hg
+visual							= w_att_huds\1014_hg	
+inv_name					= 1014_hg
+inv_name_short		= 1014_hg
+cost							= 750
+inv_weight				= 0.24
+inv_grid_width			= 2
+inv_grid_x					= 30
+inv_grid_y					= 44
+attachment_point	= 1014_hg|0,0,0|0,0,0
+item_tags	=	hg
+override_section = 1014_hg_attributes
+
+[1014_hg_attributes]
+animation_prefix = c_
+zoom_rotate_time = -0.08
+recoil_koeff = -0.02
+inertia_koeff = 0.9
+
+[1014_hg_mlok]:1014_hg
+kind  = benelli
+inv_ui_sign				= m4_mlok
+visual							= w_att_huds\1014_hg_mlok	
+description				= 1014_hg_mlok_descr
+inv_name					= 1014_hg_mlok
+inv_name_short		= 1014_hg_mlok
+cost							= 2300
+inv_weight				= 0.28
+inv_grid_x					= 32
+attachment_slots	= mlok_rail_grip|wpn_body|0,-0.0317,0.095|0,0,0#mlok_front|wpn_body|0,0.0691,0.233|0,0,0#mlok|wpn_body|0,0.0691,0.373|0,0,0#mlok|wpn_body|-0.0167,0.0603,0.316|0,0,-60#mlok|wpn_body|0.0167,0.0603,0.316|0,0,60#mlok|wpn_body|-0.0213,0.0445,0.373|0,0,-90#mlok|wpn_body|0.0213,0.0445,0.373|0,0,90#mlok|wpn_body|-0.0172,0.014,0.377|0,0,-120#mlok|wpn_body|0.0172,0.014,0.377|0,0,120
+override_section		= 1014_hg_mlok_attributes
+[1014_hg_mlok_attributes]:c_attributes
+zoom_rotate_time = -0.06
+recoil_koeff            = -0.04
+inertia_koeff           = 0.9
+impair_koeff = 0.9
+	
+[1014_hg_mlok_mi]:1014_hg
+kind  = benelli
+inv_ui_sign				= m4_mlok_l
+visual							= w_att_huds\1014_hg_mlok_mi		
+inv_name					= 1014_hg_mlok_mi
+cost							= 3200
+inv_weight				= 0.28
+inv_grid_x					= 34
+attachment_slots	= mlok_rail_grip|wpn_body|00,-0.0317,0.095|0,0,0#mlok|wpn_body|0,0.0039,0.444|0,0,180#mlok|wpn_body|-0.0201,0.0428,0.387|0,0,-67#mlok|wpn_body|0.0201,0.0428,0.387|0,0,67#mlok|wpn_body|-0.0232,0.0284,0.464|0,0,-90#mlok|wpn_body|0.0232,0.0284,0.464|0,0,90		
+override_section = 1014_hg_mlok_mi_attributes
+
+[1014_hg_mlok_mi_attributes]
+animation_prefix = c_
+zoom_rotate_time = -0.04
+recoil_koeff = -0.06
+inertia_koeff = 0.8
+[1014_hg_mlok_mi_att]:c_attributes
+zoom_rotate_time = -0.04
+recoil_koeff            = -0.16
+inertia_koeff           = 0.8
+
+[1014_hg_tac]:1014_hg
+kind  = benelli
+inv_ui_sign				= m4_hgP
+visual							= w_att_huds\1014_hg_tac	
+description				= pica_3_up3
+inv_name					= 1014_hg_tac
+inv_name_short		= 1014_hg_tacS
+cost							= 4000
+inv_weight				= 0.29
+inv_grid_x					= 36
+attachment_slots	= pica_3|wpn_body|-0.0243,0.0252,0.444|0,0,-90#pica_3|wpn_body|0.0243,0.0252,0.444|0,0,90#pica_3|wpn_body|0,0.0039,0.43|0,0,180#picgrp|wpn_body|0,-0.0316,0.095|0,0,0					
+override_section = 1014_hg_tac_attributes
+
+[1014_hg_tac_attributes]
+animation_prefix = c_
+zoom_rotate_time = 0.01
+recoil_koeff = -0.08
+inertia_koeff = 0.8
+
+[1014_sight_weaver]:attachment_base
+kind  = benelli
+inv_ui_sign				= m4_rail
+visual							= w_att_huds\1014_sight_weaver	
+description				= pica_13_up
+inv_name					= 1014_sight_weaver
+inv_name_short		= 1014_sight_weaverS
+cost							= 1850
+inv_weight				= 0.08
+inv_grid_x					= 34
+inv_grid_y					= 45
+attachment_point	= 1014_sight|0,0,0|0,0,0
+attachment_slots	= pica_13|wpn_body|0,0.0722,0.0843|0,0,0
+item_tags	=	rail
+override_section = 1014_sight_weaver_attributes
+
+[1014_sight_weaver_attributes]
+
+[1014_sight_weaver_2x]:1014_sight_weaver
+kind  = benelli
+inv_ui_sign				= m4_rail+
+visual							= w_att_huds\1014_sight_weaver_2x	
+inv_name					= 1014_sight_weaver_2x
+inv_name_short		= 1014_sight_weaver_2xS
+cost							= 3150
+inv_weight				= 0.11
+inv_grid_x					= 35
+attachment_slots	= pica_13|wpn_body|0,0.0722,0.0843|0,0,0#pica_3|wpn_body|-0.0238,0.0458,0.167|0,0,-90		
+override_section = 1014_sight_weaver_2x_attributes
+
+[1014_sight_weaver_2x_attributes]
+
+[1014_stock_short]:attachment_base
+kind  = benelli
+inv_ui_sign				= m4_stk-
+visual							= w_att_huds\1014_stock_short	
+inv_name					= 1014_stock_short
+inv_name_short		= 1014_stock_shortS
+cost							= 450
+inv_weight				= 0.17
+inv_grid_x					= 25
+inv_grid_y					= 45
+attachment_point	= 1014_stock|0,0,0|0,0,0
+item_tags =	stock
+override_section 	= 1014_stock_short_attributes
+
+[1014_stock_short_attributes]
+weapon_lenght = 0.05
+zoom_rotate_time = 0.01
+recoil_koeff = 0.25
+
+[1014_stock]:attachment_base
+kind  = benelli
+inv_ui_sign				= m4_stk
+visual							= w_att_huds\1014_stock	
+inv_name					= 1014_stock
+inv_name_short		= 1014_stockS
+cost							= 5000
+inv_weight				= 0.54
+inv_grid_width			= 2
+inv_grid_x					= 26
+inv_grid_y					= 45
+attachment_point	= 1014_stock|0,0,0|0,0,0
+item_tags	=	stock
+override_section 	= 1014_stock_attributes
+
+[1014_stock_attributes]
+zoom_rotate_time = 0.04
+recoil_koeff = -0.17
+inertia_koeff = 0.6
+weapon_lenght = 0.3
+[1014_stock_att]:vintorez_stock_strap_att
+weapon_lenght	=	0.3
+
+[1014_stock_grip]:1014_stock
+kind  = benelli
+inv_ui_sign				= m4_stkG
+visual							= w_att_huds\1014_stock_grip	
+inv_name					= 1014_stock_grip
+inv_name_short		= 1014_stock_gripS
+cost							= 7000
+inv_weight				= 0.65
+inv_grid_x					= 28
+override_section 	= 1014_stock_grip_attributes
+[1014_stock_grip_attributes]:cg_attributes
+weapon_lenght = 0.3
+zoom_rotate_time = 0.02
+recoil_koeff            = -0.25
+inertia_koeff          = 0.6
+
+[1014_stock_fold]:1014_stock_grip
+kind  = benelli
+inv_ui_sign				= m4_stkF
+visual							= w_att_huds\1014_stock_fold	
+inv_name					= 1014_stock_fold
+inv_name_short		= 1014_stock_foldS
+cost							= 6000
+inv_weight				= 0.45
+inv_grid_x					= 30
+override_section 	= 1014_stock_fold_attributes
+[1014_stock_fold_attributes]:cg_attributes
+weapon_lenght	=	0.28
+zoom_rotate_time = -0.01
+recoil_koeff            = -0.21
+inertia_koeff          = 0.8
+
+[1014_stock_raven]:1014_stock_grip
+kind  = benelli
+inv_ui_sign				= m4_stkF+
+visual							= w_att_huds\1014_stock_raven	
+inv_name					= 1014_stock_raven
+inv_name_short		= 1014_stock_foldS
+cost							= 8000
+inv_weight				= 0.5
+inv_grid_x					= 32
+override_section 	= 1014_stock_raven_attributes
+[1014_stock_raven_attributes]:cg_attributes
+weapon_lenght = 0.28
+zoom_rotate_time = 0.01
+recoil_koeff            = -0.27
+inertia_koeff          = 0.6
+
+[1014_sights]:attachment_base
+kind  = benelli
+inv_ui_sign				= m4_is
+visual							= w_att_huds\1014_sights	
+inv_name					= 1014_sights
+inv_name_short		= 1014_sightsS
+cost							= 650
+inv_weight				= 0.1
+inv_grid_x					= 36
+inv_grid_y					= 45
+attachment_point	= 1014_sights|0,0,0|0,0,0
+item_tags	=	sights
+override_section = 1014_sights_attributes
+
+[1014_sights_attributes]
+
+[1014_sights_up]:1014_sights
+kind  = benelli
+inv_ui_sign				= m4_is+
+visual							= w_att_huds\1014_sights_up	
+inv_name					= 1014_sights_up
+inv_name_short		= 1014_sights_upS
+cost							= 800
+inv_grid_x					= 37
+override_section = 1014_sights_up_attributes
+
+[1014_sights_up_attributes]

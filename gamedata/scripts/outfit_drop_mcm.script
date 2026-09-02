@@ -1,9 +1,7 @@
 local default_chances = {
     ["_chance"] = 100,
-    ["helmet_light_chance"] = 85,
-    ["helmet_medium_chance"] = 70,
-    ["helmet_heavy_chance"] = 40,
-    ["helmet_exo_chance"] = 25,
+    ["helmet_chance"] = 70,
+    ["helmet_light_chance"] = 70,
     ["outfit_light_chance"] = 70,
     ["outfit_medium_chance"] = 50,
     ["outfit_heavy_chance"] = 30,
@@ -14,15 +12,13 @@ local default_chances = {
 
 function on_mcm_load()
     op = { id= "outfitdrop",sh=true ,gr={
-        {id = "helmet_light_chance", type = "track", val = 2, min=5,max=100,step=1, def = 85},
-        {id = "helmet_medium_chance", type = "track", val = 2, min=5,max=100,step=1, def = 70},
-        {id = "helmet_heavy_chance", type = "track", val = 2, min=5,max=100,step=1, def = 40},
-        {id = "helmet_exo_chance", type = "track", val = 2, min=5,max=100,step=1, def = 25},
-        {id = "outfit_light_chance", type = "track", val = 2, min=5,max=100,step=1, def = 70},
-        {id = "outfit_medium_chance", type = "track", val = 2, min=5,max=100,step=1, def = 50},
-        {id = "outfit_heavy_chance", type = "track", val = 2, min=5,max=100,step=1, def = 30},
-        {id = "outfit_exo_chance", type = "track", val = 2, min=5,max=100,step=1, def = 10},
-        {id = "parts_chance", type = "track", val = 2, min=5,max=100,step=1, def = 70},
+        {id = "helmet_light_chance", type = "track", val = 2, min=0,max=100,step=1, def = 70},
+        {id = "helmet_chance", type = "track", val = 2, min=0,max=100,step=1, def = 30},
+        {id = "outfit_light_chance", type = "track", val = 2, min=0,max=100,step=1, def = 70},
+        {id = "outfit_medium_chance", type = "track", val = 2, min=0,max=100,step=1, def = 50},
+        {id = "outfit_heavy_chance", type = "track", val = 2, min=0,max=100,step=1, def = 30},
+        {id = "outfit_exo_chance", type = "track", val = 2, min=0,max=100,step=1, def = 10},
+        {id = "parts_chance", type = "track", val = 2, min=0,max=100,step=1, def = 80},
         {id = "debug", type = "check", val = 1, def=false},
 
     }
@@ -49,18 +45,6 @@ function death_manager.spawn_cosmetics(npc, npc_id, npc_comm, npc_rank, visual, 
 	local tbl = death_manager.get_outfit_by_npc_visual(visual)
 	local outfit_section = tbl and tbl[1]
 	local helmet_section = tbl and tbl[2]
-  
-  	-- DPH_LOOT_COND
-	local ckey = npc_rank
-
-	if npc:character_community() == "zombied" then
-		ckey = 'zombied'
-	end
-
-	local min_cond = ui_mcm.get('dph_loot_cond/outfit/' .. ckey .. '_min')
-	local max_cond = ui_mcm.get('dph_loot_cond/outfit/' .. ckey .. '_max')
-
-	-- DPH_LOOT_COND END
 
 	-- Spawn patch
 	if ini_sys:section_exist(npc_comm .. "_patch") then
@@ -70,7 +54,7 @@ function death_manager.spawn_cosmetics(npc, npc_id, npc_comm, npc_rank, visual, 
 	-- Spawn outfit
 	local outfit_id
 	if outfit_section and ini_sys:section_exist(outfit_section)  then
-        local condition = math.random(min_cond, max_cond) / 100
+        local condition = rand_condition and (math.random(75,85)/100) or death_manager.get_condition_by_rank(npc_rank, coef)
         if death_manager.validate_drop(outfit_section) then
             outfit_id = death_manager.spawn_with_condition(npc, outfit_section, condition)
         else
@@ -82,7 +66,7 @@ function death_manager.spawn_cosmetics(npc, npc_id, npc_comm, npc_rank, visual, 
 	-- Spawn helmet
 	local helmet_id
 	if helmet_section and ini_sys:section_exist(helmet_section) and  death_manager.validate_drop(helmet_section) then
-		local condition = math.random(min_cond, max_cond) / 100
+		local condition = rand_condition and (math.random(75,85)/100) or death_manager.get_condition_by_rank(npc_rank, coef)
 		helmet_id = death_manager.spawn_with_condition(npc, helmet_section, condition)
 	end
 

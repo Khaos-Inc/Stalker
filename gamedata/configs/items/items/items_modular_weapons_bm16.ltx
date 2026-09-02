@@ -1,0 +1,228 @@
+--\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ wpn_bm16 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+[izh43_barrel_80]:attachment_base
+kind  = izh
+inv_ui_sign				= izh_8cm
+visual						= w_att_huds\izh43_barrel_80	
+inv_name					= izh43_barrel_80
+inv_name_short			= izh43_barrelS
+cost							= 500
+inv_weight					= 0.25
+inv_grid_x         			= 6
+inv_grid_y         			= 46
+1icon_layer = clean1_ico
+attachment_point = izh43_barrel|0,0,0|0,0,0
+attachment_slots = izh43_rear|wpn_body|0,0,0|0,0,0
+item_tags = barrel
+override_section = izh43_barrel_80_attributes
+
+[izh43_barrel_80_attributes]
+fire_point = 0, 0, 0.02
+bullet_speed = 0.59
+k_hit_koeff = 0.75
+fire_dispersion_base = 5.5
+zoom_rotate_time = 0.04
+recoil_koeff = 0.15
+inertia_koeff = 0.8
+
+[izh43_barrel_310]:izh43_barrel_80
+kind  = izh
+inv_ui_sign				= izh_31cm
+visual						= w_att_huds\izh43_barrel_310	
+inv_name					= izh43_barrel_310
+cost							= 1800
+inv_weight					= 0.7
+inv_grid_width			= 2
+inv_grid_x					= 7
+inv_grid_y					= 46
+1icon_layer = clean2_ico
+attachment_slots = izh43_rear|wpn_body|0,0,0|0,0,0#barrel_side|wpn_body|0.048,0.0621,-0.108|0,0,-90
+override_section			= izh43_barrel_310_attributes
+[izh43_barrel_310_attributes]:c_attributes 
+fire_point						= 0, 0, 0.24
+weapon_lenght			=	0.25
+zoom_rotate_time 		= 0.05
+recoil_koeff             	= -0.05
+inertia_koeff            	= 1.3
+bullet_speed				= 0.9
+k_hit_koeff					= 0.95
+fire_dispersion_base	= 4.3
+
+[izh43_barrel_510]:izh43_barrel_310
+kind  = izh
+inv_ui_sign				= izh_51cm
+visual						= w_att_huds\izh43_barrel_510	
+inv_name					= izh43_barrel_510
+cost							= 2600
+inv_weight				= 1.25
+inv_grid_width			= 3
+inv_grid_x				= 9
+1icon_layer = clean3_ico
+attachment_slots = izh43_rear|wpn_body|0,0,0|0,0,0#izh43_front|wpn_body|0,0,0|0,0,0#barrel_side|wpn_body|0.048,0.0621,-0.055|0,0,-90
+override_section	=	izh43_barrel_510_attributes
+
+[izh43_barrel_510_attributes]
+animation_prefix = c_
+bullet_speed = 1.08
+fire_dispersion_base = 3.5
+fire_point = 0, 0, 0.42
+weapon_lenght = 0.45
+zoom_rotate_time = 0.08
+recoil_koeff = -0.07
+inertia_koeff = 1.7
+
+[izh43_barrel_720]:izh43_barrel_510
+kind  = izh
+inv_ui_sign				= izh_72cm
+visual						= w_att_huds\izh43_barrel_720	
+inv_name					= izh43_barrel_720
+cost							= 3200
+inv_weight				= 1.5
+inv_grid_width			= 4
+inv_grid_x				= 12
+1icon_layer = clean4_ico
+override_section	= izh43_barrel_720_attributes
+
+[izh43_barrel_720_attributes]
+animation_prefix = c_
+bullet_speed = 1.23
+k_hit_koeff = 1.15
+fire_dispersion_base = 3.1
+fire_point = 0, 0, 0.63
+weapon_lenght = 0.65
+impair_koeff = 0.85
+zoom_rotate_time = 0.13
+recoil_koeff = -0.1
+inertia_koeff = 2.1
+
+[izh43_patriot_m]:attachment_base
+kind  = izh
+inv_ui_sign				= izh_g12
+visual						= w_att_huds\izh43_patriot_m_g12	
+description				= ar_hg_8
+inv_name					= izh43_patriot_m_g12
+inv_name_short			= izh43_patriot_m_g12S
+cost							= 1200
+inv_weight					= 0.22
+inv_grid_x					= 7
+inv_grid_y					= 47
+attachment_point = izh43_front|0,0,0|0,0,0
+attachment_slots = pica_8|wpn_body|0,0.0871,0.314|0,0,0#pica_3|wpn_body|0,0.03666,0.34|0,0,180
+item_tags	=	rail
+override_section = izh43_patriot_m_attributes
+
+[izh43_patriot_m_attributes]
+zoom_rotate_time = 0.01
+
+[izh43_weaver]:attachment_base
+kind  = izh
+inv_ui_sign				= izh_wc
+visual						= w_att_huds\izh43_weaver_combat	
+description				= pica_5_up
+inv_name					= izh43_weaver_combat
+inv_name_short			= izh43_weaver_combatS
+cost							= 600
+inv_weight					= 0.1
+inv_grid_x					= 11
+inv_grid_y					= 47
+attachment_point		= izh43_rear|0,0,0|0,0,0
+attachment_slots		= pica_5|wpn_body|0,0.08864,0.09|0,0,0
+item_tags	=	rail
+override_section = izh43_weaver_attributes
+
+[izh43_weaver_attributes]
+
+[izh43_patriot_mks]:izh43_weaver
+kind  = izh
+inv_ui_sign				= izh_g12ks
+visual						= w_att_huds\izh43_patriot_m_g12ks	
+description				= pica_8_up
+inv_name					= izh43_patriot_m_g12ks
+inv_name_short			= izh43_patriot_m_g12ksS
+cost							= 1000
+inv_weight					= 0.2
+inv_grid_x					= 8
+attachment_slots		= pica_8|wpn_body|0,0.085365,0.15|0,0,0
+override_section = izh43_patriot_mks_attributes
+
+[izh43_patriot_mks_attributes]
+zoom_rotate_time = 0.01
+
+[izh43_patriot_mk]:izh43_patriot_mks
+kind  = izh
+inv_ui_sign				= izh_g12k
+visual						= w_att_huds\izh43_patriot_m_g12k	
+description				= pica_20_up
+inv_name					= izh43_patriot_m_g12k
+inv_name_short		= izh43_patriot_m_g12kS
+cost							= 1650
+inv_weight				= 0.24
+inv_grid_width			= 2
+inv_grid_x				= 9
+attachment_slots		= pica_20|wpn_body|0,0.085365,0.0854|0,0,0
+override_section 		= izh43_patriot_mk_attributes
+
+[izh43_patriot_mk_attributes]
+zoom_rotate_time = 0.01
+[patriot_klesch_long_att]
+zoom_rotate_time = 0.01
+recoil_koeff            = -0.09
+
+[izh43_stock]:attachment_base
+kind  = izh
+inv_ui_sign				= izh_stock
+visual						= w_att_huds\izh43_stock	
+inv_name					= izh43_stock
+inv_name_short			= izh43_stock
+cost							= 1200
+inv_weight					= 0.65
+inv_grid_width			= 2
+inv_grid_x					= 12
+inv_grid_y					= 47
+attachment_point		= izh43_stock|0,0,0|0,0,0
+item_tags =	stock
+override_section = izh43_stock_attributes
+
+[izh43_stock_attributes]
+weapon_lenght = 0.25
+zoom_rotate_time = 0.07
+recoil_koeff = -0.22
+inertia_koeff = 0.6
+
+[izh43_stock_pro]:izh43_stock
+kind  = izh
+inv_ui_sign				= izh_stock+
+visual						= w_att_huds\izh43_stock_pro	
+inv_name					= izh43_stock_pro
+inv_name_short			= izh43_stock_proS
+cost							= 1900
+inv_weight					= 0.59
+inv_grid_x					= 14
+override_section =	izh43_stock_pro_attributes
+
+[izh43_stock_pro_attributes]
+zoom_rotate_time = 0.03
+recoil_koeff = -0.3
+inertia_koeff = 0.6
+weapon_lenght = 0.3
+[izh43_stock_pro_att]:python_stock_att 
+weapon_lenght = 0.3 
+
+[izh43_stock_short]:izh43_stock
+kind  = izh
+inv_ui_sign				= izh_grp
+visual						= w_att_huds\izh43_stock_short	
+inv_name					= izh43_stock_short
+inv_name_short			= izh43_stock_shortS
+cost							= 400
+inv_weight					= 0.15
+inv_grid_width			= 1
+inv_grid_x					= 16
+inv_grid_y					= 47
+attachment_slots = izh43_stock_short_cut|stock|0,0,0|0,0,0
+override_section = izh43_stock_short_attributes
+
+[izh43_stock_short_attributes]
+weapon_lenght = 0.05
+zoom_rotate_time = 0.02
+recoil_koeff = 0.15

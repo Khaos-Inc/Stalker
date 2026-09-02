@@ -5,6 +5,11 @@ local OPTION_DEFS = {
 	stalker_movement_enabled = { type = "check", val = 1, def = true },
 	mutant_movement_enabled = { type = "check", val = 1, def = true },
 	debug_hud_enabled = { type = "check", val = 1, def = false },
+	squad_dialogue_enabled = { type = "check", val = 1, def = true },
+	squad_travel_paid_enabled = { type = "check", val = 1, def = true },
+	squad_travel_price_multiplier = { type = "track", val = 2, min = 0.1, max = 10, step = 0.1, def = 1 },
+	faction_task_settings_enabled = { type = "check", val = 1, def = false, hint = "zhopa2_faction_task_settings_enabled" },
+	npc_quests_enabled = { type = "check", val = 1, def = true },
 	explore_enabled = { type = "check", val = 1, def = true },
 	populate_enabled = { type = "check", val = 1, def = true },
 	base_camping_enabled = { type = "check", val = 1, def = true },
@@ -16,7 +21,7 @@ local OPTION_DEFS = {
 	revenge_actor_chance = { type = "track", val = 2, min = 0, max = 100, step = 1, def = 10 },
 	artefact_enabled = { type = "check", val = 1, def = true },
 	artefact_offline_enabled = { type = "check", val = 1, def = true },
-	rest_duration_game_hours = { type = "track", val = 2, min = 0.25, max = 6, step = 0.25, def = 0.25 },
+	rest_duration_game_hours = { type = "track", val = 2, min = 0.01, max = 6, step = 0.01, def = 0.25 },
 	patrol_duration_game_hours = { type = "track", val = 2, min = 0.25, max = 6, step = 0.25, def = 1 },
 	rest_fallback_stay_min_sec = { type = "track", val = 2, min = 0, max = 7200, step = 60, def = 900 },
 	rest_fallback_stay_max_sec = { type = "track", val = 2, min = 0, max = 7200, step = 60, def = 1800 },
@@ -32,10 +37,15 @@ local OPTION_DEFS = {
 	stalker_hunt_weight = { type = "track", val = 2, min = 0, max = 100, step = 1, def = 15 },
 	stalker_artefact_weight = { type = "track", val = 2, min = 0, max = 100, step = 1, def = 10 },
 	stalker_trade_weight = { type = "track", val = 2, min = 0, max = 100, step = 1, def = 10 },
+	stalker_quest_weight = { type = "track", val = 2, min = 0, max = 100, step = 1, def = 10 },
 	mutant_hunt_weight = { type = "track", val = 2, min = 0, max = 100, step = 1, def = 35 },
 	mutant_patrol_weight = { type = "track", val = 2, min = 0, max = 100, step = 1, def = 30 },
 	mutant_explore_weight = { type = "track", val = 2, min = 0, max = 100, step = 1, def = 35 },
-	mutant_rest_duration_game_hours = { type = "track", val = 2, min = 0.25, max = 6, step = 0.25, def = 0.25 },
+	geographic_balance_enabled = { type = "check", val = 1, def = true },
+	geographic_balance_mode = { type = "radio_h", val = 2, content = { { 1, "zhopa2_balance_soft" }, { 2, "zhopa2_balance_balanced" }, { 3, "zhopa2_balance_strict" } }, def = 2, force_horz = true },
+	faction_presence_balance_enabled = { type = "check", val = 1, def = true },
+	faction_lore_preferences_enabled = { type = "check", val = 1, def = true },
+	mutant_rest_duration_game_hours = { type = "track", val = 2, min = 0.01, max = 6, step = 0.01, def = 0.25 },
 	mutant_patrol_duration_game_hours = { type = "track", val = 2, min = 0.25, max = 6, step = 0.25, def = 1 },
 	target_sync_enabled = { type = "check", val = 1, def = true },
 	online_intent_enforce_enabled = { type = "check", val = 1, def = true },
@@ -45,17 +55,82 @@ local OPTION_DEFS = {
 	trade_enabled = { type = "check", val = 1, def = true },
 	npc_sell_price_multiplier = { type = "track", val = 2, min = 0, max = 1, step = 0.05, def = 0.2 },
 	service_filler_enabled = { type = "check", val = 1, def = true },
-	loot_enabled = { type = "check", val = 1, def = true },
+	loot_enabled = { type = "check", val = 1, def = false },
 	loot_offline_enabled = { type = "check", val = 1, def = true },
 }
+
+local FACTIONS = {
+	{ id = "stalker", text = "ui_mcm_zhopa2_faction_stalker" },
+	{ id = "csky", text = "ui_mcm_zhopa2_faction_csky" },
+	{ id = "dolg", text = "ui_mcm_zhopa2_faction_dolg" },
+	{ id = "freedom", text = "ui_mcm_zhopa2_faction_freedom" },
+	{ id = "bandit", text = "ui_mcm_zhopa2_faction_bandit" },
+	{ id = "killer", text = "ui_mcm_zhopa2_faction_killer" },
+	{ id = "renegade", text = "ui_mcm_zhopa2_faction_renegade" },
+	{ id = "ecolog", text = "ui_mcm_zhopa2_faction_ecolog" },
+	{ id = "army", text = "ui_mcm_zhopa2_faction_army" },
+	{ id = "monolith", text = "ui_mcm_zhopa2_faction_monolith" },
+	{ id = "isg", text = "ui_mcm_zhopa2_faction_isg" },
+	{ id = "greh", text = "ui_mcm_zhopa2_faction_greh" },
+}
+
+local FACTION_TASK_OPTIONS = {
+	"npc_quests_enabled",
+	"stalker_quest_weight",
+	"explore_enabled",
+	"stalker_explore_weight",
+	"populate_enabled",
+	"stalker_populate_weight",
+	"base_camping_enabled",
+	"patrol_enabled",
+	"stalker_patrol_weight",
+	"night_rest_enabled",
+	"stalker_hunt_enabled",
+	"stalker_hunt_weight",
+	"artefact_enabled",
+	"stalker_artefact_weight",
+	"trade_enabled",
+	"stalker_trade_weight",
+	"revenge_enabled",
+	"revenge_actor_enabled",
+}
+
+local FACTION_GROUPS = {
+	{
+		id = "mode",
+		text = "ui_mcm_zhopa2_group_faction_task_mode",
+		["options"] = {
+			"faction_task_settings_enabled",
+			{ id = "faction_task_settings_note", type = "desc", text = "ui_mcm_zhopa2_faction_task_settings_note", clr = { 210, 210, 210, 255 } },
+		},
+	},
+}
+
+for i = 1, #FACTIONS do
+	local faction = FACTIONS[i]
+	local group = { id = "faction_" .. faction.id, text = faction.text, options = {} }
+	for j = 1, #FACTION_TASK_OPTIONS do
+		local key = FACTION_TASK_OPTIONS[j]
+		local source = OPTION_DEFS[key]
+		local option_key = "faction_" .. faction.id .. "_" .. key
+		local option = {}
+		for field, value in pairs(source) do
+			option[field] = value
+		end
+		option.hint = "zhopa2_faction_task_" .. key
+		OPTION_DEFS[option_key] = option
+		group.options[#group.options + 1] = option_key
+	end
+	FACTION_GROUPS[#FACTION_GROUPS + 1] = group
+end
 
 local PANELS = {
 	{
 		id = "general",
 		text = "ui_mcm_zhopa2_panel_general",
 		["groups"] = {
-			{ id = "core", text = "ui_mcm_zhopa2_group_core", options = { "enabled", "stalker_movement_enabled", "mutant_movement_enabled", "debug_hud_enabled" } },
-			{ id = "systems", text = "ui_mcm_zhopa2_group_systems", options = { "service_filler_enabled", "loot_enabled", "loot_offline_enabled", "artefact_offline_enabled", "trade_enabled", "npc_sell_price_multiplier" } },
+			{ id = "core", text = "ui_mcm_zhopa2_group_core", options = { { id = "update_notice", type = "desc", text = "ui_mcm_zhopa2_general_update_notice", clr = { 255, 210, 120, 255 } }, "enabled", "stalker_movement_enabled", "mutant_movement_enabled", "debug_hud_enabled" } },
+			{ id = "systems", text = "ui_mcm_zhopa2_group_systems", options = { "squad_dialogue_enabled", "squad_travel_paid_enabled", "squad_travel_price_multiplier", "npc_quests_enabled", "service_filler_enabled", "loot_enabled", "loot_offline_enabled", "artefact_offline_enabled", "trade_enabled", "npc_sell_price_multiplier" } },
 			{ id = "story", text = "ui_mcm_zhopa2_group_story", options = { "story_psy_watchdog_enabled", "story_north_migration_enabled", "story_north_migration_percent" } },
 		},
 	},
@@ -64,7 +139,8 @@ local PANELS = {
 		text = "ui_mcm_zhopa2_panel_tasks",
 		["groups"] = {
 			{ id = "roam", text = "ui_mcm_zhopa2_group_roam", options = { "explore_enabled", "populate_enabled", "base_camping_enabled", "patrol_enabled", "night_rest_enabled", "stalker_hunt_enabled", "artefact_enabled" } },
-			{ id = "weights", text = "ui_mcm_zhopa2_group_weights", options = { "stalker_explore_weight", "stalker_populate_weight", "stalker_patrol_weight", "stalker_hunt_weight", "stalker_artefact_weight", "stalker_trade_weight" } },
+			{ id = "balance", text = "ui_mcm_zhopa2_group_balance", options = { "geographic_balance_enabled", "geographic_balance_mode", "faction_presence_balance_enabled", "faction_lore_preferences_enabled" } },
+			{ id = "weights", text = "ui_mcm_zhopa2_group_weights", options = { "stalker_explore_weight", "stalker_populate_weight", "stalker_patrol_weight", "stalker_hunt_weight", "stalker_artefact_weight", "stalker_trade_weight", "stalker_quest_weight" } },
 			{ id = "timing", text = "ui_mcm_zhopa2_group_timing", options = { "rest_duration_game_hours", "patrol_duration_game_hours", "rest_fallback_stay_min_sec", "rest_fallback_stay_max_sec" } },
 			{ id = "targeting", text = "ui_mcm_zhopa2_group_targeting", options = { "target_sync_enabled", "online_intent_enforce_enabled", "revenge_enabled", "revenge_actor_enabled", "revenge_actor_chance", "hunt_offline_combat_enabled", "hunt_offline_combat_interval_sec", "hunt_offline_combat_distance" } },
 		},
@@ -78,6 +154,11 @@ local PANELS = {
 			{ id = "timing", text = "ui_mcm_zhopa2_group_mutants_timing", options = { "mutant_rest_duration_game_hours", "mutant_patrol_duration_game_hours" } },
 		},
 	},
+	{
+		id = "faction_weights",
+		text = "ui_mcm_zhopa2_panel_faction_weights",
+		["groups"] = FACTION_GROUPS,
+	},
 }
 
 local PATH_BY_KEY = {}
@@ -88,7 +169,9 @@ for i = 1, #PANELS do
 		local group = panel.groups[j]
 		for k = 1, #group.options do
 			local key = group.options[k]
-			PATH_BY_KEY[key] = "zhopa2/" .. panel.id .. "/" .. key
+			if type(key) == "string" then
+				PATH_BY_KEY[key] = "zhopa2/" .. panel.id .. "/" .. key
+			end
 		end
 	end
 end

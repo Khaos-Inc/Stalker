@@ -163,8 +163,6 @@ kill_msg_y                               = 0
 kill_msg_width                           = 82
 kill_msg_height                          = 28
 
-snd_reload_empty				                                  = weapons\m16\m16_reload_empty
-snd_reload_misfire				                                  = weapons\m16\m16_misfire
 
 [wpn_m16_hud]:hud_base
 item_visual                              = anomaly_weapons\wpn_m16\wpn_m16_hud.ogf
@@ -174,25 +172,20 @@ zoom_hide_crosshair                      = true
 item_position                            = 0, 0, 0
 item_orientation                         = 0, 0, 0
 
-hands_position                           = -0.065, -0.15, -0.125
-hands_position_16x9                      = -0.065, -0.15, -0.125
-hands_orientation                        = 0, -1, 0.15
-hands_orientation_16x9                   = 0, -1, 0.15
+hands_position                           = -0.05, -0.18, 0.12
+hands_position_16x9                      = -0.05, -0.18, 0.12
+hands_orientation                        = 0, 1, 0
+hands_orientation_16x9                   = 0, 1, 0
 
-aim_hud_offset_pos                       = -0.0845, 0.0265, -0.005
-aim_hud_offset_pos_16x9                  = -0.0845, 0.0265, -0.005
-aim_hud_offset_rot                       = -0.0255, -0.0005, -0.005
-aim_hud_offset_rot_16x9                  = -0.0255, -0.0005, -0.005
+aim_hud_offset_pos                       = -0.09873, 0.054, -0.27
+aim_hud_offset_pos_16x9                  = -0.09873, 0.054, -0.27
+aim_hud_offset_rot                       = 0.00905, -0.00085, -0.0069
+aim_hud_offset_rot_16x9                  = 0.00905, -0.00085, -0.0069
 
-lowered_hud_offset_pos			= 0.05,-0.04,-0.02
-lowered_hud_offset_pos_16x9		= 0.05,-0.04,-0.02
-lowered_hud_offset_rot			= -0.1,-0.6,0.4
-lowered_hud_offset_rot_16x9		= -0.1,-0.6,0.4
-
-gl_hud_offset_pos                        = -0.083, -0.055, -0.07
-gl_hud_offset_pos_16x9                   = -0.083, -0.055, -0.07
-gl_hud_offset_rot                        = -0.1552, -0.004, -0.008
-gl_hud_offset_rot_16x9                   = -0.1552, -0.004, -0.008
+gl_hud_offset_pos                        = -0.09658, -0.1144, -0.27
+gl_hud_offset_pos_16x9                   = -0.09658, -0.1144, -0.27
+gl_hud_offset_rot                        = -0.185, -0.0047, -0.0069
+gl_hud_offset_rot_16x9                   = -0.185, -0.0047, -0.0069
 
 lean_hud_offset_pos                      = 0, 0, 0
 lean_hud_offset_rot                      = 0, 0, 0
@@ -219,12 +212,8 @@ anm_idle_sprint_w_gl                     = m16_sprint_w_gl
 anm_idle_w_gl                            = m16_idle_w_gl
 anm_idle_w_gl_aim                        = m16_aim_w_gl
 anm_reload                               = m16_reload, reload
-anm_reload_empty              			 = m16_reload_empty, reload_empty
-anm_reload_misfire              	     = m16_misfire, misfire
 anm_reload_g                             = m16_reload_g, reload_g
-anm_reload_w_gl         				 = m16_reload_w_gl, reload
-anm_reload_empty_w_gl         			 = m16_reload_empty_w_gl, reload_empty
-anm_reload_misfire_w_gl              	 = m16_misfire_w_gl, misfire
+anm_reload_w_gl                          = m16_reload_w_gl, reload
 anm_shots                                = m16_shoot, shoot
 anm_shots_g                              = m16_shoot_g, shoot_g
 anm_shots_w_gl                           = m16_shoot_w_gl, shoot
@@ -240,7 +229,7 @@ shell_point                              = 0, 0, 0
 
 fire_bone                                = muzzle
 fire_bone2                               = muzzle_gl
-fire_point                               = 0, -0.005, 0
+fire_point                               = 0, 0, 0
 fire_point2                              = 0, 0, 0
 
 freelook_z_offset_mul					 = 0.1
@@ -260,10 +249,10 @@ visual                                   = dynamics\weapons\wpn_m16\wpn_m16_ac10
 [wpn_m16_ac10632_hud]:wpn_m16_hud
 item_visual                              = anomaly_weapons\wpn_m16\wpn_m16_ac10632_hud.ogf
 
-aim_hud_offset_pos                       = -0.0846, 0.025, -0.063
-aim_hud_offset_pos_16x9                  = -0.0846, 0.025, -0.063
-aim_hud_offset_rot                       = -0.016, 0, 0
-aim_hud_offset_rot_16x9                  = -0.016, 0, 0
+aim_hud_offset_pos                       = -0.09873,0.04495,-0.3
+aim_hud_offset_pos_16x9                  = -0.09873,0.04495,-0.3
+aim_hud_offset_rot                       = 0, -0.0008, -0.0125
+aim_hud_offset_rot_16x9                  = 0, -0.0008, -0.0125
 
 ;------------------------------------------------------------------------------------------------
 [wpn_m16_acog]:wpn_m16
@@ -280,20 +269,15 @@ scope_status                             = 0
 scope_zoom_factor                        = 20
 
 zoom_rotate_time                         = 0.25
-use_alt_aim_hud  		         = true
+
 
 [wpn_m16_acog_hud]:wpn_m16_hud,hud_low_interia
 item_visual                              = anomaly_weapons\wpn_m16\wpn_m16_acog_hud.ogf
 
-aim_hud_offset_pos                       = -0.0845, 0.01, -0.002
-aim_hud_offset_pos_16x9                  = -0.0845, 0.01, -0.002
-aim_hud_offset_rot                       = -0.016, -0.001, -0.005
-aim_hud_offset_rot_16x9                  = -0.016, -0.001, -0.005
-
-aim_hud_offset_alt_pos	  		 = -0.0845, 0.0363, 0.05
-aim_hud_offset_alt_pos_16x9 		 = -0.0845, 0.0363, 0.05
-aim_hud_offset_alt_rot			 = -0.0095, -0.001, -0.005
-aim_hud_offset_alt_rot_16x9 		 = -0.0095, -0.001, -0.005
+aim_hud_offset_pos                       = -0.098649, 0.035305, -0.28
+aim_hud_offset_pos_16x9                  = -0.098649, 0.035305, -0.28
+aim_hud_offset_rot                       = 0.006, -0.00075, -0.0125
+aim_hud_offset_rot_16x9                  = 0.006, -0.00075, -0.0125
 
 ;------------------------------------------------------------------------------------------------
 [wpn_m16_eot]:wpn_m16
@@ -310,10 +294,10 @@ visual                                   = dynamics\weapons\wpn_m16\wpn_m16_eot.
 [wpn_m16_eot_hud]:wpn_m16_hud
 item_visual                              = anomaly_weapons\wpn_m16\wpn_m16_eot_hud.ogf
 
-aim_hud_offset_pos                       = -0.0851, 0.029, -0.07
-aim_hud_offset_pos_16x9                  = -0.0851, 0.029, -0.07
-aim_hud_offset_rot                       = -0.0145, 0.0005, 0
-aim_hud_offset_rot_16x9                  = -0.0145, 0.0005, 0
+aim_hud_offset_pos                       = -0.0984,0.0544,-0.3
+aim_hud_offset_pos_16x9                  = -0.0984,0.0544,-0.3
+aim_hud_offset_rot                       = 0.00905, -0.00075, -0.0125
+aim_hud_offset_rot_16x9                  = 0.00905, -0.00075, -0.0125
 
 ;------------------------------------------------------------------------------------------------
 [wpn_m16a2]:wpn_m16
@@ -365,19 +349,18 @@ condition_shot_dec                       = 0.0009
 [wpn_m16a2_hud]:wpn_m16_hud
 item_visual                              = anomaly_weapons\wpn_m16\wpn_m16a2_hud.ogf
 
-hands_position                           = -0.065, -0.15, -0.125
-hands_position_16x9                      = -0.065, -0.15, -0.125
-hands_orientation                        = 0, -1, 0.15
-hands_orientation_16x9                   = 0, -1, 0.15
+hands_position                           = -0.06, -0.18, 0.15
+hands_position_16x9                      = -0.06, -0.18, 0.15
+hands_orientation                        = 0, 1, 0
+hands_orientation_16x9                   = 0, 1, 0
 
-aim_hud_offset_pos                       = -0.0836, 0.0245, 0.01
-aim_hud_offset_pos_16x9                  = -0.0836, 0.0245, 0.01
-aim_hud_offset_rot                       = -0.0165, -0.0003, 0
-aim_hud_offset_rot_16x9                  = -0.0165, -0.0003, 0
+aim_hud_offset_pos                       = -0.08762, 0.0557, -0.3
+aim_hud_offset_pos_16x9                  = -0.08762, 0.0557, -0.3
+aim_hud_offset_rot                       = 0.0184, -0.00065, -0.0075
+aim_hud_offset_rot_16x9                  = 0.0184, -0.00065, -0.0075
 
-gl_hud_offset_pos                        = -0.0865, -0.0205, -0.07
-gl_hud_offset_pos_16x9                   = -0.0865, -0.0205, -0.07
-gl_hud_offset_rot                        = -0.0857, 0.0037, -0.008
-gl_hud_offset_rot_16x9                   = -0.0857, 0.0037, -0.008
+gl_hud_offset_pos                        = -0.0903, -0.057, -0.3
+gl_hud_offset_pos_16x9                   = -0.0903, -0.057, -0.3
+gl_hud_offset_rot                        = -0.103, 0.001, -0.011
+gl_hud_offset_rot_16x9                   = -0.103, 0.001, -0.011
 
-fire_point                               = 0, -0.005, 0

@@ -1,0 +1,293 @@
+--\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\	wpn_pm	\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\--
+[pm_barrel]:attachment_base
+kind  =  pm
+inv_ui_sign				= pm_bar
+visual						= w_att_huds\pm_barrel	
+inv_name					= pm_barrel
+inv_name_short			= pm_barrelS
+cost							= 500
+inv_weight					= 0.1
+inv_grid_x         = 2
+inv_grid_y         = 2
+1icon_layer = clean1_ico
+attachment_point = pm_barrel|0,0,0|0,0,0
+attachment_slots	= pm_spring|zatvor|0,0,0|0,0,0#pm_zatvor|zatvor|0,0,0|0,0,0
+item_tags = barrel
+override_section = pm_barrel_attributes
+
+[pm_barrel_attributes]
+bullet_speed = 0.9
+fire_dispersion_base = 0.24
+zoom_rotate_time = 0.01
+[pm_barrel_att]
+bullet_speed = 0.9
+fire_dispersion_base = 0.24
+zoom_rotate_time = 0.01
+recoil_koeff            = -0.05
+
+[pm_barrel_up]:pm_barrel
+kind  =  pm
+inv_ui_sign				= pm_bar+
+visual						= w_att_huds\pm_barrel_up
+inv_name					= pm_barrel_up
+inv_name_short			= pm_barrel_upS
+cost							= 750
+inv_weight					= 0.1
+inv_grid_x         = 3
+inv_grid_y         = 2
+attachment_slots	=	pm_spring|zatvor|0,0,0|0,0,0#pm_zatvor|zatvor|0,0,0|0,0,0#pm_muzzle|muzzle|0,0,0|0,0,0
+override_section = pm_barrel_up_attributes
+
+[pm_barrel_up_attributes]
+bullet_speed = 0.9
+fire_dispersion_base = 0.24
+zoom_rotate_time = 0.01
+impair_koeff = 1.1
+[pm_barrel_up_att]:pm_barrel_att
+impair_koeff = 1.1
+
+[pm_silencer]:attachment_base
+kind  =  pm
+inv_ui_sign				= pm_sil
+visual						= w_att_huds\pm_silencer
+inv_name					= pm_silencer
+inv_name_short			= pm_silencerS
+cost							= 1250
+inv_weight					= 0.27
+inv_grid_x         = 9
+inv_grid_y         = 2
+attachment_point = pm_muzzle|0,0,0|0,0,0
+item_tags =	muzzle_device
+override_section = pm_silencer_attributes
+[pm_silencer_attributes]:silencer_base_attributes
+weapon_lenght = 0.15
+silencer_status		= 1
+impair_koeff = 1.2
+zoom_rotate_time = 0.02
+recoil_koeff            = -0.1
+inertia_koeff            = 1.1
+
+[pm_spring]:attachment_base
+kind  =  pm
+inv_ui_sign				= pm_spr
+visual						= w_att_huds\pm_spring
+inv_name					= pm_spring
+inv_name_short			= pm_springS
+cost							= 200
+inv_weight					= 0.02
+inv_grid_x         = 9
+inv_grid_y         = 3
+1icon_layer = clean1_ico
+attachment_point = pm_spring|0,0,0|0,0,0
+item_tags = spring
+override_section = pm_spring_attributes
+
+[pm_spring_attributes]
+
+[pm_zatvor]:attachment_base
+kind  =  pm
+inv_ui_sign				= pm_slide
+visual						= w_att_huds\pm_zatvor
+inv_name					= pm_zatvor
+inv_name_short			= pm_zatvorS
+cost							= 700
+inv_weight					= 0.1
+inv_grid_width     = 2
+inv_grid_x         = 11
+inv_grid_y         = 2
+1icon_layer = clean_lub2_ico
+attachment_point = pm_zatvor|0,0,0|0,0,0
+attachment_slots =	zatvor_side|zatvor|0,0.041955,-0.0204|0,0,0
+item_tags = spring,zatvor
+override_section	=	pm_zatvor_attributes
+[pm_zatvor_attributes]
+zoom_rotate_time = 0.06
+rpm = 1000
+impair_koeff = 0.95
+
+[pm_grip]:attachment_base
+kind  =  pm
+inv_ui_sign				= pm_pg
+visual						= w_att_huds\pm_grip
+inv_name					= pm_grip
+inv_name_short			= pm_gripS
+cost							= 250
+inv_weight					= 0.08
+inv_grid_x         = 2
+inv_grid_y         = 3
+attachment_point	=	pm_grip|0,0,0|0,0,0
+override_section = pm_grip_attributes
+
+[pm_grip_attributes]
+zoom_rotate_time = -0.02
+
+[pm_grip_up]:pm_grip
+kind  =  pm
+inv_ui_sign				= pm_pg+
+visual						= w_att_huds\pm_grip_up
+inv_name					= pm_grip_up
+inv_name_short			= pm_grip_upS
+cost							= 400
+inv_weight					= 0.09
+inv_grid_x         = 3
+item_tags = pgrip
+override_section = pm_grip_up_attributes
+
+[pm_grip_up_attributes]
+zoom_rotate_time = -0.05
+
+[pm_rail]:attachment_base
+kind  =  pm
+inv_ui_sign				= pm_rail
+visual						= w_att_huds\pm_rail
+description				= pistol_railD
+inv_name					= pm_rail
+inv_name_short			= pm_railS
+cost							= 400
+inv_weight					= 0.07
+inv_grid_x         = 4
+inv_grid_y         = 3
+attachment_point	=	pm_rail|0,0,0|0,0,0
+attachment_slots	=	pica_3|wpn_body|0,0.0027,0.078|0,0,180#usmount|wpn_body|0,0.0027,0.063|0,0,0 	;конфликт с Кобальтом 
+item_tags = rail
+override_section = pm_rail_attributes
+
+[pm_rail_attributes]
+
+[pm_laser]:attachment_base
+kind  =  pm
+inv_ui_sign				= pm_laser
+visual						= w_att_huds\pm_laser
+inv_name					= pm_laser
+inv_name_short		= pm_laserS
+cost 						= 900
+inv_weight 				= 0.08
+inv_grid_x         		= 4
+inv_grid_y         		= 1
+attachment_point	= pm_rail|0,0,0|0,0,0
+is_torch_laser                  = true
+is_torch                  = false
+laser_section             = tactical_laser_red
+laser_bone         = laser
+laser_bone_axis    = y
+laser_bone_invert  = false
+1icon_layer = red_laser_ico
+item_tags 				= rail
+override_section = pm_laser_attributes
+
+[pm_laser_attributes]
+
+[mag_wpn_pm_9x18_fmj]:mag_wpn_base,wg_wpn_pm,ag_ammo_9x18_fmj
+inv_ui_sign					= pm_mg8
+visual							= w_att_huds\pm_mag
+inv_name						= pm_mag
+inv_name_short				= pm_magS
+inv_grid_x         = 4
+inv_grid_y         = 2
+inv_weight						= 0.07
+cost								= 250
+max_mag_size = 8
+mag_size						= small
+override_section				=	mag_wpn_pm_9x18_fmj_attributes
+
+[mag_wpn_pm_9x18_fmj_attributes]
+animation_prefix_mag = 8_
+[pm_mag_attributes]
+animation_prefix_mag			=	8_
+
+[mag_wpn_pb_9x18_fmj]:mag_wpn_pm_9x18_fmj
+
+[mag_wpn_pm_20_9x18_fmj]:mag_wpn_pm_9x18_fmj
+inv_ui_sign					= pm_mg20
+visual							= w_att_huds\pm_mag20
+inv_name						= pm_mag20
+inv_name_short				= pm_mag20S
+inv_grid_height    = 2
+inv_grid_x         = 5
+inv_grid_y         = 2
+inv_weight						= 0.14
+cost								= 500
+max_mag_size = 20
+mag_size						= small
+override_section				=	mag_wpn_pm_20_9x18_fmj_attributes
+
+[mag_wpn_pm_20_9x18_fmj_attributes]
+animation_prefix_mag = 20_
+[pm_mag20_attributes]
+animation_prefix_mag			=	20_
+[mag_wpn_pm_20r_9x18_fmj]:mag_wpn_pm_20_9x18_fmj
+visual							= w_att_huds\pm_mag20r
+inv_grid_x         = 6
+override_section = mag_wpn_pm_20r_9x18_fmj_attributes
+
+[mag_wpn_pm_20r_9x18_fmj_attributes]
+animation_prefix_mag = 20_
+
+[mag_wpn_pm_75_9x18_fmj]:mag_wpn_pm_9x18_fmj
+inv_ui_sign					= pm_mg75
+visual							= w_att_huds\pm_mag75
+inv_name						= pm_mag75
+inv_name_short				= pm_mag75S
+inv_grid_height    = 2
+inv_grid_x         = 7
+inv_grid_y         = 2
+inv_weight						= 1.05
+cost								= 1550
+max_mag_size = 81
+override_section				=	mag_wpn_pm_75_9x18_fmj_attributes
+
+[mag_wpn_pm_75_9x18_fmj_attributes]
+animation_prefix_mag = 75_
+[pm_mag75_attributes]
+animation_prefix_mag			=	75_
+
+--\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\	wpn_pmm	\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\--
+
+[pmm_zatvor]:pm_zatvor
+kind  =  pm
+inv_ui_sign				= pmm_sli
+visual						= w_att_huds\pmm_zatvor
+inv_name					= pmm_zatvor
+inv_name_short			= pmm_zatvorS
+cost							= 800
+inv_weight					= 0.14
+inv_grid_width     = 2
+inv_grid_x         = 9
+inv_grid_y         = 1
+item_tags =	zatvor
+override_section	=	pmm_zatvor_attributes
+[pmm_zatvor_attributes]
+zoom_rotate_time = 0.07
+rpm = 1000
+impair_koeff = 0.85
+
+[pmm_grip]:attachment_base
+kind  =  pm
+inv_ui_sign				= pmm_pg
+visual						= w_att_huds\pmm_grip
+inv_name					= pmm_grip
+inv_name_short			= pmm_gripS
+cost							= 300
+inv_weight					= 0.1
+inv_grid_x         = 9
+inv_grid_y         = 0
+attachment_point	=	pmm_grip|0,0,0|0,0,0
+override_section = pmm_grip_attributes
+
+[pmm_grip_attributes]
+zoom_rotate_time = -0.05
+recoil_koeff = -0.06
+
+[mag_wpn_pmm_9x18_fmj]:mag_wpn_pm_9x18_fmj,wg_wpn_pmm,ag_ammo_9x18_fmj
+inv_ui_sign					= pmm_12
+visual							= w_att_huds\pmm_mag
+inv_name						= pmm_mag
+inv_name_short				= pmm_magS
+inv_grid_x         = 10
+inv_grid_y         = 0
+inv_weight						= 0.08
+cost								= 300
+max_mag_size = 12
+override_section				=	mag_wpn_pmm_9x18_fmj_attributes
+[mag_wpn_pmm_9x18_fmj_attributes]
+animation_prefix_mag = 8_

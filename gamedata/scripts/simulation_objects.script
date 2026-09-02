@@ -232,19 +232,19 @@ function is_on_the_nearby_level(se_obj_1, se_obj_2) -- linked and linked to link
 	end
 	
 	if (obj1_level == obj2_level) then
-		return true
+		return false
 	end
 
 	if string.find(config:r_value(obj1_level,"target_maps",0,""),obj2_level) then
 		return true
 	end
 	
---	local linked_levels = parse_list(config,obj1_level,"target_maps")
---	for i=1,#linked_levels do
---		if string.find(config:r_value(linked_levels[i],"target_maps",0,""),obj2_level) then
---			return true
---		end
---	end
+	local linked_levels = parse_list(config,obj1_level,"target_maps")
+	for i=1,#linked_levels do
+		if string.find(config:r_value(linked_levels[i],"target_maps",0,""),obj2_level) then
+			return true
+		end
+	end
 	
 	return false
 end

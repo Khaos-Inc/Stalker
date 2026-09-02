@@ -1,0 +1,26 @@
+![logic@merc_pri_a18_mech_mlr]
+on_combat = re_combat
+
+![logic@pri_special_trader_mlr]
+on_combat = re_combat
+
+![logic@merc_pri_grifon_mlr]
+on_combat = re_combat
+
+![logic@pri_a18_smart_terrain_camp_work_1]
+on_combat = re_combat
+
+![logic@pri_a18_smart_terrain_camp_work_2]
+on_combat = re_combat
+
+![logic@pri_a18_smart_terrain_camp_work_3]
+on_combat = re_combat
+
+![logic@pri_a18_smart_terrain_camp_work_4]
+on_combat = re_combat
+
+;[logic@pri_a18_smart_terrain_camp_work_5]
+;on_combat = re_combat
+
+[re_combat]
+combat_type = {=cond_scheme_cover_dumb()} cover, {=cond_scheme_camper_dumb()} camper, {=cond_scheme_cover_coward()} cover, {=cond_scheme_camper_coward()} camper, {=cond_scheme_stupid()} monolith

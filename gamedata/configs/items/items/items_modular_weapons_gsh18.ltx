@@ -1,0 +1,166 @@
+--\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ wpn_gsh18 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+[gsh18_trigger]:attachment_base
+kind  =  gsh
+inv_ui_sign				= gsh_trig
+visual						= w_att_huds\gsh18_trigger	
+inv_name					= gsh18_trigger
+inv_name_short			= gsh18_triggerS
+cost							= 950
+inv_weight					= 0.06
+inv_grid_x         = 3
+inv_grid_y         = 31
+1icon_layer = clean_lub1_ico
+attachment_point = gsh18_trigger|0,0,0|0,0,0
+attachment_slots	=	gsh18_barrel|muzzle|0,0,0|0,0,0#hpsa_spring|zatvor|0,-0.003,-0.03|0,0,0
+item_tags =	trigger
+override_section = gsh18_trigger_attributes
+
+[gsh18_trigger_attributes]
+
+[gsh18_trigger_up]:gsh18_trigger
+kind  =  gsh
+inv_ui_sign				= gsh_trg+
+visual						= w_att_huds\gsh18_trigger_up	
+inv_name					= gsh18_trigger_up
+inv_name_short			= gsh18_trigger_upS
+cost							= 3250
+inv_grid_y         = 32
+is_torch_laser                  = true
+is_torch                  = false
+laser_section             = tactical_laser_red
+laser_bone         = laser
+laser_bone_axis    = y
+laser_bone_invert  = false
+1icon_layer = red_laser_ico
+override_section = gsh18_trigger_up_attributes
+
+inv_weight = 0.06
+[gsh18_trigger_up_attributes]
+
+[gsh18_barrel]:attachment_base
+kind  =  gsh
+inv_ui_sign				= gsh_bar
+visual						= w_att_huds\gsh18_barrel	
+inv_name					= gsh18_barrel
+inv_name_short			= gsh18_barrel
+cost							= 850
+inv_weight					= 0.08
+inv_grid_x         = 2
+inv_grid_y         = 31
+1icon_layer = clean1_ico
+attachment_point = gsh18_barrel|0,0,0|0,0,0
+attachment_slots	=	gsh18_zatvor|zatvor|0,0,0|0,0,0
+item_tags =	barrel
+override_section = gsh18_barrel_attributes
+
+[gsh18_barrel_attributes]
+bullet_speed = 1.03
+k_hit_koeff = 1.05
+fire_dispersion_base = 0.23
+zoom_rotate_time = 0.01
+recoil_koeff = -0.08
+[gsh18_barrel_att]
+bullet_speed				= 1.03
+k_hit_koeff						= 1.05
+fire_dispersion_base		= 0.23
+zoom_rotate_time = 0.01
+recoil_koeff            = -0.08
+
+[gsh18_barrel_up]:gsh18_barrel
+kind  =  gsh
+inv_ui_sign				= gsh_bar+
+visual						= w_att_huds\gsh18_barrel_up	
+inv_name					= gsh18_barrel_up
+inv_name_short			= gsh18_barrel_up
+cost							= 2050
+inv_weight					= 0.09
+inv_grid_y         = 32
+attachment_slots	=	gsh18_zatvor|zatvor|0,0,0|0,0,0#9mm_muzzle|muzzle|0,0,0|0,0,0
+override_section = gsh18_barrel_up_attributes
+
+[gsh18_barrel_up_attributes]
+bullet_speed = 1.03
+k_hit_koeff = 1.05
+fire_dispersion_base = 0.23
+zoom_rotate_time = 0.01
+recoil_koeff = -0.1
+impair_koeff = 1.1
+[gsh18_barrel_up_att]:gsh18_barrel_att
+impair_koeff = 1.1
+
+[gsh18_zatvor]:attachment_base
+kind  =  gsh
+inv_ui_sign				= gsh_slide
+visual						= w_att_huds\gsh18_zatvor
+inv_name					= gsh18_zatvor
+inv_name_short			= gsh18_zatvor
+cost							= 950
+inv_weight					= 0.1
+inv_grid_width     = 2
+inv_grid_x         = 6
+inv_grid_y         = 32
+1icon_layer = clean_lub2_ico
+attachment_point = gsh18_zatvor|0,0,0|0,0,0
+attachment_slots =	zatvor_side|zatvor|0,0.03758,-0.0247|0,0,0
+item_tags =	zatvor
+override_section = gsh18_zatvor_attributes
+
+[gsh18_zatvor_attributes]
+zoom_rotate_time = 0.09
+rpm = 900
+impair_koeff = -0.85
+[gsh18_zatvor_att]
+zoom_rotate_time = 0.09
+rpm = 900
+impair_koeff = -0.85
+
+[gsh18_rail]:attachment_base
+kind  =  gsh
+inv_ui_sign				= gsh_rail
+visual						= w_att_huds\gsh18_rail
+description				= pistol_railD
+inv_name					= gsh18_rail
+inv_name_short			= gsh18_railS
+cost							= 1450
+inv_weight					= 0.05
+inv_grid_x         = 5
+inv_grid_y         = 32
+attachment_point		=	gsh18_rail|0,0,0|0,0,0
+attachment_slots =	pica_3|wpn_body|0,-0.00459,0.0835|0,0,180#usmount|wpn_body|0,-0.00459,0.078|0,0,0		
+item_tags	=	rail
+override_section = gsh18_rail_attributes
+
+[gsh18_rail_attributes]
+
+[mag_wpn_gsh18_9x19_fmj]:mag_wpn_base,wg_wpn_gsh18,ag_ammo_9x19_fmj
+inv_ui_sign					= gsh_18
+visual							= w_att_huds\gsh18_mag
+inv_name						= gsh18_mag
+inv_name_short				= gsh18_mag
+inv_grid_x         = 6
+inv_grid_y         = 31
+inv_weight						= 0.06
+cost								= 300
+max_mag_size				= 18
+mag_size						= small
+override_section				=	mag_wpn_gsh18_9x19_fmj_attributes
+
+[mag_wpn_gsh18_9x19_fmj_attributes]
+animation_prefix_mag = 17_
+
+[mag_wpn_gsh18_35_9x19_fmj]:mag_wpn_gsh18_9x19_fmj
+inv_ui_sign					= gsh_35
+visual							= w_att_huds\gsh18_mag35
+inv_name						= gsh18_mag35
+inv_name_short				= gsh18_mag35S
+inv_grid_height    = 2
+inv_grid_x         = 8
+inv_grid_y         = 31
+inv_weight						= 0.11
+cost								= 600
+max_mag_size				= 35
+override_section				=	mag_wpn_gsh18_35_9x19_fmj_attributes
+
+[mag_wpn_gsh18_35_9x19_fmj_attributes]
+animation_prefix_mag = 33_

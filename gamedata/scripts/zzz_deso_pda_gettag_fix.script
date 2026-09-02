@@ -1,0 +1,31 @@
+-- Deso 0.3 PDA fast-travel CTD fix.
+--
+-- The modded_exes gamedata (db/mods/00_modded_exes_gamedata.db0, updated by Deso
+-- 0.3) ships a callbacks_gameobject.script that overrides pda.property_box_clicked
+-- to forward the clicked list item's u32 tag as a 5th arg:
+--     ... prop, list_item:GetTAG())
+-- That CUIListBoxItem:GetTAG binding only exists in the newer themrdemonized
+-- modded-exes engine. Desolation's own compiled exe (Deso_new_age_compile_test)
+-- does NOT implement it, so picking any PDA map-spot context-menu property (e.g.
+-- right-click a bed -> fast travel) crashes:
+--     callbacks_gameobject.script:277: attempt to call method 'GetTAG' (a nil value)
+--
+-- Fix: re-declare pda.property_box_clicked with the GetTAG call guarded. If the
+-- engine exposes GetTAG we still forward the tag (forward-compatible); otherwise we
+-- pass nil, which equals the long-standing vanilla 4-arg behaviour that single-spot
+-- fast travel always used. on_game_start runs after every script has loaded, so this
+-- reliably wins over the db version, and re-assigning the pda TABLE field is picked
+-- up by the engine's call-time lookup.
+
+function on_game_start()
+	pda.property_box_clicked = function(property_ui)
+		local list_item = property_ui:GetSelectedItem()
+		if not list_item then
+			return
+		end
+		local prop = list_item:GetTextItem():GetText()
+		local tag = list_item.GetTAG and list_item:GetTAG() or nil
+		SendScriptCallback("map_spot_menu_property_clicked", property_ui,
+			pda.map_spot_property.id, pda.map_spot_property.level_name, prop, tag)
+	end
+end

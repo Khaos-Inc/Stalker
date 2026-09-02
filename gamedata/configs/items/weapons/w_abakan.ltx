@@ -1,46 +1,97 @@
-;==============================================================================	
-[wpn_abakan]:wpn_abakan_n
-parent_section		= wpn_abakan
-hud					= wpn_abakan_n_hud
-[wpn_abakan_kobra]:wpn_abakan
-parent_section		= wpn_abakan
-hud					= wpn_abakan_n_kobra_hud
-[wpn_abakan_1p76]:wpn_abakan_n_1p76
-parent_section		= wpn_abakan
-hud					= wpn_abakan_n_1p76_hud
-[wpn_abakan_ekp8_02]:wpn_abakan_n_ekp8_02
-parent_section		= wpn_abakan
-hud					= wpn_abakan_n_ekp8_02_hud
-[wpn_abakan_okp]:wpn_abakan_n_okp
-parent_section		= wpn_abakan
-hud					= wpn_abakan_n_okp_hud
-[wpn_abakan_pka]:wpn_abakan_n_pka
-parent_section		= wpn_abakan
-hud					= wpn_abakan_n_pka_hud
-[wpn_abakan_1p63]:wpn_abakan_n_1p63
-parent_section		= wpn_abakan
-hud					= wpn_abakan_n_1p63_hud
-[wpn_abakan_usp1]:wpn_abakan_n_usp1
-parent_section		= wpn_abakan
-hud					= wpn_abakan_n_usp1_hud
-[wpn_abakan_1p29]:wpn_abakan_n_1p29
-parent_section		= wpn_abakan
-hud					= wpn_abakan_n_usp1_hud
-[wpn_abakan_pso2]:wpn_abakan_n_pso2
-parent_section		= wpn_abakan
-hud					= wpn_abakan_n_pso2_hud
-[wpn_abakan_1p78gs]:wpn_abakan_n_1p78gs
-parent_section		= wpn_abakan
-hud					= wpn_abakan_n_1p78gs_hud
-[wpn_abakan_1pn93n2_1gs]:wpn_abakan_n_1pn93n2_1gs
-parent_section		= wpn_abakan
-hud					= wpn_abakan_n_1pn93n2_1gs_hud
-[wpn_abakan_1pn93]:wpn_abakan_n_1pn93
-parent_section		= wpn_abakan
-hud					= wpn_abakan_n_1pn93_hud
-[wpn_abakan_1p59]:wpn_abakan_n_1p59
-parent_section		= wpn_abakan
-hud					= wpn_abakan_n_1p59_hud
-[wpn_abakan_pso1m21]:wpn_abakan_n_pso1m21
-parent_section		= wpn_abakan
-hud					= wpn_abakan_n_pso1m21_hud
+[wpn_abakan]:wpn_ak74
+GroupControlSection	= spawn_group
+$spawn						= "weapons\abakan"
+parent_section			= wpn_abakan
+inv_grid_x         			= 0
+inv_grid_y         			= 22
+inv_name						= wpn_type88
+inv_name_short			= wpn_type88
+description					= wpn_type88D
+cost								= 120000
+visual                  			= w_att_huds\wpn_abakan.ogf
+ph_mass						= 6
+ammo_mag_size			= 110
+bullet_speed = 1;				= 870
+fire_dispersion_base		= 0.1
+hud								= wpn_type88_hud
+weapon_lenght			=	0.6
+required_tags_shoot	= trigger,zatvor
+
+zoom_rotate_time = 0.2
+required_tags_cycle					= spring
+attachment_slots 		= slot_magazin|magazin|0,0,0|0,0,0#ak_trigger|wpn_body|0,0,0|0,0,0#74_zatvor|zatvor|0,0,0|0,0,0#ak_hg_up|wpn_body|0,0,0|0,0,0#74_front_sight_block|wpn_body|0,0,0|0,0,0#ak_rear_sight|wpn_body|0,0,0|0,0,0#ak_barrel_rod|wpn_body|0,0,0|0,0,0#ak_cover|wpn_body|0,0,0|0,0,0#tac_mount|wpn_body|0,0.045278,0.375|0,0,0#ak_grip|wpn_body|0,0,0|0,0,0#ak_stock_ad|wpn_body|0,0,0|0,0,0#dovetail_mount|wpn_body|0,0,0|0,0,0#ak_spring|wpn_body|0,0,0|0,0,0
+ui_render_cam_offset 				= 0.22, -0.1, 1.0
+
+inv_icon_padding  = 1.5
+inv_icon_offset_x = -0.1
+inv_icon_offset_y = 0.5
+
+positive X = move right
+negative X = move left
+positive Y = move up
+negative Y = move down
+
+additional_sounds		= ak100_additional_sounds
+[ak100_additional_sounds]:ak_additional_sounds
+snd_75_mag_in 			= weapons\main\ak_75_mag_in_plm
+
+[wpn_type88_hud]:wpn_ak_hud
+item_visual                 = w_att_huds\wpn_abakan_hud.ogf
+anm_reload_p1_sounds					= 0,snd_75_move_out|8,snd_75_mag_out
+anm_reload_p2_sounds		 			= 0,snd_75_move_in|16,snd_75_mag_in
+anm_reload_empty_p1_sounds		= 0,snd_75_move_out|8,snd_75_mag_out
+anm_reload_empty_p2_sounds 		= 0,snd_75_move_in_empty|16,snd_75_mag_in|53,snd_charging_handle
+100_anm_reload_misfire_sounds		= 0,snd_move_unjam|13,snd_charging_handle
+100_anm_switch_mode_sounds			= 0,snd_move_selector|10,snd_selector_down
+100_anm_reload_p1_sounds				= 0,snd_75_move_out|8,snd_75_mag_out
+100_anm_reload_p2_sounds		 		= 0,snd_75_move_in|16,snd_75_mag_in
+100_anm_reload_empty_p1_sounds	= 0,snd_75_move_out|8,snd_75_mag_out
+100_anm_reload_empty_p2_sounds 	= 0,snd_75_move_in_empty|16,snd_75_mag_in|53,snd_charging_handle
+100_anm_mag_check_sounds				= 0,snd_move_long|13,snd_75_mag_out|65,snd_75_mag_in
+100_anm_mag_check_empty_sounds	= 0,snd_move_long|13,snd_75_mag_out|65,snd_75_mag_in
+
+anm_mag_check						= ak_m_check_100, check, 1.4
+anm_mag_check_empty			= ak_m_check_100, check_empty, 1.4
+
+anm_bore                          			= ak_c_bore, idle
+anm_hide									= ak_c_holster_e, idle
+anm_show									= ak_c_show_e, idle
+anm_idle										= ak_c_idle, idle
+anm_idle_aim								= ak_c_idle_aim, idle
+anm_idle_aim_moving				= ak_c_walk_aim, idle
+anm_idle_aim_moving_crouch	= ak_c_walk_aim, idle
+anm_idle_moving						= ak_c_walk, idle
+anm_idle_moving_crouch			= ak_c_walk, idle
+anm_shots									= ak_c_shoot, shoot
+anm_reload_misfire						= ak_c_unjam, unjam
+anm_switch_mode						= ak_c_firemode, firemode
+anm_idle_sprint							= ak_c_idle_sprint, idle
+anm_mag_check							= ak_c_check, check, 1.4
+anm_mag_check_empty				= ak_c_check, check_empty, 1.4
+anm_reload										= ak_m_reload_100_p1, reload_p1, 1.1
+anm_reload_p1								= ak_m_reload_100_p1, reload_p1, 1.1
+anm_reload_p2								= ak_m_reload_100_p2, reload_p2, 1.1
+anm_reload_empty							= ak_m_reload_100_p1, reload_empty_p1, 1.1
+anm_reload_empty_p1					= ak_m_reload_100_p1, reload_empty_p1, 1.1
+anm_reload_empty_p2					= ak_m_reload_100e_p2, reload_empty_p2, 1.1
+100_anm_bore                          		= ak_m_bore_100, idle
+100_anm_hide									= ak_m_holster_100e, idle
+100_anm_show								= ak_m_show_100e, idle
+100_anm_idle									= ak_m_idle_100, idle
+100_anm_idle_aim							= ak_m_idle_aim_100, idle
+100_anm_idle_aim_moving				= ak_m_walk_aim_100, idle
+100_anm_idle_aim_moving_crouch	= ak_m_walk_aim_100, idle
+100_anm_idle_moving					= ak_m_walk_100, idle
+100_anm_idle_moving_crouch		= ak_m_walk_100, idle
+100_anm_shots								= ak_m_shoot_100, shoot
+100_anm_reload_misfire					= ak_m_unjam_100, unjam
+100_anm_switch_mode					= ak_m_firemode_100, idle
+100_anm_idle_sprint						= ak_m_idle_sprint_100, idle, 1.1
+100_anm_reload							= ak_m_reload_100_p1, reload_p1, 1.1
+100_anm_reload_p1					= ak_m_reload_100_p1, reload_p1, 1.1
+100_anm_reload_p2					= ak_m_reload_100_p2, reload_p2, 1.1
+100_anm_reload_empty				= ak_m_reload_100_p1, reload_empty_p1, 1.1
+100_anm_reload_empty_p1		= ak_m_reload_100_p1, reload_empty_p1, 1.1
+100_anm_reload_empty_p2		= ak_m_reload_100e_p2, reload_empty_p2, 1.1
+100_anm_mag_check					= ak_m_check_100, check, 1.4
+100_anm_mag_check_empty		= ak_m_check_100, check_empty, 1.4

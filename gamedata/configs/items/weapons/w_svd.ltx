@@ -1,41 +1,368 @@
-[wpn_svd]:wpn_svd_m1
-parent_section	= wpn_svd
-[wpn_svd_1p29]:wpn_svd_m1_1p29
-parent_section	= wpn_svd
-[wpn_svd_usp1]:wpn_svd_m1_1p29
-parent_section	= wpn_svd
-[wpn_svd_1p59]:wpn_svd_m1_1p59
-parent_section	= wpn_svd
-[wpn_svd_ps01]:wpn_svd_m1_ps01
-parent_section	= wpn_svd
-[wpn_svd_pso2]:wpn_svd_m1_pso2
-parent_section	= wpn_svd
-[wpn_svd_pso1m21]:wpn_svd_m1_pso1m21
-parent_section	= wpn_svd
-[wpn_svd_1p78gs]:wpn_svd_m1_1p78gs
-parent_section	= wpn_svd
-[wpn_svd_1pn93]:wpn_svd_m1_1pn93
-parent_section	= wpn_svd
-[wpn_svd_1pn93n2_1gs]:wpn_svd_m1_1pn93n2_1gs
-parent_section	= wpn_svd
+[wpn_svd]:wpn_vpo123,wpn_svd_sounds
+GroupControlSection		= spawn_group
+$spawn							= "weapons\svd"
+inv_grid_x					= 19
+inv_grid_y					= 22
+inv_name						= wpn_svd
+inv_name_short			= wpn_svd
+description					= wpn_svd_descr
+inv_weight					= 1.1
+cost								= 75000
+npc_rpm  = 450
+ammo_mag_size			= 10
+required_tags_shoot	= barrel,trigger,zatvor
+required_tags_cycle		= spring
+zoom_rotate_time = 0.15
+attachment_slots			=	slot_magazin|magazin|0,0,0|0,0,0#svd_trigger|wpn_body|0,0,0|0,0,0#svd_rear|wpn_body|0,0,0|0,0,0#svd_stock|wpn_body|0,0,0|0,0,0#svd_zatvor|zatvor|0,0,0|0,0,0#dovetail_side|wpn_body|0.00245,0.0054,0|0,0,0#dovetail_side_low|wpn_body|0.00245,0.0054,0|0,0,0
+ui_render_cam_offset	= 0.34, -0.09, 1.25
+aimpoint_offset_y = 0.08986
+weapon_lenght						=	0.3
+visual							= w_att_huds\svd
+hud								= wpn_svd_hud
+additional_sounds		= svd_additional_sounds
+[svd_additional_sounds]:ash12_additional_sounds
+snd_mag_in 						= weapons\main\svd_mag_in
+snd_mag_out						= weapons\main\svd_mag_out
+snd_bolt_release					= weapons\main\svd_bolt_release
+snd_bolt_back						= weapons\main\svd_bolt_back
 
-[wpn_svd_nimble]:wpn_svd_m1
-parent_section	= wpn_svd_nimble
-[wpn_svd_nimble_1p29]:wpn_svd_m1_1p29
-parent_section	= wpn_svd_nimble
-[wpn_svd_nimble_usp1]:wpn_svd_m1_1p29
-parent_section	= wpn_svd_nimble
-[wpn_svd_nimble_1p59]:wpn_svd_m1_1p59
-parent_section	= wpn_svd_nimble
-[wpn_svd_nimble_ps01]:wpn_svd_m1_ps01
-parent_section	= wpn_svd_nimble
-[wpn_svd_nimble_pso2]:wpn_svd_m1_pso2
-parent_section	= wpn_svd_nimble
-[wpn_svd_nimble_pso1m21]:wpn_svd_m1_pso1m21
-parent_section	= wpn_svd_nimble
-[wpn_svd_nimble_1p78gs]:wpn_svd_m1_1p78gs
-parent_section	= wpn_svd_nimble
-[wpn_svd_nimble_1pn93]:wpn_svd_m1_1pn93
-parent_section	= wpn_svd_nimble
-[wpn_svd_nimble_1pn93n2_1gs]:wpn_svd_m1_1pn93n2_1gs
-parent_section	= wpn_svd_nimble
+[wpn_svd_hud]:hud_base
+
+weapon_recoil_vert         = 2.88
+weapon_recoil_vert_inc     = 2.88
+weapon_recoil_horz         = 2.3
+weapon_recoil_ret_speed    = 1
+
+
+anm_reload_misfire_sounds				= 0,snd_move_arm|21,snd_bolt_back|34,snd_bolt_release
+anm_reload_p1_sounds						= 0,snd_move_arm|15,snd_mag_out
+anm_reload_p2_sounds						= 0,snd_move_in|16,snd_mag_in
+anm_reload_empty_p1_sounds			= 0,snd_move_arm|15,snd_mag_out
+anm_reload_empty_p2_sounds			= 0,snd_move_in_empty|16,snd_mag_in|48,snd_bolt_release
+anm_mag_check_sounds					= 0,snd_move_long|15,snd_mag_out|63,snd_mag_in
+anm_mag_check_empty_sounds			= 0,snd_move_long|15,snd_mag_out|63,snd_mag_in
+5_anm_mag_check_sounds					= 0,snd_move_long|15,snd_mag_out|63,snd_mag_in
+5_anm_mag_check_empty_sounds		= 0,snd_move_long|15,snd_mag_out|63,snd_mag_in
+m_anm_reload_misfire_sounds				= 0,snd_move_arm|21,snd_bolt_back|34,snd_bolt_release
+m_anm_reload_p1_sounds						= 0,snd_move_arm|15,snd_mag_out
+m_anm_reload_p2_sounds						= 0,snd_move_in|16,snd_mag_in
+m_anm_reload_empty_p1_sounds			= 0,snd_move_arm|15,snd_mag_out
+m_anm_reload_empty_p2_sounds			= 0,snd_move_in_empty|16,snd_mag_in|48,snd_bolt_release
+m_anm_mag_check_sounds					= 0,snd_move_long|15,snd_mag_out|63,snd_mag_in
+m_anm_mag_check_empty_sounds		= 0,snd_move_long|15,snd_mag_out|63,snd_mag_in
+5_m_anm_mag_check_sounds				= 0,snd_move_long|15,snd_mag_out|63,snd_mag_in
+5_m_anm_mag_check_empty_sounds	= 0,snd_move_long|15,snd_mag_out|63,snd_mag_in
+c_anm_reload_misfire_sounds				= 0,snd_move_arm|21,snd_bolt_back|34,snd_bolt_release
+c_anm_reload_p1_sounds					= 0,snd_move_arm|15,snd_mag_out
+c_anm_reload_p2_sounds					= 0,snd_move_in|16,snd_mag_in
+c_anm_reload_empty_p1_sounds		= 0,snd_move_arm|15,snd_mag_out
+c_anm_reload_empty_p2_sounds		= 0,snd_move_in_empty|16,snd_mag_in|48,snd_bolt_release
+c_anm_mag_check_sounds					= 0,snd_move_long|15,snd_mag_out|63,snd_mag_in
+c_anm_mag_check_empty_sounds		= 0,snd_move_long|15,snd_mag_out|63,snd_mag_in
+5_c_anm_mag_check_sounds				= 0,snd_move_long|15,snd_mag_out|63,snd_mag_in
+5_c_anm_mag_check_empty_sounds	= 0,snd_move_long|15,snd_mag_out|63,snd_mag_in
+h_anm_reload_misfire_sounds			= 0,snd_move_arm|21,snd_bolt_back|34,snd_bolt_release
+h_anm_reload_p1_sounds					= 0,snd_move_arm|15,snd_mag_out
+h_anm_reload_p2_sounds					= 0,snd_move_in|16,snd_mag_in
+h_anm_reload_empty_p1_sounds		= 0,snd_move_arm|15,snd_mag_out
+h_anm_reload_empty_p2_sounds		= 0,snd_move_in_empty|16,snd_mag_in|48,snd_bolt_release
+h_anm_mag_check_sounds					= 0,snd_move_long|15,snd_mag_out|63,snd_mag_in
+h_anm_mag_check_empty_sounds		= 0,snd_move_long|15,snd_mag_out|63,snd_mag_in
+5_h_anm_mag_check_sounds				= 0,snd_move_long|15,snd_mag_out|63,snd_mag_in
+5_h_anm_mag_check_empty_sounds	= 0,snd_move_long|15,snd_mag_out|63,snd_mag_in
+r_anm_reload_misfire_sounds				= 0,snd_move_arm|21,snd_bolt_back|34,snd_bolt_release
+r_anm_reload_p1_sounds					= 0,snd_move_arm|15,snd_mag_out
+r_anm_reload_p2_sounds					= 0,snd_move_in|16,snd_mag_in
+r_anm_reload_empty_p1_sounds		= 0,snd_move_arm|15,snd_mag_out
+r_anm_reload_empty_p2_sounds		= 0,snd_move_in_empty|16,snd_mag_in|48,snd_bolt_release
+r_anm_mag_check_sounds					= 0,snd_move_long|15,snd_mag_out|63,snd_mag_in
+r_anm_mag_check_empty_sounds		= 0,snd_move_long|15,snd_mag_out|63,snd_mag_in
+5_r_anm_mag_check_sounds				= 0,snd_move_long|15,snd_mag_out|63,snd_mag_in
+5_r_anm_mag_check_empty_sounds	= 0,snd_move_long|15,snd_mag_out|63,snd_mag_in
+t_anm_reload_misfire_sounds				= 0,snd_move_arm|21,snd_bolt_back|34,snd_bolt_release
+t_anm_reload_p1_sounds					= 0,snd_move_arm|15,snd_mag_out
+t_anm_reload_p2_sounds					= 0,snd_move_in|16,snd_mag_in
+t_anm_reload_empty_p1_sounds		= 0,snd_move_arm|15,snd_mag_out
+t_anm_reload_empty_p2_sounds		= 0,snd_move_in_empty|16,snd_mag_in|48,snd_bolt_release
+t_anm_mag_check_sounds					= 0,snd_move_long|15,snd_mag_out|63,snd_mag_in
+t_anm_mag_check_empty_sounds		= 0,snd_move_long|15,snd_mag_out|63,snd_mag_in
+5_t_anm_mag_check_sounds				= 0,snd_move_long|15,snd_mag_out|63,snd_mag_in
+5_t_anm_mag_check_empty_sounds	= 0,snd_move_long|15,snd_mag_out|63,snd_mag_in
+v_anm_reload_misfire_sounds				= 0,snd_move_arm|21,snd_bolt_back|34,snd_bolt_release
+v_anm_reload_p1_sounds					= 0,snd_move_arm|15,snd_mag_out
+v_anm_reload_p2_sounds					= 0,snd_move_in|16,snd_mag_in
+v_anm_reload_empty_p1_sounds		= 0,snd_move_arm|15,snd_mag_out
+v_anm_reload_empty_p2_sounds		= 0,snd_move_in_empty|16,snd_mag_in|48,snd_bolt_release
+v_anm_mag_check_sounds					= 0,snd_move_long|15,snd_mag_out|63,snd_mag_in
+v_anm_mag_check_empty_sounds		= 0,snd_move_long|15,snd_mag_out|63,snd_mag_in
+5_v_anm_mag_check_sounds				= 0,snd_move_long|15,snd_mag_out|63,snd_mag_in
+5_v_anm_mag_check_empty_sounds	= 0,snd_move_long|15,snd_mag_out|63,snd_mag_in
+
+shooting_backward_offset		= 0.04,0.01
+item_visual                 		= w_att_huds\svd_hud
+freelook_z_offset_mul					 = 0.6
+hands_position						= 0.08, -0.05, -0.2
+hands_position_16x9				= 0.08, -0.05, -0.2
+hands_orientation					= 0.2, 0.5, 0
+hands_orientation_16x9			= 0.2, 0.5, 0
+aim_hud_offset_pos				= -0.0801, 0.034, -0.07
+aim_hud_offset_pos_16x9		= -0.0801, 0.034, -0.07
+aim_hud_offset_rot					= 0.013, 0.004, 0
+aim_hud_offset_rot_16x9		= 0.013, 0.004, 0
+anm_bore                          						= svd_m_bore, idle, 1.2
+anm_bore_empty									= svd_m_bore_e, idle_empty
+anm_hide												= svd_m_holster, idle, 1.1
+anm_hide_empty										= svd_m_holster, idle_empty, 1.1
+anm_show												= svd_m_show, idle
+anm_show_empty									= svd_m_show, idle_empty
+anm_idle													= svd_m_idle, idle
+anm_idle_empty										= svd_m_idle, idle_empty
+anm_idle_aim											= svd_m_idle_aim, idle
+anm_idle_aim_empty								= svd_m_idle_aim, idle_empty
+anm_idle_aim_moving							= svd_m_walk_aim, idle
+anm_idle_aim_moving_empty					= svd_m_walk_aim, idle_empty
+anm_idle_aim_moving_crouch				= svd_m_walk_aim, idle
+anm_idle_aim_moving_crouch_empty	= svd_m_walk_aim, idle_empty
+anm_idle_moving									= svd_m_walk, idle
+anm_idle_moving_empty						= svd_m_walk, idle_empty
+anm_idle_moving_crouch						= svd_m_walk, idle
+anm_idle_moving_crouch_empty			= svd_m_walk, idle_empty
+anm_shots												= svd_m_shoot, shoot
+anm_shot_l												= svd_m_shoot, shoot_last
+anm_reload_misfire									= svd_m_unjam, unjam, 1.3
+anm_idle_sprint										= svd_m_idle_sprint, idle, 1.1
+anm_idle_sprint_empty							= svd_m_idle_sprint, idle_empty, 1.1
+anm_mag_check										= svd_m_check, check, 1.3
+anm_mag_check_empty							= svd_m_check, check_empty, 1.3
+anm_reload												= svd_m_reload_p1, reload_p1, 1.3
+anm_reload_p1										= svd_m_reload_p1, reload_p1, 1.3
+anm_reload_p2										= svd_m_reload_p2, reload_p2, 1.3
+anm_reload_empty									= svd_m_reload_p1, reload_empty_p1, 1.3
+anm_reload_empty_p1							= svd_m_reload_p1, reload_empty_p1, 1.3
+anm_reload_empty_p2							= svd_m_reload_e_p2, reload_empty_p2, 1.3
+5_anm_mag_check									= svd_m_check_5, check, 1.3
+5_anm_mag_check_empty						= svd_m_check_5, check_empty, 1.3
+
+c_anm_bore                          						= svd_c_bore, idle, 1.2
+c_anm_bore_empty										= svd_c_bore_e, idle_empty
+c_anm_hide													= svd_c_holster, idle, 1.1
+c_anm_hide_empty										= svd_c_holster, idle_empty, 1.1
+c_anm_show												= svd_c_show, idle
+c_anm_show_empty									= svd_c_show, idle_empty
+c_anm_idle													= svd_c_idle, idle
+c_anm_idle_empty										= svd_c_idle, idle_empty
+c_anm_idle_aim											= svd_c_idle_aim, idle
+c_anm_idle_aim_empty								= svd_c_idle_aim, idle_empty
+c_anm_idle_aim_moving								= svd_c_walk_aim, idle
+c_anm_idle_aim_moving_empty					= svd_c_walk_aim, idle_empty
+c_anm_idle_aim_moving_crouch					= svd_c_walk_aim, idle
+c_anm_idle_aim_moving_crouch_empty		= svd_c_walk_aim, idle_empty
+c_anm_idle_moving										= svd_c_walk, idle
+c_anm_idle_moving_empty							= svd_c_walk, idle_empty
+c_anm_idle_moving_crouch						= svd_c_walk, idle
+c_anm_idle_moving_crouch_empty			= svd_c_walk, idle_empty
+c_anm_shots												= svd_c_shoot, shoot
+c_anm_shot_l												= svd_c_shoot, shoot_last
+c_anm_reload_misfire									= svd_c_unjam, unjam, 1.3
+c_anm_idle_sprint										= svd_c_idle_sprint, idle, 1.1
+c_anm_idle_sprint_empty							= svd_c_idle_sprint, idle_empty, 1.1
+c_anm_mag_check										= svd_c_check, check, 1.3
+c_anm_mag_check_empty							= svd_c_check, check_empty, 1.3
+c_anm_reload												= svd_c_reload_p1, reload_p1, 1.3
+c_anm_reload_p1										= svd_c_reload_p1, reload_p1, 1.3
+c_anm_reload_p2										= svd_c_reload_p2, reload_p2, 1.3
+c_anm_reload_empty									= svd_c_reload_p1, reload_empty_p1, 1.3
+c_anm_reload_empty_p1								= svd_c_reload_p1, reload_empty_p1, 1.3
+c_anm_reload_empty_p2								= svd_c_reload_e_p2, reload_empty_p2, 1.3
+5_c_anm_mag_check									= svd_c_check_5, check, 1.3
+5_c_anm_mag_check_empty						= svd_c_check_5, check_empty, 1.3
+
+h_anm_bore                          						= svd_h_bore, idle, 1.2
+h_anm_bore_empty										= svd_h_bore_e, idle_empty
+h_anm_hide													= svd_h_holster, idle, 1.1
+h_anm_hide_empty										= svd_h_holster, idle_empty, 1.1
+h_anm_show												= svd_h_show, idle
+h_anm_show_empty									= svd_h_show, idle_empty
+h_anm_idle													= svd_h_idle, idle
+h_anm_idle_empty										= svd_h_idle, idle_empty
+h_anm_idle_aim											= svd_h_idle_aim, idle
+h_anm_idle_aim_empty								= svd_h_idle_aim, idle_empty
+h_anm_idle_aim_moving								= svd_h_walk_aim, idle
+h_anm_idle_aim_moving_empty					= svd_h_walk_aim, idle_empty
+h_anm_idle_aim_moving_crouch				= svd_h_walk_aim, idle
+h_anm_idle_aim_moving_crouch_empty		= svd_h_walk_aim, idle_empty
+h_anm_idle_moving									= svd_h_walk, idle
+h_anm_idle_moving_empty							= svd_h_walk, idle_empty
+h_anm_idle_moving_crouch						= svd_h_walk, idle
+h_anm_idle_moving_crouch_empty			= svd_h_walk, idle_empty
+h_anm_shots												= svd_h_shoot, shoot
+h_anm_shot_l												= svd_h_shoot, shoot_last
+h_anm_reload_misfire									= svd_h_unjam, unjam, 1.3
+h_anm_idle_sprint										= svd_h_idle_sprint, idle, 1.1
+h_anm_idle_sprint_empty							= svd_h_idle_sprint, idle_empty, 1.1
+h_anm_mag_check										= svd_h_check, check, 1.3
+h_anm_mag_check_empty							= svd_h_check, check_empty, 1.3
+h_anm_reload												= svd_h_reload_p1, reload_p1, 1.3
+h_anm_reload_p1										= svd_h_reload_p1, reload_p1, 1.3
+h_anm_reload_p2										= svd_h_reload_p2, reload_p2, 1.3
+h_anm_reload_empty									= svd_h_reload_p1, reload_empty_p1, 1.3
+h_anm_reload_empty_p1							= svd_h_reload_p1, reload_empty_p1, 1.3
+h_anm_reload_empty_p2							= svd_h_reload_e_p2, reload_empty_p2, 1.3
+5_h_anm_mag_check									= svd_h_check_5, check, 1.3
+5_h_anm_mag_check_empty						= svd_h_check_5, check_empty, 1.3
+
+r_anm_bore                          						= svd_r_bore, idle, 1.2
+r_anm_bore_empty										= svd_r_bore_e, idle_empty
+r_anm_hide													= svd_r_holster, idle, 1.1
+r_anm_hide_empty										= svd_r_holster, idle_empty, 1.1
+r_anm_show												= svd_r_show, idle
+r_anm_show_empty									= svd_r_show, idle_empty
+r_anm_idle													= svd_r_idle, idle
+r_anm_idle_empty										= svd_r_idle, idle_empty
+r_anm_idle_aim											= svd_r_idle_aim, idle
+r_anm_idle_aim_empty								= svd_r_idle_aim, idle_empty
+r_anm_idle_aim_moving								= svd_r_walk_aim, idle
+r_anm_idle_aim_moving_empty					= svd_r_walk_aim, idle_empty
+r_anm_idle_aim_moving_crouch					= svd_r_walk_aim, idle
+r_anm_idle_aim_moving_crouch_empty		= svd_r_walk_aim, idle_empty
+r_anm_idle_moving										= svd_r_walk, idle
+r_anm_idle_moving_empty							= svd_r_walk, idle_empty
+r_anm_idle_moving_crouch							= svd_r_walk, idle
+r_anm_idle_moving_crouch_empty				= svd_r_walk, idle_empty
+r_anm_shots												= svd_r_shoot, shoot
+r_anm_shot_l												= svd_r_shoot, shoot_last
+r_anm_reload_misfire									= svd_r_unjam, unjam, 1.3
+r_anm_idle_sprint										= svd_r_idle_sprint, idle, 1.1
+r_anm_idle_sprint_empty							= svd_r_idle_sprint, idle_empty, 1.1
+r_anm_mag_check										= svd_r_check, check, 1.3
+r_anm_mag_check_empty							= svd_r_check, check_empty, 1.3
+r_anm_reload												= svd_r_reload_p1, reload_p1, 1.3
+r_anm_reload_p1											= svd_r_reload_p1, reload_p1, 1.3
+r_anm_reload_p2											= svd_r_reload_p2, reload_p2, 1.3
+r_anm_reload_empty									= svd_r_reload_p1, reload_empty_p1, 1.3
+r_anm_reload_empty_p1								= svd_r_reload_p1, reload_empty_p1, 1.3
+r_anm_reload_empty_p2								= svd_r_reload_e_p2, reload_empty_p2, 1.3
+5_r_anm_mag_check									= svd_r_check_5, check, 1.3
+5_r_anm_mag_check_empty						= svd_r_check_5, check_empty, 1.3
+
+t_anm_bore                          						= svd_t_bore, idle, 1.2
+t_anm_bore_empty										= svd_t_bore_e, idle_empty
+t_anm_hide													= svd_t_holster, idle, 1.1
+t_anm_hide_empty										= svd_t_holster, idle_empty, 1.1
+t_anm_show												= svd_t_show, idle
+t_anm_show_empty									= svd_t_show, idle_empty
+t_anm_idle													= svd_t_idle, idle
+t_anm_idle_empty										= svd_t_idle, idle_empty
+t_anm_idle_aim											= svd_t_idle_aim, idle
+t_anm_idle_aim_empty								= svd_t_idle_aim, idle_empty
+t_anm_idle_aim_moving								= svd_t_walk_aim, idle
+t_anm_idle_aim_moving_empty					= svd_t_walk_aim, idle_empty
+t_anm_idle_aim_moving_crouch					= svd_t_walk_aim, idle
+t_anm_idle_aim_moving_crouch_empty		= svd_t_walk_aim, idle_empty
+t_anm_idle_moving										= svd_t_walk, idle
+t_anm_idle_moving_empty							= svd_t_walk, idle_empty
+t_anm_idle_moving_crouch							= svd_t_walk, idle
+t_anm_idle_moving_crouch_empty				= svd_t_walk, idle_empty
+t_anm_shots												= svd_t_shoot, shoot
+t_anm_shot_l												= svd_t_shoot, shoot_last
+t_anm_reload_misfire									= svd_t_unjam, unjam, 1.3
+t_anm_idle_sprint										= svd_t_idle_sprint, idle, 1.1
+t_anm_idle_sprint_empty							= svd_t_idle_sprint, idle_empty, 1.1
+t_anm_mag_check										= svd_t_check, check, 1.3
+t_anm_mag_check_empty							= svd_t_check, check_empty, 1.3
+t_anm_reload												= svd_t_reload_p1, reload_p1, 1.3
+t_anm_reload_p1											= svd_t_reload_p1, reload_p1, 1.3
+t_anm_reload_p2											= svd_t_reload_p2, reload_p2, 1.3
+t_anm_reload_empty									= svd_t_reload_p1, reload_empty_p1, 1.3
+t_anm_reload_empty_p1								= svd_t_reload_p1, reload_empty_p1, 1.3
+t_anm_reload_empty_p2								= svd_t_reload_e_p2, reload_empty_p2, 1.3
+5_t_anm_mag_check									= svd_t_check_5, check, 1.3
+5_t_anm_mag_check_empty						= svd_t_check_5, check_empty, 1.3
+
+v_anm_bore                          						= svd_v_bore, idle, 1.2
+v_anm_bore_empty										= svd_v_bore_e, idle_empty
+v_anm_hide													= svd_v_holster, idle, 1.1
+v_anm_hide_empty										= svd_v_holster, idle_empty, 1.1
+v_anm_show												= svd_v_show, idle
+v_anm_show_empty									= svd_v_show, idle_empty
+v_anm_idle													= svd_v_idle, idle
+v_anm_idle_empty										= svd_v_idle, idle_empty
+v_anm_idle_aim											= svd_v_idle_aim, idle
+v_anm_idle_aim_empty								= svd_v_idle_aim, idle_empty
+v_anm_idle_aim_moving								= svd_v_walk_aim, idle
+v_anm_idle_aim_moving_empty					= svd_v_walk_aim, idle_empty
+v_anm_idle_aim_moving_crouch					= svd_v_walk_aim, idle
+v_anm_idle_aim_moving_crouch_empty		= svd_v_walk_aim, idle_empty
+v_anm_idle_moving										= svd_v_walk, idle
+v_anm_idle_moving_empty							= svd_v_walk, idle_empty
+v_anm_idle_moving_crouch						= svd_v_walk, idle
+v_anm_idle_moving_crouch_empty			= svd_v_walk, idle_empty
+v_anm_shots												= svd_v_shoot, shoot
+v_anm_shot_l												= svd_v_shoot, shoot_last
+v_anm_reload_misfire									= svd_v_unjam, unjam, 1.3
+v_anm_idle_sprint										= svd_v_idle_sprint, idle, 1.1
+v_anm_idle_sprint_empty							= svd_v_idle_sprint, idle_empty, 1.1
+v_anm_mag_check										= svd_v_check, check, 1.3
+v_anm_mag_check_empty							= svd_v_check, check_empty, 1.3
+v_anm_reload												= svd_v_reload_p1, reload_p1, 1.3
+v_anm_reload_p1										= svd_v_reload_p1, reload_p1, 1.3
+v_anm_reload_p2										= svd_v_reload_p2, reload_p2, 1.3
+v_anm_reload_empty									= svd_v_reload_p1, reload_empty_p1, 1.3
+v_anm_reload_empty_p1							= svd_v_reload_p1, reload_empty_p1, 1.3
+v_anm_reload_empty_p2							= svd_v_reload_e_p2, reload_empty_p2, 1.3
+5_v_anm_mag_check									= svd_v_check_5, check, 1.3
+5_v_anm_mag_check_empty						= svd_v_check_5, check_empty, 1.3
+
+[wpn_svds]:wpn_svd
+GroupControlSection	= spawn_group
+inv_grid_x					= 25
+inv_name						= wpn_svds
+inv_name_short			= wpn_svds
+description					= wpn_svds_descr
+inv_weight					= 1.2
+attachment_slots			=	slot_magazin|magazin|0,0,0|0,0,0#svd_trigger|wpn_body|0,0,0|0,0,0#svd_rear|wpn_body|0,0,0|0,0,0#svds_stock|wpn_body|0,0,0|0,0,0#svds_grip|wpn_body|0,0,0|0,0,0#svd_zatvor|zatvor|0,0,0|0,0,0#dovetail_side|wpn_body|0.00245,0.0054,0|0,0,0#dovetail_side_low|wpn_body|0.00245,0.0054,0|0,0,0
+visual							= w_att_huds\svds
+hud								= wpn_svds_hud
+[wpn_svds_hud]:wpn_svd_hud					;pgrip anims
+
+weapon_recoil_vert         = 2.88
+weapon_recoil_vert_inc     = 2.88
+weapon_recoil_horz         = 2.3
+weapon_recoil_ret_speed    = 1
+
+
+item_visual					= w_att_huds\svds_hud
+
+anm_bore                          						= svd_ms_bore, idle, 1.2
+anm_bore_empty									= svd_ms_bore_e, idle_empty
+anm_hide												= svd_ms_holster, idle, 1.1
+anm_hide_empty										= svd_ms_holster, idle_empty, 1.1
+anm_show												= svd_ms_show, idle
+anm_show_empty									= svd_ms_show, idle_empty
+anm_idle													= svd_ms_idle, idle
+anm_idle_empty										= svd_ms_idle, idle_empty
+anm_idle_aim											= svd_ms_idle_aim, idle
+anm_idle_aim_empty								= svd_ms_idle_aim, idle_empty
+anm_idle_aim_moving							= svd_ms_walk_aim, idle
+anm_idle_aim_moving_empty					= svd_ms_walk_aim, idle_empty
+anm_idle_aim_moving_crouch				= svd_ms_walk_aim, idle
+anm_idle_aim_moving_crouch_empty	= svd_ms_walk_aim, idle_empty
+anm_idle_moving									= svd_ms_walk, idle
+anm_idle_moving_empty						= svd_ms_walk, idle_empty
+anm_idle_moving_crouch						= svd_ms_walk, idle
+anm_idle_moving_crouch_empty			= svd_ms_walk, idle_empty
+anm_shots												= svd_ms_shoot, shoot
+anm_shot_l												= svd_ms_shoot, shoot_last
+anm_reload_misfire									= svd_ms_unjam, unjam, 1.3
+anm_idle_sprint										= svd_ms_idle_sprint, idle, 1.1
+anm_idle_sprint_empty							= svd_ms_idle_sprint, idle_empty, 1.1
+anm_mag_check										= svd_ms_check, check, 1.3
+anm_mag_check_empty							= svd_ms_check, check_empty, 1.3
+anm_reload												= svd_ms_reload_p1, reload_p1, 1.3
+anm_reload_p1										= svd_ms_reload_p1, reload_p1, 1.3
+anm_reload_p2										= svd_ms_reload_p2, reload_p2, 1.3
+anm_reload_empty									= svd_ms_reload_p1, reload_empty_p1, 1.3
+anm_reload_empty_p1							= svd_ms_reload_p1, reload_empty_p1, 1.3
+anm_reload_empty_p2							= svd_ms_reload_e_p2, reload_empty_p2, 1.3
+5_anm_mag_check									= svd_ms_check_5, check, 1.3
+5_anm_mag_check_empty						= svd_ms_check_5, check_empty, 1.3

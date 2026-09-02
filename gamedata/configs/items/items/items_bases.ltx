@@ -1,0 +1,496 @@
+;module attributes
+;inertia_koeff = 1.4 controls inertia 1.4 = 40% more inertia, weapon responds slower
+;recoil_koeff = -0.10  -0.10 = 10% less recoil
+;rpm_koeff = -0.076 controls rpm -0.076 = 7.6% lower RPM
+;weapon_length = 0.6 self expainatory 
+;zoom_rotate_time = 0.08 ADS speed, just adds 0.08 seconds
+;fire_dispersion_base		= 0.06 MOA, controlls spread
+
+
+; gameplay magnification scale, not real optics scale
+
+1x  = 120
+2x  = 70
+3x  = 50
+4x  = 38
+6x  = 28
+8x  = 22
+10x = 18
+12x = 15
+16x = 12
+20x = 10
+24x = 8
+32x = 6
+
+
+[default_immunities]
+burn_immunity = 1.0
+strike_immunity = 1.0
+shock_immunity = 1.0
+wound_immunity = 1.0
+radiation_immunity = 1.0
+telepatic_immunity = 1.0
+chemical_burn_immunity = 1.0
+explosion_immunity = 1.0
+fire_wound_immunity = 1.0
+
+
+[mag_wpn_base]:ammo_base
+class = II_MAG
+visual = dynamics\devices\dev_bolt\dev_bolt
+description	= no_attributes_descr
+inv_name = magazine
+inv_name_short = magazine
+icons_texture				= ui\ui_icons_deso
+inv_weight = 0.1
+cost = 1
+inv_grid_width = 1
+inv_grid_height = 1
+inv_grid_x = 0
+inv_grid_y = 0
+item_tags = magazine
+dont_stack = true
+can_stack = false
+can_take			= true
+attachment_point		= slot_magazin|0,0,0|0,0,0
+attachment_type			= magazin
+kind								= w_ammo
+immunities_sect = default_immunities
+immunities = default_immunities
+condition = 1
+can_trade = true
+quest_item = false
+slot = -1
+ef_weapon_type = 0
+use3_functor = module_items.menu_unload_magazine
+use3_action_functor = module_items.unload_magazine
+use3_modes = inventory
+use3_containers = actor_bag,actor_equ
+
+max_mag_size = 17
+box_size = 17
+ammo_elapsed = 0
+condition = 0
+mag_ammo_class = ammo_9x19_fmj
+module_type = magazine
+mag_load_time = 0.05
+mag_unload_time = 0.05
+
+[mag_wpn_base_ak]:mag_wpn_base
+icons_texture				= ui\ui_icons_deso_ak
+[mag_wpn_base_ar]:mag_wpn_base
+icons_texture				= ui\ui_icons_deso_ar
+
+[tactical_flashlight_default]
+type                 = 2
+
+color = 0.65,0.72,0.85,1.0
+color_r2 = 1.65,1.72,1.85,1.0
+
+range                = 100.0
+range_r2             = 100.0
+spot_angle           = 26.0
+spot_texture         = 
+
+shadow               = true
+hud_mode             = false
+
+volumetric           = false
+volumetric_intensity = 0.35
+volumetric_distance  = 0.6
+
+flashlight_use_omni  = false
+flashlight_use_glow  = false
+
+
+[laser_base]
+is_torch            = false
+is_torch_laser      = true
+laser_section     = tactical_laser_red
+laser_bone         = laser
+laser_bone_axis    = y
+laser_bone_invert  = false
+1icon_layer = red_laser_ico
+item_tags 				= rail
+
+[tactical_laser_red]
+laser_color               = 0.0,0.0,1.0,1.0
+laser_range               = 1000.0
+
+laser_beam_width          = 0.003
+laser_beam_intensity      = 1
+
+laser_dot_size            = 0.02
+laser_dot_intensity       = 1.0
+
+laser_draw_beam           = true
+laser_draw_dot            = true
+
+[tactical_laser_green]
+laser_color               = 0.0,1.0,0.0,1.0
+laser_range               = 1000.0
+
+laser_beam_width          = 0.003
+laser_beam_intensity      = 1
+
+laser_dot_size            = 0.02
+laser_dot_intensity       = 1.0
+
+laser_draw_beam           = true
+laser_draw_dot            = true
+
+[tactical_laser_blue]
+laser_color               = 1.0,0.0,0.0,1.0
+laser_range               = 1000.0
+
+laser_beam_width          = 0.003
+laser_beam_intensity      = 1
+
+laser_dot_size            = 0.02
+laser_dot_intensity       = 1.0
+
+laser_draw_beam           = true
+laser_draw_dot            = true
+
+[attachment_base]:itm_basickit
+visual = dynamics\devices\dev_bolt\dev_bolt.ogf
+inv_name				= st_attachment_base
+inv_name_short		= st_attachment_base
+icons_texture		= ui\ui_icons_deso
+description			= no_attributes_descr
+inv_grid_width     	= 1
+inv_grid_height    	= 1
+inv_grid_x         		= 4
+inv_grid_y         		= 2
+inv_weight				= 0.1
+cost						= 9880
+repair_type			= 
+attachment_type	= none
+snd_on_take			= outfit
+can_stack = false
+max_stack = 1
+inv_max_stack = 1
+dont_stack								 = true
+tier						= 3
+kind						= w_misc 
+attachment_point = wpn_body|0,0.015,0|0,0,0
+attachment_slots = test_muzzle|wpn_body
+item_tags = module
+use1_functor = module_items.menu_install_module
+use1_action_functor = module_items.install_module
+override_section = test_module_barrel_stats
+
+[attachment_base_ak]:attachment_base
+icons_texture		= ui\ui_icons_deso_ak
+
+[attachment_base_ar]:attachment_base
+icons_texture		= ui\ui_icons_deso_ar
+
+[silencer_base]:attachment_base
+override_section		= silencer_base_attributes
+[silencer_base_attributes]
+silencer_status		= 1
+silencer_name		= wpn_addon_silencer
+silencer_x	 			= 1
+silencer_y				= 1
+
+[sight_base]:attachment_base
+attachment_type			= sight
+attachment_point		= slot_scope|0,0,0|0,0,0
+inv_grid_x         = 40
+inv_grid_y         = 2
+is_holo = true
+holo_position_offset	=	0,0,1
+
+[ar_sight]:sight_base
+icons_texture	= ui\ui_icons_deso_ar
+
+[ak_sight]:sight_base
+icons_texture	= ui\ui_icons_deso_ak
+
+[scope_base_pip]:sight_base_pip
+is_pip								= true
+scope_2d_tag 			= scope_base
+
+[sight_base_pip]:attachment_base
+attachment_type			= sight
+attachment_point		= slot_scope|0,0,0|0,0,0
+
+[ak_pip_scope]:scope_base_pip
+icons_texture	= ui\ui_icons_deso_ak
+inv_grid_x         = 40
+inv_grid_y         = 2
+
+[clean1_ico]:attachment_base
+icons_texture = ui\ui_icons_eq
+inv_grid_width     = 1
+inv_grid_height    = 1
+inv_grid_x         = 4
+inv_grid_y         = 1
+
+[clean2_ico]:clean1_ico
+inv_grid_width     = 2
+inv_grid_x         = 3
+[clean3_ico]:clean1_ico
+inv_grid_width     = 3
+inv_grid_x         = 2
+[clean4_ico]:clean1_ico
+inv_grid_width     = 4
+inv_grid_x         = 1
+
+[clean_lub1_ico]:clean1_ico
+inv_grid_x         = 0
+inv_grid_y         = 0
+[clean_lub2_ico]:clean_lub1_ico
+inv_grid_width     = 2
+inv_grid_x         = 3
+[clean_lub3_ico]:clean_lub1_ico
+inv_grid_width     = 3
+inv_grid_x         = 2
+
+[nightvision_ico]:clean1_ico
+inv_grid_width     = 2
+inv_grid_x         = 0
+inv_grid_y         = 2
+
+[nightvision_pn]:clean1_ico
+inv_grid_x         = 1
+inv_grid_y         = 2
+
+[flashlight_ico]:clean1_ico
+inv_grid_x         = 2
+inv_grid_y         = 2
+
+[green_laser_ico]:clean1_ico
+inv_grid_x         = 0
+inv_grid_y         = 3
+[red_laser_ico]:green_laser_ico
+inv_grid_x         = 1
+[blue_laser_ico]:green_laser_ico
+inv_grid_x         = 2
+
+[fmj_ico]:clean1_ico
+icons_texture = ui\ui_icons_eq
+inv_grid_x         = 0
+inv_grid_y         = 4
+[ap_ico]:fmj_ico
+inv_grid_x         = 1
+[ep_ico]:fmj_ico
+inv_grid_x         = 2
+[buck_ico]:fmj_ico
+inv_grid_x         = 3
+
+[cleaning_only]:attachment_base
+altrep_has_condition = true
+altrep_needs_cleaning = true
+
+[cleaning_and_lubrication]:cleaning_only 
+altrep_needs_lubrication = true
+
+
+//////////////////////MODULE_ANIM_PREFIXES/////////////////
+
+[t_base]:attachment_base
+override_section = t_attributes
+[t_attributes]
+animation_prefix	=	t_
+
+[c_base]:t_base
+override_section = c_attributes
+[c_attributes]
+animation_prefix	= c_
+
+[cp_base]:t_base
+override_section = cp_attributes
+[cp_attributes]
+animation_prefix	= cp_
+
+[cd_base]:t_base
+override_section = cd_attributes
+[cd_attributes]
+animation_prefix	=	cd_
+
+[right_hand_base]:attachment_base
+override_section =	cg_attributes
+[cg_attributes]
+animation_prefix_base = cg_
+
+[r_base]:t_base
+override_section = r_attributes
+[r_attributes]
+animation_prefix	= r_
+
+[v_base]:t_base
+override_section = v_attributes
+[v_attributes]
+animation_prefix	=	v_
+
+[h_base]:t_base
+override_section = h_attributes
+[h_attributes]
+animation_prefix = h_
+
+
+/////////////////////////// AMMO_CLASSES_FOR_MAGS////////////////////////////////////
+
+[ag_ammo_9x18_fmj]
+mag_ammo_class		= ammo_9x18_fmj, ammo_9x18_fmj_bad, ammo_9x18_fmj_verybad, ammo_9x18_pmm, ammo_9x18_pmm_bad, ammo_9x18_pmm_verybad, ammo_9x18_ap, ammo_9x18_ap_bad, ammo_9x18_ap_verybad
+[ag_ammo_9x19_fmj]
+mag_ammo_class		= ammo_9x19_fmj, ammo_9x19_fmj_bad, ammo_9x19_fmj_verybad, ammo_9x19_pbp, ammo_9x19_pbp_bad, ammo_9x19_pbp_verybad, ammo_9x19_ap, ammo_9x19_ap_bad, ammo_9x19_ap_verybad
+[ag_ammo_9x21_ps]
+mag_ammo_class		= ammo_9x21_ps, ammo_9x21_ps_bad, ammo_9x21_pe, ammo_9x21_pe_bad, ammo_9x21_bt, ammo_9x21_bt_bad
+[ag_ammo_11.43x23_fmj]
+mag_ammo_class		= ammo_11.43x23_fmj, ammo_11.43x23_fmj_bad, ammo_11.43x23_fmj_verybad, ammo_11.43x23_hydro, ammo_11.43x23_hydro_bad, ammo_11.43x23_hydro_verybad, ammo_11.43x23_ap, ammo_11.43x23_ap_bad
+[ag_ammo_7.62x25_p]
+mag_ammo_class		= ammo_7.62x25_p, ammo_7.62x25_p_bad, ammo_7.62x25_p_verybad, ammo_7.62x25_ps, ammo_7.62x25_ps_bad, ammo_7.62x25_ps_verybad
+[ag_ammo_357_hp_mag]
+mag_ammo_class		= ammo_357_hp_mag, ammo_357_hp_mag_bad, ammo_357_hp_mag_verybad
+[ag_ammo_44_hp_mag]
+mag_ammo_class		= ammo_44_hp_mag, ammo_44_hp_mag_bad, ammo_44_fmj_mag, ammo_44_fmj_mag_bad
+[ag_ammo_5.7x28_ss190]
+mag_ammo_class		= ammo_5.7x28_ss190, ammo_5.7x28_ss190_bad, ammo_5.7x28_ss190_verybad, ammo_5.7x28_ss195, ammo_5.7x28_ss195_bad, ammo_5.7x28_ss195_verybad
+[ag_ammo_9x39_pab9]
+mag_ammo_class		= ammo_9x39_pab9, ammo_9x39_pab9_bad, ammo_9x39_pab9_verybad, ammo_9x39_ap, ammo_9x39_ap_bad, ammo_9x39_ap_verybad, ammo_9x39_sp5, ammo_9x39_sp5_bad
+[ag_ammo_5.45x39]
+mag_ammo_class		= ammo_5.45x39_fmj, ammo_5.45x39_fmj_bad, ammo_5.45x39_fmj_verybad, ammo_5.45x39_ep, ammo_5.45x39_ep_bad, ammo_5.45x39_ep_verybad, ammo_5.45x39_ap, ammo_5.45x39_ap_bad, ammo_5.45x39_ap_verybad
+[ag_ammo_5.56x45]
+mag_ammo_class		= ammo_5.56x45_fmj, ammo_5.56x45_fmj_bad, ammo_5.56x45_fmj_verybad, ammo_5.56x45_ss190, ammo_5.56x45_ss190_bad, ammo_5.56x45_ss190_verybad, ammo_5.56x45_ap, ammo_5.56x45_ap_bad, ammo_5.56x45_ap_verybad
+[ag_ammo_7.62x39]
+mag_ammo_class		= ammo_7.62x39_fmj, ammo_7.62x39_fmj_bad, ammo_7.62x39_fmj_verybad, ammo_7.62x39_ap, ammo_7.62x39_ap_bad, ammo_7.62x39_ap_verybad, ammo_7.62x39_ep, ammo_7.62x39_ep_bad
+[ag_ammo_12.7x55]
+mag_ammo_class		= ammo_12.7x55_fmj, ammo_12.7x55_fmj_bad, ammo_12.7x55_fmj_verybad, ammo_12.7x55_ap, ammo_12.7x55_ap_bad, ammo_12.7x55_ap_verybad
+[ag_ammo_12.7x55_pt2]
+mag_ammo_class		= ammo_12.7x55_pt2, ammo_12.7x55_fmj, ammo_12.7x55_fmj_bad, ammo_12.7x55_fmj_verybad, ammo_12.7x55_ap, ammo_12.7x55_ap_bad, ammo_12.7x55_ap_verybad
+[ag_ammo_7.62x51]
+mag_ammo_class		= ammo_7.62x51_fmj, ammo_7.62x51_fmj_bad, ammo_7.62x51_fmj_verybad, ammo_7.62x51_ap, ammo_7.62x51_ap_bad, ammo_7.62x51_ap_verybad
+[ag_ammo_7.62x54]
+mag_ammo_class		= ammo_7.62x54_7h1, ammo_7.62x54_7h1_bad, ammo_7.62x54_7h1_verybad, ammo_7.62x54_ap, ammo_7.62x54_ap_bad, ammo_7.62x54_ap_verybad, ammo_7.62x54_7h14, ammo_7.62x54_7h14_bad, ammo_7.62x54_7h14_verybad
+[ag_ammo_magnum_300]
+mag_ammo_class		= ammo_magnum_300, ammo_magnum_300_bad, ammo_magnum_300_verybad, ammo_magnum_300_sst_bad
+[ag_ammo_12x70]
+mag_ammo_class		= ammo_12x70_buck, ammo_12x70_buck_bad, ammo_12x70_buck_verybad, ammo_12x76_zhekan, ammo_12x76_zhekan_bad, ammo_12x76_zhekan_verybad, ammo_12x76_dart, ammo_12x76_dart_bad, ammo_12x76_dart_verybad, ammo_12x70_buck_self
+[ag_ammo_23x75]
+mag_ammo_class		= ammo_23x75_shrapnel, ammo_23x75_shrapnel_bad, ammo_23x75_barrikada, ammo_23x75_barrikada_bad,ammo_23x75_sp_bad,ammo_23x75_rsp_bad
+
+[wg_wpn_pm]
+magazine_group			= wpn_pb, wpn_pm, wpn_pmm
+[wg_wpn_pmm]
+magazine_group			= wpn_pmm
+[wg_wpn_fort]
+magazine_group			= wpn_fort
+[wg_wpn_aps]
+magazine_group			= wpn_aps, wpn_pp93
+[wg_wpn_pernach]
+magazine_group			= wpn_pernach
+[wg_wpn_vz82]
+magazine_group			= wpn_vz82, wpn_kedr, wpn_kiparis
+[wg_wpn_kashtan]
+magazine_group			= wpn_kashtan
+[wg_wpn_bizon]
+magazine_group			= wpn_bizon, wpn_ar9b
+
+[wg_wpn_beretta]
+magazine_group			= wpn_beretta
+[wg_wpn_cz75]
+magazine_group			= wpn_cz75, wpn_walther, wpn_pl15
+[wg_wpn_glock]
+magazine_group			= wpn_glock
+[wg_wpn_gsh18]
+magazine_group			= wpn_gsh18
+[wg_wpn_hpsa]
+magazine_group			= wpn_hpsa
+[wg_wpn_grach]
+magazine_group			= wpn_grach
+[wg_wpn_agram]
+magazine_group			= wpn_agram
+[wg_wpn_uzi]
+magazine_group			= wpn_uzi, wpn_mp40, wpn_ar9
+[wg_wpn_ar9]
+magazine_group			= wpn_ar9
+[wg_wpn_mp40]
+magazine_group			= wpn_mp40
+[wg_wpn_mp5]
+magazine_group			= wpn_mp5
+[wg_wpn_vityaz]
+magazine_group			= wpn_vityaz
+[wg_wpn_luty]
+magazine_group			= wpn_luty
+[wg_wpn_pp2000]
+magazine_group			= wpn_pp2000
+
+[wg_wpn_tt33]
+magazine_group			= wpn_cz52, wpn_tt33
+[wg_wpn_m712]
+magazine_group			= wpn_m712
+[wg_wpn_ppsh41]
+magazine_group			= wpn_ppsh41
+
+[wg_wpn_gyurza]
+magazine_group			= wpn_gyurza
+[wg_wpn_veresk]
+magazine_group			= wpn_veresk, wpn_gepard
+
+[wg_wpn_colt1911]
+magazine_group			= wpn_colt1911
+[wg_wpn_glock21]
+magazine_group			= wpn_glock21
+[wg_wpn_sig220]
+magazine_group			= wpn_sig220
+[wg_wpn_fnp45]
+magazine_group			= wpn_fnp45
+[wg_wpn_usp]
+magazine_group			= wpn_usp
+[wg_wpn_ump45]
+magazine_group			= wpn_ump45
+[wg_wpn_desert_eagle]
+magazine_group			= wpn_desert_eagle
+[wg_wpn_grizzly]
+magazine_group			= wpn_grizzly
+
+[wg_wpn_fn57]
+magazine_group			= wpn_fn57
+[wg_wpn_p90]
+magazine_group			= wpn_p90, wpn_ar57
+
+[wg_wpn_ak74]
+magazine_group			= wpn_ak74, wpn_ak74u, wpn_ar74
+[wg_wpn_ak100]
+magazine_group			= wpn_abakan
+[wg_wpn_ak]			
+magazine_group			= wpn_ak, wpn_akm, wpn_akms, wpn_aks, wpn_ak103, wpn_mk47
+[wg_wpn_ak101]
+magazine_group			= wpn_ak101
+[wg_wpn_ar15]
+magazine_group			= wpn_lr300, wpn_fn2000, wpn_l85, wpn_g36, wpn_sig550
+
+[wg_wpn_saiga308]
+magazine_group			= wpn_saiga308
+[wg_wpn_ar10]
+magazine_group			= wpn_ar10, wpn_cs5, wpn_sig550_sniper
+[wg_wpn_vpo123]
+magazine_group			= wpn_vpo123
+[wg_wpn_svd]
+magazine_group			= wpn_svd, wpn_svds, wpn_svu
+[wg_wpn_omen]
+magazine_group			= wpn_omen
+[wg_wpn_orsis]
+magazine_group			= wpn_orsis
+
+[wg_wpn_ash12]
+magazine_group			= wpn_ash12
+[wg_wpn_vssk]
+magazine_group			= wpn_vssk
+[wg_wpn_vsv]
+magazine_group			= wpn_vsv
+
+[wg_wpn_tiss]
+magazine_group			= wpn_tiss, wpn_groza
+[wg_wpn_val]
+magazine_group			= wpn_val, wpn_vintorez
+
+[wg_wpn_derya]
+magazine_group			= wpn_derya
+[wg_wpn_12ga]
+magazine_group			= wpn_saiga12, wpn_vepr12
+[wg_wpn_ks23k]
+magazine_group			= wpn_ks23k

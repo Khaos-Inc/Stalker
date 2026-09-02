@@ -1,0 +1,840 @@
+---\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ wpn_mosin \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+[mosin_barrel_80]:attachment_base
+kind  =  mosin
+inv_ui_sign					= mos80
+visual							= w_att_huds\mosin_barrel_80_pistol
+inv_name						= mosin_barrel_80_pistol
+inv_name_short			= mosin_barrel_80_pistolS
+description					= mosin_barrel_80_pistolD
+cost								= 300
+inv_weight					= 0.15
+inv_grid_x					= 6
+inv_grid_y					= 63
+1icon_layer = clean1_ico
+attachment_point		= mosin_barrel|0,0,0|0,0,0
+attachment_slots			= mosin_lower_grip|wpn_body|0,0,0|0,0,0
+item_tags					= barrel
+override_section			= mosin_barrel_80_attributes
+
+[mosin_barrel_80_attributes]
+fire_point = 0, 0, -0.63
+weapon_lenght = 0.05
+bullet_speed = 0.43
+k_hit_koeff = 0.6
+fire_dispersion_base = 0.35
+zoom_rotate_time = 0.04
+recoil_koeff = 0.1
+[mosin_barrel_80_pistol_attributes]:cz75_barrel_att
+fire_point 					= 0, 0, -0.63
+weapon_lenght			= 0.05
+bullet_speed				= 0.43
+k_hit_koeff					= 0.6
+fire_dispersion_base	= 0.35
+zoom_rotate_time = 0.04
+recoil_koeff            = -0.1
+
+[mosin_barrel_220]:mosin_barrel_80
+kind  =  mosin
+inv_ui_sign					= mos_220
+visual							= w_att_huds\mosin_barrel_220_obrez
+inv_name						= mosin_barrel_220_obrez
+inv_name_short			= mosin_barrel_220_obrezS
+description					= mosin_barrel_220_obrezD
+cost								= 650
+inv_weight					= 0.65
+inv_grid_width				= 2
+inv_grid_x					= 7
+1icon_layer = clean2_ico
+attachment_slots			= mosin_lower_short|wpn_body|0,0,0|0,0,0#mosin_sight_rear|wpn_body|0,0,0|0,0,0
+override_section			= mosin_barrel_220_attributes
+
+[mosin_barrel_220_attributes]
+recoil_koeff = -0.06
+inertia_koeff = 1.3
+fire_point = 0, 0, -0.5
+weapon_lenght = 0.18
+zoom_rotate_time = 0.06
+bullet_speed = 0.6
+k_hit_koeff = 0.75
+fire_dispersion_base = 0.17
+impair_koeff = 1.1
+[mosin_barrel_220_obrez_attributes]:ar_barrel_8_att
+fire_point 					= 0, 0, -0.5
+weapon_lenght			= 0.18
+zoom_rotate_time = 0.06
+bullet_speed				= 0.6
+k_hit_koeff					= 0.75
+fire_dispersion_base	= 0.17
+impair_koeff				= 1.1
+
+[mosin_barrel_510]:mosin_barrel_80
+kind  =  mosin
+inv_ui_sign					= mosin_510mm
+visual							= w_att_huds\mosin_barrel_510_carabine
+inv_name						= mosin_barrel_510_carabine
+inv_name_short			= mosin_barrel_510_carabineS
+description					= no_attributes_descr
+cost								= 1500
+inv_weight					= 1.2
+inv_grid_width				= 3
+inv_grid_x         			= 9
+1icon_layer = clean3_ico
+attachment_slots			= mosin_lower|wpn_body|0,0,0|0,0,0#mosin_sight_rear|wpn_body|0,0,0|0,0,0#mosin_muzzle|muzzle|0,0,-0.211|0,0,0
+override_section			= mosin_barrel_510_attributes
+
+[mosin_barrel_510_attributes]
+zoom_rotate_time = 0.1
+recoil_koeff = -0.13
+inertia_koeff = 1.7
+fire_point = 0, 0, -0.21
+weapon_lenght = 0.46
+bullet_speed = 0.91
+fire_dispersion_base = 0.06
+impair_koeff = 0.9
+[mosin_barrel_510_carabine_attributes]:ar_barrel_15_att
+fire_point 					= 0, 0, -0.21
+weapon_lenght			= 0.46
+bullet_speed				= 0.91
+fire_dispersion_base	= 0.06
+impair_koeff				= 0.9
+
+[mosin_barrel_730]:mosin_barrel_510
+kind  =  mosin
+inv_ui_sign					= mosin_730mm
+visual							= w_att_huds\mosin_barrel_730_dragun
+inv_name						= mosin_barrel_730_dragun
+inv_name_short			= mosin_barrel_730_dragunS
+cost								= 2600
+inv_weight					= 1.7
+inv_grid_width				= 4
+inv_grid_x         			= 12
+1icon_layer = clean4_ico
+attachment_slots			= mosin_lower|wpn_body|0,0,0|0,0,0#mosin_sight_rear|wpn_body|0,0,0|0,0,0#mosin_muzzle|muzzle|0,0,0|0,0,0
+override_section			= mosin_barrel_730_attributes
+
+[mosin_barrel_730_attributes]
+weapon_lenght = 0.67
+bullet_speed = 1
+k_hit_koeff = 1.15
+fire_dispersion_base = 0.05
+impair_koeff = 0.8
+zoom_rotate_time = 0.13
+recoil_koeff = -0.19
+inertia_koeff = 1.9
+[mosin_barrel_730_dragun_attributes]
+weapon_lenght			= 0.67
+bullet_speed				= 1
+k_hit_koeff					= 1.15
+fire_dispersion_base	= 0.05
+impair_koeff				= 0.8
+zoom_rotate_time = 0.13
+recoil_koeff             = -0.42
+inertia_koeff            = 1.9
+
+[mosin_barrel_730_vz54]:mosin_barrel_730
+kind  =  mosin
+inv_ui_sign					= vz54_730mm
+visual							= w_att_huds\mosin_barrel_730_vz54
+inv_name						= mosin_barrel_730_vz54
+inv_name_short			= mosin_barrel_730_vz54S
+cost								= 2550
+inv_weight					= 1.62
+inv_grid_x         			= 16
+override_section			= mosin_barrel_730_vz54_attributes
+[mosin_barrel_730_vz54_attributes]:mosin_barrel_730_dragun_attributes
+bullet_speed				= 1.03
+fire_dispersion_base	= 0.06
+impair_koeff				= 0.9
+
+k_hit_koeff = 1.15
+zoom_rotate_time = 0.13
+recoil_koeff = -0.19
+inertia_koeff = 1.9
+weapon_lenght = 0.67
+[mosin_barrel_800]:mosin_barrel_730
+kind  =  mosin
+inv_ui_sign					= mosin_800mm
+visual							= w_att_huds\mosin_barrel_800_infantry
+inv_name						= mosin_barrel_800_infantry
+inv_name_short			= mosin_barrel_800_infantryS
+cost								= 3000
+inv_weight					= 2.1
+inv_grid_x         			= 20
+attachment_slots			= mosin_lower|wpn_body|0,0,0|0,0,0#mosin_sight_rear|wpn_body|0,0,0|0,0,0#mosin_muzzle|muzzle|0,0,0.0654|0,0,0
+override_section			= mosin_barrel_800_attributes
+
+[mosin_barrel_800_attributes]
+fire_point = 0, 0, 0.07
+weapon_lenght = 0.73
+bullet_speed = 1.05
+k_hit_koeff = 1.2
+fire_dispersion_base = 0.04
+impair_koeff = 0.75
+zoom_rotate_time = 0.14
+recoil_koeff = -0.20
+inertia_koeff = 2.1
+[mosin_barrel_800_infantry_attributes]
+fire_point 					= 0, 0, 0.07
+weapon_lenght			= 0.73
+bullet_speed				= 1.05
+k_hit_koeff					= 1.2
+fire_dispersion_base	= 0.04
+impair_koeff				= 0.75
+zoom_rotate_time = 0.14
+recoil_koeff             = -0.44
+inertia_koeff            = 2.1
+
+[mosin_klesch]:attachment_base
+kind  =  mosin
+inv_ui_sign					= mp8x
+visual							= w_att_huds\mosin_klesch_8x
+description					= pica_8_up
+inv_name						= mosin_klesch_8x
+inv_name_short			= mosin_kleschS
+cost								= 600
+inv_weight					= 0.07
+inv_grid_x					= 27
+inv_grid_y					= 62
+attachment_point		= mosin_mount|0,0,0|0,0,0
+attachment_slots			= pica_8|wpn_body|0,0.08926,0.13|0,0,0
+item_tags					= rail
+override_section = mosin_klesch_attributes
+
+[mosin_klesch_attributes]
+zoom_rotate_time = 0.01
+
+[mosin_dovetail]:attachment_base
+kind  =  mosin
+inv_ui_sign					= mos_dov
+visual							= w_att_huds\mosin_dovetail
+description					= mosin_dovetailD
+inv_name						= mosin_dovetail
+inv_name_short			= mosin_dovetailS
+cost								= 450
+inv_weight					= 0.09
+inv_grid_x         = 38
+inv_grid_y         = 62
+attachment_point		= mosin_mount|0,0,0|0,0,0
+attachment_slots			= dovetail_side|wpn_body|-0.0044,0.0136,0.058|0,0,0
+item_tags					= rail
+override_section = mosin_dovetail_attributes
+
+[mosin_dovetail_attributes]
+
+[mosin_kleschb]:mosin_klesch
+kind  =  mosin
+inv_ui_sign					= mp20x
+visual							= w_att_huds\mosin_klesch_20x
+description					= pica_20_up
+inv_name						= mosin_klesch_20x
+cost								= 1250
+inv_weight					= 0.12
+inv_grid_x					= 28
+attachment_slots			= pica_20|wpn_body|0,0.08926,0.108|0,0,0
+override_section = mosin_kleschb_attributes
+
+[mosin_kleschb_attributes]
+zoom_rotate_time = 0.01
+
+[mosin_scope_pe]:sight_base_pip
+kind = mosin
+inv_ui_sign					= PE-4X
+visual							= w_att_huds\mosin_klesch_pe_4x
+description					= mosin_scope_pe_4xD
+inv_name						= mosin_scope_pe_4x
+inv_name_short			= mosin_scope_pe_4xS
+cost								= 4000
+inv_weight					= 0.2
+inv_grid_width				= 2
+inv_grid_x					= 29
+inv_grid_y					= 62
+attachment_point		= mosin_mount|0,0,0|0,0,0
+attachment_slots			= aim_lens_pip|wpn_body|0,0.1098,0.0933|0,0,0
+scope_texture          =
+scope_zoom_factor      = 25       ; strongest zoom / max magnification
+min_scope_zoom_factor  = 25  ; weakest zoom / low magnification
+scope_dynamic_zoom     = false
+zoom_step_count        = 5
+
+s3ds_reticle_size      = 2
+s3ds_eye_relief        = 1
+s3ds_exit_pupil        = 0.3
+s3ds_ffp               = 0
+s3ds_min_zoom_1x       = 1
+s3ds_image_type        = 0
+s3ds_reticle_type      = 0
+s3ds_dirt_intensity    = 0
+s3ds_chroma_power      = 0
+s3ds_lens_color        = lens_clear
+
+override_section = mosin_scope_pe_attributes
+
+[mosin_scope_pe_attributes]
+zoom_rotate_time = 0.03
+fire_dispersion_base_koeff = -0.03
+
+[mosin_scope_pu]:sight_base_pip
+kind = mosin
+inv_ui_sign					= PU-3.5X
+visual							= w_att_huds\mosin_scope_pu_3_5x
+description					= mosin_scope_pu_3_5xD
+inv_name						= mosin_scope_pu_3_5x
+inv_name_short			= mosin_scope_pu_3_5xS
+cost								= 3500
+inv_weight					= 0.17
+inv_grid_x					= 31
+inv_grid_y					= 62
+attachment_point		= mosin_mount|0,0,0|0,0,0
+attachment_slots			= aim_lens_pip|wpn_body|0,0.10557,0.09285|0,0,0	
+
+scope_texture          =
+scope_zoom_factor      = 28.57       ; strongest zoom / max magnification
+min_scope_zoom_factor  = 28.57  ; weakest zoom / low magnification
+scope_dynamic_zoom     = false
+zoom_step_count        = 5
+
+s3ds_reticle_size      = 2
+s3ds_eye_relief        = 1
+s3ds_exit_pupil        = 0.3
+s3ds_ffp               = 0
+s3ds_min_zoom_1x       = 1
+s3ds_image_type        = 0
+s3ds_reticle_type      = 0
+s3ds_dirt_intensity    = 0
+s3ds_chroma_power      = 0
+s3ds_lens_color        = lens_clear
+
+override_section = mosin_scope_pu_attributes
+
+[mosin_scope_pu_attributes]
+zoom_rotate_time = 0.03
+fire_dispersion_base_koeff = -0.03
+
+[mosin_scope_vz54]:mosin_scope_pu						;scope_meopta_ZF4 ALT
+kind = mosin
+inv_ui_sign					= VZ-3X
+visual							= w_att_huds\mosin_scope_vz54_3x
+description					= mosin_scope_vz54_3xD
+inv_name						= mosin_scope_vz54_3x
+inv_name_short			= mosin_scope_vz54_3xS
+cost								= 3500
+inv_weight					= 0.17
+inv_grid_x					= 32
+attachment_slots			= aim_lens_pip|wpn_body|0,0.10791,0.0534|0,0,0
+
+scope_texture          =
+scope_zoom_factor      = 33.33       ; strongest zoom / max magnification
+min_scope_zoom_factor  = 33.33  ; weakest zoom / low magnification
+scope_dynamic_zoom     = false
+zoom_step_count        = 5
+
+s3ds_reticle_size      = 2
+s3ds_eye_relief        = 1
+s3ds_exit_pupil        = 0.3
+s3ds_ffp               = 0
+s3ds_min_zoom_1x       = 1
+s3ds_image_type        = 0
+s3ds_reticle_type      = 0
+s3ds_dirt_intensity    = 0
+s3ds_chroma_power      = 0
+s3ds_lens_color        = lens_clear
+
+override_section		=	sight_low_att
+
+[mosin_muzzle_bayonet]:attachment_base
+kind  =  mosin
+inv_ui_sign					= bayonet
+visual							= w_att_huds\mosin_muzzle_bayonet
+inv_name						= mosin_muzzle_bayonet
+inv_name_short			= mosin_muzzle_bayonetS
+cost								= 850
+inv_weight					= 0.15
+inv_grid_width				= 2
+inv_grid_x					= 33
+inv_grid_y					= 62
+attachment_point		= mosin_muzzle|0,0,0|0,0,0
+override_section			= mosin_muzzle_bayonet_attributes
+
+[mosin_muzzle_bayonet_attributes]
+weapon_lenght = 0.2
+zoom_rotate_time = 0.01
+[mosin_muzzle_bayonet_att]
+weapon_lenght = 0.2
+zoom_rotate_time = 0.01
+
+[mosin_muzzle_bramit]:attachment_base
+kind  =  mosin
+inv_ui_sign					= bramit
+visual							= w_att_huds\mosin_muzzle_bramit
+description					= mosin_muzzle_bramitD
+inv_name						= mosin_muzzle_bramit
+inv_name_short			= mosin_muzzle_bramitS
+cost								= 2100
+inv_weight					= 0.47
+inv_grid_width				= 2
+inv_grid_x					= 35
+inv_grid_y					= 62
+attachment_point		= mosin_muzzle|0,0,0|0,0,0
+item_tags					= muzzle
+override_section			= mosin_muzzle_bramit_attributes
+
+[mosin_muzzle_bramit_attributes]
+silencer_status = 1
+silencer_name = wpn_addon_silencer
+silencer_x = 1
+silencer_y = 1
+zoom_rotate_time = 0.08
+recoil_koeff = -0.07
+inertia_koeff = 1.3
+weapon_lenght = 0.14
+[mosin_muzzle_bramit_att]:74_silencer_pbs4_attributes
+weapon_lenght = 0.14
+
+[mosin_muzzle_ak]:mosin_muzzle_bramit
+kind  =  mosin
+inv_ui_sign					= adpt_ak
+visual							= w_att_huds\mosin_muzzle_ak
+description					= mosin_muzzle_akD
+inv_name						= mosin_muzzle_ak
+inv_name_short			= mosin_muzzle_akS
+cost								= 500
+inv_weight					= 0.09
+inv_grid_width				= 1
+inv_grid_x					= 37
+attachment_slots			= ak_muzzle|muzzle|0,0,-0.025|0,0,0
+override_section			= mosin_muzzle_ak_attributes
+
+[mosin_muzzle_ak_attributes]
+[mosin_muzzle_ak_att]
+
+[mosin_sight_rear]:attachment_base
+kind  =  mosin
+inv_ui_sign					= ms_sgt
+visual							= w_att_huds\mosin_sight_rear
+inv_name						= mosin_sight_rear
+inv_name_short			= mosin_sight_rearS
+cost								= 300
+inv_weight					= 0.05
+inv_grid_x					= 29
+inv_grid_y					= 63
+attachment_point		= mosin_sight_rear|0,0,0|0,0,0
+override_section = mosin_sight_rear_attributes
+
+[mosin_sight_rear_attributes]
+zoom_rotate_time = -0.01
+fire_dispersion_base_koeff = -0.05
+
+[mosin_sight_rear_inf]:mosin_sight_rear
+kind  =  mosin
+visual							= w_att_huds\mosin_sight_rear_inf
+inv_name						= mosin_sight_rear_inf
+inv_grid_x					= 30
+override_section = mosin_sight_rear_inf_attributes
+
+[mosin_sight_rear_inf_attributes]
+zoom_rotate_time = -0.01
+fire_dispersion_base_koeff = -0.05
+
+[mosin_sight_rear_vz54]:mosin_sight_rear
+kind  =  mosin
+inv_ui_sign					= sght_vz
+visual							= w_att_huds\mosin_sight_rear_vz54
+inv_name						= mosin_sight_rear_vz54
+inv_grid_x					= 31
+override_section = mosin_sight_rear_vz54_attributes
+
+[mosin_sight_rear_vz54_attributes]
+zoom_rotate_time = -0.01
+fire_dispersion_base_koeff = -0.05
+
+[mosin_sight_rear_pica]:mosin_sight_rear
+kind  =  mosin
+inv_ui_sign					= sight
+visual							= w_att_huds\mosin_sight_rear_pica
+description					= pica_14_up
+inv_name						= mosin_sight_rear_pica
+inv_name_short			= mosin_sight_rear_picaS
+cost								= 900
+inv_weight					= 0.08
+inv_grid_x					= 32
+attachment_slots			= pica_14|wpn_body|0,0.08356,0.202|0,0,0
+override_section = mosin_sight_rear_pica_attributes
+
+[mosin_sight_rear_pica_attributes]
+zoom_rotate_time = 0.01
+fire_dispersion_base_koeff = -0.02
+[ak_rear_sight_pica_att]
+zoom_rotate_time = 0.01
+fire_dispersion_base_koeff = -0.02
+
+[mosin_mag]:attachment_base
+kind  =  mosin
+inv_ui_sign					= mag5
+visual							= w_att_huds\mosin_mag	
+inv_name						= mosin_mag
+inv_name_short			= mosin_magS
+cost								= 700
+inv_weight					= 0.11
+inv_grid_x					= 24
+inv_grid_y					= 63
+attachment_point		= mosin_mag|0,0,0|0,0,0		
+item_tags					= mag
+override_section			= mosin_mag_attributes
+[mosin_mag_attributes]
+ammo_mag_size			= 5
+impair_koeff				= 0.9
+
+[mosin_lower_grip]:attachment_base
+kind  =  mosin
+inv_ui_sign					= mos_grp
+visual							= w_att_huds\mosin_lower_grip	
+inv_name						= mosin_lower_grip
+inv_name_short			= mosin_lower_gripS
+description					= mosin_lower_gripD
+cost								= 500
+inv_weight					= 0.12
+inv_grid_x					= 6
+inv_grid_y					= 64
+attachment_point		= mosin_lower_grip|0,0,0|0,0,0
+attachment_slots			= mosin_mag|wpn_body|0,0,0|0,0,0
+item_tags					= stock
+override_section 	= mosin_lower_grip_attributes
+
+[mosin_lower_grip_attributes]
+weapon_lenght = 0.05
+recoil_koeff = 0.1
+aim_hud_offset_pos = -0.0796, 0.0413, -0.12
+aim_hud_offset_pos_16x9 = -0.0796, 0.0413, -0.12
+aim_hud_offset_rot = -0.01, 0.0065, 0
+aim_hud_offset_rot_16x9 = -0.01, 0.0065, 0
+aimpoint_offset_y = 0.077248
+zoom_rotate_time = 0.02
+[mosin_grip_aim_att]:255_stock_short_attributes 
+aim_hud_offset_pos			= -0.0796, 0.0413, -0.12
+aim_hud_offset_pos_16x9	= -0.0796, 0.0413, -0.12
+aim_hud_offset_rot				= -0.01, 0.0065, 0
+aim_hud_offset_rot_16x9	= -0.01, 0.0065, 0
+aimpoint_offset_y = 0.077248
+zoom_rotate_time = 0.02
+
+[mosin_lower_short]:attachment_base
+kind  =  mosin
+inv_ui_sign					= mos_shrt
+visual							= w_att_huds\mosin_lower_short	
+inv_name						= mosin_lower_short
+inv_name_short			= mosin_lower_shortS
+description					= mosin_lower_shortD
+cost								= 1000
+inv_weight					= 0.58
+inv_grid_width				= 3
+inv_grid_x					= 7
+inv_grid_y					= 64
+attachment_point		= mosin_lower_short|0,0,0|0,0,0
+attachment_slots			= mosin_mag|wpn_body|0,0,0|0,0,0#mosin_laser|wpn_body|0,0,0|0,0,0
+item_tags					= stock
+override_section			= mosin_lower_short_attributes
+[mosin_lower_short_attributes]:c_attributes
+animation_prefix_base = c_
+weapon_lenght			= 0.22
+zoom_rotate_time = 0.02
+recoil_koeff            = 0.17
+inertia_koeff          = 0.8
+
+[mosin_lower_short_old]:mosin_lower_short
+kind  =  mosin
+visual							= w_att_huds\mosin_lower_short_old	
+inv_name						= mosin_lower_short_old
+cost								= 650
+inv_weight					= 0.52
+inv_grid_x					= 10
+attachment_slots			= mosin_mag|wpn_body|0,0,0|0,0,0
+override_section			= mosin_lower_short_old_attributes
+[mosin_lower_short_old_attributes]:mosin_lower_short_attributes
+impair_koeff = 1.2
+
+[mosin_lower_carabine]:attachment_base
+kind  =  mosin
+inv_ui_sign					= mosin_carabine
+visual							= w_att_huds\mosin_lower_carabine	
+inv_name						= mosin_lower_carabine
+inv_name_short			= mosin_lower_carabineS
+cost								= 2000
+inv_weight					= 1.2
+inv_grid_width				= 4
+inv_grid_x					= 13
+inv_grid_y					= 64
+attachment_point		= mosin_lower|0,0,0|0,0,0
+attachment_slots			= mosin_mag|wpn_body|0,0,0|0,0,0#mosin_laser|wpn_body|0,0.0015,0.0086|0,0,0#mosin_cheek|wpn_body|0,0,0|0,0,0
+item_tags					= stock
+override_section			= mosin_lower_carabine_attributes
+
+[mosin_lower_carabine_attributes]
+animation_prefix = c_
+animation_prefix_base = c_
+weapon_lenght = 0.35
+zoom_rotate_time = 0.07
+recoil_koeff = -0.19
+inertia_koeff = 0.6
+[mosin_lower_carabine_att]:c_attributes
+animation_prefix_base = c_
+weapon_lenght = 0.35
+zoom_rotate_time = 0.07
+recoil_koeff            = -0.47
+inertia_koeff          = 0.6
+
+[mosin_lower_carabine_s]:mosin_lower_carabine
+kind  =  mosin
+visual							= w_att_huds\mosin_lower_carabine_s	
+inv_name						= mosin_lower_carabine_s
+cost								= 2200
+inv_weight					= 1.3
+inv_grid_x					= 17
+override_section			= mosin_lower_carabine_s_attributes
+
+[mosin_lower_carabine_s_attributes]
+animation_prefix = c_
+animation_prefix_base = c_
+weapon_lenght = 0.35
+recoil_koeff = -0.19
+inertia_koeff = 0.6
+zoom_rotate_time = 0.06
+[mosin_lower_carabine_strap_att]:mosin_lower_carabine_att
+zoom_rotate_time = 0.06
+
+[mosin_lower_vz54]:mosin_lower_carabine
+kind  =  mosin
+inv_ui_sign					= vz54_lower
+visual							= w_att_huds\mosin_lower_vz54	
+inv_name						= mosin_lower_vz54
+inv_name_short			= mosin_lower_vz54S
+cost								= 2450
+inv_weight					= 1.3
+inv_grid_x					= 21
+attachment_slots			= mosin_mag|wpn_body|0,0,0|0,0,0#mosin_laser|wpn_body|0,0.0024,0.144|0,0,0
+override_section			= mosin_lower_vz54_attributes
+
+[mosin_lower_vz54_attributes]
+animation_prefix = c_
+animation_prefix_base = c_
+weapon_lenght = 0.3
+zoom_rotate_time = 0.08
+recoil_koeff = -0.20
+inertia_koeff = 0.7
+impair_koeff = 0.8
+[mosin_lower_vz54_att]:c_attributes
+animation_prefix_base = c_
+weapon_lenght = 0.3
+zoom_rotate_time = 0.08
+recoil_koeff            = -0.5
+inertia_koeff          = 0.7
+impair_koeff = 0.8
+
+[mosin_lower_vz54s]:mosin_lower_vz54
+kind  =  mosin
+visual							= w_att_huds\mosin_lower_vz54s	
+inv_name						= mosin_lower_vz54_sprap
+cost								= 2700
+inv_weight					= 1.4
+inv_grid_x					= 25
+override_section			= mosin_lower_vz54s_attributes
+
+[mosin_lower_vz54s_attributes]
+animation_prefix = c_
+animation_prefix_base = c_
+weapon_lenght = 0.3
+recoil_koeff = -0.20
+inertia_koeff = 0.7
+impair_koeff = 0.8
+zoom_rotate_time = 0.07
+[mosin_lower_vz54_sprap_att]:mosin_lower_vz54_att
+zoom_rotate_time = 0.07
+
+[mosin_lower_hunt]:mosin_lower_vz54s
+kind  =  mosin
+inv_ui_sign					= mosin_tac
+visual							= w_att_huds\mosin_lower_hunt	
+inv_name						= mosin_lower_hunt
+inv_name_short			= mosin_lower_huntS
+description					= mosin_lower_huntD
+cost								= 4400
+inv_weight					= 1.1
+inv_grid_y					= 63
+attachment_slots			= picgrp|wpn_body|0,-0.01444,0.05|0,0,0#bipods|wpn_body|0,0.021145,0.43757|0,0,0#pica_3|wpn_body|0.024344,0.04558,0.43757|0,0,90	;#pica_3|wpn_body|0,0.021145,0.43757|0,0,-180
+override_section			= mosin_lower_hunt_attributes
+
+[mosin_lower_hunt_attributes]
+animation_prefix = c_
+weapon_lenght = 0.3
+ammo_mag_size = 10
+zoom_rotate_time = 0.03
+recoil_koeff = -0.27
+inertia_koeff = 0.6
+[mosin_lower_hunt_att]:c_attributes
+weapon_lenght = 0.3
+ammo_mag_size = 10
+zoom_rotate_time = 0.03
+recoil_koeff            = -0.44
+inertia_koeff          = 0.6
+
+[mosin_lower_dragun]:mosin_lower_carabine
+kind  =  mosin
+inv_ui_sign					= mosin_dragun
+visual							= w_att_huds\mosin_lower_dragun	
+inv_name						= mosin_lower_dragun
+inv_name_short			= mosin_lowerS
+cost								= 3000
+inv_weight					= 1.5
+inv_grid_width				= 5
+inv_grid_x					= 29
+attachment_slots			= mosin_mag|wpn_body|0,0,0|0,0,0#mosin_laser|wpn_body|0,0,0|0,0,0#mosin_cheek|wpn_body|0,0,0|0,0,0#barrel_side|wpn_body|0,0.0148,0.293|0,0,0
+override_section			= mosin_lower_dragun_attributes
+
+[mosin_lower_dragun_attributes]
+animation_prefix = c_
+animation_prefix_base = c_
+weapon_lenght = 0.35
+zoom_rotate_time = 0.1
+recoil_koeff = -0.20
+inertia_koeff = 0.7
+[mosin_lower_dragun_att]:c_attributes
+animation_prefix_base = c_
+weapon_lenght = 0.35
+zoom_rotate_time = 0.1
+recoil_koeff            = -0.53
+inertia_koeff          = 0.7
+
+[mosin_lower_infantry]:mosin_lower_dragun
+kind  =  mosin
+inv_ui_sign					= mosin_infantry
+visual							= w_att_huds\mosin_lower_infantry	
+inv_name						= mosin_lower_infantry
+cost								= 3300
+inv_weight					= 1.45
+inv_grid_x					= 34
+attachment_slots			= mosin_mag|wpn_body|0,0,0|0,0,0#mosin_laser|wpn_body|0,0,0|0,0,0#mosin_cheek|wpn_body|0,0,0|0,0,0
+override_section			= mosin_lower_infantry_attributes
+
+[mosin_lower_infantry_attributes]
+animation_prefix = c_
+animation_prefix_base = c_
+weapon_lenght = 0.4
+zoom_rotate_time = 0.09
+recoil_koeff = -0.20
+inertia_koeff = 0.7
+impair_koeff = 0.9
+[mosin_lower_infantry_att]:c_attributes
+animation_prefix_base = c_
+weapon_lenght = 0.4
+zoom_rotate_time = 0.09
+recoil_koeff            = -0.51
+inertia_koeff          = 0.7
+impair_koeff = 0.9
+
+[mosin_lower_old]:mosin_lower_infantry
+kind  =  mosin
+inv_ui_sign					= mosin_ba_hm
+visual							= w_att_huds\mosin_lower_old	
+inv_name						= mosin_lower_old
+cost								= 2900
+inv_weight					= 1.25
+inv_grid_y					= 63
+attachment_slots			= mosin_mag|wpn_body|0,0,0|0,0,0#mosin_laser|wpn_body|0,0,0|0,0,0
+override_section			= mosin_lower_old_attributes
+
+[mosin_lower_old_attributes]
+animation_prefix = c_
+animation_prefix_base = c_
+weapon_lenght = 0.35
+zoom_rotate_time = 0.06
+recoil_koeff = -0.18
+inertia_koeff = 0.6
+[mosin_lower_old_att]:c_attributes
+animation_prefix_base = c_
+weapon_lenght = 0.35
+zoom_rotate_time = 0.06
+recoil_koeff            = -0.4
+inertia_koeff          = 0.6
+
+[mosin_cheek]:attachment_base
+kind  =  mosin
+inv_ui_sign					= mos_cheek
+visual							= w_att_huds\mosin_cheek	
+inv_name						= mosin_cheek
+inv_name_short			= mosin_cheekS
+cost								= 600
+inv_weight					= 0.12
+inv_grid_x					= 39
+inv_grid_y					= 64
+attachment_point		= mosin_cheek|0,0,0|0,0,0
+item_tags					= stock
+override_section			= mosin_cheek_attributes
+
+[mosin_cheek_attributes]
+zoom_rotate_time = -0.04
+[mosin_cheek_att]
+zoom_rotate_time = -0.04
+
+[mosin_zatvor_handle]:attachment_base
+kind  =  mosin
+inv_ui_sign					= ms_hndle
+visual							= w_att_huds\mosin_zatvor_handle	
+inv_name						= mosin_zatvor_handle
+inv_name_short			= mosin_zatvor_handleS
+cost								= 700
+inv_weight					= 0.1
+inv_grid_x					= 39
+inv_grid_y					= 63
+1icon_layer = clean_lub1_ico
+attachment_point		= mosin_handle|0,0,0|0,0,0
+item_tags					= zatvor
+override_section			= mosin_zatvor_handle_attributes
+
+[mosin_zatvor_handle_attributes]
+rpm = 48
+[mosin_zatvor_att]
+rpm = 48
+
+[mosin_zatvor_handle_vz54]:mosin_zatvor_handle
+kind  =  mosin
+inv_ui_sign					= vz_hndle
+visual							= w_att_huds\mosin_zatvor_handle_vz54	
+inv_name						= mosin_zatvor_handle_vz54
+inv_name_short			= mosin_zatvor_handle_vz54S
+cost								= 850
+inv_weight					= 0.09
+inv_grid_y					= 62
+override_section			= mosin_zatvor_handle_vz54_attributes
+
+[mosin_zatvor_handle_vz54_attributes]
+rpm = 54
+[mosin_zatvor_vz54_att]
+rpm = 54
+
+[mosin_laser]:attachment_base
+kind  =  mosin
+inv_ui_sign					= mos_laser
+visual							= w_att_huds\mosin_laser	
+inv_name						= mosin_laser
+inv_name_short			= mosin_laserS
+description					= tac_laserD
+cost								= 800
+inv_weight					= 0.08
+inv_grid_x					= 33
+inv_grid_y					= 63
+attachment_point		= mosin_laser|0,0,0|0,0,0
+attachment_slots 		= tac_aim|wpn_body|0.05,0.14247,-0.05|0,0,30	
+item_tags					= rail
+is_torch_laser                  = true
+is_torch                  = false
+laser_section             = tactical_laser_red
+laser_bone         = laser
+laser_bone_axis    = y
+laser_bone_invert  = false
+1icon_layer = red_laser_ico
+override_section = mosin_laser_attributes
+
+[mosin_laser_attributes]
+zoom_rotate_time = -0.05
+[mosin_laser_att]
+zoom_rotate_time = -0.05

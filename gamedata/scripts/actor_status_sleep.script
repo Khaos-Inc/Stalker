@@ -3,22 +3,11 @@
 -- Date: 2018/11/7
 -- Sleep deprivation
 
--- Updated: 2021/14/03
--- By: TKCrits
--- Addon: Immersive Sleep v1.0.1b
-
 local last_sleep, last_sleep_chk, pwr_chk
 local feature_state
 
--- Default 27. Runs 192 times for 16 hours. Adding up to 5184.
-local up_sleep				= 30 -- step
-
--- Default 1400. 625 will be for perfect 8 hour sleep, 
--- 510 = 4080, because the zone is not the most comfortable.
--- Food also increases sleepiness.
--- Should look into how bedrolls can improve sleep
-local in_hour				= 750-- amount decreased every sleep hour
-
+local up_sleep				= 27 -- step
+local in_hour				= 1400 -- amount decreased every sleep hour
 local start_blur_1 			= 5000 -- value at which gray indicator appear
 local start_blur_2 			= 6250 -- value at which yellow indicator appear
 local start_blur_3 			= 7500 -- value at which orange indicator appear
@@ -28,10 +17,8 @@ local force_slp				= 10001
 
 local sleep_chk				= 300 -- amount of in-game seconds where indicator value increase
 local itn_mul 				= 0.001
-local eat_sleepiness_mul	= 2000
+local eat_sleepiness_mul	= 1000
 local pwr_rate,rng_factor 	= -0.00010, 0.08
-
-local comfy 				= 0
 	
 function create()
 	printdbg("- Sleep deprivation | Enabled")
@@ -88,13 +75,15 @@ function test_blur()
 		elseif last_sleep >= force and math.random(100) <= force_slp and not db.actor:has_info("actor_is_sleeping")==true then
 			db.actor:give_info_portion("force_slp2")
 			force_sleep()
+			-- actor_menu.set_msg(1, game.translate_string("You are extremely depleted - you need to sleep!"),5)
 		end
 	end
 end
 
 function force_sleep()
+	ui_sleep_dialog.sleep_forced()
+	actor_menu.set_msg(1, game.translate_string("st_sleep_deprived"),5)
 	disable_info("force_slp2")
-	printf("You are really tired")
 end
 
 function get_sleep_deprivation(visual)
@@ -111,34 +100,6 @@ function get_sleep_deprivation(visual)
 		end
 	end
 	return clamp( normalize(last_sleep, 0, 10000) , 0 , 1)
-end
-
--- Immersive Sleep
-function get_last_sleep()
-	return last_sleep or 0
-end
-
-function get_sleep_blur_4()
-	return start_blur_4 or 0
-end
-
-function get_sleep_deprivation_level()
-	local sleep_level = 0
-	if (not last_sleep) then
-		return 0
-	end
-	
-	if last_sleep > start_blur_1 then sleep_level = 1
-	elseif last_sleep > start_blur_2 then sleep_level = 2
-	elseif last_sleep > start_blur_3 then sleep_level = 3
-	elseif last_sleep > start_blur_4 then sleep_level = 4
-	end
-
-	return sleep_level
-end
-
-function set_rest_per_hour(rest)
-	in_hour = rest
 end
 
 
@@ -166,10 +127,9 @@ function load_state(m_data)
 end
 
 function actor_on_sleep(hours)
-	printdbg("# Immersive Sleep | Rest per hour: %s",tostring(in_hour))
 	if (not db.actor:has_info("force_slp2")) then
 		printdbg("/ Sleep deprivation | Reduced sleepiness by sleeping: %s - old sleepiness level: %s", hours*(in_hour/2), last_sleep)
-		last_sleep = last_sleep and math.ceil(last_sleep - hours*((in_hour or 1400))) or 0
+		last_sleep = last_sleep and math.ceil(last_sleep - hours*((in_hour or 1400)/2)) or 0
 		if (last_sleep < 0) then
 			last_sleep = 0
 		elseif (last_sleep > 10000) then
@@ -177,7 +137,6 @@ function actor_on_sleep(hours)
 		end
 	end
 end
-
 
 function actor_on_item_use(item)
 

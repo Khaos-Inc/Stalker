@@ -14,8 +14,6 @@ Modes:
 	
 --]]
 
-display_supply_level = true
-
 local enable_feature        = true
 local enable_item_picker	= true
 
@@ -23,44 +21,21 @@ local is_shift_pressed = false
 
 local weight_unit = game.translate_string("st_kg")
 local snd_open         = sound_object([[interface\inv_open]])
-local snd_open_loot	   = sound_object([[interface\inv_open_loot]])
 local snd_close        = sound_object([[interface\inv_close]])
 local snd_item_to_slot = sound_object([[interface\inv_slot]])
 local snd_item_to_belt = sound_object([[interface\inv_belt]])
 local snd_item_to_ruck = sound_object([[interface\inv_ruck]])
-local snd_item_move_all= sound_object([[interface\inv_move_all]])
 local snd_properties   = sound_object([[interface\inv_properties_2]])
 local snd_drop_item    = sound_object([[interface\inv_drop]])
 local snd_attach_addon = sound_object([[interface\inv_attach_addon]])
 local snd_detach_addon = sound_object([[interface\inv_detach_addon]])
 local snd_item_use     = sound_object([[interface\inv_none]])
-local snd_trade        = sound_object([[interface\inv_trade]])
-local snd_button	   = sound_object([[interface\inv_button]])
-
-local snd_addon = {
-	["snd_attach_scope"] 	= sound_object([[interface\inv_attach_scope]]),
-	["snd_attach_sil"]   	= sound_object([[interface\inv_attach_sil]]),
-	["snd_attach_gl"]  		= sound_object([[interface\inv_attach_gl]]),
-	["snd_detach_scope"] 	= sound_object([[interface\inv_attach_scope]]),
-	["snd_detach_sil"]   	= sound_object([[interface\inv_detach_sil]]),
-	["snd_detach_gl"]  		= sound_object([[interface\inv_detach_gl]]),
-}
 
 local clr_weight = {
 	[1] = GetARGB(255,255,255,255),
 	[2] = GetARGB(255,255,50,0),
 	[3] = GetARGB(255,200,150,0),
 }
-
-local clr_bars_text = {
-	[1] = GetARGB(255,255,255,255),
-	[2] = GetARGB(255,255,255,255),
-	[3] = GetARGB(255,255,255,255),
-	[4] = GetARGB(255,255,255,255),
-}
-
-local perc = "%"
-
 
 -- UI events
 local K_Timer   = false
@@ -74,11 +49,6 @@ local E_RELEASE = ui_events.WINDOW_KEY_RELEASED
 -- Utils
 local in_actor_inv = utils_item.in_actor_inv
 local in_npc_inv = utils_item.in_npc_inv
-
-function InvRoundStats(x)
-	rounded = x + 0.5 - (x + 0.5) % 1
-	return rounded
-end
 
 function keybind_pass()
 	-- I added this to prevent inventory closing after starting because of release keybind
@@ -122,12 +92,30 @@ end
 
 ----------------------------------------------------------------
 GUI = nil -- instance, don't touch
+
+local function prewarm_inventory_weapon_icons(owner)
+	if not owner then
+		return
+	end
+
+	local function queue(owner_obj, item)
+		if item and IsWeapon(nil, item:clsid()) and prewarm_runtime_weapon_icon then
+			prewarm_runtime_weapon_icon(item, false)
+		end
+	end
+
+	-- Actor inventory iteration includes equipped and rucksack items.
+	if owner.iterate_inventory then
+		owner:iterate_inventory(queue, nil)
+	end
+end
+
 function start(mode, obj)
 	if (not mode) then
 		return
 	end
 	
-	if (mode == "loot") and is_shift_pressed then
+	if (mode == "loot" and not IsInvbox(obj)) and is_shift_pressed then
 		return
 	end
 	
@@ -138,6 +126,11 @@ function start(mode, obj)
 	if (GUI) and (not GUI:IsShown()) and keybind_pass() then
 		if mode == "inventory" then
 			change_last_mode(1)
+
+			-- Queue shader icons before the inventory window is rebuilt/shown.
+			-- This removes the one-frame/static-icon flash on open.
+			prewarm_inventory_weapon_icons(db.actor)
+
 			GUI:IMode_Init()
 			
 		elseif mode == "loot" then
@@ -155,10 +148,8 @@ function start(mode, obj)
 		end
 		
 		GUI:ShowDialog(true)
---[[Bartoche70 for my addon Bart's New Sorting Tabs	because "Keypad 0" toggle hud in inventory	
-		--_GUIs_keyfree["UIInventory"] = true
---]]
-		_GUIs_keyfree["UIInventory"] = false
+		
+		_GUIs_keyfree["UIInventory"] = true
 		Register_UI("UIInventory","ui_inventory")
 	end
 end
@@ -179,12 +170,14 @@ function UIInventory:__init() super()
 	-- Technical
 	self.hover           = { idx = false , bag = false, tg = 0 }
 	self.slot_hl         = { idx = false , bag = false }
+	self.ammo_hl         = { idx = false , bag = false, list = {} }
 	self.holding_shift   = false
 	self.holding_ctrl    = false
 	self.update_info     = false
 	self.update_inv 	 = false
 	self.update_bags     = {"actor_bag", "actor_trade", "actor_trade_bag", "npc_bag", "npc_trade", "npc_trade_bag" , "picker"}
 	self.update_items	 = {}
+	self.magazine_operation = nil -- timed one-round-at-a-time load/unload
 
 	self.tg_info  	     = nil
 	self.tg_info_step  	 = 2 --[ms]
@@ -243,13 +236,7 @@ function UIInventory:__init() super()
 		["psi"]        = { min= 0 , max= (SYS_GetParam(2,"actor_condition","psi_zone_max_power"))        , hint= "ui_inv_telepatic_protection"},
 		["wound"]      = { min= 0 , max= (SYS_GetParam(2,"actor_condition","max_wound_protection"))      , hint= "ui_inv_wound_protection" },
 		["fire_wound"] = { min= 0 , max= (SYS_GetParam(2,"actor_condition","max_fire_wound_protection")) , hint= "ui_inv_fire_wound_protection" },
-		["explosion"] = { min= 0 , max= (SYS_GetParam(2,"actor_condition","max_fire_wound_protection")) , hint= "ui_inv_explosion_protection" },
-		["strike"] = { min= 0 , max= (SYS_GetParam(2,"actor_condition","max_fire_wound_protection")) , hint= "ui_inv_strike_protection" },
-		["power"]      = { min= 0 , max= (SYS_GetParam(2,"actor_condition","max_power_restore_speed"))   },
-		["thirst"]		= { min= 0 , max= (SYS_GetParam(2,"actor_condition","max_power_restore_speed"))   },
-		["sleep"]		= { min= 0 , max= (SYS_GetParam(2,"actor_condition","max_power_restore_speed"))   },
-		["br_class"]	= { min= 0 , max= (SYS_GetParam(2,"actor_condition","max_fire_wound_protection")) , hint= "ui_inv_br_protection"   },	
-		["br_mitigation"]	= { min= 0 , max= (SYS_GetParam(2,"actor_condition","max_fire_wound_protection")) , hint= "ui_inv_br_protection"   },	
+		["power"]      = { min= 0 , max= (SYS_GetParam(2,"actor_condition","max_power_restore_speed"))   , hint= "ui_inv_power_restore"},
 	}
 	self.boost_id = {
 		[ BoosterID["HpRestore"] ]              = "health_restore",
@@ -280,6 +267,8 @@ function UIInventory:__init() super()
 		["move_all"]        = { index= 8 ,  name= "st_move_all",               mode= {"loot","trade"},			cont= {"actor_equ","actor_belt","actor_bag","actor_trade_bag","actor_trade","npc_bag","npc_trade","npc_trade_bag"},   precondition1= {"Cond_Childs"}, precondition2= {"Cond_Move"},          action= {"Action_Move_All"} },
 		["donate"]          = { index= 9 ,  name= "st_donate",                 mode= {"trade"},					cont= {"actor_trade_bag","actor_trade"},precondition1= {"Cond_NotQuest"},                                          	   action= {"Action_Donate"} },
 		["unload"]          = { index= 10,  name= "st_unload_magazine",        mode= {"loot","inventory"},		cont= {"actor_equ","actor_bag","npc_bag"}, precondition1= {"Cond_Unload"},                                             action= {"Action_Unload"} },
+		["load_detachable_mag"]   = { index= 10.1, name= "Load magazine",   mode= {"inventory"}, cont= {"actor_bag"}, precondition1= {"Cond_Load_Detachable_Mag"}, action= {"Action_Load_Detachable_Mag"} },
+		["unload_detachable_mag"] = { index= 10.2, name= "Unload magazine", mode= {"inventory"}, cont= {"actor_bag"}, precondition1= {"Cond_Unload_Detachable_Mag"}, action= {"Action_Unload_Detachable_Mag"} },
 		["custom_1"]        = { index= 11,  name_func= {"Name_Custom",1},      mode_func= {"Mode_Custom",1},	cont_func= {"Cont_Custom",1},   		precondition1= {"Name_Custom",1 },                                             action= {"Action_Custom",1} },
 		["custom_2"]        = { index= 12,  name_func= {"Name_Custom",2},      mode_func= {"Mode_Custom",2},	cont_func= {"Cont_Custom",2},   		precondition1= {"Name_Custom",2 },                                             action= {"Action_Custom",2} },
 		["custom_3"]        = { index= 13,  name_func= {"Name_Custom",3},      mode_func= {"Mode_Custom",3},	cont_func= {"Cont_Custom",3},   		precondition1= {"Name_Custom",3 },                                             action= {"Action_Custom",3} },
@@ -341,14 +330,10 @@ function UIInventory:InitControls()
 	xml:ParseFile			("ui_inventory.xml")
 
 	-- Right side - Player
-
 	self.player_dialog            = xml:InitStatic("player", self)
 	self.player_background		  = xml:InitStatic("player:background", self.player_dialog)
-	self.player_community_overlay = xml:InitStatic("player:community_overlay", self.player_dialog)
 	self.player_name              = xml:InitTextWnd("player:name", self.player_dialog)
 	self.player_community         = xml:InitTextWnd("player:community", self.player_dialog)
-	self.player_rank         	  = xml:InitTextWnd("player:rank", self.player_dialog)
-	self.player_rank_icon      	  = xml:InitStatic("player:rank_icon", self.player_dialog)
 	self.player_icon              = xml:InitStatic("player:icon", self.player_dialog)
 	self.player_money             = xml:InitTextWnd("player:money", self.player_dialog)
 	self.player_weight_cap        = xml:InitStatic("player:weight_caption", self.player_dialog)
@@ -356,7 +341,6 @@ function UIInventory:InitControls()
 	self.player_weight_max        = xml:InitTextWnd("player:weight_max", self.player_dialog)
 	self.player_putall 		      = xml:Init3tButton("player:putall_button", self.player_dialog)
 	self:Register(self.player_putall, "put_all")
-	
 	self.player_trade  		      = xml:InitStatic("player:trade_delimiter", self.player_dialog)
 	self.player_trade_cap         = xml:InitStatic("player:trade_delimiter:trade_caption", self.player_trade)
 	self.player_trade_price       = xml:InitTextWnd("player:trade_delimiter:trade_price", self.player_trade)
@@ -367,23 +351,19 @@ function UIInventory:InitControls()
 	self.CC["actor_trade"]        = utils_ui.UICellContainer("actor_trade", self, nil, "player:cont_trade", self.player_dialog)
 	self.CC["actor_trade_bag"]    = utils_ui.UICellContainer("actor_trade_bag", self, nil, "player:cont_trade_bag", self.player_dialog)
 	
-	self.CC["actor_bag"].stack_all              = enable_item_picker and true or false
-	self.CC["actor_trade"].stack_all            = enable_item_picker and true or false
-	self.CC["actor_trade_bag"].stack_all        = enable_item_picker and true or false
+	-- Disable automatic "stack all" merging for player containers.
+	-- Magazine items need to remain separate because each mag can have its own ammo count.
+	self.CC["actor_bag"].stack_all              = false
+	self.CC["actor_trade"].stack_all            = false
+	self.CC["actor_trade_bag"].stack_all        = false
 --	self.CC["actor_bag"].sort_method       = "kind"
 --	self.CC["actor_trade_bag"].sort_method = "kind"
-
-	-- Community Player
-	self.player_community_icon    = xml:InitStatic("player:community_icon", self.player_dialog)
 	
 	-- Left side -- NPC
 	self.npc_dialog               = xml:InitStatic("npc", self)
 	self.npc_background		      = xml:InitStatic("npc:background", self.npc_dialog)
-	self.npc_community_overlay 	  = xml:InitStatic("player:community_overlay", self.npc_dialog)
 	self.npc_name                 = xml:InitTextWnd("npc:name", self.npc_dialog)
 	self.npc_community            = xml:InitTextWnd("npc:community", self.npc_dialog)
-	self.npc_rank         	  	  = xml:InitTextWnd("npc:rank", self.npc_dialog)
-	self.npc_rank_icon      	  = xml:InitStatic("npc:rank_icon", self.npc_dialog)
 	self.npc_icon                 = xml:InitStatic("npc:icon", self.npc_dialog)
 	self.npc_money                = xml:InitTextWnd("npc:money", self.npc_dialog)
 	self.npc_weight_cap           = xml:InitStatic("npc:weight_caption", self.npc_dialog)
@@ -401,9 +381,11 @@ function UIInventory:InitControls()
 	self.CC["npc_trade"]          = utils_ui.UICellContainer("npc_trade", self, nil, "npc:cont_trade", self.npc_dialog)
 	self.CC["npc_trade_bag"]      = utils_ui.UICellContainer("npc_trade_bag", self, nil, "npc:cont_trade_bag", self.npc_dialog)
 	
-	self.CC["npc_bag"].stack_all              = enable_item_picker and true or false
-	self.CC["npc_trade"].stack_all            = enable_item_picker and true or false
-	self.CC["npc_trade_bag"].stack_all        = enable_item_picker and true or false
+	-- Disable automatic "stack all" merging for NPC/trade containers too,
+	-- otherwise mags can merge again when moved through loot/trade.
+	self.CC["npc_bag"].stack_all              = false
+	self.CC["npc_trade"].stack_all            = false
+	self.CC["npc_trade_bag"].stack_all        = false
 --	self.CC["npc_bag"].sort_method       = "kind"
 --	self.CC["npc_trade_bag"].sort_method = "kind"
 	
@@ -411,21 +393,14 @@ function UIInventory:InitControls()
 	self.npc_up_dialog	          = xml:InitStatic("upgrade", self)
 	self.npc_up_background		  = xml:InitStatic("upgrade:background", self.npc_up_dialog)
 	self.npc_up_name              = xml:InitTextWnd("upgrade:name", self.npc_up_dialog)
-	self.npc_up_community            = xml:InitTextWnd("npc:community", self.npc_up_dialog)
-	self.npc_up_community_overlay 	  = xml:InitStatic("player:community_overlay", self.npc_up_dialog)
-	self.npc_up_rank         	  	  = xml:InitTextWnd("npc:rank", self.npc_up_dialog)
-	self.npc_up_rank_icon      	  = xml:InitStatic("npc:rank_icon", self.npc_up_dialog)
+	self.npc_up_community         = xml:InitTextWnd("upgrade:community", self.npc_up_dialog)
 	self.npc_up_icon              = xml:InitStatic("upgrade:icon", self.npc_up_dialog)
 	self.npc_up_money             = xml:InitTextWnd("upgrade:money", self.npc_up_dialog)
 	self.npc_up_scheme            = xml:InitScrollView("upgrade:scheme", self.npc_up_dialog)
 	self.npc_up_item              = xml:InitStatic("upgrade:item_static", self.npc_up_dialog)
 	self.npc_up_repair 		  	  = xml:Init3tButton("upgrade:repair_button", self.npc_up_dialog)
 	self:Register(self.npc_up_repair, "repair")
-
-	-- Community NPC
-	self.npc_community_icon    = xml:InitStatic("npc:community_icon", self.npc_dialog)
-	self.npc_up_community_icon    = xml:InitStatic("upgrade:community_icon", self.npc_up_dialog)
-		
+	
 	self.equ_dialog            	  = xml:InitStatic("equipment", self)
 	self.equ_background		      = xml:InitStatic("equipment:background", self.equ_dialog)
 	
@@ -469,9 +444,6 @@ function UIInventory:InitControls()
 		self.stat[name].base     = xml:InitStatic("equipment:actor_state_info:" .. name .. "_sensor", self.stats_dialog)
 		self.stat[name].bar      = xml:InitProgressBar("equipment:actor_state_info:" .. name .. "_sensor:state_progress", self.stat[name].base)
 		self.stat[name].ico_base = xml:InitStatic("equipment:actor_state_info:icon", self.stat[name].base)
-		self.stat[name].text	 = xml:InitTextWnd("equipment:actor_state_info:" .. name .. "_sensor:stats", self.stat[name].base)
-		self.stat[name].text_bonus	 = xml:InitTextWnd("equipment:actor_state_info:" .. name .. "_sensor:stats_bonus", self.stat[name].base)
-		self.stat[name].text_bonus_regen	 = xml:InitTextWnd("equipment:actor_state_info:" .. name .. "_sensor:stats_bonus_regen", self.stat[name].base)
 		
 		self.stat[name].ico_p    = xml:InitStatic("equipment:actor_state_info:icon:active", self.stat[name].ico_base)
 		self.stat[name].ico_p:InitTexture("ui_inGame2_inv_state_P_" .. name)
@@ -482,21 +454,11 @@ function UIInventory:InitControls()
 		self.stat[name].ico_n:Show(false)
 	end
 
-	self.stat["fire_wound"].text_bonus2	 = xml:InitTextWnd("equipment:actor_state_info:" .. "fire_wound" .. "_sensor:stats_bonus2", self.stat["fire_wound"].base)
-	
 	-- Sorter
 	self.sort_dialog            = xml:InitStatic("equipment:sorter", self.equ_dialog)
 	self.sort_btn = {}
 	self.sort_num = {}
-    
-
---[[Bartoche70 for my addon Bart's New Sorting Tabs	30/10/2020
-    -------------------------------------------------------
-	--for i=1,8 do  --> because tabs are now 10
---]]	
-	
-	for i=1,10 do
-    	
+	for i=1,8 do
 		self.sort_btn[i] 		= xml:InitCheck("equipment:sorter:btn_" .. i, self.sort_dialog)
 		self.sort_btn[i]:SetCheck(false)
 		local _wrapper = function(handler) -- we need wrapper in order to pass ctrl to method
@@ -547,12 +509,6 @@ function UIInventory:InitControls()
 	self.hint_wnd:SetAutoDelete(false)
 	self.hint_wnd_text = xml:InitTextWnd("hint_wnd:text",self.hint_wnd)
 	self.hint_wnd:Show(false)
-
-	-- Trader Level
-	self.haruka_xml = CScriptXmlInit()
-	self.haruka_xml:ParseFile("ui_haruka_trade_stats.xml")
-	local haruka_xml = self.haruka_xml
-	self.haruka_trader_supply_level = haruka_xml:InitTextWnd("trader:level", self.npc_dialog)
 end
 
 function UIInventory:InitCallbacks()
@@ -569,12 +525,7 @@ function UIInventory:InitCallbacks()
 end
 
 function UIInventory:Reset(obj)
-	local mode = self.mode
-	local mT = mode == "trade"
 
-	self.haruka_trader_supply_level:Show(mT and display_supply_level)
-
-	--printdbg("# UIInventory:Reset")
 	local to_show = obj and self:IsInvOwner(obj)
 	local mode = self.mode
 	local mI = mode == "inventory"
@@ -597,8 +548,6 @@ function UIInventory:Reset(obj)
 	self.CC["npc_trade_bag"]:Show( mT )
 	self:Picker_Toggle()
 	self.trash:Show( mI )
-	self:ShowFaction("na", "npc")
-	self:ShowRank(0, "npc")
 	
 	self.CC["actor_bag"].can_select = mR
 	self.CC["actor_equ"].can_select = mR
@@ -622,8 +571,6 @@ function UIInventory:Reset(obj)
 	self.npc_community:Show(to_show)
 	self.npc_icon:Show(to_show)
 	self.npc_up_repair:Enable(false)
-
-	self.npc_community_icon:InitTexture("ui_mm_faction_na") 
 	
 	self.item_info:Update()
 	self.upgr_info:Update()
@@ -639,6 +586,7 @@ function UIInventory:Reset(obj)
 	self.upgr 			 = { id = false , sec = false , idx = false , bag = false}
 	self.hover           = { idx = false , bag = false, tg = 0 }
 	self.slot_hl         = { idx = false , bag = false }
+	self.ammo_hl         = { idx = false , bag = false, list = {} }
 	self.holding_ctrl    = false
 	self.holding_shift   = false
 	
@@ -674,7 +622,7 @@ function UIInventory:ParseInventory(npc, all, id_list, ignore_kind)
 		else
 			npc:iterate_ruck(iterate,nil)
 		end
-	elseif npc and self.npc_is_box then
+	elseif self.npc_is_box then
 		npc:iterate_inventory_box(iterate,nil)
 	end
 	
@@ -684,7 +632,7 @@ end
 function UIInventory:ParseInventory_Companion(npc, id_list, ignore_kind)
 	-- only for alive NPCs, player shouldn't get NPC equipped items
 	-- companions are a special case, player can only get their assigned items
-	if npc == nil then return end
+	
 	local npc_id = npc:id() 
 	local inv = {}
 	local size_c = 0
@@ -791,6 +739,7 @@ function UIInventory:InitProperties(obj, bag)
 	local context_str = {}
 	local context_action = {}
 	local context_params = {}
+	local context_sections = {}
 	
 	for n,props in spairs(self.properties, func_index) do
 	
@@ -841,16 +790,267 @@ function UIInventory:InitProperties(obj, bag)
 				if func_action and func_action[1] and self[func_action[1]] then
 					table.insert(context_action, func_action[1])
 					table.insert(context_params, {id, bag, unpack(func_action)})
+					table.insert(context_sections, false)
 				end
 			end
 			
 		end
 	end
 	
+	-- Remove old fixed module rows. Exact module installation and unlimited
+	-- removal are added below.
+	for i = #context_str, 1, -1 do
+		local label = tostring(context_str[i] or "")
+		if label == "Install module" or
+		   string.find(label, "Remove module:", 1, true) == 1 or
+		   string.find(label, "Remove magazine:", 1, true) == 1
+		then
+			table.remove(context_str, i)
+			table.remove(context_action, i)
+			table.remove(context_params, i)
+			table.remove(context_sections, i)
+		end
+	end
+
+	-- Exact rail/provider/position installation for loose modules.
+	if module_items and module_items.get_dynamic_install_placements then
+		local placements =
+			module_items.get_dynamic_install_placements(obj)
+
+		for _, entry in ipairs(placements) do
+			table.insert(context_str, entry.label)
+			table.insert(
+				context_action,
+				"Action_Install_Module_Placement")
+			table.insert(
+				context_params,
+				{id, bag, entry.index})
+			table.insert(
+				context_sections,
+				obj:section())
+		end
+	end
+
+	-- Unlimited exact-instance module removal.
+	if module_items and module_items.get_dynamic_removable_modules and
+	   obj.module_count and obj.module_get_section
+	then
+		local removable = module_items.get_dynamic_removable_modules(obj)
+
+		for _, entry in ipairs(removable) do
+			table.insert(context_str, entry.label)
+			table.insert(context_action, "Action_Remove_Module_Index")
+			table.insert(context_params, {id, bag, entry.index})
+			table.insert(context_sections, entry.section)
+		end
+	end
+
+	-- Open the physical 3D workbench for modular weapons owned by the actor.
+	if mode == "inventory" and
+	   (bag == "actor_bag" or bag == "actor_equ") and
+	   IsWeapon(obj) and
+	   SYS_GetParam(
+		   1,
+		   obj:section(),
+		   "modular_attachments",
+		   false) == true
+	then
+		table.insert(context_str, "Modify weapon")
+		table.insert(context_action, "Action_Modify_Weapon")
+		table.insert(context_params, {id, bag})
+		table.insert(context_sections, obj:section())
+	end
+
 	if is_not_empty(context_action) and is_not_empty(context_str) then
-		self.item_props:Reset(GetCursorPosition(), context_action, context_str, context_params)
+		self.item_props:Reset(
+			GetCursorPosition(),
+			context_action,
+			context_str,
+			context_params,
+			context_sections)
 		self:PlaySND(snd_properties)
 	end
+end
+
+
+-- Opens the second-level slot selector for one exact provider module.
+-- Returns true when it installed directly or opened the slot menu.
+function UIInventory:Open_Module_Placement_Slots(
+	module_obj,
+	module_bag,
+	target_weapon,
+	selected_owner)
+	if not (module_obj and target_weapon and selected_owner) then
+		return false
+	end
+
+	if not (module_items and module_items.get_dynamic_install_placements) then
+		return false
+	end
+
+	local all_placements = module_items.get_dynamic_install_placements(
+		module_obj,
+		target_weapon)
+	local placements = {}
+
+	for _, entry in ipairs(all_placements or {}) do
+		if tostring(entry.owner or "") == tostring(selected_owner) then
+			table.insert(placements, entry)
+		end
+	end
+
+	if #placements == 0 then
+		return false
+	end
+
+	-- Only one exact slot/position on the selected provider: install directly.
+	if #placements == 1 then
+		if module_items.install_module_placement then
+			local ok = module_items.install_module_placement(
+				module_obj,
+				placements[1].index,
+				target_weapon)
+
+			if ok then
+				self:RefreshItemIcon(target_weapon)
+				self:PlaySND(snd_attach_addon)
+				self:On_Item_Update()
+			end
+		end
+
+		return true
+	end
+
+	local context_str = {}
+	local context_action = {}
+	local context_params = {}
+	local context_sections = {}
+	local module_id = module_obj:id()
+	local weapon_id = target_weapon:id()
+
+	for _, entry in ipairs(placements) do
+		table.insert(
+			context_str,
+			entry.slot_label or entry.label)
+		table.insert(
+			context_action,
+			"Action_Install_Module_Placement")
+		table.insert(context_params, {
+			module_id,
+			module_bag,
+			entry.index,
+			weapon_id
+		})
+		table.insert(context_sections, module_obj:section())
+	end
+
+	self.item_props:Reset(
+		GetCursorPosition(),
+		context_action,
+		context_str,
+		context_params,
+		context_sections)
+	self:PlaySND(snd_properties)
+
+	return true
+end
+
+
+-- Opens the first-level provider selector for a module dropped onto a weapon.
+-- First choose the weapon body or installed provider module, then choose one of
+-- that provider's exact slots/rail positions.
+function UIInventory:Handle_Module_DragDrop(module_obj, module_bag, target_weapon)
+	if not (module_obj and target_weapon) then
+		return false
+	end
+
+	if not (module_items and module_items.get_dynamic_install_placements) then
+		return false
+	end
+
+	local placements = module_items.get_dynamic_install_placements(
+		module_obj,
+		target_weapon)
+
+	if not placements or #placements == 0 then
+		return false
+	end
+
+	-- Group valid positions by the module that actually provides the slot.
+	local providers = {}
+	local provider_order = {}
+
+	for _, entry in ipairs(placements) do
+		local owner = tostring(entry.owner or "")
+		if owner ~= "" and not providers[owner] then
+			providers[owner] = {
+				owner = owner,
+				name = entry.provider_name or owner,
+				count = 0
+			}
+			table.insert(provider_order, owner)
+		end
+
+		if providers[owner] then
+			providers[owner].count = providers[owner].count + 1
+		end
+	end
+
+	if #provider_order == 0 then
+		return false
+	end
+
+	-- No need for a redundant first menu when only one provider is possible.
+	if #provider_order == 1 then
+		return self:Open_Module_Placement_Slots(
+			module_obj,
+			module_bag,
+			target_weapon,
+			provider_order[1])
+	end
+
+	local context_str = {}
+	local context_action = {}
+	local context_params = {}
+	local context_sections = {}
+	local module_id = module_obj:id()
+	local weapon_id = target_weapon:id()
+
+	for _, owner in ipairs(provider_order) do
+		local provider = providers[owner]
+		local label = tostring(provider.name)
+
+		if provider.count > 1 then
+			label = string.format(
+				"%s (%d available slots)",
+				label,
+				provider.count)
+		else
+			label = label .. " (1 available slot)"
+		end
+
+		table.insert(context_str, label)
+		table.insert(
+			context_action,
+			"Action_Select_Module_Provider")
+		table.insert(context_params, {
+			module_id,
+			module_bag,
+			weapon_id,
+			owner
+		})
+		table.insert(context_sections, module_obj:section())
+	end
+
+	self.item_props:Reset(
+		GetCursorPosition(),
+		context_action,
+		context_str,
+		context_params,
+		context_sections)
+	self:PlaySND(snd_properties)
+
+	return true
 end
 
 function UIInventory:Discard()
@@ -978,11 +1178,9 @@ end
 
 function UIInventory:Cond_Childs(obj, bag)
 	obj = self:CheckItem(obj,"Cond_Childs")
-	
-	if obj and bag then
-		local ci = self.CC[bag]:GetCell_ID(obj:id())
-		return ci.ID == obj:id() and ci:HasChild()
-	end
+
+	local ci = self.CC[bag]:GetCell_ID(obj:id())
+	return ci.ID == obj:id() and ci:HasChild()
 end
 
 function UIInventory:Cond_Use(obj, bag)
@@ -1111,6 +1309,18 @@ function UIInventory:Cond_Equip(obj, bag)
 	return (not arty) and (SCANNED_SLOTS[slot] == true)
 end
 
+function UIInventory:Cond_Load_Detachable_Mag(obj, bag)
+	obj = self:CheckItem(obj,"Cond_Load_Detachable_Mag")
+	return obj and obj.is_inventory_magazine and obj:is_inventory_magazine()
+		and obj.magazine_can_load and obj:magazine_can_load()
+end
+
+function UIInventory:Cond_Unload_Detachable_Mag(obj, bag)
+	obj = self:CheckItem(obj,"Cond_Unload_Detachable_Mag")
+	return obj and obj.is_inventory_magazine and obj:is_inventory_magazine()
+		and obj.magazine_ammo_count and (obj:magazine_ammo_count() > 0)
+end
+
 function UIInventory:Cond_Unload(obj, bag)
 	obj = self:CheckItem(obj,"Cond_Unload")
 
@@ -1172,6 +1382,7 @@ end
 
 function UIInventory:Action_Move(obj, bag)
 	obj = self:CheckItem(obj,"Action_Move")
+	if not obj then return end
 	
 	if (self.mode == "loot") then
 		local npc = self.npc_id and get_object_by_id(self.npc_id)
@@ -1200,7 +1411,6 @@ function UIInventory:Action_Move(obj, bag)
 		
 		if bag_to and self.CC[bag_to] then
 			self.CC[bag]:TransferItem( self.CC[bag_to] , obj)
-			itms_manager.play_item_sound(obj)
 		end
 	end
 
@@ -1225,15 +1435,7 @@ function UIInventory:Action_UnEquip(obj, bag)
 	db.actor:move_to_ruck(obj)
 	
 	--self:UpdateInfo(true)
-	--self:PlaySND(snd_item_to_ruck)
-	-- FDDAR patch
-	if (IsHeadgear(obj) and ui_mcm and ui_mcm.get("fddar/headgear_anm/enable"))
-	or (IsItem("backpack", nil, obj) and ui_mcm and ui_mcm.get("fddar/outfit_anm/enable_backpack_equip")) then
-		--printf("UIInventory:Action_Equip sound omitted")
-	else
-		itms_manager.play_item_sound(obj)
-	end
-
+	self:PlaySND(snd_item_to_ruck)
 	self:On_Item_Update()
 end
 
@@ -1243,8 +1445,7 @@ function UIInventory:Action_Equip(obj, bag)
 	-- Belt
 	if IsArtefact(obj) then
 		db.actor:move_to_belt(obj)
-		--self:PlaySND(snd_item_to_belt)
-		itms_manager.play_item_sound(obj)
+		self:PlaySND(snd_item_to_belt)
 		
 	-- Slots
 	else
@@ -1276,14 +1477,7 @@ function UIInventory:Action_Equip(obj, bag)
 			db.actor:move_to_slot(obj, slot_new)
 		end
 		
-		--self:PlaySND(snd_item_to_slot)
-		-- FDDAR patch
-		if (IsHeadgear(obj) and ui_mcm and ui_mcm.get("fddar/headgear_anm/enable"))
-		or (IsItem("backpack", nil, obj) and ui_mcm and ui_mcm.get("fddar/outfit_anm/enable_backpack_equip")) then
-			--printf("UIInventory:Action_Equip sound omitted")
-		else
-			itms_manager.play_item_sound(obj)
-		end
+		self:PlaySND(snd_item_to_slot)
 	end
 	
 	self:On_Item_Update()
@@ -1309,9 +1503,144 @@ function UIInventory:Action_Attach(obj, bag, temp, slot, wpn)
 	
 	utils_item.attach_addon(wpn, obj, typ, true)
 
-	if itms_manager.timeout_snd_on_take then itms_manager.timeout_snd_on_take(50) end
-	self:PlaySND(snd_addon["snd_attach_" .. typ])
+	self:PlaySND(snd_attach_addon)
 	self:On_Item_Update()
+end
+
+function UIInventory:Action_Select_Module_Provider(
+	obj,
+	bag,
+	target_weapon,
+	selected_owner)
+	obj = self:CheckItem(
+		obj,
+		"Action_Select_Module_Provider")
+	if not obj then
+		return
+	end
+
+	if type(target_weapon) == "number" then
+		target_weapon = level.object_by_id(target_weapon)
+	end
+
+	if not target_weapon then
+		return
+	end
+
+	self:Open_Module_Placement_Slots(
+		obj,
+		bag,
+		target_weapon,
+		selected_owner)
+end
+
+
+function UIInventory:Action_Install_Module_Placement(
+    obj,
+    bag,
+    placement_index,
+    target_weapon)
+    obj = self:CheckItem(
+        obj,
+        "Action_Install_Module_Placement")
+    if not obj then
+        return
+    end
+
+    if type(target_weapon) == "number" then
+        target_weapon = level.object_by_id(target_weapon)
+    end
+
+    if module_items and
+       module_items.install_module_placement
+    then
+        local ok = module_items.install_module_placement(
+            obj,
+            placement_index,
+            target_weapon)
+
+        if ok then
+            self:PlaySND(snd_attach_addon)
+        end
+    end
+
+	self:RefreshItemIcon(target_weapon or obj) 
+    self:On_Item_Update()
+end
+
+
+function UIInventory:Action_Remove_Module_Index(obj, bag, installed_index)
+    obj = self:CheckItem(obj, "Action_Remove_Module_Index")
+    if not obj then return end
+
+    -- Magazine removal is special. The installed magazine exists as runtime
+    -- weapon state, while the dynamic module entry only controls its visual.
+    -- Return the real magazine object to inventory before removing that entry.
+    local installed_section = nil
+    if obj.module_get_section then
+        installed_section = obj:module_get_section(installed_index)
+    end
+
+    local is_magazine = false
+    if installed_section and installed_section ~= "" then
+        local class_id = SYS_GetParam(0, installed_section, "class")
+        is_magazine =
+            class_id == "II_MAG" or
+            string.find(installed_section, "mag_", 1, true) == 1
+    end
+
+    if is_magazine and obj.force_unload_magazine then
+        printf(
+            "MAGAZINE SCRIPT REMOVE: weapon=[%s] section=[%s] index=[%s]",
+            tostring(obj:section()),
+            tostring(installed_section),
+            tostring(installed_index))
+
+        -- The C++ detachable-magazine path recreates the inserted magazine
+        -- with its exact section, condition and remaining cartridges.
+        obj:force_unload_magazine(true)
+    end
+
+    if module_items and module_items.remove_installed_module_exact then
+        module_items.remove_installed_module_exact(obj, installed_index)
+    end
+
+	self:RefreshItemIcon(obj)   
+    self:On_Item_Update()
+end
+
+function UIInventory:Action_Modify_Weapon(obj, bag)
+	obj = self:CheckItem(obj, "Action_Modify_Weapon")
+
+	if not obj then
+		return
+	end
+
+	if not (ui_physical_weapon_workbench and
+			ui_physical_weapon_workbench.start_by_id)
+	then
+		printe(
+			"!ERROR UIInventory:Action_Modify_Weapon | " ..
+			"ui_physical_weapon_workbench.start_by_id is unavailable")
+		return
+	end
+
+	-- Do not open another modal dialog from inside the inventory context-menu
+	-- callback. The inventory still owns the input receiver until this callback
+	-- returns, which prevented the preview camera from receiving drag input and
+	-- left the workbench UI in a partially active state.
+	local weapon_id = obj:id()
+
+	self:Close()
+
+	CreateTimeEvent(
+		"physical_weapon_workbench",
+		"open_after_inventory_close",
+		0.05,
+		function()
+			ui_physical_weapon_workbench.start_by_id(weapon_id)
+			return true
+		end)
 end
 
 function UIInventory:Action_Custom(obj, bag, temp, i)
@@ -1328,7 +1657,6 @@ function UIInventory:Action_Custom(obj, bag, temp, i)
 		end
 	end
 	
-	self:PlaySND(snd_button)
 	self:On_Item_Update()
 end
 
@@ -1338,8 +1666,7 @@ function UIInventory:Action_Detach_Silencer(obj, bag)
 	utils_item.detach_addon(obj, nil, "sil")
 	self:On_Item_Update()
 	
-	if itms_manager.timeout_snd_on_take then itms_manager.timeout_snd_on_take(50) end
-	self:PlaySND(snd_addon["snd_detach_sil"])
+	self:PlaySND(snd_detach_addon)
 end
 
 function UIInventory:Action_Detach_Scope(obj, bag)
@@ -1347,8 +1674,7 @@ function UIInventory:Action_Detach_Scope(obj, bag)
 
 	utils_item.detach_addon(obj, nil, "scope")
 	
-	if itms_manager.timeout_snd_on_take then itms_manager.timeout_snd_on_take(50) end
-	self:PlaySND(snd_addon["snd_detach_scope"])
+	self:PlaySND(snd_detach_addon)
 	self:On_Item_Update()
 end
 
@@ -1357,16 +1683,133 @@ function UIInventory:Action_Detach_GL(obj, bag)
 	
 	utils_item.detach_addon(obj, nil, "gl")
 
-	if itms_manager.timeout_snd_on_take then itms_manager.timeout_snd_on_take(50) end
-	self:PlaySND(snd_addon["snd_detach_gl"])
+	self:PlaySND(snd_detach_addon)
 	self:On_Item_Update()
+end
+
+function UIInventory:GetMagazineOperationDelay(obj, unloading)
+	local sec = obj:section()
+	local key = unloading and "mag_unload_time" or "mag_load_time"
+	local delay = tonumber(SYS_GetParam(0, sec, key)) or 0.05
+	return math.max(1, math.floor(delay * 1000))
+end
+
+function UIInventory:RefreshMagazineCell(obj, bag)
+	local cc = bag and self.CC[bag]
+	if cc then
+		local cell = cc:GetCell_ID(obj:id())
+		if cell and cell.Update then
+			cell:Update(obj)
+		end
+	end
+	self:On_Item_Update()
+end
+
+function UIInventory:Start_Load_Detachable_Mag(obj, bag, ammo_obj)
+	if not obj then return false end
+
+	if ammo_obj then
+		if not obj.magazine_can_load_ammo or not obj:magazine_can_load_ammo(ammo_obj) then
+			return false
+		end
+	elseif not obj.magazine_can_load or not obj:magazine_can_load() then
+		return false
+	end
+
+	self.magazine_operation = {
+		id = obj:id(),
+		bag = bag,
+		ammo_id = ammo_obj and ammo_obj:id() or nil,
+		unloading = false,
+		delay = self:GetMagazineOperationDelay(obj, false),
+		next_tick = time_global()
+	}
+
+	return true
+end
+
+function UIInventory:Action_Load_Detachable_Mag(obj, bag)
+	obj = self:CheckItem(obj,"Action_Load_Detachable_Mag")
+	if not obj then return end
+
+	self:Start_Load_Detachable_Mag(obj, bag, nil)
+end
+
+function UIInventory:Action_Unload_Detachable_Mag(obj, bag)
+	obj = self:CheckItem(obj,"Action_Unload_Detachable_Mag")
+	if not obj then return end
+
+	self.magazine_operation = {
+		id = obj:id(),
+		bag = bag,
+		unloading = true,
+		delay = self:GetMagazineOperationDelay(obj, true),
+		next_tick = time_global()
+	}
+end
+
+function UIInventory:UpdateMagazineOperation()
+	local op = self.magazine_operation
+	if not op or time_global() < op.next_tick then
+		return
+	end
+
+	local obj = level.object_by_id(op.id)
+	if not obj or not obj.is_inventory_magazine or not obj:is_inventory_magazine() then
+		self.magazine_operation = nil
+		return
+	end
+
+	local moved = 0
+	if op.unloading then
+		if obj.magazine_ammo_count and obj:magazine_ammo_count() > 0 and obj.magazine_unload then
+			moved = obj:magazine_unload() or 0
+		end
+	else
+		if op.ammo_id then
+			local ammo_obj = level.object_by_id(op.ammo_id)
+			if ammo_obj and obj.magazine_can_load_ammo and
+				obj:magazine_can_load_ammo(ammo_obj) and obj.magazine_load_ammo then
+				moved = obj:magazine_load_ammo(ammo_obj) or 0
+			end
+
+			-- The dragged stack may have been exhausted or destroyed after the
+			-- previous round. Continue with the next compatible stack instead
+			-- of ending the whole operation.
+			if moved <= 0 then
+				op.ammo_id = nil
+				if obj.magazine_can_load and obj:magazine_can_load() and obj.magazine_load then
+					moved = obj:magazine_load() or 0
+				end
+			end
+		elseif obj.magazine_can_load and obj:magazine_can_load() and obj.magazine_load then
+			moved = obj:magazine_load() or 0
+		end
+	end
+
+	if moved > 0 then
+		op.next_tick = time_global() + op.delay
+		self:RefreshMagazineCell(obj, op.bag)
+	else
+		self.magazine_operation = nil
+		self:RefreshMagazineCell(obj, op.bag)
+	end
 end
 
 function UIInventory:Action_Unload(obj, bag)
 	obj = self:CheckItem(obj,"Action_Unload")
-	
+
+	local installed_index = nil
+	if module_items and module_items.find_installed_magazine_index then
+		installed_index = module_items.find_installed_magazine_index(obj)
+	end
+
 	obj:force_unload_magazine(true)
-	
+
+	if installed_index and module_items and module_items.remove_installed_module_exact then
+		module_items.remove_installed_module_exact(obj, installed_index, false)
+	end
+
 	self:On_Item_Update()
 	if self.mode == "loot" and bag == "npc_bag" then
 		--self:LMode_ResetNPCInventory()
@@ -1378,7 +1821,6 @@ function UIInventory:Action_Drop(obj, bag)
 
 	db.actor:drop_item(obj)
 	self:PlaySND(snd_drop_item)
-	itms_manager.play_item_sound(obj)
 end
 
 function UIInventory:Action_Drop_All(obj, bag)
@@ -1443,146 +1885,30 @@ function UIInventory:UpdateInfo(go)
 	end
 end
 
-function UIInventory:ShowFaction(v, view)
-	local arr = {'stalker', 'bandit', 'csky', 'dolg', 'freedom', 'killer', 'army','ecolog','monolith','greh','renegade','isg'}
-	local texture = v:gsub("actor_", "")
-	if not self:ArrayHasValue(arr, texture) then texture = "neutral" end
-	texture = "ui_inGame2_" .. texture
-	
-	--printdbg("# UIInventory:ShowFaction | %s", texture)
-	if(view == "player") then
-		self.player_community_overlay:InitTexture(texture) 
-	elseif (view == "npc") then
-		self.npc_community_overlay:InitTexture(texture)
-		self.npc_up_community_overlay:InitTexture(texture)
-	else
-		self.npc_community_overlay:InitTexture("ui_inGame2_na") 
-		self.npc_up_community_overlay:InitTexture("ui_inGame2_na")
-	end
-end
-
-function UIInventory:ArrayHasValue (tab, val)
-    for index, value in ipairs(tab) do
-        if value == val then
-            return true
-        end
-    end
-
-    return false
-end
-
--- Original ranks and rewards:
-
--- novice: 0, 5
--- trainee: 2000, 6
--- experienced: 4000, 7
--- professional: 7000, 8
--- veteran: 10000, 9
--- expert: 15000, 10
--- master: 21000, 15
--- legend: 28000, 20
-
--- Improved ranks and rewards:
-
--- novice: 0, 50
--- trainee: 4000, 100
--- experienced: 6000, 200
--- professional: 10000, 350
--- veteran: 16000, 550
--- expert: 24000, 800
--- master: 35000, 1100
--- legend: 50000, 1500
-
-
-
-function UIInventory:ShowRank(v, view)
-	local texture = "ui_rank_0"
-	--printdbg("# UIInventory:ShowRank | Rank Number %s", v)
-	if v < 4000 		then 	texture = "ui_rank_0"	-- novice
-	elseif v < 6000		then 	texture = "ui_rank_1"	-- trainee
-	elseif v < 10000 	then 	texture = "ui_rank_2"	-- experienced
-	elseif v < 16000 	then 	texture = "ui_rank_3"	-- professional
-	elseif v < 24000 	then 	texture = "ui_rank_4"	-- veteran
-	elseif v < 35000 	then 	texture = "ui_rank_5"	-- expert
-	elseif v < 50000 	then 	texture = "ui_rank_6"	-- master
-	elseif v >= 50000 	then 	texture = "ui_rank_7"	-- legend
-	end
-	
-	--printdbg("# UIInventory:ShowRank | Rank Texture %s", texture)
-
-	if(view == "player") then
-		self.player_rank_icon:InitTexture(texture) 
-	elseif (view == "npc") then
-		self.npc_rank_icon:InitTexture(texture) 
-		self.npc_up_rank_icon:InitTexture(texture) 
-	else
-		self.npc_rank_icon:InitTexture("ui_rank_0") 
-		self.npc_up_rank_icon:InitTexture("ui_rank_0") 
-	end
-end
-
-function supply_level(npc, as_number)
-    local profile = trade_manager.get_trade_profile(npc:id(), "cfg_ltx")
-    --printf("Profile is %s", profile)
-    local config = trade_manager.get_trade_cfg(profile)    
-    if not config then return end
-	local str = config:r_string_ex("trader", "buy_supplies")
-	if not (str) then 
-		return -- no buy_supplies this is normal
-	end
-
-	local condlist = xr_logic.parse_condlist(npc, "trader", "buy_supplies", str)
-	str = condlist and xr_logic.pick_section_from_condlist(db.actor, npc, condlist)
-    if as_number then
-        local num = str_explode(str, "_")
-        return tonumber(num[2])
-    else   
-        return str
-    end
-end
-
 function UIInventory:UpdateCharacter()
-	local npc = self:GetPartner()
-	if npc and (not (self.npc_is_box or npc:has_info("npcx_is_companion"))) then
-		local supply_level = supply_level(npc, true) or 1
-		self.haruka_trader_supply_level:Show(false)
-		if supply_level and npc:alive() then
-			self.haruka_trader_supply_level:SetText(game.translate_string("st_haruka_sulpplies_level").. " " .. supply_level)
-			self.haruka_trader_supply_level:Show(display_supply_level)
-		end
-	end
-
 	local actor = db.actor
-	self:ShowFaction(actor:character_community(), "player")
 	self.player_name:SetText( alife():actor():character_name() )
 	self.player_community:SetText( game.translate_string(actor:character_community()) )
 	self.player_icon:InitTexture( actor:character_icon() )
-	self.player_money:SetText( actor:money() )
-	self:ShowRank(actor:character_rank(), "player")
-	-- self.player_rank:SetText(actor:character_rank())
+	self.player_money:SetText( actor:money() .. " RU" )
 	
 	-- NPC
 	local npc = self:GetPartner()
 	if npc and (not self.npc_is_box) then
 		-- in case of rich NPCs
 		local npc_money = npc:money()
-		npc_money = npc_money > 999999 and "..." or npc_money
+		npc_money = npc_money > 500000 and "..." or npc_money
 		
 		if (self.mode == "repair") then
-			self:ShowFaction(npc:character_community(), "npc")
 			self.npc_up_name:SetText( npc:character_name() )
 			self.npc_up_community:SetText( game.translate_string(npc:character_community()) )
 			self.npc_up_icon:InitTexture( npc:character_icon() )
-			self.npc_up_money:SetText( npc_money )
-			self:ShowRank(npc:character_rank(), "npc")
+			self.npc_up_money:SetText( npc_money .. " RU" )
 		else
-			self:ShowFaction(npc:character_community(), "npc")
 			self.npc_name:SetText( npc:character_name() )
 			self.npc_community:SetText( game.translate_string(npc:character_community()) )
 			self.npc_icon:InitTexture( npc:character_icon() )
-			self.npc_money:SetText( npc_money )
-			-- self.npc_rank:SetText(npc:character_rank())
-			self:ShowRank(npc:character_rank(), "npc")
+			self.npc_money:SetText( npc_money .. " RU" )
 		end
 	end
 end
@@ -1607,12 +1933,10 @@ function UIInventory:UpdateWeight()
 	max_weight = max_weight + (backpack and backpack:get_additional_max_weight() or 0)
 	
 	-- Additional weight - Artefacts
-    local function itr(npc,itm)
-        if (npc:is_on_belt(itm)) then
-            max_weight = max_weight + (itm and ((ini_sys:r_float_ex(itm:section(),"additional_inventory_weight") or 0) * itm:condition()) or 0)
-        end
-    end
-    db.actor:iterate_inventory(itr,db.actor)
+	actor:iterate_belt( function(owner, obj)
+		local c_arty = obj:cast_Artefact()
+		max_weight = max_weight + (c_arty and c_arty:AdditionalInventoryWeight() or 0)
+	end)
 	
 	-- Additional weight - Booster
 	actor:cast_Actor():conditions():BoosterForEach( function(booster_type, booster_time, booster_value)
@@ -1739,7 +2063,6 @@ function UIInventory:UpdateQuick()
 		if quick_item and ini_sys:section_exist(quick_item) then
 			if (cc.cell[i].sec ~= quick_item) then
 				cc:AddItemManual(nil, quick_item, i)
-				--itms_manager.play_item_sound(quick_item)
 			end
 			cc.cell[i]:Colorize( db.actor:object(quick_item) and "def" or "hide" )
 		end
@@ -1851,141 +2174,43 @@ function UIInventory:UpdateStats()
 	end)
 	
 -- Progress bars
-	local health_color = clr_bars_text[1]
-	local player_health = actor.health
-	if (player_health < 0.25) then
-		health_color = clr_bars_text[4]
-	elseif (player_health < 0.5) then
-		health_color = clr_bars_text[3]
-	elseif (player_health < 0.75) then
-		health_color = clr_bars_text[2]  
-	end
-
-	self.stat["health"].text:SetText(strformat("%s%s", math.floor(player_health * 100), perc))
-	self.stat["health"].text:SetTextColor(health_color)
 	self.stat["health"].bar:SetProgressPos( clamp( actor.health, 0, 1) )
-	local radia_val = ((self.stat_outfit["radia"] + self.stat_helm["radia"]))
-	local radia_bonus = self.stat_arty["radia"] + self.stat_boost["radia"]
 	
-	local radia_bonus_symbol = ""
-	if radia_val <= 0 then
-		self.stat["radia"].text:SetTextColor(clr_bars_text[4])
-	else
-		self.stat["radia"].text:SetTextColor(clr_bars_text[1])
-	end
-	self.stat["radia"].text:SetText(strformat("%s%s", InvRoundStats(radia_val * 1000), perc))
-	if radia_bonus ~= 0 then
-		if radia_bonus < 0 then
-			self.stat["radia"].text_bonus:SetTextColor(clr_bars_text[4])
-		else
-			self.stat["radia"].text_bonus:SetTextColor(clr_bars_text[1])
-			radia_bonus_symbol = "+"
+	local radia_val = ((self.stat_outfit["radia"] + self.stat_helm["radia"] + self.stat_arty["radia"] + self.stat_boost["radia"]) / self.stat_list["radia"].max)
+	self.stat["radia"].bar:SetProgressPos( clamp( radia_val, 0, 1) )
+	
+	local acid_val = ((self.stat_outfit["acid"] + self.stat_helm["acid"] + self.stat_arty["acid"] + self.stat_boost["acid"]) / self.stat_list["acid"].max)
+	self.stat["acid"].bar:SetProgressPos( clamp( acid_val, 0, 1) )
+
+	local shock_val = ((self.stat_outfit["shock"] + self.stat_helm["shock"] + self.stat_arty["shock"]) / self.stat_list["shock"].max)
+	self.stat["shock"].bar:SetProgressPos( clamp( shock_val, 0, 1) )
+
+	local fire_val = ((self.stat_outfit["fire"] + self.stat_helm["fire"] + self.stat_arty["fire"]) / self.stat_list["fire"].max)
+	self.stat["fire"].bar:SetProgressPos( clamp( fire_val, 0, 1) )
+
+	local psi_val = ((self.stat_outfit["psi"] + self.stat_helm["psi"] + self.stat_arty["psi"] + self.stat_boost["psi"]) / self.stat_list["psi"].max)
+	self.stat["psi"].bar:SetProgressPos( clamp( psi_val, 0, 1) )
+
+	local wound_val = ((self.stat_outfit["wound"] + self.stat_helm["wound"] + self.stat_arty["wound"]) / self.stat_list["wound"].max)
+	self.stat["wound"].bar:SetProgressPos( clamp( wound_val, 0, 1) )
+
+	local fire_wound_val = ((self.stat_outfit["fire_wound"] + self.stat_helm["fire_wound"] + self.stat_arty["fire_wound"]) / self.stat_list["fire_wound"].max)
+	self.stat["fire_wound"].bar:SetProgressPos( clamp( fire_wound_val, 0, 1) )
+
+	-- Special case for power (similar to engine method)
+	local power = actor:cast_Actor():conditions():V_SatietyPower() --db.actor.satiety
+	power = power + self.stat_arty["power"]
+	if outfit then
+		power = power + self.stat_outfit["power"]
+		local power_loss = outfit:cast_CustomOutfit().m_fPowerLoss or 0
+		if power_loss ~= 0 then
+			power = power / power_loss
 		end
-		self.stat["radia"].text_bonus:SetText(strformat("%s%s%s", radia_bonus_symbol, math.ceil(radia_bonus * 10000), perc))
 	else
-		self.stat["radia"].text_bonus:SetText()
+		power = power / 0.5
 	end
-	
-	-- This part is for GAMMA actor damage balancer to display protection as % in UI.
-	
-	local get_protection = grok_actor_damage_balancer.get_protection
-	
-	local s_hit = hit()
-	s_hit.bone = "bip01_spine"
-	s_hit.bone_id = 13
-	s_hit.power = 0.05
-	s_hit.draftsman = db.actor
-	s_hit.direction = VEC_Z
-	
-	local bonus_symbol = "/"	
-	
-	s_hit.type = hit.chemical_burn
-	local acid_val, acid_bonus = get_protection(s_hit,s_hit.bone_id)
-	self.stat["acid"].text:SetText(strformat("%s%s", math.ceil(acid_val * 100), perc))
-	self.stat["acid"].text_bonus:SetText(strformat("%s%s%s", bonus_symbol, acid_bonus * 100 , perc))
-
-
-	s_hit.type = hit.shock
-	local shock_val, shock_bonus = get_protection(s_hit,s_hit.bone_id)
-	self.stat["shock"].text:SetText(strformat("%s%s", math.ceil(shock_val * 100), perc))
-	self.stat["shock"].text_bonus:SetText(strformat("%s%s%s", bonus_symbol, shock_bonus * 100 , perc))
-
-
-	s_hit.type = hit.burn
-	local fire_val, fire_bonus = get_protection(s_hit,s_hit.bone_id)
-	self.stat["fire"].text:SetText(strformat("%s%s", math.ceil(fire_val * 100), perc))
-	self.stat["fire"].text_bonus:SetText(strformat("%s%s%s", bonus_symbol, fire_bonus * 100, perc))
-
-
-	s_hit.type = hit.telepatic
-	local psi_val, psi_bonus = get_protection(s_hit,s_hit.bone_id)
-	self.stat["psi"].text:SetText(strformat("%s%s", math.ceil(psi_val * 100), perc))
-	self.stat["psi"].text_bonus:SetText(strformat("%s%s%s", bonus_symbol, psi_bonus *100, perc))
-
-
-	s_hit.type = hit.wound
-	local wound_val, wound_bonus = get_protection(s_hit,s_hit.bone_id)
-	self.stat["wound"].text:SetText(strformat("%s%s", math.ceil(wound_val *100), perc))
-	self.stat["wound"].text_bonus:SetText(strformat("%s%s%s", bonus_symbol, math.ceil(wound_bonus * 100), perc))
-
-	s_hit.type = hit.wound
-	local wound_val, wound_bonus = get_protection(s_hit,s_hit.bone_id)
-	self.stat["wound"].text:SetText(strformat("%s%s", math.ceil(wound_val *100), perc))
-	self.stat["wound"].text_bonus:SetText(strformat("%s%s%s", bonus_symbol, math.ceil(wound_bonus * 100), perc))
-
-	s_hit.type = hit.explosion
-	local explosion_val, explosion_bonus = get_protection(s_hit,s_hit.bone_id)
-	self.stat["explosion"].text:SetText(strformat("%s%s", math.ceil(explosion_val *100), perc))
-	self.stat["explosion"].text_bonus:SetText(strformat("%s%s%s", bonus_symbol, math.ceil(explosion_bonus * 100), perc))
-
-	s_hit.type = hit.strike
-	local strike_val, strike_bonus = get_protection(s_hit,s_hit.bone_id)
-	self.stat["strike"].text:SetText(strformat("%s%s", math.ceil(strike_val *100), perc))
-	self.stat["strike"].text_bonus:SetText(strformat("%s%s%s", bonus_symbol, math.ceil(strike_bonus * 100), perc))
-
-	s_hit.type = hit.fire_wound
-	local fire_wound_val, fire_wound_bonus,tmp1,tmp2,armor_br = get_protection(s_hit,s_hit.bone_id, 100)
-	local tmp1, tmp2,tmp3,tmp4,tmp5,tmp6,armor_premitigation = get_protection(s_hit,s_hit.bone_id, 0)
-	self.stat["fire_wound"].text:SetText(strformat("%s%s", math.ceil(fire_wound_val * 100), perc))
-	self.stat["fire_wound"].text_bonus:SetText(strformat("%s%s%s", bonus_symbol, math.ceil(fire_wound_bonus * 100), perc))
-	self.stat["fire_wound"].text_bonus2:SetText(strformat("%s%s%s", bonus_symbol, math.ceil(fire_wound_bonus * 100), perc))
-	self.stat["br_class"].text:SetText(strformat("%s", math.ceil(armor_br *100)))
-	self.stat["br_mitigation"].text:SetText(strformat("<%s%s", math.ceil(armor_premitigation *100), perc))
-
-	local h_hit = hit()
-	h_hit.bone = "bip01_head"
-	h_hit.bone_id = 19
-	h_hit.power = 0.05
-	h_hit.draftsman = db.actor
-	h_hit.type = hit.fire_wound
-	h_hit.direction = VEC_Z
-	local fire_wound_helm,tmp1,tmp2,tmp3,tmp4,helm_br = get_protection(h_hit,19, 100)
-	local tmp1, tmp2,tmp3,tmp4,tmp5,tmp6,helm_premitigation = get_protection(s_hit,19, 0)
-	self.stat["fire_wound"].text_bonus_regen:SetText(strformat("%s%s", fire_wound_helm * 100, perc))
-	self.stat["br_class"].text_bonus_regen:SetText(strformat("%s", helm_br * 100))
-	self.stat["br_mitigation"].text_bonus_regen:SetText(strformat("<%s%s", math.ceil(helm_premitigation *100), perc))
-
-	-- Satiety Bar
-	local satiety = actor:cast_Actor():conditions():GetSatiety()
-	satiety = (satiety - 0.1)		-- 5.7
---	self.stat["power"].bar:SetProgressPos( clamp( satiety , 0, 0.2) )
-	self.stat["power"].text:SetText(strformat("%s%s", math.floor(clamp( satiety , 0, 1) * 1.123  * 100), perc))
-
-	-- Thirst Bar
-	local thirst = actor_status_thirst.get_last_drink()
-	local thirst_red_icon = actor_status_thirst.get_thirst_blur_4()
-	thirst = thirst_red_icon - thirst
-	thirst = (thirst / thirst_red_icon)
---	self.stat["thirst"].bar:SetProgressPos( clamp( thirst, 0, 0.185))
-	self.stat["thirst"].text:SetText(strformat("%s%s", math.floor(clamp( thirst, 0, 1) * 100), perc))
-
-	-- Sleep bar
-	local sleep = actor_status_sleep.get_last_sleep()
-	local sleep_red_icon = actor_status_sleep.get_sleep_blur_4()
-	sleep = sleep_red_icon - sleep
-	sleep = (sleep / sleep_red_icon)
---	self.stat["sleep"].bar:SetProgressPos( clamp( sleep, 0, 0.185))
-	self.stat["sleep"].text:SetText(strformat("%s%s", math.floor(clamp( sleep, 0, 1) * 100), perc))
+	power = power / self.stat_list["power"].max
+	self.stat["power"].bar:SetProgressPos( clamp( power , 0, 15) )
 
 
 -- Blinking Icons
@@ -2003,13 +2228,11 @@ function UIInventory:UpdateStats()
 	end
 	
 	-- Power
-	--[[
 	if (self.stat_boost["power"] < 0) then
 		self.stat["power"].ico_n:Show(true)
 	elseif (self.stat_boost["power"] > 0) then
 		self.stat["power"].ico_p:Show(true)
 	end
-	--]]
 	
 	-- Radiation
 	local radia_restore = self.stat_outfit["radia_restore"] + self.stat_arty["radia_restore"] + self.stat_boost["radia_restore"]
@@ -2166,6 +2389,20 @@ function UIInventory:Picker_Refresh()
 	end
 end
 
+function UIInventory:RefreshItemIcon(obj)
+	if not obj then
+		return
+	end
+
+	local id = obj:id()
+	for bag, cc in pairs(self.CC) do
+		local ci = cc:GetCell_ID(id)
+		if ci then
+			ci:ForceRuntimeIconRefresh()
+		end
+	end
+end
+
 function UIInventory:Picker_Toggle(bag, idx, update_mode, force_hide)
 	
 	if (not enable_item_picker) then
@@ -2215,11 +2452,9 @@ function UIInventory:Picker_Toggle(bag, idx, update_mode, force_hide)
 				self:Print(nil, "Picker_Toggle(%s, %s) | dealing with picker -> continue", bag, idx)
 				return
 
-			elseif type(cc.hold.ico) ~= "boolean" then
-				if (cc.hold.ico:IsShown()) then
-					self:Print(nil, "Picker_Toggle(%s, %s) | was holding cell -> continue", bag, idx)
-					return
-				end
+			elseif (cc.hold.ico:IsShown()) then
+				self:Print(nil, "Picker_Toggle(%s, %s) | was holding cell -> continue", bag, idx)
+				return
 			else
 				self:Print(nil, "Picker_Toggle(%s, %s) | clicking outside picker area -> hide", bag, idx)
 				self:Picker_Update(true)
@@ -2373,11 +2608,7 @@ function UIInventory:IMode_Init()
 	self:UpdateInfo(true)
 	
 	-- Sound effect
-	if ui_mcm and ui_mcm.get("fddar/backpack/enable") then
-		--printf("FDDAR backpack enabled, omit ui_inventory sound effect")
-	else
-		self:PlaySND(snd_open)
-	end
+	self:PlaySND(snd_open)
 end
 
 function UIInventory:IMode_ResetInventories()
@@ -2432,7 +2663,7 @@ function UIInventory:LMode_Init(obj)
 	self:LMode_TransferInfo(obj)
 	
 	-- Sound effect
-	self:PlaySND(snd_open_loot)
+	self:PlaySND(snd_open)
 end
 
 function UIInventory:LMode_ResetInventories(reset_only)
@@ -2586,7 +2817,7 @@ function UIInventory:LMode_TakeAll()
 			end
 		end
 	end
-
+	
 	-- Update info
 	self.update_info = true
 end
@@ -2793,10 +3024,6 @@ function UIInventory:TMode_Sell()
 		return
 	end
 	
-	if not npc:alive() then
-		return
-	end
-	
 	-- Calculate full price
 	local tot_cost = 0
 	for idx,ci in pairs(cc.cell) do
@@ -2811,10 +3038,6 @@ function UIInventory:TMode_Sell()
 		self.message_box:ShowDialog(true)
 		return
 	end
-
-	-- Sound effect
-	if itms_manager.timeout_snd_on_take then itms_manager.timeout_snd_on_take(50) end
-	self:PlaySND(snd_trade)
 	
 	-- Transfer items
 	for id,idx in pairs(cc.indx_id) do
@@ -2871,9 +3094,6 @@ function UIInventory:TMode_Buy()
 	-- Transfer money
 	npc:give_money(tot_cost)
 	db.actor:give_money(-tot_cost)
-
-	-- Sound effect
-	self:PlaySND(snd_trade)
 	
 	-- Update UI
 	self.update_info = true
@@ -3330,7 +3550,7 @@ function UIInventory:actor_on_item_put_in_box(npc, obj)
 		
 		self:On_Item_Update()
 		
-		itms_manager.play_item_sound(obj)
+		itms_manager.play_item_sound(obj, 0.75)
 	end
 end
 
@@ -3352,8 +3572,8 @@ function UIInventory:npc_on_item_take(npc, obj)
 		end
 		
 		self:On_Item_Update()
-
-		itms_manager.play_item_sound(obj)
+		
+		itms_manager.play_item_sound(obj, 0.75)
 	end
 end
 
@@ -3385,14 +3605,42 @@ function UIInventory:actor_on_net_destroy()
 	GUI = nil
 end
 
+-- Dragging loose ammunition onto a standalone magazine, or a magazine
+-- onto loose ammunition, begins the same timed one-round loading operation.
+function UIInventory:Handle_Magazine_Ammo_DragDrop(obj_from, bag_from, obj_to, bag_to)
+	if not (obj_from and obj_to) then
+		return false
+	end
+
+	local mag = nil
+	local ammo = nil
+	local mag_bag = nil
+
+	if obj_from.is_inventory_magazine and obj_from:is_inventory_magazine() then
+		mag = obj_from
+		ammo = obj_to
+		mag_bag = bag_from
+	elseif obj_to.is_inventory_magazine and obj_to:is_inventory_magazine() then
+		mag = obj_to
+		ammo = obj_from
+		mag_bag = bag_to
+	else
+		return false
+	end
+
+	if not mag.magazine_can_load_ammo or not mag:magazine_can_load_ammo(ammo) then
+		return false
+	end
+
+	return self:Start_Load_Detachable_Mag(mag, mag_bag, ammo)
+end
+
 -- Callbacks - UI
 function UIInventory:On_CC_DragDrop(bag_from, idx_from)
 	local obj_from = self.CC[bag_from]:GetObj(idx_from)
 	if (not obj_from) then
 		return
 	end
-	
-	if self.mode == "trade" then return end
 	
 	-- When interacting with item picker, get parent cell bag and index
 	bag_from, idx_from = self:Picker_Ownership(bag_from, idx_from, obj_from)
@@ -3438,8 +3686,7 @@ function UIInventory:On_CC_DragDrop(bag_from, idx_from)
 
 					db.actor:move_to_slot(obj_from, idx_to)
 					
-					--self:PlaySND(snd_item_to_slot)
-					itms_manager.play_item_sound(obj_from)
+					self:PlaySND(snd_item_to_slot)
 					break
 				end
 			end
@@ -3456,8 +3703,21 @@ function UIInventory:On_CC_DragDrop(bag_from, idx_from)
 			
 		-- Case object to drop on
 		elseif obj_to then
+
+			-- Loose ammo <-> standalone detachable magazine. Loading remains
+			-- timed and transfers one cartridge per mag_load_time tick.
+			if self:Handle_Magazine_Ammo_DragDrop(obj_from, bag_from, obj_to, bag_to) then
+				return
+			end
 		
-			-- Attachment
+			-- Modular attachment drag/drop. The exact weapon under the cursor is
+			-- used; one legal placement installs immediately, while several
+			-- placements open the existing position selector.
+			if self:Handle_Module_DragDrop(obj_from, bag_from, obj_to) then
+				return
+			end
+
+			-- Legacy fixed scope/silencer/GL attachment
 			if ((bag_to == "actor_bag") or (bag_to == "actor_equ")) and self:Cond_Attach(obj_from, "actor_bag", nil, nil, obj_to) then
 				self:Action_Attach(obj_from, "actor_bag", nil, nil, obj_to)
 				
@@ -3596,6 +3856,75 @@ function UIInventory:On_CC_Hover(bag, idx)
 					local cc = self.CC["actor_quick"]
 					for i=1,#cc.cell do
 						cc.cell[i]:Highlight(true, "def", true)
+					end
+				end
+			end
+		end
+	end
+
+	-- Highlight ammo compatible with a hovered weapon or detachable magazine
+	if ((self.ammo_hl.idx ~= idx) or (self.ammo_hl.bag ~= bag)) then
+		self.ammo_hl.idx = idx
+		self.ammo_hl.bag = bag
+
+		-- Unhighlight previously highlighted ammo cells
+		for i=1,#self.ammo_hl.list do
+			local hci = self.ammo_hl.list[i]
+			if hci then
+				hci:Highlight(false)
+			end
+		end
+		self.ammo_hl.list = {}
+
+		if bag and idx then
+			local obj = self.CC[bag]:GetObj(idx)
+			if obj then
+				local sec = obj:section()
+
+				local is_wpn = IsWeapon(obj) and (not IsItem("fake_ammo_wpn", sec))
+				local is_mag = obj.is_inventory_magazine and obj:is_inventory_magazine()
+
+				if is_wpn or is_mag then
+
+					-- For weapons, gather the set of ammo sections it can fire
+					local ammo_sections = nil
+					if is_wpn then
+						local ok, list = pcall(utils_item.get_ammo, sec, obj:id())
+						if ok and list and list[1] then
+							ammo_sections = {}
+							for i=1,#list do
+								ammo_sections[ list[i] ] = true
+							end
+						end
+					end
+
+					if ammo_sections or is_mag then
+						for _,ab in ipairs(self.update_bags) do
+							local cc = self.CC[ab]
+							if cc and cc:IsShown() then
+								for i=1,#cc.cell do
+									local ci = cc.cell[i]
+									if ci and ci:IsShown() and ci.section and IsItem("ammo", ci.section) then
+										local matches = false
+
+										if is_mag then
+											local ammo_obj = cc:GetObj(i)
+											if ammo_obj and obj.magazine_can_load_ammo then
+												local ok_chk, can_load = pcall(obj.magazine_can_load_ammo, obj, ammo_obj)
+												matches = ok_chk and can_load and true or false
+											end
+										elseif ammo_sections then
+											matches = ammo_sections[ci.section] and true or false
+										end
+
+										if matches then
+											ci:Highlight(true, "green")
+											table.insert(self.ammo_hl.list, ci)
+										end
+									end
+								end
+							end
+						end
 					end
 				end
 			end
@@ -3807,7 +4136,7 @@ function UIInventory:PlaySND(snd, vol)
 	
 	-- Anti sound spam
 	local tg = time_global()
-	if self.tg_play and (tg - self.tg_play < 200) then
+	if self.tg_play and (tg - self.tg_play < 500) then
 		return
 	end
 	self.tg_play = tg
@@ -3845,8 +4174,45 @@ function UIInventory:SetHint(text, pos)
 	FitInRect(self.hint_wnd,Frect():set(0,0,1024,768),0,100)
 end
 
+-- Re-assert runtime-rendered weapon icons after normal inventory cell updates.
+-- This is intentionally weapon-only and does not touch any other item category.
+function UIInventory:EnforceDynamicWeaponIcons()
+	local now = time_global()
+	if self.tg_runtime_icon_priority and now < self.tg_runtime_icon_priority then
+		return
+	end
+	self.tg_runtime_icon_priority = now + 16
+
+	-- IMPORTANT: iterate physical cells, not indx_id.
+	-- Manual/equipment cells are reused and some icon mods leave stale ID->cell
+	-- mappings behind. The cell's current ID is the only authoritative owner.
+	for _, cc in pairs(self.CC) do
+		if cc and cc:IsShown() and cc.cell then
+			for _, ci in pairs(cc.cell) do
+				if ci then
+					local id = ci.ID
+					local obj = id and level.object_by_id(id) or nil
+
+					if obj and IsWeapon(nil, obj:clsid()) then
+						if ci.ApplyRuntimeIconPriority then
+							ci:ApplyRuntimeIconPriority(obj, false)
+						end
+					elseif ci._runtime_priority_ready and ci.ReleaseRuntimeIconPriority then
+						-- If this is now an empty manual slot, explicitly hide the
+						-- old custom texture. For a non-weapon replacement, normal
+						-- Set()/Update() has already rebuilt its icon, so only drop
+						-- runtime ownership without hiding the new icon.
+						ci:ReleaseRuntimeIconPriority(id == nil)
+					end
+				end
+			end
+		end
+	end
+end
+
 function UIInventory:Update()
 	CUIScriptWnd.Update(self)
+	self:UpdateMagazineOperation()
 	
 	-- Update all info: weight/prices/slots/bags/stats
 	self:UpdateInfo()
@@ -3896,6 +4262,10 @@ function UIInventory:Update()
 		end
 	end
 
+	-- Final weapon-only icon priority pass. Other mods may freely manage every
+	-- non-weapon icon; runtime-rendered weapon icons are restored last.
+	self:EnforceDynamicWeaponIcons()
+
 	-- Unhighlight all cells if no cell is focused on
 	if (self.found_cell) then
 		self:SetHint(false)
@@ -3918,19 +4288,6 @@ function UIInventory:Update()
 		end
 	end
 	self:SetHint(false)
-end
-
-show_full_stats = false
-
-function update_gui(gui)
-	if gui and gui.item_info then
-		local self = gui
-		self:UpdateInfo(true)
-		if self.item_info then
-			local self = self.item_info
-			self:Update(hovered_obj)
-		end
-	end
 end
 
 function UIInventory:OnKeyboard(dik, keyboard_action)
@@ -3973,10 +4330,6 @@ function UIInventory:OnKeyboard(dik, keyboard_action)
 			
 			------------------------------
 			elseif dik == K_CTRL then
-				show_full_stats = false
-				if _GUIs["UIInventory"] then
-					update_gui(ui_inventory.GUI)
-				end
 				self.holding_ctrl = false
 			elseif dik == K_SHFT then
 				self.holding_shift = false
@@ -3988,10 +4341,6 @@ function UIInventory:OnKeyboard(dik, keyboard_action)
 			
 			------------------------------
 			if dik == K_CTRL then
-				show_full_stats = true
-				if _GUIs["UIInventory"] then
-					update_gui(ui_inventory.GUI)
-				end
 				self.holding_ctrl = true
 			elseif dik == K_SHFT then
 				self.holding_shift = true
@@ -4006,26 +4355,22 @@ function UIInventory:OnKeyboard(dik, keyboard_action)
 			-- Exit
 			elseif dik == DIK_keys.DIK_ESCAPE then
 				self:Close()
-
-            -- PDA
-            elseif bind == key_bindings.kACTIVE_JOBS then
-                if (db.actor:item_in_slot(8)) then
-                    self:Close()
-                    if (get_console_cmd(1,"g_3d_pda")) then
-                        db.actor:activate_slot(8)
-                    else
-                        ActorMenu.get_pda_menu():ShowDialog(true)
-                        end
-                    end          
-								
+				
+			-- PDA
+			elseif bind == key_bindings.kACTIVE_JOBS then
+				if (db.actor:item_in_slot(8)) then
+					self:Close()
+					if (get_console_cmd(1,"g_3d_pda")) then
+						db.actor:activate_slot(8)
+					else
+						ActorMenu.get_pda_menu():ShowDialog(true)
+					end
+				end
+				
 			-- Sort tabs
 			else
 				for i=1,#self.sort_btn do
-
-					if (dik == DIK_keys["DIK_" .. i]) or (dik == DIK_keys["DIK_NUMPAD" .. i]) or i==10 and ((dik == DIK_keys["DIK_0" ]) or (dik == DIK_keys["DIK_NUMPAD0"])) then
---[[Bartoche70 for my addon Bart's New Sorting Tabs --> To add a quick access for the tenth tab, 0 or keypad 0
-					--if (dik == DIK_keys["DIK_" .. i]) or (dik == DIK_keys["DIK_NUMPAD" .. i]) then
---]]						
+					if (dik == DIK_keys["DIK_" .. i]) or (dik == DIK_keys["DIK_NUMPAD" .. i]) then
 						self:On_Sort(i,true)
 						self:On_Sort(i)
 						break
@@ -4041,11 +4386,7 @@ function UIInventory:Close()
 	self:Print(nil, "Close")
 	
 	-- Sound effect
-	if ui_mcm and ui_mcm.get("fddar/backpack/enable") then
-		--printf("FDDAR backpack enabled, omit ui_inventory sound effect")
-	else
-		self:PlaySND(snd_close)
-	end
+	self:PlaySND(snd_close)
 	
 	self:HideDialog()
 	self:Show(false)

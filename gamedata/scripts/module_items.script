@@ -1,0 +1,2561 @@
+local function get_actor()
+    return db and db.actor
+end
+
+focused_modular_weapon = nil
+focused_magazine_item = nil
+
+local module_hl_colors = {
+    -- Can be attached to the focused weapon right now.
+    ["installable"] = GetARGB(185, 95, 225, 105),
+
+    -- Compatible with the weapon's modular system, but another adapter,
+    -- rail, handguard, mount, etc. must be installed first.
+    ["compatible_later"] = GetARGB(150, 30, 105, 40),
+}
+
+-- Timed magazine loading/unloading guard.
+-- Global: only ONE magazine operation may run at a time.
+-- mag_load_busy is kept for compatibility with the existing per-mag checks/event code.
+local mag_load_busy = {}
+local mag_operation_busy = nil
+local mag_operation_serial = 0
+local MAG_LOAD_TIME_DEFAULT = 0.35
+
+local function actor_inventory_is_open()
+    -- If we can see the actor inventory menu state, stop mag operations when it closes.
+    -- If the UI object is temporarily unavailable, do not hard-fail here.
+    if ui_inventory and ui_inventory.GUI and ui_inventory.GUI.IsShown then
+        return ui_inventory.GUI:IsShown()
+    end
+
+    return true
+end
+
+local function next_mag_operation_token()
+    mag_operation_serial = mag_operation_serial + 1
+    return mag_operation_serial
+end
+
+local function start_mag_operation(busy_key, op_name)
+    -- Global lock: loading/unloading any mag blocks every other mag operation.
+    if mag_operation_busy then
+        printf(
+            "MAG OPERATION: cannot start [%s], already running [%s]",
+            tostring(op_name),
+            tostring(mag_operation_busy.op)
+        )
+        return nil
+    end
+
+    if mag_load_busy[busy_key] then
+        return nil
+    end
+
+    local token = next_mag_operation_token()
+
+    local state = { op = op_name, token = token, key = busy_key }
+    mag_operation_busy = state
+    mag_load_busy[busy_key] = state
+
+    return token
+end
+
+local function clear_mag_operation(busy_key, token)
+    local state = mag_load_busy[busy_key]
+
+    if state and ((not token) or state.token == token) then
+        mag_load_busy[busy_key] = nil
+
+        if mag_operation_busy and mag_operation_busy.key == busy_key then
+            if (not token) or mag_operation_busy.token == token then
+                mag_operation_busy = nil
+            end
+        end
+    end
+end
+
+local function mag_operation_should_stop(busy_key, token)
+    if not actor_inventory_is_open() then
+        clear_mag_operation(busy_key, token)
+        printf("MAG OPERATION: cancelled because inventory closed")
+        return true
+    end
+
+    local state = mag_load_busy[busy_key]
+
+    if not state or state.token ~= token then
+        return true
+    end
+
+    if not mag_operation_busy or mag_operation_busy.token ~= token or mag_operation_busy.key ~= busy_key then
+        clear_mag_operation(busy_key, token)
+        return true
+    end
+
+    return false
+end
+
+function cancel_mag_operations()
+    mag_load_busy = {}
+    mag_operation_busy = nil
+    printf("MAG OPERATION: cancelled all active magazine operations")
+end
+
+function on_actor_menu_hide()
+    cancel_mag_operations()
+end
+
+local function give_item_to_actor(section)
+    local actor = get_actor()
+    if not actor then return false end
+
+    alife():create(section, actor:position(), actor:level_vertex_id(), actor:game_vertex_id(), actor:id())
+    printf("MODULE ITEM: returned [%s] to actor inventory", section)
+    return true
+end
+
+local function is_magazine_module(section)
+    if not section or section == "" then return false end
+
+    local ini = system_ini()
+    if not ini or not ini:section_exist(section) then return false end
+
+    -- Explicit detachable magazine markers only.
+    -- Do NOT classify by section name. Names like [870_mag4] are tube
+    -- extension modules, not detachable inventory magazines.
+    if ini:line_exist(section, "module_type") then
+        local module_type = ini:r_string(section, "module_type")
+        if module_type == "magazine" or module_type == "mag" then
+            return true
+        end
+    end
+
+    local class_id = SYS_GetParam and SYS_GetParam(0, section, "class") or nil
+    if class_id == "II_MAG" then
+        return true
+    end
+
+    if ini:line_exist(section, "max_mag_size") then
+        return true
+    end
+
+    if ini:line_exist(section, "mag_ammo_class") then
+        return true
+    end
+
+    if ini:line_exist(section, "magazine_group") then
+        return true
+    end
+
+    return false
+end
+
+local function weapon_accepts_magazine(wpn, mag_section)
+    if not wpn or not mag_section then return false end
+
+    local wpn_sec = wpn:section()
+    if not wpn_sec or wpn_sec == "" then return false end
+
+    local ini = system_ini()
+
+    -- Primary check: the engine-authoritative field. CInventoryMagazine
+    -- reads "magazine_group" from the MAGAZINE's own section (usually
+    -- inherited from a group parent like [wg_wpn_ak]) and lists the weapon
+    -- sections that accept it. This mirrors CInventoryMagazine::AcceptsWeapon
+    -- exactly, so it stays correct even if the weapon's own ini never
+    -- mentions the magazine at all.
+    if ini:section_exist(mag_section) and ini:line_exist(mag_section, "magazine_group") then
+        local weapons = ini:r_string(mag_section, "magazine_group")
+
+        if weapons then
+            for s in string.gmatch(weapons, "([^,%s]+)") do
+                if s == wpn_sec then
+                    return true
+                end
+            end
+        end
+    end
+
+    -- Legacy/alternate check: some configs instead list accepted magazines
+    -- directly on the weapon via "magazine_class". Kept as a fallback so any
+    -- data using that convention still works.
+    if ini:line_exist(wpn_sec, "magazine_class") then
+        local mags = ini:r_string(wpn_sec, "magazine_class")
+
+        if mags then
+            for s in string.gmatch(mags, "([^,%s]+)") do
+                if s == mag_section then
+                    return true
+                end
+            end
+        end
+    end
+
+    return false
+end
+
+local function get_best_modular_weapon_for_module(module_section)
+    local actor = get_actor()
+    if not actor then return nil end
+
+    local active = actor:active_item()
+    if active and active.module_count and active.module_can_install then
+        if is_magazine_module(module_section) then
+            if weapon_accepts_magazine(active, module_section) then
+                return active
+            end
+        elseif active:module_can_install(module_section) then
+            return active
+        end
+    end
+
+    local found = nil
+
+    actor:iterate_inventory(function(owner, obj)
+        if found then return end
+
+        if obj and obj.module_count and obj.module_can_install then
+            if is_magazine_module(module_section) then
+                if weapon_accepts_magazine(obj, module_section) then
+                    found = obj
+                end
+            elseif obj:module_can_install(module_section) then
+                found = obj
+            end
+        end
+    end, nil)
+
+    return found
+end
+
+local function is_modular_weapon(obj)
+    if not obj then return false end
+
+    local sec = obj:section()
+    if not sec or sec == "" then return false end
+    if is_magazine_module(sec) then return false end
+
+    -- module_count/module_can_install are exported on script_game_object, so
+    -- merely checking that those methods exist does NOT prove that obj is a
+    -- CWeapon. Ammo, sights, PDAs and other inventory objects also expose the
+    -- wrapper names and would therefore reach the C++ weapon cast.
+    local ini = system_ini()
+    if not ini:section_exist(sec) then return false end
+    if not ini:line_exist(sec, "modular_attachments") then return false end
+    if not ini:r_bool(sec, "modular_attachments") then return false end
+
+    if not obj.module_count then return false end
+    if not obj.module_can_install then return false end
+
+    return true
+end
+
+local function highlight_cell(ci, highlight_type)
+    if not ci or not ci.hl then return end
+
+    highlight_type = highlight_type or "installable"
+
+    ci.hl:Show(true)
+    ci.hl:SetTextureColor(
+        module_hl_colors[highlight_type] or
+        module_hl_colors["installable"])
+end
+
+local function module_compat_trim(value)
+    if not value then return "" end
+    return (string.gsub(value, "^%s*(.-)%s*$", "%1"))
+end
+
+local function module_compat_first_pipe_field(value)
+    if not value or value == "" then return "" end
+    local field = string.match(value, "^([^|]+)")
+    return module_compat_trim(field)
+end
+
+local function module_required_attachment_points(section)
+    local result = {}
+    local ini = system_ini()
+
+    if not section or section == "" or
+       not ini or not ini:section_exist(section) or
+       not ini:line_exist(section, "attachment_point") then
+        return result
+    end
+
+    local raw = ini:r_string(section, "attachment_point")
+    if not raw or raw == "" then
+        return result
+    end
+
+    for entry in string.gmatch(raw .. "#", "(.-)#") do
+        local point = module_compat_first_pipe_field(entry)
+        if point ~= "" then
+            result[point] = true
+        end
+    end
+
+    return result
+end
+
+local function module_provided_attachment_slots(section)
+    local result = {}
+    local ini = system_ini()
+
+    if not section or section == "" or
+       not ini or not ini:section_exist(section) or
+       not ini:line_exist(section, "attachment_slots") then
+        return result
+    end
+
+    local raw = ini:r_string(section, "attachment_slots")
+    if not raw or raw == "" then
+        return result
+    end
+
+    for entry in string.gmatch(raw .. "#", "(.-)#") do
+        local slot = module_compat_first_pipe_field(entry)
+        if slot ~= "" then
+            result[slot] = true
+        end
+    end
+
+    return result
+end
+
+local function module_points_intersect(required_points, available_slots)
+    for point, _ in pairs(required_points or {}) do
+        if available_slots[point] then
+            return true
+        end
+    end
+
+    return false
+end
+
+-- Starting from modules the engine says can attach immediately, follow every
+-- attachment slot those modules would expose. This marks adapter -> rail ->
+-- optic chains of any depth as compatible-later.
+local function collect_module_highlight_states(wpn, visible_modules)
+    local states = {}
+    local available_slots = {}
+    local changed = true
+
+    for section, _ in pairs(visible_modules) do
+        if wpn:module_can_install(section) then
+            states[section] = "installable"
+
+            for slot, _ in pairs(module_provided_attachment_slots(section)) do
+                available_slots[slot] = true
+            end
+        end
+    end
+
+    while changed do
+        changed = false
+
+        for section, _ in pairs(visible_modules) do
+            if not states[section] then
+                local required = module_required_attachment_points(section)
+
+                if module_points_intersect(required, available_slots) then
+                    states[section] = "compatible_later"
+                    changed = true
+
+                    for slot, _ in pairs(module_provided_attachment_slots(section)) do
+                        if not available_slots[slot] then
+                            available_slots[slot] = true
+                        end
+                    end
+                end
+            end
+        end
+    end
+
+    return states
+end
+
+function clear_module_highlights()
+    if not ui_inventory or not ui_inventory.GUI then return end
+
+    for bag, id in pairs(ui_inventory.GUI.bag_id) do
+        local cc = ui_inventory.GUI.CC[bag]
+
+        if cc and cc.cell then
+            for idx, ci in pairs(cc.cell) do
+                if ci and ci.hl then
+                    ci.hl:Show(false)
+                end
+            end
+        end
+    end
+end
+
+
+local function refresh_magazine_cell(mag_id)
+    if not mag_id then
+        return false
+    end
+
+    if not ui_inventory or not ui_inventory.GUI then
+        return false
+    end
+
+    if not ui_inventory.GUI.CC or not ui_inventory.GUI.bag_id then
+        return false
+    end
+
+    -- Update only the cell that represents the magazine being loaded or
+    -- unloaded. The previous implementation updated every visible inventory
+    -- cell after every round.
+    for bag, id in pairs(ui_inventory.GUI.bag_id) do
+        local cc = ui_inventory.GUI.CC[bag]
+
+        if cc and cc.IsShown and cc:IsShown() and cc.cell then
+            for idx, ci in pairs(cc.cell) do
+                if ci and ci.ID == mag_id then
+                    if ci.Update then
+                        ci:Update()
+                    end
+
+                    return true
+                end
+            end
+        end
+    end
+
+    return false
+end
+
+function highlight_installable_modules_for_weapon(wpn)
+    clear_module_highlights()
+
+    if not is_modular_weapon(wpn) then return end
+    if not ui_inventory or not ui_inventory.GUI then return end
+
+    local visible_modules = {}
+    local visible_cells = {}
+
+    for bag, id in pairs(ui_inventory.GUI.bag_id) do
+        local cc = ui_inventory.GUI.CC[bag]
+
+        if cc and cc:IsShown() and cc.cell then
+            for idx, ci in pairs(cc.cell) do
+                if ci and ci.ID and ci.section then
+                    local obj = level.object_by_id(ci.ID)
+
+                    if obj and obj:id() ~= wpn:id() then
+                        local section = obj:section()
+
+                        if section and is_magazine_module(section) then
+                            -- Detachable magazines are immediate-only and do
+                            -- not participate in attachment-slot chains.
+                            if weapon_accepts_magazine(wpn, section) then
+                                highlight_cell(ci, "installable")
+                            end
+                        elseif section then
+                            visible_modules[section] = true
+                            table.insert(visible_cells, {
+                                cell = ci,
+                                section = section
+                            })
+                        end
+                    end
+                end
+            end
+        end
+    end
+
+    local states = collect_module_highlight_states(wpn, visible_modules)
+
+    for _, entry in ipairs(visible_cells) do
+        local state = states[entry.section]
+        if state then
+            highlight_cell(entry.cell, state)
+        end
+    end
+end
+
+local function highlight_compatible_weapons_for_magazine(mag)
+    clear_module_highlights()
+
+    if not mag then return end
+    if not ui_inventory or not ui_inventory.GUI then return end
+
+    local mag_section = mag:section()
+    if not mag_section or mag_section == "" then return end
+    if not is_magazine_module(mag_section) then return end
+
+    for bag, id in pairs(ui_inventory.GUI.bag_id) do
+        local cc = ui_inventory.GUI.CC[bag]
+
+        if cc and cc:IsShown() and cc.cell then
+            for idx, ci in pairs(cc.cell) do
+                if ci and ci.ID and ci.section then
+                    local obj = level.object_by_id(ci.ID)
+
+                    if obj and obj:id() ~= mag:id() then
+                        if is_modular_weapon(obj) and weapon_accepts_magazine(obj, mag_section) then
+                            highlight_cell(ci)
+                        end
+                    end
+                end
+            end
+        end
+    end
+end
+
+function on_item_focus_receive(obj)
+    if not obj then return end
+
+    local section = obj:section()
+
+    if section and is_magazine_module(section) then
+        focused_modular_weapon = nil
+        focused_magazine_item = obj
+        printf("MODULE ITEM: focused magazine [%s] HUDRECOIL_MAG_COMPAT_HIGHLIGHT", section)
+        highlight_compatible_weapons_for_magazine(obj)
+        return
+    end
+
+    if not is_modular_weapon(obj) then return end
+
+    focused_magazine_item = nil
+    focused_modular_weapon = obj
+    printf("MODULE ITEM: focused modular weapon [%s]", obj:section())
+
+    highlight_installable_modules_for_weapon(obj)
+end
+
+function on_item_focus_lost(obj)
+    -- No clear here. Focus events are noisy.
+end
+
+function should_highlight_installable(obj)
+    if not obj then return false end
+
+    local section = obj:section()
+    if not section or section == "" then return false end
+
+    if focused_modular_weapon then
+        if obj.id and focused_modular_weapon.id and obj:id() == focused_modular_weapon:id() then
+            return false
+        end
+
+        if is_magazine_module(section) then
+            return weapon_accepts_magazine(focused_modular_weapon, section)
+        end
+
+        return focused_modular_weapon:module_can_install(section)
+    end
+
+    if focused_magazine_item then
+        local mag_section = focused_magazine_item:section()
+        if not mag_section or mag_section == "" then return false end
+        if obj.id and focused_magazine_item.id and obj:id() == focused_magazine_item:id() then
+            return false
+        end
+
+        return is_modular_weapon(obj) and weapon_accepts_magazine(obj, mag_section)
+    end
+
+    return false
+end
+
+function menu_install_module(obj)
+    if not obj then return false end
+
+    local section = obj:section()
+    if not section then return false end
+
+    local wpn = get_best_modular_weapon_for_module(section)
+    if not wpn then return false end
+
+    if is_magazine_module(section) then
+        return "Install magazine"
+    end
+
+    return "Install module"
+end
+
+function install_module(obj)
+    if not obj then return false end
+
+    local section = obj:section()
+    if not section then return false end
+
+    local wpn = get_best_modular_weapon_for_module(section)
+    if not wpn then
+        printf("MODULE ITEM: no compatible weapon found for [%s]", section)
+        return false
+    end
+
+    local can_install = false
+
+    if is_magazine_module(section) then
+        can_install = weapon_accepts_magazine(wpn, section)
+    else
+        can_install = wpn:module_can_install(section)
+    end
+
+    if not can_install then
+        printf("MODULE ITEM: cannot install [%s] on [%s]", section, wpn:section())
+        return false
+    end
+
+    local ok = wpn:module_install(section)
+
+    if ok then
+        printf("MODULE ITEM: installed [%s] on [%s]", section, wpn:section())
+        alife_release(obj)
+        highlight_installable_modules_for_weapon(wpn)
+    else
+        printf("MODULE ITEM: install failed [%s] on [%s]", section, wpn:section())
+    end
+
+    return ok
+end
+
+function on_item_drag_drop(itm1, itm2, from_slot, to_slot)
+    if not itm1 or not itm2 then return false end
+
+    -- Dragged item = loose ammo stack.
+    -- Target item = detached magazine.
+    -- This fills only until the magazine is full and leaves the rest of the ammo stack.
+    if itm1.ammo_get_count and is_magazine_module(itm2:section()) then
+        if start_timed_mag_load then
+            return start_timed_mag_load(itm1, itm2)
+        end
+
+        return false
+    end
+
+    -- Dragged item = normal module.
+    -- Target item = weapon.
+    if not itm2.module_count or not itm2.module_can_install then return false end
+
+    local module_section = itm1:section()
+    if not module_section or module_section == "" then return false end
+
+    -- Magazines are disabled for weapon drag/drop.
+    -- They should use the normal reload system, not silent module install.
+    if is_magazine_module(module_section) then
+        printf("MODULE ITEM: drag-drop magazine disabled [%s] on [%s]", module_section, itm2:section())
+        return false
+    end
+
+    if not itm2:module_can_install(module_section) then
+        return false
+    end
+
+    -- Drag/drop has no way to ask which physical rail and rail position the
+    -- player wants. Use the right-click exact-placement menu instead.
+    printf(
+        "MODULE ITEM: drag install requires exact placement; use context menu [%s] on [%s]",
+        module_section,
+        itm2:section())
+    return false
+end
+
+function on_game_start()
+    RegisterScriptCallback("ActorMenu_on_item_drag_drop", module_items.on_item_drag_drop)
+    RegisterScriptCallback("ActorMenu_on_item_focus_receive", module_items.on_item_focus_receive)
+    RegisterScriptCallback("ActorMenu_on_item_focus_lost", module_items.on_item_focus_lost)
+
+    -- Some builds expose this callback. If yours does, active mag loading/unloading
+    -- is cancelled immediately when inventory closes. The timed-event callbacks
+    -- also check the UI state every round, so this is only an extra safety net.
+    if module_items.on_actor_menu_hide then
+        RegisterScriptCallback("ActorMenu_on_hide", module_items.on_actor_menu_hide)
+    end
+end
+
+
+
+local function module_provider_display_name(section)
+    if not section or section == "" then
+        return "Unknown rail"
+    end
+
+    if ini_sys and ini_sys:section_exist(section) then
+        local key = nil
+
+        if ini_sys:line_exist(section, "inv_name_short") then
+            key = ini_sys:r_string(section, "inv_name_short")
+        elseif ini_sys:line_exist(section, "inv_name") then
+            key = ini_sys:r_string(section, "inv_name")
+        end
+
+        if key and key ~= "" then
+            return game.translate_string(key)
+        end
+    end
+
+    return section
+end
+
+-- Reads the exact authored attachment_slots entry used by a placement and
+-- gives it a human-readable mounting side.
+--
+-- Expected entry format:
+-- slot_name|parent_point|pos_x,pos_y,pos_z|rot_x,rot_y,rot_z
+--
+-- Authored convention used by the modular weapons:
+--   rot_z near -90  = Left side
+--   rot_z near  90  = Right side
+--   rot_z near   0  = Top
+--   rot_z near 180  = Bottom
+local function module_trim(value)
+    if not value then return "" end
+    return (string.gsub(value, "^%s*(.-)%s*$", "%1"))
+end
+
+local function module_split_attachment_entries(value)
+    local entries = {}
+
+    if not value or value == "" then
+        return entries
+    end
+
+    for entry in string.gmatch(value .. "#", "(.-)#") do
+        table.insert(entries, module_trim(entry))
+    end
+
+    return entries
+end
+
+local function module_get_pipe_field(value, wanted_index)
+    if not value then return "" end
+
+    local index = 1
+    for field in string.gmatch(value .. "|", "(.-)|") do
+        if index == wanted_index then
+            return module_trim(field)
+        end
+
+        index = index + 1
+    end
+
+    return ""
+end
+
+local function module_parse_vector3(value)
+    if not value or value == "" then
+        return 0, 0, 0
+    end
+
+    local x, y, z = string.match(
+        value,
+        "^%s*([%+%-]?[%d%.]+)%s*,%s*([%+%-]?[%d%.]+)%s*,%s*([%+%-]?[%d%.]+)%s*$"
+    )
+
+    return tonumber(x) or 0, tonumber(y) or 0, tonumber(z) or 0
+end
+
+local function module_normalize_angle(angle)
+    angle = tonumber(angle) or 0
+
+    while angle > 180 do
+        angle = angle - 360
+    end
+
+    while angle < -180 do
+        angle = angle + 360
+    end
+
+    return angle
+end
+
+local function module_angle_distance(a, b)
+    return math.abs(module_normalize_angle(a - b))
+end
+
+local function module_get_placement_side(owner_section, entry_index)
+    if not owner_section or owner_section == "" then
+        return "Unknown side"
+    end
+
+    local ini_sys = system_ini()
+    if not ini_sys or
+       not ini_sys:section_exist(owner_section) or
+       not ini_sys:line_exist(owner_section, "attachment_slots") then
+        return "Unknown side"
+    end
+
+    local raw_slots = ini_sys:r_string(owner_section, "attachment_slots")
+    local entries = module_split_attachment_entries(raw_slots)
+
+    -- C++ exposes attachment_slots entry indices as zero-based values.
+    local entry = entries[(tonumber(entry_index) or 0) + 1]
+    if not entry or entry == "" then
+        return "Unknown side"
+    end
+
+    local px, py, pz = module_parse_vector3(module_get_pipe_field(entry, 3))
+    local rx, ry, rz = module_parse_vector3(module_get_pipe_field(entry, 4))
+    rz = module_normalize_angle(rz)
+
+    -- Rotation is the primary source because it also works for rails whose
+    -- position is close to the weapon centre.
+    local angle_tolerance = 35
+
+    if module_angle_distance(rz, -90) <= angle_tolerance then
+        return "Left side"
+    end
+
+    if module_angle_distance(rz, 90) <= angle_tolerance then
+        return "Right side"
+    end
+
+    if module_angle_distance(rz, 180) <= angle_tolerance or
+       module_angle_distance(rz, -180) <= angle_tolerance then
+        return "Bottom"
+    end
+
+    if module_angle_distance(rz, 0) <= angle_tolerance then
+        -- Most zero-rotation rails are top rails. Negative local Y is used as
+        -- a fallback for an authored underside rail.
+        if py < -0.005 then
+            return "Bottom"
+        end
+
+        return "Top"
+    end
+
+    -- Fallback for unusual authored angles.
+    if px < -0.005 then
+        return "Left side"
+    elseif px > 0.005 then
+        return "Right side"
+    elseif py < -0.005 then
+        return "Bottom"
+    elseif py > 0.005 then
+        return "Top"
+    end
+
+    return "Center"
+end
+
+-- Returns every currently valid exact mounting position for a loose module.
+-- The returned placement index is consumed directly by C++, which validates
+-- the list again before installation.
+function get_dynamic_install_placements(module_obj, target_weapon)
+    local result = {}
+
+    if not module_obj then
+        return result
+    end
+
+    local section = module_obj:section()
+    if not section or section == "" or is_magazine_module(section) then
+        return result
+    end
+
+    local wpn = target_weapon or get_best_modular_weapon_for_module(section)
+    if not wpn or not wpn.module_placement_count or not wpn.module_can_install then
+        return result
+    end
+
+    if not wpn:module_can_install(section) then
+        return result
+    end
+
+    local count = wpn:module_placement_count(section) or 0
+
+    for placement_index = 0, count - 1 do
+        local owner = wpn:module_placement_owner(
+            section, placement_index) or ""
+        local slot = wpn:module_placement_slot(
+            section, placement_index) or ""
+        local entry = wpn:module_placement_entry(
+            section, placement_index) or 0
+        local rail_start = wpn:module_placement_start(
+            section, placement_index) or 0
+        local rail_length = wpn:module_placement_length(
+            section, placement_index) or 1
+
+        local provider_name = module_provider_display_name(owner)
+        local first_position = rail_start + 1
+        local last_position = rail_start + rail_length
+
+        local side_name = module_get_placement_side(owner, entry)
+
+        local label = string.format(
+            "Install on %s — %s — %s #%d [%d-%d]",
+            provider_name,
+            side_name,
+            slot,
+            entry + 1,
+            first_position,
+            last_position)
+
+        local slot_label = string.format(
+            "%s — %s #%d [%d-%d]",
+            side_name,
+            slot,
+            entry + 1,
+            first_position,
+            last_position)
+
+        table.insert(result, {
+            index = placement_index,
+            owner = owner,
+            provider_name = provider_name,
+            slot = slot,
+            entry = entry,
+            start = rail_start,
+            length = rail_length,
+            side = side_name,
+            slot_label = slot_label,
+            label = label,
+            weapon = wpn
+        })
+    end
+
+    return result
+end
+
+function install_module_placement(obj, placement_index, target_weapon)
+    if not obj then
+        return false
+    end
+
+    placement_index = tonumber(placement_index)
+    if placement_index == nil then
+        return false
+    end
+
+    local section = obj:section()
+    if not section or section == "" then
+        return false
+    end
+
+    local wpn = target_weapon or get_best_modular_weapon_for_module(section)
+    if not wpn or not wpn.module_install_placement then
+        printf("MODULE ITEM: exact placement API unavailable for [%s]",
+            section)
+        return false
+    end
+
+    local ok = wpn:module_install_placement(
+        section,
+        placement_index)
+
+    if ok then
+        printf(
+            "MODULE ITEM: exact-installed [%s] placement=[%d] weapon=[%s]",
+            section,
+            placement_index,
+            wpn:section())
+
+        alife_release(obj)
+        highlight_installable_modules_for_weapon(wpn)
+    else
+        printf(
+            "MODULE ITEM: exact install failed [%s] placement=[%d]",
+            section,
+            placement_index)
+    end
+
+    return ok
+end
+
+function find_installed_magazine_index(wpn)
+    if not wpn or not wpn.module_count or not wpn.module_get_section then
+        return nil
+    end
+
+    local count = wpn:module_count() or 0
+    for installed_index = count - 1, 0, -1 do
+        local section = wpn:module_get_section(installed_index)
+        if section and section ~= "" and is_magazine_module(section) then
+            return installed_index
+        end
+    end
+
+    return nil
+end
+
+-- Returns every removable installed module as an exact installed-list entry.
+-- No fixed limit: 20 removable modules produce 20 table entries.
+function get_dynamic_removable_modules(wpn)
+    local result = {}
+
+    if not wpn or not wpn.module_count or not wpn.module_get_section then
+        return result
+    end
+
+    local count = wpn:module_count() or 0
+
+    -- Reverse order keeps newest/top-level attachments first and makes the menu
+    -- consistent with the previous fixed remove functors.
+    for installed_index = count - 1, 0, -1 do
+        local section = wpn:module_get_section(installed_index)
+
+        if section and section ~= "" then
+            local removable = true
+
+            if wpn.module_can_remove_index then
+                local ok, can_remove = pcall(function()
+                    return wpn:module_can_remove_index(installed_index)
+                end)
+                removable = ok and can_remove == true
+            elseif wpn.module_can_remove then
+                removable = wpn:module_can_remove(section)
+            end
+
+            if removable then
+                local label_prefix = is_magazine_module(section)
+                    and "Remove magazine: "
+                    or "Remove module: "
+
+                local display_name = section
+                if ini_sys and ini_sys:section_exist(section) then
+                    if ini_sys:line_exist(section, "inv_name_short") then
+                        display_name = game.translate_string(
+                            ini_sys:r_string(section, "inv_name_short"))
+                    elseif ini_sys:line_exist(section, "inv_name") then
+                        display_name = game.translate_string(
+                            ini_sys:r_string(section, "inv_name"))
+                    end
+                end
+
+                table.insert(result, {
+                    index = installed_index,
+                    section = section,
+                    label = label_prefix .. display_name
+                })
+            end
+        end
+    end
+
+    return result
+end
+
+function remove_installed_module_exact(obj, installed_index, give_to_actor)
+    if give_to_actor == nil then give_to_actor = true end
+
+    if not obj or not obj.module_get_section then
+        return false
+    end
+
+    installed_index = tonumber(installed_index)
+    if not installed_index then
+        return false
+    end
+
+    local section = obj:module_get_section(installed_index)
+    if not section or section == "" then
+        printf("MODULE ITEM: invalid installed module index [%s]",
+            tostring(installed_index))
+        return false
+    end
+
+    if obj.module_can_remove_index and
+       not obj:module_can_remove_index(installed_index)
+    then
+        printf("MODULE ITEM: exact module index [%s] cannot be removed",
+            tostring(installed_index))
+        return false
+    end
+
+    if not obj.module_remove_index then
+        printf("MODULE ITEM: module_remove_index API is unavailable")
+        return false
+    end
+
+    local magazine = is_magazine_module(section)
+    local ok = obj:module_remove_index(installed_index)
+
+    if ok then
+        -- Inserted magazines are returned by CWeaponMagazined itself so their
+        -- exact mixed-ammo stack is transferred. Spawning another section item
+        -- here would create an empty duplicate.
+        if not magazine and give_to_actor then
+            give_item_to_actor(section)
+        end
+
+        highlight_installable_modules_for_weapon(obj)
+
+        printf("MODULE ITEM: removed exact index=[%s] section=[%s] magazine=[%s] give_to_actor=[%s]",
+            tostring(installed_index),
+            section,
+            tostring(magazine),
+            tostring(give_to_actor))
+    else
+        printf("MODULE ITEM: failed exact removal index=[%s] section=[%s]",
+            tostring(installed_index), section)
+    end
+
+    return ok
+end
+
+local function get_removable_modules(wpn)
+    local result = {}
+
+    if not wpn or not wpn.module_count then return result end
+
+    local count = wpn:module_count()
+    if count <= 0 then return result end
+
+    for i = count - 1, 0, -1 do
+        local section = wpn:module_get_section(i)
+
+        if section and section ~= "" then
+            if not wpn.module_can_remove or wpn:module_can_remove(section) then
+                table.insert(result, section)
+            end
+        end
+    end
+
+    return result
+end
+
+local function get_removable_module_by_index(wpn, index)
+    local modules = get_removable_modules(wpn)
+    return modules[index]
+end
+
+local function menu_remove_installed_module_by_index(obj, index)
+    if not obj then return false end
+    if not obj.module_count then return false end
+
+    local section = get_removable_module_by_index(obj, index)
+    if not section then return false end
+
+    if is_magazine_module(section) then
+        return "Remove magazine: " .. section
+    end
+
+    return "Remove module: " .. section
+end
+
+local function remove_installed_module_by_index(obj, index)
+    if not obj then return false end
+    if not obj.module_remove then return false end
+
+    local section = get_removable_module_by_index(obj, index)
+    if not section then
+        printf("MODULE ITEM: no removable module index [%s] on [%s]", tostring(index), obj:section())
+        return false
+    end
+
+    if obj.module_can_remove and not obj:module_can_remove(section) then
+        printf("MODULE ITEM: cannot remove [%s] from [%s]", section, obj:section())
+        return false
+    end
+
+    local ok = obj:module_remove(section)
+
+    if ok then
+        printf("MODULE ITEM: removed [%s] from [%s]", section, obj:section())
+        give_item_to_actor(section)
+        highlight_installable_modules_for_weapon(obj)
+    else
+        printf("MODULE ITEM: failed to remove [%s]", section)
+    end
+
+    return ok
+end
+
+function get_mag_ammo_class(mag)
+    if not mag then return nil end
+
+    local sec = mag:section()
+    if not sec or sec == "" then return nil end
+
+    if not system_ini():line_exist(sec, "mag_ammo_class") then
+        return nil
+    end
+
+    return system_ini():r_string(sec, "mag_ammo_class")
+end
+
+
+local function mag_accepts_ammo(mag, ammo_section)
+    if not mag or not ammo_section or ammo_section == "" then
+        return false
+    end
+
+    if mag.magazine_accepts_ammo then
+        local ok, accepted = pcall(function()
+            return mag:magazine_accepts_ammo(ammo_section)
+        end)
+
+        if ok then
+            return accepted == true
+        end
+    end
+
+    -- Fallback parser for older builds.
+    local classes = get_mag_ammo_class(mag)
+    if not classes or classes == "" then return false end
+
+    for entry in string.gmatch(classes, "([^,]+)") do
+        local trimmed = string.gsub(entry, "^%s*(.-)%s*$", "%1")
+        if trimmed == ammo_section then
+            return true
+        end
+    end
+
+    return false
+end
+
+function get_mag_max_size(mag)
+    if not mag then return 0 end
+
+    local sec = mag:section()
+    if not sec or sec == "" then return 0 end
+
+    if not system_ini():line_exist(sec, "max_mag_size") then
+        return 0
+    end
+
+    return system_ini():r_u32(sec, "max_mag_size")
+end
+
+function get_mag_ammo_count(mag)
+    if not mag then return 0 end
+
+    local max_size = get_mag_max_size(mag)
+    if max_size <= 0 then return 0 end
+
+    -- Persistent AMMO-class magazine storage.
+    -- Magazines now inherit from ammo_base/class = AMMO, so their current fill is
+    -- stored by the engine as ammo count, not item condition.
+    if mag.get_ammo_in_magazine then
+        local ok, count = pcall(function()
+            return mag:get_ammo_in_magazine()
+        end)
+
+        if ok and count then
+            count = tonumber(count) or 0
+
+            if count < 0 then count = 0 end
+            if count > max_size then count = max_size end
+
+            return count
+        end
+    end
+
+    -- Fallback only for old II_ATTCH condition-based magazines.
+    local ok, cond = pcall(function()
+        return mag:condition()
+    end)
+
+    if not ok or not cond then
+        return 0
+    end
+
+    cond = tonumber(cond) or 0
+    if cond < 0 then cond = 0 end
+    if cond > 1 then cond = 1 end
+
+    return math.floor((cond * max_size) + 0.5)
+end
+
+function set_mag_ammo_count(mag, count)
+    if not mag then return false end
+
+    local max_size = get_mag_max_size(mag)
+    if max_size <= 0 then return false end
+
+    count = tonumber(count) or 0
+    if count < 0 then count = 0 end
+    if count > max_size then count = max_size end
+
+    -- Persistent AMMO-class magazine storage.
+    if mag.set_ammo_elapsed then
+        local ok = pcall(function()
+            mag:set_ammo_elapsed(count)
+        end)
+
+        if ok then
+            local check = get_mag_ammo_count(mag)
+            return check == count
+        end
+    end
+
+    -- Fallback only for old II_ATTCH condition-based magazines.
+    local cond = count / max_size
+
+    local ok = pcall(function()
+        mag:set_condition(cond)
+    end)
+
+    return ok
+end
+
+local function find_loadable_magazine_for_ammo(ammo_section)
+    local actor = get_actor()
+    if not actor then return nil end
+
+    local found = nil
+
+    actor:iterate_inventory(function(owner, obj)
+        if found then return end
+        if not obj then return end
+
+        local sec = obj:section()
+        if not is_magazine_module(sec) then return end
+
+        local mag_ammo = get_mag_ammo_class(obj)
+        if not mag_accepts_ammo(obj, ammo_section) then return end
+
+        local max_size = get_mag_max_size(obj)
+        if max_size <= 0 then return end
+
+        local current = get_mag_ammo_count(obj)
+
+        if current < max_size then
+            found = obj
+        end
+    end, nil)
+
+    return found
+end
+
+function menu_load_ammo_to_magazine(obj)
+    if not obj then return false end
+    if not obj.ammo_get_count then return false end
+
+    local ammo_section = obj:section()
+    if not ammo_section then return false end
+
+    local mag = find_loadable_magazine_for_ammo(ammo_section)
+    if not mag then return false end
+
+    return "Load magazine"
+end
+
+local function load_ammo_obj_into_mag(ammo_obj, mag)
+    if not ammo_obj or not mag then return false end
+    if not ammo_obj.ammo_get_count then return false end
+    if not ammo_obj.ammo_set_count then return false end
+
+    local ammo_section = ammo_obj:section()
+    if not ammo_section then return false end
+
+    if not mag_accepts_ammo(mag, ammo_section) then
+        return false
+    end
+
+    local max_size = get_mag_max_size(mag)
+    local current = get_mag_ammo_count(mag)
+
+    if max_size <= 0 then return false end
+    if current >= max_size then return false end
+
+    local ammo_count = ammo_obj:ammo_get_count()
+    if ammo_count <= 0 then return false end
+
+    -- ONE ROUND ONLY. Store the exact ammo section at the top/back of the
+    -- magazine stack. The last round loaded is therefore the first fired.
+    local new_mag_count = current + 1
+    local new_ammo_count = ammo_count - 1
+
+    if not mag.magazine_push_round then
+        return false
+    end
+
+    local pushed_ok, pushed = pcall(function()
+        return mag:magazine_push_round(ammo_section)
+    end)
+
+    if not pushed_ok or pushed ~= true then
+        return false
+    end
+
+    if new_ammo_count > 0 then
+        ammo_obj:ammo_set_count(new_ammo_count)
+    else
+        alife_release(ammo_obj)
+    end
+
+    refresh_magazine_cell(mag:id())
+
+    printf(
+        "MAG LOAD: loaded ONE round [%s] into [%s] (%d/%d), ammo left [%d]",
+        ammo_section,
+        mag:section(),
+        new_mag_count,
+        max_size,
+        new_ammo_count
+    )
+
+    return true
+end
+
+local function get_mag_load_time(ammo_obj, mag)
+    local load_time = MAG_LOAD_TIME_DEFAULT
+
+    if mag then
+        local mag_sec = mag:section()
+        if mag_sec and system_ini():line_exist(mag_sec, "mag_load_time") then
+            load_time = tonumber(system_ini():r_string(mag_sec, "mag_load_time")) or load_time
+        end
+    end
+
+    if ammo_obj then
+        local ammo_sec = ammo_obj:section()
+        if ammo_sec and system_ini():line_exist(ammo_sec, "mag_load_time") then
+            load_time = tonumber(system_ini():r_string(ammo_sec, "mag_load_time")) or load_time
+        end
+    end
+
+    if load_time < 0.05 then
+        load_time = 0.05
+    end
+
+    return load_time
+end
+
+local function find_ammo_stack_for_mag(mag, preferred_ammo_id, ammo_section)
+    if not mag then return nil end
+
+    local wanted_ammo = ammo_section
+    if not wanted_ammo or wanted_ammo == "" then return nil end
+
+    -- Prefer the exact stack the player clicked/dragged first.
+    if preferred_ammo_id then
+        local preferred = level.object_by_id(preferred_ammo_id)
+        if preferred
+        and preferred.ammo_get_count
+        and preferred:section() == wanted_ammo
+        and preferred:ammo_get_count() > 0 then
+            return preferred
+        end
+    end
+
+    local actor = get_actor()
+    if not actor then return nil end
+
+    local found = nil
+
+    actor:iterate_inventory(function(owner, obj)
+        if found then return end
+        if not obj then return end
+        if not obj.ammo_get_count then return end
+        if obj:section() ~= wanted_ammo then return end
+
+        local count = obj:ammo_get_count()
+        if count and count > 0 then
+            found = obj
+        end
+    end, nil)
+
+    return found
+end
+
+function start_timed_mag_load(ammo_obj, mag)
+    if not ammo_obj or not mag then return false end
+    if not ammo_obj.ammo_get_count then return false end
+
+    local ammo_section = ammo_obj:section()
+    local mag_section = mag:section()
+
+    if not ammo_section or ammo_section == "" then return false end
+    if not mag_section or mag_section == "" then return false end
+    if not is_magazine_module(mag_section) then return false end
+
+    local max_size = get_mag_max_size(mag)
+    local current = get_mag_ammo_count(mag)
+
+    if max_size <= 0 then return false end
+
+    if current >= max_size then
+        printf("MAG LOAD: magazine [%s] already full (%d/%d)", mag_section, current, max_size)
+        return false
+    end
+
+    local mag_ammo_class = get_mag_ammo_class(mag)
+    if not mag_accepts_ammo(mag, ammo_section) then
+        printf(
+            "MAG LOAD: ammo [%s] is not compatible with magazine [%s], expected [%s]",
+            ammo_section,
+            mag_section,
+            tostring(mag_ammo_class)
+        )
+        return false
+    end
+
+    local first_stack = find_ammo_stack_for_mag(mag, ammo_obj:id(), ammo_section)
+    if not first_stack then
+        printf("MAG LOAD: no ammo stack available for [%s]", ammo_section)
+        return false
+    end
+
+    local mag_id = mag:id()
+    local busy_key = tostring(mag_id)
+
+    if mag_operation_busy then
+        printf("MAG LOAD: another magazine operation is already running")
+        return false
+    end
+
+    local op_token = start_mag_operation(busy_key, "load")
+    if not op_token then
+        return false
+    end
+
+    local load_time = get_mag_load_time(ammo_obj, mag)
+    local event_key_base = tostring(mag_id) .. "_" .. tostring(ammo_section)
+    local round_index = 0
+    local preferred_ammo_id = first_stack:id()
+
+    printf(
+        "MAG LOAD: started per-round loading [%s] -> [%s], round_time=[%.2f]",
+        ammo_section,
+        mag_section,
+        load_time
+    )
+
+    local function schedule_next_round()
+        round_index = round_index + 1
+
+        -- Use a new event id every round. Some builds repeat immediately when
+        -- a time event returns false, so we chain one-shot events instead.
+        local event_key = event_key_base .. "_" .. tostring(round_index)
+
+        CreateTimeEvent("module_mag_load_round", event_key, load_time, function()
+            if mag_operation_should_stop(busy_key, op_token) then
+                return true
+            end
+
+            local mag_live = level.object_by_id(mag_id)
+
+            if not mag_live then
+                clear_mag_operation(busy_key, op_token)
+                printf("MAG LOAD: stopped, magazine disappeared")
+                return true
+            end
+
+            local live_max = get_mag_max_size(mag_live)
+            local live_current = get_mag_ammo_count(mag_live)
+
+            if live_max <= 0 then
+                clear_mag_operation(busy_key, op_token)
+                printf("MAG LOAD: stopped, invalid magazine size")
+                return true
+            end
+
+            -- The real stop condition: magazine full.
+            if live_current >= live_max then
+                clear_mag_operation(busy_key, op_token)
+                printf("MAG LOAD: finished, magazine full [%s] (%d/%d)", mag_live:section(), live_current, live_max)
+                return true
+            end
+
+            -- Find a live ammo stack every round.
+            -- If the original stack became empty/deleted, continue with the next
+            -- stack of the same ammo section instead of stopping.
+            local ammo_live = find_ammo_stack_for_mag(mag_live, preferred_ammo_id, ammo_section)
+
+            if not ammo_live then
+                clear_mag_operation(busy_key, op_token)
+                printf("MAG LOAD: stopped, no more ammo stacks [%s]", ammo_section)
+                return true
+            end
+
+            preferred_ammo_id = ammo_live:id()
+
+            -- This function loads exactly ONE round and subtracts exactly ONE
+            -- from the current ammo stack.
+            if not load_ammo_obj_into_mag(ammo_live, mag_live) then
+                clear_mag_operation(busy_key, op_token)
+                printf("MAG LOAD: stopped, one-round load failed")
+                return true
+            end
+
+            local mag_after = level.object_by_id(mag_id)
+
+            if not mag_after then
+                clear_mag_operation(busy_key, op_token)
+                printf("MAG LOAD: stopped, magazine disappeared after load")
+                return true
+            end
+
+            local after_current = get_mag_ammo_count(mag_after)
+            local after_max = get_mag_max_size(mag_after)
+
+            if after_current >= after_max then
+                clear_mag_operation(busy_key, op_token)
+                printf("MAG LOAD: finished, magazine full [%s] (%d/%d)", mag_after:section(), after_current, after_max)
+                return true
+            end
+
+            -- Continue even if this specific stack is empty; the next tick will
+            -- search inventory for another matching ammo stack.
+            schedule_next_round()
+
+            -- This event is done. The next event handles the next round.
+            return true
+        end)
+    end
+
+    schedule_next_round()
+    return true
+end
+
+function load_ammo_to_magazine(obj)
+    if not obj then return false end
+    if not obj.ammo_get_count then return false end
+
+    local ammo_section = obj:section()
+    if not ammo_section then return false end
+
+    local mag = find_loadable_magazine_for_ammo(ammo_section)
+    if not mag then
+        printf("MAG LOAD: no compatible magazine for [%s]", ammo_section)
+        return false
+    end
+
+    return start_timed_mag_load(obj, mag)
+end
+
+
+
+
+local function get_mag_unload_time(mag)
+    local unload_time = MAG_LOAD_TIME_DEFAULT
+
+    if mag then
+        local mag_sec = mag:section()
+        if mag_sec and system_ini():line_exist(mag_sec, "mag_unload_time") then
+            unload_time = tonumber(system_ini():r_string(mag_sec, "mag_unload_time")) or unload_time
+        elseif mag_sec and system_ini():line_exist(mag_sec, "mag_load_time") then
+            unload_time = tonumber(system_ini():r_string(mag_sec, "mag_load_time")) or unload_time
+        end
+    end
+
+    if unload_time < 0.05 then
+        unload_time = 0.05
+    end
+
+    return unload_time
+end
+
+local function add_one_round_to_actor_ammo_stack(ammo_section)
+    if not ammo_section or ammo_section == "" then return false end
+
+    local actor = get_actor()
+    if not actor then return false end
+
+    -- Prefer adding to an existing stack. This avoids spawning a full default ammo box.
+    local found = nil
+
+    actor:iterate_inventory(function(owner, obj)
+        if found then return end
+        if not obj then return end
+        if obj:section() ~= ammo_section then return end
+        if not obj.ammo_get_count then return end
+        if not obj.ammo_set_count then return end
+
+        found = obj
+    end, nil)
+
+    if found then
+        local count = found:ammo_get_count()
+        if not count then count = 0 end
+
+        found:ammo_set_count(count + 1)
+
+        printf(
+            "MAG UNLOAD: returned 1 round to existing stack [%s], stack now [%d]",
+            ammo_section,
+            count + 1
+        )
+
+        return true
+    end
+
+    -- Optional helper used by some Desolation/Anomaly scripts.
+    -- This should create an ammo item with an exact custom count.
+    if alife_create_item then
+        alife_create_item(ammo_section, actor, { ammo = 1 })
+
+        printf(
+            "MAG UNLOAD: created new one-round ammo stack [%s]",
+            ammo_section
+        )
+
+        return true
+    end
+
+    -- Fallback is intentionally disabled.
+    -- Plain alife():create(ammo_section, ...) may create a full ammo box,
+    -- which would duplicate ammo. So we stop safely instead.
+    printf(
+        "MAG UNLOAD: cannot unload [%s], no existing ammo stack and no alife_create_item helper",
+        ammo_section
+    )
+
+    return false
+end
+
+local function unload_one_round_from_mag(mag)
+    if not mag then return false end
+
+    local mag_section = mag:section()
+    if not mag_section or mag_section == "" then return false end
+    if not is_magazine_module(mag_section) then return false end
+
+    local current = get_mag_ammo_count(mag)
+    if current <= 0 then return false end
+    if not mag.magazine_get_round then return false end
+    if not mag.magazine_pop_round then return false end
+
+    local ok_top, ammo_section = pcall(function()
+        return mag:magazine_get_round(current - 1)
+    end)
+
+    if not ok_top or not ammo_section or ammo_section == "" then
+        return false
+    end
+
+    -- Add ammo first. If this fails, do not alter the magazine.
+    if not add_one_round_to_actor_ammo_stack(ammo_section) then
+        return false
+    end
+
+    local ok_pop, popped = pcall(function()
+        return mag:magazine_pop_round()
+    end)
+
+    if not ok_pop or popped ~= ammo_section then
+        return false
+    end
+
+    refresh_magazine_cell(mag:id())
+
+    printf(
+        "MAG UNLOAD: unloaded 1 round [%s] from [%s] (%d left)",
+        ammo_section,
+        mag_section,
+        current - 1
+    )
+
+    return true
+end
+
+function menu_unload_magazine(obj)
+    if not obj then return false end
+
+    local sec = obj:section()
+    if not sec or sec == "" then return false end
+    if not is_magazine_module(sec) then return false end
+
+    local current = get_mag_ammo_count(obj)
+    if current <= 0 then return false end
+
+    return "Unload magazine"
+end
+
+function unload_magazine(obj)
+    if not obj then return false end
+
+    local sec = obj:section()
+    if not sec or sec == "" then return false end
+    if not is_magazine_module(sec) then return false end
+
+    local current = get_mag_ammo_count(obj)
+    if current <= 0 then
+        printf("MAG UNLOAD: magazine [%s] already empty", sec)
+        return false
+    end
+
+    local mag_id = obj:id()
+    local busy_key = tostring(mag_id)
+
+    if mag_operation_busy then
+        printf("MAG UNLOAD: another magazine operation is already running")
+        return false
+    end
+
+    local op_token = start_mag_operation(busy_key, "unload")
+    if not op_token then
+        return false
+    end
+
+    local unload_time = get_mag_unload_time(obj)
+    local round_index = 0
+
+    printf(
+        "MAG UNLOAD: started per-round unloading [%s], round_time=[%.2f]",
+        sec,
+        unload_time
+    )
+
+    local function schedule_next_unload_round()
+        round_index = round_index + 1
+
+        local event_key = tostring(mag_id) .. "_unload_" .. tostring(round_index)
+
+        CreateTimeEvent("module_mag_unload_round", event_key, unload_time, function()
+            if mag_operation_should_stop(busy_key, op_token) then
+                return true
+            end
+
+            local mag_live = level.object_by_id(mag_id)
+
+            if not mag_live then
+                clear_mag_operation(busy_key, op_token)
+                printf("MAG UNLOAD: stopped, magazine disappeared")
+                return true
+            end
+
+            local live_current = get_mag_ammo_count(mag_live)
+
+            if live_current <= 0 then
+                clear_mag_operation(busy_key, op_token)
+                printf("MAG UNLOAD: finished, magazine empty [%s]", mag_live:section())
+                refresh_magazine_cell(mag_id)
+                return true
+            end
+
+            if not unload_one_round_from_mag(mag_live) then
+                clear_mag_operation(busy_key, op_token)
+                printf("MAG UNLOAD: stopped, one-round unload failed")
+                return true
+            end
+
+            local mag_after = level.object_by_id(mag_id)
+            if not mag_after then
+                clear_mag_operation(busy_key, op_token)
+                printf("MAG UNLOAD: stopped, magazine disappeared after unload")
+                return true
+            end
+
+            local after_current = get_mag_ammo_count(mag_after)
+            if after_current <= 0 then
+                clear_mag_operation(busy_key, op_token)
+                printf("MAG UNLOAD: finished, magazine empty [%s]", mag_after:section())
+                refresh_magazine_cell(mag_id)
+                return true
+            end
+
+            schedule_next_unload_round()
+            return true
+        end)
+    end
+
+    schedule_next_unload_round()
+    return true
+end
+
+
+-- Removes every currently removable module from a modular weapon.
+--
+-- Console usage for the active weapon:
+--   run_string module_items.remove_all_modules()
+--
+-- A script may also pass a specific weapon object:
+--   module_items.remove_all_modules(wpn)
+-- Right-click menu predicate for modular weapons.
+-- Configure it with:
+--   use1_functor        = module_items.menu_remove_all_modules
+--   use1_action_functor = module_items.remove_all_modules
+function menu_remove_all_modules(obj)
+    if not obj or not is_modular_weapon(obj) then
+        return false
+    end
+
+    if not obj.module_count then
+        return false
+    end
+
+    local ok, count = pcall(function()
+        return obj:module_count()
+    end)
+
+    if not ok or not count or count <= 0 then
+        return false
+    end
+
+    return "Remove all modules"
+end
+
+
+-- Tube-fed/non-detachable weapons store their cartridges directly in the
+-- weapon. Capacity modules must never be removed while those cartridges are
+-- still present, otherwise ammo_elapsed and the rebuilt magazine capacity can
+-- become inconsistent (including negative remaining/max tube values).
+local function weapon_uses_detachable_magazines(obj)
+    if not obj then return false end
+
+    local section = obj:section()
+    if not section or section == "" then return false end
+
+    local raw = nil
+
+    if SYS_GetParam then
+        local ok, value = pcall(function()
+            return SYS_GetParam(0, section, "use_detachable_magazines")
+        end)
+
+        if ok then raw = value end
+    end
+
+    if raw == nil then
+        local ini = system_ini()
+        if ini and ini:section_exist(section) and
+           ini:line_exist(section, "use_detachable_magazines")
+        then
+            local ok, value = pcall(function()
+                return ini:r_string(section, "use_detachable_magazines")
+            end)
+
+            if ok then raw = value end
+        end
+    end
+
+    if raw == nil then return false end
+
+    raw = string.lower(tostring(raw))
+    return raw == "true" or raw == "on" or raw == "1" or raw == "yes"
+end
+
+local function get_weapon_loaded_rounds(obj)
+    if not obj or not obj.get_ammo_in_magazine then return 0 end
+
+    local ok, count = pcall(function()
+        return obj:get_ammo_in_magazine()
+    end)
+
+    if not ok then return 0 end
+    return math.max(0, tonumber(count) or 0)
+end
+
+-- Remove-all no longer uses the detachable weapon's eject/unload path first.
+-- force_unload_magazine(true) creates a magazine inventory item, but on these
+-- modular weapons it does not remove the installed magazine attachment entry.
+-- Calling it on every Remove All press therefore duplicates magazines.
+--
+-- Correct order for detachable magazines:
+--   1. Remove the actual installed magazine module exactly once. The engine
+--      returns the real magazine item and preserves its ammunition stack.
+--   2. Clear any stale CWeaponMagazined state with force_unload_magazine(false).
+--      false is important: it must not create another inventory magazine.
+--   3. Remove all ordinary modules.
+local function clear_detachable_magazine_state_without_spawning(obj)
+    if not obj or not obj.force_unload_magazine then
+        return true
+    end
+
+    local ok, err = pcall(function()
+        obj:force_unload_magazine(false)
+    end)
+
+    if not ok then
+        printf(
+            "MODULE ITEM: failed to clear detachable magazine state without spawning weapon=[%s] error=[%s]",
+            obj:section(),
+            tostring(err)
+        )
+        return false
+    end
+
+    return true
+end
+
+local function safely_empty_fixed_magazine_weapon(obj)
+    if not obj then return false end
+
+    -- Detachable weapons are handled separately in remove_all_modules().
+    if weapon_uses_detachable_magazines(obj) then
+        return true
+    end
+
+    local loaded_before = get_weapon_loaded_rounds(obj)
+    if loaded_before <= 0 then
+        return true
+    end
+
+    local unload_ok = false
+
+    if obj.force_unload_magazine then
+        unload_ok = pcall(function()
+            obj:force_unload_magazine(true)
+        end)
+    elseif obj.unload_magazine then
+        unload_ok = pcall(function()
+            obj:unload_magazine(true)
+        end)
+    end
+
+    if not unload_ok then
+        printf(
+            "MODULE ITEM: remove_all_modules failed to unload fixed-magazine weapon [%s]",
+            obj:section()
+        )
+        return false
+    end
+
+    local loaded_after = get_weapon_loaded_rounds(obj)
+    if loaded_after > 0 then
+        printf(
+            "MODULE ITEM: remove_all_modules unload left [%u] rounds in fixed-magazine weapon [%s]",
+            loaded_after,
+            obj:section()
+        )
+        return false
+    end
+
+    return true
+end
+
+local function remove_all_ordinary_modules(obj)
+    local removed_count = 0
+    local pass_count = 0
+
+    while obj:module_count() > 0 do
+        pass_count = pass_count + 1
+        local removed_this_pass = 0
+        local count = obj:module_count()
+
+        for installed_index = count - 1, 0, -1 do
+            local section = obj:module_get_section(installed_index)
+
+            if section and section ~= "" and not is_magazine_module(section) then
+                local removable = true
+
+                if obj.module_can_remove_index then
+                    local ok, can_remove = pcall(function()
+                        return obj:module_can_remove_index(installed_index)
+                    end)
+                    removable = ok and can_remove == true
+                end
+
+                if removable then
+                    local count_before = obj:module_count()
+                    local ok = remove_installed_module_exact(obj, installed_index, true)
+                    local count_after = obj:module_count()
+
+                    if ok and count_after < count_before then
+                        removed_count = removed_count + 1
+                        removed_this_pass = removed_this_pass + 1
+                    elseif ok then
+                        printf(
+                            "MODULE ITEM: ordinary removal returned true without progress index=[%s] section=[%s]",
+                            tostring(installed_index),
+                            tostring(section)
+                        )
+                    end
+                end
+            end
+        end
+
+        if removed_this_pass == 0 then
+            break
+        end
+
+        if pass_count > 128 then
+            printf("MODULE ITEM: remove_all_modules aborted after too many ordinary-module passes")
+            break
+        end
+    end
+
+    return removed_count, pass_count
+end
+
+function remove_all_modules(obj)
+    printf("MODULE ITEM: REMOVE_ALL_BUILD_20260730_C entered")
+    local actor = get_actor()
+
+    if not obj and actor then
+        obj = actor:active_item()
+    end
+
+    if not is_modular_weapon(obj) then
+        printf("MODULE ITEM: remove_all_modules requires an active modular weapon")
+        return false
+    end
+
+    if not obj.module_count or not obj.module_remove_index then
+        printf("MODULE ITEM: remove_all_modules API is unavailable")
+        return false
+    end
+
+    local detachable = weapon_uses_detachable_magazines(obj)
+    local removed_magazine = false
+
+    if detachable then
+        local magazine_index = find_installed_magazine_index(obj)
+
+        if magazine_index ~= nil then
+            local magazine_section = obj:module_get_section(magazine_index)
+            local count_before = obj:module_count()
+
+            -- This is the same exact engine removal used by the individual
+            -- "Remove magazine" action. Do not call force_unload_magazine(true)
+            -- before this; that call is what created the duplicate magazine.
+            local ok = remove_installed_module_exact(obj, magazine_index, false)
+            local count_after = obj:module_count()
+
+            printf(
+                "MODULE ITEM: remove_all magazine exact-remove index=[%s] section=[%s] ok=[%s] count_before=[%u] count_after=[%u] weapon=[%s]",
+                tostring(magazine_index),
+                tostring(magazine_section),
+                tostring(ok),
+                count_before,
+                count_after,
+                obj:section()
+            )
+
+            if not ok then
+                printf("MODULE ITEM: remove_all_modules could not remove installed magazine [%s]", tostring(magazine_section))
+                return false
+            end
+
+            removed_magazine = true
+        end
+
+        -- Exact module removal can leave the rendered module gone while an old
+        -- CWeaponMagazined pointer/state remains. Clear that state, but never use
+        -- the spawning/ejecting form here.
+        if not clear_detachable_magazine_state_without_spawning(obj) then
+            return false
+        end
+    else
+        if not safely_empty_fixed_magazine_weapon(obj) then
+            return false
+        end
+    end
+
+    local removed_count, pass_count = remove_all_ordinary_modules(obj)
+    highlight_installable_modules_for_weapon(obj)
+
+    local remaining = obj:module_count()
+    local remaining_magazine = find_installed_magazine_index(obj)
+
+    printf(
+        "MODULE ITEM: remove_all_modules weapon=[%s] magazine_removed=[%s] ordinary_removed=[%u] remaining=[%u] remaining_mag_index=[%s] passes=[%u]",
+        obj:section(),
+        tostring(removed_magazine),
+        removed_count,
+        remaining,
+        tostring(remaining_magazine),
+        pass_count
+    )
+
+    -- Individual module removal from UIInventory explicitly calls
+    -- UIInventory:RefreshItemIcon(). "Remove all modules" is an action functor
+    -- executed directly from this script, so it used to skip that final
+    -- shader-icon refresh. Refresh exactly once after the entire batch has
+    -- completed, using the same path as single-module removal.
+    if ui_inventory and
+       ui_inventory.GUI and
+       ui_inventory.GUI.RefreshItemIcon
+    then
+        ui_inventory.GUI:RefreshItemIcon(obj)
+
+        if ui_inventory.GUI.On_Item_Update then
+            ui_inventory.GUI:On_Item_Update()
+        end
+    end
+
+    return remaining == 0 and remaining_magazine == nil
+end
+
+
+function menu_remove_installed_module(obj) return menu_remove_installed_module_by_index(obj, 1) end
+function remove_installed_module(obj) return remove_installed_module_by_index(obj, 1) end
+
+function menu_remove_installed_module_1(obj) return menu_remove_installed_module_by_index(obj, 1) end
+function remove_installed_module_1(obj) return remove_installed_module_by_index(obj, 1) end
+
+function menu_remove_installed_module_2(obj) return menu_remove_installed_module_by_index(obj, 2) end
+function remove_installed_module_2(obj) return remove_installed_module_by_index(obj, 2) end
+
+function menu_remove_installed_module_3(obj) return menu_remove_installed_module_by_index(obj, 3) end
+function remove_installed_module_3(obj) return remove_installed_module_by_index(obj, 3) end
+
+function menu_remove_installed_module_4(obj) return menu_remove_installed_module_by_index(obj, 4) end
+function remove_installed_module_4(obj) return remove_installed_module_by_index(obj, 4) end
+
+function menu_remove_installed_module_5(obj) return menu_remove_installed_module_by_index(obj, 5) end
+function remove_installed_module_5(obj) return remove_installed_module_by_index(obj, 5) end
+
+function menu_remove_installed_module_6(obj) return menu_remove_installed_module_by_index(obj, 6) end
+function remove_installed_module_6(obj) return remove_installed_module_by_index(obj, 6) end
+
+function menu_remove_installed_module_7(obj) return menu_remove_installed_module_by_index(obj, 7) end
+function remove_installed_module_7(obj) return remove_installed_module_by_index(obj, 7) end
+
+function menu_remove_installed_module_8(obj) return menu_remove_installed_module_by_index(obj, 8) end
+function remove_installed_module_8(obj) return remove_installed_module_by_index(obj, 8) end
+
+function menu_remove_installed_module_9(obj) return menu_remove_installed_module_by_index(obj, 9) end
+function remove_installed_module_9(obj) return remove_installed_module_by_index(obj, 9) end
+
+function menu_remove_installed_module_10(obj) return menu_remove_installed_module_by_index(obj, 10) end
+function remove_installed_module_10(obj) return remove_installed_module_by_index(obj, 10) end
+
+
+------------------------------------------------------------
+-- Debug-spawner weapon loadouts
+------------------------------------------------------------
+-- Popup grouping comes ONLY from:
+--
+--   [weapon_debug_variants]
+--   wpn_lr300 = wpn_lr300, lr300_tac, m4a1, hk416
+--
+-- The module lists still come ONLY from:
+--
+--   [weapon_default_attachments]
+--   wpn_lr300 = ...
+--   m4a1      = ...
+--
+-- The debug spawner always spawns the real/base weapon section, then applies
+-- the chosen loadout after spawn. This prevents wpn_lr300 factory modules from
+-- being kept when choosing m4a1/hk416/etc.
+
+local DEFAULT_ATTACHMENTS_SECTION = "weapon_default_attachments"
+local DEBUG_VARIANTS_SECTION      = "weapon_debug_variants"
+
+local function dbg_trim(str)
+    if not str then return "" end
+    return string.match(tostring(str), "^%s*(.-)%s*$") or ""
+end
+
+local function dbg_ini()
+    -- Use ini_sys first because the old debug spawner used ini_sys and it sees
+    -- the loaded system config sections used by the item spawner.
+    if ini_sys then return ini_sys end
+    if system_ini then return system_ini() end
+    return nil
+end
+
+local function dbg_line_exists(ini, section, key)
+    if not ini or not section or not key then return false end
+    local ok, res = pcall(function() return ini:line_exist(section, key) end)
+    return ok and res and true or false
+end
+
+local function dbg_section_exists(ini, section)
+    if not ini or not section then return false end
+    local ok, res = pcall(function() return ini:section_exist(section) end)
+    return ok and res and true or false
+end
+
+local function dbg_read_string(ini, section, key)
+    if not ini or not section or not key then return nil end
+
+    if ini.r_string_ex then
+        local ok, res = pcall(function() return ini:r_string_ex(section, key) end)
+        if ok and res then return res end
+    end
+
+    if ini.r_string then
+        local ok, res = pcall(function() return ini:r_string(section, key) end)
+        if ok and res then return res end
+    end
+
+    return nil
+end
+
+local function split_csv_list(str)
+    local result = {}
+    if not str then return result end
+
+    for token in string.gmatch(tostring(str), "([^,]+)") do
+        local trimmed = dbg_trim(token)
+        if trimmed ~= "" then
+            table.insert(result, trimmed)
+        end
+    end
+
+    return result
+end
+
+local function push_unique(list, seen, name, is_default, modules)
+    name = dbg_trim(name)
+    if name == "" or seen[name] then return end
+    seen[name] = true
+
+    table.insert(list, {
+        name = name,
+        modules = modules or {},
+        is_default = is_default and true or false
+    })
+end
+
+function get_weapon_default_attachment_loadouts(section)
+    local result = {}
+    section = dbg_trim(section)
+    if section == "" then return result end
+
+    local ini = dbg_ini()
+    if not ini then
+        printf("DEBUG_SPAWNER_VARIANTS section=[%s] no_ini", tostring(section))
+        return result
+    end
+
+    local has_defaults = dbg_section_exists(ini, DEFAULT_ATTACHMENTS_SECTION)
+    local has_index    = dbg_section_exists(ini, DEBUG_VARIANTS_SECTION)
+    local seen = {}
+
+    -- Always add the real weapon section first if it has a default loadout.
+    -- This matches old behavior: first popup item is the base weapon.
+    if has_defaults and dbg_line_exists(ini, DEFAULT_ATTACHMENTS_SECTION, section) then
+        push_unique(
+            result,
+            seen,
+            section,
+            true,
+            split_csv_list(dbg_read_string(ini, DEFAULT_ATTACHMENTS_SECTION, section))
+        )
+    end
+
+    -- New explicit popup index. No scanning and no weapon_builds.ltx.
+    if has_index and dbg_line_exists(ini, DEBUG_VARIANTS_SECTION, section) then
+        local variants = split_csv_list(dbg_read_string(ini, DEBUG_VARIANTS_SECTION, section))
+
+        for _, variant in ipairs(variants) do
+            if has_defaults and dbg_line_exists(ini, DEFAULT_ATTACHMENTS_SECTION, variant) then
+                push_unique(
+                    result,
+                    seen,
+                    variant,
+                    variant == section,
+                    split_csv_list(dbg_read_string(ini, DEFAULT_ATTACHMENTS_SECTION, variant))
+                )
+            else
+                -- Keep it visible for debugging even if the actual loadout line
+                -- is missing. Selecting it will print a missing-loadout message.
+                push_unique(result, seen, variant, variant == section, {})
+                printf(
+                    "DEBUG_SPAWNER_VARIANTS warning base=[%s] variant=[%s] missing [%s] line",
+                    tostring(section),
+                    tostring(variant),
+                    DEFAULT_ATTACHMENTS_SECTION
+                )
+            end
+        end
+    end
+
+    -- Compatibility with your old index name if it is still present. This is
+    -- only a fallback when the new [weapon_debug_variants] line is missing.
+    if #result <= 1 and dbg_section_exists(ini, "wuut_weapon_variants") and dbg_line_exists(ini, "wuut_weapon_variants", section) then
+        local variants = split_csv_list(dbg_read_string(ini, "wuut_weapon_variants", section))
+        for _, variant in ipairs(variants) do
+            if has_defaults and dbg_line_exists(ini, DEFAULT_ATTACHMENTS_SECTION, variant) then
+                push_unique(
+                    result,
+                    seen,
+                    variant,
+                    variant == section,
+                    split_csv_list(dbg_read_string(ini, DEFAULT_ATTACHMENTS_SECTION, variant))
+                )
+            end
+        end
+    end
+
+    printf(
+        "DEBUG_SPAWNER_VARIANTS base=[%s] has_index=[%s] has_defaults=[%s] count=[%s]",
+        tostring(section),
+        tostring(has_index and dbg_line_exists(ini, DEBUG_VARIANTS_SECTION, section)),
+        tostring(has_defaults and dbg_line_exists(ini, DEFAULT_ATTACHMENTS_SECTION, section)),
+        tostring(#result)
+    )
+
+    return result
+end
+
+function has_weapon_default_attachment_loadouts(section)
+    local loadouts = get_weapon_default_attachment_loadouts(section)
+    return loadouts and #loadouts > 1
+end
+
+-- Section-only modular check kept for compatibility with other debug code.
+function is_modular_weapon_section(section)
+    if not section or section == "" then return false end
+    if is_magazine_module(section) then return false end
+
+    local ini = dbg_ini()
+    if not ini or not dbg_section_exists(ini, section) then return false end
+    if not dbg_line_exists(ini, section, "modular_attachments") then return false end
+
+    local ok, res = pcall(function() return ini:r_bool(section, "modular_attachments") end)
+    return ok and res and true or false
+end
+
+-- [item_id] = selected loadout name to apply once the object appears.
+build_post_spawn = {}
+
+local function can_install_module_section(wpn, section)
+    if is_magazine_module(section) then
+        return weapon_accepts_magazine(wpn, section)
+    end
+
+    return wpn.module_can_install and wpn:module_can_install(section)
+end
+
+-- Removes every removable/default module from a freshly spawned weapon before
+-- a chosen loadout is installed. give_to_actor=false avoids dumping the
+-- temporary factory-default parts into the player's inventory.
+local function strip_all_removable_modules(wpn, give_to_actor)
+    if not wpn or not wpn.module_count or not wpn.module_get_section then return end
+
+    local idx = wpn:module_count() - 1
+    local guard = 0
+
+    while idx >= 0 and guard < 128 do
+        guard = guard + 1
+
+        if remove_installed_module_exact(wpn, idx, give_to_actor) then
+            idx = wpn:module_count() - 1
+        else
+            idx = idx - 1
+        end
+    end
+end
+
+local function find_loadout_for_weapon(wpn, loadout_name)
+    if not wpn or not loadout_name or loadout_name == false then return nil end
+
+    local section = wpn:section()
+    local loadouts = get_weapon_default_attachment_loadouts(section)
+
+    if loadout_name == "random" then
+        local choices = {}
+        for i = 1, #loadouts do
+            if not loadouts[i].is_default then
+                table.insert(choices, loadouts[i])
+            end
+        end
+
+        if #choices > 0 then
+            return choices[math.random(#choices)]
+        end
+
+        return nil
+    end
+
+    for i = 1, #loadouts do
+        if loadouts[i].name == loadout_name then
+            return loadouts[i]
+        end
+    end
+
+    return nil
+end
+
+local function refresh_spawned_weapon_after_loadout(wpn)
+    if not wpn then return end
+
+    if wpn.UpdateAddonsVisibility then pcall(function() wpn:UpdateAddonsVisibility() end) end
+    if wpn.update_addons_visibility then pcall(function() wpn:update_addons_visibility() end) end
+    if wpn.UpdateHUDAddonsVisibility then pcall(function() wpn:UpdateHUDAddonsVisibility() end) end
+    if wpn.update_hud_addons_visibility then pcall(function() wpn:update_hud_addons_visibility() end) end
+end
+
+local function apply_default_attachment_loadout(wpn, loadout_name)
+    local loadout = find_loadout_for_weapon(wpn, loadout_name)
+    if not loadout then
+        printf(
+            "DEBUG_SPAWNER_LOADOUT_APPLY missing base=[%s] loadout=[%s]",
+            tostring(wpn and wpn:section()),
+            tostring(loadout_name)
+        )
+        return
+    end
+
+    -- Base/default option is just the normal spawned weapon.
+    if loadout.is_default then return end
+
+    if not loadout.modules or #loadout.modules == 0 then
+        printf(
+            "DEBUG_SPAWNER_LOADOUT_APPLY empty base=[%s] loadout=[%s]",
+            tostring(wpn and wpn:section()),
+            tostring(loadout_name)
+        )
+        return
+    end
+
+    local section = wpn:section()
+
+    printf(
+        "DEBUG_SPAWNER_LOADOUT_APPLY base=[%s] loadout=[%s] modules=[%s]",
+        tostring(section),
+        tostring(loadout.name),
+        tostring(#loadout.modules)
+    )
+
+    strip_all_removable_modules(wpn, false)
+
+    for _, module_section in ipairs(loadout.modules) do
+        if can_install_module_section(wpn, module_section) then
+            local ok = wpn:module_install(module_section)
+            printf(
+                "DEBUG_SPAWNER_LOADOUT_APPLY module=[%s] result=[%s]",
+                tostring(module_section),
+                ok and "installed" or "failed"
+            )
+        else
+            printf(
+                "DEBUG_SPAWNER_LOADOUT_APPLY module=[%s] result=[not_installable]",
+                tostring(module_section)
+            )
+        end
+    end
+
+    refresh_spawned_weapon_after_loadout(wpn)
+end
+
+local function schedule_build_check(item_id, attempt)
+    local event_key = "debug_spawner_loadout_check_" .. tostring(item_id) .. "_" .. tostring(attempt)
+
+    CreateTimeEvent("debug_spawner_loadout_post_spawn", event_key, 0.2, function()
+        local loadout_name = build_post_spawn[item_id]
+
+        if loadout_name == nil then
+            return true
+        end
+
+        local wpn = level.object_by_id(item_id)
+
+        if not wpn then
+            if attempt >= 25 then
+                printf(
+                    "DEBUG_SPAWNER_LOADOUT_APPLY gave up id=[%s] loadout=[%s]",
+                    tostring(item_id),
+                    tostring(loadout_name)
+                )
+                build_post_spawn[item_id] = nil
+                return true
+            end
+
+            schedule_build_check(item_id, attempt + 1)
+            return true
+        end
+
+        if loadout_name and loadout_name ~= false and loadout_name ~= wpn:section() then
+            apply_default_attachment_loadout(wpn, loadout_name)
+
+            -- The engine/default module pass can sometimes happen shortly after
+            -- the client object first appears. Re-apply once more so the chosen
+            -- debug-spawner loadout wins over the factory default.
+            local second_key = "debug_spawner_loadout_second_pass_" .. tostring(item_id)
+            CreateTimeEvent("debug_spawner_loadout_post_spawn", second_key, 0.6, function()
+                local obj = level.object_by_id(item_id)
+                if obj then
+                    apply_default_attachment_loadout(obj, loadout_name)
+                end
+                build_post_spawn[item_id] = nil
+                return true
+            end)
+        else
+            build_post_spawn[item_id] = nil
+        end
+
+        return true
+    end)
+end
+
+function SetUpBuildPostSpawn(item_id, loadout_name)
+    if not item_id then return end
+
+    build_post_spawn[item_id] = loadout_name or false
+    schedule_build_check(item_id, 0)
+end

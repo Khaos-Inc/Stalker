@@ -136,7 +136,7 @@ function sim_squad_scripted:get_script_target()
 	
 	local new_id = tonumber(new_target)
 	local se_target = new_id and alife_object(new_id)
-	if se_target and (obj:clsid() == clsid.online_offline_group_s or obj:clsid() == clsid.smart_terrain) then
+	if se_target and (se_target:clsid() == clsid.online_offline_group_s or se_target:clsid() == clsid.smart_terrain) then
 		return new_id
 	end
 end
@@ -265,7 +265,7 @@ local function can_help_actor(squad)
 end
 
 local function get_help_target_id(squad)
-	if (smr_amain_mcm.get_config("smr_enabled") and smr_zombies_mcm.get_config("seek_enabled") and squad.online and squad.dist_to_actor <= smr_zombies_mcm.get_config("seek_distance")) then
+	if (IsSurvivalMode() and squad.online and squad.dist_to_actor <= 250) then
 		if (squad.player_id == "zombied" or is_squad_monster[squad.player_id]) then
 			return 0
 		end
@@ -285,10 +285,10 @@ function sim_squad_scripted:specific_update(script_target_id) -- This update is 
 		return 
 	end 
 	
-	if (self.smart_id ~= self.assigned_target_id and se_target:clsid() == clsid.smart_terrain) then
-		sim_board.get_sim_board():assign_squad_to_smart(self, se_target.id)
+	if (self.smart_id ~= self.assigned_target_id and se_target:clsid() == clsid.smart_terrain) then 
+		self:assign_smart(se_target,self.smart_id)
 	end
-
+	
 	if (self.current_action) then
 	
 		-- in such case assigned is changed (such as get_help_target_id) but current action is 1 (reached)
@@ -353,7 +353,7 @@ function sim_squad_scripted:generic_update() -- This update is called for all sq
 			-- If current action is not finished, then return
 			
 			if (self.smart_id ~= self.assigned_target_id and se_target:clsid() == clsid.smart_terrain) then 
-				sim_board.get_sim_board():assign_squad_to_smart(self, se_target.id)
+				self:assign_smart(se_target,self.smart_id)
 			end
 	
 			if (self.current_action == 0) then
@@ -1031,7 +1031,7 @@ function sim_squad_scripted:on_unregister()
 	cse_alife_online_offline_group.on_unregister(self)
 end
 
-																									
+-- warning: the one inside warfare_options.script is used regardless of if warfare mode is on or not
 function sim_squad_scripted:check_online_status()
 	local b = nil
 	if (get_object_story_id(self.id)) then 

@@ -1,0 +1,340 @@
+--\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ wpn_mts255 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+[255_barrel_ots62]:attachment_base
+kind  =  255
+inv_ui_sign				= mts_barS
+visual						= w_att_huds\255_barrel_ots62	
+inv_name					= 255_barrel_ots62
+inv_name_short			= 255_barrel_ots62S
+cost							= 650
+inv_weight					= 0.5
+inv_grid_width			= 2
+inv_grid_x					= 7
+inv_grid_y					= 48
+1icon_layer = clean2_ico
+attachment_point = 255_barrel|0,0,0|0,0,0
+item_tags =	barrel
+override_section = 255_barrel_ots62_attributes
+
+[255_barrel_ots62_attributes]
+animation_prefix = c_
+fire_point = 0, 0, 0.13
+weapon_lenght = 0.12
+bullet_speed = 0.28
+k_hit_koeff = 0.85
+fire_dispersion_base_koeff = -0.09
+zoom_rotate_time = 0.02
+recoil_koeff = -0.08
+inertia_koeff = 0.9
+[255_ots62_attributes]:c_attributes
+fire_point						= 0, 0, 0.13
+weapon_lenght				= 0.12
+bullet_speed				= 0.28
+k_hit_koeff						= 0.85
+fire_dispersion_base_koeff = -0.09
+zoom_rotate_time = 0.02
+recoil_koeff             = -0.08
+inertia_koeff            = 0.9
+
+[255_barrel_465]:attachment_base
+kind  =  255
+inv_ui_sign				= mts_barM
+visual						= w_att_huds\255_barrel_465	
+inv_name					= 255_barrel_465
+inv_name_short			= 255_barrel_465S
+cost							= 2400
+inv_weight					= 1.0
+inv_grid_width			= 3
+inv_grid_x					= 9
+inv_grid_y					= 48
+1icon_layer = clean3_ico
+attachment_point = 255_barrel|0,0,0|0,0,0
+attachment_slots = 255_hg|wpn_body|0,0,0|0,0,0#255_choke|muzzle|0,0,0.3638|0,0,0#sight_rail|wpn_body|0,0.0173,0.02|0,0,0#barrel_side|wpn_body|0,0.04,-0.0605|0,0,0
+;item_tags	=	barrel
+override_section			=	255_barrel_465_attributes
+[255_barrel_465_attributes]:12_barrel_3_att
+fire_point						= 0, 0, 0.4
+weapon_lenght				= 0.4
+bullet_speed				= 0.38
+fire_dispersion_base_koeff = -0.3
+
+override_section = 12_barrel_3_att
+recoil_koeff = -0.06
+inertia_koeff = 1.3
+zoom_rotate_time = 0.06
+[12_barrel_3_att]
+zoom_rotate_time = 0.06
+recoil_koeff             = -0.12
+inertia_koeff            = 1.3
+
+[255_barrel_505]:255_barrel_465
+kind  =  255
+inv_ui_sign				= mts_barM+
+visual						= w_att_huds\255_barrel_505	
+inv_name					= 255_barrel_505
+inv_name_short			= 255_barrel_505S
+cost							= 2150
+inv_weight					= 1.05
+inv_grid_x					= 12
+attachment_slots		= 255_hg|wpn_body|0,0,0|0,0,0#255_choke|muzzle|0,0,0.406|0,0,0#sight_rail|wpn_body|0,0.0173,0.02|0,0,0#barrel_side|wpn_body|0,0.04,-0.0605|0,0,0
+override_section			=	255_barrel_505_attributes
+[255_barrel_505_attributes]:12_barrel_4_att
+fire_point						= 0, 0, 0.45
+weapon_lenght				= 0.4
+bullet_speed				= 0.4
+fire_dispersion_base_koeff = -0.33
+
+recoil_koeff = -0.08
+inertia_koeff = 1.4
+zoom_rotate_time = 0.07
+[255_barrel_660]:255_barrel_465
+kind  =  255
+inv_ui_sign				= mts_barL
+visual						= w_att_huds\255_barrel_660	
+inv_name					= 255_barrel_660
+inv_name_short			= 255_barrel_660S
+cost							= 2750
+inv_weight					= 1.3
+inv_grid_width			= 4
+inv_grid_x					= 15
+1icon_layer = clean4_ico
+attachment_slots		= 255_hg|wpn_body|0,0,0|0,0,0#255_choke|muzzle|0,0,0.539|0,0,0#sight_rail|wpn_body|0,0.0173,0.02|0,0,0#barrel_side|wpn_body|0,0.04,-0.0605|0,0,0
+override_section			=	255_barrel_660_attributes
+[255_barrel_660_attributes]:12_barrel_8_att
+fire_point						= 0, 0, 0.6
+weapon_lenght				= 0.55
+bullet_speed				= 0.53
+k_hit_koeff						= 1.1
+fire_dispersion_base_koeff = -0.4
+impair_koeff					= 0.8
+
+recoil_koeff = -0.10
+inertia_koeff = 1.6
+zoom_rotate_time = 0.1
+[255_choke_cyl]:attachment_base
+kind  =  255
+inv_ui_sign				= cyl
+visual							= w_att_huds\255_choke_cyl
+;description				= 255_choke_cyl_descr
+inv_name					= 255_choke_cyl
+inv_name_short		= 255_choke_cylS
+cost							= 400
+inv_weight				= 0.05
+inv_grid_x					= 19
+inv_grid_y					= 48
+attachment_point	= 255_choke|0,0,0|0,0,0
+item_tags =	muzzle_device
+override_section = 255_choke_cyl_attributes
+
+[255_choke_cyl_attributes]
+fire_dispersion_base_koeff = -0.02
+impair_koeff = 0.9
+[choke_cyl_att]
+fire_dispersion_base_koeff = -0.02
+impair_koeff = 0.9
+
+[255_choke_ic]:255_choke_cyl
+kind  =  255
+inv_ui_sign				= ic
+visual							= w_att_huds\255_choke_ic
+inv_name					= 255_choke_ic
+inv_name_short		= 255_choke_icS
+cost							= 750
+inv_grid_x					= 20
+override_section = 255_choke_ic_attributes
+
+[255_choke_ic_attributes]
+fire_dispersion_base_koeff = -0.05
+impair_koeff = 0.95
+[choke_ic_att]
+fire_dispersion_base_koeff = -0.05
+impair_koeff = 0.95
+
+[255_choke_m]:255_choke_cyl
+kind  =  255
+inv_ui_sign				= m
+visual							= w_att_huds\choke_green_m
+inv_name					= 255_choke_m
+inv_name_short		= 255_choke_mS
+cost							= 850
+inv_grid_x					= 21
+override_section = 255_choke_m_attributes
+
+[255_choke_m_attributes]
+fire_dispersion_base_koeff = -0.1
+impair_koeff = 0.95
+[choke_m_att]
+fire_dispersion_base_koeff = -0.1
+impair_koeff = 0.95
+
+[255_choke_im]:255_choke_cyl
+kind  =  255
+inv_ui_sign				= im
+visual							= w_att_huds\255_choke_im
+inv_name					= 255_choke_im
+inv_name_short		= 255_choke_imS
+cost							= 950
+inv_grid_x					= 22
+override_section = 255_choke_im_attributes
+
+[255_choke_im_attributes]
+fire_dispersion_base_koeff = -0.15
+impair_koeff = 0.95
+[choke_im_att]
+fire_dispersion_base_koeff = -0.15
+impair_koeff = 0.95
+
+[255_hg]:attachment_base
+kind  =  255
+inv_ui_sign				= mts_hg
+visual						= w_att_huds\255_hg	
+inv_name					= 255_hg
+inv_name_short			= 255_hgS
+cost							= 700
+inv_weight					= 0.38
+inv_grid_width			= 2
+inv_grid_x					= 6
+inv_grid_y					= 49
+attachment_point		= 255_hg|0,0,0|0,0,0
+item_tags	=	rail
+override_section = 255_hg_attributes
+
+[255_hg_attributes]
+animation_prefix = c_
+zoom_rotate_time = -0.01
+inertia_koeff = 0.9
+[255_hg_att]:c_attributes
+zoom_rotate_time = -0.01
+recoil_koeff            = -0.3
+inertia_koeff           = 0.9
+
+[255_hg_poly]:255_hg
+kind  =  255
+inv_ui_sign				= mts_hg+
+visual						= w_att_huds\255_hg_poly	
+inv_name					= 255_hg_poly
+inv_name_short			= 255_hg_polyS
+cost							= 800
+inv_weight					= 0.3
+inv_grid_x					= 8
+override_section			= 255_hg_poly_attributes
+[255_hg_poly_attributes]:c_attributes
+zoom_rotate_time = -0.01
+inertia_koeff           = 0.9
+
+[255_hg_tac]:255_hg
+kind  =  255
+inv_ui_sign				= mts_hgP
+visual						= w_att_huds\255_hg_tac	
+description				= pica_3_up3
+inv_name					= 255_hg_tac
+inv_name_short			= 255_hg_tacS
+cost							= 1100
+inv_weight					= 0.26
+inv_grid_x					= 10	
+attachment_slots		= pica_3|wpn_body|-0.0196,0.0648,0.28|0,0,-90#pica_3|wpn_body|0.0196,0.0648,0.28|0,0,90#pica_3|wpn_body|0,0.0374,0.28|0,0,180#picgrp|wpn_body|0,0.0018,0.004|0,0,0
+override_section = 255_hg_tac_attributes
+
+[255_hg_tac_attributes]
+animation_prefix = c_
+zoom_rotate_time = 0.01
+inertia_koeff = 0.8
+
+[255_stock]:attachment_base
+kind  =  255
+inv_ui_sign				= mts_stkW
+visual						= w_att_huds\255_stock	
+inv_name					= 255_stock
+inv_name_short			= 255_stock
+cost							= 1200
+inv_weight					= 0.67
+inv_grid_width			= 2
+inv_grid_x					= 12
+inv_grid_y					= 49
+attachment_point		= 255_stock|0,0,0|0,0,0
+item_tags	=	stock
+override_section = 255_stock_attributes
+
+[255_stock_attributes]
+weapon_lenght = 0.25
+zoom_rotate_time = 0.07
+recoil_koeff = -0.24
+inertia_koeff = 0.6
+
+[255_stock_short]:255_stock
+kind  =  255
+inv_ui_sign				= mts_stkS
+visual						= w_att_huds\255_stock_short	
+inv_name					= 255_stock_short
+inv_name_short			= 255_stock_shortS
+cost							= 450
+inv_weight					= 0.17
+inv_grid_width			= 1
+inv_grid_x					= 14
+attachment_slots		= 255_stock_short_cut|wpn_body|0,0,0|0,0,0
+override_section 	= 255_stock_short_attributes
+[255_stock_short_attributes]
+weapon_lenght = 0.05
+zoom_rotate_time = 0.01
+recoil_koeff            = 0.1
+
+;[255_stock_short_cut]:attachment_base
+;kind  =  255
+;inv_ui_sign				= mts_cut
+;visual						= w_att_huds\255_stock_short_cut	
+;inv_name					= 255_stock_short_cut
+;inv_name_short			= 255_stock_short_cutS
+;cost							= 400
+;inv_weight					= 0.5
+;inv_grid_x					= 15
+;inv_grid_y					= 49
+;attachment_point		= 255_stock_short_cut|0,0,0|0,0,0
+;override_section			= izh43_stock_short_cut_att
+
+[255_grip_ots62]:attachment_base
+kind  =  255
+inv_ui_sign				= mts_grp
+visual						= w_att_huds\255_grip_ots62	
+inv_name					= 255_grip_ots62
+inv_name_short			= 255_grip_ots62S
+cost							= 650
+inv_weight					= 0.15
+inv_grid_x					= 16
+inv_grid_y					= 49
+attachment_point = 255_stock|0,0,0|0,0,0
+item_tags =	stock
+override_section	= 255_grip_ots62_attributes
+
+[255_grip_ots62_attributes]
+animation_prefix_base = cg_
+weapon_lenght = 0.05
+zoom_rotate_time = -0.04
+recoil_koeff = -0.07
+[255_grip_ots62_att]:cg_attributes
+weapon_lenght = 0.05
+zoom_rotate_time = -0.04
+recoil_koeff            = -0.07
+
+[255_grip_stock]:255_grip_ots62
+kind  =  255
+inv_ui_sign				= mts_stk
+visual						= w_att_huds\255_grip_stock	
+inv_name					= 255_grip_stock
+inv_name_short			= 255_grip_stockS
+cost							= 1600
+inv_weight					= 0.6
+inv_grid_width			= 2
+inv_grid_x					= 17
+override_section			= 255_grip_stock_attributes
+
+[255_grip_stock_attributes]
+animation_prefix_base = cg_
+weapon_lenght = 0.25
+zoom_rotate_time = 0.01
+recoil_koeff = -0.16
+inertia_koeff = 0.6
+[255_grip_stock_att]:cg_attributes
+weapon_lenght = 0.25
+zoom_rotate_time = 0.01
+recoil_koeff            = -0.3
+inertia_koeff          = 0.6

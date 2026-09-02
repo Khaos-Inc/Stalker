@@ -1,0 +1,418 @@
+--\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ wpn_m712 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+[712_trigger]:attachment_base
+kind  =  712
+inv_ui_sign				= 712_trig
+visual						= w_att_huds\712_trigger	
+inv_name					= 712_trigger
+inv_name_short			= 712_triggerS
+cost							= 950
+inv_weight					= 0.1
+inv_grid_x         			= 16
+inv_grid_y         			= 10
+1icon_layer = clean_lub1_ico
+attachment_point	=	712_trigger|0,0,0|0,0,0
+attachment_slots	=	712_barrel|zatvor|0,0,0|0,0,0
+item_tags	=	trigger,spring
+override_section = 712_trigger_attributes
+
+[712_trigger_attributes]
+
+[712_trigger_up]:712_trigger
+kind  =  712
+inv_ui_sign				= 712_trig+
+visual						= w_att_huds\712_trigger_up	
+inv_name					= 712_trigger_up
+inv_name_short			= 712_trigger_upS
+cost							= 4500
+inv_grid_x         			= 17
+override_section = 712_trigger_up_attributes
+
+inv_weight = 0.1
+[712_trigger_up_attributes]
+fire_modes = -1, 1
+
+[712_barrel_135]:attachment_base
+kind  =  712
+inv_ui_sign				= 712_bar
+visual						= w_att_huds\712_barrel_135	
+inv_name					= 712_barrel_135
+inv_name_short			= 712_barrel_135
+cost							= 1100
+inv_weight					= 0.13
+inv_grid_width     		= 2
+inv_grid_x         			= 16
+inv_grid_y         			= 9
+1icon_layer = clean_lub2_ico
+attachment_point	=	712_barrel|0,0,0|0,0,0
+attachment_slots	=	712_zatvor|stock|0,0,0|0,0,0#712_scope|zatvor|0,0,0|0,0,0#712_sight_rear|zatvor|0,0,0|0,0,0
+item_tags = barrel
+override_section = 712_barrel_135_attributes
+
+[712_barrel_135_attributes]
+weapon_lenght = 0.15
+bullet_speed = 1.23
+fire_dispersion_base = 0.19
+zoom_rotate_time = 0.08
+recoil_koeff = -0.03
+inertia_koeff = 1.2
+[712_barrel_135_att]
+weapon_lenght				= 0.15
+bullet_speed				= 1.23
+fire_dispersion_base		= 0.19
+zoom_rotate_time = 0.08
+recoil_koeff            = -0.33
+inertia_koeff            = 1.2
+
+[712_barrel_150]:712_barrel_135
+kind  =  712
+inv_ui_sign				= 712_bar+
+visual						= w_att_huds\712_barrel_150	
+inv_name					= 712_barrel_150
+inv_name_short			= 712_barrel_150
+cost							= 3350
+inv_weight					= 0.145
+inv_grid_x         			= 18
+attachment_slots	=	712_zatvor|stock|0,0,0|0,0,0#712_scope|zatvor|0,0,0|0,0,0#712_sight_rear|zatvor|0,0,0|0,0,0#tt33_muzzle|muzzle|0,0,0|0,0,0
+override_section			=	712_barrel_150_attributes
+[712_barrel_150_attributes]:712_barrel_135_att
+fire_point = 0, 0, 0.02
+rpm_koeff						= -0.06
+bullet_speed				= 1.26
+fire_dispersion_base		= 0.18
+
+recoil_koeff = 0.04
+[712_barrel_210]:712_barrel_135
+kind  =  712
+inv_ui_sign				= 712_barC
+visual						= w_att_huds\712_barrel_210	
+inv_name					= 712_barrel_210
+inv_name_short			= 712_barrel_210
+cost							= 5650
+inv_weight					= 0.175
+inv_grid_width			= 3
+inv_grid_x					= 20
+1icon_layer = clean3_ico
+override_section			=	712_barrel_210_attributes
+[712_barrel_210_attributes]
+fire_point						= 0, 0, 0.09
+weapon_lenght				= 0.22
+bullet_speed				= 1.34
+rpm_koeff						= -0.17
+k_hit_koeff						= 1.1
+fire_dispersion_base		= 0.15
+impair_koeff					= 0.9
+zoom_rotate_time = 0.09
+recoil_koeff            = -0.05
+inertia_koeff            = 1.2
+
+[712_zatvor]:attachment_base
+kind  =  712
+inv_ui_sign				= 712_slide
+visual						= w_att_huds\712_zatvor
+inv_name					= 712_zatvor
+inv_name_short			= 712_zatvor
+cost							= 2800
+inv_weight					= 0.11
+inv_grid_x        			= 20
+inv_grid_y        			= 10
+1icon_layer = clean_lub1_ico
+attachment_point		=	712_zatvor|0,0,0|0,0,0
+item_tags =	zatvor
+override_section = 712_zatvor_attributes
+
+[712_zatvor_attributes]
+rpm = 850
+zoom_rotate_time = 0.02
+[712_zatvor_att]:rpm_850_zatvor_att
+recoil_koeff = -0.1
+zoom_rotate_time = 0.02
+
+[712_sight_rear]:attachment_base
+kind  =  712
+inv_ui_sign				= 712_rs
+visual						= w_att_huds\712_sight_rear
+inv_name					= 712_sight_rear
+inv_name_short			= 712_sight_rear
+cost							= 2350
+inv_weight					= 0.04
+inv_grid_x        			= 18
+inv_grid_y        			= 10
+attachment_point		=	712_sight_rear|0,0,0|0,0,0
+override_section = 712_sight_rear_attributes
+
+[712_sight_rear_attributes]
+zoom_rotate_time = -0.01
+fire_dispersion_base_koeff = -0.05
+
+[712_sight_rear_pica]:712_sight_rear
+kind  =  712
+inv_ui_sign				= 712_rsP
+visual						= w_att_huds\712_sight_rear_pica
+description				= pica_5_up
+inv_name					= 712_sight_rear_pica
+inv_name_short			= 712_sight_rear_picaS
+cost							= 4600
+inv_weight					= 0.06
+inv_grid_x         			= 19
+attachment_slots =	pica_5|zatvor|0,0.070787,0|0,0,0
+item_tags = rail
+override_section = 712_sight_rear_pica_attributes
+
+[712_sight_rear_pica_attributes]
+zoom_rotate_time = -0.01
+fire_dispersion_base_koeff = -0.05
+
+[712_scope]:scope_base_pip			;2.8x
+kind  =  712
+inv_ui_sign					= 712_scope
+visual						= w_att_huds\712_scope
+inv_name						= 712_scope
+inv_name_short				= 712_scope
+inv_grid_width     			= 2
+inv_grid_x         				= 23
+inv_grid_y         				= 9
+inv_weight 					= 0.25
+cost								= 14500
+attachment_point = 712_scope|0,0,0|0,0,0
+attachment_slots = aim_lens_pip|wpn_body|0,0.09009,0.01596|0,0,0
+
+scope_texture          =
+scope_zoom_factor      = 35.71       ; strongest zoom / max magnification
+min_scope_zoom_factor  = 35.71  ; weakest zoom / low magnification
+scope_dynamic_zoom     = false
+zoom_step_count        = 5
+
+s3ds_reticle_size      = 1
+s3ds_eye_relief        = 1
+s3ds_exit_pupil        = 0.3
+s3ds_ffp               = 0
+s3ds_min_zoom_1x       = 1
+s3ds_image_type        = 0
+s3ds_reticle_type      = 0
+s3ds_dirt_intensity    = 0
+s3ds_chroma_power      = 0
+s3ds_lens_color        = lens_clear
+
+item_tags =	sights
+override_section = sight_mid_att
+
+[712_hg_carabine]:attachment_base
+kind  =  712
+inv_ui_sign				= 712_hg
+visual						= w_att_huds\712_hg_carabine
+inv_name					= 712_hg_carabine
+inv_name_short			= 712_hg_carabineS
+cost							= 1300
+inv_weight					= 0.15
+inv_grid_width     		= 2
+inv_grid_x         			= 23
+inv_grid_y         			= 10
+attachment_point		= 712_hg|0,0,0|0,0,0
+item_tags	=	rail
+override_section			= 712_hg_carabine_attributes
+
+[712_hg_carabine_attributes]
+animation_prefix = c_
+impair_koeff = 0.9
+[712_hg_carabine_att]:c_attributes,hg_8_att
+impair_koeff = 0.9
+
+[712_hg_foregrip]:712_hg_carabine
+kind  =  712
+inv_ui_sign				= 712_fg
+visual						= w_att_huds\712_hg_foregrip
+inv_name					= 712_hg_foregrip
+inv_name_short			= 712_hg_foregripS
+cost							= 4850
+inv_weight					= 0.25
+inv_grid_height    		= 2
+inv_grid_x         			= 25
+inv_grid_y         			= 9
+attachment_slots = hg_ring|wpn_body|0,0,0|0,0,0
+override_section = 712_hg_foregrip_attributes
+
+[712_hg_foregrip_attributes]
+zoom_rotate_time = 0.03
+recoil_koeff = -0.06
+inertia_koeff = 1.1
+animation_prefix = t_
+impair_koeff = 0.9
+[712_hg_foregrip_att]:keymod_foregrip_tommy_attributes,t_attributes
+impair_koeff = 0.9
+
+[712_hg_foregrip_ring]:attachment_base
+kind  =  712
+inv_ui_sign				= 712_ring
+visual						= w_att_huds\712_hg_foregrip_ring
+inv_name					= 712_hg_foregrip_ring
+inv_name_short			= 712_hg_foregrip_ringS
+cost							= 2250
+inv_weight					= 0.03
+inv_grid_x         			= 21
+inv_grid_y         			= 10
+attachment_point		= hg_ring|0,0,0|0,0,0
+item_tags =	rail
+override_section = 712_hg_foregrip_ring_attributes
+
+[712_hg_foregrip_ring_attributes]
+
+[712_hg_foregrip_rails]:712_hg_foregrip_ring
+kind  =  712
+inv_ui_sign				= 712_rails
+visual						= w_att_huds\712_hg_foregrip_rails
+description				= pica_3_up2
+inv_name					= 712_hg_foregrip_rails
+inv_name_short			= 712_hg_foregrip_railsS
+cost							= 2650
+inv_weight					= 0.06
+inv_grid_x         			= 22
+attachment_slots = pica_3|wpn_body|-0.0148,0.0415,0.21|0,0,-90#pica_3|wpn_body|0.0148,0.0415,0.21|0,0,90				
+override_section = 712_hg_foregrip_rails_attributes
+
+[712_hg_foregrip_rails_attributes]
+
+[712_stock_frame]:attachment_base
+kind  =  712
+inv_ui_sign				= 712_stk_fr
+visual						= w_att_huds\712_stock_frame
+inv_name					= 712_stock_frame
+inv_name_short			= 712_stock_frameS
+cost							= 14500
+inv_weight					= 0.41
+inv_grid_width     		= 2
+inv_grid_x         			= 29
+inv_grid_y         			= 9
+attachment_point		= 712_stock|0,0,0|0,0,0
+item_tags	=	stock
+override_section = 712_stock_frame_attributes
+
+[712_stock_frame_attributes]
+zoom_rotate_time = 0.01
+recoil_koeff = -0.16
+inertia_koeff = 0.9
+weapon_lenght = 0.3
+[712_stock_frame_att]:pp2k_stock_mag_att
+weapon_lenght	=	0.3
+
+[712_stock]:712_stock_frame
+kind  =  712
+inv_ui_sign				= 712_stk_w
+visual						= w_att_huds\712_stock
+inv_name					= 712_stock
+inv_name_short			= 712_stockS
+cost							= 19000
+inv_weight					= 0.62
+inv_grid_x         			= 27
+override_section = 712_stock_attributes
+
+[712_stock_attributes]
+zoom_rotate_time = 0.08
+recoil_koeff = -0.29
+inertia_koeff = 0.7
+weapon_lenght = 0.32
+
+[712_stock_carabine]:712_stock_frame
+kind  =  712
+inv_ui_sign				= 712_stk_C
+visual						= w_att_huds\712_stock_carabine
+inv_name					= 712_stock_carabine
+inv_name_short			= 712_stockS
+cost							= 19500
+inv_weight					= 0.67
+inv_grid_x         			= 27
+inv_grid_y         			= 10
+override_section = 712_stock_carabine_attributes
+
+[712_stock_carabine_attributes]
+zoom_rotate_time = 0.04
+recoil_koeff = -0.31
+inertia_koeff = 0.6
+weapon_lenght = 0.33
+[712_stock_carabine_att]:vintorez_stock_strap_att
+weapon_lenght = 0.33
+
+[mag_wpn_m712_7.62x25_p]:mag_wpn_base,wg_wpn_m712,ag_ammo_7.62x25_p
+inv_ui_sign					= 712_10
+visual							= w_att_huds\712_mag10
+inv_name						= 712_mag10
+inv_name_short				= 712_mag10S
+inv_grid_x         				= 29
+inv_grid_y         				= 10
+inv_weight						= 0.05
+cost								= 300
+max_mag_size				= 10
+mag_size						= small
+override_section				= mag_wpn_m712_7.62x25_p_attributes
+
+[mag_wpn_m712_7.62x25_p_attributes]
+animation_prefix_mag = 10_
+[712_mag10_attributes]
+animation_prefix_mag	=	10_
+
+[mag_wpn_m712_20_7.62x25_p]:mag_wpn_m712_7.62x25_p
+inv_ui_sign					= 712_20
+visual							= w_att_huds\712_mag20
+inv_name						= 712_mag20
+inv_name_short				= 712_mag20S
+inv_grid_x         				= 30
+inv_weight						= 0.1
+cost								= 550
+max_mag_size				= 20
+override_section				= mag_wpn_m712_20_7.62x25_p_attributes
+
+[mag_wpn_m712_20_7.62x25_p_attributes]
+animation_prefix_mag = 20_
+[712_mag20_attributes]
+animation_prefix_mag	=	20_
+
+[mag_wpn_m712_40_7.62x25_p]:mag_wpn_m712_7.62x25_p
+inv_ui_sign					= 712_40
+visual							= w_att_huds\712_mag40
+inv_name						= 712_mag40
+inv_name_short				= 712_mag40S
+inv_grid_height				= 2
+inv_grid_x						= 31
+inv_grid_y						= 9
+inv_weight						= 0.19
+cost								= 1000
+max_mag_size				= 40
+mag_size						= medium
+override_section				= mag_wpn_m712_40_7.62x25_p_attributes
+
+[mag_wpn_m712_40_7.62x25_p_attributes]
+animation_prefix_mag = 20_
+
+[mag_wpn_m712_50_7.62x25_p]:mag_wpn_m712_40_7.62x25_p
+inv_ui_sign						= 712_50
+visual								= w_att_huds\712_mag50
+inv_name							= 712_mag50
+inv_name_short				= 712_mag50S
+inv_grid_x						= 32
+inv_weight						= 0.5
+cost									= 1100
+max_mag_size					= 50
+mag_size							= medium
+override_section				= mag_wpn_m712_50_7.62x25_p_attributes
+
+[mag_wpn_m712_50_7.62x25_p_attributes]
+animation_prefix_mag = 50_
+[712_mag50_attributes]
+animation_prefix_mag		=	50_
+
+[mag_wpn_m712_75_7.62x25_p]:mag_wpn_m712_50_7.62x25_p
+inv_ui_sign					= 712_75
+visual							= w_att_huds\712_mag75
+inv_name						= 712_mag75
+inv_name_short			= 712_mag75S
+inv_grid_x         			= 33
+inv_weight					= 1.06
+cost								= 1600
+max_mag_size				= 75
+mag_size						= large
+override_section			= mag_wpn_m712_75_7.62x25_p_attributes
+
+[mag_wpn_m712_75_7.62x25_p_attributes]
+animation_prefix_mag = 75_
+[712_mag75_attributes]
+animation_prefix_mag	=	75_

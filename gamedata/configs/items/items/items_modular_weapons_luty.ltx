@@ -1,0 +1,368 @@
+--\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ wpn_luty \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+[luty_zatvor]:attachment_base
+kind  =  luty
+inv_ui_sign				= luty_bolt
+visual						= w_att_huds\luty_zatvor	
+inv_name					= luty_zatvor
+inv_name_short			= luty_zatvor
+cost							= 550
+inv_weight					= 0.16
+inv_grid_width			= 2
+inv_grid_x					= 25
+inv_grid_y					= 30
+1icon_layer = clean_lub2_ico
+attachment_point		= luty_zatvor|0,0,0|0,0,0
+attachment_slots		= luty_spring|wpn_body|0,0,0|0,0,0
+item_tags =	zatvor
+override_section = luty_zatvor_attributes
+
+[luty_zatvor_attributes]
+zoom_rotate_time = 0.07
+rpm = 500
+impair_koeff = 1.1
+[luty_zatvor_att]
+zoom_rotate_time = 0.07
+rpm = 500
+recoil_koeff = -0.15
+impair_koeff = 1.1
+
+[luty_zatvor_up]:luty_zatvor
+kind  =  luty
+inv_ui_sign				= luty_bolt+
+visual						= w_att_huds\luty_zatvor_up	
+inv_name					= luty_zatvor_up
+inv_name_short			= luty_zatvor_upS
+cost							= 650
+inv_weight					= 0.12
+inv_grid_x					= 27
+attachment_slots		= ak_zatvor_rh|zatvor|0.045616,0.016692,-0.055194|0,0,-45#luty_spring|wpn_body|0,0,0|0,0,0
+override_section = luty_zatvor_up_attributes
+
+[luty_zatvor_up_attributes]
+zoom_rotate_time = 0.07
+rpm = 585
+impair_koeff = 0.9
+[luty_zatvor_up_att]:luty_zatvor_att
+rpm = 585
+impair_koeff = 0.9
+
+[luty_spring]:attachment_base
+kind  =  luty
+inv_ui_sign				= luty_spr
+visual						= w_att_huds\luty_spring	
+inv_name					= luty_spring
+inv_name_short			= luty_springS
+cost							= 350
+inv_weight					= 0.1
+inv_grid_x					= 29
+inv_grid_y					= 30
+1icon_layer = clean1_ico
+attachment_point		= luty_spring|0,0,0|0,0,0
+attachment_slots = luty_stock|wpn_body|0,0,0|0,0,0
+item_tags =	spring
+override_section = luty_spring_attributes
+
+[luty_spring_attributes]
+
+[luty_spring_up]:luty_spring
+kind  =  luty
+inv_ui_sign				= luty_spr+
+visual						= w_att_huds\luty_spring_up	
+inv_name					= luty_spring_up
+inv_name_short			= luty_spring_upS
+cost							= 450
+inv_grid_x         			= 30
+override_section = luty_spring_up_attributes
+
+[luty_spring_up_attributes]
+rpm_koeff = 0.1
+[luty_spring_up_att]
+rpm_koeff = 0.1
+
+[luty_barrel]:attachment_base
+kind  =  luty
+inv_ui_sign				= luty_bar
+visual						= w_att_huds\luty_barrel	
+inv_name					= luty_barrel
+inv_name_short			= luty_barrel
+cost							= 650
+inv_weight					= 0.13
+inv_grid_width			= 2
+inv_grid_x					= 24
+inv_grid_y					= 29
+1icon_layer = clean2_ico
+attachment_point		= luty_barrel|0,0,0|0,0,0
+attachment_slots = luty_barrel_rail|wpn_body|0,0,0|0,0,0#luty_sights|wpn_body|0,0,0|0,0,0#tac_mount|muzzle|0,0,0|0,0,0
+item_tags =	barrel
+override_section = luty_barrel_attributes
+[luty_barrel_attributes]
+fire_point = 0, 0, 0.15
+weapon_lenght		=	0.15
+bullet_speed				= 1.23
+k_hit_koeff						= 1.1
+fire_dispersion_base		= 0.15
+zoom_rotate_time = 0.08
+recoil_koeff            = -0.01
+inertia_koeff            = 1.2
+
+[luty_barrel_up]:luty_barrel
+kind  =  luty
+inv_ui_sign				= luty_bar+
+visual						= w_att_huds\luty_barrel_up	
+inv_name					= luty_barrel_up
+inv_name_short			= luty_barrel_up
+cost							= 700
+inv_grid_x					= 26
+attachment_slots		= 9mm_muzzle|muzzle|0,0,0.1176|0,0,0#luty_barrel_rail|wpn_body|0,0,0|0,0,0#luty_sights|wpn_body|0,0,0|0,0,0#tac_mount|muzzle|0,0,0|0,0,0
+override_section = luty_barrel_up_attributes
+
+inv_weight = 0.13
+[luty_barrel_up_attributes]
+fire_point = 0, 0, 0.15
+weapon_lenght = 0.15
+bullet_speed = 1.24
+k_hit_koeff = 1.1
+fire_dispersion_base = 0.15
+zoom_rotate_time = 0.08
+recoil_koeff = -0.02
+inertia_koeff = 1.2
+impair_koeff = 1.1
+[luty_barrel_up_att]:luty_barrel_attributes
+impair_koeff = 1.1
+
+[luty_barrel_short]:luty_barrel
+kind  =  luty
+inv_ui_sign				= luty_barS+
+visual						= w_att_huds\luty_barrel_short	
+inv_name					= luty_barrel_short
+inv_name_short			= luty_barrel_short
+cost							= 400
+inv_grid_width			= 1
+inv_grid_x					= 30
+attachment_slots		= 9mm_muzzle|muzzle|0,0,0|0,0,0#luty_barrel_rail|wpn_body|0,0,0|0,0,0#luty_sights|wpn_body|0,0,0|0,0,0
+override_section = luty_barrel_short_attributes
+
+inv_weight = 0.13
+[luty_barrel_short_attributes]
+rpm_koeff = 0.2
+bullet_speed = 0.89
+k_hit_koeff = 0.95
+fire_dispersion_base = 0.24
+zoom_rotate_time = 0.06
+inertia_koeff = 1.1
+[luty_barrel_short_att]
+rpm_koeff						= 0.2
+bullet_speed				= 0.89
+k_hit_koeff						= 0.95
+fire_dispersion_base		= 0.24
+zoom_rotate_time = 0.06
+recoil_koeff            = -0.23
+inertia_koeff            = 1.1
+
+[luty_barrel_silencer]:luty_barrel
+kind  =  luty
+inv_ui_sign				= luty_sil
+visual						= w_att_huds\luty_barrel_silencer	
+inv_name					= luty_barrel_silencer
+inv_name_short			= luty_barrel_silencerS
+cost							= 1050
+inv_weight					= 0.35
+inv_grid_x					= 28
+attachment_slots		= luty_barrel_silencer_rails|wpn_body|0,0,0|0,0,0#luty_sights|wpn_body|0,0,0|0,0,0
+override_section			= luty_barrel_silencer_attributes
+
+[luty_barrel_silencer_attributes]
+silencer_status = 1
+silencer_name = wpn_addon_silencer
+silencer_x = 1
+silencer_y = 1
+weapon_lenght = 0.07
+rpm_koeff = 0.17
+bullet_speed = 0.94
+k_hit_koeff = 0.95
+fire_dispersion_base = 0.24
+zoom_rotate_time = 0.09
+recoil_koeff = -0.02
+inertia_koeff = 1.2
+impair_koeff = 1.2
+[luty_barrel_silencer_att]:silencer_base_attributes
+weapon_lenght				= 0.07
+rpm_koeff						= 0.17
+bullet_speed				= 0.94
+k_hit_koeff						= 0.95
+fire_dispersion_base		= 0.24
+zoom_rotate_time = 0.09
+recoil_koeff            = -0.4
+inertia_koeff            = 1.2
+impair_koeff			= 1.2
+
+[luty_barrel_rail]:attachment_base
+kind  =  luty
+inv_ui_sign				= luty_rail
+visual						= w_att_huds\luty_barrel_rail	
+description				= pica_3_up
+inv_name					= luty_barrel_rail
+inv_name_short			= luty_barrel_railS
+cost							= 650
+inv_weight					= 0.06
+inv_grid_x					= 31
+inv_grid_y					= 29
+attachment_point		= luty_barrel_rail|0,0,0|0,0,0
+attachment_slots = pica_3|wpn_body|0,0.0188,0.27|0,0,180#picgrp|wpn_body|0,-0.0168,0.028|0,0,0
+item_tags	=	rail
+override_section = luty_barrel_rail_attributes
+
+[luty_barrel_rail_attributes]
+
+[luty_barrel_silencer_rails]:attachment_base
+kind  =  luty
+inv_ui_sign				= luty_rail4
+visual						= w_att_huds\luty_barrel_silencer_rails	
+description				= ar_hg_6
+inv_name					= luty_barrel_silencer_rails
+inv_name_short			= luty_barrel_silencer_railsS
+cost							= 1100
+inv_weight					= 0.11
+inv_grid_x					= 24
+inv_grid_y					= 30
+attachment_point		= luty_barrel_silencer_rails|0,0,0|0,0,0	
+attachment_slots = pica_3|wpn_body|-0.0242,0.0484,0.27|0,0,-90#pica_3|wpn_body|0.0242,0.0484,0.27|0,0,90#pica_3|wpn_body|0,0.0188,0.27|0,0,180#picgrp|wpn_body|0,-0.0168,0.04|0,0,0#pica_7|wpn_body|0,0.0724,0.267|0,0,0
+item_tags =	rail
+override_section = luty_barrel_silencer_rails_attributes
+
+[luty_barrel_silencer_rails_attributes]
+
+[luty_sights]:attachment_base
+kind  =  luty
+inv_ui_sign				= luty_sig
+visual						= w_att_huds\luty_sights	
+inv_name					= luty_sights
+inv_name_short			= luty_sightsS
+cost							= 150
+inv_weight					= 0.04
+inv_grid_x					= 32
+inv_grid_y					= 29
+attachment_point		= luty_sights|0,0,0|0,0,0
+override_section = luty_sights_attributes
+
+[luty_sights_attributes]
+
+[luty_sights_pica]:luty_sights
+kind  =  luty
+inv_ui_sign				= luty_sigP
+visual						= w_att_huds\luty_sights_pica	
+description				= ar_hg_11
+inv_name					= luty_sights_pica
+inv_name_short			= luty_sights_picaS
+cost							= 550
+inv_weight					= 0.07
+inv_grid_x					= 33
+attachment_slots = pica_11|wpn_body|0,0.0724,0.135|0,0,0#pica_3|wpn_body|0.0242,0.0484,0.212|0,0,90		
+item_tags	=	rail
+override_section = luty_sights_pica_attributes
+
+[luty_sights_pica_attributes]
+
+[luty_sights_pica_long]:luty_sights
+kind  =  luty
+inv_ui_sign				= luty_sigP+
+visual						= w_att_huds\luty_sights_pica_long	
+description				= pica_18_up
+inv_name					= luty_sights_pica_long
+inv_name_short			= luty_sights_pica_longS
+cost							= 750
+inv_weight					= 0.09
+inv_grid_x					= 34
+attachment_slots = pica_18|wpn_body|0,0.0724,-0.0546|0,0,0
+item_tags	=	rail
+override_section = luty_sights_pica_long_attributes
+
+[luty_sights_pica_long_attributes]
+
+[luty_stock]:attachment_base
+kind  =  luty
+inv_ui_sign				= luty_stock
+visual						= w_att_huds\luty_stock	
+inv_name					= luty_stock
+inv_name_short			= luty_stock
+cost							= 950
+inv_weight					= 0.18
+inv_grid_width			= 2
+inv_grid_x					= 31
+inv_grid_y					= 30
+attachment_point		= luty_stock|0,0,0|0,0,0
+item_tags	=	stock
+override_section = luty_stock_attributes
+
+[luty_stock_attributes]
+zoom_rotate_time = 0.02
+recoil_koeff = -0.09
+inertia_koeff = 0.9
+weapon_lenght = 0.2
+
+[luty_stock_uzi]:luty_stock
+kind  =  luty
+inv_ui_sign				= luty_stk_w
+visual						= w_att_huds\luty_stock_uzi	
+inv_name					= luty_stock_uzi
+cost							= 1400
+inv_weight					= 0.56
+inv_grid_x					= 33
+override_section = luty_stock_uzi_attributes
+
+[luty_stock_uzi_attributes]
+weapon_lenght = 0.2
+zoom_rotate_time = 0.05
+recoil_koeff = -0.13
+inertia_koeff = 0.8
+
+[mag_wpn_luty_9x19_fmj]:mag_wpn_base,wg_wpn_luty,ag_ammo_9x19_fmj
+inv_ui_sign					= luty_20
+visual							= w_att_huds\luty_mag20
+inv_name						= luty_mag20
+inv_name_short				= luty_mag20
+inv_grid_height				= 2
+inv_grid_x						= 35
+inv_grid_y						= 29
+inv_weight						= 0.1
+cost								= 300
+max_mag_size				= 20
+mag_size						= small
+override_section				= mag_wpn_luty_9x19_fmj_attributes
+
+[mag_wpn_luty_9x19_fmj_attributes]
+animation_prefix_mag = 20_
+[luty_mag_attributes]
+animation_prefix_mag	=	20_
+
+[mag_wpn_luty_30_9x19_fmj]:mag_wpn_luty_9x19_fmj
+inv_ui_sign					= luty_30
+visual							= w_att_huds\luty_mag30
+inv_name						= luty_mag30
+inv_name_short				= luty_mag30S
+inv_grid_x						= 36
+inv_weight						= 0.12
+cost								= 400
+max_mag_size				= 30
+override_section = mag_wpn_luty_30_9x19_fmj_attributes
+
+[mag_wpn_luty_30_9x19_fmj_attributes]
+animation_prefix_mag = 20_
+
+[mag_wpn_luty_50_9x19_fmj]:mag_wpn_luty_9x19_fmj
+inv_ui_sign					= luty_50
+visual							= w_att_huds\luty_mag50
+inv_name						= luty_mag50
+inv_name_short				= luty_mag50S
+inv_grid_x						= 37
+inv_weight						= 0.5
+cost								= 1100
+max_mag_size				= 50
+mag_size						= large
+override_section				= mag_wpn_luty_50_9x19_fmj_attributes
+
+[mag_wpn_luty_50_9x19_fmj_attributes]
+animation_prefix_mag = 50_
+[luty_mag50_attributes]
+animation_prefix_mag	=	50_

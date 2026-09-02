@@ -1,0 +1,329 @@
+--\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ wpn_desert_eagle \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+[deagle_trigger]:attachment_base
+kind  =  deagle
+inv_ui_sign				= de_trig
+visual						= w_att_huds\deagle_trigger	
+inv_name					= deagle_trigger
+inv_name_short			= deagle_triggerS
+cost							= 1400
+inv_weight					= 0.1
+inv_grid_x         			= 4
+inv_grid_y         			= 44
+1icon_layer = clean_lub1_ico
+attachment_point = deagle_trigger|0,0,0|0,0,0
+attachment_slots	=	deagle_zatvor|zatvor|0,0,0|0,0,0#deagle_grips|wpn_body|0,0,0|0,0,0
+item_tags =	trigger
+override_section = deagle_trigger_attributes
+
+[deagle_trigger_attributes]
+
+[deagle_trigger_up]:deagle_trigger
+kind  =  deagle
+inv_ui_sign				= de_trig+
+visual						= w_att_huds\deagle_trigger_up	
+inv_name					= deagle_trigger_up
+inv_name_short			= deagle_trigger_upS
+cost							= 3750
+inv_grid_y         			= 45
+override_section		=	deagle_trigger_up_attributes
+
+inv_weight = 0.1
+[deagle_trigger_up_attributes]
+fire_modes = -1
+
+[deagle_zatvor]:attachment_base
+kind  =  deagle
+inv_ui_sign				= de_slide
+visual						= w_att_huds\deagle_zatvor
+inv_name					= deagle_zatvor
+inv_name_short			= deagle_zatvor
+cost							= 1500
+inv_weight					= 0.25
+inv_grid_width     = 2
+inv_grid_x         = 11
+inv_grid_y         = 44
+1icon_layer = clean_lub2_ico
+attachment_point = deagle_zatvor|0,0,0|0,0,0
+attachment_slots =	deagle_spring|wpn_body|0,0,0|0,0,0
+item_tags =	zatvor
+override_section = deagle_zatvor_attributes
+
+[deagle_zatvor_attributes]
+rpm = 600
+zoom_rotate_time = 0.12
+inertia_koeff = 1.1
+[deagle_zatvor_att]:rpm_600_zatvor_att
+zoom_rotate_time = 0.12
+recoil_koeff = -0.44
+inertia_koeff            = 1.1
+
+[deagle_spring]:attachment_base
+kind  =  deagle
+inv_ui_sign				= de_spr
+visual						= w_att_huds\deagle_spring	
+inv_name					= deagle_spring
+inv_name_short			= deagle_springS
+cost							= 500
+inv_weight					= 0.06
+inv_grid_x         			= 14
+inv_grid_y         			= 45
+1icon_layer = clean1_ico
+attachment_point = deagle_spring|0,0,0|0,0,0
+attachment_slots = deagle_barrel|wpn_body|0,0,0|0,0,0	
+item_tags = spring
+override_section = deagle_spring_attributes
+
+[deagle_spring_attributes]
+
+[deagle_barrel]:attachment_base
+kind  =  deagle
+inv_ui_sign				= de_bar
+visual						= w_att_huds\deagle_barrel	
+description				= pica_10_up
+inv_name					= deagle_barrel
+inv_name_short			= deagle_barrelS
+cost							= 1650
+inv_weight					= 0.3
+inv_grid_width     		= 2
+inv_grid_x         			= 5
+inv_grid_y         			= 44
+1icon_layer = clean2_ico
+attachment_point = deagle_barrel|0,0,0|0,0,0
+attachment_slots	= pica_10|wpn_body|0,0.0598,0.081|0,0,0
+item_tags = barrel
+override_section = deagle_barrel_attributes
+[deagle_barrel_attributes]
+fire_point							= 0, 0, 0.03
+bullet_speed				= 1
+fire_dispersion_base		= 0.27
+zoom_rotate_time = 0.08
+inertia_koeff            = 1.2
+
+[deagle_barrel_comp]:deagle_barrel
+kind  =  deagle
+inv_ui_sign				= de_barC
+visual						= w_att_huds\deagle_barrel_comp	
+inv_name					= deagle_barrel_comp
+inv_name_short			= deagle_barrel_compS
+cost							= 3800
+inv_weight					= 0.27
+inv_grid_x         			= 9
+override_section = deagle_barrel_comp_attributes
+[deagle_barrel_comp_attributes]:deagle_barrel_attributes
+bullet_speed				= 0.93
+impair_koeff					= 0.9
+recoil_koeff            = -0.05
+
+fire_dispersion_base = 0.25
+[deagle_barrel_up]:deagle_barrel
+kind  =  deagle
+inv_ui_sign				= de_bar+
+visual						= w_att_huds\deagle_barrel_up	
+description				= pica_10_up
+inv_name					= deagle_barrel_up
+inv_name_short			= deagle_barrel_upS
+cost							= 2850
+inv_weight					= 0.29
+inv_grid_x         			= 7
+attachment_slots	=	deagle_muzzle|wpn_body|0,0,0|0,0,0#pica_10|wpn_body|0,0.0598,0.081|0,0,0
+override_section = deagle_barrel_up_attributes
+
+[deagle_barrel_up_attributes]
+fire_point = 0, 0, 0.03
+bullet_speed = 1
+fire_dispersion_base = 0.27
+zoom_rotate_time = 0.08
+recoil_koeff = -0.03
+inertia_koeff = 1.2
+
+[deagle_rail]:attachment_base
+kind  =  deagle
+inv_ui_sign				= de_rail
+visual						= w_att_huds\deagle_rail	
+description				= pistol_gripD
+inv_name					= deagle_rail
+inv_name_short			= deagle_railS
+cost							= 2650
+inv_weight					= 0.07
+inv_grid_x         			= 13
+inv_grid_y         			= 45
+attachment_point = deagle_rail|0,0,0|0,0,0
+attachment_slots	=	pica_3|wpn_body|0,0.013936,0.092|0,0,180#picgrp|wpn_body|0,-0.02146,-0.078|0,0,0
+item_tags	=	rail
+override_section = deagle_rail_attributes
+
+[deagle_rail_attributes]
+
+[deagle_grips]:attachment_base
+kind  =  deagle
+inv_ui_sign				= de_pg
+visual						= w_att_huds\deagle_grips
+inv_name					= deagle_grips
+inv_name_short			= deagle_gripsS
+cost							= 2400
+inv_weight					= 0.07
+inv_grid_x         			= 9
+inv_grid_y         			= 45
+attachment_point		=	deagle_grips|0,0,0|0,0,0
+override_section = deagle_grips_attributes
+
+[deagle_grips_attributes]
+zoom_rotate_time = -0.02
+recoil_koeff = -0.02
+
+[deagle_grip_ergo]:deagle_grips
+kind  =  deagle
+inv_ui_sign				= de_pg+
+visual						= w_att_huds\deagle_grip_ergo
+inv_name					= deagle_grip_ergo
+inv_name_short			= deagle_grip_ergoS
+cost							= 1800
+inv_weight					= 0.08
+inv_grid_x         			= 10
+item_tags	=	pgrip
+override_section = deagle_grip_ergo_attributes
+
+[deagle_grip_ergo_attributes]
+zoom_rotate_time = -0.03
+
+[deagle_grip_carabine]:deagle_grips
+kind  =  deagle
+inv_ui_sign				= de_stock
+visual						= w_att_huds\deagle_grip_carabine
+inv_name					= deagle_grip_carabine
+inv_name_short			= deagle_grip_carabineS
+cost							= 5600
+inv_weight					= 0.72
+inv_grid_width     		= 2
+inv_grid_x         			= 11
+item_tags	=	stock
+override_section = deagle_grip_carabine_attributes
+
+[deagle_grip_carabine_attributes]
+weapon_lenght = 0.35
+zoom_rotate_time = 0.06
+recoil_koeff = -0.34
+inertia_koeff = 0.6
+[deagle_grip_carabine_att]
+weapon_lenght = 0.35
+zoom_rotate_time = 0.06
+recoil_koeff            = -0.34
+inertia_koeff          = 0.6
+
+[deagle_silencer]:attachment_base
+kind  =  deagle
+inv_ui_sign				= de_sil
+visual						= w_att_huds\deagle_silencer
+inv_name					= deagle_silencer
+inv_name_short			= deagle_silencerS
+cost							= 5250
+inv_weight					= 0.36
+inv_grid_width     		= 2
+inv_grid_width     = 2
+inv_grid_x         = 15
+inv_grid_y         = 44
+attachment_point		=	deagle_muzzle|0,0,0|0,0,0
+item_tags	=	muzzle_device
+override_section = deagle_silencer_attributes
+
+[deagle_silencer_attributes]
+silencer_status = 1
+silencer_name = wpn_addon_silencer
+silencer_x = 1
+silencer_y = 1
+weapon_lenght = 0.2
+zoom_rotate_time = 0.08
+recoil_koeff = -0.17
+inertia_koeff = 1.3
+
+[deagle_muzzle]:attachment_base
+kind  =  deagle
+inv_ui_sign				= de_mb
+visual						= w_att_huds\deagle_muzzle
+inv_name					= deagle_muzzle
+inv_name_short			= deagle_muzzleS
+cost							= 2800
+inv_weight					= 0.08
+inv_grid_x         			= 13
+inv_grid_y         			= 44
+attachment_point		=	deagle_muzzle|0,0,0|0,0,0
+attachment_slots	=	deagle_rail|wpn_body|0,0,0|0,0,0
+item_tags	=	muzzle_device
+override_section			=	deagle_muzzle_attributes
+[deagle_muzzle_attributes]:05_muzzle_lenght_attributes
+fire_point = 0, 0.03, 0.05
+zoom_rotate_time = 0.01
+recoil_koeff            = -0.05
+
+[deagle_muzzle_long]:deagle_muzzle
+kind  =  deagle
+inv_ui_sign				= de_mb+
+visual						= w_att_huds\deagle_muzzle_long
+inv_name					= deagle_muzzle_long
+cost							= 3100
+inv_weight					= 0.1
+inv_grid_x         			= 14
+override_section			=	deagle_muzzle_long_attributes
+[deagle_muzzle_long_attributes]		;ar_muz_sf_mini_monster_attributes 
+fire_point = 0, 0, 0.1
+
+weapon_lenght = 0.12
+impair_koeff = 1.4
+zoom_rotate_time = 0.04
+recoil_koeff            = -0.07
+inertia_koeff            = 1.1
+
+[mag_wpn_desert_44_hp_mag]:mag_wpn_base,wg_wpn_desert_eagle,ag_ammo_44_hp_mag
+inv_ui_sign					= de_8
+visual							= w_att_huds\deagle_mag
+inv_name						= deagle_mag
+inv_name_short				= deagle_magS
+inv_grid_x         				= 15
+inv_grid_y         				= 45
+inv_weight						= 0.08
+cost								= 500
+max_mag_size				= 8
+mag_size						= small
+override_section				= mag_wpn_desert_44_hp_mag_attributes
+
+[mag_wpn_desert_44_hp_mag_attributes]
+animation_prefix_mag = 8_
+
+[mag_wpn_desert_20_44_hp_mag]:mag_wpn_desert_44_hp_mag
+inv_ui_sign					= de_20
+visual							= w_att_huds\deagle_mag20
+inv_name						= deagle_mag20
+inv_name_short				= deagle_mag20S
+inv_grid_height    			= 2
+inv_grid_x         				= 17
+inv_grid_y         				= 44
+inv_weight						= 0.17
+cost								= 1000
+max_mag_size				= 20
+mag_size						= medium
+override_section				= mag_wpn_desert_20_44_hp_mag_attributes
+
+[mag_wpn_desert_20_44_hp_mag_attributes]
+animation_prefix_mag = 20_
+[deagle_mag20_att]
+animation_prefix_mag			=	20_
+
+[mag_wpn_desert_drum_44_hp_mag]:mag_wpn_desert_44_hp_mag
+inv_ui_sign					= de_44
+visual							= w_att_huds\deagle_mag44
+inv_name						= deagle_mag44
+inv_name_short				= deagle_mag44S
+inv_grid_height    			= 2
+inv_grid_x         				= 18
+inv_grid_y        				= 44
+inv_weight						= 0.69
+cost								= 1000
+max_mag_size				= 44
+mag_size						= large
+override_section				= mag_wpn_desert_drum_44_hp_mag_attributes
+
+[mag_wpn_desert_drum_44_hp_mag_attributes]
+animation_prefix_mag = 44_
+[deagle_mag44_att]
+animation_prefix_mag			=	44_

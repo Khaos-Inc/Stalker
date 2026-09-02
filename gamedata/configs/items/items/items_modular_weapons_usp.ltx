@@ -1,0 +1,296 @@
+--\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ wpn_usp \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+[usp_trigger]:attachment_base
+kind  =  usp
+inv_ui_sign				= usp_trig
+visual						= w_att_huds\usp_trigger	
+inv_name					= usp_trigger
+inv_name_short			= usp_triggerS
+cost							= 950
+inv_weight					= 0.07
+inv_grid_x         			= 5
+inv_grid_y         			= 42
+1icon_layer = clean_lub1_ico
+attachment_point	=	usp_trigger|0,0,0|0,0,0
+attachment_slots	=	usp_barrel|muzzle|0,0,0|0,0,0#hpsa_spring|zatvor|0,0.001,-0.006|0,0,0
+item_tags =	trigger
+override_section = usp_trigger_attributes
+
+[usp_trigger_attributes]
+
+[usp_trigger_up]:usp_trigger
+kind  =  usp
+inv_ui_sign				= usp_trig+
+visual						= w_att_huds\usp_trigger_up	
+inv_name					= usp_trigger_up
+inv_name_short			= usp_trigger_upS
+cost							= 1350
+inv_grid_x         			= 12
+inv_grid_y         			= 43
+override_section =	usp_trigger_up_attributes
+
+[usp_trigger_up_attributes]
+fire_modes = -1
+
+[usp_barrel]:attachment_base
+kind  =  usp
+inv_ui_sign				= usp_bar
+visual						= w_att_huds\usp_barrel	
+inv_name					= usp_barrel
+inv_name_short			= usp_barrelS
+cost							= 750
+inv_weight					= 0.09
+inv_grid_x         			= 3
+inv_grid_y         			= 42
+1icon_layer = clean1_ico
+attachment_point	=	usp_barrel|0,0,0|0,0,0
+attachment_slots	=	usp_zatvor|zatvor|0,0,0|0,0,0
+item_tags =	barrel
+override_section = usp_barrel_attributes
+
+[usp_barrel_attributes]
+zoom_rotate_time = 0.03
+recoil_koeff = -0.12
+bullet_speed = 0.83
+k_hit_koeff = 1.05
+fire_dispersion_base = 0.22
+[usp_barrel_att]:beretta_barrel_att
+bullet_speed				= 0.83
+k_hit_koeff						=	1.05
+fire_dispersion_base		= 0.22
+
+[usp_barrel_up]:usp_barrel
+kind  =  usp
+inv_ui_sign				= usp_bar+
+visual						= w_att_huds\usp_barrel_up	
+inv_name					= usp_barrel_up
+inv_name_short			= usp_barrel_upS
+cost							= 950
+inv_weight					= 0.1
+inv_grid_x         			= 4
+attachment_slots	=	usp_zatvor|zatvor|0,0,0|0,0,0#45_muzzle|muzzle|0,0,0|0,0,0
+override_section = usp_barrel_up_attributes
+
+[usp_barrel_up_attributes]
+zoom_rotate_time = 0.03
+recoil_koeff = -0.12
+bullet_speed = 0.83
+k_hit_koeff = 1.05
+fire_dispersion_base = 0.22
+impair_koeff = 1.1
+[usp_barrel_up_att]:usp_barrel_att
+impair_koeff = 1.1
+
+[usp_zatvor]:attachment_base
+kind  =  usp
+inv_ui_sign				= usp_slide
+visual						= w_att_huds\usp_zatvor
+inv_name					= usp_zatvor
+inv_name_short			= usp_zatvor
+cost							= 850
+inv_weight					= 0.12
+inv_grid_width			= 2
+inv_grid_x					= 6
+inv_grid_y					= 43
+1icon_layer = clean_lub2_ico
+attachment_point = usp_zatvor|0,0,0|0,0,0
+item_tags =	zatvor
+override_section = usp_zatvor_attributes
+
+[usp_zatvor_attributes]
+zoom_rotate_time = 0.11
+rpm = 880
+recoil_koeff = -0.4
+[usp_zatvor_att]
+zoom_rotate_time = 0.11
+rpm = 880
+recoil_koeff = -0.4
+
+[usp_rail_foregrip]:attachment_base
+kind  =  usp
+inv_ui_sign				= rail
+visual						= w_att_huds\usp_rail_foregrip
+inv_name					= usp_rail_foregrip
+inv_name_short		= usp_rail_foregripS
+cost							= 900
+inv_weight				= 0.11
+inv_grid_x				= 13
+inv_grid_y				= 43
+attachment_point	=	usp_rail|0,0,0|0,0,0
+item_tags	=	rail
+override_section = usp_rail_foregrip_attributes
+
+[usp_rail_foregrip_attributes]
+zoom_rotate_time = -0.03
+recoil_koeff = -0.07
+inertia_koeff = 0.8
+animation_prefix = cd_
+[usp_rail_foregrip_att]:foregrip_roni_attributes,cd_attributes	
+
+[usp_rail]:attachment_base
+kind  =  usp
+inv_ui_sign				= usp_rail
+visual						= w_att_huds\usp_rail
+description				= pistol_grip_mountD
+inv_name					= usp_rail
+inv_name_short			= usp_railS
+cost							= 450
+inv_weight					= 0.06
+inv_grid_x         			= 6
+inv_grid_y         			= 42
+attachment_point		=	usp_rail|0,0,0|0,0,0
+attachment_slots =	pica_3|wpn_body|0,0.0094,0.097|0,0,180#usmount|wpn_body|0,0.0094,0.092|0,0,0#picgrp|wpn_body|0,-0.026,-0.0981|0,0,0			;что-то одно одновременно
+item_tags =	rail
+override_section = usp_rail_attributes
+
+[usp_rail_attributes]
+
+[usm]:usp_rail								;usmount|0,0,0|0,0,0
+kind  =  usp
+visual					= w_att_huds\fab_def_usm	
+description			= ar_hg_9
+inv_name				= fab_def_usm
+inv_name_short	= fab_def_usmS
+cost						= 1600
+inv_weight			= 0.08
+inv_grid_x         	= 10
+inv_grid_y        	= 3							
+attachment_slots =	pica_3|wpn_body|0,0.0087,0.097|0,0,180#pica_9|wpn_body|0,0.058,0.02|0,0,0#picgrp|wpn_body|0,-0.0268,-0.0981|0,0,0
+override_section 	= usm_attributes
+[usm_attributes]:ak_hg_radom_up_att
+;additional_hud_offset = 0, 0, -0.168
+
+[usp_rail_lam]:attachment_base
+kind  =  usp
+inv_ui_sign				= usp_lam
+visual						= w_att_huds\usp_rail_mk23_socom_lam
+inv_name					= usp_rail_mk23_socom_lam
+inv_name_short			= usp_rail_mk23_socom_lamS
+description					= tac_laserD
+cost							= 1050
+inv_weight					= 0.1
+inv_grid_x         			= 8
+inv_grid_y         			= 42
+attachment_point = usp_rail|0,0,0|0,0,0
+attachment_slots = tac_aim|wpn_body|0.05,0.1146,-0.09|0,0,30	;-0.095040,0.006570,0.000000
+item_tags =	rail
+is_torch_laser                  = true
+is_torch                  = false
+laser_section             = tactical_laser_red
+laser_bone         = laser
+laser_bone_axis    = y
+laser_bone_invert  = false
+1icon_layer = red_laser_ico
+override_section = usp_rail_lam_attributes
+
+[usp_rail_lam_attributes]
+
+[usp_rail_muzzle]:usp_rail
+kind  =  usp
+inv_ui_sign				= usp_mbP
+visual						= w_att_huds\usp_rail_muzzle_march
+inv_name					= usp_rail_muzzle_march
+inv_name_short			= usp_rail_muzzle_marchS
+inv_grid_x         			= 7
+item_tags	=	rail
+override_section = usp_rail_muzzle_attributes
+
+[usp_rail_muzzle_attributes]
+weapon_lenght = 0.05
+zoom_rotate_time = 0.01
+
+[mag_wpn_usp_11.43x23_fmj]:mag_wpn_base,wg_wpn_usp,ag_ammo_11.43x23_fmj
+inv_ui_sign					= usp_12
+visual							= w_att_huds\usp_mag
+inv_name						= usp_mag
+inv_name_short				= usp_magS
+inv_grid_x						= 8
+inv_grid_y						= 43
+inv_weight						= 0.06
+cost								= 300
+max_mag_size				= 12
+mag_size						= small
+override_section				= mag_wpn_usp_11.43x23_fmj_attributes
+
+[mag_wpn_usp_11.43x23_fmj_attributes]
+animation_prefix_mag = 17_
+
+[mag_wpn_usp_24_11.43x23_fmj]:mag_wpn_usp_11.43x23_fmj
+inv_ui_sign					= usp_24
+visual							= w_att_huds\usp_mag24
+inv_name						= usp_mag24
+inv_name_short				= usp_mag24S
+inv_grid_height				= 2
+inv_grid_x						= 9
+inv_grid_y						= 42
+inv_weight						= 0.16
+cost								= 650
+max_mag_size				= 24
+override_section				= mag_wpn_usp_24_11.43x23_fmj_attributes
+
+[mag_wpn_usp_24_11.43x23_fmj_attributes]
+animation_prefix_mag = 33_
+
+[45_silencer_mk23]:45_silencer_bhss
+kind  =  45sil
+visual						= w_att_huds\45_silencer_mk23
+inv_name					= 45_silencer_mk23
+inv_name_short			= 45_silencer_mk23S
+cost							= 1450
+inv_weight					= 0.3
+inv_grid_width			= 2
+inv_grid_x					= 12
+inv_grid_y					= 42
+override_section = 45_silencer_mk23_attributes
+
+[45_silencer_mk23_attributes]
+silencer_status = 1
+silencer_name = wpn_addon_silencer
+silencer_x = 1
+silencer_y = 1
+weapon_lenght = 0.15
+impair_koeff = 1.4
+zoom_rotate_time = 0.02
+recoil_koeff = -0.09
+inertia_koeff = 1.2
+
+[45_silencer_osprey]:45_silencer_bhss
+kind  =  45sil
+visual						= w_att_huds\45_silencer_osprey
+inv_name					= 45_silencer_osprey
+inv_name_short			= 45_silencer_ospreyS
+cost							= 1650
+inv_weight					= 0.3
+inv_grid_width			= 2
+inv_grid_x					= 10
+inv_grid_y					= 42
+override_section = 45_silencer_osprey_attributes
+
+[45_silencer_osprey_attributes]
+silencer_status = 1
+silencer_name = wpn_addon_silencer
+silencer_x = 1
+silencer_y = 1
+weapon_lenght = 0.2
+impair_koeff = 1.2
+zoom_rotate_time = 0.06
+recoil_koeff = -0.08
+inertia_koeff = 1.3
+
+[45_silencer_osprey_d]:45_silencer_osprey
+visual						= w_att_huds\45_silencer_osprey_ide
+inv_grid_y					= 43
+override_section = 45_silencer_osprey_d_attributes
+
+cost = 1650
+inv_weight = 0.3
+[45_silencer_osprey_d_attributes]
+silencer_status = 1
+silencer_name = wpn_addon_silencer
+silencer_x = 1
+silencer_y = 1
+weapon_lenght = 0.2
+impair_koeff = 1.2
+zoom_rotate_time = 0.06
+recoil_koeff = -0.08
+inertia_koeff = 1.3

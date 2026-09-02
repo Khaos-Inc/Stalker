@@ -46,6 +46,14 @@ local function cfg_num(key, default)
 	return default
 end
 
+local function squad_task_enabled(squad, key, default)
+	local cfg = cfg_mod()
+	if cfg and type(cfg.squad_task_enabled) == "function" then
+		return cfg.squad_task_enabled(squad, key, default) == true
+	end
+	return cfg_bool(key, default)
+end
+
 local function hour_is_night(hour)
 	hour = tonumber(hour) or 12
 	return hour >= 21 or hour <= 5
@@ -126,9 +134,24 @@ local last_hostility_update = 0
 local active_actor_revenge_squad_id = nil
 local night_revenge_cancelled = false
 local sleep_hook_installed = false
+local sleep_hook_class = nil
+local sleep_hook_original = nil
+local sleep_hook_wrapper = nil
 local last_sleep_start_hour = nil
 local sleep_paused_actor_revenge_squad_id = nil
 local sleep_paused_actor_revenge_touched_night = false
+
+local function master_enabled()
+	if rawget(_G, "zhopa2_runtime_disabled") == true then
+		return false
+	end
+	local fn = rawget(_G, "zhopa2_master_enabled")
+	if type(fn) == "function" then
+		local ok, enabled = pcall(fn)
+		return ok and enabled == true
+	end
+	return true
+end
 
 local function death_key(victim_squad, offender_target_id)
 	if not (victim_squad and victim_squad.id and offender_target_id ~= nil) then
@@ -267,6 +290,10 @@ end
 
 local function responder_manageable_soft(squad)
 	if not (squad and squad.id and squad.disabled ~= true) then
+		return false
+	end
+	local p = perception_mod()
+	if p and type(p.quest_protected_squad) == "function" and p.quest_protected_squad(squad) then
 		return false
 	end
 	if service_squad_soft(squad) then
@@ -412,6 +439,14 @@ local function consider_candidate(victim_squad, offender_squad, candidate, best,
 	if not responder_ok(candidate, victim_squad, offender_squad) then
 		return best, best_dist
 	end
+	if offender_squad then
+		local tasks = tasks_mod()
+		if tasks and type(tasks.direct_target_allowed) == "function"
+			and tasks.direct_target_allowed(candidate, TASK_REVENGE, offender_squad) ~= true
+		then
+			return best, best_dist
+		end
+	end
 	local dist = squad_distance(victim_squad, candidate)
 	if not best_dist or dist < best_dist then
 		return candidate, dist
@@ -439,7 +474,7 @@ end
 local function find_responder(victim_squad, offender_squad)
 	local levels = level_pool(victim_squad)
 	local best = scan_vanilla_squads(levels, victim_squad, offender_squad)
-	return best
+	return best, offender_squad ~= nil
 end
 
 local function actor_revenge_roll_passed()
@@ -593,9 +628,6 @@ function M.apply_online_revenge_hostility()
 	if not runtime_ready("revenge_hostility") then
 		return false, "runtime_not_ready"
 	end
-	if not cfg_bool("revenge_enabled", true) then
-		return false
-	end
 	if revenge_disabled_for_night() then
 		return false
 	end
@@ -623,7 +655,7 @@ function M.apply_online_revenge_hostility()
 		end
 		seen[squad_id] = true
 		local squad = alife_object(squad_id)
-		if squad and squad.zhopa2_task == TASK_REVENGE and obj_level(squad) == level_name then
+		if squad and squad.zhopa2_task == TASK_REVENGE and squad_task_enabled(squad, "revenge_enabled", true) and obj_level(squad) == level_name then
 			processed = processed + 1
 			applied = tasks.apply_revenge_hostility(squad) or applied
 		end
@@ -670,19 +702,41 @@ local function install_sleep_hook()
 		return false
 	end
 	if ui_class.zhopa2_revenge_sleep_hooked then
+		sleep_hook_class = ui_class
+		sleep_hook_original = ui_class.zhopa2_revenge_on_button_sleep
+		sleep_hook_wrapper = ui_class.zhopa2_revenge_sleep_hooked
 		sleep_hook_installed = true
 		return true
 	end
 	local original = ui_class.OnButtonSleep
-	ui_class.zhopa2_revenge_sleep_hooked = true
-	ui_class.zhopa2_revenge_on_button_sleep = original
-	function ui_class.OnButtonSleep(self, ...)
-		local hours = sleep_hours_from_ui(self)
-		pause_actor_revenge_for_sleep(hours)
+	local wrapper = function(self, ...)
+		if master_enabled() then
+			local hours = sleep_hours_from_ui(self)
+			pause_actor_revenge_for_sleep(hours)
+		end
 		return original(self, ...)
 	end
+	sleep_hook_class = ui_class
+	sleep_hook_original = original
+	sleep_hook_wrapper = wrapper
+	ui_class.zhopa2_revenge_sleep_hooked = wrapper
+	ui_class.zhopa2_revenge_on_button_sleep = original
+	ui_class.OnButtonSleep = wrapper
 	sleep_hook_installed = true
 	return true
+end
+
+local function uninstall_sleep_hook()
+	local ui_class = sleep_hook_class
+	if ui_class and sleep_hook_wrapper and ui_class.OnButtonSleep == sleep_hook_wrapper then
+		ui_class.OnButtonSleep = sleep_hook_original
+		ui_class.zhopa2_revenge_sleep_hooked = nil
+		ui_class.zhopa2_revenge_on_button_sleep = nil
+		sleep_hook_class = nil
+		sleep_hook_original = nil
+		sleep_hook_wrapper = nil
+	end
+	sleep_hook_installed = false
 end
 
 local function actor_on_sleep(hours)
@@ -714,11 +768,18 @@ local function actor_on_update()
 	return M.apply_online_revenge_hostility()
 end
 
-function M.assign_revenge(responder, offender_target_id)
+function M.assign_revenge(responder, offender_target_id, opts)
+	opts = opts or {}
 	if not runtime_ready("revenge_assign") then
 		return false, "runtime_not_ready"
 	end
 	if not (responder and offender_target_id ~= nil) then
+		return false
+	end
+	if not responder_manageable_soft(responder) then
+		return false
+	end
+	if not squad_task_enabled(responder, "revenge_enabled", true) then
 		return false
 	end
 	if revenge_disabled_for_night() then
@@ -728,7 +789,9 @@ function M.assign_revenge(responder, offender_target_id)
 		return false
 	end
 	local tasks = tasks_mod()
-	local ok = tasks and type(tasks.assign_revenge_interrupt) == "function" and tasks.assign_revenge_interrupt(responder, offender_target_id) or false
+	local ok = tasks and type(tasks.assign_revenge_interrupt) == "function" and tasks.assign_revenge_interrupt(responder, offender_target_id, {
+		direct_target = opts.direct_target_checked ~= true,
+	}) or false
 	if ok and tonumber(offender_target_id) == ACTOR_TARGET_ID then
 		active_actor_revenge_squad_id = responder.id
 	end
@@ -742,9 +805,6 @@ function M.on_squad_npc_death(victim_squad, se_npc, se_killer)
 	if not (victim_squad and victim_squad.id and se_npc and se_killer) then
 		return false
 	end
-	if not cfg_bool("revenge_enabled", true) then
-		return false
-	end
 	if revenge_disabled_for_night() then
 		return false
 	end
@@ -753,6 +813,12 @@ function M.on_squad_npc_death(victim_squad, se_npc, se_killer)
 	end
 
 	local offender_squad, offender_target_id = killer_squad_and_target(se_killer)
+	local p = perception_mod()
+	if p and type(p.quest_protected_squad) == "function"
+		and (p.quest_protected_squad(victim_squad) or p.quest_protected_squad(offender_squad))
+	then
+		return false
+	end
 	if offender_squad and (offender_squad.zhopa2_task == TASK_REVENGE or offender_squad.zhopa2_task == TASK_BASE_CAMPING) then
 		return false
 	end
@@ -760,9 +826,6 @@ function M.on_squad_npc_death(victim_squad, se_npc, se_killer)
 		return false
 	end
 	local is_actor_target = offender_target_id == ACTOR_TARGET_ID
-	if is_actor_target and not cfg_bool("revenge_actor_enabled", true) then
-		return false
-	end
 	if offender_squad and offender_squad.id == victim_squad.id then
 		return false
 	end
@@ -778,11 +841,16 @@ function M.on_squad_npc_death(victim_squad, se_npc, se_killer)
 			return false
 		end
 	end
-	local responder = find_responder(victim_squad, offender_squad)
+	local responder, direct_target_checked = find_responder(victim_squad, offender_squad)
 	if not responder then
 		return false
 	end
-	local assigned = M.assign_revenge(responder, offender_target_id)
+	if is_actor_target and not squad_task_enabled(responder, "revenge_actor_enabled", true) then
+		return false
+	end
+	local assigned = M.assign_revenge(responder, offender_target_id, {
+		direct_target_checked = direct_target_checked,
+	})
 	if assigned then
 		mark_death_processed(victim_squad, offender_target_id)
 	end
@@ -801,6 +869,9 @@ function M.on_npc_death_callback(victim, who)
 end
 
 function M.on_game_start()
+	if rawget(_G, "zhopa2_runtime_disabled") == true then
+		return M.on_master_disable()
+	end
 	if not RegisterScriptCallback then
 		return
 	end
@@ -815,6 +886,25 @@ function M.on_game_start()
 	RegisterScriptCallback("actor_on_update", actor_on_update)
 	RegisterScriptCallback("actor_on_sleep", actor_on_sleep)
 	install_sleep_hook()
+end
+
+function M.on_master_disable()
+	if UnregisterScriptCallback then
+		pcall(UnregisterScriptCallback, "squad_on_npc_death", M.on_squad_npc_death)
+		pcall(UnregisterScriptCallback, "npc_on_death_callback", M.on_npc_death_callback)
+		pcall(UnregisterScriptCallback, "actor_on_update", actor_on_update)
+		pcall(UnregisterScriptCallback, "actor_on_sleep", actor_on_sleep)
+	end
+	uninstall_sleep_hook()
+	processed_deaths = {}
+	processed_order = {}
+	last_hostility_update = 0
+	active_actor_revenge_squad_id = nil
+	night_revenge_cancelled = false
+	last_sleep_start_hour = nil
+	sleep_paused_actor_revenge_squad_id = nil
+	sleep_paused_actor_revenge_touched_night = false
+	return true
 end
 
 function on_game_start()
