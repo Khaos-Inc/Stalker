@@ -15,18 +15,19 @@ function utils_xml.get_color_con(condition, to_code)
     --    return old_utils_xml_get_color_con(condition, to_code)
     --end
     if condition then
-        if is_wpn then
+        if string.find(sec, "prt_o_") then
             if condition < z_item_icon_info.settings.part_dots.opo_orange then return utils_xml.get_color("d_red", to_code)
-            elseif condition < z_item_icon_info.settings.part_dots.opo_yellow then return utils_xml.get_color("d_purple", to_code)
+            elseif condition < z_item_icon_info.settings.part_dots.opo_yellow then return utils_xml.get_color("d_orange", to_code)
             elseif condition < z_item_icon_info.settings.part_dots.opo_green then return utils_xml.get_color("yellow", to_code)
             end
-	    elseif IsWeapon(parent) then --typ == "w" then
+	    elseif string.find(sec, "prt_w_") then
             if condition < z_item_icon_info.settings.part_dots.wpo_orange then return utils_xml.get_color("d_red", to_code)
             elseif condition < z_item_icon_info.settings.part_dots.wpo_yellow then return utils_xml.get_color("d_orange", to_code)
             elseif condition < z_item_icon_info.settings.part_dots.wpo_green then return utils_xml.get_color("yellow", to_code)
             end
         end
 	end
+	return get_color("d_green", to_code)
 	return utils_xml.get_color("d_green", to_code)
 end
 ]]

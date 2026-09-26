@@ -384,7 +384,7 @@ function build_desc_header(obj, sec, str)  -- obj needed
 	
 	-- Consumable uses
 	if IsItem("multiuse",sec) then
-		_str = clr_g .. " • " .. clr_2 .. str_tbl.uses .. ": " .. clr_g .. obj:get_remaining_uses() .. "\\n \\n" .. clr_2
+		_str = clr_g .. " ï¿½ " .. clr_2 .. str_tbl.uses .. ": " .. clr_g .. obj:get_remaining_uses() .. "\\n \\n" .. clr_2
 		
 	-- Device power
 	elseif IsItem("device",sec)
@@ -392,7 +392,7 @@ function build_desc_header(obj, sec, str)  -- obj needed
 	then
 		local con = math_ceil(obj:condition() * 100)
 		local clr = clr_b1 --(con < 25 and clr_r) or (con < 50 and clr_o) or (con < 75 and clr_y) or clr_b1
-		_str = clr .. " • " .. clr_2 .. str_tbl.pwr_left .. ": " .. clr .. tostring(con) .. "%" .. "\\n \\n" .. clr_2
+		_str = clr .. " ï¿½ " .. clr_2 .. str_tbl.pwr_left .. ": " .. clr .. tostring(con) .. "%" .. "\\n \\n" .. clr_2
 		
 	-- Condition
 	elseif IsWeapon(obj)
@@ -402,14 +402,14 @@ function build_desc_header(obj, sec, str)  -- obj needed
 	or IsItem("disassemble",sec)
 	then
 		local con = math_ceil(obj:condition() * 100)
-		local clr = utils_xml.get_color_con(con)
-		_str = clr .. " • " .. clr_2 .. str_tbl.con .. ": " .. clr .. tostring(con) .. "%" .. "\\n \\n" .. clr_2
+		local clr = utils_xml.get_color_con_extended(con, obj:section(), true)
+		_str = clr .. " ï¿½ " .. clr_2 .. str_tbl.con .. ": " .. clr .. tostring(con) .. "%" .. "\\n \\n" .. clr_2
 		
 	elseif ini_sys:r_bool_ex(sec,"cond_part") then
 		local con = obj:condition()
 		con = math_floor(con*100)
-		local clr = utils_xml.get_color_con_extended(con, obj:section())
-		_str = clr .. " • " .. clr_2 .. str_tbl.con .. ": " .. clr .. utils_xml.get_name_cond(con, nil, sec) .. "\\n \\n" .. clr_2
+		local clr = utils_xml.get_color_con_extended(con, obj:section(), true)
+		_str = clr .. " ï¿½ " .. clr_2 .. str_tbl.con .. ": " .. clr .. utils_xml.get_name_cond(con, nil, sec) .. "\\n \\n" .. clr_2
 	
 	-- Contained artefact
 	elseif string_find(sec,"af_") then
@@ -417,25 +417,25 @@ function build_desc_header(obj, sec, str)  -- obj needed
 			local break_con = "lead_box"
 			local break_arty = sec:gsub("_lead_box", "")
 			if ini_sys:section_exist(break_arty) then
-				_str = clr_o .. " • " .. clr_2 .. str_tbl.arty_cont .. ": " .. clr_o .. get_sec_name(break_arty) .. "\\n \\n" .. clr_2
+				_str = clr_o .. " ï¿½ " .. clr_2 .. str_tbl.arty_cont .. ": " .. clr_o .. get_sec_name(break_arty) .. "\\n \\n" .. clr_2
 			end
 		elseif (string_find(sec, "(af.-_iam)",3)) then
 			local break_con = "af_iam"
 			local break_arty = sec:gsub("_af_iam", "")
 			if ini_sys:section_exist(break_arty) then
-				_str = clr_o .. " • " .. clr_2 .. str_tbl.arty_cont .. ": " .. clr_o .. get_sec_name(break_arty) .. "\\n \\n" .. clr_2
+				_str = clr_o .. " ï¿½ " .. clr_2 .. str_tbl.arty_cont .. ": " .. clr_o .. get_sec_name(break_arty) .. "\\n \\n" .. clr_2
 			end
 		elseif (string_find(sec, "(af.-_aac)",3)) then
 			local break_con = "af_aac"
 			local break_arty = sec:gsub("_af_aac", "")
 			if ini_sys:section_exist(break_arty) then
-				_str = clr_o .. " • " .. clr_2 .. str_tbl.arty_cont .. ": " .. clr_o .. get_sec_name(break_arty) .. "\\n \\n" .. clr_2
+				_str = clr_o .. " ï¿½ " .. clr_2 .. str_tbl.arty_cont .. ": " .. clr_o .. get_sec_name(break_arty) .. "\\n \\n" .. clr_2
 			end
 		elseif (string_find(sec, "(af.-_aam)",3)) then
 			local break_con = "af_aam"
 			local break_arty = sec:gsub("_af_aam", "")
 			if ini_sys:section_exist(break_arty) then
-				_str = clr_o .. " • " .. clr_2 .. str_tbl.arty_cont .. ": " .. clr_o .. get_sec_name(break_arty) .. "\\n \\n" .. clr_2
+				_str = clr_o .. " ï¿½ " .. clr_2 .. str_tbl.arty_cont .. ": " .. clr_o .. get_sec_name(break_arty) .. "\\n \\n" .. clr_2
 			end
 		end
 		
@@ -458,9 +458,107 @@ function build_desc_header(obj, sec, str)  -- obj needed
 	return str
 end
 
+
+-- Dynamic ammunition tooltip stats.
+-- The old ammunition descriptions contain static values in localization/XML.
+-- For ammo, trim that static "Attributes:" block and rebuild it from the
+-- active LTX section instead.
+local function trim_ammo_static_stats(str)
+	if not str then
+		return str
+	end
+
+	local markers = {
+		"\\nAttributes:",
+		"\nAttributes:",
+		"Attributes:"
+	}
+
+	for _, marker in ipairs(markers) do
+		local pos = string.find(str, marker, 1, true)
+		if pos then
+			-- Remove whitespace/newline immediately before the old stats block.
+			local cut = pos - 1
+			while cut > 0 do
+				local ch = string.sub(str, cut, cut)
+				if ch ~= " " and ch ~= "\t" and ch ~= "\r" and ch ~= "\n" and ch ~= "\\" then
+					break
+				end
+				cut = cut - 1
+			end
+			return string.sub(str, 1, cut)
+		end
+	end
+
+	return str
+end
+
+local function build_ammo_ltx_stats(sec)
+	local k_ap = ini_sys:r_float_ex(sec, "k_ap")
+	local k_hit = ini_sys:r_float_ex(sec, "k_hit")
+	local k_bullet_speed = ini_sys:r_float_ex(sec, "k_bullet_speed")
+	local buck_shot = ini_sys:r_float_ex(sec, "buck_shot") or 1
+
+	local out = ""
+
+	if k_ap or k_hit or k_bullet_speed then
+		out = out .. "\\n \\n" .. clr_2 .. " Attributes:\\n"
+
+		if k_ap then
+			-- Example: k_ap = 0.25 -> Armor piercing: 25
+			local ap = math_floor((k_ap * 100) + 0.5)
+			out = out .. clr_g .. "  \x95 " .. clr_1 .. " Armor piercing: " .. clr_g .. tostring(ap) .. " \\n"
+		end
+
+		if k_hit then
+			-- Buckshot damage is per pellet in the LTX, so show the total
+			-- nominal damage represented by all pellets.
+			local damage = k_hit * buck_shot
+			if damage == math_floor(damage) then
+				damage = math_floor(damage)
+			end
+			out = out .. clr_g .. "  \x95 " .. clr_1 .. " Average damage: " .. clr_g .. tostring(damage) .. " \\n"
+		end
+
+		if k_bullet_speed then
+			local speed = k_bullet_speed
+			if speed == math_floor(speed) then
+				speed = math_floor(speed)
+			end
+			out = out .. clr_g .. "  \x95 " .. clr_1 .. " Bullet speed: " .. clr_g .. tostring(speed) .. " m/s \\n"
+		end
+
+		local bullet_type = "Bullet"
+		if buck_shot > 1 then
+			bullet_type = "Buckshot"
+		elseif string_find(sec, "12x") then
+			bullet_type = "Slug"
+		end
+
+		out = out .. clr_g .. "  \x95 " .. clr_1 .. " Bullet type: " .. clr_g .. bullet_type .. " \\n"
+	end
+
+	if buck_shot > 1 then
+		local pellets = buck_shot
+		if pellets == math_floor(pellets) then
+			pellets = math_floor(pellets)
+		end
+		out = out .. "\\n" .. clr_2 .. " Abilities:\\n"
+		out = out .. clr_g .. "  \x95 " .. clr_1 .. " Number of fractions: " .. clr_g .. tostring(pellets) .. "x \\n"
+	end
+
+	return out
+end
+
 function build_desc_footer(obj, sec, str) -- one obj used
 	str = str or gc(ini_sys:r_string_ex(sec,"description"))
 	if (not str) then return "" end
+
+	-- Ammo stat values are generated from LTX below, so remove the old
+	-- static Attributes/Abilities text supplied by localization XML.
+	if IsItem("ammo",sec) or IsItem("grenade_ammo",sec) then
+		str = trim_ammo_static_stats(str)
+	end
 
 	local _str = ""
 	if is_empty(str_tbl) then
@@ -472,15 +570,15 @@ function build_desc_footer(obj, sec, str) -- one obj used
 		if (string_find(sec, "(af.-_iam)",3)) then
 			local break_con = "af_iam"
 			local rad_out = "12"
-			_str = _str .. "%c[0,225,225,225] • " .. clr_1 .. " " .. str_tbl.arty_cont_rad .. ": " .. clr2 .. rad_out .. " " .. gc("st_msv") .. " \\n"
+			_str = _str .. "%c[0,225,225,225] ï¿½ " .. clr_1 .. " " .. str_tbl.arty_cont_rad .. ": " .. clr2 .. rad_out .. " " .. gc("st_msv") .. " \\n"
 		elseif (string_find(sec, "(af.-_aac)",3)) then
 			local break_con = "af_aac"
 			local rad_out = "24"
-			_str = _str .. "%c[0,225,225,225] • " .. clr_1 .. " " .. str_tbl.arty_cont_rad .. ": " .. clr2 .. rad_out .. " " .. gc("st_msv") .. " \\n"
+			_str = _str .. "%c[0,225,225,225] ï¿½ " .. clr_1 .. " " .. str_tbl.arty_cont_rad .. ": " .. clr2 .. rad_out .. " " .. gc("st_msv") .. " \\n"
 		elseif (string_find(sec, "(af.-_aam)",3)) then
 			local break_con = "af_aam"
 			local rad_out = "36"
-			_str = _str .. "%c[0,225,225,225] • " .. clr_1 .. " " .. str_tbl.arty_cont_rad .. ": " .. clr2 .. rad_out .. " " .. gc("st_msv") .. " \\n"
+			_str = _str .. "%c[0,225,225,225] ï¿½ " .. clr_1 .. " " .. str_tbl.arty_cont_rad .. ": " .. clr2 .. rad_out .. " " .. gc("st_msv") .. " \\n"
 		end
 	end
 	--]]
@@ -494,11 +592,11 @@ function build_desc_footer(obj, sec, str) -- one obj used
 		local community = ini_sys:r_string_ex(sec,"community")
 		
 		_str = _str .. clr_2 .. " " .. str_tbl.prop .. ":\\n"
-		_str = _str .. clr_y .. "  • " .. clr_1 .. " " .. str_tbl.out_comm .. ": " .. clr_2 .. (community and gc("st_dyn_news_comm_" .. community .. "_6") or str_tbl.stat_unknown) .. " \\n"
-		_str = _str .. clr_p .. "  • " .. clr_1 .. " " .. str_tbl.out_helm .. ": " .. clr_2 .. (helmet_avaliable and str_tbl.stat_included or str_tbl.stat_avail) .. " \\n"
---		_str = _str .. clr_p .. "  • " .. clr_1 .. " " .. str_tbl.out_slots .. ": " .. clr_2 .. tostring(artefact_count) .. " \\n"
---		_str = _str .. clr_p .. "  • " .. clr_1 .. " " .. str_tbl.out_cw .. ": " .. clr_2 .. "+" .. tostring(additional_inventory_weight) .. " " .. gc("st_kg") .. " \\n"
-		_str = _str .. clr_p .. "  • " .. clr_1 .. " " .. str_tbl.out_run .. " " .. (sprint_allowed and str_tbl.stat_posble_y or str_tbl.stat_posble_n) .. " \\n"
+		_str = _str .. clr_y .. "  ï¿½ " .. clr_1 .. " " .. str_tbl.out_comm .. ": " .. clr_2 .. (community and gc("st_dyn_news_comm_" .. community .. "_6") or str_tbl.stat_unknown) .. " \\n"
+		_str = _str .. clr_p .. "  ï¿½ " .. clr_1 .. " " .. str_tbl.out_helm .. ": " .. clr_2 .. (helmet_avaliable and str_tbl.stat_included or str_tbl.stat_avail) .. " \\n"
+--		_str = _str .. clr_p .. "  ï¿½ " .. clr_1 .. " " .. str_tbl.out_slots .. ": " .. clr_2 .. tostring(artefact_count) .. " \\n"
+--		_str = _str .. clr_p .. "  ï¿½ " .. clr_1 .. " " .. str_tbl.out_cw .. ": " .. clr_2 .. "+" .. tostring(additional_inventory_weight) .. " " .. gc("st_kg") .. " \\n"
+		_str = _str .. clr_p .. "  ï¿½ " .. clr_1 .. " " .. str_tbl.out_run .. " " .. (sprint_allowed and str_tbl.stat_posble_y or str_tbl.stat_posble_n) .. " \\n"
 	
 	-- parts
 	elseif IsItem("part",sec) then
@@ -507,9 +605,9 @@ function build_desc_footer(obj, sec, str) -- one obj used
 		local part_type = (part_o and str_tbl.part_o) or (part_w and str_tbl.part_w) or (str_tbl.part_i)
 	
 		_str = _str .. clr_2 .. " " .. str_tbl.prop .. ":\\n"
-		_str = _str .. clr_p .. "  • " .. clr_1 .. " " .. part_type .. " \\n"
+		_str = _str .. clr_p .. "  ï¿½ " .. clr_1 .. " " .. part_type .. " \\n"
 		if part_o or part_w then
-			_str = _str .. clr_o .. "  • " .. clr_1 .. " " .. str_tbl.part_usable .. " \\n"
+			_str = _str .. clr_o .. "  ï¿½ " .. clr_1 .. " " .. str_tbl.part_usable .. " \\n"
 		end
 		
 	-- upgrades
@@ -518,9 +616,13 @@ function build_desc_footer(obj, sec, str) -- one obj used
 		local part_type = upgr_o and str_tbl.upgr_o or str_tbl.upgr_w
 	
 		_str = _str .. clr_2 .. " " .. str_tbl.prop .. ":\\n"
-		_str = _str .. clr_p .. "  • " .. clr_1 .. " " .. part_type .. " \\n"
-		_str = _str .. clr_o .. "  • " .. clr_1 .. " " .. str_tbl.upgr_usable .. " \\n"
+		_str = _str .. clr_p .. "  ï¿½ " .. clr_1 .. " " .. part_type .. " \\n"
+		_str = _str .. clr_o .. "  ï¿½ " .. clr_1 .. " " .. str_tbl.upgr_usable .. " \\n"
 	
+		-- Ammunition
+	elseif IsItem("ammo",sec) or IsItem("grenade_ammo",sec) then
+		_str = _str .. build_ammo_ltx_stats(sec)
+
 	-- Consumables (Sleepiness \ Thirstiness)
 	elseif IsItem("consumable",sec) then
 		local eat_sleepiness = ini_sys:r_float_ex(sec,"eat_sleepiness")
@@ -530,7 +632,7 @@ function build_desc_footer(obj, sec, str) -- one obj used
 			local sign = (eat_sleepiness > 0 ) and str_tbl.stat_increase or str_tbl.stat_decrease
 			local clr = (eat_sleepiness > 0 ) and clr_r or clr_g
 			local str1_eat_sleepiness =  strformat(str_tbl.eat_sleepiness, amount, sign)
-			_str = _str .. clr .. "  • " .. clr_1 .. " " .. str1_eat_sleepiness .. " \\n"
+			_str = _str .. clr .. "  ï¿½ " .. clr_1 .. " " .. str1_eat_sleepiness .. " \\n"
 		end
 		
 		local eat_thirstiness = ini_sys:r_float_ex(sec,"eat_thirstiness")
@@ -540,18 +642,18 @@ function build_desc_footer(obj, sec, str) -- one obj used
 			local sign = (eat_thirstiness > 0 ) and str_tbl.stat_increase or str_tbl.stat_decrease
 			local clr = (eat_thirstiness > 0 ) and clr_r or clr_g
 			local str1_eat_thirstiness =  strformat(str_tbl.eat_thirstiness, amount, sign)
-			_str = _str .. clr .. "  • " .. clr_1 .. " " .. str1_eat_thirstiness .. " \\n"
+			_str = _str .. clr .. "  ï¿½ " .. clr_1 .. " " .. str1_eat_thirstiness .. " \\n"
 		end
 		
 		local eat_health = ini_sys:r_float_ex(sec,"eat_health")
 		if eat_health and (eat_health < 0) then
-			_str = _str .. clr_r .. "  • " .. clr_1 .. " " .. str_tbl.eat_health .. " \\n"
+			_str = _str .. clr_r .. "  ï¿½ " .. clr_1 .. " " .. str_tbl.eat_health .. " \\n"
 		end
 		
 		local eat_rad = ini_sys:r_float_ex(sec,"eat_radiation")
 		if eat_rad and (eat_rad > 0) then
 			local num = math.abs(eat_rad) * 10000
-			_str = _str .. clr_r .. "  • " .. clr_1 .. " " .. str_tbl.eat_rad_poison .. ": " .. clr_2 .. "+" .. math_ceil(num) .. " " .. str_tbl.msv .. " \\n"
+			_str = _str .. clr_r .. "  ï¿½ " .. clr_1 .. " " .. str_tbl.eat_rad_poison .. ": " .. clr_2 .. "+" .. math_ceil(num) .. " " .. str_tbl.msv .. " \\n"
 		end
 	end
 	
@@ -573,45 +675,45 @@ function build_desc_footer(obj, sec, str) -- one obj used
 				unit = str_tbl.pah_sec
 			end
 			
-			_str = _str .. clr_p .. "  • " .. clr_1 .. " " .. gc("st_ui_power_consumption") .. ": " .. clr_2 .. tostring(val) .. " " .. unit .. " \\n"
+			_str = _str .. clr_p .. "  ï¿½ " .. clr_1 .. " " .. gc("st_ui_power_consumption") .. ": " .. clr_2 .. tostring(val) .. " " .. unit .. " \\n"
 		end
 	end
 	
 	-- Repair base condition
 	local repair_base = ini_sys:r_float_ex(sec,"repair_add_condition")
 	if repair_base then
-		_str = _str .. clr_o .. "  • " .. clr_1 .. " " .. str_tbl.repair_base_con .. ": " .. clr_2 .. " +" .. tostring(math_ceil(repair_base*100)) .. "% \\n"
+		_str = _str .. clr_o .. "  ï¿½ " .. clr_1 .. " " .. str_tbl.repair_base_con .. ": " .. clr_2 .. " +" .. tostring(math_ceil(repair_base*100)) .. "% \\n"
 	end
 	
 	-- Repair min condition
 	local repair_min = ini_sys:r_float_ex(sec,"repair_min_condition")
 	if repair_min then
-		_str = _str .. clr_o .. "  • " .. clr_1 .. " " .. str_tbl.repair_min_con .. ": " .. clr_2 .. " " .. tostring(math_ceil(repair_min*100)) .. "% \\n"
+		_str = _str .. clr_o .. "  ï¿½ " .. clr_1 .. " " .. str_tbl.repair_min_con .. ": " .. clr_2 .. " " .. tostring(math_ceil(repair_min*100)) .. "% \\n"
 	end
 	
 	-- Repair bonus part
 	local repair_bonus = ini_sys:r_float_ex(sec,"repair_part_bonus")
 	if repair_bonus then
-		_str = _str .. clr_o .. "  • " .. clr_1 .. " " .. str_tbl.repair_bonus .. ": " .. clr_2 .. " +" .. tostring(math_ceil(repair_bonus*100)) .. "% \\n"
+		_str = _str .. clr_o .. "  ï¿½ " .. clr_1 .. " " .. str_tbl.repair_bonus .. ": " .. clr_2 .. " +" .. tostring(math_ceil(repair_bonus*100)) .. "% \\n"
 	end
 	
 	-- Repair match parts
 	local is_part_match = ini_sys:r_bool_ex(sec,"repair_parts_match")
 	if is_part_match then
-		_str = _str .. clr_b .. "  • " .. clr_1 .. " " .. str_tbl.repair_match .. " \\n"
+		_str = _str .. clr_b .. "  ï¿½ " .. clr_1 .. " " .. str_tbl.repair_match .. " \\n"
 	end
 	
 	-- Workshop tool
 	local is_workshop_tool = ini_sys:r_bool_ex(sec,"workshop_tool")
 	if is_workshop_tool then
-		_str = _str .. clr_p .. "  • " .. clr_1 .. " " .. str_tbl.workshop_tool .. " \\n"
+		_str = _str .. clr_p .. "  ï¿½ " .. clr_1 .. " " .. str_tbl.workshop_tool .. " \\n"
 	end
 	
 	-- Required tool
 	local required_tool = ini_sys:r_string_ex(sec,"required_tool")
 	if required_tool and ini_sys:section_exist(required_tool) then
 		local required_tool_name = get_sec_name(required_tool)
-		_str = _str .. clr_o .. "  • " .. clr_1 .. " " .. str_tbl.require_tool .. ": " .. clr_2 .. " " .. required_tool_name .. " \\n"
+		_str = _str .. clr_o .. "  ï¿½ " .. clr_1 .. " " .. str_tbl.require_tool .. ": " .. clr_2 .. " " .. required_tool_name .. " \\n"
 	end
 	
 	

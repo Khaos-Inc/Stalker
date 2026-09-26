@@ -252,10 +252,26 @@ function Add_Condition_Text(self, xml, obj, sec, clsid)
 
 	self.cond_text = self.cond_text or utjan_xml:InitTextWnd("counter_text", self.cell)
 
-	local cond = obj:condition()
-	local str = SYS_GetParam(0,sec, "condition_bar","condition_progess_bar")
-	local props = bar_list[str]
-	local color = props.def or lerp_color( cond , props.min , props.mid , props.max )
+	local cond = obj:condition()  
+	local cond_pct = math.ceil(cond * 100)  
+	local color  
+	if string.find(sec, "prt_o_") then  
+		color = clr_missing  
+		if cond_pct >= settings.part_dots.opo_green then color = clr_g  
+		elseif cond_pct >= settings.part_dots.opo_yellow then color = clr_y  
+		elseif cond_pct >= settings.part_dots.opo_orange then color = clr_o  
+		elseif cond_pct > -1 then color = clr_r end  
+	elseif string.find(sec, "prt_w_") then  
+		color = clr_missing  
+		if cond_pct >= settings.part_dots.wpo_green then color = clr_g  
+		elseif cond_pct >= settings.part_dots.wpo_yellow then color = clr_y  
+		elseif cond_pct >= settings.part_dots.wpo_orange then color = clr_o  
+		elseif cond_pct > -1 then color = clr_r end  
+	else  
+		local str = SYS_GetParam(0,sec, "condition_bar","condition_progess_bar")  
+		local props = bar_list[str]  
+		color = props.def or lerp_color( cond , props.min , props.mid , props.max )  
+	end
 	if color then
 		self.cond_text:SetTextColor( color )
 	end

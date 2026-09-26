@@ -184,10 +184,6 @@ function try_spawn_world_item(ignore)
 	-- Get spawn place name
 	local _name
 	if ignore then
-		if not (world_itm_off and size_table(world_itm_off) > 0) then
-			print_debug("! Game Setup | world_itm_off is nil or empty")
-			return
-		end
 		_name = random_key_table(world_itm_off)
 	else
 		local lvl_short = txr_routes.get_map(level.name())
@@ -436,6 +432,11 @@ local function actor_on_first_update()
 	
 	-- Setup items
 	local multi = game_difficulties.get_eco_factor("random_items") or 0.5
+  -- ZCP
+  if smr_amain_mcm.get_config("smr_enabled") then
+    multi = smr_loot_mcm.get_config("random_items")
+  end
+  -- ZCP END
 	multi = (multi < 1) and multi or 1
 	
 	local num = math.ceil(size_table(world_itm_off) * multi)

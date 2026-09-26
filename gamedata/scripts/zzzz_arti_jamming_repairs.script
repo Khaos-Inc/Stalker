@@ -247,7 +247,7 @@ function ui_workshop.UIWorkshopRepair:ReplacePart()
 			if self.new_con[i] then
 				t = self.new_con[i].con
 			end
-			local clr = utils_xml.get_color_con(t)
+			local clr = utils_xml.get_color_con_extended(ci.flags.info, ci.section, true)
 			local str = t < 0 and "[X]" or t .. "%"
 			self.itm_con[i]:SetText(clr .. str)
 		end

@@ -34,8 +34,14 @@ TODO:
 
 --]]
 
+-- Added by Sota
+-- check if it's gamma
+local is_gamma = ui_inventory.is_gamma
+-- custom stat rounding function
+local stats_round_idp = ui_inventory.stats_round_idp
 
-local ratio = utils_xml.screen_ratio()
+-- Edited by Sota - commented out because it’s better to get the actual ratio value in functions
+--local ratio = utils_xml.screen_ratio()
 
 local XMLP = CScriptXmlInit()
 XMLP:ParseFile("utils.xml")
@@ -492,6 +498,77 @@ function prepare_stats_table()
 	}
 end
 
+
+-- UI Rework / Sota Stats Tweak mutates stats_table["weapon"] after
+-- utils_ui has initialized it. Our modular weapon system needs effective,
+-- runtime values instead of Sota's normalized wrappers, so rebuild only the
+-- weapon table at the point it is requested. Outfit/artefact/booster/etc.
+-- tables remain fully owned by UI Rework/Sota.
+local function deso_runtime_weapon_stats()
+	return {
+		["accuracy"] = {
+			index=1, typ="float", label="Accuracy", icon_p="ui_wp_prop_tochnost",
+			icon_n="", track=false, magnitude=1, unit="°", literal_unit=true, decimals=2,
+			compare=false, sign=false, show_always=true,
+			value_functor={"utils_ui","prop_accuracy_value"}
+		},
+		["inertia"] = {
+			index=2, typ="float", label="Inertia", icon_p="ui_wp_prop_ergonomics",
+			icon_n="", track=false, magnitude=1, unit="", decimals=2,
+			compare=false, sign=false, show_always=true,
+			value_functor={"utils_ui","prop_inertia"}
+		},
+		["damage"] = {
+			index=3, typ="float", label="Damage", icon_p="ui_wp_prop_damage",
+			icon_n="", track=false, magnitude=1, unit="", decimals=2,
+			compare=false, sign=false, show_always=true,
+			value_functor={"utils_ui","prop_damage_value"}
+		},
+		["fire_rate"] = {
+			index=4, typ="float", label="Rate of fire", icon_p="ui_wp_prop_skorostrelnost",
+			icon_n="", track=false, magnitude=1, unit="RPM", literal_unit=true, decimals=0,
+			compare=false, sign=false, show_always=true,
+			value_functor={"utils_ui","prop_rpm_value"}
+		},
+		["bullet_speed"] = {
+			index=5, typ="float", label="Bullet velocity", icon_p="ui_wp_prop_skorostrelnost",
+			icon_n="", track=false, magnitude=1, unit="m/s", literal_unit=true, decimals=0,
+			compare=false, sign=false, show_always=true,
+			value_functor={"utils_ui","prop_bullet_speed"}
+		},
+		["zoom_rotate_time"] = {
+			index=15, typ="float", label="ADS time", icon_p="ui_wp_prop_ergonomics",
+			icon_n="", track=false, magnitude=1, unit="s", literal_unit=true, decimals=2,
+			compare=false, sign=false, show_always=true,
+			value_functor={"utils_ui","prop_ads_time"}
+		},
+		["weapon_length"] = {
+			index=7, typ="float", label="Weapon length", icon_p="ui_wp_prop_ergonomics",
+			icon_n="", track=false, magnitude=1, unit="m", literal_unit=true, decimals=2,
+			compare=false, sign=false, show_always=true,
+			value_functor={"utils_ui","prop_weapon_length"}
+		},
+		["weapon_recoil_vert"] = {
+			index=8, typ="float", label="Vertical recoil", icon_p="ui_wp_prop_ergonomics",
+			icon_n="", track=false, magnitude=100, unit="", decimals=0,
+			compare=false, sign=false, show_always=true,
+			value_functor={"utils_ui","prop_hud_recoil_vert"}
+		},
+		["weapon_recoil_horz"] = {
+			index=9, typ="float", label="Horizontal recoil", icon_p="ui_wp_prop_ergonomics",
+			icon_n="", track=false, magnitude=100, unit="", decimals=0,
+			compare=false, sign=false, show_always=true,
+			value_functor={"utils_ui","prop_hud_recoil_horz"}
+		},
+		["weapon_recoil_ret_speed"] = {
+			index=10, typ="float", label="Recoil recovery", icon_p="ui_wp_prop_ergonomics",
+			icon_n="", track=false, magnitude=1, unit="", decimals=2,
+			compare=false, sign=false, show_always=true,
+			value_functor={"utils_ui","prop_hud_recoil_return"}
+		},
+	}
+end
+
 function add_stats_table(k1,k2,v)
 	if is_not_empty(stats_table) then return end
 	
@@ -506,6 +583,10 @@ function get_stats_table(sec)
 	prepare_stats_table()
 
 	if ini_sys:r_string_ex(sec, "ammo_class") and (not IsItem("fake_ammo_wpn", sec)) then
+		-- Final authority for modular weapons: Sota may have wrapped/replaced
+		-- these entries after initialization, so restore our runtime-value table
+		-- immediately before the tooltip consumes it.
+		stats_table["weapon"] = deso_runtime_weapon_stats()
 		return stats_table["weapon"]
 	elseif IsItem("outfit", sec) or IsItem("helmet", sec) then 
 		return stats_table["outfit"]
@@ -531,13 +612,101 @@ function get_stats_value(obj, sec, gr, stat)
 	
 	local sect = gr.section and SYS_GetParam(0, sec, gr.section) or sec
 	
-	local value = gr.value_functor and get_stats_func_value(obj, sec, unpack(gr.value_functor))
+	local value
+	if gr.value_functor then
+		local vf_file = gr.value_functor[1]
+		local vf_func = gr.value_functor[2]
+
+		-- Compatibility: Sota replaces get_stats_func_value() at runtime.
+		-- Our custom weapon/module tooltip functors live in utils_ui itself and
+		-- are not part of Sota's dispatch table, so route only those directly.
+		-- All original Sota/vanilla functors still go through its hook unchanged.
+		local deso_custom_stats = {
+			prop_accuracy_value = true,
+			prop_inertia = true,
+			prop_damage_value = true,
+			prop_rpm_value = true,
+			prop_bullet_speed = true,
+			prop_ads_time = true,
+			prop_weapon_length = true,
+			prop_hud_recoil_vert = true,
+			prop_hud_recoil_horz = true,
+			prop_hud_recoil_return = true,
+			prop_module_weapon_length = true,
+			prop_module_recoil_delta = true,
+			prop_module_rpm_delta = true,
+			prop_module_k_hit_delta = true,
+		}
+
+		-- Sota replaces get_stats_func_value() with a dispatcher that only knows
+		-- its own/vanilla functors. Route every Desolation custom tooltip functor
+		-- directly, while leaving all other stats on Sota's original path.
+		if vf_file == "utils_ui"
+		and deso_custom_stats[vf_func]
+		and _G[vf_file]
+		and _G[vf_file][vf_func]
+		then
+			value = _G[vf_file][vf_func](obj, sec, unpack(gr.value_functor, 3))
+		else
+			-- Sota replaces get_stats_func_value() with a dispatcher. Preserve it
+			-- whenever it can handle the requested stat, but never allow an unknown
+			-- functor to crash the whole inventory. If its dispatcher fails, fall
+			-- back to the actual target function referenced by value_functor.
+			local ok, result = pcall(
+				get_stats_func_value,
+				obj,
+				sec,
+				unpack(gr.value_functor)
+			)
+
+			if ok then
+				value = result
+			elseif vf_file
+			and vf_func
+			and _G[vf_file]
+			and _G[vf_file][vf_func]
+			then
+				local direct_ok, direct_result = pcall(
+					_G[vf_file][vf_func],
+					obj,
+					sec,
+					unpack(gr.value_functor, 3)
+				)
+
+				if direct_ok then
+					value = direct_result
+				else
+					printf(
+						"[UI STATS] failed functor [%s.%s]: %s",
+						tostring(vf_file),
+						tostring(vf_func),
+						tostring(direct_result)
+					)
+				end
+			else
+				printf(
+					"[UI STATS] missing functor [%s.%s], Sota dispatcher error: %s",
+					tostring(vf_file),
+					tostring(vf_func),
+					tostring(result)
+				)
+			end
+		end
+	end
+
 	if (not value) then
 		value = utils_item.get_param(sect, obj and obj:id(), stat, (gr.typ or "float"), true)
 	end
 	
+	-- Edited by Sota - GAMMA v0.9.3 compatibility
 	if obj and value and gr.condition then
-		value = value * obj:condition()
+		local cond = obj:condition()
+		if is_gamma then
+			cond = ui_inventory.show_full_stats and 1 or cond
+		else
+			cond = ui_inventory.show_full_stats and 1/cond or 1
+		end
+		value = value * cond
 	end
 	
 	return (value ~= 0 or gr.show_always) and value
@@ -562,14 +731,22 @@ function get_stats_string_value(obj, sec, gr, stat, to_text)
 		return
 	end
 	
+	-- Added by Sota - number of decimal places
+	local idp_stats_tt = ui_inventory.color_settings.idp_stats_tt
+	
 	if gr.track then
 		local valbar = clamp((math.abs(value) * gr.magnitude), 0, 1)
-		return to_text and (math.ceil(valbar * 100) .. "%") or valbar
+		-- Edited by Sota - change rounding method
+--		return to_text and (math.ceil(valbar * 100) .. "%") or valbar
+		return to_text and (stats_round_idp( valbar * 100 , idp_stats_tt ) .. "%") or valbar
 	else
-		local valbar = value * gr.magnitude
+		-- Edited by Sota - round value before color determination
+--		local valbar = value * gr.magnitude
+		local valbar = stats_round_idp( value * gr.magnitude , idp_stats_tt )
 		local unit = gr.unit and gr.unit ~= "" and game.translate_string(gr.unit) or ""
 		local clr = valbar >= 0 and clr_list["p1"] or clr_list["n1"]
-		valbar = math.ceil(valbar)
+		-- Edited by Sota - value is already rounded
+--		valbar = math.ceil(valbar)
 		
 		if gr.sign_inverse then
 			clr = valbar < 0 and clr_list["p1"] or clr_list["n1"]
@@ -697,6 +874,23 @@ function UICellItem:InitControls(path, st)
 	sync_element(self.hl, self.cell)
 end
 
+function UICellItem:FindChildIdByBestCondition(orElse)
+	if self.childs then
+		local id_child
+		local max_condition_so_far = -1
+		for id, cnt in pairs(self.childs) do
+			local obj = level.object_by_id(id)
+			local condition = (obj and obj:condition()) or 0
+			if max_condition_so_far < condition then
+				id_child = id
+				max_condition_so_far = condition
+			end
+		end
+		return id_child or orElse
+	end
+	return orElse
+end
+
 -- Short-lived queue cache used when opening inventory.
 -- It lets us queue shader-rendered weapon icons before the UI becomes visible,
 -- then prevents UICellItem:Set() from immediately queueing the same render again.
@@ -795,8 +989,8 @@ function UICellItem:ApplyRuntimeIconPriority(obj, regenerate)
 		self._runtime_priority_ready = true
 	end
 
-	local w = self.W
-	local h = self.H
+	local w = self.icon_w or self.W
+	local h = self.icon_h or self.H
 	if (not w) or (not h) then
 		local grid_size = self.grid_size or 50
 		w = SYS_GetParam(2, sec, "inv_grid_width", 1) * grid_size
@@ -879,6 +1073,12 @@ function UICellItem:ForceRuntimeIconRefresh()
 end
 
 function UICellItem:Set(obj, area)
+	-- Added by Sota - always up to date screen ratio
+	local ratio = utils_xml.screen_ratio()
+	-- lazy fix for 16:10 ratio (specifically for 1600x1024)
+	local ratio_1610 = (4/3) / (16/10)
+	ratio = (ratio > ratio_1610) and (ratio < 1) and ratio_1610 or ratio
+	
 	local xml = self:GetXML()
 	local path = self.path
 	local is_obj = (self.showcase == 0)
@@ -908,16 +1108,29 @@ function UICellItem:Set(obj, area)
 
 	x = x * grid_size
 	y = y * grid_size
-	w = w * grid_size
-	h = h * grid_size
+	
+	-- Edited by G_FLAT - inventory cells use grid line thickness, separate dimensions for icons
+--	w = w * grid_size
+--	h = h * grid_size
+
+	-- demonized: HD Inventory Icons Framework
+	local scale = zz_hd_inventory_icons_patches and SYS_GetParam(2, sec, "inv_grid_scale", 1) or 1
+	local icon_w = math.ceil(w * grid_size / scale)
+	local icon_h = math.ceil(h * grid_size / scale)
+	
+	-- Added by G_FLAT - inventory cells use grid line thickness
+	local grid_line = self.grid_line
+	w = math.ceil(w * grid_size / scale) + (math.ceil(w / scale) - 1) * grid_line
+	h = math.ceil(h * grid_size / scale) + (math.ceil(h / scale) - 1) * grid_line
 	
 	self.ID = is_obj and obj:id() or nil
 	self.section = sec
 	self.area = area
-	--self.X = x
-	--self.Y = y
+	self.X = x
+	self.Y = y
 	self.W = w
 	self.H = h
+	self.scale = scale
 
 	-- Trade mode
 	--if self:Check_TradeMode(obj, sec) then
@@ -928,8 +1141,11 @@ function UICellItem:Set(obj, area)
 	if area and (not self.manual) then
 		local area_x = ((area.x * grid_size) - grid_size) * ratio
 		local area_y = (area.y * grid_size) - grid_size
-		local area_xl = self.grid_line * area.x
-		local area_yl = self.grid_line * area.y
+		-- Edited by Sota - fix gap between cells for wide/uwide screens
+--		local area_xl = self.grid_line * area.x
+		local area_xl = grid_line * area.x * ratio
+		
+		local area_yl = grid_line * area.y
 		
 		self.cell:SetWndPos(vector2():set( area_x + area_xl , area_y + area_yl ))
 		self.cell:SetWndSize(vector2():set(w * ratio , h))
@@ -951,8 +1167,11 @@ function UICellItem:Set(obj, area)
 	local runtime_icon = self:Refresh_Runtime_Icon(obj, sec, clsid, is_obj)
 
 	-- Icon
-	self:Add_Icon(sec, w, h, runtime_icon)
-	self:Add_Shadow(sec, w, h, runtime_icon)
+	-- UI Rework keeps separate cell/icon dimensions; runtime icon uses those dimensions too.
+	self.icon_w = icon_w
+	self.icon_h = icon_h
+	self:Add_Icon(sec, icon_w, icon_h, runtime_icon)
+	self:Add_Shadow(sec, icon_w, icon_h, runtime_icon)
 	
 	-- Icon layers
 	self:Add_Layers(xml, obj, sec, clsid)
@@ -998,6 +1217,12 @@ function UICellItem:Update(obj)
 	-- Update upgrade indicator
 	self:Add_Upgrade(xml, obj, sec)
 	
+	-- Added by Sota - change upgrade indicator icon
+	if self.upgr then
+		local str_upgr = ui_inventory.ui_rework_support.str_upgr_lst[ ui_inventory.color_settings.use_alt_upgr ]
+		self.upgr:InitTexture( "ui_upgrade_arrow2" .. str_upgr )
+	end
+	
 	-- Update trade mode
 	if self:Check_TradeMode(obj, sec) then
 		return false
@@ -1011,6 +1236,8 @@ function UICellItem:Update(obj)
 end
 
 function UICellItem:Add_Icon(sec, w, h, runtime_icon)
+	-- Added by Sota - always up to date screen ratio
+	local ratio = utils_xml.screen_ratio()
 	local rot = self.ico:GetHeading() > 0
 
 	if runtime_icon and self.ico.InitTextureCustom then
@@ -1022,7 +1249,7 @@ function UICellItem:Add_Icon(sec, w, h, runtime_icon)
 	end
 
 	self.ico:SetStretchTexture(true)
-	self.ico:SetWndSize(vector2():set( w * (rot and 1 or ratio) , h ))
+	self.ico:SetWndSize(vector2():set( w * (rot and 1 or ratio) , h * (rot and ratio or 1) ))
 	self.ico:Show(true)
 	utils_xml.align_to_center(self.ico, self.cell)
 	
@@ -1030,6 +1257,8 @@ function UICellItem:Add_Icon(sec, w, h, runtime_icon)
 end
 
 function UICellItem:Add_Shadow(sec, w, h, runtime_icon)
+	-- Added by Sota - always up to date screen ratio
+	local ratio = utils_xml.screen_ratio()
 	local rot = self.shadow:GetHeading() > 0
 
 	if runtime_icon and self.shadow.InitTextureCustom then
@@ -1041,13 +1270,15 @@ function UICellItem:Add_Shadow(sec, w, h, runtime_icon)
 	end
 
 	self.shadow:SetStretchTexture(true)
-	self.shadow:SetWndSize(vector2():set( w * (rot and 1 or ratio) , h ))
+	self.shadow:SetWndSize(vector2():set( w * (rot and 1 or ratio) , h * (rot and ratio or 1) ))
 	self.shadow:Show(true)
 	self.shadow:Show(true)
 	utils_xml.align_to_center(self.shadow, self.cell)
 	
 	local pos = self.ico:GetWndPos()
-	self.shadow:SetWndPos( vector2():set( pos.x + 1 , pos.y + 2 ) )
+	-- Edited by Sota - shadow now moves exactly diagonally by 1
+--	self.shadow:SetWndPos( vector2():set( pos.x + 1 , pos.y + 2 ) )
+	self.shadow:SetWndPos( vector2():set( pos.x + 1 * ratio , pos.y + 1 ) )
 	self.shadow:SetTextureColor( clr_list["shadow"] )
 	
 	self:Print(nil, runtime_icon and "Show runtime 3D shadow" or "Show shadow")
@@ -1138,6 +1369,13 @@ function UICellItem:Add_ProgressBar(xml, obj, sec, clsid)
 			xml = self:GetXML()
 		end
 		self.bar = xml:InitProgressBar(self.path .. ":" .. self.cx .. ":bar", self.cell)
+		-- Added by Sota - GAMMA compatibility
+		if is_gamma and IsWeapon(obj) and (not IsMelee(obj)) and ((self.cx == "cell_2") or (self.cx == "cell_3")) then
+			local bar_pos = self.bar:GetWndPos()
+			local bar_h = self.bar:GetHeight()
+			bar_pos.y = bar_pos.y + bar_h
+			self.bar:SetWndPos(bar_pos)
+		end
 	end
 
 	-- Not manual -> bar is set at the left-bottom corner
@@ -1181,10 +1419,8 @@ function UICellItem:Add_ProgressBar(xml, obj, sec, clsid)
 	if color then
 		self.bar:SetColor(color)
 	end
-
 	self.bar:ShowBackground(props.background)
-	self.bar:Show(true)
-
+	self.bar:Show(not (is_gamma and IsWeapon(obj) and not IsMelee(obj)))
 	self:Print(nil, "Show progress bar: %s - value: %s", str, cond)
 end
 
@@ -1358,6 +1594,9 @@ function UICellItem:Add_Attachements(xml, obj, sec, clsid)
 end
 
 function UICellItem:Add_CustomText(txt, align_h, align_v, clr, fnt)
+	-- Added by Sota - always up to date screen ratio
+	local ratio = utils_xml.screen_ratio()
+	
 	if self.ctxt then
 		self.ctxt:Show(false)
 		self.ctxts:Show(false)
@@ -1378,7 +1617,9 @@ function UICellItem:Add_CustomText(txt, align_h, align_v, clr, fnt)
 	utils_xml.sync_size(self.ctxt, self.ctxts)
 	
 	local pos = self.ctxt:GetWndPos()
-	self.ctxts:SetWndPos(vector2():set( pos.x+1 , pos.y+1 ))
+	-- Edited by Sota - shadow now moves exactly diagonally by 1
+--	self.ctxts:SetWndPos(vector2():set( pos.x+1 , pos.y+1 ))
+	self.ctxts:SetWndPos(vector2():set( pos.x+1*ratio , pos.y+1 ))
 	
 	self.ctxt:SetText(txt)
 	self.ctxts:SetText(txt)
@@ -1406,11 +1647,18 @@ function UICellItem:Add_CustomText(txt, align_h, align_v, clr, fnt)
 end
 
 function UICellItem:Create_Layer(ele, base, sec_m, sec_l, str_x, str_y, str_scale)
+	-- Added by Sota - always up to date screen ratio
+	local ratio = utils_xml.screen_ratio()
+	
 	local grid_size = self.grid_size
 	local x = str_x and SYS_GetParam(2,sec_m, str_x) or 0 
 	local y = str_y and SYS_GetParam(2,sec_m, str_y) or 0
-	local w = SYS_GetParam(2,sec_l, "inv_grid_width",1) * grid_size
-	local h = SYS_GetParam(2,sec_l, "inv_grid_height",1) * grid_size
+
+	-- demonized: HD Inventory Icons Framework
+	local scale = zz_hd_inventory_icons_patches and SYS_GetParam(2, sec_l, "inv_grid_scale", 1) or 1
+	local w = math.ceil(SYS_GetParam(2,sec_l, "inv_grid_width",1) * grid_size / scale)
+	local h = math.ceil(SYS_GetParam(2,sec_l, "inv_grid_height",1) * grid_size / scale)
+
 	local scale = str_scale and SYS_GetParam(2,sec_m, str_scale) or 1
 	local scale_pos = scale * (grid_size/50)
 
@@ -1426,16 +1674,15 @@ function UICellItem:Create_Layer(ele, base, sec_m, sec_l, str_x, str_y, str_scal
 		-- despite rotation, movement for x and y stays normal! 
 		-- Move start pos to match the one for rotated base icon
 		local w_b, h_b = base:GetWidth(), base:GetHeight()
-		local x_st = (w_b/2) - (h_b/2)*ratio
-		local y_st = (w_b/2) + (h_b/2)
+		local x_st = (w_b/2) - (h_b/2)
+		local y_st = h_b + x_st
 		
-		--printf("w:%s,h:%s, y:%s,x:%s",w_b, h_b, y_st,x_st)
 		-- On 90 rotation, x and y are inverted, y axis goes negative simulate normal x movement
 		x_s = x_st + (y * ratio * scale_pos)
 		y_s = y_st - (x * scale_pos) 
 		w_s = w * scale
-		h_s = h * scale
-		w_off = (h_s* ratio/2)
+		h_s = h * ratio * scale
+		w_off = (h_s * (1/ratio))/2
 		h_off = -w_s/2
 	end
 	
@@ -1533,6 +1780,12 @@ function UICellItem:AddChild(obj)
 	if (not self.childs) then
 		self.childs = {}
 	end
+
+	local current_obj = self.ID and level.object_by_id(self.ID)
+	if current_obj and (current_obj:condition() < obj:condition()) then
+		self:Set(obj)               -- whatever we set here is visible as the icon in the main invetory section, we make sure to always show item with best condition
+		return self:AddChild(current_obj) -- we need to make sure that previously "top of the stack" is preserved so we insert it as the new UICellItem.childs instead
+	end
 	
 	-- Real
 	local sec = obj:section()
@@ -1595,10 +1848,11 @@ end
 function UICellItem:ResetToChild()
 	local id_child
 	if self.childs then
-		for id,cnt in pairs(self.childs) do
-			id_child = id
-			break
-		end
+--		for id,cnt in pairs(self.childs) do
+--			id_child = id
+--			break
+--		end
+		id_child = self:FindChildIdByBestCondition()
 	end
 	
 	if id_child then
@@ -1652,6 +1906,8 @@ function UICellItem:Reset()
 			local a = self.area
 			if a then
 				self.container:FreeRoom(a.y, a.x, a.w, a.h)
+			else
+				self:Show(false)
 			end
 		end
 		
@@ -1748,6 +2004,10 @@ function UICellContainer:__init(id, owner, path, prof, ele_base, manual, use_fra
 end
 
 function UICellContainer:InitControls(owner, prof, ele_base)
+	-- Added by Sota - always up to date screen ratio
+	local ratio = utils_xml.screen_ratio()
+	local uwide_ratio = (ratio < 0.75) and 0.75 or 1
+	
 	local xml = self.xml
 	local path = self.path
 
@@ -1778,9 +2038,11 @@ function UICellContainer:InitControls(owner, prof, ele_base)
 	self.pad:InitTexture("ui_inGame2_white_rect")
 	self.pad:SetTextureColor( GetARGB(100,255,255,255) )
 	self.pad:SetWndPos(vector2():set( self.prof:GetWidth() , 0 ))
-	self.pad:SetWndSize(vector2():set( 5 , self.prof:GetHeight() ))
-	self.pad:Show(false)
+	-- Edited by Sota - scrollbar width for uwide screens the same as wide screens
+--	self.pad:SetWndSize(vector2():set( 5 , self.prof:GetHeight() ))
+	self.pad:SetWndSize(vector2():set( 5 * uwide_ratio , self.prof:GetHeight() ))
 	
+	self.pad:Show(false)
 	self:SetGridSpecs()
 end
 
@@ -2153,11 +2415,12 @@ function UICellContainer:FindFreeCell(obj, sec)
 	local w = SYS_GetParam(2,sec, "inv_grid_width",1)
 	local h = SYS_GetParam(2,sec, "inv_grid_height",1)
 
-	-- Showcase containers, such as the new-game starter loadout, must not
-	-- silently discard weapons whose normal inventory icon is wider than the
-	-- showcase panel. Reserve the full available row and let UICellItem:Set()
-	-- scale only the displayed icon to fit. Normal inventory containers keep
-	-- the original strict behavior.
+	-- demonized: HD Inventory Icons Framework
+	local scale = zz_hd_inventory_icons_patches and SYS_GetParam(2, sec, "inv_grid_scale", 1) or 1
+	w = math.ceil(w / scale)
+	h = math.ceil(h / scale)
+
+	-- Showcase containers must not discard wide weapons; display scaling is handled by the cell.
 	if w > self.cols then
 		if self.showcase then
 			local scale = self.cols / w
@@ -2385,7 +2648,9 @@ function UICellContainer:On_Select(idx)
 end
 
 function UICellContainer:On_Drag(idx, tg, set)
-
+	-- Added by Sota - always up to date screen ratio
+	local ratio = utils_xml.screen_ratio()
+	
 	-- Hold icon should be declared after everything else, so it stays on top
 	-- Also it must be assigned on the base UI because we need x and y to start from absolute screen corner
 	if (not self.hold.ico) then
@@ -2437,8 +2702,10 @@ function UICellContainer:On_Drag(idx, tg, set)
 			local sec = self.cell[self.hold.idx].section
 			
 			if sec then
-				self.hold.w = SYS_GetParam(2,sec, "inv_grid_width") * self.grid_size * ratio
-				self.hold.h = SYS_GetParam(2,sec, "inv_grid_height") * self.grid_size
+				-- demonized: HD Inventory Icons Framework
+				local scale = zz_hd_inventory_icons_patches and SYS_GetParam(2, sec, "inv_grid_scale", 1) or 1
+				self.hold.w = math.ceil(SYS_GetParam(2,sec, "inv_grid_width") * self.grid_size * ratio / scale)
+				self.hold.h = math.ceil(SYS_GetParam(2,sec, "inv_grid_height") * self.grid_size / scale)
 				
 				self.hold.ico:InitTexture( utils_xml.get_icons_texture(sec) )
 				self.hold.ico:SetTextureRect(Frect():set( get_item_axis(sec, nil, true) ))
@@ -2571,7 +2838,14 @@ function UICellContainer:On_Scroll()
 	if (not self.scroll_tg) then
 		self.scroll_tg = get_time()
 	end
-	if self.scroll_tg > (get_time() + 25) then
+	
+	-- Added by Sota - Alt Tab Scroll Issue fix by DPurple
+	-- get_time() may unreliable , try reset delay
+	if get_time() - self.scroll_tg < 0 then
+		self.scroll_tg = get_time()
+	end
+	
+	if self.scroll_tg > (get_time() + 25) then -- at -25 the container contents will flicker when scrolling at the end
 		return
 	end
 	self.scroll_tg = get_time()
@@ -2844,6 +3118,9 @@ function UICellContainer:Scroll_DragDrop_Ctrl()
 end
 
 function UICellContainer:Scroll_Pad_Ctrl(update)
+	-- Added by Sota - always up to date screen ratio
+	local ratio = utils_xml.screen_ratio()
+	local uwide_ratio = (ratio < 0.75) and 0.75 or 1
 	
 	-- Scroll pad state and size
 	if update then
@@ -2858,7 +3135,10 @@ function UICellContainer:Scroll_Pad_Ctrl(update)
 			self.pd.power = h_scroll/(h_view - h_pad)
 			--printf("h_view: %s - h_scroll: %s - h_max: %s - h_pad: %s - ratio: %s - power: %s", h_view, h_scroll, h_max, h_pad, ratio, self.pd.power)
 			self.pad:SetWndPos(vector2():set( self.prof:GetWidth() , self.scroll_pos / self.pd.power ))
-			self.pad:SetWndSize(vector2():set( 5 , math.floor(h_pad) ))
+			-- Edited by Sota - scrollbar width for uwide screens the same as wide screens
+--			self.pad:SetWndSize(vector2():set( 5 , math.floor(h_pad) ))
+			self.pad:SetWndSize(vector2():set( 5 * uwide_ratio , math.floor(h_pad) ))
+			
 			self.pad:Show(true)
 		end
 		return
@@ -2920,6 +3200,9 @@ function UICellContainer:AdjustHeightToCell()
 end
 
 function UICellContainer:AdjustWidthToCell()
+	-- Added by Sota - always up to date screen ratio
+	local ratio = utils_xml.screen_ratio()
+	
 	local w = self.col_end * (self.grid_size + self.grid_line)
 	w = w * ratio
 	if self.use_frame then
@@ -2939,6 +3222,9 @@ function UICellContainer:SetBackground(path, clr)
 end
 
 function UICellContainer:SetGridSpecs(size, line)
+	-- Added by Sota - always up to date screen ratio
+	local ratio = utils_xml.screen_ratio()
+	
 	self.grid_size = size or self.grid_size
 	self.grid_line = line or self.grid_line
 	self.cols = math.floor( (self.scroll:GetWidth() * (1/ratio)) / (self.grid_size + self.grid_line) )
@@ -3049,7 +3335,11 @@ function UIInfoItem:Update(obj, sec, flags)
 		self:Show(false)
 		return
 	end
-
+	
+	-- Added by Sota - set transparency for tooltip
+	local clr_a = ui_inventory.color_settings.inv_hint_alpha
+	self.frame:SetColor( GetARGB(clr_a, 255, 255, 255) )
+	
 	-- item info box is shown at cursor
 	sync_cursor(self.dialog, self.frame, 0, 0)
 	
@@ -3069,6 +3359,15 @@ function UIInfoItem:Update(obj, sec, flags)
 	-- gather basic info
 	sec = obj and obj:section() or sec
 	local typ = self:GetType(sec)
+
+	-- UIInfoItem does not call get_stats_table(); it reads stats_table[typ]
+	-- directly. Sota Stats Tweak rewrites stats_table["weapon"] after
+	-- prepare_stats_table(), so reassert our runtime weapon table here, at the
+	-- actual consumption point, before Sync_Finale() and the stats loop.
+	if typ == "weapon" then
+		stats_table["weapon"] = deso_runtime_weapon_stats()
+	end
+
 	--printf("-updating | section [%s] - type: %s", sec, typ)
 	
 	self.id = obj and obj:id() or nil
@@ -3356,15 +3655,20 @@ function UIInfoItem:Update(obj, sec, flags)
 					
 				-- Text
 				elseif ele.txt then
-					local valbar_a = val_a * gr.magnitude
+					local idp_stats_tt = ui_inventory.color_settings.idp_stats_tt
+					if (stat == "additional_inventory_weight") or (stat == "boost_max_weight") then
+						idp_stats_tt = 1
+					elseif (stat == "eat_satiety") then
+						gr.magnitude = 100
+						gr.unit = "st_perc"
+					end
+					local decimals = (gr.decimals ~= nil) and gr.decimals or idp_stats_tt
+					local valbar_a = stats_round_idp(val_a * gr.magnitude, decimals)
 					local unit = gr.unit or ""
 					if unit ~= "" and not gr.literal_unit then
 						unit = game.translate_string(unit)
 					end
 					local clr = valbar_a >= 0 and clr_list["p1"] or clr_list["n1"]
-					local decimals = gr.decimals or 0
-					local scale = 10 ^ decimals
-					valbar_a = math.floor(valbar_a * scale + 0.5) / scale
 					
 					if gr.sign_inverse then
 						clr = valbar_a < 0 and clr_list["p1"] or clr_list["n1"]
@@ -3374,12 +3678,9 @@ function UIInfoItem:Update(obj, sec, flags)
 
 					-- Comparison item
 					local val_b = obj_b and get_stats_value(obj_b, obj_b:section(), gr, stat)
-					local valbar_b = val_b and val_b * gr.magnitude
-					if valbar_b then
-						valbar_b = math.floor(valbar_b * scale + 0.5) / scale
-					end
+					local valbar_b = val_b and stats_round_idp(val_b * gr.magnitude, decimals)
 					if valbar_b and (valbar_a ~= valbar_b) then
-						local diff_val = math.floor((valbar_a - valbar_b) * scale + ((valbar_a - valbar_b) >= 0 and 0.5 or -0.5)) / scale
+						local diff_val = stats_round_idp(valbar_a - valbar_b, decimals)
 						ele.comp:SetText( "(" .. (diff_val > 0 and "+" or "") .. diff_val .. ")" )
 						ele.comp:Show(true)
 						clr = (valbar_a > valbar_b) and clr_list["info_p_txt"] or clr_list["info_n_txt"]
@@ -3567,7 +3868,8 @@ function UIInfoItem:Sync_H(parent, child, offset)
 	local pos_p = parent:GetWndPos()
 	local h_p = parent:GetHeight()
 	local h = pos_p.y + h_p + offset
-	if h < 300 then h = 300 end
+	-- Edited by Sota - fix item tooltip height
+--	if h < 300 then h = 300 end
 	child:SetWndSize(vector2():set( child:GetWidth() , h ))
 	return h
 end
@@ -3622,6 +3924,10 @@ function UIInfoUpgr:InitControls()
 	self.prereq     = XMLP:InitTextWnd("upgrade_info:info_prerequisites", self.dialog)
 
 	self.prop_frame = XMLP:InitStatic("upgrade_info:properties", self.dialog)
+	
+	-- Added by Sota - return back descr and upgrade stat separator line for upgrade tooltip
+	self.upgr_line = XMLP:InitStatic("upgrade_info:properties:upgr_line", self.prop_frame)
+	
 	self.prop = {}
 	self.prop_h = self.prop_frame:GetHeight()
 	local pos
@@ -3642,6 +3948,10 @@ function UIInfoUpgr:Update(upgr, prereq, installed)
 		self:Show(false)
 		return
 	end
+	
+	-- Added by Sota - set transparency for tooltip
+--	local clr_a = ui_inventory.color_settings.inv_hint_alpha
+--	self.frame:SetColor( GetARGB(clr_a, 255, 255, 255) )
 	
 	-- info box is shown at cursor
 	sync_cursor(self.dialog, self.frame, 0, 0)
@@ -3692,7 +4002,10 @@ function UIInfoUpgr:Update(upgr, prereq, installed)
 	end
 	
 	self:Sync_Y(self.prereq, self.prop_frame, 10)
-	self:Sync_H(self.prop_frame, self.frame, (self.prop_h * #props) )
+	-- Edited by Sota - fix upgrade tooltip height
+--	self:Sync_H(self.prop_frame, self.frame, (self.prop_h * #props) )
+	self:Sync_H(self.prop_frame, self.frame, (self.prop_h * #props) + 20 )
+	
 	return
 end
 
@@ -3746,9 +4059,10 @@ end
 
 function UIInfoUpgr:Sync_H(parent, child, offset)
 	local h = parent:GetWndPos().y + parent:GetHeight() + offset
-	if (h < 265) then
-		h = 265
-	end
+	-- Edited by Sota - fix upgrade tooltip height
+--	if (h < 265) then
+--		h = 265
+--	end
 	child:SetWndSize(vector2():set( child:GetWidth() , h ))
 	return h
 end
@@ -4075,25 +4389,27 @@ function UIHint:Update(txt)
 		self:Show(false)
 		return
 	end
-
+	
 	-- no need to process if it's same txt
 	if (txt == self.txt) then
 		sync_cursor(self.dialog)
 		self:Show(true)
 		return
 	end
-
+	
 	-- Set text
 	self.dialog_text:SetText(txt)
 	self.dialog_text:AdjustHeightToText()
 	
 	-- Set wnd size
+	-- Edited by Sota - fix hint size
 	local w = self.dialog:GetWidth()
-	w = w >= 96 and w or 96
-	local h = self.dialog_text:GetHeight()+44
-	h = h >= 96 and h or 96
+--	w = w >= 96 and w or 96
+--	local h = self.dialog_text:GetHeight()+40
+	local h = self.dialog_text:GetHeight() + self.dialog_text:GetWndPos().y * 2
+--	h = h >= 96 and h or 96
 	self.dialog:SetWndSize(vector2():set(w,h))
-
+	
 	FitInRect(self.dialog,Frect():set(0,0,1024,768),0,100)
 	
 	-- box is shown at cursor
@@ -4139,6 +4455,12 @@ end
 function prop_accuracry(obj,sec)
 	local fire_dispersion_base = utils_item.get_wpn_param(obj, sec, "fire_dispersion_base", 0)
 	return normalize(fire_dispersion_base, 1.5, 0)
+end
+
+function prop_handling(obj,sec)
+	local PDM_disp_base = utils_item.get_wpn_param(obj, sec, "PDM_disp_base", 0)
+	local control_inertion_factor = utils_item.get_wpn_param(obj, sec, "control_inertion_factor", 0)
+	return (normalize(PDM_disp_base, 2.1, 0) + normalize(control_inertion_factor, 3, 1))/2
 end
 
 local function read_weapon_inertia_weight_length_koeff(sec)
@@ -4839,7 +5161,9 @@ function prop_hud_recoil_return(obj, sec)
 end
 
 function prop_condition(obj,sec)
-	return obj and obj:condition() or 1
+	-- Edited by Sota - show full condition when full stats key is pressed
+--	return obj and obj:condition() or 1
+	return obj and (not ui_inventory.show_full_stats) and math.ceil(obj:condition()*100)/100 or 1
 end
 
 function get_utils_xml()

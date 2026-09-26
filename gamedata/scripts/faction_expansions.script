@@ -137,16 +137,13 @@ function get_section(faction, advanced_chance, veteran_chance)
 			return (name .. "_sim_squad_novice")
 		end
 	elseif faction == "monster" then
-	
-		if not (IsSurvivalMode()) then
-			if math.random(100) >= 98 then
-				return random_rare[math.random(#random_rare)]
-			else
-				return random_mutants[math.random(#random_mutants)]
-			end
+		if math.random(100) >= 98 then
+			return random_rare[math.random(#random_rare)]
 		else
-			return random_zombies[math.random(#random_zombies)]
+			return random_mutants[math.random(#random_mutants)]
 		end
+	else
+		return random_zombies[math.random(#random_zombies)]
 	end
 	
 	return nil

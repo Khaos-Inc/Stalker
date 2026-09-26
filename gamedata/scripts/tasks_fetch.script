@@ -81,6 +81,9 @@ local faction_lookup = { -- List of factions used in patch tasks
 	"monolith"
 }
 
+if smr_amain_mcm.get_config("smr_enabled") then
+	faction_lookup = smr_pop.get_faction_spawn_table()
+end
 
 ---------------------------< Utility >---------------------------
 function postpone_fetch_for_next_frame(task_id, section, amount)
@@ -358,7 +361,13 @@ xr_effects.setup_fetch_task = function(actor,npc,p) -- setup_supplies_fetch_task
 			end
 			
 			if is_empty(patches) then
-				patches = patch_general[npc_comm]
+                if smr_amain_mcm.get_config("smr_enabled") then
+                    local t = smr_pop.get_faction_spawn_table()
+                    local patch = t[math.random(#t)] .. "_patch"
+                    patches[patch] = 0
+                else
+                    patches = patch_general[npc_comm]
+                end
 			end
 			
 			itms = patches
@@ -432,7 +441,7 @@ xr_effects.setup_fetch_task = function(actor,npc,p) -- setup_supplies_fetch_task
 			itms = fetch_items[p[2]]
 		end
 		
-		if not (itms and is_not_empty(itms)) then
+		if (not itms) then
 			printe("! ERROR: %s | fetch list [%s] is invalid", p[1], p[2])
 		end
 		
@@ -469,6 +478,26 @@ xr_effects.setup_supplies_fetch_task_lostzone_patch = function(actor,npc,p)
 	else
 		local comm = npc and character_community(npc) or "stalker"
 		local itms = patch_general[comm] or patch_general["stalker"]
+		-- SMR
+        if smr_amain_mcm.get_config("smr_enabled") then
+			local itms = {}
+			for i=1,#faction_lookup do
+				if game_relations.is_factions_enemies(faction_lookup[i], comm) then
+					if (faction_lookup[i] == "killer") then comm = "merc"
+					elseif (faction_lookup[i] == "dolg") then comm = "duty"
+					else comm = faction_lookup[i]
+					end
+					local patch =  comm .. "_patch"
+					itms[patch] = 0
+				end
+			end
+			
+			if is_empty(itms) then
+				local t = smr_pop.get_faction_spawn_table()
+				local patch = t[math.random(#t)] .. "_patch"
+				itms[patch] = 0
+			end
+        end
 		sec = random_key_table(itms)
 		cnt = math.random(p[2] and tonumber(p[2]) or 1,p[3] and tonumber(p[3]) or 1)
 
