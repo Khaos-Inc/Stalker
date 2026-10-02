@@ -2523,16 +2523,46 @@ function UICellContainer:FindSimilar(obj, sec)
 		printe("!ERROR UICellContainer:FindSimilar | no data recieved!")
 		return false
 	end
+
+	-- Never stack standalone detachable magazines.
+	-- This must run BEFORE the stack_all shortcut below, otherwise SOTA
+	-- merges every item with the same section without doing normal checks.
+	local item_sec = sec
+	if (not item_sec) and obj and obj.section then
+		item_sec = obj:section()
+	end
+
+	local is_magazine = false
+	if obj and obj.is_inventory_magazine then
+		is_magazine = obj:is_inventory_magazine() and true or false
+	end
+
+	if (not is_magazine) and item_sec and ini_sys:line_exist(item_sec, "module_type") then
+		local module_type = ini_sys:r_string(item_sec, "module_type")
+		is_magazine = (module_type == "magazine") or (module_type == "mag")
+	end
+
+	if (not is_magazine) and item_sec and ini_sys:line_exist(item_sec, "max_mag_size") then
+		is_magazine = true
+	end
+
+	if (not is_magazine) and item_sec then
+		is_magazine = SYS_GetParam(0, item_sec, "class") == "II_MAG"
+	end
+
+	if is_magazine then
+		return false
+	end
 	
 	if self.disable_stack then
 		return false
 	end
 	
 	if self.showcase or self.stack_all then
-		return self:GetCell_SEC(sec)
+		return self:GetCell_SEC(item_sec)
 	end
 	
-	local sec = obj:section()
+	local sec = item_sec or obj:section()
 	
 	-- Ignore search if item isn't meant to stack
 	if SYS_GetParam(1,sec,"dont_stack") then

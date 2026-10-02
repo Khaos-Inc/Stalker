@@ -1,0 +1,149 @@
+local mcm_keybinds = ui_mcm and ui_mcm.key_hold
+local KEY_DROP = DIK_keys.DIK_LSHIFT
+local KEY_DISA = DIK_keys.DIK_MINUS
+
+--  allow to drop weapons and gear that are equipped in inventory
+local INV_DROP_BOOL = true
+-- allow to disassemble items that are equipped in inventory
+local INV_DISA_BOOL = true
+
+-- dissassemble in own inventory instead of moving (only if set to shift)
+local INV_MOVE_BOOL = false
+
+function on_mcm_load()
+    return {
+        id = "drop_and_disassemble_item",
+        sh = true,
+        gr = {
+            -- LuaFormatter off
+            {id = "title", type = "slide", link = "ui_options_slider_player", text = "drop and disassemble item", size = {512, 50}, spacing = 20},
+            {id = "key_drop", type = "key_bind", val = 2, def = KEY_DROP},
+			{id = "inventory_safe_drop", type = "check", val = 1, def = true},
+			{id = "key_disa", type = "key_bind", val = 2, def = KEY_DISA},
+			{id = "inventory_safe_disa", type = "check", val = 1, def = true},
+			{id = "inventory_move", type = "check", val = 1, def = false},
+            -- LuaFormatter on
+        }
+    }
+end
+
+
+local function on_option_change(mcm)
+    if mcm then
+        KEY_DROP = ui_mcm.get("drop_and_disassemble_item/key_drop") or KEY_DROP
+		KEY_DISA = ui_mcm.get("drop_and_disassemble_item/key_disa") or KEY_DISA
+		INV_DROP_BOOL = ui_mcm.get("drop_and_disassemble_item/inventory_safe_drop") or INV_DROP_BOOL
+		INV_DISA_BOOL = ui_mcm.get("drop_and_disassemble_item/inventory_safe_disa") or INV_DISA_BOOL
+		INV_MOVE_BOOL = ui_mcm.get("drop_and_disassemble_item/inventory_move") or INV_MOVE_BOOL
+    end
+end
+
+
+local function tablelength(T)
+	local count = 0
+	for _ in pairs(T) do count = count + 1 end
+	return count
+end
+
+
+-- find all slots, if selected item has same ID -> stop
+local function if_in_inventory(obj_inp)
+	for i = 0, tablelength(_G.SCANNED_SLOTS) + 1, 1 do
+		local tmp = db.actor:item_in_slot(i)
+		if tmp and obj_inp:id() == tmp:id() then
+			return true
+		end
+	end
+	return false
+end
+
+-- get item the mouse is over
+local function get_hover()
+	local bag = ui_inventory.GUI.hover.bag
+	local idx = ui_inventory.GUI.hover.idx
+	if idx then
+		return ui_inventory.GUI.CC[bag]:GetObj(idx)
+	end
+end
+
+function handle_drop(obj, lootMode, dik)
+	if obj == nil then return end
+
+	-- inventory check
+	if INV_DROP_BOOL and if_in_inventory(obj) then
+		return
+	end
+
+	if lootMode == "loot" and dik == DIK_keys.DIK_LSHIFT and not INV_MOVE_BOOL then
+		return
+	end
+
+	db.actor:drop_item(obj)
+end
+
+
+function handle_disassembly(obj, lootMode, dik)
+	if obj == nil then return end
+
+	if item_parts.menu_disassembly(obj) then
+		-- check to disable inventory disassemble
+		if INV_DISA_BOOL and if_in_inventory(obj) then
+			return
+		end
+
+		-- skip disassemble if in lootmode
+		-- and hotkey is shift -> move item
+		printf("lootMode: %s, dik: %s, INV_MOVE_BOOL: %s", lootMode, dik, INV_MOVE_BOOL)
+		if lootMode == "loot" and dik == DIK_keys.DIK_LSHIFT and not INV_MOVE_BOOL then
+			return
+		end
+
+		-- tool check is done internally
+		item_parts.func_disassembly(obj)
+
+		-- FIX for inventory_box not updating.
+		if lootMode == "loot" then
+			ui_inventory.GUI:On_Item_Update()
+		end
+	end
+end
+
+function handle_KeyPress(dik, lootMode)
+	local obj = get_hover()
+	
+	if not obj then 
+		return
+	end
+
+	if dik == KEY_DROP then
+		handle_drop(obj, lootMode, dik)
+	elseif dik == KEY_DISA then
+		handle_disassembly(obj, lootMode, dik)
+	end
+end
+
+
+local original_OnKeyboard = ui_inventory and ui_inventory.UIInventory and ui_inventory.UIInventory.OnKeyboard
+
+function ui_inventory.UIInventory:OnKeyboard(dik, keyboard_action)
+	-- call original with proper self
+	local res = original_OnKeyboard(self, dik, keyboard_action)
+
+	if keyboard_action == ui_events.WINDOW_KEY_PRESSED then
+
+		lootMode = ui_inventory.GUI.mode or nil
+		-- ignore trade and other modes
+		if lootMode == "inventory" or lootMode == "loot" then
+			handle_KeyPress(dik, lootMode)
+		end
+	end
+
+	return res
+end
+
+
+function on_game_start()
+	RegisterScriptCallback("on_option_change",on_option_change)
+
+	on_option_change(mcm_keybinds)
+end

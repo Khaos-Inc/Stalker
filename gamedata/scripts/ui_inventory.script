@@ -521,6 +521,32 @@ end
 
 
 ----------------------------------------------------------------
+-- Keep detachable magazines as individual inventory cells.
+-- SOTA enables stack_all for bag containers, which would otherwise merge
+-- magazines with the same section even when they contain different ammo.
+if utils_ui and utils_ui.UICellContainer and not utils_ui._deso_no_mag_stacking then
+	local sota_find_similar = utils_ui.UICellContainer.FindSimilar
+
+	function utils_ui.UICellContainer:FindSimilar(obj, sec)
+		if obj and obj.is_inventory_magazine and obj:is_inventory_magazine() then
+			return false
+		end
+
+		-- Fallback for calls that identify the item by section/class.
+		local section = sec
+		if (not section) and obj and obj.section then
+			section = obj:section()
+		end
+		if section and SYS_GetParam(0, section, "class") == "II_MAG" then
+			return false
+		end
+
+		return sota_find_similar(self, obj, sec)
+	end
+
+	utils_ui._deso_no_mag_stacking = true
+end
+
 class "UIInventory" (CUIScriptWnd)
 
 function UIInventory:__init() super()
@@ -1634,7 +1660,6 @@ function UIInventory:Reset(obj)
 	self.upgr 			 = { id = false , sec = false , idx = false , bag = false}
 	self.hover           = { idx = false , bag = false, tg = 0 }
 	self.slot_hl         = { idx = false , bag = false }
-	self.ammo_hl         = { idx = false , bag = false, list = {} }
 	self.holding_ctrl    = false
 	self.holding_shift   = false
 	

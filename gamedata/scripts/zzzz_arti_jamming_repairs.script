@@ -380,7 +380,7 @@ end
 
 -- check the existing weapon and what services are available for it
 function analyze_weapon(npc, wpn)
-	local parts = item_parts.get_parts_con(wpn, nil, true)
+	local parts = item_parts.get_parts_con(wpn, nil, true) or {} --------------------------------------------------------------------------------<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 	local to_do = {}
 	for k,v in pairs(parts) do
 		if not string.find(k, "prt_w") or v > 98 then
@@ -658,7 +658,7 @@ local clr_g  = utils_xml.get_color("d_green")
 local clr_p  = utils_xml.get_color("d_purple")
 
 function get_part_short_name(name)
-	if not string_find(name, "prt_w") then return "" end
+	if not is_part(name) then return "" end --if not string_find(name, "prt_w") then return "" end
 	local i = 1
 	local part_name = ""
 	if unique_mapping[name] then

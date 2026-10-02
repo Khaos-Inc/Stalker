@@ -1,0 +1,66 @@
+-- ======================================================================
+-- LNCT Campfire Healing - MCM Config
+-- Author: LNCT | Version: 0.7.1
+-- ======================================================================
+-- CHANGELOG v0.7.1:
+-- + Optimized get_config() with cached prefix
+-- ======================================================================
+
+local defaults = {
+    ["enable"]          = true,
+    ["distance"]        = 4.0,
+    ["enable_vanilla"]  = true,
+    ["vanilla_rate"]    = 0.015,
+    
+    ["bhs_heal_temp"]   = true,
+    ["bhs_heal_perm"]   = true,
+    ["bhs_rate"]        = 0.2,
+    
+    ["enable_rad"]      = true,
+    ["rad_rate"]        = 0.002,
+    ["enable_psy"]      = true,
+    ["psy_rate"]        = 0.01,
+    ["enable_stamina"]  = true,
+    ["stamina_rate"]    = 0.01,
+}
+
+local mcm_prefix = "lnct_campfire/"
+
+function get_config(key)
+    if ui_mcm then 
+        return ui_mcm.get(mcm_prefix .. key) 
+    else 
+        return defaults[key] 
+    end
+end
+
+function on_mcm_load()
+    op = { id= "lnct_campfire", sh=true, gr={
+            { id= "title", type= "slide", link= "ui_options_slider_player", text="ui_mcm_lnct_campfire_title", size= {512,50}, spacing= 20 },
+            
+            { id= "enable", type= "check", val= 1, def= true },
+            { id= "distance", type= "track", val= 2, min= 1.0, max= 10.0, step= 0.1, def= 4.0 },
+            { type = "line" },
+            
+            { id= "bhs_heal_temp", type= "check", val= 1, def= true },
+            { id= "bhs_heal_perm", type= "check", val= 1, def= true },
+            { id= "bhs_rate", type= "track", val= 2, min= 0.1, max= 1.0, step= 0.05, def= 0.2 },
+            
+            { type = "desc", text = "ui_mcm_lnct_campfire_bhs_logic_desc" }, 
+            { type = "line" },
+
+            { id= "enable_vanilla", type= "check", val= 1, def= true },
+            { id= "vanilla_rate", type= "track", val= 2, min= 0.001, max= 0.05, step= 0.001, def= 0.015 },
+            { type = "line" },
+            { id= "enable_rad", type= "check", val= 1, def= true },
+            { id= "rad_rate", type= "track", val= 2, min= 0.0001, max= 0.01, step= 0.0001, def= 0.002 },
+            { type = "line" },
+            { id= "enable_psy", type= "check", val= 1, def= true },
+            { id= "psy_rate", type= "track", val= 2, min= 0.001, max= 0.02, step= 0.001, def= 0.01 },
+            { type = "line" },
+            { id= "enable_stamina", type= "check", val= 1, def= true },
+            { id= "stamina_rate", type= "track", val= 2, min= 0.001, max= 0.05, step= 0.001, def= 0.01 },
+        }
+    }
+    return op
+end
