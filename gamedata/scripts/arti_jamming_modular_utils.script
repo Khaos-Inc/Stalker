@@ -1,0 +1,331 @@
+-- Utility functions for modular parts jamming system
+-- Provides convenient helper functions for working with modular weapon parts
+
+-- ======================== Part Information ========================
+
+--- Get human-readable part name
+-- @param part_id string ID of the part
+-- @return string formatted part name
+local function get_part_display_name(part_id)
+	local name_map = {
+		["barrel_standard"] = "Barrel (Standard)",
+		["barrel_precision"] = "Barrel (Precision)",
+		["barrel_heavy"] = "Barrel (Heavy)",
+		["receiver_standard"] = "Receiver (Standard)",
+		["receiver_reinforced"] = "Receiver (Reinforced)",
+		["stock_tactical"] = "Stock (Tactical)",
+		["stock_foldable"] = "Stock (Foldable)",
+		["bolt_carrier_standard"] = "Bolt Carrier",
+		["trigger_precision"] = "Trigger (Precision)",
+		["trigger_light"] = "Trigger (Light)",
+	}
+	
+	return name_map[part_id] or part_id
+end
+
+--- Get condition status text
+-- @param condition number 0.0 to 1.0
+-- @return string status description
+local function get_condition_status(condition)
+	if condition >= 0.76 then
+		return "Excellent"
+	elseif condition >= 0.51 then
+		return "Good"
+	elseif condition >= 0.26 then
+		return "Acceptable"
+	elseif condition >= 0.01 then
+		return "Poor"
+	else
+		return "Worn Out"
+	end
+end
+
+--- Get condition visual indicator
+-- @param condition number 0.0 to 1.0
+-- @param length number of characters for bar
+-- @return string visual bar representation
+local function get_condition_bar(condition, length)
+	length = length or 20
+	local filled = math.floor(condition * length)
+	local empty = length - filled
+	
+	return "[" .. string.rep("=", filled) .. string.rep("-", empty) .. "]"
+end
+
+-- ======================== Part Inspection ========================
+
+--- Get detailed information about all parts on a weapon
+-- @param wpn weapon object
+-- @return table of detailed part information
+function arti_jamming_modular_utils.inspect_weapon_modules(wpn)
+	if not wpn or not arti_jamming_modular_patch then
+		return {}
+	end
+	
+	local parts = arti_jamming_modular_patch.get_tracked_parts_list(wpn)
+	local details = {}
+	
+	for _, part in ipairs(parts) do
+		table.insert(details, {
+			name = get_part_display_name(part.part_id),
+			id = part.part_id,
+			slot = part.module_slot,
+			tags = part.tags,
+			condition = part.condition,
+			status = get_condition_status(part.condition),
+			bar = get_condition_bar(part.condition, 15),
+			degraded = part.condition < 0.5
+		})
+	end
+	
+	return details
+end
+
+--- Print weapon module status to console (debugging)
+-- @param wpn weapon object
+function arti_jamming_modular_utils.print_weapon_status(wpn)
+	if not wpn then
+		printf("ERROR: No weapon provided")
+		return
+	end
+	
+	local details = arti_jamming_modular_utils.inspect_weapon_modules(wpn)
+	
+	printf("=== Weapon Module Status ===")
+	printf("Weapon: %s", wpn:name())
+	
+	if #details == 0 then
+		printf("No tracked modular parts found")
+		return
+	end
+	
+	for _, part in ipairs(details) do
+		printf("%s [Slot %d]: %s %s [%.1f%%]",
+			part.name, part.slot, part.bar, part.status, part.condition * 100)
+	end
+end
+
+-- ======================== Part Maintenance ========================
+
+--- Simulate wear from firing
+-- @param wpn weapon object
+-- @param shots number of shots fired
+function arti_jamming_modular_utils.apply_firing_wear(wpn, shots)
+	shots = shots or 1
+	if not wpn or not arti_jamming_modular_patch then
+		return
+	end
+	
+	local damage = shots * 0.08  -- Based on config
+	arti_jamming_modular_patch.apply_wear_damage(wpn, damage)
+end
+
+--- Simulate wear from environmental conditions
+-- @param wpn weapon object
+-- @param condition string "mud", "sand", "rain", etc
+-- @param duration number hours of exposure
+function arti_jamming_modular_utils.apply_environmental_wear(wpn, condition, duration)
+	duration = duration or 1
+	if not wpn or not arti_jamming_modular_patch then
+		return
+	end
+	
+	local damage_rate = {
+		["mud"] = 0.05,
+		["sand"] = 0.04,
+		["rain"] = 0.02,
+		["snow"] = 0.01,
+		["heat"] = 0.03,
+		["cold"] = 0.02,
+	}
+	
+	local rate = damage_rate[condition] or 0.02
+	arti_jamming_modular_patch.apply_wear_damage(wpn, rate * duration)
+end
+
+--- Repair a specific part on a weapon
+-- @param wpn weapon object
+-- @param slot_index number module slot to repair
+-- @param repair_amount number condition to restore (0.0-1.0)
+function arti_jamming_modular_utils.repair_module_part(wpn, slot_index, repair_amount)
+	if not wpn or not arti_jamming_modular_patch then
+		return false
+	end
+	
+	local current = arti_jamming_modular_patch.get_weapon_module_condition(wpn, slot_index)
+	local new_condition = math.min(1.0, current + repair_amount)
+	
+	return arti_jamming_modular_patch.set_weapon_module_condition(wpn, slot_index, new_condition)
+end
+
+--- Restore all parts on a weapon to like-new condition
+-- @param wpn weapon object
+function arti_jamming_modular_utils.restore_weapon_modules(wpn)
+	if not wpn then
+		return false
+	end
+	
+	local parts = arti_jamming_modular_patch.get_tracked_parts_list(wpn)
+	for _, part in ipairs(parts) do
+		arti_jamming_modular_utils.repair_module_part(wpn, part.module_slot, 1.0)
+	end
+	
+	return true
+end
+
+-- ======================== Statistics & Analysis ========================
+
+--- Get average wear across all weapon parts
+-- @param wpn weapon object
+-- @return number average condition 0.0-1.0
+function arti_jamming_modular_utils.get_average_wear(wpn)
+	local parts = arti_jamming_modular_patch.get_tracked_parts_list(wpn)
+	
+	if #parts == 0 then
+		return 1.0
+	end
+	
+	local total = 0
+	for _, part in ipairs(parts) do
+		total = total + part.condition
+	end
+	
+	return total / #parts
+end
+
+--- Get most worn part on a weapon
+-- @param wpn weapon object
+-- @return table {slot, part_id, condition} or nil
+function arti_jamming_modular_utils.get_most_worn_part(wpn)
+	local parts = arti_jamming_modular_patch.get_tracked_parts_list(wpn)
+	
+	if #parts == 0 then
+		return nil
+	end
+	
+	local worst = parts[1]
+	for _, part in ipairs(parts) do
+		if part.condition < worst.condition then
+			worst = part
+		end
+	end
+	
+	return {
+		slot = worst.module_slot,
+		part_id = worst.part_id,
+		condition = worst.condition,
+		name = get_part_display_name(worst.part_id),
+		status = get_condition_status(worst.condition)
+	}
+end
+
+--- Count how many parts need maintenance
+-- @param wpn weapon object
+-- @param threshold number condition below which part is considered degraded (default 0.5)
+-- @return number of degraded parts
+function arti_jamming_modular_utils.count_degraded_parts(wpn, threshold)
+	threshold = threshold or 0.5
+	local parts = arti_jamming_modular_patch.get_tracked_parts_list(wpn)
+	
+	local count = 0
+	for _, part in ipairs(parts) do
+		if part.condition < threshold then
+			count = count + 1
+		end
+	end
+	
+	return count
+end
+
+-- ======================== Jamming Prediction ========================
+
+--- Predict jamming probability for next shot
+-- @param wpn weapon object
+-- @return number probability 0.0 to 1.0
+function arti_jamming_modular_utils.predict_jam_probability(wpn)
+	local parts = arti_jamming_modular_patch.get_tracked_parts_list(wpn)
+	
+	if #parts == 0 then
+		return 0.0
+	end
+	
+	local avg_condition = arti_jamming_modular_utils.get_average_wear(wpn)
+	
+	-- Calculate jam probability based on condition
+	-- At 50% condition: 5% jam chance
+	-- At 25% condition: 15% jam chance
+	-- At 0% condition: 30% jam chance
+	local jam_chance = math.max(0, (1 - avg_condition) * 0.3)
+	
+	return jam_chance
+end
+
+--- Get jam probability classification
+-- @param wpn weapon object
+-- @return string description "Safe", "Low Risk", "Moderate Risk", "High Risk", "Critical"
+function arti_jamming_modular_utils.get_jam_risk_level(wpn)
+	local prob = arti_jamming_modular_utils.predict_jam_probability(wpn)
+	
+	if prob < 0.02 then
+		return "Safe"
+	elseif prob < 0.08 then
+		return "Low Risk"
+	elseif prob < 0.15 then
+		return "Moderate Risk"
+	elseif prob < 0.25 then
+		return "High Risk"
+	else
+		return "Critical"
+	end
+end
+
+-- ======================== Part Identification ========================
+
+--- Get parts by category
+-- @param category string category name (see config)
+-- @return table of part IDs in that category
+function arti_jamming_modular_utils.get_parts_by_category(category)
+	local categories = {
+		critical = {"barrel_standard", "receiver_standard", "bolt_carrier_standard", "trigger_standard"},
+		performance = {"barrel_precision", "trigger_precision", "gas_system_adjustable"},
+		durability = {"receiver_reinforced", "bolt_carrier_hc"},
+		comfort = {"stock_tactical", "handguard_tactical", "stock_skeleton"},
+	}
+	
+	return categories[category] or {}
+end
+
+--- Check if a part is in a specific category
+-- @param part_id string part ID
+-- @param category string category name
+-- @return boolean
+function arti_jamming_modular_utils.is_part_critical(part_id)
+	local critical = arti_jamming_modular_utils.get_parts_by_category("critical")
+	for _, part in ipairs(critical) do
+		if part == part_id then
+			return true
+		end
+	end
+	return false
+end
+
+-- ======================== Export Functions ========================
+
+-- Make utilities accessible to external systems
+function arti_jamming_modular_utils.export_api()
+	return {
+		inspect_weapon = arti_jamming_modular_utils.inspect_weapon_modules,
+		print_status = arti_jamming_modular_utils.print_weapon_status,
+		apply_firing_wear = arti_jamming_modular_utils.apply_firing_wear,
+		apply_env_wear = arti_jamming_modular_utils.apply_environmental_wear,
+		repair_part = arti_jamming_modular_utils.repair_module_part,
+		restore_weapon = arti_jamming_modular_utils.restore_weapon_modules,
+		avg_wear = arti_jamming_modular_utils.get_average_wear,
+		worst_part = arti_jamming_modular_utils.get_most_worn_part,
+		degraded_count = arti_jamming_modular_utils.count_degraded_parts,
+		jam_probability = arti_jamming_modular_utils.predict_jam_probability,
+		risk_level = arti_jamming_modular_utils.get_jam_risk_level,
+		get_category_parts = arti_jamming_modular_utils.get_parts_by_category,
+		is_critical = arti_jamming_modular_utils.is_part_critical,
+	}
+end
