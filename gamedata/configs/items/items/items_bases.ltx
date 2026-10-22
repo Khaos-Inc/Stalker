@@ -36,6 +36,21 @@ fire_wound_immunity = 1.0
 
 
 [mag_wpn_base]:ammo_base
+
+icon_3d_render = false
+
+inv_icon_rotation = 105, -7, -15
+inv_icon_padding  = 0.7
+
+inv_icon_offset_x = -0.1
+inv_icon_offset_y = 0.1
+
+positive X = move right
+negative X = move left
+positive Y = move up
+negative Y = move down
+
+
 class = II_MAG
 visual = dynamics\devices\dev_bolt\dev_bolt
 description	= no_attributes_descr
@@ -49,6 +64,7 @@ inv_grid_height = 1
 inv_grid_x = 0
 inv_grid_y = 0
 item_tags = magazine
+dont_stack = true
 dont_stack = true
 can_stack = false
 can_take			= true
@@ -99,7 +115,7 @@ volumetric           = false
 volumetric_intensity = 0.35
 volumetric_distance  = 0.6
 
-flashlight_use_omni  = false
+flashlight_use_omni  = true
 flashlight_use_glow  = false
 
 
@@ -153,6 +169,31 @@ laser_draw_beam           = true
 laser_draw_dot            = true
 
 [attachment_base]:itm_basickit
+
+svp_scope_render_vertical_offset = 0.01
+
+condition_queue_shot_dec                 = 0.0008
+condition_shot_dec                       = 0.0008
+
+use_condition                            = true
+
+uses_lubrication = true
+uses_dust = true
+
+icon_3d_render = false
+
+inv_icon_rotation = 105, -7, -15
+inv_icon_padding  = 0.8
+
+inv_icon_offset_x = -0.1
+inv_icon_offset_y = 0.1
+
+positive X = move right
+negative X = move left
+positive Y = move up
+negative Y = move down
+
+
 visual = dynamics\devices\dev_bolt\dev_bolt.ogf
 inv_name				= st_attachment_base
 inv_name_short		= st_attachment_base
@@ -168,9 +209,9 @@ repair_type			=
 attachment_type	= none
 snd_on_take			= outfit
 can_stack = false
+dont_stack = true
 max_stack = 1
 inv_max_stack = 1
-dont_stack								 = true
 tier						= 3
 kind						= w_misc 
 attachment_point = wpn_body|0,0.015,0|0,0,0
@@ -256,25 +297,10 @@ inv_grid_y         = 2
 [nightvision_pn]:clean1_ico
 inv_grid_x         = 1
 inv_grid_y         = 2
-inv_grid_width     = 1
-
-[thermal_ico]:clean1_ico
-inv_grid_width     = 2
-inv_grid_x         = 3
-inv_grid_y         = 2
-
-[thermal_pn]:clean1_ico
-inv_grid_x         = 4
-inv_grid_y         = 2
-inv_grid_width     = 1
 
 [flashlight_ico]:clean1_ico
 inv_grid_x         = 2
 inv_grid_y         = 2
-
-[tactical_ico]:clean1_ico
-inv_grid_x         = 3
-inv_grid_y         = 3
 
 [green_laser_ico]:clean1_ico
 inv_grid_x         = 0
@@ -294,11 +320,6 @@ inv_grid_x         = 1
 inv_grid_x         = 2
 [buck_ico]:fmj_ico
 inv_grid_x         = 3
-[trcr_ico]:fmj_ico
-inv_grid_x         = 4
-[sbsc_ico]:fmj_ico
-inv_grid_x         = 4
-inv_grid_y         = 3
 
 [cleaning_only]:attachment_base
 altrep_has_condition = true
@@ -514,3 +535,9 @@ magazine_group			= wpn_derya
 magazine_group			= wpn_saiga12, wpn_vepr12
 [wg_wpn_ks23k]
 magazine_group			= wpn_ks23k
+
+[wg_wpn_9a91]
+magazine_group			= wpn_9a91
+
+[wg_wpn_dvl10]
+magazine_group			= wpn_dvl10

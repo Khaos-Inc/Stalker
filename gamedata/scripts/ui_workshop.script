@@ -310,7 +310,7 @@ function UIWorkshopState:Reset()
 			mech_name = obj_mech:character_name()
 		end
 	end
-	self.info_text:SetText( str_intro .. clr_list["b2"] .. " \\n • " .. strformat(str_owner,mech_name) )
+	self.info_text:SetText( str_intro .. clr_list["b2"] .. " \\n ï¿½ " .. strformat(str_owner,mech_name) )
 end
 
 
@@ -550,13 +550,13 @@ function UIWorkshopRepair:ListPartScheme()
 	local toolkits_num = self:UpdateToolkits(0)
 	
 	-- Prepare parts
-	local parts = itms_manager.ini_parts:r_string_ex("con_parts_list",sec)
-	parts = parts and str_explode(parts,",") or {}
-	local parts_con = item_parts.get_parts_con(obj, nil, true)
-	for i=1,#parts do
-		self.parts[i] = {}
-		self.parts[i].sec = parts[i]
-		self.parts[i].con = parts_con[parts[i]]
+	local slots = item_parts.resolve_module_slots(obj, sec) -- returns nil for non-modular  
+	local parts_con = item_parts.get_parts_con(obj, nil, true)  
+	for i = 1, #slots do  
+		self.parts[i] = {}  
+		self.parts[i].sec = slots[i].sec or "na" -- display name falls back to tag  
+		self.parts[i].tag = slots[i].tag  
+		self.parts[i].con = parts_con[slots[i].tag]      -- -1 shows as missing  
 	end
 	
 	for i=1,6 do
@@ -603,13 +603,11 @@ function UIWorkshopRepair:ListSpareParts()
 	
 	local cc = self.CC["parts"]
 	local inv, inf, size_t = {},{}, 0
-	db.actor:iterate_inventory(function(owner,obj)
-		local sec = obj:section()
-		if (sec == sec_part) then
-			size_t = size_t + 1
-			inv[size_t] = obj
-			inf[size_t] = math.ceil(obj:condition() * 100)
-		end
+	db.actor:iterate_inventory(function(owner, obj2)  
+		local mtags = ini_sys:r_string_ex(obj2:section(), "item_tags")  
+		if mtags and string.find(mtags, self.parts[self.selected_btn].tag) then  
+			-- add to list  
+		end  
 	end)
 
 	cc:Reinit(inv, inf)
@@ -2100,7 +2098,7 @@ end
 -------------------------------------------------------------------
 
 function SetTip(tip, warning, solution, sec, pass, XMLtxt)
-	local str = "" -- "• "
+	local str = "" -- "ï¿½ "
 	local name = sec and ui_item.get_sec_name(sec) or ""
 	if tip and pass then
 		local str_tip = game.translate_string("st_ui_workshop_info_" .. tip)

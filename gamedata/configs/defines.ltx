@@ -1,8 +1,6 @@
 [hud_base]
 
 
-
-
 ;weapon_recoil_enabled      = true
 ;weapon_recoil_vert         = 0.25
 ;weapon_recoil_vert_inc     = 0.05
@@ -17,22 +15,21 @@
 ;weapon_recoil_ads_mult    = 1
 ;weapon_recoil_pivot = 0, 0, 0.1 ;A more positive Z moves the pivot farther toward the stock, making the muzzle/front of the weapon rise up
 
-							   
 
-					
 weapon_recoil_enabled      = true
-weapon_recoil_vert         = 0.5
-weapon_recoil_vert_inc     = 11.0
-weapon_recoil_horz         = 0.25
-weapon_recoil_max_vert     = 6.5
-weapon_recoil_max_horz     = 5.0
-weapon_recoil_ret_speed    = 1.0
-weapon_recoil_back         = 0.001
-weapon_recoil_back_max    = 0.006
-weapon_recoil_pos_mult     = 0.0005
-weapon_recoil_ads_dispersion_mult = 0.0
-weapon_recoil_ads_mult    = 0.3
-weapon_recoil_pivot = 0, 0, 0.08
+weapon_recoil_vert         = 10
+weapon_recoil_vert_inc     = 1
+weapon_recoil_horz         = 10
+weapon_recoil_max_vert     = 10
+weapon_recoil_max_horz     = 10
+weapon_recoil_ret_speed    = 2.0
+weapon_recoil_back         = 0
+weapon_recoil_back_max    = 0
+weapon_recoil_pos_mult     = 0.0
+weapon_recoil_ads_dispersion_mult = 1
+weapon_recoil_ads_mult    = 1
+weapon_recoil_pivot = 0, 0, 0.1
+weapon_recoil_smooth_speed = 0
 
 
 inertion_tendto_speed          = 1.0
@@ -43,8 +40,8 @@ inertion_tendto_ret_aim_speed  = 5.0
 inertion_offset_LRUD      = 0.120, 0.120, 0.100, 0.080
 inertion_offset_LRUD_aim  = 0.120, 0.120, 0.100, 0.080
 
-inertion_pivot      = 0, 0, 0.10
-inertion_pivot_aim  = 0, 0, 0.10
+inertion_pivot      = 0, 0, 0.01
+inertion_pivot_aim  = 0, 0, 0.01
 
 inertion_angle_koeff = 0.25
 
@@ -412,6 +409,8 @@ snd_on_take					            = weapon
 kind						            			= w_base
 can_be_lowered				            = true
 weapon_lower_speed					= 0.3
+
+icon_3d_render = true
 inv_icon_rotation = -90, 0, 0
 inv_icon_padding  = 1
 
@@ -427,6 +426,18 @@ cam_relax_speed 	=	4
 
 cam_max_angle_random = 0.5
 zoom_cam_max_angle_random = 0.5
+
+uses_lubrication = true
+uses_dust = true
+
+lubrication_shot_dec = 0.0016667
+lubrication_dust_factor = 1.0
+lubrication_rpm_start = 0.80
+lubrication_min_rpm_factor = 0.80
+
+dust_shot_inc = 0.001
+
+
 
 use2_functor        = module_items.menu_remove_all_modules
 use2_action_functor = module_items.remove_all_modules

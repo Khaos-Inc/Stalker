@@ -31,79 +31,6 @@ local item_prop_table = { cond_r = {30,70} , cond_ct = "part" , cond_cr = {0.5,0
 local sfind = string.find
 local keep_one = {}
 
--- ============================================================
--- GLOBAL ATTACHMENT DROP CHANCE
--- Controls the chance that an NPC is eligible to drop an attachment.
--- Change ONLY the number below to adjust the overall drop frequency.
--- Examples: 1 = 1%, 5 = 5%, 10 = 10%
--- Maximum ONE attachment can spawn per corpse.
---!!!!!!!!!!!!!! The percentace on the next line doesnt mean necesarly that every X out of Y NPC will drop something, they have a chance to roll,but it might still fail and drop nothing , thats why you need to tweak to your likings. 
--- ============================================================
-
-local attachment_drop_chance = 20
-local attachment_spawned = false
-local attachment_roll_allowed = false
-
-local function get_attachment_category(section)
-
-    if sfind(section, "^sight_")
-    or sfind(section, "^dovetail_sight_") then
-        return "sight"
-
-    elseif sfind(section, "^scope_")
-    or sfind(section, "^dovetail_scope_") then
-        return "scope"
-
-    elseif sfind(section, "^tac_") then
-        return "laser"
-
-    -- Suppressors / muzzle devices across the current supported families.
-    -- ak_barrel_gopak is grouped here because it includes an integrated suppressor.
-    elseif sfind(section, "^ar_muzzle_")
-    or sfind(section, "^12ga_silencer_")
-    or sfind(section, "^12ga_muzzle_")
-    or sfind(section, "^ak_silencer_")
-    or sfind(section, "^ak_muzzle_")
-    or sfind(section, "^74_silencer_")
-    or sfind(section, "^74_muzzle_")
-    or section == "ak_barrel_gopak" then
-        return "suppressor"
-
-    -- Foregrips plus the KeyMod / M-LOK rail accessories currently
-    -- grouped with grips in death_items.ltx.
-    elseif sfind(section, "^foregrip_")
-    or sfind(section, "^keymod_foregrip_")
-    or sfind(section, "^mlok_foregrip_")
-    or sfind(section, "^keymod_rail")
-    or sfind(section, "^mlok_rail")
-    or section == "mlok_flashlight" then
-        return "grip"
-
-    -- 12 gauge choke family.
-    elseif sfind(section, "^choke_") then
-        return "choke"
-
-    -- 12 gauge tube-magazine rails / lights / mounts.
-    elseif sfind(section, "^tubemag_") then
-        return "tube_rail"
-
-    -- AK / AK74U modular front-end furniture with attachment mounting capability.
-    elseif sfind(section, "^ak_hg_")
-    or sfind(section, "^74u_hg_") then
-        return "handguard"
-
-    -- Railed AK / AK74U dust covers / receiver-top components.
-    elseif sfind(section, "^ak_cover_")
-    or sfind(section, "^74u_cover_") then
-        return "receiver"
-
-    -- Current supported modular stock family.
-    elseif sfind(section, "^ak_stock_") then
-        return "stock"
-    end
-
-    return nil
-end
 
 function SetDiffModifications()
 	local diff = game_difficulties.get_eco_factor("loots") or 1
@@ -247,35 +174,8 @@ function clear_items_by_npc()
 	alife_storage_manager.get_state().items_by_npc = {}
 end
 
-local attachment_categories = {
-    "sight",
-    "scope",
-    "laser",
-    "suppressor",
-    "grip",
-    "choke",
-    "tube_rail",
-    "handguard",
-    "receiver",
-    "stock"
-}
-
-local function roll_attachment_category()
-    return attachment_categories[math.random(1, #attachment_categories)]
-end
-
-
 function create_release_item(npc)
-    attachment_spawned = false
-    selected_attachment_category = nil
-
-    attachment_roll_allowed = (math.random(1,100) <= attachment_drop_chance)
-
-    if attachment_roll_allowed then
-        selected_attachment_category = roll_attachment_category()
-    end
-
-    --printf("! create_release_item")
+	--printf("! create_release_item")
 	
 	-- Gather NPC info
 	local npc_id = npc:id()
@@ -427,20 +327,6 @@ function create_item(npc, section, number, rnd, to_save)
 					end
 					flags.eatable = true
 				end
-				-- Attachment loot gate + one attachment maximum
-
-local attachment_category = get_attachment_category(section)
-local found_attachment = attachment_category ~= nil
-
-if found_attachment then
-    if not attachment_roll_allowed then
-        skip = true
-    elseif attachment_category ~= selected_attachment_category then
-        skip = true
-    elseif attachment_spawned then
-        skip = true
-    end
-end
 				
 				-- Spawn PDA for supported factions
 				if item_device.device_npc_pda[section] and (not ui_pda_npc_tab.can_own_pda(npc)) then
@@ -450,15 +336,9 @@ end
 				if (not skip) then
 					
 					local se_itm = alife_create_item(section, npc, item_prop_table)
-
--- Mark the attachment slot as used after successful spawn
-if se_itm and found_attachment then
-    attachment_spawned = true
-end
-
-if (not se_itm) then
-    printe("!ERROR [%s] is not spawned by ItemProcessor",section)
-end
+					if (not se_itm) then
+						printe("!ERROR [%s] is not spawned by ItemProcessor",section)
+					end
 					
 					-- Save npc belongings if it's needed
 					if se_itm and to_save then

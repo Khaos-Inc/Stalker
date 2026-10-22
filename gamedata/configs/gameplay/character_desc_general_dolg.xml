@@ -1,3 +1,4 @@
+
 <specific_character id="sim_default_duty_0_default_0" team_default = "1">
 #include "gameplay\profiles\character_desc_dolg_0.xml"
     <icon>ui_inGame2_Dolg_2</icon>
@@ -955,15 +956,17 @@
     <snd_config>characters_voice\human\dolg_3\</snd_config>
     <visual>actors\stalker_dolg\stalker_dolg_2_proto</visual>
 </specific_character>
-
-<!-- Special -->
+  
+	
+	
+	<!-- Special -->
 <specific_character id="sim_default_dolg_trader" team_default = "1">
 #include "gameplay\profiles\character_desc_dolg_special.xml"
     <name>GENERATE_NAME_senior_sergeant</name>
     <icon>ui_inGame2_dutygas_2</icon>
     <class>sim_default_dolg_trader</class>
     <snd_config>characters_voice\human\dolg_1\</snd_config>
-    <visual>actors\stalker_dolg\stalker_dolg_trader</visual>
+    <visual>actors\stalker_dolg\stalker_dolggas2a</visual>
 
 	<actor_dialog>dm_init_trader</actor_dialog>
 	<actor_dialog>dm_broker_dialog</actor_dialog>
@@ -982,7 +985,7 @@
     <class>sim_default_dolg_mechanic</class>
 	<mechanic_mode>1</mechanic_mode>
     <snd_config>characters_voice\human\dolg_1\</snd_config>
-    <visual>actors\stalker_dolg\stalker_dolg_mechanic</visual>
+    <visual>actors\stalker_dolg\stalker_dolggas2a</visual>
 
 	<actor_dialog>dm_init_trader</actor_dialog>
 	<actor_dialog>dm_init_mechanic</actor_dialog>
@@ -999,7 +1002,7 @@
     <icon>ui_inGame2_dutygas_2</icon>
     <class>sim_default_dolg_medic</class>
     <snd_config>characters_voice\human\dolg_1\</snd_config>
-    <visual>actors\stalker_dolg\stalker_dolg_doctor</visual>
+    <visual>actors\stalker_dolg\stalker_dolggas2a</visual>
 
 		<actor_dialog>dm_init_medic</actor_dialog>
 		<actor_dialog>dm_medic_general</actor_dialog>
@@ -1014,7 +1017,7 @@
     <icon>ui_inGame2_dutygas_2</icon>
     <class>sim_default_dolg_barman</class>
     <snd_config>characters_voice\human\dolg_1\</snd_config>
-    <visual>actors\stalker_dolg\stalker_dolg_barman</visual>
+    <visual>actors\stalker_dolg\stalker_dolggas2a</visual>
 
 	<actor_dialog>dm_init_batender</actor_dialog>
 	<actor_dialog>dm_ordered_task_dialog</actor_dialog>
@@ -1025,16 +1028,16 @@
 
 <specific_character id="sim_default_duty_dead_default_0" team_default = "1">
     <name>GENERATE_NAME_sergeant</name>
-    <icon>ui_inGame3_ico_dolg</icon>
+    <icon>ui_inGame2_Dolg_4e</icon>
     <map_icon x="1" y="0"></map_icon>
-    <bio>пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ.</bio>
+    <bio>Опытный сталкер. Детальная информация отсутствует.</bio>
     <class>sim_default_duty_dead</class>
     <community>dolg</community> <terrain_sect>stalker_terrain</terrain_sect>
     <snd_config>characters_voice\human\dolg_1\</snd_config><!--2-->
-    <rank>5837</rank>
+    <rank>17837</rank>
     <reputation>105</reputation>
     <money min="5000" max="10000" infinitive="0"/>
-    <visual>actors\stalker_dolg\stalker_dolg2a_backpack</visual>
+    <visual>actors\stalker_dolg\stalker_dolgexo_4</visual>
     <supplies>
         [spawn] \n
 		broken_pda = 1 \n
@@ -1044,17 +1047,17 @@
 </specific_character>
 	
 <specific_character id="sim_default_duty_dead_default_1" team_default = "1">
-    <name>GENERATE_NAME_senior_sergeant</name>
-    <icon>ui_inGame3_ico_dolg</icon>
+    <name>GENERATE_NAME_sergeant</name>
+    <icon>ui_inGame2_Dolg_1_mask</icon>
     <map_icon x="1" y="0"></map_icon>
-    <bio>пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ.</bio>
+    <bio>Опытный сталкер. Детальная информация отсутствует.</bio>
     <class>sim_default_duty_dead</class>
     <community>dolg</community> <terrain_sect>stalker_terrain</terrain_sect>
-    <snd_config>characters_voice\human\dolg_3\</snd_config>
-    <rank>11352</rank>
+    <snd_config>characters_voice\human\dolg_1\</snd_config>
+    <rank>8352</rank>
     <reputation>353</reputation>
     <money min="1500" max="3500" infinitive="0"/>
-    <visual>actors\stalker_dolg\stalker_dolg1b_hauler</visual>
+    <visual>actors\stalker_dolg\stalker_dolg2a_mas3</visual>
     <supplies>
         [spawn] \n
 		broken_pda = 1 \n
@@ -1064,17 +1067,17 @@
 </specific_character>
     
 <specific_character id="sim_default_duty_dead_default_2" team_default = "1">
-    <name>GENERATE_NAME_lieutenant</name>
-    <icon>ui_dolg_skat_mk2_1</icon>
+    <name>GENERATE_NAME_captain</name>
+    <icon>ui_inGame2_Dolg_4e</icon>
     <map_icon x="1" y="0"></map_icon>
-    <bio>пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ.</bio>
+    <bio>Опытный сталкер. Детальная информация отсутствует.</bio>
     <class>sim_default_duty_dead</class>
     <community>dolg</community> <terrain_sect>stalker_terrain</terrain_sect>
-    <snd_config>characters_voice\human\dolg_3\</snd_config><!--2-->
-    <rank>19641</rank>
-    <reputation>1551</reputation>
+    <snd_config>characters_voice\human\dolg_1\</snd_config><!--2-->
+    <rank>13641</rank>
+    <reputation>551</reputation>
     <money min="2500" max="5000" infinitive="0"/>
-    <visual>actors\stalker_dolg\stalker_dolg_skat_mk2_1</visual>
+    <visual>actors\stalker_dolg\stalker_dolgexo4b</visual>
     <supplies>
         [spawn] \n
 		broken_pda = 1 \n
@@ -1085,16 +1088,16 @@
     
 <specific_character id="sim_default_duty_dead_default_3" team_default = "1">
     <name>GENERATE_NAME_captain</name>
-    <icon>ui_dolg_berill_2ndgen_2</icon>
+    <icon>ui_inGame2_Dolg_4e</icon>
     <map_icon x="1" y="0"></map_icon>
-    <bio>пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ.</bio>
+    <bio>Опытный сталкер. Детальная информация отсутствует.</bio>
     <class>sim_default_duty_dead</class>
     <community>dolg</community> <terrain_sect>stalker_terrain</terrain_sect>
-    <snd_config>characters_voice\human\dolg_3\</snd_config><!--2-->
-    <rank>25225</rank>
+    <snd_config>characters_voice\human\dolg_1\</snd_config><!--2-->
+    <rank>15225</rank>
     <reputation>359</reputation>
     <money min="2500" max="5000" infinitive="0"/>
-    <visual>actors\stalker_dolg\stalker_dolg_berill_2ndgen_2</visual>
+    <visual>actors\stalker_dolg\stalker_dolgexo4c</visual>
     <supplies>
         [spawn] \n
 		broken_pda = 1 \n

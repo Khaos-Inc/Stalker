@@ -1186,6 +1186,8 @@ itm_to_spawn_table = {
 		[138] = "Scopes",
 		[139] = "Tac",
 		[140] = "AR Muzzles",
+		[141] = "Barrett",
+		[142] = "DVL10",
 }
 local itm_to_spawn_classes = {
 		-- kind
@@ -1302,6 +1304,8 @@ local itm_to_spawn_classes = {
 		["scopes"]     	        = "Scopes",
 		["tac"]     	        = "Tac",
 		["ar_muzzle"]     	    = "AR Muzzles",
+		["w_barret"]     	    = "Barrett",
+		["dvl10"]     	   		= "DVL10",
 
 
 		["i_arty_junk"]     	= "Artefacts",
@@ -1574,6 +1578,8 @@ function get_spawn_table(name)
 		["Scopes"]                        = {},
 		["Tac"]                           = {},
 		["AR Muzzles"]                    = {},
+		["Barrett"]                    	  = {},
+		["DVL10"]                    	  = {},
 	}	
 
 	local ltx = ini_file("plugins\\spawner_blacklist.ltx")
@@ -1789,18 +1795,71 @@ function UIDebug_ItemSpawn:InitItems(index)
 			--printf(tostring(sec))
 		end
 	end
-	--self.d2_CC:Reinit(t)
-	
-	--WUUT Force non render icons in debug
-	self.d2_CC.forcenorender = true
 	self.d2_CC:Reinit(t)
-	self.d2_CC.forcenorender = false
-	
+
+	-- Debug spawn-menu runtime icons. The engine renders directly from the
+	-- section world visual, so no temporary gameplay object is created.
+	debug_spawn_section_icon_cache = debug_spawn_section_icon_cache or {}
+	local ratio = utils_xml.screen_ratio()
+
 	for idx,ci in pairs(self.d2_CC.cell) do
 		if ci:IsShown() then
 			ci.flags.note_str = ci.section
+
+			local sec = ci.section
+			local use_3d = sec
+				and ini_sys:section_exist(sec)
+				and ini_sys:line_exist(sec, "icon_3d_render")
+				and ini_sys:r_bool(sec, "icon_3d_render")
+
+			if use_3d and ui_render_inventory_icon_section and ci.ico and ci.ico.InitTextureCustom then
+				local texture_id = debug_spawn_section_icon_cache[sec]
+				if not texture_id then
+					local candidate = "dbg_invicon_" .. sec
+					local ok, rendered = pcall(ui_render_inventory_icon_section, sec, candidate)
+					if ok and rendered then
+						texture_id = candidate
+						debug_spawn_section_icon_cache[sec] = candidate
+					end
+				end
+
+				if texture_id then
+					local w = ci.W or 50
+					local h = ci.H or 50
+					local rot = ci.ico:GetHeading() > 0
+
+					ci.ico:InitTextureCustom(texture_id)
+					ci.ico:SetTextureRect(Frect():set(0, 0, w * 4, h * 4))
+					ci.ico:SetStretchTexture(true)
+					ci.ico:SetWndSize(vector2():set(w * (rot and 1 or ratio), h))
+					ci.ico:Show(true)
+					utils_xml.align_to_center(ci.ico, ci.cell)
+
+					if ci.shadow and ci.shadow.InitTextureCustom then
+						ci.shadow:InitTextureCustom(texture_id)
+						ci.shadow:SetTextureRect(Frect():set(0, 0, w * 4, h * 4))
+						ci.shadow:SetStretchTexture(true)
+						ci.shadow:SetWndSize(vector2():set(w * (rot and 1 or ratio), h))
+						ci.shadow:Show(true)
+						utils_xml.align_to_center(ci.shadow, ci.cell)
+						local pos = ci.ico:GetWndPos()
+						ci.shadow:SetWndPos(vector2():set(pos.x + 1, pos.y + 2))
+					end
+
+					-- Runtime texture already contains the complete model; hide static overlay layers.
+					if ci.layer then
+						for _,layer in pairs(ci.layer) do
+							if layer then layer:Show(false) end
+						end
+					end
+					if ci.ico_scope then ci.ico_scope:Show(false) end
+					if ci.ico_sil then ci.ico_sil:Show(false) end
+					if ci.ico_gl then ci.ico_gl:Show(false) end
+				end
+			end
 		end
 	end
+
 end
 
 function UIDebug_ItemSpawn:CheckItem(obj, msg)

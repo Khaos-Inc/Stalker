@@ -1,0 +1,305 @@
+-- Desolation New Age - LTX driven persistent world spawner V2
+-- Uses the proven SAFE DROP path:
+-- create item in actor inventory -> wait for live game_object -> drop_item_and_teleport.
+
+local SPAWN_FILE        = "items\\settings\\deso_world_spawns.ltx"
+local VARIANTS_SECTION  = "weapon_debug_variants"
+local START_DELAY_MS     = 5000
+local ONLINE_TIMEOUT_MS  = 10000
+local DROP_Y_OFFSET      = 1.0
+local LOG_NAME           = "deso_world_spawner.log"
+
+local queue = {}
+local queue_index = 1
+local pending = nil
+local scan_pending = false
+local scan_at = 0
+local variant_to_base = {}
+
+local function trim(s)
+    if not s then return "" end
+    return (tostring(s):gsub("^%s+", ""):gsub("%s+$", ""))
+end
+
+local function log_path()
+    local ok, p = pcall(function()
+        return getFS():update_path("$app_data_root$", LOG_NAME)
+    end)
+    if ok and p then return p end
+    return LOG_NAME
+end
+
+local function log(msg, ...)
+    local out = msg
+    if select('#', ...) > 0 then
+        local ok, s = pcall(string.format, msg, ...)
+        if ok then out = s end
+    end
+    printf("[DESO_WORLD_SPAWNER] %s", out)
+    local f = io.open(log_path(), "a")
+    if f then
+        f:write(os.date("[%Y-%m-%d %H:%M:%S] "), out, "\n")
+        f:close()
+    end
+end
+
+local function split_csv(s)
+    local t = {}
+    if not s then return t end
+    for v in tostring(s):gmatch("([^,]+)") do
+        v = trim(v)
+        if v ~= "" then t[#t + 1] = v end
+    end
+    return t
+end
+
+local function strip_instance_suffix(s)
+    -- Optional duplicate syntax: bandage#1, bandage#2, etc.
+    return trim((s or ""):gsub("#.*$", ""))
+end
+
+local function parse_xyz(s)
+    local p = split_csv(s)
+    if #p ~= 3 then return nil end
+    local x, y, z = tonumber(p[1]), tonumber(p[2]), tonumber(p[3])
+    if not x or not y or not z then return nil end
+    return x, y, z
+end
+
+local function build_variant_index()
+    variant_to_base = {}
+
+    if not ini_sys then
+        log("ERROR: ini_sys is NIL while building variant index")
+        return
+    end
+
+    if not ini_sys:section_exist(VARIANTS_SECTION) then
+        log("WARNING: [%s] does not exist; normal item sections will still work", VARIANTS_SECTION)
+        return
+    end
+
+    local n = ini_sys:line_count(VARIANTS_SECTION)
+    log("Reading [%s]: %d line(s)", VARIANTS_SECTION, n)
+
+    for i = 0, n - 1 do
+        local ok, base, value = ini_sys:r_line_ex(VARIANTS_SECTION, i, "", "")
+        if ok and base and base ~= "" then
+            base = trim(base)
+            variant_to_base[base] = base
+            for _, variant in ipairs(split_csv(value)) do
+                variant_to_base[variant] = base
+            end
+        end
+    end
+
+    log("Variant index ready")
+end
+
+local function resolve_item(name)
+    local base = variant_to_base[name]
+    if base then
+        if base ~= name then return base, name end
+        return base, nil
+    end
+
+    if ini_sys and ini_sys:section_exist(name) then
+        return name, nil
+    end
+
+    return nil, nil
+end
+
+local function persistence_key(level_name, raw_key, x, y, z)
+    -- Top-level ALife state flag, deliberately matching the simple persistence
+    -- style used by the original working Easter-egg test.
+    return string.format("deso_world_spawn|%s|%s|%.6f|%.6f|%.6f",
+        level_name, raw_key, x, y, z)
+end
+
+local function build_queue()
+    queue = {}
+    queue_index = 1
+    pending = nil
+
+    if not db.actor then
+        log("ERROR: actor is NIL during spawn-list scan")
+        return
+    end
+
+    local level_name = level.name()
+    log("Scanning spawn list for current level [%s]", tostring(level_name))
+
+    build_variant_index()
+
+    local ok_ini, ltx = pcall(ini_file, SPAWN_FILE)
+    if not ok_ini or not ltx then
+        log("ERROR: failed to open [%s], pcall_ok=%s result=%s",
+            SPAWN_FILE, tostring(ok_ini), tostring(ltx))
+        return
+    end
+
+    log("LTX opened successfully: [%s]", SPAWN_FILE)
+
+    if not ltx:section_exist(level_name) then
+        log("No [%s] section in LTX; nothing to spawn on this map", level_name)
+        return
+    end
+
+    local ok_state, state = pcall(alife_storage_manager.get_state)
+    if not ok_state or not state then
+        log("ERROR: alife_storage_manager.get_state failed: %s", tostring(state))
+        return
+    end
+
+    local count = ltx:line_count(level_name)
+    log("Found %d LTX line(s) under [%s]", count, level_name)
+
+    for i = 0, count - 1 do
+        local ok, raw_key, value = ltx:r_line_ex(level_name, i, "", "")
+        if ok and raw_key and raw_key ~= "" then
+            raw_key = trim(raw_key)
+            local item = strip_instance_suffix(raw_key)
+            local x, y, z = parse_xyz(value)
+
+            if not x then
+                log("SKIP line %d: bad XYZ [%s] = [%s]", i, raw_key, tostring(value))
+            else
+                local base, variant = resolve_item(item)
+                if not base then
+                    log("SKIP line %d: unknown item/variant [%s]", i, item)
+                else
+                    local flag = persistence_key(level_name, raw_key, x, y, z)
+                    if state[flag] then
+                        log("ALREADY SPAWNED: [%s]", raw_key)
+                    else
+                        queue[#queue + 1] = {
+                            raw_key = raw_key,
+                            item = item,
+                            base = base,
+                            variant = variant,
+                            x = x, y = y, z = z,
+                            flag = flag,
+                            state = state,
+                        }
+                        log("QUEUED: [%s] base=[%s] variant=[%s] pos=(%.6f, %.6f, %.6f)",
+                            raw_key, base, tostring(variant), x, y, z)
+                    end
+                end
+            end
+        end
+    end
+
+    log("Queue ready: %d item(s)", #queue)
+end
+
+local function begin_next()
+    if pending or queue_index > #queue or not db.actor then return end
+
+    local e = queue[queue_index]
+    queue_index = queue_index + 1
+
+    log("CREATE IN ACTOR: item=[%s] base=[%s]", e.item, e.base)
+
+    local ok_spawn, se_obj = pcall(alife_create_item, e.base, db.actor)
+    log("alife_create_item: ok=%s object=%s", tostring(ok_spawn), tostring(se_obj))
+
+    if not ok_spawn or not se_obj then
+        log("ERROR: failed creating [%s] in actor inventory", e.item)
+        return
+    end
+
+    local id = se_obj.id
+    log("SERVER OBJECT CREATED: id=%s", tostring(id))
+
+    if e.variant then
+        log("APPLY VARIANT: [%s] id=%s", e.variant, tostring(id))
+        local ok_variant, err = pcall(module_items.SetUpBuildPostSpawn, id, e.variant)
+        log("variant result: ok=%s error/result=%s", tostring(ok_variant), tostring(err))
+        if not ok_variant then
+            log("ERROR: variant application failed; spawn flag NOT set")
+            return
+        end
+    end
+
+    pending = {
+        id = id,
+        entry = e,
+        started = time_global(),
+    }
+
+    log("WAITING FOR LIVE OBJECT: id=%s", tostring(id))
+end
+
+local function finish_pending()
+    if not pending or not db.actor then return end
+
+    local obj = level.object_by_id(pending.id)
+    if not obj then
+        if time_global() - pending.started > ONLINE_TIMEOUT_MS then
+            log("ERROR: timed out waiting for level.object_by_id(%s)", tostring(pending.id))
+            pending = nil
+        end
+        return
+    end
+
+    local e = pending.entry
+    local pos = vector():set(e.x, e.y + DROP_Y_OFFSET, e.z)
+
+    log("LIVE OBJECT READY: id=%s; DROP+TELEPORT to (%.6f, %.6f, %.6f)",
+        tostring(pending.id), pos.x, pos.y, pos.z)
+
+    local ok_drop, err = pcall(function()
+        db.actor:drop_item_and_teleport(obj, pos)
+    end)
+
+    log("drop_item_and_teleport: ok=%s error/result=%s", tostring(ok_drop), tostring(err))
+
+    if not ok_drop then
+        log("ERROR: drop failed; spawn flag NOT set")
+        pending = nil
+        return
+    end
+
+    e.state[e.flag] = true
+    log("SUCCESS: [%s] spawned; persistence flag set", e.raw_key)
+    pending = nil
+end
+
+local function actor_on_first_update()
+    scan_pending = true
+    scan_at = time_global() + START_DELAY_MS
+    log("actor_on_first_update: level=[%s]; scan scheduled in %d ms",
+        tostring(level.name()), START_DELAY_MS)
+end
+
+local function actor_on_update()
+    if scan_pending and time_global() >= scan_at then
+        scan_pending = false
+        log("Initial delay elapsed; reading LTX now")
+        local ok, err = pcall(build_queue)
+        if not ok then
+            log("FATAL during build_queue: %s", tostring(err))
+        end
+    end
+
+    local ok_finish, err_finish = pcall(finish_pending)
+    if not ok_finish then
+        log("FATAL during finish_pending: %s", tostring(err_finish))
+        pending = nil
+    end
+
+    local ok_begin, err_begin = pcall(begin_next)
+    if not ok_begin then
+        log("FATAL during begin_next: %s", tostring(err_begin))
+    end
+end
+
+function on_game_start()
+    log("on_game_start FIRED [V2]")
+    RegisterScriptCallback("actor_on_first_update", actor_on_first_update)
+    RegisterScriptCallback("actor_on_update", actor_on_update)
+    log("Callbacks registered")
+    log("Spawn file: [%s]", SPAWN_FILE)
+    log("Debug log: [%s]", log_path())
+end

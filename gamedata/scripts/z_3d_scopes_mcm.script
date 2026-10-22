@@ -7,7 +7,8 @@ local defaults = {
 	["thermal_pixelation"] = true,
 	["chromatism"] = true,
 	["holo_reticle_size"] = 0.75,
-	["inertia_weight_length_koeff"] = 1.0
+	["inertia_weight_length_koeff"] = 1.0,
+	["hide_ammo_counter"] = false
 }
 
 function get_config(key)
@@ -15,6 +16,14 @@ function get_config(key)
 		return ui_mcm.get("3d_scopes/" .. key)
 	else
 		return defaults[key]
+	end
+end
+
+
+-- Direct MCM caption override; avoids XML localization entirely.
+function rename_ammo_counter_caption(anchor, handlers, attrs, flags)
+	if handlers and handlers.cap then
+		handlers.cap:TextControl():SetText("Hide Ammo Counter")
 	end
 end
 
@@ -31,8 +40,43 @@ function on_mcm_load()
 			{id = "parallax_shadow", type = "check", val = 1, def = true},
 			{id = "see_through", type = "check", val = 1, def = true},
 			{id = "thermal_pixelation", type = "check", val = 1, def = true},
-			{id = "chromatism", type = "check", val = 1, def = true}
+			{id = "chromatism", type = "check", val = 1, def = true},
+			{id = "hide_ammo_counter", type = "check", val = 1, def = false, ui_hook_functor = {z_3d_scopes_mcm.rename_ammo_counter_caption}}
 		}
 	}
 	return op
+end
+
+-- Ammo counter visibility -----------------------------------------------------
+
+local function update_ammo_counter_visibility()
+	local hide_counter = get_config("hide_ammo_counter")
+	local main_game = ActorMenu and ActorMenu.get_maingame and ActorMenu.get_maingame()
+	local hud_states = main_game and main_game.m_ui_hud_states
+	if not hud_states or not hud_states.m_ui_weapon_cur_ammo then
+		return
+	end
+
+	local ammo_counter = hud_states.m_ui_weapon_cur_ammo
+	local pos = ammo_counter:GetWndPos()
+
+	-- The original ammo-inspector implementation hides the counter by moving
+	-- its HUD window to the opposite side of the screen.
+	if (hide_counter and pos.x > 0) or ((not hide_counter) and pos.x < 0) then
+		pos.x = -pos.x
+		ammo_counter:SetWndPos(pos)
+	end
+end
+
+function z_3d_scopes_ammo_counter_first_update()
+	update_ammo_counter_visibility()
+end
+
+function z_3d_scopes_ammo_counter_option_change()
+	update_ammo_counter_visibility()
+end
+
+function on_game_start()
+	RegisterScriptCallback("actor_on_first_update", z_3d_scopes_ammo_counter_first_update)
+	RegisterScriptCallback("on_option_change", z_3d_scopes_ammo_counter_option_change)
 end

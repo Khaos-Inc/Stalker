@@ -40,6 +40,9 @@ is_holo                      = true
 holo_position_offset         = 0,0,1
 override_section             = scope_mid_att
 
+svp_scope_render_distance = 0.19443
+
+
 [scope_acog_ta648]:attachment_base ; 6x
 kind = scopes
 inv_ui_sign				= acog_6
@@ -80,6 +83,9 @@ override_section             = scope_mid_att
 ms_count  = 1
 ms_colors =  red
 
+svp_scope_render_distance = 0.20034
+
+
 
 [scope_ado]:attachment_base ; 3-9x
 kind = scopes
@@ -119,6 +125,8 @@ ms_count  = 2
 ms_colors = red, green
 
 override_section = scope_high_att
+svp_scope_render_distance = 0.18122
+
 [scope_barska]:attachment_base ; 3-9x
 kind = scopes
 inv_ui_sign				= barska_ac
@@ -151,8 +159,11 @@ s3ds_dirt_intensity    = 0
 s3ds_chroma_power      = 0
 s3ds_lens_color        = lens_clear
 
-
 override_section = scope_mid_att
+
+svp_scope_render_distance = 0.15887
+
+
 [scope_c79]:attachment_base ; 3.4x
 kind = scopes
 inv_ui_sign				= elcan_c79
@@ -185,8 +196,9 @@ s3ds_dirt_intensity    = 0
 s3ds_chroma_power      = 0
 s3ds_lens_color        = lens_clear
 
-
 override_section = scope_mid_att
+svp_scope_render_distance = 0.13578
+
 [scope_m145]:scope_c79 ; 3.4x
 kind = scopes
 inv_ui_sign				= elcan_m145
@@ -218,6 +230,8 @@ s3ds_lens_color        = lens_clear
 override_section = scope_mid_att
 cost = 18500
 inv_weight = 0.685
+svp_scope_render_distance = 0.13544
+
 
 [scope_specter_6x]:attachment_base ; 1.5-6x
 kind = scopes
@@ -257,6 +271,8 @@ ms_colors               = black, red, green
 
 
 override_section = scope_mid_att
+svp_scope_render_distance = 0.13793
+
 [scope_specter_6x_rmr]:scope_specter_6x
 kind = scopes
 inv_ui_sign				= elcan_rmr
@@ -294,6 +310,8 @@ ms_colors               = black, red, green
 
 
 override_section = scope_mid_att
+svp_scope_render_distance = 0.13793
+
 
 [scope_accushot]:attachment_base ; 3-12x		pica_21
 kind = scopes
@@ -328,6 +346,9 @@ s3ds_dirt_intensity    = 0
 s3ds_chroma_power      = 0
 s3ds_lens_color        = lens_clear
 
+svp_scope_render_distance = 0.28925
+
+
 
 [scope_mark3]:attachment_base ; 3-9x		pica_21
 kind = scopes
@@ -361,6 +382,8 @@ s3ds_reticle_type      = 0
 s3ds_dirt_intensity    = 0
 s3ds_chroma_power      = 0
 s3ds_lens_color        = lens_clear
+svp_scope_render_distance = 0.27856
+
 
 
 [scope_cqt]:attachment_base ; 1-3x		pica_14
@@ -376,14 +399,14 @@ inv_grid_y				= 4
 cost							= 31000
 inv_weight 				= 0.5
 attachment_point	= pica_10|0,0,0.015|0,0,0
-attachment_slots		= aim_lens_pip|wpn_body|0,0.03199,0.1|0,0,0#pica_3|wpn_body|0.01646,0.034532,0|0,0,90#pica_4|wpn_body|0,0.0503,0.03|0,0,0
+attachment_slots		= aim_lens_pip|wpn_body|0,0.03199,0.08|0,0,0#pica_3|wpn_body|0.01646,0.034532,0|0,0,90#pica_4|wpn_body|0,0.0503,0.03|0,0,0
 override_section 		= scope_low_att
 
 scope_texture          =
 scope_zoom_factor      = 33.33       ; strongest zoom / max magnification
 min_scope_zoom_factor  = 100  ; weakest zoom / low magnification
 scope_dynamic_zoom     = true
-zoom_step_count        = 5
+zoom_step_count        = 2
 
 s3ds_reticle_size      = 0.5
 s3ds_eye_relief        = 2
@@ -398,6 +421,8 @@ s3ds_lens_color        = lens_clear
 
 ms_count  = 2
 ms_colors = red, black
+
+svp_scope_render_distance = 0.18415
 
 
 [scope_atacr_f1]:attachment_base ; 4-20x		pica_25
@@ -436,6 +461,9 @@ s3ds_lens_color        = lens_clear
 ms_count  = 2
 ms_colors = red, black
 
+svp_scope_render_distance = 0.31025
+
+
 
 [scope_atacr_f1_rail]:scope_atacr_f1 ; 4-20x		pica_25
 kind = scopes
@@ -468,6 +496,9 @@ s3ds_lens_color        = lens_clear
 
 ms_count  = 2
 ms_colors = red, black
+
+svp_scope_render_distance = 0.31025
+
 
 
 [scope_atracr_dmx]:attachment_base ; 1-8x					pica_16
@@ -506,6 +537,9 @@ s3ds_lens_color        = lens_clear
 ms_count  = 2
 ms_colors = red, black
 
+svp_scope_render_distance = 0.21927
+
+
 
 [scope_nx8]:attachment_base ; 4-32x			pica_24
 kind = scopes
@@ -542,6 +576,8 @@ s3ds_lens_color        = lens_clear
 
 ms_count  = 2
 ms_colors = red, black
+svp_scope_render_distance = 0.29508
+
 
 
 [scope_nx8_rail]:scope_nx8
@@ -576,6 +612,8 @@ s3ds_lens_color        = lens_clear
 
 ms_count  = 2
 ms_colors = red, black
+svp_scope_render_distance = 0.29508
+
 
 [scope_high_plus_att]
 zoom_rotate_time = 0.05
@@ -617,6 +655,8 @@ s3ds_lens_color        = lens_clear
 
 ms_count  = 2
 ms_colors = red, black
+svp_scope_render_distance = 0.22103
+
 
 
 [scope_po156]:attachment_base ;1.5-6x		pica_11
@@ -651,6 +691,8 @@ s3ds_reticle_type      = 3
 s3ds_dirt_intensity    = 0
 s3ds_chroma_power      = 0
 s3ds_lens_color        = lens_clear
+svp_scope_render_distance = 0.19946
+
 
 
 [scope_pks07]:attachment_base ;7x		pica_17
@@ -688,6 +730,8 @@ s3ds_lens_color        = lens_clear
 
 ms_count  = 2
 ms_colors = red, black
+svp_scope_render_distance = 0.20664
+
 
 [scope_mid_att]
 zoom_rotate_time = 0.08
@@ -729,6 +773,8 @@ s3ds_lens_color        = lens_clear
 
 ms_count  = 2
 ms_colors = red, black
+svp_scope_render_distance = 0.23986
+
 
 
 [scope_1p78]:attachment_base ; 2.8x
@@ -762,6 +808,9 @@ s3ds_reticle_type      = 0
 s3ds_dirt_intensity    = 0.5
 s3ds_chroma_power      = 0
 s3ds_lens_color        = lens_clear
+
+svp_scope_render_distance = 0.16286
+
 
 [scope_low_att]
 zoom_rotate_time = 0.12
@@ -802,6 +851,8 @@ s3ds_lens_color        = lens_clear
 
 ms_count  = 2
 ms_colors = red, black
+svp_scope_render_distance = 0.12160
+
 
 [scope_slx6]:attachment_base ;1-6x			pica_17
 kind = scopes
@@ -838,6 +889,8 @@ s3ds_lens_color        = lens_clear
 
 ms_count  = 2
 ms_colors = red, black
+svp_scope_render_distance = 0.22229
+
 
 [scope_tango6t]:attachment_base ; 1-6x			;pica_18
 kind = scopes
@@ -875,6 +928,8 @@ ms_count  = 2
 ms_colors = red, black
 
 override_section = scope_high_att
+svp_scope_render_distance = 0.24921
+
 [scope_tango6t_d]:scope_tango6t
 kind = scopes
 visual						= w_att_huds\scope_sig_sauer_tango_6t_d	
@@ -904,6 +959,8 @@ ms_count  = 2
 ms_colors = red, black
 
 override_section = scope_high_att
+svp_scope_render_distance = 0.25471
+
 
 [scope_pn23]:attachment_base ;2.5x	fpica17
 kind = scopes
@@ -941,6 +998,8 @@ s3ds_lens_color        = lens_clear
 
 ms_count  = 2
 ms_colors = red, black
+svp_scope_render_distance = 0.17592
+
 
 
 [scope_pn23_ec]:attachment_base
@@ -996,6 +1055,8 @@ s3ds_lens_color        = lens_clear
 
 ms_count  = 2
 ms_colors = red, black
+svp_scope_render_distance = 0.28989
+
 
 [scope_high_att]
 zoom_rotate_time = 0.1
@@ -1037,6 +1098,8 @@ ms_count  = 2
 ms_colors = red, black
 
 cost = 56000
+svp_scope_render_distance = 0.28760
+
 [scope_pm2t_att]:scope_high_att
 zoom_rotate_time = 0.05
 fire_dispersion_base_koeff = -0.08		;-0.000240,0.030150,0.000000
@@ -1074,6 +1137,8 @@ s3ds_reticle_type      = 0
 s3ds_dirt_intensity    = 0
 s3ds_chroma_power      = 0
 s3ds_lens_color        = lens_clear
+svp_scope_render_distance = 0.18158
+
 
 [scope_crossfire2]:attachment_base ;1-4x		pica_16			pica_23f
 kind = scopes
@@ -1110,6 +1175,8 @@ s3ds_lens_color        = lens_clear
 
 ms_count  = 2
 ms_colors = red, black
+svp_scope_render_distance = 0.21352
+
 
 [scope_razor]:attachment_base ;1-10x			pica_18			pica_23
 kind = scopes
@@ -1146,6 +1213,8 @@ s3ds_lens_color        = lens_clear
 
 ms_count  = 2
 ms_colors = red, black
+svp_scope_render_distance = 0.22403
+
 
 [scope_strike_eagle]:attachment_base ;1-8x			pica_19			pica_24
 kind = scopes
@@ -1182,6 +1251,8 @@ s3ds_lens_color        = lens_clear
 
 ms_count  = 2
 ms_colors = red, black
+svp_scope_render_distance = 0.22945
+
 
 
 [scope_psu]:attachment_base ;1-4x			pica_17f
@@ -1219,6 +1290,8 @@ s3ds_lens_color        = lens_clear
 
 ms_count  = 2
 ms_colors = red, black
+svp_scope_render_distance = 0.16121
+
 
 
 [scope_acog_ta31]:attachment_base ; 4x			pica_8		pica_14f
@@ -1256,6 +1329,9 @@ s3ds_lens_color        = lens_clear
 ms_count  = 1
 ms_colors =  red
 
+svp_scope_render_distance = 0.12936
+
+
 
 [scope_acog_ta31_rmr]:scope_acog_ta31
 kind = scopes
@@ -1285,8 +1361,10 @@ ms_colors =  red
 is_holo = true
 holo_position_offset	=	0,0,1
 
-
 override_section = scope_mid_att
+
+svp_scope_render_distance = 0.12936
+
 
 [scope_specter]:attachment_base
 kind                    = scopes
@@ -1339,6 +1417,9 @@ s3ds_lens_color         = lens_clear
 ms_count                = 3
 ms_colors               = black, red, green
 
+svp_scope_render_distance = 0.11600
+
+
 
 [scope_specter_rmr]:scope_specter
 kind = scopes
@@ -1387,6 +1468,8 @@ holo_position_offset	=	0,0,1
 
 
 override_section = scope_mid_att
+svp_scope_render_distance = 0.11600
+
 [scope_hensoldt]:attachment_base ; 4x		pica_8		pica_12
 kind = scopes
 inv_ui_sign				= zo4
@@ -1421,6 +1504,8 @@ s3ds_lens_color        = lens_clear
 
 ms_count  = 2
 ms_colors = red, black
+svp_scope_render_distance = 0.11137
+
 
 
 [scope_drs]:attachment_base ; 1.5x		pica_8f
@@ -1436,7 +1521,7 @@ cost							= 46000
 inv_weight 				= 0.53
 attachment_point	= pica_6|0,0,0.01|0,0,0
 attachment_slots		= aim_lens_pip|wpn_body|0,0.03536,0.12|0,0,0
-1icon_layer = thermal_pn
+1icon_layer = nightvision_ico
 override_section = scope_mid_att
 
 scope_texture          =
@@ -1455,6 +1540,8 @@ s3ds_reticle_type      = 7
 s3ds_dirt_intensity    = 0
 s3ds_chroma_power      = 0
 s3ds_lens_color        = lens_clear
+svp_scope_render_distance = 0.06596
+
 
 
 [scope_devo]:attachment_base ; 6x		pica_10f
@@ -1488,6 +1575,8 @@ s3ds_reticle_type      = 1
 s3ds_dirt_intensity    = 0
 s3ds_chroma_power      = 0
 s3ds_lens_color        = lens_clear
+svp_scope_render_distance = 0.10337
+
 
 [scope_hamr]:attachment_base ; 4x				pica_13f
 kind = scopes
@@ -1523,6 +1612,8 @@ s3ds_lens_color        = lens_clear
 
 ms_count  = 2
 ms_colors = red, black
+svp_scope_render_distance = 0.11789
+
 
 [scope_hamr_dp]:scope_hamr
 kind = scopes
@@ -1555,6 +1646,8 @@ holo_position_offset	=	0,0,1
 
 
 override_section = scope_mid_att
+svp_scope_render_distance = 0.11789
+
 [scope_monstrum]:attachment_base ; 2x		pica_10f
 kind = scopes
 inv_ui_sign				= mnstrm
@@ -1589,6 +1682,8 @@ s3ds_lens_color        = lens_clear
 
 ms_count  = 2
 ms_colors = red, black
+svp_scope_render_distance = 0.10131
+
 
 
 [scope_pilad25]:attachment_base ; 2.5x			pica_7			pica_11f
@@ -1625,6 +1720,8 @@ s3ds_lens_color        = lens_clear
 
 ms_count  = 2
 ms_colors = green, black
+svp_scope_render_distance = 0.09377
+
 
 
 [scope_pilad35]:attachment_base ; 3.5x		pica_10	pica_16f
@@ -1658,6 +1755,8 @@ s3ds_reticle_type      = 0
 s3ds_dirt_intensity    = 0.3
 s3ds_chroma_power      = 0
 s3ds_lens_color        = lens_clear
+svp_scope_render_distance = 0.15709
+
 
 
 [scope_pu]:attachment_base ; 3.5x			pica_10		pica_15f
@@ -1691,6 +1790,8 @@ s3ds_reticle_type      = 0
 s3ds_dirt_intensity    = 0
 s3ds_chroma_power      = 0
 s3ds_lens_color        = lens_clear
+svp_scope_render_distance = 0.15304
+
 
 
 [scope_bravo4]:attachment_base ; 4x		pica_7		pica_14f
@@ -1725,6 +1826,9 @@ s3ds_dirt_intensity    = 0
 s3ds_chroma_power      = 0
 s3ds_lens_color        = lens_clear
 
+svp_scope_render_distance = 0.13249
+
+
 
 [scope_bravo5]:attachment_base ; 5x		pica_10			pica_15f
 kind = scopes
@@ -1758,6 +1862,9 @@ s3ds_dirt_intensity    = 0
 s3ds_chroma_power      = 0
 s3ds_lens_color        = lens_clear
 
+svp_scope_render_distance = 0.14016
+
+
 [scope_sp1]:attachment_base ; 3x		pica_10		pica_14
 kind = scopes
 inv_ui_sign				= sp1
@@ -1789,6 +1896,8 @@ s3ds_reticle_type      = 0
 s3ds_dirt_intensity    = 0.3
 s3ds_chroma_power      = 0
 s3ds_lens_color        = lens_clear
+svp_scope_render_distance = 0.13261
+
 
 [scope_spitfire_3x]:attachment_base ; 3x		pica_10			pica_13f
 kind = scopes
@@ -1824,6 +1933,8 @@ s3ds_lens_color        = lens_clear
 
 ms_count  = 2
 ms_colors = red, black
+svp_scope_render_distance = 0.12046
+
 
 [scope_spitfire_5x]:attachment_base ; 5x
 kind = scopes
@@ -1859,6 +1970,8 @@ s3ds_lens_color        = lens_clear
 
 ms_count  = 2
 ms_colors = red, black
+svp_scope_render_distance = 0.07880
+
 
 [scope_spitfire_5x_venom]:scope_spitfire_5x
 kind = scopes
@@ -1890,8 +2003,10 @@ ms_colors = red, black
 is_holo = true
 holo_position_offset = 0,0,1		
 
-
 override_section = scope_mid_att
+svp_scope_render_distance = 0.07880
+
+
 [scope_atn]:attachment_base ; 3-14x
 kind = scopes
 inv_ui_sign				= ant-x
@@ -1927,6 +2042,9 @@ s3ds_dirt_intensity    = 0
 s3ds_chroma_power      = 0
 s3ds_lens_color        = lens_clear
 
+svp_scope_render_distance = 0.22672
+
+
 
 [scope_atn_ec]:attachment_base
 kind = scopes
@@ -1961,7 +2079,7 @@ inv_weight 				= 0.8
 attachment_point	= pica_14|0,0,0.015|0,0,0
 attachment_slots		= aim_lens_pip|wpn_body|0,0.02977,0.1|0,0,0		
 is_nv 						= true
-1icon_layer = thermal_ico
+1icon_layer = nightvision_ico
 override_section 		= scope_mid_att
 
 scope_texture          =
@@ -1980,6 +2098,8 @@ s3ds_reticle_type      = 0
 s3ds_dirt_intensity    = 0
 s3ds_chroma_power      = 0
 s3ds_lens_color        = lens_clear
+svp_scope_render_distance = 0.16939
+
 
 
 [scope_dedal]:attachment_base ; 3-12x		pica_24
@@ -2017,6 +2137,8 @@ s3ds_lens_color        = lens_clear
 
 ms_count  = 2
 ms_colors = red, black
+svp_scope_render_distance = 0.30659
+
 
 [scope_vudu]:attachment_base ; 1-6x			pica_17
 kind = scopes
@@ -2054,3 +2176,5 @@ ms_count  = 2
 ms_colors = red, black
 
 override_section = scope_high_att
+svp_scope_render_distance = 0.22831
+

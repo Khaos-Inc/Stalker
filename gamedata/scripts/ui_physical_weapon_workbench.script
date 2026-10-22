@@ -555,6 +555,27 @@ local function wb_apply_module(stats, section)
     if max_mag and max_mag > 0 then stats.mag = max_mag end
 end
 
+local function wb_native_weapon_length(weapon)
+    if not weapon then
+        return nil
+    end
+
+    local ok, value = pcall(function()
+        return weapon:get_weapon_length()
+    end)
+
+    if not ok or value == nil then
+        return nil
+    end
+
+    value = tonumber(value)
+    if value and value > 0 then
+        return value
+    end
+
+    return nil
+end
+
 local function wb_collect_weapon_stats(weapon, add_section, exclude_index)
     if not weapon then return nil end
     local stats = wb_new_stats(weapon:section())
@@ -573,6 +594,18 @@ local function wb_collect_weapon_stats(weapon, add_section, exclude_index)
     stats.recoil_vert = stats.recoil_vert * recoil_mult
     stats.recoil_horz = stats.recoil_horz * recoil_mult
     stats.recoil_back = stats.recoil_back * recoil_mult
+
+    -- The assembled weapon's native geometry measurement is authoritative.
+    -- Only use it for the weapon's actual current module state. Hypothetical
+    -- add/remove previews cannot be measured correctly until the module is
+    -- really attached, so those are handled in ShowWeaponStats below.
+    if add_section == nil and exclude_index == nil then
+        local measured_length = wb_native_weapon_length(weapon)
+        if measured_length then
+            stats.weapon_length = measured_length
+        end
+    end
+
     return stats
 end
 
@@ -2243,6 +2276,45 @@ function UIPhysicalWeaponWorkbench:ShowWeaponStats(hover_section, mode, module_i
     elseif hover_section and mode == "installed" and module_index ~= nil then
         compared = wb_collect_weapon_stats(weapon, nil, module_index)
         title = title .. "  |  Installed: " .. item_display_name(hover_section)
+    end
+
+    -- Current length is always the native geometry-measured engine value.
+    -- For a pre-install/remove preview, preserve the module length delta that
+    -- wb_collect_weapon_stats calculated from the module config, but apply that
+    -- delta on top of the real native current length. This keeps the live value
+    -- authoritative while still giving the workbench a useful QoL preview.
+    if compared and current and current.weapon_length then
+        local legacy_current = wb_new_stats(weapon:section())
+        for index = 0, weapon:module_count() - 1 do
+            wb_apply_module(legacy_current, weapon:module_get_section(index))
+        end
+
+        local legacy_compared = nil
+        if hover_section and mode == "available" then
+            legacy_compared = wb_new_stats(weapon:section())
+            for index = 0, weapon:module_count() - 1 do
+                wb_apply_module(legacy_compared, weapon:module_get_section(index))
+            end
+            wb_apply_module(legacy_compared, hover_section)
+        elseif hover_section and mode == "installed" and module_index ~= nil then
+            legacy_compared = wb_new_stats(weapon:section())
+            for index = 0, weapon:module_count() - 1 do
+                if index ~= module_index then
+                    wb_apply_module(legacy_compared, weapon:module_get_section(index))
+                end
+            end
+        end
+
+        if legacy_compared then
+            local length_delta =
+                (legacy_compared.weapon_length or 0) -
+                (legacy_current.weapon_length or 0)
+
+            compared.weapon_length =
+                math.max(0, current.weapon_length + length_delta)
+        else
+            compared.weapon_length = current.weapon_length
+        end
     end
 
     local lines = wb_stat_lines(current, compared, mode)

@@ -7,7 +7,7 @@ local last_sleep, last_sleep_chk, pwr_chk
 local feature_state
 
 local up_sleep				= 27 -- step
-local in_hour				= 780 -- amount decreased every sleep hour
+local in_hour				= 1400 -- amount decreased every sleep hour
 local start_blur_1 			= 5000 -- value at which gray indicator appear
 local start_blur_2 			= 6250 -- value at which yellow indicator appear
 local start_blur_3 			= 7500 -- value at which orange indicator appear
@@ -102,13 +102,6 @@ function get_sleep_deprivation(visual)
 	return clamp( normalize(last_sleep, 0, 10000) , 0 , 1)
 end
 
-function get_last_sleep()
-	return last_sleep or 0
-end
-
-function get_sleep_blur_4()
-	return start_blur_4 or 0
-end
 
 -------------------------------------------------------------------
 -- Callbacks
@@ -136,8 +129,7 @@ end
 function actor_on_sleep(hours)
 	if (not db.actor:has_info("force_slp2")) then
 		printdbg("/ Sleep deprivation | Reduced sleepiness by sleeping: %s - old sleepiness level: %s", hours*(in_hour/2), last_sleep)
-		last_sleep = last_sleep and math.ceil(last_sleep - hours*((in_hour or 780)/2)) or 0
-		db.actor:change_health(0.02*hours)
+		last_sleep = last_sleep and math.ceil(last_sleep - hours*((in_hour or 1400)/2)) or 0
 		if (last_sleep < 0) then
 			last_sleep = 0
 		elseif (last_sleep > 10000) then

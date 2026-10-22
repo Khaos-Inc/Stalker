@@ -1,17 +1,17 @@
--- Desolation New Age - LTX driven persistent world spawner V2
--- Uses the proven SAFE DROP path:
--- create item in actor inventory -> wait for live game_object -> drop_item_and_teleport.
+-- Desolation New Age - LTX driven persistent world spawner V3
+-- Direct ALife world spawning, matching the vanilla/Oasis spawn path:
+-- resolve world position -> level vertex -> alife_create directly in the world.
+-- No actor inventory spawn, no live-object wait, no drop_item_and_teleport.
 
 local SPAWN_FILE        = "items\\settings\\deso_world_spawns.ltx"
 local VARIANTS_SECTION  = "weapon_debug_variants"
 local START_DELAY_MS     = 5000
-local ONLINE_TIMEOUT_MS  = 10000
 local DROP_Y_OFFSET      = 1.0
 local LOG_NAME           = "deso_world_spawner.log"
 
 local queue = {}
 local queue_index = 1
-local pending = nil
+local online_checks = {}
 local scan_pending = false
 local scan_at = 0
 local variant_to_base = {}
@@ -113,14 +113,13 @@ end
 local function persistence_key(level_name, raw_key, x, y, z)
     -- Top-level ALife state flag, deliberately matching the simple persistence
     -- style used by the original working Easter-egg test.
-    return string.format("deso_world_spawn|%s|%s|%.6f|%.6f|%.6f",
+    return string.format("deso_world_spawn_v6matched|%s|%s|%.6f|%.6f|%.6f",
         level_name, raw_key, x, y, z)
 end
 
 local function build_queue()
     queue = {}
     queue_index = 1
-    pending = nil
 
     if not db.actor then
         log("ERROR: actor is NIL during spawn-list scan")
@@ -194,76 +193,123 @@ local function build_queue()
 end
 
 local function begin_next()
-    if pending or queue_index > #queue or not db.actor then return end
+    if queue_index > #queue or not db.actor then return end
 
     local e = queue[queue_index]
     queue_index = queue_index + 1
 
-    log("CREATE IN ACTOR: item=[%s] base=[%s]", e.item, e.base)
+    -- Spawn point and navigation vertex are intentionally resolved separately.
+    -- Vanilla patrol paths work the same way: the patrol point has a world
+    -- position plus a valid precomputed level vertex. Our configured point is
+    -- the near-ground reference; +Y is only the physical item placement.
+    local pos = vector():set(e.x, e.y + DROP_Y_OFFSET, e.z)
 
-    local ok_spawn, se_obj = pcall(alife_create_item, e.base, db.actor)
-    log("alife_create_item: ok=%s object=%s", tostring(ok_spawn), tostring(se_obj))
+    -- level.vertex_id(pos) only succeeds when the point itself maps cleanly
+    -- into the level graph. For arbitrary item coordinates we instead ask the
+    -- engine for real navigation vertices around the configured position and
+    -- choose the closest one. This gives alife_create() the same kind of valid
+    -- level vertex that a baked patrol point would already contain.
+    local lvid = nil
+    local vertex_pos = nil
+    local search_origin = vector():set(e.x, e.y, e.z)
+    local search_radii = { 1.0, 2.0, 5.0, 10.0, 20.0, 40.0 }
+
+    for _, radius in ipairs(search_radii) do
+        local ok_near, verts = pcall(level.get_nearby_vertices, search_origin, radius)
+        if ok_near and verts then
+            local best_id = nil
+            local best_pos = nil
+            local best_d2 = nil
+
+            for id, present in pairs(verts) do
+                if present and id ~= nil and id < 4294967295 then
+                    local ok_vp, vp = pcall(level.vertex_position, id)
+                    if ok_vp and vp then
+                        local dx = vp.x - search_origin.x
+                        local dy = vp.y - search_origin.y
+                        local dz = vp.z - search_origin.z
+                        local d2 = dx * dx + dy * dy + dz * dz
+
+                        if best_d2 == nil or d2 < best_d2 then
+                            best_d2 = d2
+                            best_id = id
+                            best_pos = vp
+                        end
+                    end
+                end
+            end
+
+            if best_id ~= nil then
+                lvid = best_id
+                vertex_pos = best_pos
+                log("NEAREST NAV VERTEX: item=[%s] radius=%.1f lvid=%s nav_pos=(%.6f, %.6f, %.6f) distance=%.3f",
+                    e.item, radius, tostring(lvid),
+                    vertex_pos.x, vertex_pos.y, vertex_pos.z,
+                    math.sqrt(best_d2))
+                break
+            end
+        end
+    end
+
+    if lvid == nil then
+        log("ERROR: no navigation vertex found within 40m of [%s] config pos=(%.6f, %.6f, %.6f); spawn pos=(%.6f, %.6f, %.6f)",
+            e.item, e.x, e.y, e.z, pos.x, pos.y, pos.z)
+        return
+    end
+
+    -- Resolve the ALife game-graph vertex that actually corresponds to the
+    -- chosen level-graph vertex. Patrol paths already carry this exact pair;
+    -- for arbitrary XYZ we derive the game vertex through the cross table.
+    local ok_gvid, gvid = pcall(level.game_vertex_id, lvid)
+    if not ok_gvid or gvid == nil or gvid >= 65535 then
+        log("ERROR: could not resolve matching game vertex for [%s] lvid=%s: ok=%s gvid=%s",
+            e.item, tostring(lvid), tostring(ok_gvid), tostring(gvid))
+        return
+    end
+
+    log("VERTEX RESOLVE: item=[%s] lvid=%s vertex_pos=(%.6f, %.6f, %.6f) spawn_pos=(%.6f, %.6f, %.6f) matched_gvid=%s",
+        e.item, tostring(lvid), vertex_pos.x, vertex_pos.y, vertex_pos.z, pos.x, pos.y, pos.z, tostring(gvid))
+
+    log("DIRECT ALIFE CREATE: item=[%s] base=[%s] pos=(%.6f, %.6f, %.6f) lvid=%s gvid=%s",
+        e.item, e.base, pos.x, pos.y, pos.z, tostring(lvid), tostring(gvid))
+
+    local ok_spawn, se_obj = pcall(alife_create, e.base, pos, lvid, gvid)
+    log("alife_create: ok=%s object=%s", tostring(ok_spawn), tostring(se_obj))
 
     if not ok_spawn or not se_obj then
-        log("ERROR: failed creating [%s] in actor inventory", e.item)
+        log("ERROR: direct world creation failed for [%s]", e.item)
         return
     end
 
     local id = se_obj.id
-    log("SERVER OBJECT CREATED: id=%s", tostring(id))
+    log("SERVER OBJECT CREATED DIRECTLY IN WORLD: id=%s", tostring(id))
+
+    local ok_can, can_online = pcall(function() return se_obj:can_switch_online() end)
+    log("can_switch_online: ok=%s result=%s", tostring(ok_can), tostring(can_online))
+
+    local ok_force, force_err = pcall(utils_obj.switch_online, id)
+    log("FORCE ONLINE: id=%s ok=%s error/result=%s", tostring(id), tostring(ok_force), tostring(force_err))
+
+    online_checks[id] = {
+        item = e.item,
+        x = pos.x, y = pos.y, z = pos.z,
+        started = time_global(),
+        last_log = 0,
+    }
 
     if e.variant then
         log("APPLY VARIANT: [%s] id=%s", e.variant, tostring(id))
         local ok_variant, err = pcall(module_items.SetUpBuildPostSpawn, id, e.variant)
         log("variant result: ok=%s error/result=%s", tostring(ok_variant), tostring(err))
         if not ok_variant then
-            log("ERROR: variant application failed; spawn flag NOT set")
+            log("ERROR: variant application failed; releasing spawned object; spawn flag NOT set")
+            pcall(alife_release, se_obj)
             return
         end
     end
 
-    pending = {
-        id = id,
-        entry = e,
-        started = time_global(),
-    }
-
-    log("WAITING FOR LIVE OBJECT: id=%s", tostring(id))
-end
-
-local function finish_pending()
-    if not pending or not db.actor then return end
-
-    local obj = level.object_by_id(pending.id)
-    if not obj then
-        if time_global() - pending.started > ONLINE_TIMEOUT_MS then
-            log("ERROR: timed out waiting for level.object_by_id(%s)", tostring(pending.id))
-            pending = nil
-        end
-        return
-    end
-
-    local e = pending.entry
-    local pos = vector():set(e.x, e.y + DROP_Y_OFFSET, e.z)
-
-    log("LIVE OBJECT READY: id=%s; DROP+TELEPORT to (%.6f, %.6f, %.6f)",
-        tostring(pending.id), pos.x, pos.y, pos.z)
-
-    local ok_drop, err = pcall(function()
-        db.actor:drop_item_and_teleport(obj, pos)
-    end)
-
-    log("drop_item_and_teleport: ok=%s error/result=%s", tostring(ok_drop), tostring(err))
-
-    if not ok_drop then
-        log("ERROR: drop failed; spawn flag NOT set")
-        pending = nil
-        return
-    end
-
     e.state[e.flag] = true
-    log("SUCCESS: [%s] spawned; persistence flag set", e.raw_key)
-    pending = nil
+    log("SUCCESS: [%s] spawned directly in world; persistence flag set", e.raw_key)
 end
 
 local function actor_on_first_update()
@@ -283,20 +329,30 @@ local function actor_on_update()
         end
     end
 
-    local ok_finish, err_finish = pcall(finish_pending)
-    if not ok_finish then
-        log("FATAL during finish_pending: %s", tostring(err_finish))
-        pending = nil
-    end
-
+    -- Spawn one queued entry per update.
     local ok_begin, err_begin = pcall(begin_next)
     if not ok_begin then
         log("FATAL during begin_next: %s", tostring(err_begin))
     end
+
+    -- Verify that directly-created ALife objects actually switch online.
+    for id, chk in pairs(online_checks) do
+        local obj = level.object_by_id(id)
+        if obj then
+            local p = obj:position()
+            log("LIVE OBJECT READY: item=[%s] id=%s pos=(%.6f, %.6f, %.6f) expected=(%.6f, %.6f, %.6f)",
+                chk.item, tostring(id), p.x, p.y, p.z, chk.x, chk.y, chk.z)
+            online_checks[id] = nil
+        elseif time_global() - chk.started > 5000 then
+            log("ONLINE TIMEOUT: item=[%s] id=%s never became level.object_by_id after force-online",
+                chk.item, tostring(id))
+            online_checks[id] = nil
+        end
+    end
 end
 
 function on_game_start()
-    log("on_game_start FIRED [V2]")
+    log("on_game_start FIRED [V7 DIRECT ALIFE FORCE ONLINE]")
     RegisterScriptCallback("actor_on_first_update", actor_on_first_update)
     RegisterScriptCallback("actor_on_update", actor_on_update)
     log("Callbacks registered")

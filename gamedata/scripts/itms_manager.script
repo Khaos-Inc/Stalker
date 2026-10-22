@@ -147,37 +147,43 @@ function actor_on_item_before_use(obj,flags)
 		pass = false
 	
 	-- older booster is still active
-	-- elseif old_booster["period"] and (old_booster["period"] > time_g) then
-		--printf("~ on_before_item_use [%s] | older booster [%s] is still active", sec, old_booster['section'])
-		-- local weaker_effect
-		-- local stronger_effect
-		-- for k,v in pairs(curr_booster) do
-			-- if (k ~= "section") and (k ~= "period") then
-				-- local v2 = old_booster[k]
-				-- if v2  and (v > boost_min) and (v2 > boost_min) then
-					-- if (v <= v2) then
-						-- weaker_effect = k
-					-- else
-						-- stronger_effect = k
-					-- end
-				-- elseif (v2 == 0) and (v > boost_min) then
-					-- stronger_effect = k
-				-- end
-			-- end
-		-- end
+	elseif old_booster["period"] and (old_booster["period"] > time_g) then
+		--printf("~ actor_on_item_before_use [%s] | older booster [%s] is still active", sec, old_booster['section'])
+		local weaker_effect
+		local stronger_effect
+		for k,v in pairs(curr_booster) do
+			if (k ~= "section") and (k ~= "period") then
+				local v2 = old_booster[k]
+				if v2  and (v > boost_min) and (v2 > boost_min) then
+					if (v <= v2) then
+						weaker_effect = k
+					else
+						stronger_effect = k
+					end
+				elseif (v2 == 0) and (v > boost_min) then
+					stronger_effect = k
+				end
+			end
+		end
 		
 		-- older booster has some stronger effect, while new one doesn't have any stronger effect
-		-- if weaker_effect and (not stronger_effect) then
-			--printf("~ on_before_item_use [%s] | older booster [%s] has stronger effect: %s", sec, old_booster['section'], weaker_effect)
-			-- local boost_str = game.translate_string(booster_string[weaker_effect])
-			-- str = strformat(game.translate_string("st_itm_manager_greater_effect"),boost_str)
-			-- pass = false
-		-- end
+		if weaker_effect and (not stronger_effect) then
+			--printf("~ actor_on_item_before_use [%s] | older booster [%s] has stronger effect: %s", sec, old_booster['section'], weaker_effect)
+			local boost_str = game.translate_string(booster_string[weaker_effect])
+			str = strformat(game.translate_string("st_itm_manager_greater_effect"),boost_str)
+			pass = false
+		end
+	-- prevent player to take anabiotic during combat
+	elseif sec == "drug_anabiotic" then
+		if (not is_empty(xr_combat_ignore.fighting_with_actor_npcs)) then
+			str = game.translate_string("st_anabiotic_combat")
+			pass = false
+		end
 	end
 	
 	-- to eat or not to eat
 	if pass then
-		--printf("- on_before_item_use [%s] | pass = true", sec)
+		--printf("- actor_on_item_before_use [%s] | pass = true", sec)
 		flags.ret_value = true
 		copy_table(old_booster, curr_booster)
 		if obj_tool then
