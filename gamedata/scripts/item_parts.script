@@ -276,7 +276,7 @@ function disassembly_weapon(obj, obj_d)
 	obj:force_unload_magazine(true)
 	
 	-- Collect weapon parts
-	for k,v in spairs(parts, parts_sort) do
+	for k,v in pairs(parts) do
 		if (k ~= sec_p) and (math.random(100) <= (disassembly_chance + con*100)) then
 			local index = #result_details
 			result_details[index + 1] = k
@@ -381,7 +381,7 @@ function disassembly_outfit(obj, obj_d)
 	local delay = actor_effects.is_animations_on() and 3 or 0
 
 	-- Collect outfit parts
-	for k,v in spairs(parts, parts_sort) do
+	for k,v in pairs(parts) do
 		if (k ~= sec) and (math.random(100) <= (disassembly_chance + con*100)) then
 			local index = #result_details
 			result_details[index + 1] = k
